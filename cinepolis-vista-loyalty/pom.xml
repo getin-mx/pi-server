@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>mobi.allshoppings</groupId>
+    <artifactId>pi-server</artifactId>
+    <version>0.1</version>
+  </parent>
+
+  <artifactId>cinepolis-vista-loyalty</artifactId>
+
+  <name>Cinepolis Vista Loyalty Service</name>
+	<url>http://www.allshoppings.mobi</url>
+
+	<scm>
+		<url>http://development.inodes-it.com/svn/repos/mobi.allshoppings/vista-loyalty/trunk</url>
+		<connection>scm:svn:http://development.inodes-it.com/svn/repos/mobi.allshoppings/vista-loyalty/trunk</connection>
+	</scm>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+
+	<organization>
+		<name>AllShoppings LLC</name>
+		<url>http://www.allshoppings.mobi</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>mhapanow</id>
+			<name>Matias Hapanowicz</name>
+			<email>mhapanowicz@allshoppings.mobi</email>
+			<url>http://www.allshoppings.mobi</url>
+			<organization>AllShoppings LLC</organization>
+			<organizationUrl>http://www.allshoppings.mobi</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- This is just for "eclipse:eclipse" goal to always attempt downloading 
+			sources -->
+		<downloadSources>true</downloadSources>
+	</properties>
+
+	<dependencies>
+
+		<!-- AllShoppings dependencies -->
+		<dependency>
+			<groupId>mobi.allshoppings</groupId>
+			<artifactId>allshoppings-services</artifactId>
+			<version>0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-api</artifactId>
+			<version>1.2.14</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-impl</artifactId>
+			<version>1.2.14</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.woodstox</groupId>
+					<artifactId>woodstox-core-asl</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.woodstox</groupId>
+					<artifactId>stax2-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- Testing dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- tag::wsdl[] -->
+			<plugin>
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
+				<version>0.12.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<args>
+						<arg>-XautoNameResolution</arg>
+					</args>
+					<forceRegenerate>false</forceRegenerate>
+					<bindingDirectory>${basedir}/src/main/resources/schema/xjb</bindingDirectory>
+					<bindingIncludes>
+						<include>*.xjb</include>
+					</bindingIncludes>
+					<schemaLanguage>WSDL</schemaLanguage>
+					<generatePackage>mx.com.cineticket.inetvis.vista.loyalty</generatePackage>
+					<schemas>
+						<schema>
+							<!-- <url><![CDATA[http://cinepolis-vpn.allshoppings.mobi:8030/visloyalty/vistaLoyalty.asmx?WSDL]]></url> -->
+							<url><![CDATA[http://development.inodes-it.com/cinepolis/wsdl/vistaLoyalty.wsdl]]></url>
+						</schema>
+					</schemas>
+				</configuration>
+			</plugin>
+			<!-- end::wsdl[] -->
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.2</version>
+					<configuration>
+						<source>1.7</source>
+						<target>1.7</target>
+					</configuration>
+				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.jvnet.jaxb2.maven2</groupId>
+										<artifactId>maven-jaxb2-plugin</artifactId>
+										<versionRange>0.12.3</versionRange>
+										<goals>
+											<goal>generate</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+	</build>
+
+</project>

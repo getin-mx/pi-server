@@ -1,0 +1,32 @@
+{
+	"identifier": "f0db94b0-cbe8-4936-8610-66698d790e9b",
+	"creationDateTime": "2016-06-10T13:59:28-05:00",
+	"fenceSize": 0,
+	"avatarId": "27da4612-5555-49be-9e61-8e06797f0b4a.png",
+	"acl": {
+		"userIds": [],
+		"entries": {}
+	},
+	"status": 0,
+	"lastUpdate": "2016-06-10T13:59:28-05:00",
+	"brandName": "Krispy Kreme",
+	"brandId": "krispykreme_mx",
+	"shoppingId": "",
+	"timezone": 0,
+	"contactInfo": {
+		"youtubeChannel": "",
+		"mail": "",
+		"phone": "",
+		"webURL": "",
+		"facebookId": "",
+		"twitterId": "",
+		"googleId": ""
+	},
+	"address": {},
+	"shoppingName": "---",
+	"photoId": [],
+	"systemDateTime": "2016-06-10T13:59:30-05:00",
+	"videoId": [],
+	"name": "Krispy Kreme --- Modesto Arreola-",
+	"checkinAreaSize": 50
+}

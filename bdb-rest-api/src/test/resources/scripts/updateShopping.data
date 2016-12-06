@@ -1,0 +1,47 @@
+{
+	"identifier": "plazacanning",
+	"creationDateTime": "2013-03-01T16:52:10-06:00",
+	"structureInfo": {
+		"floorCount": 3,
+		"storeCount": 100,
+		"brandCount": 32
+	},
+	"fenceSize": 10000,
+	"avatarId": "df6905a7-ddd7-4e93-aad0-280178024934.jpg",
+	"acl": {
+		"userIds": [],
+		"entries": {}
+	},
+	"status": 0,
+	"lastUpdate": "2016-05-10T18:05:05-05:00",
+	"country": "Argentina",
+	"timezone": 0,
+	"contactInfo": {
+		"youtubeChannel": "",
+		"mail": "marketing@plazacanning.com.ar",
+		"phone": "50750016",
+		"webURL": "http://www.plazacanning.com.ar",
+		"foursquareId": "",
+		"facebookId": "https://www.facebook.com/plazacanning?fref=ts",
+		"twitterId": "plazacanning",
+		"googleId": ""
+	},
+	"serviceId": ["1364063477585", "1363910858055", "1364062745348", "1364063427445", "1364062710981", "1364065266236", "1364066748202", "1364063504271"],
+	"address": {
+		"zipCode": "",
+		"neighborhood": "",
+		"province": "Buenos Aires",
+		"longitude": -58.52126221429444,
+		"streetName": "Mariano Castex",
+		"streetNumber": "1277",
+		"latitude": -34.92854723668902,
+		"city": "Ezeiza",
+		"country": "Argentina"
+	},
+	"photoId": ["54ec50b1-26e6-4fea-a048-e6534415e36c.png", "01066ae2-9c27-4cb7-a9a4-d914dfc732b6.png", "9b95055c-832e-434e-93cc-53e6df209419.png"],
+	"systemDateTime": "2016-06-10T13:24:45-05:00",
+	"description": "<p>Plaza Canning, es sin lugar a dudas, un paseo diferente a cualquier otro. La belleza arquitect?nica al recorrer las peque?as calles adoquinadas, balcones floridos y arcadas de piedra, al estilo de los pueblos medievales italianos, es una experiencia incomparable. Locales comerciales, gastronom?a, un hotel de 4 estrellas y un teatro...ponen al alcance de los visitantes todos lo que no debe faltar.<\/p><div><div><br><\/div><\/div><p><\/p>",
+	"name": "Plaza Canning",
+	"videoId": [],
+	"checkinAreaSize": 100
+}

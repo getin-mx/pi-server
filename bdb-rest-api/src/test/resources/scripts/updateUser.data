@@ -1,0 +1,51 @@
+{
+	"creationDateTime": "2016-01-01T08:33:10-06:00",
+	"statusModificationDateTime": "2016-03-23T13:59:15-06:00",
+	"avatarId": "",
+	"lastUpdate": "2016-06-02T18:27:19-05:00",
+	"lastname": "Hapanowicz",
+	"viewLocation": {
+		"country": "Mexico"
+	},
+	"firstname": "Matias",
+	"lastLogin": "2016-06-02T18:27:09-05:00",
+	"securitySettings": {
+		"status": 7,
+		"role": 1,
+		"userManager": false,
+		"password": "FDC421A71188D270B41509DF99C574B10537F55F4E5F252D9376BA11B4F98A60",
+		"tableManager": false
+	},
+	"fullnameReverse": "Hapanowicz Matias",
+	"contactInfo": {
+		"mail": "mhapanow@hotmail.com",
+		"youtubeChannel": "",
+		"phone": "",
+		"webURL": "",
+		"facebookId": "1542097628",
+		"lastname": "Hapanowicz",
+		"firstname": "Matias",
+		"twitterId": "",
+		"googleId": "",
+		"mobile": ""
+	},
+	"address": {
+		"zipCode": "",
+		"neighborhood": "",
+		"province": "Buenos Aires",
+		"longitude": 0,
+		"streetName": "",
+		"streetNumber": "",
+		"latitude": 0,
+		"city": "Moron",
+		"country": "Argentina"
+	},
+	"trackingCode": "0000000024F1A670",
+	"systemDateTime": "2016-06-02T23:04:30-05:00",
+	"activityStatus": 1,
+	"gender": "male",
+	"birthDate": "1981-10-12T18:00:00-06:00",
+	"points": 0,
+	"identifier": "mhapanow@hotmail.com",
+	"fullname": "Matias Hapanowicz"
+}

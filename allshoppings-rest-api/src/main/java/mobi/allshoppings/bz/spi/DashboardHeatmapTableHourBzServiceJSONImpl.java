@@ -1,0 +1,235 @@
+package mobi.allshoppings.bz.spi;
+
+
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import mobi.allshoppings.bz.DashboardHeatmapTableHourBzService;
+import mobi.allshoppings.bz.RestBaseServerResource;
+import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.DashboardIndicatorData;
+import mobi.allshoppings.tools.CollectionFactory;
+
+
+/**
+ *
+ */
+public class DashboardHeatmapTableHourBzServiceJSONImpl
+extends RestBaseServerResource
+implements DashboardHeatmapTableHourBzService {
+
+	private static final Logger log = Logger.getLogger(DashboardHeatmapTableHourBzServiceJSONImpl.class.getName());
+	
+	@Autowired
+	private DashboardIndicatorDataDAO dao;
+
+	/**
+	 * Obtains information about a user
+	 * 
+	 * @return A JSON representation of the selected fields for a user
+	 */
+	@Override
+	public String retrieve()
+	{
+		long start = markStart();
+		try {
+			// obtain the id and validates the auth token
+			// obtainUserIdentifier();
+
+			String entityId = obtainStringValue("entityId", null);
+			Integer entityKind = obtainIntegerValue("entityKind", null);
+			String elementId = obtainStringValue("elementId", null);
+			String elementSubId = obtainStringValue("elementSubId", null);
+			String shoppingId = obtainStringValue("shoppingId", null);
+			String subentityId = obtainStringValue("subentityId", null);
+			String periodType = obtainStringValue("periodId", null);
+			String fromStringDate = obtainStringValue("fromStringDate", null);
+			String toStringDate = obtainStringValue("toStringDate", null);
+			String movieId = obtainStringValue("movieId", null);
+			String voucherType = obtainStringValue("voucherType", null);
+			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
+			Integer timezone = obtainIntegerValue("timezone", null);
+			Boolean average = obtainBooleanValue("average", false);
+			Boolean toMinutes = obtainBooleanValue("toMinutes", false);
+			Boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
+			
+			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
+					entityKind, elementId, elementSubId, shoppingId,
+					subentityId, periodType, fromStringDate, toStringDate,
+					movieId, voucherType, dayOfWeek, timezone, null, null, null, null);
+
+
+			// Data
+			Map<Integer, Map<Integer, Long>> yData = CollectionFactory.createMap();
+			Map<Integer, Map<Integer, Long>> yCounter = CollectionFactory.createMap();
+
+			// y Categories
+			List<String> yCategories = CollectionFactory.createList();
+			for( int i = 0; i < 24; i++ ) {
+				yCategories.add(i + ":00");
+				yData.put(i, new HashMap<Integer, Long>());
+				yCounter.put(i, new HashMap<Integer, Long>());
+			}
+			
+			// x Categories
+			List<String> xCategories = CollectionFactory.createList();
+			xCategories.add("Domingo");
+			xCategories.add("Lunes");
+			xCategories.add("Martes");
+			xCategories.add("Miercoles");
+			xCategories.add("Jueves");
+			xCategories.add("Viernes");
+			xCategories.add("Sabado");
+
+			// Sets data
+			for( DashboardIndicatorData obj : list ) {
+				Map<Integer, Long> xData = yData.get(obj.getTimeZone());
+
+				// Sets the double value
+				Long val = xData.get(obj.getDayOfWeek()-1);
+				if( val == null ) val = 0L;
+				val += obj.getDoubleValue().intValue();
+				xData.put(obj.getDayOfWeek()-1, val);
+
+				// Sets the record count
+				xData = yCounter.get(obj.getTimeZone());
+				val = xData.get(obj.getDayOfWeek()-1);
+				if( val == null ) val = 0L;
+				if( obj.getRecordCount() != null )
+					val += obj.getRecordCount();
+				else 
+					log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
+				xData.put(obj.getDayOfWeek()-1, val);
+			}
+			
+			// Checks Average
+			if( average ) {
+				Iterator<Integer> i1 = yData.keySet().iterator();
+				while( i1.hasNext() ) {
+					Integer key1 = i1.next();
+					Map<Integer, Long> xData = yData.get(key1);
+					Map<Integer, Long> xCounter = yCounter.get(key1);
+					Iterator<Integer> i2 = xData.keySet().iterator();
+					while( i2.hasNext() ) {
+						Integer key2 = i2.next();
+						Long val = xData.get(key2);
+						if( val != null ) {
+							Long count = xCounter.get(key2);
+							if( count != null && count != 0 ) {
+								if( toMinutes ) {
+									val = val / count / 60000;
+								} else {
+									val = val / count;
+								}
+								xData.put(key2, val);
+							}
+						}
+					}
+				}
+			}
+			
+			// Checks Erase Blanks
+			if( eraseBlanks ) {
+				List<String> newYCategories = CollectionFactory.createList();
+				for( int i = 0; i < 24; i++ ) {
+					Map<Integer, Long> xData = yData.get(i);
+					if( xData.size() > 0 ) 
+						newYCategories.add(i + ":00");
+					else
+						yData.remove(i);
+				}
+				yCategories = newYCategories;
+			}
+
+			// Creates the yPositions map
+			Map<Integer, Integer> yPositions = CollectionFactory.createMap();
+			Iterator<Integer> i = yData.keySet().iterator();
+			int count = 0;
+			while(i.hasNext()) {
+				Integer key = i.next();
+				yPositions.put(key, count);
+				count++;
+			}
+			
+			// Writes the results
+			JSONObject ret = new JSONObject();
+			
+			JSONArray xCategoriesJson = new JSONArray();
+			for( String cat : xCategories ) {
+				xCategoriesJson.put(cat);
+			}
+			ret.put("xCategories", xCategoriesJson);
+			
+			JSONArray yCategoriesJson = new JSONArray();
+			for( String cat : yCategories ) {
+				yCategoriesJson.put(cat);
+			}
+			ret.put("yCategories", yCategoriesJson);
+
+			JSONArray dataJson = new JSONArray();
+			JSONArray element = new JSONArray();
+			for( int y = 0; y < 24; y++ ) {
+				Map<Integer, Long> xData = yData.get(y);
+				if( xData != null ) {
+					for( int x = 0; x <= 7; x++ ) {
+						Long val = xData.get(x);
+						if( val != null ) {
+							element = new JSONArray();
+							element.put(x);
+							element.put(yPositions.get(y));
+							element.put(val);
+							dataJson.put(element);
+						}
+					}
+				}
+			}
+			ret.put("data", dataJson);
+			
+			return ret.toString();
+			
+		} catch (ASException e) {
+			if( e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENEXPIRED_CODE || 
+					e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENMISSING_CODE) {
+				log.log(Level.INFO, e.getMessage());
+			} else {
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
+			return getJSONRepresentationFromException(e).toString();
+		} catch (Exception e) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+			return getJSONRepresentationFromException(ASExceptionHelper.defaultException(e.getMessage(), e)).toString();
+		} finally {
+			markEnd(start);
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	class ValueComparator implements Comparator {
+	    Map<?,?> base;
+
+	    public ValueComparator(Map<?,?> base) {
+	        this.base = base;
+	    }
+
+	    // Note: this comparator imposes orderings that are inconsistent with
+	    // equals.
+	    public int compare(Object a, Object b) {
+	        if ((Integer)base.get(a) >= (Integer)base.get(b)) {
+	            return -1;
+	        } else {
+	            return 1;
+	        } // returning 0 would merge keys
+	    }
+	}
+}

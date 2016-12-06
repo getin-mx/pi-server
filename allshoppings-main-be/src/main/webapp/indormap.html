@@ -1,0 +1,72 @@
+<html>
+<head>
+
+<title>AllShoppings Map</title>
+<!-- Library styles -->
+<link href="css/indoormap.css" rel="stylesheet">
+
+</head>
+<body>
+
+	<div class="mapContainer">
+	<canvas id="map"></canvas>
+	</div>
+	<a href="#" id="zoomin">zoom in</a>
+	<a href="#" id="zoomout">zoom out</a>
+	<a href="#" id="save">save</a>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="js/heatmap.min.js"></script>
+	<script src="js/indoormap.js"></script>
+	
+	<script>
+	$(document).ready( function() {
+		
+		KEY = indoormap.queryString()['floorMapId'];
+		
+		var mapData = indoormap.loadAndParseURL(KEY);
+		$('#map').css('background-image', 'url(/img/' + mapData.imageId + ')');
+		$('#map').css('height', mapData.mapHeight + 'px');
+		$('#map').css('width', mapData.mapWidth + 'px');
+		
+		if( !mapData.corrected ) {
+			mapData = indoormap.correct(mapData);
+		}
+		
+		indoormap.init();
+		indoormap.draw(mapData, $('.mapContainer')[0]);
+		if( indoormap.queryString()['noHeatMap'] != 'true' )  {
+			$('#save').css('display', 'none');
+			indoormap.drawHeatMap(mapData, KEY, $('.mapContainer')[0]);
+		}
+		
+		$('#zoomout').click(function() {
+			current = Math.round(parseFloat($('.mapContainer').css('zoom')) * 100) / 100;
+			if( current == 'NaN' ) current = 0.5;
+			current -= 0.1;
+			if( current == 0.5 ) {
+				$('.mapContainer').css('zoom', '');
+			} else {
+				$('.mapContainer').css('zoom', current);
+			}
+		});
+		
+		$('#zoomin').click(function() {
+			current = Math.round(parseFloat($('.mapContainer').css('zoom')) * 100) / 100;
+			if( current == 'NaN' ) current = 0.5;
+			current += 0.1;
+			if( current == 0.5 ) {
+				$('.mapContainer').css('zoom', '');
+			} else {
+				$('.mapContainer').css('zoom', current);
+			}
+		});
+		
+		$('#save').click(function() {
+			indoormap.save(mapData, KEY);
+		});
+
+	});
+	</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<html>
+<head>
+
+<title>AllShoppings Map</title>
+<!-- Library styles -->
+<link href="/main-be/css/indoormap.css" rel="stylesheet">
+
+</head>
+<body>
+
+	<div class="mapContainer" style="float: left;">
+	<canvas id="map"></canvas>
+	</div>
+	<a href="#" id="zoomin">zoom in</a>
+	<a href="#" id="zoomout">zoom out</a>
+	<a href="#" id="save">save</a>
+
+	<div id="zoneNameContainer"
+		style="float: right; width: 600px; height: 600px;">
+		<table>
+			<tr>
+				<td>ID</td>
+				<td>Zone</td>
+			</tr>
+			#foreach( $wifiSpot in $!wifiSpots )
+			<tr>
+				<td>$!wifiSpot.identifier</td>
+				<td><input type="text" id="zoneName-$!wifiSpot.identifier" value="$!wifiSpot.zoneName"/></td>
+			</tr>
+			#end
+		</table>
+	</div>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="/main-be/js/jquery.overscroll.js"></script>
+	<script src="/main-be/js/heatmap.min.js"></script>
+	<script src="/main-be/js/indoormap.js"></script>
+
+	<script>
+	$(document).ready( function() {
+		
+		KEY = '$!floorMap.identifier';
+		
+		var mapData = indoormap.loadAndParseURL(KEY);
+		$('#map').css('background-image', 'url(/img/' + mapData.imageId + ')');
+		$('#map').css('height', mapData.mapHeight + 'px');
+		$('#map').css('width', mapData.mapWidth + 'px');
+		
+		if( !mapData.corrected ) {
+			mapData = indoormap.correct(mapData);
+		}
+		
+		indoormap.init();
+		indoormap.draw(mapData, $('.mapContainer')[0]);
+		if( indoormap.queryString()['noHeatMap'] != 'true' )  {
+			$('#save').css('display', 'none');
+			indoormap.drawHeatMap(mapData, KEY, $('.mapContainer')[0]);
+			$('#zoneNameContainer').css('display', 'none');
+		}
+		
+		$('#zoomout').click(function() {
+			current = Math.round(parseFloat($('.mapContainer').css('zoom')) * 100) / 100;
+			if( current == 'NaN' ) current = 0.5;
+			current -= 0.1;
+			if( current == 0.5 ) {
+				$('.mapContainer').css('zoom', '');
+			} else {
+				$('.mapContainer').css('zoom', current);
+			}
+		});
+		
+		$('#zoomin').click(function() {
+			current = Math.round(parseFloat($('.mapContainer').css('zoom')) * 100) / 100;
+			if( current == 'NaN' ) current = 0.5;
+			current += 0.1;
+			if( current == 0.5 ) {
+				$('.mapContainer').css('zoom', '');
+			} else {
+				$('.mapContainer').css('zoom', current);
+			}
+		});
+		
+		$('#save').click(function() {
+			indoormap.save(mapData, KEY);
+		});
+
+		#foreach( $wifiSpot in $!wifiSpots )
+			$('#zoneName-$!wifiSpot.identifier').focus(function() {
+				indoormap.onfocus('$!wifiSpot.identifier', mapData);
+			});
+		
+			$('#zoneName-$!wifiSpot.identifier').focusout(function() {
+				indoormap.onfocusout('$!wifiSpot.identifier', mapData);
+			});
+		#end
+
+	});
+	</script>
+</body>
+</html>

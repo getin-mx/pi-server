@@ -1,0 +1,117 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>mobi.allshoppings</groupId>
+		<artifactId>pi-server</artifactId>
+		<version>0.1</version>
+	</parent>
+
+	<groupId>com.inodes</groupId>
+	<artifactId>datanucleus-gae-mappings</artifactId>
+	<version>1.0</version>
+	<packaging>jar</packaging>
+
+	<name>Datanucleus GAE Mappings</name>
+	<url>http://www.inodes-it.com</url>
+
+	<scm>
+		<url>http://development.inodes-it.com/svn/repos/mobi.allshoppings/com.inodes.datanucleus-gae-mappingsy/trunk</url>
+		<connection>scm:svn:http://development.inodes-it.com/svn/repos/mobi.allshoppings/com.inodes.datanucleus-gae-mappings/trunk</connection>
+	</scm>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+
+	<organization>
+		<name>iNODeS IT</name>
+		<url>http://www.inodes-it.com</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>mhapanow</id>
+			<name>Matias Hapanowicz</name>
+			<email>mhapanowicz@inodes-it.com</email>
+			<url>http://www.inodes-it.com</url>
+			<organization>iNODeS IT</organization>
+			<organizationUrl>http://www.inodes-it.com</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mongodb.version>2.13.3</mongodb.version>
+	</properties>
+
+	<dependencies>
+		<!-- JDO -->
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-core</artifactId>
+			<version>[3.2.0, 3.2.99)</version>
+		</dependency>
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-rdbms</artifactId>
+			<version>[3.2.0, 3.2.99)</version>
+		</dependency>
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-api-jdo</artifactId>
+			<version>[3.2.0, 3.2.99)</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.jdo</groupId>
+			<artifactId>jdo-api</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+		<!-- Mongo DB -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>${mongodb.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+					</archive>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>

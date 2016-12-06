@@ -1,0 +1,69 @@
+<script type="text/javascript">
+
+$(function() {
+	$.getJSON('/main-be/metrics/chartData?metricEntity=VisitorUser&metricType=4&filterNames=age&filter=gender=male&entityKind=$entityKind&entityId=$entityId&callback=?', function(data) {
+		// Create the chart
+		$('#visitors_male_users_age_widget_container').highcharts({
+			lang : {
+				contextButtonTitle : 'Menu',
+				decimalPoint : '.',
+				downloadJPEG : 'Descargar JPEG',
+				downloadPDF : 'Descargar PDF',
+				downloadPNG : 'Descargar PNG',
+				downloadSVG : 'Descargar SVG',
+				loading : 'Cargando...',
+				months : ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+				printChart : 'Imprimir',
+				rangeSelectorFrom : 'Desde',
+				rangeSelectorTo : 'Hasta',
+				rangeSelectorZoom : 'Zoom',
+				resetZoom : 'Reestablecer Zoom',
+				resetZoomTitle : 'Zoom 1:1',
+				thousandsSep : ',',
+				weekdays : ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado']
+			},
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: $.i18n._('counters.visitors.malebyage.title')
+            },
+            tooltip: {
+                formatter: function() {
+                    return '<b>'+  $.i18n._('counters.activeusers.' + this.point.name) +'</b>: '+ this.percentage.toFixed(2) +' %';
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000',
+                        connectorColor: '#000000',
+                        formatter: function() {
+                            return '<b>'+  $.i18n._('counters.activeusers.' + this.point.name)  +'</b>: '+ this.percentage.toFixed(2) +' %';
+                        }
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: $.i18n._('counters.visitors.malebyage.title'),
+                data: data
+            }]
+        });
+	});
+
+});
+</script>
+
+
+<div class="widget" id="visitors_male_users_age_widget" data-icon="users" data-collapsed="false" data-collapsible="false">
+	<h3 class="handle">#springMessage("counters.visitors.malebyage.title")</h3>
+	<div>
+		<div id="visitors_male_users_age_widget_container" style="height: 400px; min-width: 400px"></div>
+	</div>
+</div>

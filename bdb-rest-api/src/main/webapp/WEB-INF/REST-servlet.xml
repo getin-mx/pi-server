@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+>
+
+	<!-- ** Creates a router and map the REST services ** -->
+	<bean id="root" class="mobi.allshoppings.bdb.tools.RestletExtensionSpringRouter">
+		<property name="routesMap">
+			<map>
+				<entry key="/dummy" 						value-ref="spring.dummy.rest.resource" />
+				<entry key="/myip" 							value-ref="spring.ipaddress.rest.resource" />
+			    <entry key="/auth" 							value-ref="spring.auth.rest.resource" />
+				<entry key="/pass" 							value-ref="spring.pass.rest.resource" />
+				<entry key="/user" 							value-ref="spring.user.rest.resource" />
+				<entry key="/user/{identifier}" 			value-ref="spring.user.rest.resource" />
+				<entry key="/me" 							value-ref="spring.user.rest.resource" />
+				<entry key="/mymenu" 						value-ref="spring.currentusermenu.rest.resource" />
+				<entry key="/area" 							value-ref="spring.area.rest.resource" />
+				<entry key="/area/{identifier}" 			value-ref="spring.area.rest.resource" />
+				<entry key="/category" 						value-ref="spring.area.rest.resource" />
+				<entry key="/category/{identifier}" 		value-ref="spring.area.rest.resource" />
+				<entry key="/countries" 					value-ref="spring.countries.rest.resource" />
+				<entry key="/service" 						value-ref="spring.service.rest.resource" />
+				<entry key="/service/{identifier}" 			value-ref="spring.service.rest.resource" />
+				<entry key="/offerType" 					value-ref="spring.offertype.rest.resource" />
+				<entry key="/offerType/{identifier}"		value-ref="spring.offertype.rest.resource" />
+				<entry key="/shopping" 						value-ref="spring.shopping.rest.resource" />
+				<entry key="/shopping/{identifier}" 		value-ref="spring.shopping.rest.resource" />
+				<entry key="/brand" 						value-ref="spring.brand.rest.resource" />
+				<entry key="/brand/{identifier}" 			value-ref="spring.brand.rest.resource" />
+				<entry key="/store" 						value-ref="spring.store.rest.resource" />
+				<entry key="/store/{identifier}" 			value-ref="spring.store.rest.resource" />
+				<entry key="/offer" 						value-ref="spring.offer.rest.resource" />
+				<entry key="/offer/{identifier}" 			value-ref="spring.offer.rest.resource" />
+				<entry key="/menu" 							value-ref="spring.usermenu.rest.resource" />
+				<entry key="/menu/{identifier}" 			value-ref="spring.usermenu.rest.resource" />
+				<entry key="/apdevice" 						value-ref="spring.apdevice.rest.resource" />
+				<entry key="/apdevice/{identifier}" 		value-ref="spring.apdevice.rest.resource" />
+				<entry key="/apdassignation" 				value-ref="spring.apdassignation.rest.resource" />
+				<entry key="/apdassignation/{identifier}" 	value-ref="spring.apdassignation.rest.resource" />
+				<entry key="/process" 						value-ref="spring.process.rest.resource" />
+				<entry key="/process/{identifier}" 			value-ref="spring.process.rest.resource" />
+				<entry key="/requestProcess" 				value-ref="spring.requestprocess.rest.resource" />
+				
+				<!-- Dashboard Entries -->
+				<entry key="/dashboard/apuptime" 				value-ref="spring.dashboard.apuptime.rest.resource" />
+				<entry key="/dashboard/assignedBrandList" 		value-ref="spring.dashboard.assignedbrandlist.rest.resource" />
+				<entry key="/dashboard/assignedStoreList" 		value-ref="spring.dashboard.assignedstorelist.rest.resource" />
+				<entry key="/dashboard/floormapList" 			value-ref="spring.dashboard.floormaplist.rest.resource" />
+				<entry key="/dashboard/floormapData" 			value-ref="spring.dashboard.floormapdata.rest.resource" />
+				<entry key="/dashboard/floormapJourneyData" 	value-ref="spring.dashboard.floormapjourneydata.rest.resource" />
+				<entry key="/dashboard/heatmapData" 			value-ref="spring.dashboard.heatmapdata.rest.resource" />
+				<entry key="/dashboard/pieData" 				value-ref="spring.dashboard.piedata.rest.resource" />
+				<entry key="/dashboard/aphentryData" 			value-ref="spring.dashboard.aphentrydata.rest.resource" />
+				<entry key="/dashboard/externalGeoData" 		value-ref="spring.dashboard.externalgeodata.rest.resource" />
+				<entry key="/dashboard/storeTicketData" 		value-ref="spring.dashboard.storeticketdata.rest.resource" />
+			</map>
+		</property>
+	</bean>
+ 	
+ 	<!-- ** REST resources ** -->
+ 	<bean id="spring.dummy.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dummy.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.ipaddress.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="ipaddress.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.auth.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="auth.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.pass.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="pass.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.user.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="user.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.area.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="area.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.service.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="service.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.offertype.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="offertype.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.shopping.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="shopping.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.countries.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="countries.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.brand.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="brand.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.store.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="store.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.offer.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="offer.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.apdevice.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="apdevice.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.apdassignation.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="apdassignation.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.usermenu.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="usermenu.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.currentusermenu.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="currentusermenu.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.process.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="process.rest.resource" />
+ 	</bean>
+	<bean id="spring.requestprocess.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+	 	<lookup-method name="create" bean="requestprocess.rest.resource" />
+	</bean>
+
+
+	<!-- Dashboard Recources -->
+ 	<bean id="spring.dashboard.apuptime.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.apuptime.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.assignedbrandlist.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.assignedbrandlist.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.assignedstorelist.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.assignedstorelist.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.floormaplist.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.floormaplist.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.floormapdata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.floormapdata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.floormapjourneydata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.floormapjourneydata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.piedata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.piedata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.heatmapdata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.heatmapdata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.aphentrydata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.aphentrydata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.externalgeodata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.externalgeodata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.storeticketdata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.storeticketdata.rest.resource" />
+ 	</bean>
+
+</beans>

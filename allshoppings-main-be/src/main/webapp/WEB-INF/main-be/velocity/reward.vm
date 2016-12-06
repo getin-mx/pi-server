@@ -1,0 +1,346 @@
+#parse("/includes/macros.vm")
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+#if( $update )
+	<title>#springMessage("app.title") | #springMessage("app.reward.edit")</title>
+#else
+	<title>#springMessage("app.title") | #springMessage("app.reward")</title>
+#end
+
+	<meta name="description" content='#springMessage("app.reward.description")'>
+	<meta name="author" content='#springMessage("app.url")'>
+
+#parse("includes/header.vm")
+
+	<!-- local functionality script -->
+	<script src="/main-be/js/reward.js"></script>
+	
+	#if( $canwrite == false )
+	<script>
+		$(document).ready(function() {
+			$.setReadOnly();
+		});
+	</script>
+	#end
+</head>
+<body>
+#parse("includes/topmenu.vm")
+#parse("includes/leftmenu.vm")
+	<!-- content -->
+	<section id="content">
+		<ul id="headbreadcrumb" class="breadcrumb" data-connect="breadcrumbcontent">
+			<li><a href="#">#springMessage("app.reward.generalData")</a></li>
+			#if( $update )
+			<li><a href="#">#springMessage("app.reward.media")</a></li>
+			<li><a href="#">#springMessage("app.audit")</a></li>
+			<li><a href="#">#springMessage("app.reward.privacyPolicies")</a></li>
+			#end
+		</ul>
+
+		<div class="g12 nodrop">
+			<table>
+				<tr>
+					<td width="110">
+					#if( $reward.AvatarId )
+						<a class="fancybox" href="/img/$!reward.AvatarId" title="$!reward.Fullname"><img src="/img/$!reward.AvatarId" width="100" height="100" alt=""></a>
+					#else
+						<a class="fancybox" href="/main-be/css/images/defaultavatar.png"><img src="/main-be/css/images/defaultavatar.png" width="100" height="100" alt=""></a>
+					#end
+					</td>
+					<td style="text-align: left;">
+						<div class="g12 nodrop">
+							#if( $update )
+								<h1>#springMessage("app.reward.edit")</h1>
+							#else
+								<h1>#springMessage("app.reward")</h1>
+							#end
+							<p>#springMessage("app.reward.description")</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<div id="breadcrumbcontent">
+				<!-- Reward Profile -->
+				<div>
+					<form id="contactForm" method="post" #if( $canwrite == true ) action="doUpdateReward" #end autocomplete="off">
+						<fieldset>
+							<label style="height: 30px;">
+								#springMessage("app.reward.generalData")
+								#if( $canwrite == true )
+								<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+								<button class="fr" onclick="window.location='/main-be/rewardList';" >#springMessage("app.button.back")</button>
+								#end
+							</label>
+
+							<section>
+								<label>#springMessage("data.rewardName")</label>
+								<div>
+								<input style="width: 97% !important;" type="text" id="name" required data-errortext='#springMessage("error.name")' value="$!reward.Name">
+								#if ($update)
+									<input type="hidden" id="rewardid" value="$reward.Identifier">
+									<input type="hidden" id="crudtype" value="edit">
+								#else
+									<input type="hidden" id="rewardid" value="">
+									<input type="hidden" id="crudtype" value="create">
+								#end
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.country")</label>
+								<div>
+									#select("country", $!reward.Country, $svh.getCountryNames(${lang}), $svh.getCountryNames(${lang}))
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.pointsNeeded")</label>
+								<div>
+									<input style="width: 120px !important;" data-regex="^[0-9 \- .]+$" id="pointsNeeded" value="$!reward.PointsNeeded">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.shopping")</label>
+								<div>
+									#multiselect("shoppings", $!reward.Shoppings, $shoppingOfferNames, $shoppingOfferIds)
+									<button id="levelBrands" class="fr">#springMessage("app.button.levelBrands")</button>
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.brand")</label>
+								<div>
+									#multiselect("brands", $!reward.Brands, $brandOfferNames, $brandOfferIds)
+									<button id="levelShoppings" class="fr">#springMessage("app.button.levelShoppings")</button>
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.areas")</label>
+								<div>
+									#multiselect("areas", $!reward.AreaId, $areaNames, $areaIds)
+									<button id="levelAreas" class="fr">#springMessage("app.button.levelAreas")</button>
+								</div>
+							</section>
+
+							<section>
+								<label for="avatar">#springMessage("data.avatar")</label>
+								<div>
+									<table>
+										<tr>
+											<td width="130" style="vertical-align: middle;">
+											#if( $reward.AvatarId )
+												<a id="avatarAnchor" class="fancybox" href="/img/$!reward.AvatarId" title="$!reward.Fullname"><img id="avatarImage" src="/img/$!reward.AvatarId" width="116" height="116" alt=""></a>
+											#else
+												<a id="avatarAnchor" class="fancybox" href="/main-be/css/images/defaultavatar.png" title=""><img id="avatarImage" src="/main-be/css/images/defaultavatar.png" width="116" height="116" alt=""></a>
+											#end
+											<input type="hidden" id="avatarId"/>
+											</td>
+											<td>
+												<input type="file" id="avatar">
+											</td>
+										</tr>
+									</table>
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.rewardBriefDescription")</label>
+								<div>
+									<textarea id="description" class="html" rows="15" data-buttons="bold|italic|underline">$!reward.description</textarea>
+								</div>
+							</section>
+
+
+							<label>#springMessage("app.reward.messaging")</label>
+
+							<section>
+								<label>#springMessage("data.notifyDays")</label>
+								<div>
+									#multiselect("notifyDays", $!reward.NotifyDays, $availableDaysNames, $availableDaysIds)
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.hours")</label>
+								<div>
+									<input style="width: 48% !important;" type="time" id="notifyFromHour" required
+										value="$!reward.NotifyFromHour">
+									<input style="width: 48% !important;" type="time" id="notifyToHour"
+										value="$!reward.NotifyToHour">
+								</div>
+							</section>
+
+							<section>
+								<label for="validFrom">#springMessage("data.validfrom")</label>
+								<div>
+									<input id="validFrom" name="validFrom" type="text" style="width: 90px !important;" value="$svh.formatDate($!reward.validFrom)">
+								</div>
+							</section>
+
+							<section>
+								<label for="validTo">#springMessage("data.validto")</label>
+								<div>
+									<input id="validTo" name="validTo" type="text" style="width: 90px !important;" value="$svh.formatDate($!reward.validTo)">
+								</div>
+							</section>
+
+							<section>
+								<div>
+									#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+									#else
+									<button class="fr" onclick="window.location='/main-be/rewardList';" >#springMessage("app.button.back")</button>
+									#end
+								</div>
+							</section>
+
+							<section>
+								<div id="contactFormMsg"></div>
+							</section>
+
+						</fieldset>
+					</form>
+				</div>
+
+				#if( $update )
+				<!-- Multimedia -->
+				<div>
+					<form id="mediaForm" method="post" #if( $canwrite == true ) action="doUpdateRewardMedia" #end autocomplete="off">
+						<fieldset>
+							<input type="hidden" id="rewardid" value="$reward.Identifier">
+							<label style="height: 30px;">
+								#springMessage("app.reward.media")
+								#if( $canwrite == true )
+								<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+								<button class="fr" onclick="window.location='/main-be/rewardList';" >#springMessage("app.button.back")</button>
+								#end
+							</label>
+
+							<section>
+								<label for="mediaUpload">#springMessage("app.reward.uploadPhotos")<br>
+								<span>#springMessage("app.reward.uploadPhotosMeasures")</span>
+								</label>
+								<div>
+									<input type="file" id="mediaUpload" multiple>
+								</div>
+							</section>
+
+							<section>
+								<label for="media">#springMessage("app.reward.currentPhotos")</label>
+								<ul id="mediaGallery" class="gallery">
+								#foreach( $photo in $!reward.PhotoId )
+									<li><a href="/img/$photo"><img src="/img/$photo" width="116" height="116" alt=""></a></li>
+								#end
+								</ul>
+							</section>
+
+							<section>
+								<div>
+									#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+									#else
+									<button class="fr" onclick="window.location='/main-be/rewardList';" >#springMessage("app.button.back")</button>
+									#end
+								</div>
+							</section>
+
+							<section>
+								<div id="invoicingFormMsg"></div>
+							</section>
+							
+						</fieldset>
+					</form>
+				</div>
+
+				<!-- Audit -->
+				<div>
+					<form id="auditForm" autocomplete="off">
+						<fieldset>
+							<input type="hidden" id="rewardid" value="$reward.Identifier">
+							<label style="height: 30px;">
+								#springMessage("app.audit")
+							</label>
+
+							<section>
+								<label for="creationDateTime">#springMessage("app.audit.creationDateTime")</label>
+								<div>
+									$svh.formatDate($reward.creationDateTime) - $svh.formatTime($reward.creationDateTime)
+								</div>
+							</section>
+
+							<section>
+								<label for="lastUpdate">#springMessage("app.audit.lastUpdate")</label>
+								<div>
+									$svh.formatDate($reward.lastUpdate) - $svh.formatTime($reward.lastUpdate)
+								</div>
+							</section>
+
+							<section>
+								<label for="lastUpdate">#springMessage("app.audit.owner")</label>
+								<div>
+									$reward.acl.owner
+								</div>
+							</section>
+
+							<section>
+								<div id="auditFormMsg"></div>
+							</section>
+
+						</fieldset>
+					</form>
+				</div>
+
+				<!-- Privacy Policies -->
+				<div>
+					<form id="policiesForm" method="post" #if( $canwrite == true ) action="doUpdateRewardPolicies" #end autocomplete="off">
+						<fieldset>
+							<input type="hidden" id="rewardid" value="$reward.Identifier">
+							<label style="height: 30px;">
+								#springMessage("app.profile.privacyPolicies")
+								#if( $canwrite == true )
+								<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+								<button class="fr" onclick="window.location='/main-be/rewardList';" >#springMessage("app.button.back")</button>
+								#end
+							</label>
+							<section>
+								<label>#springMessage("data.privacyPolicies")</label>
+								<div>
+									<textarea id="policies" class="html" rows="30" data-buttons="bold|italic|underline">$!reward.policies</textarea>
+								</div>
+							</section>
+
+							<section>
+								<div>
+									#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+									#else
+									<button class="fr" onclick="window.location='/main-be/rewardList';" >#springMessage("app.button.back")</button>
+									#end
+								</div>
+							</section>
+
+							<section>
+								<div id="policiesFormMsg"></div>
+							</section>
+
+						</fieldset>
+					</form>
+				</div>
+
+				#end
+			</div>
+		</div>
+
+	</section>
+#parse("includes/footer.vm")
+</body>
+</html>

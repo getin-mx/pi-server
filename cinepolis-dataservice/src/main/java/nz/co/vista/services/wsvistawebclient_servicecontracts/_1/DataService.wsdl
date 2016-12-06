@@ -1,0 +1,1210 @@
+<wsdl:definitions
+    
+     targetNamespace="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1"
+     xmlns:WL5G3N4="http://schemas.xmlsoap.org/wsdl/soap/"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:WL5G3N3="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1"
+     xmlns:WL5G3N2="http://vista.co.nz/services/WSVistaWebClient.DataTypes/1/"
+     xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:WL5G3N1="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/"
+    >
+    <wsp:Policy wsu:Id="DataService_Fault_Policy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+         xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"/>
+    <wsp:Policy wsu:Id="DataService_Input_Policy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+         xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+            <sp:Body/>
+            <sp:Header Namespace="http://www.w3.org/2005/08/addressing"/>
+            <sp:Header Namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+            <sp:Header Name="fmw-context" Namespace="http://xmlns.oracle.com/fmw/context/1.0"/>
+            <sp:Header Name="SignatureConfirmation" Namespace="http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd"/>
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+            <sp:Body/>
+            <sp:Header Name="fmw-context" Namespace="http://xmlns.oracle.com/fmw/context/1.0"/>
+        </sp:EncryptedParts>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="DataService_Output_Policy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+         xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+            <sp:Body/>
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+            <sp:Body/>
+        </sp:EncryptedParts>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="wss11_message_protection_service_policy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+         xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+            <wsp:Policy>
+                <sp:ProtectionToken>
+                    <wsp:Policy>
+                        <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+                            <wsp:Policy>
+                                <sp:RequireThumbprintReference/>
+                                <sp:WssX509V3Token11/>
+                            </wsp:Policy>
+                        </sp:X509Token>
+                    </wsp:Policy>
+                </sp:ProtectionToken>
+                <sp:AlgorithmSuite>
+                    <wsp:Policy>
+                        <sp:Basic128/>
+                    </wsp:Policy>
+                </sp:AlgorithmSuite>
+                <sp:Layout>
+                    <wsp:Policy>
+                        <sp:Lax/>
+                    </wsp:Policy>
+                </sp:Layout>
+                <sp:IncludeTimestamp/>
+                <sp:OnlySignEntireHeadersAndBody/>
+            </wsp:Policy>
+        </sp:SymmetricBinding>
+        <sp:Wss11 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+            <wsp:Policy>
+                <sp:RequireSignatureConfirmation/>
+                <sp:MustSupportRefEncryptedKey/>
+            </wsp:Policy>
+        </sp:Wss11>
+    </wsp:Policy>
+    <wsdl:types>
+        <s:schema elementFormDefault="qualified" targetNamespace="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/"
+             xmlns:WL5G3N5="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:WL5G3N6="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+             xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/"
+             xmlns:s1="http://vista.co.nz/services/WSVistaWebClient.DataTypes/1/" xmlns:s3="http://microsoft.com/wsdl/types/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+             xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+             xmlns:tns="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1"
+             xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+            <s:element name="GetCinemaListRequest" type="s0:GetCinemaListRequest"/>
+            <s:complexType name="GetCinemaListRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalMovieName" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalOperatorCode" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalIncludeOperator" type="s:boolean"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalOrderByOperator" type="s:boolean"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalClientClass" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalCinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalBizDate" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalBizStartTimeOfDay" type="s:int"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalIncludeGiftStores" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetCinemaListAllRequest" type="s0:GetCinemaListAllRequest"/>
+            <s:complexType name="GetCinemaListAllRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalIncludeOperator" type="s:boolean"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalOrderByOperator" type="s:boolean"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalIncludeGiftStores" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetCinemaOpForSessionRequest" type="s0:GetCinemaOpForSessionRequest"/>
+            <s:complexType name="GetCinemaOpForSessionRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="SessionId" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+        </s:schema>
+        <s:schema elementFormDefault="qualified" targetNamespace="http://vista.co.nz/services/WSVistaWebClient.DataTypes/1/"
+             xmlns:WL5G3N5="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:WL5G3N6="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+             xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/"
+             xmlns:s1="http://vista.co.nz/services/WSVistaWebClient.DataTypes/1/" xmlns:s3="http://microsoft.com/wsdl/types/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+             xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+             xmlns:tns="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1"
+             xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+            <s:import namespace="http://microsoft.com/wsdl/types/"/>
+            <s:element name="GetCinemaListResult" type="s1:DataResponse"/>
+            <s:complexType name="DataResponse">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="1" name="Result" type="s1:ResultCode"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="DatasetXML" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:simpleType name="ResultCode">
+                <s:restriction base="s:string">
+                    <s:enumeration value="OK"/>
+                    <s:enumeration value="UnexpectedError"/>
+                    <s:enumeration value="DBError"/>
+                    <s:enumeration value="MembershipError"/>
+                    <s:enumeration value="InvalidRequestData"/>
+                    <s:enumeration value="CinemaConnectError"/>
+                    <s:enumeration value="LoyaltyConnectError"/>
+                    <s:enumeration value="InsufficientPoints"/>
+                    <s:enumeration value="SeatsUnavailable"/>
+                    <s:enumeration value="FailedSeatDataRetrieve"/>
+                    <s:enumeration value="FailedOrderValueProcess"/>
+                    <s:enumeration value="PrepareOrderForCompleteError"/>
+                    <s:enumeration value="PaymentDeclined"/>
+                    <s:enumeration value="PaymentSystemError"/>
+                    <s:enumeration value="PostChargeCommitError"/>
+                    <s:enumeration value="UnpaidBookingsDisallowed"/>
+                    <s:enumeration value="VouchersDisallowed"/>
+                    <s:enumeration value="MemberNotFound"/>
+                    <s:enumeration value="MemberPasswordIncorrect"/>
+                    <s:enumeration value="LoyaltyTimeout"/>
+                    <s:enumeration value="LoyaltyUserNameAlreadyExists"/>
+                    <s:enumeration value="LoyaltyNotSupportedAtCinema"/>
+                    <s:enumeration value="MemberEmailIncorrect"/>
+                    <s:enumeration value="MemberLoginResetDisallowed"/>
+                    <s:enumeration value="PaymentSuccessWithErrors"/>
+                    <s:enumeration value="PaymentVoidSuccessPostCommit"/>
+                    <s:enumeration value="PaymentVoidSuccessPreCommit"/>
+                    <s:enumeration value="PaymentVoidSuccessPayTotalMismatch"/>
+                    <s:enumeration value="FailedToAllocateCard"/>
+                </s:restriction>
+            </s:simpleType>
+            <s:element name="GetCinemaListAllResult" type="s1:DataResponse"/>
+            <s:element name="GetMovieListRequest" type="s1:GetMovieListRequest"/>
+            <s:complexType name="GetMovieListRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalCinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalOperatorCode" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalOrderByOperator" type="s:boolean"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalClientClass" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalBizDate" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalBizStartTimeOfDay" type="s:int"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalIncludeGiftStores" type="s:boolean"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetMovieListResult" type="s1:DataResponse"/>
+            <s:element name="GetMovieInfoListRequest" type="s1:GetMovieInfoListRequest"/>
+            <s:complexType name="GetMovieInfoListRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalMovieName" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalTypeFlag" type="s1:MovieTypeFlag"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalClientClass" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:simpleType name="MovieTypeFlag">
+                <s:restriction base="s:string">
+                    <s:enumeration value="NotSet"/>
+                    <s:enumeration value="Feature"/>
+                    <s:enumeration value="NowShowing"/>
+                    <s:enumeration value="ComingSoon"/>
+                    <s:enumeration value="ComingSoonOnSale"/>
+                    <s:enumeration value="ComingSoonNoSession"/>
+                    <s:enumeration value="NowShowingToday"/>
+                    <s:enumeration value="NowShowingOnSale"/>
+                </s:restriction>
+            </s:simpleType>
+            <s:element name="GetMovieInfoListResult" type="s1:DataResponse"/>
+            <s:element name="GetMoviePeopleRequest" type="s1:GetMoviePeopleRequest"/>
+            <s:complexType name="GetMoviePeopleRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="MovieId" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetMoviePeopleResult" type="s1:DataResponse"/>
+            <s:element name="GetSessionListRequest" type="s1:GetSessionListRequest"/>
+            <s:complexType name="GetSessionListRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="MovieId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalMovieId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalMovieName" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalOperatorCode" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalClientClass" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalEventCode" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalBizStartHourOfDay" type="s:int"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalBizDate" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalSessionDisplayCutOff" type="s:int"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetSessionListResult" type="s1:DataResponse"/>
+            <s:element name="GetSessionInfoRequest" type="s1:GetSessionInfoRequest"/>
+            <s:complexType name="GetSessionInfoRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="SessionId" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetSessionInfoResult" type="s1:DataResponse"/>
+            <s:element name="GetTicketTypeListRequest" type="s1:GetTicketTypeListRequest"/>
+            <s:complexType name="GetTicketTypeListRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalUserSessionIdForLoyaltyTickets"
+                         type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalLoyaltyTicketMatchesHOCode"
+                         type="s:boolean"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="SessionId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalShowNonATMTickets" type="s:boolean"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalReturnAllRedemptionAndCompTickets"
+                         type="s:boolean"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalReturnAllLoyaltyTickets"
+                         type="s:boolean"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalAreaCategoryCode" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalClientClass" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalReturnLoyaltyRewardFlag"
+                         type="s:boolean"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalSeparatePaymentBasedTickets"
+                         type="s:boolean"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalShowLoyaltyTicketsToNonMembers"
+                         type="s:boolean"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalEnforceChildTicketLogic"
+                         type="s:boolean"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalIncludeZeroValueTickets"
+                         type="s:boolean"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetTicketTypeListResult" type="s1:DataResponse"/>
+            <s:element name="GetTicketTypeFromBarcodeRequest" type="s1:GetTicketTypeFromBarcodeRequest"/>
+            <s:complexType name="GetTicketTypeFromBarcodeRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="SessionId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="Barcode" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetTicketTypeFromBarcodeResult" type="s1:DataResponse"/>
+            <s:element name="GetTicketTypePackageRequest" type="s1:GetTicketTypePackageRequest"/>
+            <s:complexType name="GetTicketTypePackageRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="SessionId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="TicketTypeCode" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetTicketTypePackageResult" type="s1:DataResponse"/>
+            <s:element name="GetEventListRequest" type="s1:GetEventListRequest"/>
+            <s:complexType name="GetEventListRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="TypeFlag" type="s1:MovieTypeFlag"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalMovieName" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalOperatorCode" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalEventCode" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalClientClass" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetEventListResult" type="s1:DataResponse"/>
+            <s:element name="GetEventMovieListRequest" type="s1:GetEventMovieListRequest"/>
+            <s:complexType name="GetEventMovieListRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="EventCode" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalClientClass" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetEventMovieListResult" type="s1:DataResponse"/>
+            <s:element name="GetShowtimeDateListRequest" type="s1:GetShowtimeDateListRequest"/>
+            <s:complexType name="GetShowtimeDateListRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="1" name="OptionalBizStartHourOfDay" type="s:int"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaId" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetShowtimeDateListResult" type="s1:DataResponse"/>
+            <s:element name="GetCinemaOpForSessionResult" type="s1:DataResponse"/>
+            <s:element name="GetPrintStreamResult" type="s1:DataResponse"/>
+            <s:element name="GetConfirmationDetailsRequest" type="s1:GetConfirmationDetailsRequest"/>
+            <s:complexType name="GetConfirmationDetailsRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="1" name="ConfirmationDetailsType" type="s1:ConfirmationDetailsType"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="VistaBookingNumber" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="VistaTransNumber" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalHistoryID" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:simpleType name="ConfirmationDetailsType">
+                <s:restriction base="s:string">
+                    <s:enumeration value="Booking"/>
+                    <s:enumeration value="Tickets"/>
+                    <s:enumeration value="Seats"/>
+                    <s:enumeration value="Inventory"/>
+                    <s:enumeration value="PaymentLines"/>
+                </s:restriction>
+            </s:simpleType>
+            <s:element name="GetConfirmationDetailsResult" type="s1:DataResponse"/>
+            <s:element name="GetConcessionItemsListRequest" type="s1:GetConcessionItemsListRequest"/>
+            <s:complexType name="GetConcessionItemsListRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="ClientID" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OrderUserId" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetConcessionItemsListResult" type="s1:DataResponse"/>
+            <s:element name="GetMovieShowtimesRequest" type="s1:GetMovieShowtimesRequest"/>
+            <s:complexType name="GetMovieShowtimesRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="BizDate" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="BizStartTimeOfDay" type="s:int"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalClientClass" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OrderMode" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalSessionDisplayCutOffInMins"
+                         type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="AllSalesChannels" type="s:boolean"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetMovieShowtimesResult" type="s1:DataResponse"/>
+            <s:element name="GetProductInfoRequest" type="s1:GetProductInfoRequest"/>
+            <s:complexType name="GetProductInfoRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="ProductCode" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetProductInfoResult" type="s1:DataResponse"/>
+            <s:element name="GetClientListRequest" type="s1:GetClientListRequest"/>
+            <s:complexType name="GetClientListRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalClientId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="OptionalClientDescription" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetClientListResult" type="s1:DataResponse"/>
+            <s:element name="GCBalanceRequest" type="s1:GiftCardBalanceRequest"/>
+            <s:complexType name="GiftCardBalanceRequest">
+                <s:complexContent mixed="false">
+                    <s:extension base="s1:Request">
+                        <s:sequence>
+                            <s:element maxOccurs="1" minOccurs="1" name="UseGiftCardBalanceMethod" type="s1:GiftCardBalanceMethod"/>
+                            <s:element maxOccurs="1" minOccurs="0" name="CardNo" type="s:string"/>
+                            <s:element maxOccurs="1" minOccurs="0" name="CardType" type="s:string"/>
+                            <s:element maxOccurs="1" minOccurs="0" name="CardExpiry" type="s:string"/>
+                            <s:element maxOccurs="1" minOccurs="0" name="CardExpiryMonth" type="s:string"/>
+                            <s:element maxOccurs="1" minOccurs="0" name="CardExpiryYear" type="s:string"/>
+                            <s:element maxOccurs="1" minOccurs="0" name="CardBalance" type="s:string"/>
+                            <s:element maxOccurs="1" minOccurs="0" name="CinemaID" type="s:string"/>
+                        </s:sequence>
+                    </s:extension>
+                </s:complexContent>
+            </s:complexType>
+            <s:complexType name="Request">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="UserSessionId" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:simpleType name="GiftCardBalanceMethod">
+                <s:restriction base="s:string">
+                    <s:enumeration value="CardNum"/>
+                    <s:enumeration value="CardExpiry"/>
+                    <s:enumeration value="CardExpiryMY"/>
+                </s:restriction>
+            </s:simpleType>
+            <s:element name="GiftCardBalanceRequestResult" type="s1:DataResponse"/>
+            <s:element name="CreateClientRequest" type="s1:CreateClientRequest"/>
+            <s:complexType name="CreateClientRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="ClientId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="WorkstationCode" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="Description" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="SalesChannel" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="UpdateClientRequest" type="s1:UpdateClientRequest"/>
+            <s:complexType name="UpdateClientRequest">
+                <s:complexContent mixed="false">
+                    <s:extension base="s1:CreateClientRequest">
+                        <s:sequence>
+                            <s:element maxOccurs="1" minOccurs="1" name="Status" nillable="true" type="s3:char"/>
+                            <s:element maxOccurs="1" minOccurs="0" name="ConfigXml" type="s:string"/>
+                        </s:sequence>
+                    </s:extension>
+                </s:complexContent>
+            </s:complexType>
+            <s:element name="GetLtyMembershipConcessionItemResult" type="s1:DataResponse"/>
+            <s:element name="GetConfigSettingListResult" type="s1:DataResponse"/>
+            <s:element name="GetCinemaSiteGroupsRequest" type="s1:GetCinemaSiteGroupsRequest"/>
+            <s:complexType name="GetCinemaSiteGroupsRequest"/>
+        </s:schema>
+        <s:schema elementFormDefault="qualified" targetNamespace="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1"
+             xmlns:WL5G3N5="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:WL5G3N6="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+             xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/"
+             xmlns:s1="http://vista.co.nz/services/WSVistaWebClient.DataTypes/1/" xmlns:s3="http://microsoft.com/wsdl/types/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+             xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+             xmlns:tns="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1"
+             xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+            <s:element name="GetPrintStreamRequest" type="tns:GetPrintStreamRequest"/>
+            <s:complexType name="GetPrintStreamRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="UserSessionId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="PrintDocumentType" type="tns:PrintDocumentType"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="PrintDocumentCode" nillable="true"
+                         type="s:int"/>
+                </s:sequence>
+            </s:complexType>
+            <s:simpleType name="PrintDocumentType">
+                <s:restriction base="s:string">
+                    <s:enumeration value="All"/>
+                    <s:enumeration value="BookingVoucher"/>
+                    <s:enumeration value="Receipt"/>
+                </s:restriction>
+            </s:simpleType>
+            <s:element name="CreateClientResult" type="tns:Response"/>
+            <s:complexType name="Response">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="1" name="Result" type="tns:ResultCode"/>
+                </s:sequence>
+            </s:complexType>
+            <s:simpleType name="ResultCode">
+                <s:restriction base="s:string">
+                    <s:enumeration value="OK"/>
+                    <s:enumeration value="UnexpectedError"/>
+                    <s:enumeration value="DBError"/>
+                    <s:enumeration value="MembershipError"/>
+                    <s:enumeration value="InvalidRequestData"/>
+                    <s:enumeration value="CinemaConnectError"/>
+                    <s:enumeration value="LoyaltyConnectError"/>
+                    <s:enumeration value="InsufficientPoints"/>
+                    <s:enumeration value="SeatsUnavailable"/>
+                    <s:enumeration value="FailedSeatDataRetrieve"/>
+                    <s:enumeration value="FailedOrderValueProcess"/>
+                    <s:enumeration value="PrepareOrderForCompleteError"/>
+                    <s:enumeration value="PaymentDeclined"/>
+                    <s:enumeration value="PaymentSystemError"/>
+                    <s:enumeration value="PostChargeCommitError"/>
+                    <s:enumeration value="UnpaidBookingsDisallowed"/>
+                    <s:enumeration value="VouchersDisallowed"/>
+                    <s:enumeration value="MemberNotFound"/>
+                    <s:enumeration value="MemberPasswordIncorrect"/>
+                    <s:enumeration value="LoyaltyTimeout"/>
+                    <s:enumeration value="LoyaltyUserNameAlreadyExists"/>
+                    <s:enumeration value="LoyaltyNotSupportedAtCinema"/>
+                    <s:enumeration value="MemberEmailIncorrect"/>
+                    <s:enumeration value="MemberLoginResetDisallowed"/>
+                    <s:enumeration value="PaymentSuccessWithErrors"/>
+                    <s:enumeration value="PaymentVoidSuccessPostCommit"/>
+                    <s:enumeration value="PaymentVoidSuccessPreCommit"/>
+                    <s:enumeration value="PaymentVoidSuccessPayTotalMismatch"/>
+                    <s:enumeration value="FailedToAllocateCard"/>
+                </s:restriction>
+            </s:simpleType>
+            <s:element name="UpdateClientResult" type="tns:Response"/>
+            <s:element name="GetLtyMembershipConcessionItemRequest" type="tns:GetLtyMembershipConcessionItemRequest"/>
+            <s:complexType name="GetLtyMembershipConcessionItemRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="ClientID" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetConfigSettingListRequest" type="tns:GetConfigSettingListRequest"/>
+            <s:complexType name="GetConfigSettingListRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="SettingNames" type="tns:ArrayOfString"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="ArrayOfString">
+                <s:sequence>
+                    <s:element maxOccurs="unbounded" minOccurs="0" name="string" nillable="true" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetOrderHistoryRequest" type="tns:GetOrderHistoryRequest"/>
+            <s:complexType name="GetOrderHistoryRequest">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="MemberEmail" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="LoyaltyMemberId" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetOrderHistoryResult" type="tns:GetOrderHistoryResponse"/>
+            <s:complexType name="GetOrderHistoryResponse">
+                <s:complexContent mixed="false">
+                    <s:extension base="tns:Response">
+                        <s:sequence>
+                            <s:element maxOccurs="1" minOccurs="0" name="NonPackageTickets" type="tns:ArrayOfOrderHistoryLine"/>
+                            <s:element maxOccurs="1" minOccurs="0" name="PackageTickets" type="tns:ArrayOfOrderHistoryLine"/>
+                        </s:sequence>
+                    </s:extension>
+                </s:complexContent>
+            </s:complexType>
+            <s:complexType name="ArrayOfOrderHistoryLine">
+                <s:sequence>
+                    <s:element maxOccurs="unbounded" minOccurs="0" name="OrderHistoryLine" nillable="true"
+                         type="tns:OrderHistoryLine"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="OrderHistoryLine">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="1" name="InitiatedTime" type="s:dateTime"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="BookingNumber" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaName" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaName2" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="MovieName" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="MoveNameAlt" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="TicketPriceInCents" type="s:int"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="TicketDescription" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="TicketDescriptionAlt" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="SessionTime" type="s:dateTime"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="SeatRowId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="SeatNumber" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="BookingFeeInCents" type="s:int"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="IsPaid" type="s:boolean"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="1" name="PackageGroupNumber" type="s:int"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="ParentTicketTypeCode" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="ParentTicketDescription" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="ParentTicketDescriptionAlt" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="PackageSeats" type="tns:ArrayOfSeatInfo"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="ArrayOfSeatInfo">
+                <s:sequence>
+                    <s:element maxOccurs="unbounded" minOccurs="0" name="SeatInfo" nillable="true" type="tns:SeatInfo"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="SeatInfo">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="SeatRowId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="SeatNumber" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetCinemaSiteGroupsResult" type="tns:GetCinemaSiteGroupsResponse"/>
+            <s:complexType name="GetCinemaSiteGroupsResponse">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="1" name="ResultCode" type="s:int"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaSiteGroups" type="tns:ArrayOfCinemaSiteGroupLine"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaSiteGroupLinks" type="tns:ArrayOfCinemaSiteGroupLinkLine"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="ArrayOfCinemaSiteGroupLine">
+                <s:sequence>
+                    <s:element maxOccurs="unbounded" minOccurs="0" name="CinemaSiteGroupLine" nillable="true"
+                         type="tns:CinemaSiteGroupLine"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="CinemaSiteGroupLine">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaSiteGroupId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="Name" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="AreaCode" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="ArrayOfCinemaSiteGroupLinkLine">
+                <s:sequence>
+                    <s:element maxOccurs="unbounded" minOccurs="0" name="CinemaSiteGroupLinkLine" nillable="true"
+                         type="tns:CinemaSiteGroupLinkLine"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="CinemaSiteGroupLinkLine">
+                <s:sequence>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaId" type="s:string"/>
+                    <s:element maxOccurs="1" minOccurs="0" name="CinemaSiteGroupId" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+        </s:schema>
+        <s:schema elementFormDefault="qualified" targetNamespace="http://microsoft.com/wsdl/types/"
+             xmlns:WL5G3N5="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:WL5G3N6="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+             xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/"
+             xmlns:s1="http://vista.co.nz/services/WSVistaWebClient.DataTypes/1/" xmlns:s3="http://microsoft.com/wsdl/types/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+             xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+             xmlns:tns="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1"
+             xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+            <s:simpleType name="char">
+                <s:restriction base="s:unsignedShort"/>
+            </s:simpleType>
+        </s:schema>
+    </wsdl:types>
+    <wsdl:message name="GetCinemaListSoapIn">
+        <wsdl:part name="GetCinemaListRequest" element="WL5G3N1:GetCinemaListRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetCinemaListSoapOut">
+        <wsdl:part name="GetCinemaListResult" element="WL5G3N2:GetCinemaListResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetCinemaListAllSoapIn">
+        <wsdl:part name="GetCinemaListAllRequest" element="WL5G3N1:GetCinemaListAllRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetCinemaListAllSoapOut">
+        <wsdl:part name="GetCinemaListAllResult" element="WL5G3N2:GetCinemaListAllResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetMovieListSoapIn">
+        <wsdl:part name="GetMovieListRequest" element="WL5G3N2:GetMovieListRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetMovieListSoapOut">
+        <wsdl:part name="GetMovieListResult" element="WL5G3N2:GetMovieListResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetMovieInfoListSoapIn">
+        <wsdl:part name="GetMovieInfoListRequest" element="WL5G3N2:GetMovieInfoListRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetMovieInfoListSoapOut">
+        <wsdl:part name="GetMovieInfoListResult" element="WL5G3N2:GetMovieInfoListResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetMoviePeopleSoapIn">
+        <wsdl:part name="GetMoviePeopleRequest" element="WL5G3N2:GetMoviePeopleRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetMoviePeopleSoapOut">
+        <wsdl:part name="GetMoviePeopleResult" element="WL5G3N2:GetMoviePeopleResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetSessionListSoapIn">
+        <wsdl:part name="GetSessionListRequest" element="WL5G3N2:GetSessionListRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetSessionListSoapOut">
+        <wsdl:part name="GetSessionListResult" element="WL5G3N2:GetSessionListResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetSessionInfoSoapIn">
+        <wsdl:part name="GetSessionInfoRequest" element="WL5G3N2:GetSessionInfoRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetSessionInfoSoapOut">
+        <wsdl:part name="GetSessionInfoResult" element="WL5G3N2:GetSessionInfoResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetTicketTypeListSoapIn">
+        <wsdl:part name="GetTicketTypeListRequest" element="WL5G3N2:GetTicketTypeListRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetTicketTypeListSoapOut">
+        <wsdl:part name="GetTicketTypeListResult" element="WL5G3N2:GetTicketTypeListResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetTicketTypeFromBarcodeSoapIn">
+        <wsdl:part name="GetTicketTypeFromBarcodeRequest" element="WL5G3N2:GetTicketTypeFromBarcodeRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetTicketTypeFromBarcodeSoapOut">
+        <wsdl:part name="GetTicketTypeFromBarcodeResult" element="WL5G3N2:GetTicketTypeFromBarcodeResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetTicketTypePackageSoapIn">
+        <wsdl:part name="GetTicketTypePackageRequest" element="WL5G3N2:GetTicketTypePackageRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetTicketTypePackageSoapOut">
+        <wsdl:part name="GetTicketTypePackageResult" element="WL5G3N2:GetTicketTypePackageResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetEventListSoapIn">
+        <wsdl:part name="GetEventListRequest" element="WL5G3N2:GetEventListRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetEventListSoapOut">
+        <wsdl:part name="GetEventListResult" element="WL5G3N2:GetEventListResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetEventMovieListSoapIn">
+        <wsdl:part name="GetEventMovieListRequest" element="WL5G3N2:GetEventMovieListRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetEventMovieListSoapOut">
+        <wsdl:part name="GetEventMovieListResult" element="WL5G3N2:GetEventMovieListResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetShowtimeDateListSoapIn">
+        <wsdl:part name="GetShowtimeDateListRequest" element="WL5G3N2:GetShowtimeDateListRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetShowtimeDateListSoapOut">
+        <wsdl:part name="GetShowtimeDateListResult" element="WL5G3N2:GetShowtimeDateListResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetCinemaOpForSessionSoapIn">
+        <wsdl:part name="GetCinemaOpForSessionRequest" element="WL5G3N1:GetCinemaOpForSessionRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetCinemaOpForSessionSoapOut">
+        <wsdl:part name="GetCinemaOpForSessionResult" element="WL5G3N2:GetCinemaOpForSessionResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetPrintStreamSoapIn">
+        <wsdl:part name="GetPrintStreamRequest" element="WL5G3N3:GetPrintStreamRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetPrintStreamSoapOut">
+        <wsdl:part name="GetPrintStreamResult" element="WL5G3N2:GetPrintStreamResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetConfirmationDetailsSoapIn">
+        <wsdl:part name="GetConfirmationDetailsRequest" element="WL5G3N2:GetConfirmationDetailsRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetConfirmationDetailsSoapOut">
+        <wsdl:part name="GetConfirmationDetailsResult" element="WL5G3N2:GetConfirmationDetailsResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetConcessionItemsListSoapIn">
+        <wsdl:part name="GetConcessionItemsListRequest" element="WL5G3N2:GetConcessionItemsListRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetConcessionItemsListSoapOut">
+        <wsdl:part name="GetConcessionItemsListResult" element="WL5G3N2:GetConcessionItemsListResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetMovieShowtimesSoapIn">
+        <wsdl:part name="GetMovieShowtimesRequest" element="WL5G3N2:GetMovieShowtimesRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetMovieShowtimesSoapOut">
+        <wsdl:part name="GetMovieShowtimesResult" element="WL5G3N2:GetMovieShowtimesResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetProductInfoSoapIn">
+        <wsdl:part name="GetProductInfoRequest" element="WL5G3N2:GetProductInfoRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetProductInfoSoapOut">
+        <wsdl:part name="GetProductInfoResult" element="WL5G3N2:GetProductInfoResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetClientListSoapIn">
+        <wsdl:part name="GetClientListRequest" element="WL5G3N2:GetClientListRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetClientListSoapOut">
+        <wsdl:part name="GetClientListResult" element="WL5G3N2:GetClientListResult"/>
+    </wsdl:message>
+    <wsdl:message name="GiftCardBalanceRequestSoapIn">
+        <wsdl:part name="GCBalanceRequest" element="WL5G3N2:GCBalanceRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GiftCardBalanceRequestSoapOut">
+        <wsdl:part name="GiftCardBalanceRequestResult" element="WL5G3N2:GiftCardBalanceRequestResult"/>
+    </wsdl:message>
+    <wsdl:message name="CreateClientSoapIn">
+        <wsdl:part name="CreateClientRequest" element="WL5G3N2:CreateClientRequest"/>
+    </wsdl:message>
+    <wsdl:message name="CreateClientSoapOut">
+        <wsdl:part name="CreateClientResult" element="WL5G3N3:CreateClientResult"/>
+    </wsdl:message>
+    <wsdl:message name="UpdateClientSoapIn">
+        <wsdl:part name="UpdateClientRequest" element="WL5G3N2:UpdateClientRequest"/>
+    </wsdl:message>
+    <wsdl:message name="UpdateClientSoapOut">
+        <wsdl:part name="UpdateClientResult" element="WL5G3N3:UpdateClientResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetLtyMembershipConcessionItemSoapIn">
+        <wsdl:part name="GetLtyMembershipConcessionItemRequest" element="WL5G3N3:GetLtyMembershipConcessionItemRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetLtyMembershipConcessionItemSoapOut">
+        <wsdl:part name="GetLtyMembershipConcessionItemResult" element="WL5G3N2:GetLtyMembershipConcessionItemResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetConfigSettingListSoapIn">
+        <wsdl:part name="GetConfigSettingListRequest" element="WL5G3N3:GetConfigSettingListRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetConfigSettingListSoapOut">
+        <wsdl:part name="GetConfigSettingListResult" element="WL5G3N2:GetConfigSettingListResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetOrderHistorySoapIn">
+        <wsdl:part name="GetOrderHistoryRequest" element="WL5G3N3:GetOrderHistoryRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetOrderHistorySoapOut">
+        <wsdl:part name="GetOrderHistoryResult" element="WL5G3N3:GetOrderHistoryResult"/>
+    </wsdl:message>
+    <wsdl:message name="GetCinemaSiteGroupsSoapIn">
+        <wsdl:part name="GetCinemaSiteGroupsRequest" element="WL5G3N2:GetCinemaSiteGroupsRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetCinemaSiteGroupsSoapOut">
+        <wsdl:part name="GetCinemaSiteGroupsResult" element="WL5G3N3:GetCinemaSiteGroupsResult"/>
+    </wsdl:message>
+    <wsdl:portType name="DataService">
+        <wsdl:operation name="GetCinemaList">
+            <wsdl:input message="WL5G3N3:GetCinemaListSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetCinemaListSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetCinemaListAll">
+            <wsdl:input message="WL5G3N3:GetCinemaListAllSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetCinemaListAllSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetMovieList">
+            <wsdl:input message="WL5G3N3:GetMovieListSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetMovieListSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetMovieInfoList">
+            <wsdl:input message="WL5G3N3:GetMovieInfoListSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetMovieInfoListSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetMoviePeople">
+            <wsdl:input message="WL5G3N3:GetMoviePeopleSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetMoviePeopleSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetSessionList">
+            <wsdl:input message="WL5G3N3:GetSessionListSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetSessionListSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetSessionInfo">
+            <wsdl:input message="WL5G3N3:GetSessionInfoSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetSessionInfoSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetTicketTypeList">
+            <wsdl:input message="WL5G3N3:GetTicketTypeListSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetTicketTypeListSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetTicketTypeFromBarcode">
+            <wsdl:input message="WL5G3N3:GetTicketTypeFromBarcodeSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetTicketTypeFromBarcodeSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetTicketTypePackage">
+            <wsdl:input message="WL5G3N3:GetTicketTypePackageSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetTicketTypePackageSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetEventList">
+            <wsdl:input message="WL5G3N3:GetEventListSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetEventListSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetEventMovieList">
+            <wsdl:input message="WL5G3N3:GetEventMovieListSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetEventMovieListSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetShowtimeDateList">
+            <wsdl:input message="WL5G3N3:GetShowtimeDateListSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetShowtimeDateListSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetCinemaOpForSession">
+            <wsdl:input message="WL5G3N3:GetCinemaOpForSessionSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetCinemaOpForSessionSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetPrintStream">
+            <wsdl:input message="WL5G3N3:GetPrintStreamSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetPrintStreamSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetConfirmationDetails">
+            <wsdl:input message="WL5G3N3:GetConfirmationDetailsSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetConfirmationDetailsSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetConcessionItemsList">
+            <wsdl:input message="WL5G3N3:GetConcessionItemsListSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetConcessionItemsListSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetMovieShowtimes">
+            <wsdl:input message="WL5G3N3:GetMovieShowtimesSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetMovieShowtimesSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetProductInfo">
+            <wsdl:input message="WL5G3N3:GetProductInfoSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetProductInfoSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetClientList">
+            <wsdl:input message="WL5G3N3:GetClientListSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetClientListSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GiftCardBalanceRequest">
+            <wsdl:input message="WL5G3N3:GiftCardBalanceRequestSoapIn"/>
+            <wsdl:output message="WL5G3N3:GiftCardBalanceRequestSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="CreateClient">
+            <wsdl:input message="WL5G3N3:CreateClientSoapIn"/>
+            <wsdl:output message="WL5G3N3:CreateClientSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="UpdateClient">
+            <wsdl:input message="WL5G3N3:UpdateClientSoapIn"/>
+            <wsdl:output message="WL5G3N3:UpdateClientSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetLtyMembershipConcessionItem">
+            <wsdl:input message="WL5G3N3:GetLtyMembershipConcessionItemSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetLtyMembershipConcessionItemSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetConfigSettingList">
+            <wsdl:input message="WL5G3N3:GetConfigSettingListSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetConfigSettingListSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetOrderHistory">
+            <wsdl:input message="WL5G3N3:GetOrderHistorySoapIn"/>
+            <wsdl:output message="WL5G3N3:GetOrderHistorySoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetCinemaSiteGroups">
+            <wsdl:input message="WL5G3N3:GetCinemaSiteGroupsSoapIn"/>
+            <wsdl:output message="WL5G3N3:GetCinemaSiteGroupsSoapOut"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="DataService" type="WL5G3N3:DataService">
+        <WL5G3N0:documentation>/vista/Proxies/DataServiceProxy_Encrypted
+                
+                    
+                        
+                            MIICeTCCAeKgAwIBAgIEVWzHPzANBgkqhkiG9w0BAQUFADCBgDELMAkGA1UEBhMCTVgxCzAJBgNVBAgTAk1YMQswCQYDVQQHEwJNWDElMCMGA1UEChMcQ2luZXBvbGlzIGRlIE1leGljbyBTQSBkZSBDVjELMAkGA1UECxMCSVQxIzAhBgNVBAMTGmluZXR2aXNzLmNpbmV0aWNrZXQuY29tLm14MB4XDTE1MDYwMTIwNTczNVoXDTI1MDQwOTIwNTczNVowgYAxCzAJBgNVBAYTAk1YMQswCQYDVQQIEwJNWDELMAkGA1UEBxMCTVgxJTAjBgNVBAoTHENpbmVwb2xpcyBkZSBNZXhpY28gU0EgZGUgQ1YxCzAJBgNVBAsTAklUMSMwIQYDVQQDExppbmV0dmlzcy5jaW5ldGlja2V0LmNvbS5teDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEApbu5QyJkRiffH/mJl5xLqsOCNkp4McGeWo/mUyYaHynj35kPJhEJS7lTq5ktmyYZNH+JeouzrMHnHcuLzQkN69vni+VswgAOro9qJoFDWNuXdF/cYfob/zWEoFuk4Okw3eY4/PourFR9YrG+jZASc5rAO1f4Eugc6J/KTBD3TuUCAwEAATANBgkqhkiG9w0BAQUFAAOBgQBYUf84VbsiuGY6HbDAAY/yKdZGppmhZK0i5GtsoF4uFSpSf8D7IGy0S4q48ah3qD4ozmOl6F7TsOzK8Ri79Yr5Z9bFeHn1WsHYX1LTxZJT+OllW5+SOj7JiRzg8ZCniP45tIUi7ynDOVyjpGB/VEpymklRTGFkU2artwcmUHPUJg==
+                            
+                                CN=inetviss.cineticket.com.mx, OU=IT, O=Cinepolis de Mexico SA de CV, L=MX, ST=MX, C=MX
+                                1433192255
+                            
+                            CN=inetviss.cineticket.com.mx, OU=IT, O=Cinepolis de Mexico SA de CV, L=MX, ST=MX, C=MX</WL5G3N0:documentation>
+        <WL5G3N4:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsp:PolicyReference URI="#wss11_message_protection_service_policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+        <wsdl:operation name="GetCinemaList">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetCinemaList"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetCinemaListAll">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetCinemaListAll"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMovieList">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetMovieList"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMovieInfoList">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetMovieInfoList"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMoviePeople">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetMoviePeople"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetSessionList">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetSessionList"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetSessionInfo">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetSessionInfo"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetTicketTypeList">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetTicketTypeList"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetTicketTypeFromBarcode">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetTicketTypeFromBarcode"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetTicketTypePackage">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetTicketTypePackage"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetEventList">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetEventList"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetEventMovieList">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetEventMovieList"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetShowtimeDateList">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetShowtimeDateList"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetCinemaOpForSession">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetCinemaOpForSession"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetPrintStream">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetPrintStream"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetConfirmationDetails">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetConfirmationDetails"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetConcessionItemsList">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetConcessionItemsList"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMovieShowtimes">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetMovieShowtimes"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetProductInfo">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetProductInfo"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetClientList">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetClientList"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GiftCardBalanceRequest">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GiftCardBalanceRequest"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="CreateClient">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/CreateClient"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="UpdateClient">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/UpdateClient"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetLtyMembershipConcessionItem">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetLtyMembershipConcessionItem"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetConfigSettingList">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetConfigSettingList"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOrderHistory">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetOrderHistory"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetCinemaSiteGroups">
+            <WL5G3N4:operation style="document" soapAction="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1/GetCinemaSiteGroups"/>
+            <wsdl:input>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Input_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <WL5G3N4:body use="literal"/>
+                <wsp:PolicyReference URI="#DataService_Output_Policy" wsdl:required="false" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="DataService">
+        <wsdl:port name="DataService" binding="WL5G3N3:DataService">
+            <WL5G3N4:address location="http://inetviss.cineticket.com.mx:8020/vista/Proxies/DataServiceProxy_Encrypted"/>
+            <wsa:EndpointReference xmlns:wsa="http://www.w3.org/2005/08/addressing">
+                <wsa:Address>http://inetviss.cineticket.com.mx:8020/vista/Proxies/DataServiceProxy_Encrypted</wsa:Address>
+                <wsid:Identity xmlns:wsid="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
+                    <dsig:KeyInfo xmlns:dsig="http://www.w3.org/2000/09/xmldsig#">
+                        <dsig:X509Data>
+                            <dsig:X509Certificate>MIICeTCCAeKgAwIBAgIEVWzHPzANBgkqhkiG9w0BAQUFADCBgDELMAkGA1UEBhMCTVgxCzAJBgNVBAgTAk1YMQswCQYDVQQHEwJNWDElMCMGA1UEChMcQ2luZXBvbGlzIGRlIE1leGljbyBTQSBkZSBDVjELMAkGA1UECxMCSVQxIzAhBgNVBAMTGmluZXR2aXNzLmNpbmV0aWNrZXQuY29tLm14MB4XDTE1MDYwMTIwNTczNVoXDTI1MDQwOTIwNTczNVowgYAxCzAJBgNVBAYTAk1YMQswCQYDVQQIEwJNWDELMAkGA1UEBxMCTVgxJTAjBgNVBAoTHENpbmVwb2xpcyBkZSBNZXhpY28gU0EgZGUgQ1YxCzAJBgNVBAsTAklUMSMwIQYDVQQDExppbmV0dmlzcy5jaW5ldGlja2V0LmNvbS5teDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEApbu5QyJkRiffH/mJl5xLqsOCNkp4McGeWo/mUyYaHynj35kPJhEJS7lTq5ktmyYZNH+JeouzrMHnHcuLzQkN69vni+VswgAOro9qJoFDWNuXdF/cYfob/zWEoFuk4Okw3eY4/PourFR9YrG+jZASc5rAO1f4Eugc6J/KTBD3TuUCAwEAATANBgkqhkiG9w0BAQUFAAOBgQBYUf84VbsiuGY6HbDAAY/yKdZGppmhZK0i5GtsoF4uFSpSf8D7IGy0S4q48ah3qD4ozmOl6F7TsOzK8Ri79Yr5Z9bFeHn1WsHYX1LTxZJT+OllW5+SOj7JiRzg8ZCniP45tIUi7ynDOVyjpGB/VEpymklRTGFkU2artwcmUHPUJg==</dsig:X509Certificate>
+                            <dsig:X509IssuerSerial>
+                                <dsig:X509IssuerName>CN=inetviss.cineticket.com.mx, OU=IT, O=Cinepolis de Mexico SA de CV, L=MX, ST=MX, C=MX</dsig:X509IssuerName>
+                                <dsig:X509SerialNumber>1433192255</dsig:X509SerialNumber>
+                            </dsig:X509IssuerSerial>
+                            <dsig:X509SubjectName>CN=inetviss.cineticket.com.mx, OU=IT, O=Cinepolis de Mexico SA de CV, L=MX, ST=MX, C=MX</dsig:X509SubjectName>
+                        </dsig:X509Data>
+                    </dsig:KeyInfo>
+                </wsid:Identity>
+            </wsa:EndpointReference>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

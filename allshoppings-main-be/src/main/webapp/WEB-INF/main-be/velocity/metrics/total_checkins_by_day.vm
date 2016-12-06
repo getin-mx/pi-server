@@ -1,0 +1,69 @@
+<script type="text/javascript">
+
+$(function() {
+	$.getJSON('/main-be/metrics/chartData?lastMonth=true&metricEntity=CheckinDay&metricType=4&filterNames=checkinDay&entityKind=$entityKind&entityId=$entityId&callback=?', function(data) {
+		// Create the chart
+		$('#checkins_by_day_widget_container').highcharts({
+			lang : {
+				contextButtonTitle : 'Menu',
+				decimalPoint : '.',
+				downloadJPEG : 'Descargar JPEG',
+				downloadPDF : 'Descargar PDF',
+				downloadPNG : 'Descargar PNG',
+				downloadSVG : 'Descargar SVG',
+				loading : 'Cargando...',
+				months : ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+				printChart : 'Imprimir',
+				rangeSelectorFrom : 'Desde',
+				rangeSelectorTo : 'Hasta',
+				rangeSelectorZoom : 'Zoom',
+				resetZoom : 'Reestablecer Zoom',
+				resetZoomTitle : 'Zoom 1:1',
+				thousandsSep : ',',
+				weekdays : ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado']
+			},
+            chart: {
+            	type: 'column'
+            },
+            title: {
+                text: $.i18n._('counters.checkinsbyday.title')
+            },
+            xAxis: {
+                categories: [
+                    'Lunes',
+                    'Martes',
+                    'Miercoles',
+                    'Jueves',
+                    'Viernes',
+                    'Sabado',
+                    'Domingo'
+                ]
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Porcentaje'
+                }
+            },
+            tooltip: {
+                formatter: function() {
+                    return '<b>'+  $.i18n._('counters.checkinsbyday.' + this.point.name) +'</b>: '+ this.y.toFixed(2) +' %';
+                }
+            },
+            series: [{
+                name: $.i18n._('counters.checkinsbyday.title'),
+                data: data
+            }]
+        });
+	});
+
+});
+</script>
+
+
+<div class="widget" id="checkins_by_day_widget" data-icon="users" data-collapsed="false" data-collapsible="false">
+	<h3 class="handle">#springMessage("counters.checkinsbyday.title")</h3>
+	<div>
+		<div id="checkins_by_day_widget_container" style="height: 400px; min-width: 400px"></div>
+	</div>
+</div>

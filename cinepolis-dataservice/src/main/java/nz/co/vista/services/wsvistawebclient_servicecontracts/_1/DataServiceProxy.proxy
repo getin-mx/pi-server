@@ -1,0 +1,540 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<jdevws:WebServiceProxy xmlns:jdevws="http://xmlns.oracle.com/jdeveloper/10130/webserviceproxy">
+   <list n="CHILD_NODES">
+      <url path="DataService_Service.xml"/>
+      <url path="DataService.wsdl"/>
+      <url path="DataService.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetSessionListRequest.java"/>
+      <url path="GetCinemaListRequest.java"/>
+      <url path="package-info.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetClientListRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetConfirmationDetailsRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetEventMovieListRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/ConfirmationDetailsType.java"/>
+      <url path="Response.java"/>
+      <url path="GetPrintStreamRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GiftCardBalanceRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetTicketTypePackageRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/MovieTypeFlag.java"/>
+      <url path="ArrayOfCinemaSiteGroupLinkLine.java"/>
+      <url path="GetConfigSettingListRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/Request.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetConcessionItemsListRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetProductInfoRequest.java"/>
+      <url path="ArrayOfCinemaSiteGroupLine.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/ObjectFactory.java"/>
+      <url path="GetOrderHistoryRequest.java"/>
+      <url path="ResultCode.java"/>
+      <url path="CinemaSiteGroupLinkLine.java"/>
+      <url path="ObjectFactory.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetTicketTypeFromBarcodeRequest.java"/>
+      <url path="GetLtyMembershipConcessionItemRequest.java"/>
+      <url path="OrderHistoryLine.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetTicketTypeListRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetMovieListRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetSessionInfoRequest.java"/>
+      <url path="SeatInfo.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetMovieShowtimesRequest.java"/>
+      <url path="GetCinemaOpForSessionRequest.java"/>
+      <url path="GetCinemaSiteGroupsResponse.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/DataResponse.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/package-info.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetMovieInfoListRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/UpdateClientRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/ResultCode.java"/>
+      <url path="GetOrderHistoryResponse.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/CreateClientRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetEventListRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetCinemaSiteGroupsRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GiftCardBalanceMethod.java"/>
+      <url path="GetCinemaListAllRequest.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetMoviePeopleRequest.java"/>
+      <url path="ArrayOfOrderHistoryLine.java"/>
+      <url path="ArrayOfString.java"/>
+      <url path="DataServiceClient.java"/>
+      <url path="PrintDocumentType.java"/>
+      <url path="DataService_Service.java"/>
+      <url path="../../wsvistawebclient_datatypes/_1/GetShowtimeDateListRequest.java"/>
+      <url path="ArrayOfSeatInfo.java"/>
+      <url path="CinemaSiteGroupLine.java"/>
+   </list>
+   <hash n="DATA_MODEL">
+      <value n="ATTACHMENT_ENCODING" v="MTOM"/>
+      <list n="LOCAL_FILES"/>
+      <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.WebServiceProxy"/>
+      <url n="ORACLE_WEBSERVICES_XML" path="DataService_Service.xml"/>
+      <hash n="PROPERTY_GROUPS">
+         <hash n="WSDL_TO_JAVA_PROPERTIES">
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.WSDLToJavaProperties"/>
+            <value n="WSDL2JAVA_UNWRAP_PARAMETERS" v="false"/>
+         </hash>
+      </hash>
+      <value n="PROXY_ASYNC_METHODS" v="FOR_ENABLED"/>
+      <list n="PROXY_CLIENTS">
+         <url path="DataServiceClient.java"/>
+      </list>
+      <value n="PROXY_MAPPING_URL"/>
+      <url n="PROXY_ORIGINAL_WSDL_URL" protocol="http" host="inetviss.cineticket.com.mx" port="8020" path="/vista/Proxies/DataServiceProxy_Encrypted" query="wsdl"/>
+      <hash n="PROXY_PORTS">
+         <hash n="DataService">
+            <value n="ACCESSES_DOC_WRAPPPED" v="false"/>
+            <value n="ACCESSES_RPC_ENCODED" v="false"/>
+            <value n="CLASS_NAME" v="nz.co.vista.services.wsvistawebclient_servicecontracts._1.DataService"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyPort"/>
+            <value n="NAME" v="DataService"/>
+            <hash n="OPERATIONS">
+               <hash n="createClient">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getCinemaList">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getCinemaListAll">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getCinemaOpForSession">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getCinemaSiteGroups">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getClientList">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getConcessionItemsList">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getConfigSettingList">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getConfirmationDetails">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getEventList">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getEventMovieList">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getLtyMembershipConcessionItem">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getMovieInfoList">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getMovieList">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getMoviePeople">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getMovieShowtimes">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getOrderHistory">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getPrintStream">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getProductInfo">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getSessionInfo">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getSessionList">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getShowtimeDateList">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getTicketTypeFromBarcode">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getTicketTypeList">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="getTicketTypePackage">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="giftCardBalanceRequest">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="updateClient">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </hash>
+            <hash n="PROPERTY_GROUPS">
+               <hash n="WS_CLIENT_POLICY">
+                  <value n="addressing"/>
+                  <list n="management"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.policy.PolicyClientModel"/>
+                  <value n="mtom"/>
+                  <hash n="POLICY_OVERRIDE_PROPERTIES"/>
+                  <list n="security">
+                     <string v="oracle/wss11_message_protection_client_policy"/>
+                  </list>
+                  <value n="wsrm"/>
+               </hash>
+            </hash>
+            <url n="PROXY_ORIGINAL_PORT_ENDPOINT" protocol="http" host="inetviss.cineticket.com.mx" port="8020" path="/vista/Proxies/DataServiceProxy_Encrypted"/>
+         </hash>
+      </hash>
+      <value n="PROXY_SERVICE_NAME" v="DataService"/>
+      <value n="PROXY_SERVICE_NAMESPACE" v="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1"/>
+      <url n="PROXY_TARGET_PROJECT" path="../../../../../../../DataServiceClient.jpr"/>
+      <list n="PROXY_WSDL_IMPORT_LIST"/>
+      <url n="PROXY_WSDL_URL" path="DataService.wsdl"/>
+      <hash n="REFERENCED_WEBSERVICE">
+         <list n="BD_">
+            <hash>
+               <value n="BD_DEFAULT_DOCUMENT_WRAPPED" v="false"/>
+               <value n="BOUND_PORT_TYPE" v="{http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1}DataService"/>
+               <value n="DEFAULT_NAME" v="false"/>
+               <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPBinding"/>
+               <value n="NAME" v="{http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1}DataService"/>
+               <list n="OP_BINDINGS">
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getCinemaList.nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetCinemaListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getCinemaListAll.nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetCinemaListAllRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getMovieList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetMovieListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getMovieInfoList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetMovieInfoListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getMoviePeople.nz.co.vista.services.wsvistawebclient_datatypes._1.GetMoviePeopleRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getSessionList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetSessionListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getSessionInfo.nz.co.vista.services.wsvistawebclient_datatypes._1.GetSessionInfoRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getTicketTypeList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetTicketTypeListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getTicketTypeFromBarcode.nz.co.vista.services.wsvistawebclient_datatypes._1.GetTicketTypeFromBarcodeRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getTicketTypePackage.nz.co.vista.services.wsvistawebclient_datatypes._1.GetTicketTypePackageRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getEventList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetEventListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getEventMovieList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetEventMovieListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getShowtimeDateList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetShowtimeDateListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getCinemaOpForSession.nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetCinemaOpForSessionRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getPrintStream.nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetPrintStreamRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getConfirmationDetails.nz.co.vista.services.wsvistawebclient_datatypes._1.GetConfirmationDetailsRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getConcessionItemsList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetConcessionItemsListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getMovieShowtimes.nz.co.vista.services.wsvistawebclient_datatypes._1.GetMovieShowtimesRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getProductInfo.nz.co.vista.services.wsvistawebclient_datatypes._1.GetProductInfoRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getClientList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetClientListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.giftCardBalanceRequest.nz.co.vista.services.wsvistawebclient_datatypes._1.GiftCardBalanceRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_servicecontracts._1.Response.createClient.nz.co.vista.services.wsvistawebclient_datatypes._1.CreateClientRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_servicecontracts._1.Response.updateClient.nz.co.vista.services.wsvistawebclient_datatypes._1.UpdateClientRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getLtyMembershipConcessionItem.nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetLtyMembershipConcessionItemRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getConfigSettingList.nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetConfigSettingListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetOrderHistoryResponse.getOrderHistory.nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetOrderHistoryRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BOUND_OPERATION" v="nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetCinemaSiteGroupsResponse.getCinemaSiteGroups.nz.co.vista.services.wsvistawebclient_datatypes._1.GetCinemaSiteGroupsRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+               </list>
+               <hash n="PROPERTY_GROUPS"/>
+            </hash>
+         </list>
+         <list n="BINDING_FILES"/>
+         <value n="GUID" v="67fd33f0-0150-1000-8049-c0a8a901e76f"/>
+         <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.WebServiceProxy$ProxyJavaWebService"/>
+         <list n="PO_">
+            <hash>
+               <value n="DEFAULT_NAME" v="false"/>
+               <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPPort"/>
+               <value n="NAME" v="DataService"/>
+               <value n="PORT_BINDING_NAME" v="{http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1}DataService"/>
+               <list n="PORT_OPS">
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getCinemaList.nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetCinemaListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getCinemaListAll.nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetCinemaListAllRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getMovieList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetMovieListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getMovieInfoList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetMovieInfoListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getMoviePeople.nz.co.vista.services.wsvistawebclient_datatypes._1.GetMoviePeopleRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getSessionList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetSessionListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getSessionInfo.nz.co.vista.services.wsvistawebclient_datatypes._1.GetSessionInfoRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getTicketTypeList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetTicketTypeListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getTicketTypeFromBarcode.nz.co.vista.services.wsvistawebclient_datatypes._1.GetTicketTypeFromBarcodeRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getTicketTypePackage.nz.co.vista.services.wsvistawebclient_datatypes._1.GetTicketTypePackageRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getEventList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetEventListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getEventMovieList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetEventMovieListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getShowtimeDateList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetShowtimeDateListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getCinemaOpForSession.nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetCinemaOpForSessionRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getPrintStream.nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetPrintStreamRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getConfirmationDetails.nz.co.vista.services.wsvistawebclient_datatypes._1.GetConfirmationDetailsRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getConcessionItemsList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetConcessionItemsListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getMovieShowtimes.nz.co.vista.services.wsvistawebclient_datatypes._1.GetMovieShowtimesRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getProductInfo.nz.co.vista.services.wsvistawebclient_datatypes._1.GetProductInfoRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getClientList.nz.co.vista.services.wsvistawebclient_datatypes._1.GetClientListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.giftCardBalanceRequest.nz.co.vista.services.wsvistawebclient_datatypes._1.GiftCardBalanceRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_servicecontracts._1.Response.createClient.nz.co.vista.services.wsvistawebclient_datatypes._1.CreateClientRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_servicecontracts._1.Response.updateClient.nz.co.vista.services.wsvistawebclient_datatypes._1.UpdateClientRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getLtyMembershipConcessionItem.nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetLtyMembershipConcessionItemRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse.getConfigSettingList.nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetConfigSettingListRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetOrderHistoryResponse.getOrderHistory.nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetOrderHistoryRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="nz.co.vista.services.wsvistawebclient_servicecontracts._1.GetCinemaSiteGroupsResponse.getCinemaSiteGroups.nz.co.vista.services.wsvistawebclient_datatypes._1.GetCinemaSiteGroupsRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+               </list>
+               <hash n="PROPERTY_GROUPS"/>
+               <url n="URL" protocol="http" host="inetviss.cineticket.com.mx" port="8020" path="/vista/Proxies/DataServiceProxy_Encrypted"/>
+            </hash>
+         </list>
+         <hash n="PROPERTY_GROUPS">
+            <hash n="WSDL_TO_JAVA_PROPERTIES">
+               <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.WSDLToJavaProperties"/>
+               <value n="WSDL2JAVA_UNWRAP_PARAMETERS" v="false"/>
+            </hash>
+         </hash>
+         <list n="PT_">
+            <hash>
+               <value n="AUTO_SERVICE_INTERFACE"/>
+               <value n="DEFAULT_NAME" v="false"/>
+               <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaPortType"/>
+               <value n="NAME" v="{http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1}DataService"/>
+               <hash n="PROPERTY_GROUPS"/>
+               <value n="PT_CLASS" v="nz.co.vista.services.wsvistawebclient_servicecontracts._1.DataServiceImpl"/>
+               <value n="PT_SERVICE_INTERFACE" v="nz.co.vista.services.wsvistawebclient_servicecontracts._1.DataService"/>
+            </hash>
+         </list>
+         <url n="TARGET_PROJECT" path="../../../../../../../DataServiceClient.jpr"/>
+         <value n="WS_ORIG_GEN_DIRECTION" v="TOP_DOWN"/>
+         <value n="WS_TARGET_NAMESPACE" v="http://vista.co.nz/services/WSVistaWebClient.ServiceContracts/1"/>
+         <value n="WS_URI" v="DataService"/>
+         <url n="WS_WSDL_FILE" path="DataService.wsdl"/>
+      </hash>
+      <value n="SERVICE_ASYNC" v="false"/>
+      <value n="USE_WSDL_LOCATION" v="true"/>
+   </hash>
+</jdevws:WebServiceProxy>

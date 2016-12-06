@@ -1,0 +1,278 @@
+#parse("/includes/macros.vm")
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+#if( $financialEntity )
+	<title>#springMessage("app.title") | #springMessage("app.financialEntity.edit")</title>
+#else
+	<title>#springMessage("app.title") | #springMessage("app.financialEntity")</title>
+#end
+
+	<meta name="description" content='#springMessage("app.financialEntity.description")'>
+	<meta name="author" content='#springMessage("app.url")'>
+
+#parse("includes/header.vm")
+
+	<!-- local functionality script -->
+	<script src="/main-be/highcharts-3.0.1/js/highstock.js"></script>
+	<script src="/main-be/highcharts-3.0.1/js/modules/exporting.js"></script>
+	<script src="/main-be/js/financialEntity.js"></script>
+
+	#if( $canwrite == false )
+	<script>
+		$(document).ready(function() {
+			$.setReadOnly();
+		});
+	</script>
+	#end
+</head>
+<body>
+#parse("includes/topmenu.vm")
+#parse("includes/leftmenu.vm")
+	<!-- content -->
+	<section id="content">
+		<ul id="headbreadcrumb" class="breadcrumb" data-connect="breadcrumbcontent">
+			<li><a href="#">#springMessage("app.financialEntity.generalData")</a></li>
+			#if( $financialEntity)
+			<li><a href="#">#springMessage("app.financialEntity.media")</a></li>
+			<li><a href="#">#springMessage("app.audit")</a></li>
+			<li><a href="#">#springMessage("app.followers")</a></li>
+			#end
+		</ul>
+
+		<div class="g12 nodrop">
+			<table>
+				<tr>
+					<td width="110">
+					#if( $financialEntity.AvatarId )
+						<a class="fancybox" href="/img/$!financialEntity.AvatarId" title="$!financialEntity.Name"><img src="/img/$!financialEntity.AvatarId" width="100" height="100" alt=""></a>
+					#else
+						<a class="fancybox" href="/main-be/css/images/defaultavatar.png"><img src="/main-be/css/images/defaultavatar.png" width="100" height="100" alt=""></a>
+					#end
+					</td>
+					<td style="text-align: left;">
+						<div class="g12 nodrop">
+						#if( $financialEntity )
+							<h1>#springMessage("app.financialEntity.edit")</h1>
+						#else
+							<h1>#springMessage("app.financialEntity")</h1>
+						#end
+							<p>#springMessage("app.financialEntity.description")</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<div id="breadcrumbcontent">
+				<!-- FinancialEntity Profile -->
+				<div>
+					<form id="contactForm" method="post" action="doUpdateFinancialEntity" autocomplete="off">
+						<fieldset>
+							<label style="height: 30px;">
+								#springMessage("app.financialEntity.generalData")
+								#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/financialEntityList';" >#springMessage("app.button.back")</button>
+								#end
+							</label>
+
+							<section>
+								<label>#springMessage("data.financialEntity")</label>
+								<div>
+								<input style="width: 97% !important;" type="text" id="name" required data-errortext='#springMessage("error.financialentityname")' value="$!financialEntity.Name">
+								#if ($financialEntity)
+									<input type="hidden" id="financialEntityid" value="$financialEntity.Identifier">
+									<input type="hidden" id="crudtype" value="edit">
+								#else
+									<input type="hidden" id="financialEntityid" value="">
+									<input type="hidden" id="crudtype" value="create">
+								#end
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.country")</label>
+								<div>
+									#if ($financialEntity)
+										$!financialEntity.Country
+										<input type="hidden" id="country" value="$!financialEntity.Country" />
+									#else
+										#select("country", $!financialEntity.Country, $svh.getCountryNames(${lang}), $svh.getCountryNames(${lang}))
+									#end
+								</div>
+							</section>
+
+							<section>
+								<label for="avatar">#springMessage("data.avatar")</label>
+								<div>
+									<table>
+										<tr>
+											<td width="130" style="vertical-align: middle;">
+											#if( $financialEntity.AvatarId )
+												<a id="avatarAnchor" class="fancybox" href="/img/$!financialEntity.AvatarId" title="$!financialEntity.Name"><img id="avatarImage" src="/img/$!financialEntity.AvatarId" width="116" height="116" alt=""></a>
+											#else
+												<a id="avatarAnchor" class="fancybox" href="/main-be/css/images/defaultavatar.png" title=""><img id="avatarImage" src="/main-be/css/images/defaultavatar.png" width="116" height="116" alt=""></a>
+											#end
+											<input type="hidden" id="avatarId"/>
+											</td>
+											<td>
+												<input type="file" id="avatar">
+											</td>
+										</tr>
+									</table>
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.status")</label>
+								<div>
+									#select("status", $!financialEntity.Status, $svh.getStatusNames(${lang}), $svh.StatusValues)
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.briefFinancialEntityDescription")</label>
+								<div>
+									<textarea id="description" class="html" rows="15" data-buttons="bold|italic|underline">$!financialEntity.description</textarea>
+									<p></p>
+								</div>
+							</section>
+
+
+							<section>
+								<div>
+								#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/financialEntityList';" >#springMessage("app.button.back")</button>
+								#end
+								</div>
+							</section>
+
+							<section>
+								<div id="contactFormMsg"></div>
+							</section>
+
+						</fieldset>
+					</form>
+				</div>
+
+				#if( $financialEntity )
+				<!-- Multimedia -->
+				<div>
+					<form id="mediaForm" method="post" action="doUpdateFinancialEntityMedia" autocomplete="off">
+						<fieldset>
+							<input type="hidden" id="financialEntityid" value="$financialEntity.Identifier">
+							<label style="height: 30px;">
+								#springMessage("app.financialEntity.media")
+								#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/financialEntityList';" >#springMessage("app.button.back")</button>
+								#end
+							</label>
+
+							<section>
+								<label for="mediaUpload">#springMessage("app.financialEntity.uploadPhotos")<br>
+								<span>#springMessage("app.financialEntity.uploadPhotosMeasures")</span>
+								</label>
+								<div>
+									<input type="file" id="mediaUpload" multiple>
+								</div>
+							</section>
+
+							<section>
+								<label for="media">#springMessage("app.financialEntity.currentPhotos")</label>
+								<ul id="mediaGallery" class="gallery">
+								#foreach( $photo in $!financialEntity.PhotoId )
+									<li><a href="/img/$photo"><img src="/img/$photo" width="116" height="116" alt=""></a></li>
+								#end
+								</ul>
+							</section>
+
+							<section>
+								<div>
+								#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/financialEntityList';" >#springMessage("app.button.back")</button>
+								#end
+								</div>
+							</section>
+
+							<section>
+								<div id="mediaFormMsg"></div>
+							</section>
+							
+						</fieldset>
+					</form>
+				</div>
+
+
+				<!-- Audit -->
+				<div>
+					<form id="policiesForm" autocomplete="off">
+						<fieldset>
+							<input type="hidden" id="offerid" value="$offer.Identifier">
+							<label style="height: 30px;">
+								#springMessage("app.audit")
+							</label>
+
+							<section>
+								<label for="creationDateTime">#springMessage("app.audit.creationDateTime")</label>
+								<div>
+									$svh.formatDate($financialEntity.creationDateTime) - $svh.formatTime($financialEntity.creationDateTime)
+								</div>
+							</section>
+
+							<section>
+								<label for="lastUpdate">#springMessage("app.audit.lastUpdate")</label>
+								<div>
+									$svh.formatDate($financialEntity.lastUpdate) - $svh.formatTime($financialEntity.lastUpdate)
+								</div>
+							</section>
+
+							<section>
+								<label for="lastUpdate">#springMessage("app.audit.owner")</label>
+								<div>
+									$financialEntity.acl.owner
+								</div>
+							</section>
+
+							<section>
+								<div id="auditFormMsg"></div>
+							</section>
+
+						</fieldset>
+					</form>
+				</div>
+
+				<!-- Dashboard -->
+				<div>
+					<fieldset>
+							<div class="g6 widgets">
+								#parse("metrics/total_favorites.vm")
+								#parse("metrics/total_followers_by_gender.vm")
+								#parse("metrics/total_female_followers_by_age.vm")
+							</div>
+
+							<div class="g6 widgets">
+								#parse("metrics/total_followers_devices_by_platform.vm")
+								#parse("metrics/total_followers_by_age.vm")
+								#parse("metrics/total_male_followers_by_age.vm")
+							</div>
+					</fieldset>
+				</div>
+
+				#end
+
+			</div>
+		</div>
+
+	</section>
+#parse("includes/footer.vm")
+</body>
+</html>

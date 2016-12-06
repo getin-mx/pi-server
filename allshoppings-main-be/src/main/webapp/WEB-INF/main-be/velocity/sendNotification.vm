@@ -1,0 +1,147 @@
+#parse("/includes/macros.vm")
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+	<title>#springMessage("app.title") | #springMessage("app.sendNotification")</title>
+
+	<meta name="description" content='#springMessage("app.sendNotification")'>
+	<meta name="author" content='#springMessage("app.url")'>
+
+#parse("includes/header.vm")
+
+	<!-- local functionality script -->
+	<script src="/main-be/js/sendNotification.js"></script>
+</head>
+<body>
+#parse("includes/topmenu.vm")
+#parse("includes/leftmenu.vm")
+	<!-- content -->
+	<section id="content">
+		<ul id="headbreadcrumb" class="breadcrumb" data-connect="breadcrumbcontent">
+			<li><a href="#">#springMessage("app.sendNotification")</a></li>
+		</ul>
+
+		<div class="g12 nodrop">
+			<table>
+				<tr>
+					<td width="110">
+						<a class="fancybox" href="/main-be/css/images/defaultavatar.png"><img src="/main-be/css/images/defaultavatar.png" width="100" height="100" alt=""></a>
+					</td>
+					<td style="text-align: left;">
+						<div class="g12 nodrop">
+							<h1>#springMessage("app.sendNotification")</h1>
+							<p>#springMessage("app.sendNotification.description")</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<div id="breadcrumbcontent">
+				<!-- Personal Profile -->
+				<div>
+					<form id="contactForm" method="post" action="doSendNotification" autocomplete="off">
+						<fieldset>
+							<label style="height: 30px;">
+								#springMessage("app.sendNotification")
+								<button class="fr submit">#springMessage("app.button.submit")</button>
+							</label>
+
+							<section>
+								<label>#springMessage("data.deviceId")</label>
+								<div>
+								<div>$deviceInfo.Identifier</div>
+									<input type="hidden" id="deviceInfoId" value="$deviceInfo.Identifier">
+									<input type="hidden" id="crudtype" value="edit">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("app.user.messagingToken")</label>
+								<div>$deviceInfo.MessagingToken</div>
+							</section>
+
+							<section>
+								<label>#springMessage("app.user.deviceName")</label>
+								<div>$deviceInfo.DeviceName</div>
+							</section>
+
+							<section>
+								<label>#springMessage("app.user.devicePlatform")</label>
+								<div>$deviceInfo.DevicePlatform</div>
+							</section>
+							
+							<section>
+								<label>#springMessage("app.user.deviceVersion")</label>
+								<div>$deviceInfo.DeviceVersion</div>
+							</section>
+
+							<section>
+								<label>#springMessage("app.user.appVersion")</label>
+								<div>$deviceInfo.AppVersion</div>
+							</section>
+
+							<section>
+								<label>#springMessage("app.device.mac")</label>
+								<div>$!deviceInfo.Mac</div>
+							</section>
+
+							<section>
+								<label>#springMessage("app.device.last.geo")</label>
+								<div>($!deviceLocation.Lat , $!deviceLocation.Lon) - $!deviceLocation.GeoHash</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.title")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="title" required="required" value="">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.message")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="message" required="required" value="">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.action")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="xaction" required="required" value="notification">
+								</div>
+							</section>
+
+							<section>
+								<div><button class="fr submit">#springMessage("app.button.submit")</button></div>
+							</section>
+
+							<section>
+								<div id="contactFormMsg"></div>
+							</section>
+
+						</fieldset>
+					</form>
+					<form id="requestForm" method="post" action="doRequestLocation" autocomplete="off">
+						<input type="hidden" id="deviceInfoId" value="$deviceInfo.Identifier">
+						<input type="hidden" id="crudtype" value="edit">
+						<fieldset>
+							<label style="height: 30px;">
+								#springMessage("app.requestLocation")
+								<button class="fr submit">#springMessage("app.button.submit")</button>
+							</label>
+
+							<section>
+								<div id="contactFormMsg"></div>
+							</section>
+
+						</fieldset>
+				</div>
+			</div>
+		</div>
+
+	</section>
+#parse("includes/footer.vm")
+</body>
+</html>

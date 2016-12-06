@@ -1,0 +1,2 @@
+	<!-- Footer -->
+	<footer>#springMessage("app.footer.copyright") <a href='http://www.allshoppings.mobi' target="_blank">#springMessage("app.title")</a></footer>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+        http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" version="2.0">
+
+    <!-- JOSAdmin "unit" -->
+    <persistence-unit name="allshoppings">
+        <class>mobi.allshoppings.model.Address</class>
+        <class>mobi.allshoppings.model.AddressComponentsCache</class>
+        <class>mobi.allshoppings.model.APDevice</class>
+        <class>mobi.allshoppings.model.APDeviceSignal</class>
+        <class>mobi.allshoppings.model.APDeviceMacMatch</class>
+        <class>mobi.allshoppings.model.APDeviceTriggerEntry</class>
+        <class>mobi.allshoppings.model.APDAssignation</class>
+        <class>mobi.allshoppings.model.APHEntry</class>
+        <class>mobi.allshoppings.model.APHotspot</class>
+        <class>mobi.allshoppings.model.APUptime</class>
+        <class>mobi.allshoppings.model.APDVisit</class>
+        <class>mobi.allshoppings.model.Area</class>
+        <class>mobi.allshoppings.model.Brand</class>
+        <class>mobi.allshoppings.model.BeaconHotspot</class>
+        <class>mobi.allshoppings.model.CampaignActivity</class>
+        <class>mobi.allshoppings.model.CampaignSpecial</class>
+        <class>mobi.allshoppings.model.Checkin</class>
+        <class>mobi.allshoppings.model.Cinema</class>
+        <class>mobi.allshoppings.model.ContactInfo</class>
+        <class>mobi.allshoppings.model.DashboardIndicatorAlias</class>
+        <class>mobi.allshoppings.model.DashboardIndicatorData</class>
+        <class>mobi.allshoppings.model.DeviceInfo</class>
+        <class>mobi.allshoppings.model.DeviceLocation</class>
+        <class>mobi.allshoppings.model.DeviceLocationHistory</class>
+        <class>mobi.allshoppings.model.DeviceMessageLock</class>
+        <class>mobi.allshoppings.model.DeviceWifiLocationHistory</class>
+        <class>mobi.allshoppings.model.ExternalActivityLog</class>
+        <class>mobi.allshoppings.model.Dummy</class>
+        <class>mobi.allshoppings.model.Favorite</class>
+        <class>mobi.allshoppings.model.FinancialEntity</class>
+        <class>mobi.allshoppings.model.FloorMap</class>
+        <class>mobi.allshoppings.model.FloorMapJourney</class>
+        <class>mobi.allshoppings.model.Friend</class>
+        <class>mobi.allshoppings.model.GeoEntity</class>
+        <class>mobi.allshoppings.model.InvoicingInfo</class>
+        <class>mobi.allshoppings.model.InvitationDetail</class>
+        <class>mobi.allshoppings.model.Image</class>
+        <class>mobi.allshoppings.model.MacVendor</class>
+        <class>mobi.allshoppings.model.Movie</class>
+        <class>mobi.allshoppings.model.NotificationLog</class>
+        <class>mobi.allshoppings.model.Offer</class>
+        <class>mobi.allshoppings.model.OfferType</class>
+        <class>mobi.allshoppings.model.Process</class>
+        <class>mobi.allshoppings.model.PushMessageLog</class>
+        <class>mobi.allshoppings.model.Service</class>
+        <class>mobi.allshoppings.model.Shopping</class>
+        <class>mobi.allshoppings.model.Showtime</class>
+        <class>mobi.allshoppings.model.Store</class>
+        <class>mobi.allshoppings.model.StoreTicket</class>
+        <class>mobi.allshoppings.model.StructureInfo</class>
+        <class>mobi.allshoppings.model.TFToken</class>
+        <class>mobi.allshoppings.model.User</class>
+        <class>mobi.allshoppings.model.UserSecurity</class>
+        <class>mobi.allshoppings.model.Voucher</class>
+        <class>mobi.allshoppings.model.WifiSpot</class>
+        <class>mobi.allshoppings.model.SystemStatus</class>
+        <class>mobi.allshoppings.model.UserMenu</class>
+        <class>mobi.allshoppings.model.UserMenuEntry</class>
+        <class>mobi.allshoppings.model.UserEntityCache</class>
+        <class>mobi.allshoppings.model.ExternalGeo</class>
+
+        <class>mobi.allshoppings.model.tools.ACL</class>
+        <class>mobi.allshoppings.model.tools.ViewLocation</class>
+        <class>mobi.allshoppings.model.tools.MultiLang</class>
+
+        <class>mobi.allshoppings.model.embedded.AlternateLocation</class>
+        <class>mobi.allshoppings.model.embedded.CinemaEmbedd</class>
+        <class>mobi.allshoppings.model.embedded.FormatPrice</class>
+        <class>mobi.allshoppings.model.embedded.MovieEmbedd</class>
+        <exclude-unlisted-classes/>
+
+    </persistence-unit>
+</persistence>

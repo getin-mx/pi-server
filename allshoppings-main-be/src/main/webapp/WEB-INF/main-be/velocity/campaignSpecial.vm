@@ -1,0 +1,489 @@
+#parse("/includes/macros.vm")
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+#if( $update )
+	<title>#springMessage("app.title") | #springMessage("app.campaignSpecial.edit")</title>
+#else
+	<title>#springMessage("app.title") | #springMessage("app.campaignSpecial")</title>
+#end
+
+	<meta name="description" content='#springMessage("app.campaignSpecial.description")'>
+	<meta name="author" content='#springMessage("app.url")'>
+
+#parse("includes/header.vm")
+
+	<!-- local functionality script -->
+	<script src="/main-be/js/campaignSpecial.js"></script>
+	
+	#if( $canwrite == false )
+	<script>
+		$(document).ready(function() {
+			$.setReadOnly();
+		});
+	</script>
+	#end
+</head>
+<body>
+#parse("includes/topmenu.vm")
+#parse("includes/leftmenu.vm")
+	<!-- content -->
+	<section id="content">
+		<ul id="headbreadcrumb" class="breadcrumb" data-connect="breadcrumbcontent">
+			<li><a href="#">#springMessage("app.campaignSpecial.generalData")</a></li>
+			#if( $update )
+			<li><a href="#">#springMessage("app.campaignSpecial.media")</a></li>
+			<li><a href="#">#springMessage("app.campaignSpecial.manualEngagement")</a>
+			<li><a href="#">#springMessage("app.audit")</a></li>
+			<li><a href="#">#springMessage("app.campaignSpecial.privacyPolicies")</a></li>
+			<li><a href="#">#springMessage("app.campaignSpecial.history")</a></li>
+			#end
+		</ul>
+
+		<div class="g12 nodrop">
+			<table>
+				<tr>
+					<td width="110">
+					#if( $campaignSpecial.AvatarId )
+						<a class="fancybox" href="/img/$!campaignSpecial.AvatarId" title="$!campaignSpecial.Fullname"><img src="/img/$!campaignSpecial.AvatarId" width="100" height="100" alt=""></a>
+					#else
+						<a class="fancybox" href="/main-be/css/images/defaultavatar.png"><img src="/main-be/css/images/defaultavatar.png" width="100" height="100" alt=""></a>
+					#end
+					</td>
+					<td style="text-align: left;">
+						<div class="g12 nodrop">
+							#if( $update )
+								<h1>#springMessage("app.campaignSpecial.edit")</h1>
+							#else
+								<h1>#springMessage("app.campaignSpecial")</h1>
+							#end
+							<p>#springMessage("app.campaignSpecial.description")</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div>
+			<div id="breadcrumbcontent">
+				<!-- CampaignSpecial Profile -->
+				<div>
+					<form id="contactForm" method="post" #if( $canwrite == true ) action="/main-be/doUpdateCampaignSpecial" #end autocomplete="off">
+						<fieldset>
+							<label style="height: 30px;">
+								#springMessage("app.campaignSpecial.generalData")
+							#if( $canwrite == true )
+								#if( $campaignSpecialProposalId ) 
+									<button class="fr submit">#springMessage("app.button.approve")</button>
+									<button class="fr" onclick="window.location='/main-be/rejectCampaignSpecialProposal/$campaignSpecialProposalId';">#springMessage("app.button.reject")</button>
+								#else
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#end
+							#else
+								#if( $campaignSpecialProposalId ) 
+									<button class="fr" onclick="window.location='/main-be/campaignSpecialProposalList';" >#springMessage("app.button.back")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/campaignSpecialList';" >#springMessage("app.button.back")</button>
+								#end
+							#end
+							</label>
+							<section>
+								<label>#springMessage("data.offerName")</label>
+								<div>
+								<input style="width: 97% !important;" type="text" id="name" required data-errortext='#springMessage("error.name")' value="$!campaignSpecial.Name">
+								#if ($update)
+									<input type="hidden" id="campaignSpecialid" value="$campaignSpecial.Identifier">
+									<input type="hidden" id="crudtype" value="edit">
+								#else
+									<input type="hidden" id="campaignSpecialid" value="">
+									<input type="hidden" id="crudtype" value="create">
+								#end
+								<input type="hidden" id="campaignSpecialProposalId" value="$!campaignSpecialProposalId">
+								<input type="hidden" id="source" value="$!campaignSpecial.Source">
+								<input type="hidden" id="origin" value="$!campaignSpecial.Origin">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.offerType")</label>
+								<div>
+									#select("offerTypeId", $!campaignSpecial.OfferTypeId, $offerTypeNames, $offerTypeIds)
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.briefDescription")</label>
+								<div>
+									<textarea id="description" class="html" rows="15" data-buttons="bold|italic|underline">$!campaignSpecial.description</textarea>
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.instructions")</label>
+								<div>
+									<textarea id="instructions" class="html" rows="15" data-buttons="bold|italic|underline">$!campaignSpecial.instructions</textarea>
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.country")</label>
+								<div>
+									#select("country", $!campaignSpecial.Country, $svh.getCountryNames(${lang}), $svh.getCountryNames(${lang}))
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.shopping")</label>
+								<div>
+									#multiselect("shoppings", $!campaignSpecial.Shoppings, $shoppingOfferNames, $shoppingOfferIds)
+									<button id="levelBrands" class="fr">#springMessage("app.button.levelBrands")</button>
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.brand")</label>
+								<div>
+									#multiselect("brands", $!campaignSpecial.Brands, $brandOfferNames, $brandOfferIds)
+									<button id="levelShoppings" class="fr">#springMessage("app.button.levelShoppings")</button>
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.areas")</label>
+								<div>
+									#multiselect("areas", $!campaignSpecial.AreaId, $areaNames, $areaIds)
+									<button id="levelAreas" class="fr">#springMessage("app.button.levelAreas")</button>
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.availableFinancialEntities")</label>
+								<div>
+									#multiselect("availableFinancialEntities", $!campaignSpecial.AvailableFinancialEntities, $financialEntityNames, $financialEntityIds)
+								</div>
+							</section>
+
+							#if( $campaignSpecialProposalId )
+							#else
+							<section>
+								<label for="avatar">#springMessage("data.avatar")</label>
+								<div>
+									<table>
+										<tr>
+											<td width="130" style="vertical-align: middle;">
+											#if( $campaignSpecial.AvatarId )
+												<a id="avatarAnchor" class="fancybox" href="/img/$!campaignSpecial.AvatarId" title="$!campaignSpecial.Fullname"><img id="avatarImage" src="/img/$!campaignSpecial.AvatarId" width="116" height="116" alt=""></a>
+											#else
+												<a id="avatarAnchor" class="fancybox" href="/main-be/css/images/defaultavatar.png" title=""><img id="avatarImage" src="/main-be/css/images/defaultavatar.png" width="116" height="116" alt=""></a>
+											#end
+											<input type="hidden" id="avatarId"/>
+											</td>
+											<td>
+												<input type="file" id="avatar">
+											</td>
+										</tr>
+									</table>
+								</div>
+							</section>
+							#end
+
+							<section>
+								<label>#springMessage("app.campaignSpecial.customUrl")</label>
+								<div>
+									<input style="width: 97% !important;" id="customUrl" value="$!campaignSpecial.CustomUrl" placeholder="/main-be/custom/promotions/{app}/{module}/{identifier}">
+								</div>
+							</section>
+							<section>
+								<label>#springMessage("app.campaignSpecial.promotionType")</label>
+								<div>
+									<input style="width: 97% !important;" id="promotionType" value="$!campaignSpecial.PromotionType">
+								</div>
+							</section>
+
+							<label>#springMessage("app.campaignSpecial.messaging")</label>
+
+							<section>
+								<label>#springMessage("data.genders")</label>
+								<div>
+									#multiselect("genders", $!campaignSpecial.Genders, $svh.getGenderNames(${lang}), $svh.GenderValues)
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.ages")</label>
+								<div>
+									<input style="width: 120px !important;" data-regex="^[0-9]+$" id="ageFrom" value="$!campaignSpecial.AgeFrom">
+									<input style="width: 120px !important;" data-regex="^[0-9]+$" id="ageTo" value="$!campaignSpecial.AgeTo">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.notifyDays")</label>
+								<div>
+									#multiselect("notifyDays", $!campaignSpecial.NotifyDays, $availableDaysNames, $availableDaysIds)
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.timezone")</label>
+								<div>
+									#timezone("timezone", $!campaignSpecial.Timezone)
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.hours")</label>
+								<div>
+									<input style="width: 48% !important;" type="time" id="notifyFromHour" required
+										value="$!campaignSpecial.NotifyFromHour">
+									<input style="width: 48% !important;" type="time" id="notifyToHour"
+										value="$!campaignSpecial.NotifyToHour">
+								</div>
+							</section>
+
+							<section>
+								<label for="validFrom">#springMessage("data.validfrom")</label>
+								<div>
+									<input id="validFrom" name="validFrom" type="text" style="width: 90px !important;" value="$svh.formatDate($!campaignSpecial.validFrom)">
+								</div>
+							</section>
+
+							<section>
+								<label for="validTo">#springMessage("data.validto")</label>
+								<div>
+									<input id="validTo" name="validTo" type="text" style="width: 90px !important;" value="$svh.formatDate($!campaignSpecial.validTo)">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.span")</label>
+								<div>
+									<input style="width: 97% !important;" required type="number" id="span" value="$!campaignSpecial.Span">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.dailyQuantity")</label>
+								<div>
+									<input style="width: 97% !important;" required type="number" id="dailyQuantity" value="$!campaignSpecial.DailyQuantity">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.quantity")</label>
+								<div>
+									<input style="width: 97% !important;" required type="number" id="quantity" value="$!campaignSpecial.Quantity">
+								</div>
+							</section>
+
+							<section>
+								<div>
+							#if( $canwrite == true )
+								#if( $campaignSpecialProposalId ) 
+									<button class="fr submit">#springMessage("app.button.approve")</button>
+									<button class="fr" onclick="window.location='/main-be/rejectCampaignSpecialProposal/$campaignSpecialProposalId';">#springMessage("app.button.reject")</button>
+								#else
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#end
+							#else
+								#if( $campaignSpecialProposalId ) 
+									<button class="fr" onclick="window.location='/main-be/campaignSpecialProposalList';" >#springMessage("app.button.back")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/campaignSpecialList';" >#springMessage("app.button.back")</button>
+								#end
+							#end
+								</div>
+							</section>
+
+							<section>
+								<div id="contactFormMsg"></div>
+							</section>
+
+						</fieldset>
+					</form>
+				</div>
+
+				#if( $update )
+				<!-- Multimedia -->
+				<div>
+					<form id="mediaForm" method="post" #if( $canwrite == true ) action="doUpdateCampaignSpecialMedia" #end autocomplete="off">
+						<fieldset>
+							<input type="hidden" id="campaignSpecialid" value="$campaignSpecial.Identifier">
+							<label style="height: 30px;">
+								#springMessage("app.campaignSpecial.media")
+								#if( $canwrite == true )
+								<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+								<button class="fr" onclick="window.location='/main-be/campaignSpecialList';" >#springMessage("app.button.back")</button>
+								#end
+							</label>
+
+							<section>
+								<label for="mediaUpload">#springMessage("app.campaignSpecial.uploadPhotos")<br>
+								<span>#springMessage("app.campaignSpecial.uploadPhotosMeasures")</span>
+								</label>
+								<div>
+									<input type="file" id="mediaUpload" multiple>
+								</div>
+							</section>
+
+							<section>
+								<label for="media">#springMessage("app.campaignSpecial.currentPhotos")</label>
+								<ul id="mediaGallery" class="gallery">
+								#foreach( $photo in $!campaignSpecial.PhotoId )
+									<li><a href="/img/$photo"><img src="/img/$photo" width="116" height="116" alt=""></a></li>
+								#end
+								</ul>
+							</section>
+
+							<section>
+								<div>
+									#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+									#else
+									<button class="fr" onclick="window.location='/main-be/campaignSpecialList';" >#springMessage("app.button.back")</button>
+									#end
+								</div>
+							</section>
+
+							<section>
+								<div id="invoicingFormMsg"></div>
+							</section>
+							
+						</fieldset>
+					</form>
+				</div>
+
+				<!-- Manual Engagement -->
+				<div>
+					<form id="manualEngagementForm" method="post" action="doCampaignSpecialManualEngagement" autocomplete="off">
+						<fieldset>
+							<input type="hidden" id="campaignSpecialId" value="$campaignSpecial.Identifier">
+							<label style="height: 30px;">
+								#springMessage("app.campaignSpecial.manualEngagement")
+								<button class="fr submit">#springMessage("app.button.submit")</button>
+							</label>
+
+							<section>
+								<label>#springMessage("app.campaignSpecial.userId")</label>
+								<div>
+								<input style="width: 97% !important;" type="text" id="manualEngagementUserId" required data-errortext='#springMessage("error.name")' value="">
+								</div>
+							</section>
+
+							<section>
+								<div id="manualEngagementFormMsg"></div>
+							</section>
+
+						</fieldset>
+					</form>
+				</div>
+
+				<!-- Audit -->
+				<div>
+					<form id="auditForm" autocomplete="off">
+						<fieldset>
+							<input type="hidden" id="campaignSpecialid" value="$campaignSpecial.Identifier">
+							<label style="height: 30px;">
+								#springMessage("app.audit")
+							</label>
+
+							<section>
+								<label for="creationDateTime">#springMessage("app.audit.creationDateTime")</label>
+								<div>
+									$svh.formatDate($campaignSpecial.creationDateTime) - $svh.formatTime($campaignSpecial.creationDateTime)
+								</div>
+							</section>
+
+							<section>
+								<label for="lastUpdate">#springMessage("app.audit.lastUpdate")</label>
+								<div>
+									$svh.formatDate($campaignSpecial.lastUpdate) - $svh.formatTime($campaignSpecial.lastUpdate)
+								</div>
+							</section>
+
+							<section>
+								<label for="lastUpdate">#springMessage("app.audit.owner")</label>
+								<div>
+									$campaignSpecial.acl.owner
+								</div>
+							</section>
+
+							<section>
+								<div id="auditFormMsg"></div>
+							</section>
+
+						</fieldset>
+					</form>
+				</div>
+
+				<!-- Privacy Policies -->
+				<div>
+					<form id="policiesForm" method="post" #if( $canwrite == true ) action="doUpdateCampaignSpecialPolicies" #end autocomplete="off">
+						<fieldset>
+							<input type="hidden" id="campaignSpecialid" value="$campaignSpecial.Identifier">
+							<label style="height: 30px;">
+								#springMessage("app.profile.privacyPolicies")
+								#if( $canwrite == true )
+								<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+								<button class="fr" onclick="window.location='/main-be/campaignSpecialList';" >#springMessage("app.button.back")</button>
+								#end
+							</label>
+							<section>
+								<label>#springMessage("data.privacyPolicies")</label>
+								<div>
+									<textarea id="policies" class="html" rows="30" data-buttons="bold|italic|underline">$!campaignSpecial.policies</textarea>
+								</div>
+							</section>
+
+							<section>
+								<div>
+									#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+									#else
+									<button class="fr" onclick="window.location='/main-be/campaignSpecialList';" >#springMessage("app.button.back")</button>
+									#end
+								</div>
+							</section>
+
+							<section>
+								<div id="policiesFormMsg"></div>
+							</section>
+
+						</fieldset>
+					</form>
+				</div>
+
+
+				<!-- Notifications -->
+				<div>
+					<div class="g12 nodrop">
+						<h1>#springMessage("app.campaignSpecial.history")</h1>
+					</div>
+					<table id="campaignSpecialHistory" class="datatable">
+						<thead>
+							<tr>
+								<th>Fecha de envio</th>
+								<th>Usuario</th>
+								<th>Nombre</th>
+								<th>Estado</th>
+								<th>Fecha de Canje</th>
+								<th>Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="gradeX">
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				#end
+			</div>
+		</div>
+	</section>
+#parse("includes/footer.vm")
+</body>
+</html>

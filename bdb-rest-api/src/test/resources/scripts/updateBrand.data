@@ -1,0 +1,29 @@
+{
+	"creationDateTime": "2016-06-10T13:41:03-05:00",
+	"avatarId": "d3a66aae-7062-49e4-9016-4c9f31e3b237.jpg",
+	"status": 0,
+	"acl": {
+		"userIds": [],
+		"entries": {}
+	},
+	"lastUpdate": "2016-06-10T13:41:03-05:00",
+	"areaId": ["1367887188241", "1367887189731"],
+	"country": "Mexico",
+	"contactInfo": {
+		"youtubeChannel": "",
+		"mail": "",
+		"phone": "",
+		"webURL": "http://mexico.100montaditos.com/",
+		"foursquareId": "",
+		"facebookId": "",
+		"twitterId": "100montaditosMx",
+		"googleId": "",
+		"tiendeoId": ""
+	},
+	"photoId": [],
+	"systemDateTime": "2016-06-10T13:41:05-05:00",
+	"description": "100 sabores de España para compartir con tus amigos! Montaditos - Tapas - Tintos de Verano",
+	"videoId": [],
+	"name": "100 Montaditos",
+	"identifier": "100montaditos_mx_0"
+}

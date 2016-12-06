@@ -1,0 +1,17 @@
+if [ $# -ne 4 ]; then 
+   echo -e "Usage:\n\t$0 shoppingId floorMapId fromDate toDate\n"
+   exit 1;
+fi
+
+# process common variables
+../common
+
+_URL="${_HOST}/bdb/dashboard/pieData?authToken=$_TOKEN&entityId=${1}&entityKind=0&elementId=heatmap_data&subentityId=${2}&fromStringDate=${3}&toStringDate=${4}"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`curl -k -X GET ${_URL}`
+echo ""
+echo "RESULT: $_RES"

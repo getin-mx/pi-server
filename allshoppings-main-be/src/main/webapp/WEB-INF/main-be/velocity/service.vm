@@ -1,0 +1,140 @@
+#parse("/includes/macros.vm")
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+#if( $service )
+	<title>#springMessage("app.title") | #springMessage("app.service.edit")</title>
+#else
+	<title>#springMessage("app.title") | #springMessage("app.service")</title>
+#end
+
+	<meta name="description" content='#springMessage("app.service.description")'>
+	<meta name="author" content='#springMessage("app.url")'>
+
+#parse("includes/header.vm")
+
+	<!-- local functionality script -->
+	<script src="/main-be/js/service.js"></script>
+
+	#if( $canwrite == false )
+	<script>
+		$(document).ready(function() {
+			$.setReadOnly();
+		});
+	</script>
+	#end
+</head>
+<body>
+#parse("includes/topmenu.vm")
+#parse("includes/leftmenu.vm")
+	<!-- content -->
+	<section id="content">
+		<ul id="headbreadcrumb" class="breadcrumb" data-connect="breadcrumbcontent">
+			<li><a href="#">#springMessage("app.service.generalData")</a></li>
+		</ul>
+
+		<div class="g12 nodrop">
+			<table>
+				<tr>
+					<td width="110">
+					#if( $service.AvatarId )
+						<a class="fancybox" href="/img/$!service.AvatarId" title="$!service.getName().get("es")"><img src="/img/$!service.AvatarId" width="100" height="100" alt=""></a>
+					#else
+						<a class="fancybox" href="/main-be/css/images/defaultavatar.png"><img src="/main-be/css/images/defaultavatar.png" width="100" height="100" alt=""></a>
+					#end
+					</td>
+					<td style="text-align: left;">
+						<div class="g12 nodrop">
+						#if( $service )
+							<h1>#springMessage("app.service.edit")</h1>
+						#else
+							<h1>#springMessage("app.service")</h1>
+						#end
+							<p>#springMessage("app.service.description")</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<div id="breadcrumbcontent">
+				<!-- Service Profile -->
+				<div>
+					<form id="contactForm" method="post" action="doUpdateService" autocomplete="off">
+						<fieldset>
+							<label>#springMessage("app.service.generalData")</label>
+
+							<section>
+								<label>#springMessage("data.service.es")</label>
+								<div>
+								<input style="width: 97% !important;" type="text" id="name_es" required data-errortext='#springMessage("error.servicename")' value="$!service.getName().get("es")">
+								#if ($service)
+									<input type="hidden" id="serviceid" value="$service.Identifier">
+									<input type="hidden" id="crudtype" value="edit">
+								#else
+									<input type="hidden" id="serviceid" value="">
+									<input type="hidden" id="crudtype" value="create">
+								#end
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.service.en")</label>
+								<div>
+								<input style="width: 97% !important;" type="text" id="name_en" required data-errortext='#springMessage("error.servicename")' value="$!service.getName().get("en")">
+								#if ($service)
+									<input type="hidden" id="serviceid" value="$service.Identifier">
+									<input type="hidden" id="crudtype" value="edit">
+								#else
+									<input type="hidden" id="serviceid" value="">
+									<input type="hidden" id="crudtype" value="create">
+								#end
+								</div>
+							</section>
+
+							<section>
+								<label for="avatar">#springMessage("data.avatar")</label>
+								<div>
+									<table>
+										<tr>
+											<td width="130" style="vertical-align: middle;">
+											#if( $service.AvatarId )
+												<a id="avatarAnchor" class="fancybox" href="/img/$!service.AvatarId" title="$!service.Name"><img id="avatarImage" src="/img/$!service.AvatarId" width="116" height="116" alt=""></a>
+											#else
+												<a id="avatarAnchor" class="fancybox" href="/main-be/css/images/defaultavatar.png" title=""><img id="avatarImage" src="/main-be/css/images/defaultavatar.png" width="116" height="116" alt=""></a>
+											#end
+											<input type="hidden" id="avatarId"/>
+											</td>
+											<td>
+												<input type="file" id="avatar">
+											</td>
+										</tr>
+									</table>
+								</div>
+							</section>
+
+							<section>
+								<div>
+								#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/serviceList';" >#springMessage("app.button.back")</button>
+								#end
+								</div>
+							</section>
+
+							<section>
+								<div id="contactFormMsg"></div>
+							</section>
+
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</section>
+#parse("includes/footer.vm")
+</body>
+</html>

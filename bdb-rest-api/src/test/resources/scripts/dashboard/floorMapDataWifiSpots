@@ -1,0 +1,18 @@
+if [ $# -ne 1 ]; then 
+   echo -e "Usage:\n\t$0 floorMapId\n"
+   exit 1;
+fi
+
+# process common variables
+. ../common
+. ../token.dat
+
+_URL="${_HOST}/bdb/dashboard/floormapData?authToken=$_TOKEN&floorMapId=${1}"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`curl -k -X GET ${_URL}`
+echo ""
+echo "RESULT: $_RES"

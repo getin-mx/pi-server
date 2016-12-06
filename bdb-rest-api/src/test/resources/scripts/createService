@@ -1,0 +1,19 @@
+if [ $# -ne 0 ]; then 
+   echo -e "Usage:\n\t$0 \n"
+   exit 1;
+fi
+
+# process common variables
+. ./common
+
+_URL="${_HOST}/bdb/service?authToken=$_TOKEN"
+_DATA=`cat createService.data`
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`curl -k -X PUT -H "Content-Type:application/json" -d "${_DATA}" ${_URL}`
+echo ""
+echo "RESULT: $_RES"
+

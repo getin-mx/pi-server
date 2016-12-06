@@ -1,0 +1,7 @@
+#!/bin/bash
+
+#rm -Rf /tmp/allshoppings/lib
+mvn install -DskipTests -pl allshoppings-rest-api
+mvn install -DskipTests -pl bdb-rest-api
+find ./ -name '*.war' -exec cp -v {} /tmp/allshoppings/lib/ \;
+

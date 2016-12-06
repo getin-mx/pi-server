@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<plugin>
+
+	<!-- Default Java types -->
+	<extension point="org.datanucleus.java_type">
+        <java-type name="com.inodes.datanucleus.model.Email" dfg="true" embedded="true"/>
+        <java-type name="com.inodes.datanucleus.model.Text" dfg="true" embedded="true"/>
+        <java-type name="com.inodes.datanucleus.model.Blob" dfg="true" embedded="true"/>
+        <java-type name="com.inodes.datanucleus.model.Key" dfg="true" embedded="true"/>
+        <java-type name="java.util.Date" dfg="true"/>
+        <java-type name="java.util.List" dfg="true"/>
+        <java-type name="java.util.ArrayList" dfg="true"/>
+    </extension>
+	
+
+	<!-- For NoSQL, like MongoDB -->
+	<extension point="org.datanucleus.type_converter">
+        <type-converter name="email-string" member-type="com.inodes.datanucleus.model.Email" datastore-type="java.lang.String"
+            converter-class="com.inodes.datanucleus.converters.EmailStringConverter"/>
+        <type-converter name="text-string" member-type="com.inodes.datanucleus.model.Text" datastore-type="java.lang.String"
+            converter-class="com.inodes.datanucleus.converters.TextStringConverter"/>
+        <type-converter name="blob-string" member-type="com.inodes.datanucleus.model.Blob" datastore-type="java.lang.String"
+            converter-class="com.inodes.datanucleus.converters.BlobStringConverter"/>
+        <type-converter name="key-string" member-type="com.inodes.datanucleus.model.Key" datastore-type="java.lang.String"
+            converter-class="com.inodes.datanucleus.converters.KeyStringConverter"/>
+    </extension>
+
+	<!-- For RDBMS, like MySQL or Oracle -->
+    <extension point="org.datanucleus.store_mapping">
+        <mapping java-type="com.inodes.datanucleus.model.Key" mapping-class="com.inodes.datanucleus.mapping.KeyMapping"/>
+        <mapping java-type="com.inodes.datanucleus.model.Email" mapping-class="com.inodes.datanucleus.mapping.EmailMapping"/>
+        <mapping java-type="com.inodes.datanucleus.model.Text" mapping-class="com.inodes.datanucleus.mapping.TextMapping"/>
+        <mapping java-type="com.inodes.datanucleus.model.Blob" mapping-class="com.inodes.datanucleus.mapping.BlobMapping"/>
+    </extension>
+    
+    <extension point="org.datanucleus.store.rdbms.sql_expression">
+        <sql-expression mapping-class="com.inodes.datanucleus.mapping.KeyMapping" 
+            literal-class="org.datanucleus.store.rdbms.sql.expression.StringLiteral"
+            expression-class="org.datanucleus.store.rdbms.sql.expression.StringExpression"/>
+        <sql-expression mapping-class="com.inodes.datanucleus.mapping.TextMapping" 
+            literal-class="org.datanucleus.store.rdbms.sql.expression.StringLiteral"
+            expression-class="org.datanucleus.store.rdbms.sql.expression.StringExpression"/>
+        <sql-expression mapping-class="com.inodes.datanucleus.mapping.EmailMapping" 
+            literal-class="org.datanucleus.store.rdbms.sql.expression.StringLiteral"
+            expression-class="org.datanucleus.store.rdbms.sql.expression.StringExpression"/>
+        <sql-expression mapping-class="com.inodes.datanucleus.mapping.BlobMapping" 
+            literal-class="org.datanucleus.store.rdbms.sql.expression.ObjectLiteral"
+            expression-class="org.datanucleus.store.rdbms.sql.expression.ObjectExpression"/>
+    </extension>
+    
+</plugin>

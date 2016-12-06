@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
+>
+
+	<!-- Import common resources -->
+	<import resource="file:${baseApplicationContext}" />
+	
+	 <!-- ** REST resource ** -->
+  	<bean id="base.rest.resource" class="mobi.allshoppings.bdb.bz.BDBRestBaseServerResource" abstract="true" />
+  	<bean id="dummy.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBDummyBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="ipaddress.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBIPAddressBzServicePlainImpl" parent="base.rest.resource" scope="prototype" />
+	
+	<bean id="auth.rest.resource" class="mobi.allshoppings.bdb.auth.spi.BDBAuthBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="pass.rest.resource" class="mobi.allshoppings.bdb.auth.spi.BDBPassBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="user.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBUserBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="currentusermenu.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBCurrentUserMenuBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+
+  	<bean id="usermenu.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBUserMenuBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+
+  	<bean id="countries.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBCountryListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="area.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBAreaBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="service.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBServiceBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="offertype.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBOfferTypeBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+
+  	<bean id="apdevice.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBAPDeviceBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="apdassignation.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBAPDAssignationBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="shopping.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBShoppingBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="brand.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBBrandBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="store.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBStoreBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="offer.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBOfferBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+
+  	<bean id="process.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBProcessBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="requestprocess.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBRequestProcessBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+
+
+	<!-- Dashboard Services -->
+  	<bean id="dashboard.apuptime.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.APUptimeDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.assignedbrandlist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.AssignedBrandListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.assignedstorelist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.AssignedStoreListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.floormaplist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.FloorMapListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.floormapdata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.FloorMapDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.floormapjourneydata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.FloorMapJourneyDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.heatmapdata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.HeatmapDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.piedata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.PieDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.aphentrydata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.APHEntryDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.externalgeodata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.ExternalGeoDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.storeticketdata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.StoreTicketDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+
+	<!-- Business Service validation beans -->
+	<bean id="user.bz.validator" class="mobi.allshoppings.bdb.bz.validation.BDBUserBzValidation" scope="singleton" />
+
+	<!-- Utils & Helpers -->
+  	<bean id="dashboardexport.util" class="mobi.allshoppings.bdb.tools.XSSFDashboardExport" scope="singleton" />
+  	<bean id="csvdetailsexport.util" class="mobi.allshoppings.bdb.tools.CSVVisitDetailExport" scope="singleton" />
+	
+</beans>

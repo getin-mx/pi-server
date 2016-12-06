@@ -1,0 +1,33 @@
+{
+	"avatarId": "2e83eec0-9959-4c97-a603-d33fdbabdab0.jpg",
+	"lastUpdate": "2016-06-10T14:43:24-05:00",
+	"shoppings": ["canning_plaza_central"],
+	"policies": "",
+	"areaId": ["1367887189261", "1367887188055"],
+	"validTo": "2014-02-27T18:00:00-06:00",
+	"brands": ["carocuore_ar"],
+	"photoId": [],
+	"systemDateTime": "2016-06-10T14:43:26-05:00",
+	"description": "30% de descuento en todas las mallas.",
+	"name": "Plaza Canning + Caro Cuore",
+	"availableFinancialEntities": [],
+	"videoId": [],
+	"notifyToHour": "17:00",
+	"creationDateTime": "2016-06-10T14:43:24-05:00",
+	"notifyFromHour": "16:00",
+	"acl": {
+		"userIds": [],
+		"entries": {}
+	},
+	"notifyDays": ["0", "1", "2", "3", "4", "5", "6"],
+	"offerTypeName": "30% de Descuento ",
+	"origin": "",
+	"country": "Argentina",
+	"offerTypeRibbonText": "",
+	"source": "",
+	"validFrom": "2014-01-30T18:00:00-06:00",
+	"areas": ["1367887189261", "1367887188055"],
+	"stores": [],
+	"offerTypeId": "1384101045994",
+	"identifier": "1465587804856"
+}

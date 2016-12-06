@@ -1,0 +1,15 @@
+#!/bin/sh
+
+rm -Rf /tmp/dump
+rm -Rf /tmp/dump.tar.gz
+
+ssh root@origin.allshoppings.mobi  "rm -Rf /tmp/dump"
+ssh root@origin.allshoppings.mobi  "rm -Rf /tmp/dump.tar.gz"
+ssh root@origin.allshoppings.mobi "cd /tmp; mongodump -d allshoppings -c ${1}; tar cvzf dump.tar.gz dump"
+scp root@origin.allshoppings.mobi:/tmp/dump.tar.gz /tmp/dump.tar.gz
+cd /tmp
+tar xvzf dump.tar.gz
+mongorestore -d allshoppings -c ${1} --drop dump/allshoppings/${1}.bson
+rm -Rf dump.tar.gz
+rm -Rf dump
+echo "Collection ${1} imported from database allshoppings from origin.allshoppings.mobi!"

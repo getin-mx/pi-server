@@ -1,0 +1,56 @@
+#parse("/includes/macros.vm")
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+	<title>#springMessage("app.title") | #springMessage("app.offerList")</title>
+
+	<meta name="description" content='#springMessage("app.offerList.description")'>
+	<meta name="author" content='#springMessage("app.url")'>
+
+#parse("includes/header.vm")
+
+	<!-- local functionality script -->
+	<script src="/main-be/js/offerList.js"></script>
+</head>
+<body>
+#parse("includes/topmenu.vm")
+#parse("includes/leftmenu.vm")
+	<!-- content -->
+	<section id="content">
+		<div class="g12 nodrop">
+			<h1>#springMessage("app.offerList")</h1>
+			<p>#springMessage("app.offerList.description")</p>
+			#if( $!userInfo.Role != 13 )
+			<a href="/main-be/offer/"><button class="i_plus icon">#springMessage("app.offerList.new")</button></a>
+			#end
+			<div style="float: right;">
+			<select id="viewType" style="margin-top:10px;">
+				<option value="active">#springMessage("app.offerList.viewTypeActive")</option>
+				<option value="all">#springMessage("app.offerList.viewTypeAll")</option>
+			</select>
+			</div>
+		</div>
+		<table id="offerRecords" class="datatable">
+			<thead>
+				<tr>
+					<th width="30"></th>
+					<th>#springMessage("app.offerList.name")</th>
+					<th>#springMessage("app.offerList.offerType")</th>
+					<th>#springMessage("app.offerList.validFrom")</th>
+					<th>#springMessage("app.offerList.validTo")</th>
+					<th>#springMessage("app.offerList.creationDateTime")</th>
+					<th>#springMessage("app.offerList.country")</th>
+					<th>#springMessage("app.offerList.owner")</th>
+					<th width="90">#springMessage("app.table.actions")</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="gradeX">
+				</tr>
+			</tbody>
+		</table>
+	</section>
+#parse("includes/footer.vm")
+</body>
+</html>

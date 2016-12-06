@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!-- ** IoC Spring Container ** -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/mainBeApplicationContext.xml</param-value>
+	</context-param>
+
+	<!-- Character Set Encoding Filter... Forces everyone to work in UTF-8 -->
+	<filter>
+		<filter-name>SetCharacterEncoding</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>SetCharacterEncoding</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- ** Welcome pages ** -->
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<!-- ** Error Pages ** -->
+	<error-page>
+		<error-code>400</error-code>
+		<location>/error-pages/error_400.html</location>
+	</error-page>
+
+	<error-page>
+		<error-code>403</error-code>
+		<location>/error-pages/error_403.html</location>
+	</error-page>
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error-pages/error_404.html</location>
+	</error-page>
+
+	<error-page>
+		<error-code>405</error-code>
+		<location>/error-pages/error_405.html</location>
+	</error-page>
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error-pages/error_500.html</location>
+	</error-page>
+
+	<error-page>
+		<error-code>501</error-code>
+		<location>/error-pages/error_501.html</location>
+	</error-page>
+
+	<error-page>
+		<error-code>505</error-code>
+		<location>/error-pages/error_505.html</location>
+	</error-page>
+
+	<error-page>
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/error-pages/error_500.html</location>
+	</error-page>
+
+	<!-- The front controller of this Spring Web application, responsible for handling all application requests -->
+	<!-- 
+	<servlet>
+	    <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+	    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	    <init-param>
+	        <param-name>contextConfigLocation</param-name>
+	        <param-value>/WEB-INF/mvc-dispatcher-servlet.xml</param-value>
+	    </init-param>
+	    <load-on-startup>1</load-on-startup>
+	</servlet>
+ 	-->
+	
+	<!-- Servlet that handles all requests to main-be -->
+	<servlet>
+	    <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	    <init-param>
+	        <param-name>contextConfigLocation</param-name>
+	        <param-value>/WEB-INF/mvc-dispatcher-servlet.xml</param-value>
+	    </init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+	    <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Multilang wrapper -->
+	<servlet>
+		<servlet-name>lang-wrapper</servlet-name>
+		<servlet-class>mobi.allshoppings.i18n.LangExporter</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>lang-wrapper</servlet-name>
+		<url-pattern>/js/i18n/lang.js</url-pattern>
+	</servlet-mapping>
+
+	<!-- Servlet that handles initial configuration -->
+	<servlet>
+		<servlet-name>Init</servlet-name>
+		<servlet-class>mobi.allshoppings.bz.web.tools.InitWebAppServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+</web-app>

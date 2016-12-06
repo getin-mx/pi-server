@@ -1,0 +1,103 @@
+#parse("/includes/macros.vm")
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+	<title>#springMessage("app.title") | #springMessage("app.globalNotification")</title>
+
+	<meta name="description" content='#springMessage("app.globalNotification")'>
+	<meta name="author" content='#springMessage("app.url")'>
+
+#parse("includes/header.vm")
+
+	<!-- local functionality script -->
+	<script src="/main-be/js/globalNotification.js"></script>
+</head>
+<body>
+#parse("includes/topmenu.vm")
+#parse("includes/leftmenu.vm")
+	<!-- content -->
+	<section id="content">
+		<ul id="headbreadcrumb" class="breadcrumb" data-connect="breadcrumbcontent">
+			<li><a href="#">#springMessage("app.globalNotification")</a></li>
+		</ul>
+
+		<div class="g12 nodrop">
+			<table>
+				<tr>
+					<td width="110">
+						<a class="fancybox" href="/main-be/css/images/defaultavatar.png"><img src="/main-be/css/images/defaultavatar.png" width="100" height="100" alt=""></a>
+					</td>
+					<td style="text-align: left;">
+						<div class="g12 nodrop">
+							<h1>#springMessage("app.globalNotification")</h1>
+							<p>#springMessage("app.globalNotification.description")</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<div id="breadcrumbcontent">
+				<!-- Personal Profile -->
+				<div>
+					<form id="contactForm" method="post" action="doGlobalNotification" autocomplete="off">
+						<fieldset>
+							<label style="height: 30px;">
+								#springMessage("app.globalNotification")
+								<button class="fr submit">#springMessage("app.button.submit")</button>
+							</label>
+
+							<section>
+								<label>#springMessage("data.currentCountry")</label>
+								<div>
+									#select("country", $!user.ViewLocation.Country, $svh.getCountryNames(${lang}), $svh.getCountryNames(${lang}))
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.userTypes")</label>
+								<div>
+									#select("type", "0", $svh.getActiveInactiveNames(${lang}), $svh.getActiveInactiveValues())
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.title")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="title" required="required" value="">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.message")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="message" required="required" value="">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.action")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="xaction" required="required" value="loadHomePage()">
+								</div>
+							</section>
+
+							<section>
+								<div><button class="fr submit">#springMessage("app.button.submit")</button></div>
+							</section>
+
+							<section>
+								<div id="contactFormMsg"></div>
+							</section>
+
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</section>
+#parse("includes/footer.vm")
+</body>
+</html>

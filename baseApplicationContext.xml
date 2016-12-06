@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
+>
+
+	<!-- ** Activates annotation configuration ** -->
+	<context:annotation-config/>
+
+	<!-- ** Activates AOP ** -->
+	<aop:aspectj-autoproxy />
+
+	<!-- ** Simple beans ** -->
+	<bean id="system.configuration" class="mobi.allshoppings.model.SystemConfiguration" scope="singleton" >
+  		<property name="maxUploadSize" value="5242880" />
+	    <property name="authTokenValidityInDays" value="2" />
+	    <property name="appTokenValidityInDays" value="1000" />
+	    <property name="defaultLevel" value="all" />
+	    <property name="defaultLevelOnShoppingBzService" value="all" />
+  		<property name="defaultLevelOnBrandBzService" value="all" />
+  		<property name="defaultLevelOnChallengeBzService" value="all" />
+  		<property name="defaultLevelOnUserBzService" value="all_public" />
+  		<property name="ownLevelOnUserBzService" value="all" />
+  		<property name="defaultFromRange" value="0" />
+  		<property name="defaultToRange" value="25" />
+  		<property name="defaultFavoritesFirst" value="true" />
+  		<property name="baseShareURL" value="http://www.allshoppings.mobi" />
+  		<property name="baseImageURL" value="http://api.allshoppings.mobi/img/" />
+  		<property name="staticContentURL" value="http://static.allshoppings.mobi/" />
+  		<property name="facebookShareCaption" value="AllShoppings.mobi" />
+  		<property name="homeCarouselImages" value="6442c286-3a7a-4317-84b3-091844a2663d.jpg,f787d531-8c92-4a70-a508-f8fc972991e9.jpg,1baf5b5a-060a-4152-a5cd-bbc26388d6a5.jpg" />
+  		<property name="maxNearMeLocations" value="15" />
+  		<property name="defaultViewLocationCountry" value="Mexico" />
+  		<property name="saveLocationHistory" value="true" />
+  		<property name="defaultFenceSize" value="1000" />
+  		<property name="defaultCheckinAreaSize" value="200" />
+		<property name="collapseKey" value="AllShoppings" />
+  		<property name="pushMessageRetries" value="10" />
+  		<property name="pushMessageResponseUrl" value="http://api.allshoppings.mobi" />
+  		<property name="externalActivityTriggerURL" value="http://api.allshoppings.mobi/appv2/externalActivityTrigger" />
+  		<property name="requestLocationLimit" value="2592000000" />
+  		<property name="pushMessageOfferTitle" value="Beneficios AllShoppings" />
+  		<property name="defaultTaskChunkSize" value="15" />
+  		<property name="useFakeMessages" value="false" />
+  		<property name="useFakeMails" value="false" />
+  		<property name="defaultLang" value="es" />
+  		<property name="defaultCountry" value="Mexico" />
+  		<property name="defaultGeoEntityPresition" value="7" />
+  		<property name="deviceLocationRequestInterval" value="1800000" />
+  		<property name="deviceLocationReportInterval" value="43200000" />
+  		<property name="trackerUrl" value="http://analytics.allshoppings.mobi" />
+  		<property name="trackerId" value="5" />
+  		<property name="trackerTokenAuth" value="29e359f849460d27b91098745df25e7d" />
+		<property name="trackerEnabled" value="false" />
+  		<property name="APNAppsCertificatePath" value="/usr/local/allshoppings/etc/ios-certs/" />
+  		<property name="defaultOfferTypeForProposals" value="1379869942406" />
+  		<property name="facebookAppId" value="671710909505865" />
+  		<property name="facebookAppSecret" value="f90ff5c4d3971567ac4c903a3f94397e" />
+  		<property name="checkinCloseLimitMillis" value="900000" />
+  		<property name="defaultMessageLockTimeMillis" value="86400000" />
+  		<property name="beaconProximityUUID" value="B9407F30-F5F8-466E-AFF9-25556B57FE6D" />
+  		<property name="defaultRejectionLock" value="1209600000" />
+  		<property name="defaultAcceptanceLock" value="1209600000" />
+  		<property name="defaultProximityLock" value="3600000" />
+  		<property name="lockZones" value="19.689992,-101.158809;19.704938,-101.195629;19.5025899,-99.2035316;19.3970156,-99.2816748;25.6384211,-100.3142031" />
+  		<property name="enqueueHistoryReplicableObjects" value="false"/>
+  		<property name="trackOnlyValidDevices" value="false"/>
+  		<property name="trackOnlyValidZones" value="false"/>
+  		<property name="deviceLocationPullQueueCount" value="3"/>
+  		<property name="defaultAppId" value="allshoppings"/>
+  		<property name="defaultInternalToken" value="2A2C192578F597CEE6BC3EE8A26B9F7DB0DBA4B0CD8930FDC3D2BB0E7D1B8CC9"/>
+  		<property name="getinURI" value="http://develop.getin.mx:8001"/>
+  		<property name="generalAppMail" value="root@allshoppings.mobi" />
+  		<property name="generalAppMailName" value="AllShoppings.mobi" />
+		<property name="mailFrom" value="noreply@allshoppings.mobi" />
+		<property name="mailFromName" value="AllShoppings" />
+		<property name="replyTo" value="info@allshoppings.mobi" />
+		<property name="smtpServer" value="smtp-relay.gmail.com" />
+		<property name="smtpPort" value="587" />
+		<property name="smtpUser" value="root@allshoppings.mobi" />
+		<property name="smtpPassword" value="rootman02" />
+		<property name="smtpEncription" value="tls" />
+		<property name="solrUrl" value="http://aragorn.getin.mx:8983/solr/allshoppings" />
+		<property name="getinSqlUrl" value="jdbc:mysql://getinold.allshoppings.mobi:3306/getin?user=api&amp;password=VZ52sBPTeg33rq7w" />
+		<property name="floorMapTracking">
+			<list>
+				<value>modatelas_tacubaya_pb</value>
+			</list>
+		</property>
+
+		<property name="apdReportMailList">
+			<list>
+				<value>matias@getin.mx</value>
+				<value>daniel@getin.mx</value>
+				<value>anabell@getin.mx</value>
+				<value>francisco@getin.mx</value>
+				<value>astrid@getin.mx</value>
+				<value>mariajose@getin.mx</value>
+			</list>
+		</property>
+		<property name="apdeviceJumpHost" value="aragorn.getin.mx" />
+		<property name="apdeviceJumpHostUser" value="getin" />
+		<property name="apdeviceJumpHostPass" value="#zxcvasdf7890" />
+		<property name="apdeviceVPNHost" value="cportal1.allshoppings.mobi" />
+		<property name="apdeviceVPNHostUser" value="root" />
+		<property name="apdeviceVPNHostPass" value="zxcvasdf7890" />
+		<property name="apdeviceUser" value="root" />
+		<property name="apdevicePass" value="xcal#bury5443" />
+
+		<property name="processHost" value="gandalf.getin.mx" />
+		<property name="processUser" value="getin" />
+		<property name="processPass" value="#zxcvasdf7890" />
+		<property name="processRunTimeLimit" value="10" />
+
+		<property name="cinepolisHotspots">
+			<list>
+			    <value>corporativocinepolis</value>
+			    <value>clustertim</value>
+			    <value>espaciolasamericas</value>
+			    <value>plazamorelia</value>
+			    <value>paseoaltozano</value>
+			    <value>1438621564133</value>
+			    <value>interlomas</value>
+			    <value>toreoparquecentral</value>
+			    <value>perisur</value>
+			    <value>miyanapolanco</value>
+			    <value>towncenterelrosario</value>
+			</list>
+		</property>
+		<property name="defaultBehavioursApps">
+			<list>
+			    <value></value>
+			    <value>allshoppings</value>
+			    <value>radioshoppings</value>
+			    <value>naranya_mx</value>
+			    <value>televisa_mx</value>
+			</list>
+		</property>
+		<property name="GCMSenders">
+			<map>
+				<entry><key><value>default</value></key><value>AIzaSyDdhv6Dnei_3YJE1oYA-nLVJGezX8iqw0A</value></entry>
+				<entry><key><value>allshoppings</value></key><value>AIzaSyDdhv6Dnei_3YJE1oYA-nLVJGezX8iqw0A</value></entry>
+				<entry><key><value>radioshoppings</value></key><value>AIzaSyCVDlaQ6pFHa471eMX0pYoW_CZWoZbC2Zg</value></entry>
+				<entry><key><value>cinepolis_mx</value></key><value>AIzaSyBsCk3Uwq4o4k3B-_SHF904B-kiAMQvg1Q</value></entry>
+				<entry><key><value>liverpool_mx</value></key><value>AIzaSyBsCk3Uwq4o4k3B-_SHF904B-kiAMQvg1Q</value></entry>
+				<entry><key><value>getin-apdevice-calibrator</value></key><value>AIzaSyBsCk3Uwq4o4k3B-_SHF904B-kiAMQvg1Q</value></entry>
+				<entry><key><value>naranya_mx</value></key><value>AIzaSyDdhv6Dnei_3YJE1oYA-nLVJGezX8iqw0A</value></entry>
+			</map>
+		</property>
+		<property name="APNCertPassword">
+			<map>
+				<entry><key><value>default</value></key><value>rootman01</value></entry>
+				<entry><key><value>allshoppings</value></key><value>rootman01</value></entry>
+				<entry><key><value>cinepolis_mx</value></key><value>IA.allshop.2015</value></entry>
+				<entry><key><value>liverpool_mx</value></key><value>rootman01</value></entry>
+				<entry><key><value>getin-apdevice-calibrator</value></key><value>rootman01</value></entry>
+			</map>
+		</property>
+		<property name="APNSandboxCertPassword">
+			<map>
+				<entry><key><value>default</value></key><value>rootman01</value></entry>
+				<entry><key><value>allshoppings</value></key><value>rootman01</value></entry>
+				<entry><key><value>quotegen</value></key><value>rootman01</value></entry>
+				<entry><key><value>cinepolis_mx</value></key><value>allshop</value></entry>
+				<entry><key><value>liverpool_mx</value></key><value>rootman01</value></entry>
+				<entry><key><value>getin-apdevice-calibrator</value></key><value>rootman01</value></entry>
+			</map>
+		</property>
+  	</bean>
+	
+	<bean id="system.auth.helper" class="mobi.allshoppings.auth.AuthHelper" scope="singleton">
+		<property name="validReferersList">
+			<list>
+			    <value>https://allshoppings1.appspot.com/</value>
+			    <value>https://allshoppings-test.appspot.com/</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="applicationContextProvder" class="mobi.allshoppings.tools.ApplicationContextProvider"/>
+	
+	<bean id="common.validator" class="mobi.allshoppings.tools.CommonValidator" scope="singleton" />
+	<bean id="key.helper" class="mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl" scope="singleton" />
+	<bean id="index.helper" class="mobi.allshoppings.model.tools.impl.IndexHelperSolrImpl" scope="singleton" />
+	<bean id="mail.helper" class="mobi.allshoppings.mail.impl.MailHelperImpl" scope="singleton" />
+	<bean id="tx.factory" class="mobi.allshoppings.tx.spi.TransactionFactoryJDOImpl" scope="singleton" />
+	<bean id="geocoding.helper" class="mobi.allshoppings.geocoding.impl.GeoCodingHelperGMapsImpl" scope="singleton" />
+	<bean id="cache.helper" class="mobi.allshoppings.model.tools.impl.CacheHelperNullImpl" scope="singleton" />
+	<bean id="tracker.helper" class="mobi.allshoppings.tracker.impl.TrackerHelperNullImpl" />
+	<!-- <bean id="points.service" class="mobi.allshoppings.ranking.impl.PointsServiceNullImpl" scope="singleton" /> -->
+	<!-- <bean id="hotspot.service" class="mobi.allshoppings.geocoding.impl.HotspotServiceNullImpl" scope="singleton" /> -->
+	<bean id="coupon.helper" class="mobi.allshoppings.coupon.impl.CouponHelperNullImpl" scope="singleton" />
+	<!-- <bean id="lock.helper" class="mobi.allshoppings.lock.impl.LockHelperPIImpl" scope="singleton" /> -->
+	<!-- <bean id="queuetask.helper" class="mobi.allshoppings.task.QueueTaskHelperNullImpl" scope="singleton" /> -->
+	<bean id="push.message.helper" class="mobi.allshoppings.push.impl.PushMessageHelperImpl" scope="singleton" />
+	<bean id="campaign.helper" class="mobi.allshoppings.campaign.impl.CampaignHelperImpl" scope="singleton" />
+	<bean id="image.downloader" class="mobi.allshoppings.image.ImageDownloader" scope="singleton" />
+	<bean id="barcode.service" class="mobi.allshoppings.image.BarcodeService" scope="singleton" />
+	<bean id="userentitycache.service" class="mobi.allshoppings.uec.impl.UserEntityCacheBzServiceImpl" scope="singleton" />
+	<bean id="systemstatus.service" class="mobi.allshoppings.tools.SystemStatusService" scope="singleton" />
+	<bean id="apdevice.helper" class="mobi.allshoppings.apdevice.impl.APDeviceHelperImpl" scope="singleton" />
+	<bean id="process.helper" class="mobi.allshoppings.process.impl.ProcessHelperImpl" scope="singleton" />
+	<bean id="aphentry.helper" class="mobi.allshoppings.apdevice.impl.APHHelperImpl" scope="singleton" />
+	<bean id="apdvisit.helper" class="mobi.allshoppings.apdevice.impl.APDVisitHelperImpl" scope="singleton" />
+	<bean id="external.geo.importer" class="mobi.allshoppings.exporter.ExternalGeoImporter" scope="singleton" />
+	<bean id="dashboard.apdevice.mapper" class="mobi.allshoppings.dashboards.DashboardAPDeviceMapperService" scope="singleton" />
+	
+	<!-- ** DAOs implementation ** -->
+	<bean id="shopping.dao.ref" class="mobi.allshoppings.dao.spi.ShoppingDAOJDOImpl" />
+	<bean id="brand.dao.ref" class="mobi.allshoppings.dao.spi.BrandDAOJDOImpl" />
+	<bean id="store.dao.ref" class="mobi.allshoppings.dao.spi.StoreDAOJDOImpl" />
+	<bean id="floormap.dao.ref" class="mobi.allshoppings.dao.spi.FloorMapDAOJDOImpl" />
+	<bean id="floormapjourney.dao.ref" class="mobi.allshoppings.dao.spi.FloorMapJourneyDAOJDOImpl" />
+	<bean id="wifispot.dao.ref" class="mobi.allshoppings.dao.spi.WifiSpotDAOJDOImpl" />
+	<bean id="image.dao.ref" class="mobi.allshoppings.dao.spi.ImageDAOJDOImpl" />
+
+	<bean id="invitationdetail.dao.ref" class="mobi.allshoppings.dao.spi.InvitationDetailDAOJDOImpl" />
+	<bean id="area.dao.ref" class="mobi.allshoppings.dao.spi.AreaDAOJDOImpl" />
+	<bean id="service.dao.ref" class="mobi.allshoppings.dao.spi.ServiceDAOJDOImpl" />
+	<bean id="financialentity.dao.ref" class="mobi.allshoppings.dao.spi.FinancialEntityDAOJDOImpl" />
+	<bean id="friend.dao.ref" class="mobi.allshoppings.dao.spi.FriendDAOJDOImpl" />
+
+	<bean id="storeticket.dao.ref" class="mobi.allshoppings.dao.spi.StoreTicketDAOJDOImpl" />
+	<bean id="userentitycache.dao.ref" class="mobi.allshoppings.dao.spi.UserEntityCacheDAOJDOImpl" />
+	<bean id="systemstatus.dao.ref" class="mobi.allshoppings.dao.spi.SystemStatusDAOJDOImpl" />
+	<bean id="offer.dao.ref" class="mobi.allshoppings.dao.spi.OfferDAOJDOImpl" />
+	<bean id="offertype.dao.ref" class="mobi.allshoppings.dao.spi.OfferTypeDAOJDOImpl" />
+	<bean id="pushmessagelog.dao.ref" class="mobi.allshoppings.dao.spi.PushMessageLogDAOJDOImpl" />
+	<bean id="notificationlog.dao.ref" class="mobi.allshoppings.dao.spi.NotificationLogDAOJDOImpl" />
+	<bean id="user.dao.ref" class="mobi.allshoppings.dao.spi.UserDAOJDOImpl" />
+	<bean id="tftoken.dao.ref" class="mobi.allshoppings.dao.spi.TFTokenDAOJDOImpl" />
+	<bean id="favorite.dao.ref" class="mobi.allshoppings.dao.spi.FavoriteDAOJDOImpl" />
+	<bean id="campaignspecial.dao.ref" class="mobi.allshoppings.dao.spi.CampaignSpecialDAOJDOImpl" />
+	<bean id="campaignactivity.dao.ref" class="mobi.allshoppings.dao.spi.CampaignActivityDAOJDOImpl" />
+	<bean id="checkin.dao.ref" class="mobi.allshoppings.dao.spi.CheckinDAOJDOImpl" />
+	<bean id="aphotspot.dao.ref" class="mobi.allshoppings.dao.spi.APHotspotDAOJDOImpl" />
+	<bean id="dashboardindicatoralias.dao.ref" class="mobi.allshoppings.dao.spi.DashboardIndicatorAliasDAOJDOImpl" />
+	<bean id="dashboardindicatordata.dao.ref" class="mobi.allshoppings.dao.spi.DashboardIndicatorDataDAOJDOImpl" />
+	<bean id="cinema.dao.ref" class="mobi.allshoppings.dao.spi.CinemaDAOJDOImpl" />
+	<bean id="movie.dao.ref" class="mobi.allshoppings.dao.spi.MovieDAOJDOImpl" />
+	<bean id="macvendor.dao.ref" class="mobi.allshoppings.dao.spi.MacVendorDAOJDOImpl" />
+	<bean id="aphentry.dao.ref" class="mobi.allshoppings.dao.spi.APHEntryDAOJDOImpl" />
+	<bean id="apdassignation.dao.ref" class="mobi.allshoppings.dao.spi.APDAssignationDAOJDOImpl" />
+	<bean id="apdevice.dao.ref" class="mobi.allshoppings.dao.spi.APDeviceDAOJDOImpl" />
+	<bean id="apdevicesignal.dao.ref" class="mobi.allshoppings.dao.spi.APDeviceSignalDAOJDOImpl" />
+	<bean id="apdvisit.dao.ref" class="mobi.allshoppings.dao.spi.APDVisitDAOJDOImpl" />
+	<bean id="apdevicetriggerentry.dao.ref" class="mobi.allshoppings.dao.spi.APDeviceTriggerEntryDAOJDOImpl" />
+	<bean id="apdevicemacmatch.dao.ref" class="mobi.allshoppings.dao.spi.APDeviceMacMatchDAOJDOImpl" />
+	<bean id="apuptime.dao.ref" class="mobi.allshoppings.dao.spi.APUptimeDAOJDOImpl" />
+	<bean id="devicemessagelock.dao.ref" class="mobi.allshoppings.dao.spi.DeviceMessageLockDAOJDOImpl" />
+	<bean id="beaconhotspot.dao.ref" class="mobi.allshoppings.dao.spi.BeaconHotspotDAOJDOImpl" />
+	<bean id="addresscomponentscache.dao.ref" class="mobi.allshoppings.dao.spi.AddressComponentsCacheDAOJDOImpl" />
+	<bean id="externalgeo.dao.ref" class="mobi.allshoppings.dao.spi.ExternalGeoDAOJDOImpl" />
+	<bean id="externalactivitylog.dao.ref" class="mobi.allshoppings.dao.spi.ExternalActivityLogDAOJDOImpl" />
+	<bean id="process.dao.ref" class="mobi.allshoppings.dao.spi.ProcessDAOJDOImpl" />
+	<bean id="geoentity.dao.ref" class="mobi.allshoppings.dao.spi.GeoEntityDAOJDOImpl" />
+	<bean id="deviceinfo.dao.ref" class="mobi.allshoppings.dao.spi.DeviceInfoDAOJDOImpl" />
+	<bean id="devicelocation.dao.ref" class="mobi.allshoppings.dao.spi.DeviceLocationDAOJDOImpl" />
+	<bean id="devicelocationhistory.dao.ref" class="mobi.allshoppings.dao.spi.DeviceLocationHistoryDAOJDOImpl" />
+	<bean id="devicewifilocationhistory.dao.ref" class="mobi.allshoppings.dao.spi.DeviceWifiLocationHistoryDAOJDOImpl" />
+	<bean id="usermenu.dao.ref" class="mobi.allshoppings.dao.spi.UserMenuDAOJDOImpl" />
+												
+</beans>

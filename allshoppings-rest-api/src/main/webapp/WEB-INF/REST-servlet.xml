@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+>
+
+	<!-- ** Creates a router and map the REST services ** -->
+	<bean id="root" class="mobi.allshoppings.tools.RestletExtensionSpringRouter">
+		<property name="routesMap">
+			<map>
+				<entry key="/dashoard/storesFilter" value-ref="spring.dashboardstoresfilter.rest.resource" />
+				<entry key="/dashoard/timelineDataByCinema" value-ref="spring.dashboardtimelinedatabycinema.rest.resource" />
+				<entry key="/dashoard/timelineDataByProvince" value-ref="spring.dashboardtimelinedatabyprovince.rest.resource" />
+				<entry key="/dashoard/timelineData" value-ref="spring.dashboardtimelinedata.rest.resource" />
+				<entry key="/dashoard/timelineHour" value-ref="spring.dashboardtimelinehour.rest.resource" />
+				<entry key="/dashoard/timelineGDT" value-ref="spring.dashboardtimelinegdt.rest.resource" />
+				<entry key="/dashoard/funnelData" value-ref="spring.dashboardfunneldata.rest.resource" />
+				<entry key="/dashoard/pieData" value-ref="spring.dashboardpiedata.rest.resource" />
+				<entry key="/dashoard/tableData" value-ref="spring.dashboardtabledata.rest.resource" />
+				<entry key="/dashoard/brandTableData" value-ref="spring.dashboardbrandtabledata.rest.resource" />
+				<entry key="/dashoard/brandTableData2" value-ref="spring.dashboardbrandtabledata2.rest.resource" />
+				<entry key="/dashoard/topData" value-ref="spring.dashboardtopdata.rest.resource" />
+				<entry key="/dashoard/relationData" value-ref="spring.dashboardrelationdata.rest.resource" />
+				<entry key="/dashoard/heatmapTableData" value-ref="spring.dashboardheatmaptabledata.rest.resource" />
+				<entry key="/dashoard/heatmapTableHour" value-ref="spring.dashboardheatmaptablehour.rest.resource" />
+				<entry key="/dashoard/floormapData" value-ref="spring.dashboardfloormapdata.rest.resource" />
+				<entry key="/dashoard/externalGeo" value-ref="spring.dashboardexternalgeo.rest.resource" />
+				<entry key="/dashoard/apdeviceStatus" value-ref="spring.dashboardapdevicestatus.rest.resource" />
+				<entry key="/promos" value-ref="spring.promolist.rest.resource" />
+				<entry key="/movies" value-ref="spring.movielist.rest.resource" />
+				<entry key="/movieFormats" value-ref="spring.movieformatlist.rest.resource" />
+				<entry key="/cinemas/{cinemaId}" value-ref="spring.cinema.rest.resource" />
+
+			    <entry key="/auth" value-ref="spring.auth.rest.resource" />
+				<entry key="/pass" value-ref="spring.pass.rest.resource" />
+				<entry key="/user" value-ref="spring.user.rest.resource" />
+				<entry key="/user/{userId}" value-ref="spring.user.rest.resource" />
+				<entry key="/me" value-ref="spring.me.rest.resource" />
+
+				<entry key="/coupons" value-ref="spring.coupons.rest.resource" />
+				<entry key="/coupons/{couponId}" value-ref="spring.coupon.rest.resource" />
+				
+				<entry key="/deviceInfo" value-ref="spring.deviceinfo.rest.resource" />
+				<entry key="/deviceLocation" value-ref="spring.devicelocation.rest.resource" />
+				<entry key="/deviceWifiLocation" value-ref="spring.devicewifilocation.rest.resource" />
+				<entry key="/reportHotSpot" value-ref="spring.dummy.rest.resource" />
+				<entry key="/reportHotspot" value-ref="spring.dummy.rest.resource" />
+				<entry key="/reportaphs" value-ref="spring.reportaphs.rest.resource" />
+				<entry key="/reportBeacon" value-ref="spring.reportbeacon.rest.resource" />
+				<entry key="/reportMessage" value-ref="spring.reportmessage.rest.resource" />
+				<entry key="/deviceMessage" value-ref="spring.devicemessage.rest.resource" />
+				<entry key="/deviceMessageLock" value-ref="spring.devicemessagelock.rest.resource" />
+				<entry key="/clearMessageLock" value-ref="spring.clearmessagelock.rest.resource" />
+				<entry key="/floorMaps" value-ref="spring.floormaps.rest.resource" />
+				<entry key="/wifispots/{floorMapId}" value-ref="spring.wifispots.rest.resource" />
+				<entry key="/requestDeviceLocation" value-ref="spring.requestdevicelocation.rest.resource" />
+				<entry key="/externalActivityTrigger" value-ref="spring.externalactivitytrigger.rest.resource" />
+				<entry key="/testTicket" value-ref="spring.testticket.rest.resource" />
+				<entry key="/apdSignal" value-ref="spring.apdevicesignal.rest.resource" />
+
+				<entry key="/config" value-ref="spring.systemconfiguration.rest.resource" />
+				<entry key="/tables" value-ref="spring.localtables.rest.resource" />
+				<entry key="/brands" value-ref="spring.brands.rest.resource" />
+				<entry key="/brands/{brandId}" value-ref="spring.brand.rest.resource" />
+				<entry key="/brands/{brandId}/stores/{shoppingId}" value-ref="spring.shopping.rest.resource" />
+				<entry key="/shoppings" value-ref="spring.shoppings.rest.resource" />
+				<entry key="/shoppings/{shoppingId}" value-ref="spring.shopping.rest.resource" />
+				<entry key="/shoppings/{shoppingId}/stores/{brandId}" value-ref="spring.brand.rest.resource" />
+				<entry key="/offers" value-ref="spring.offers.rest.resource" />
+				<entry key="/offers/{offerId}" value-ref="spring.offer.rest.resource" />
+				<entry key="/{kind}/{entityId}/offers" value-ref="spring.offers.rest.resource" />
+				
+				<entry key="/tools/forcepass" value-ref="spring.forcepass.rest.resource" />
+				<entry key="/replica" value-ref="spring.replica.rest.resource" />
+				
+			</map>
+		</property>
+	</bean>
+ 	
+ 	<!-- ** REST resources ** -->
+ 	<bean id="spring.dashboardstoresfilter.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardstoresfilter.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.cinema.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="cinema.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardtimelinehour.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardtimelinehour.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardtimelinedata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardtimelinedata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardtimelinedatabycinema.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardtimelinedatabycinema.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardtimelinedatabyprovince.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardtimelinedatabyprovince.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardtimelinegdt.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardtimelinegdt.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardheatmaptabledata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardheatmaptabledata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardheatmaptablehour.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardheatmaptablehour.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardfunneldata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardfunneldata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardpiedata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardpiedata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardtabledata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardtabledata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardbrandtabledata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardbrandtabledata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardbrandtabledata2.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardbrandtabledata2.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardrelationdata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardrelationdata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardfloormapdata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardfloormapdata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardtopdata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardtopdata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardexternalgeo.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardexternalgeo.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardapdevicestatus.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="apdevicestatus.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.apdevicesignal.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="apdevicesignal.rest.resource" />
+ 	</bean>
+
+	<bean id="spring.systemconfiguration.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="systemconfiguration.rest.resource" />
+	</bean>
+	<bean id="spring.localtables.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="localtables.rest.resource" />
+	</bean>
+	<bean id="spring.brands.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="brands.rest.resource" />
+	</bean>
+	<bean id="spring.brand.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="brand.rest.resource" />
+	</bean>
+	<bean id="spring.shoppings.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="shoppings.rest.resource" />
+	</bean>
+	<bean id="spring.shopping.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="shopping.rest.resource" />
+	</bean>
+	<bean id="spring.offer.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="offer.rest.resource" />
+	</bean>
+	<bean id="spring.offers.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="offers.rest.resource" />
+	</bean>
+
+ 	<bean id="spring.promolist.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="promolist.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.movielist.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="movielist.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.movieformatlist.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="movieformatlist.rest.resource" />
+ 	</bean>
+
+	<bean id="spring.devicemessage.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="devicemessage.rest.resource" />
+	</bean>
+	<bean id="spring.devicemessagelock.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="devicemessagelock.rest.resource" />
+	</bean>
+	<bean id="spring.clearmessagelock.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="clearmessagelock.rest.resource" />
+	</bean>
+	<bean id="spring.deviceinfo.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="deviceInfo.rest.resource" />
+	</bean>
+	<bean id="spring.devicelocation.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="deviceLocation.rest.resource" />
+	</bean>
+	<bean id="spring.devicewifilocation.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="deviceWifiLocation.rest.resource" />
+	</bean>
+	<bean id="spring.reportaphs.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="reportaphs.rest.resource" />
+	</bean>
+	<bean id="spring.reportbeacon.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="reportbeacon.rest.resource" />
+	</bean>
+	<bean id="spring.dummy.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="dummy.rest.resource" />
+	</bean>
+	<bean id="spring.floormaps.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="floormaps.rest.resource" />
+	</bean>
+	<bean id="spring.wifispots.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="wifispots.rest.resource" />
+	</bean>
+	<bean id="spring.replica.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="replica.rest.resource" />
+	</bean>
+	<bean id="spring.auth.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="auth.rest.resource" />
+	</bean>
+	<bean id="spring.pass.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="pass.rest.resource" />
+	</bean>
+	<bean id="spring.user.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="user.rest.resource" />
+	</bean>
+	<bean id="spring.me.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="user.rest.resource" />
+	</bean>
+	<bean id="spring.forcepass.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="forcepass.rest.resource" />
+	</bean>
+ 	<bean id="spring.requestdevicelocation.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="requestdevicelocation.rest.resource" />
+ 	</bean>
+	<bean id="spring.coupons.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="coupons.rest.resource" />
+	</bean>
+	<bean id="spring.coupon.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="coupon.rest.resource" />
+	</bean>
+	<bean id="spring.externalactivitytrigger.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="externalactivitytrigger.rest.resource" />
+	</bean>
+	<bean id="spring.testticket.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="testticket.rest.resource" />
+	</bean>
+	<bean id="spring.reportmessage.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="reportmessage.rest.resource" />
+	</bean>
+
+</beans>

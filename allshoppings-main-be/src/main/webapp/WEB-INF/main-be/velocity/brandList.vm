@@ -1,0 +1,46 @@
+#parse("/includes/macros.vm")
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+	<title>#springMessage("app.title") | #springMessage("app.brandList")</title>
+
+	<meta name="description" content='#springMessage("app.brandList.description")'>
+	<meta name="author" content='#springMessage("app.url")'>
+
+#parse("includes/header.vm")
+
+	<!-- local functionality script -->
+	<script src="/main-be/js/brandList.js"></script>
+</head>
+<body>
+#parse("includes/topmenu.vm")
+#parse("includes/leftmenu.vm")
+	<!-- content -->
+	<section id="content">
+		<div class="g12 nodrop">
+			<h1>#springMessage("app.brandList")</h1>
+			<p>#springMessage("app.brandList.description")</p>
+			#if( $!userInfo.Role == 1 || $!userInfo.Role == 3 )
+			<a href="/main-be/brand/"><button class="i_plus icon">#springMessage("app.brandList.new")</button></a>
+			#end
+		</div>
+		<table id="brandRecords" class="datatable">
+			<thead>
+				<tr>
+					<th width="30"></th>
+					<th>#springMessage("app.brandList.name")</th>
+					<th>#springMessage("data.country")</th>
+					<th>#springMessage("data.status")</th>
+					<th width="90">#springMessage("app.table.actions")</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="gradeX">
+				</tr>
+			</tbody>
+		</table>
+	</section>
+#parse("includes/footer.vm")
+</body>
+</html>

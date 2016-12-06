@@ -1,0 +1,10 @@
+#!/bin/sh
+
+BASE=/tmp/allshoppings
+LIB=$BASE/lib
+PATH=$PATH:$LIB
+LIB_PATH=-Djava.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib:$LIB
+
+JAVA=/usr/local/java/current/bin/java
+CMD=$(echo "$JAVA -Dorg.eclipse.jetty.util.log.class=org.eclipse.jetty.util.log.StdErrLog -D{classref}.LEVEL=DEBUG -Djava.library.path=$LIB_PATH -Ddynamic.loader=$LIB -cp $LIB/inodes-util-0.1.9.jar:$LIB/jetty-util-6.1.26.jar com.inodes.util.DynamicLoader mobi.allshoppings.cli.CLI $@")
+sh -c "$CMD"

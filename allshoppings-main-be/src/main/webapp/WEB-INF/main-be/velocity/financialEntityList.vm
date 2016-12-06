@@ -1,0 +1,45 @@
+#parse("/includes/macros.vm")
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+	<title>#springMessage("app.title") | #springMessage("app.financialEntityList")</title>
+
+	<meta name="description" content='#springMessage("app.financialEntityList.description")'>
+	<meta name="author" content='#springMessage("app.url")'>
+
+#parse("includes/header.vm")
+
+	<!-- local functionality script -->
+	<script src="/main-be/js/financialEntityList.js"></script>
+</head>
+<body>
+#parse("includes/topmenu.vm")
+#parse("includes/leftmenu.vm")
+	<!-- content -->
+	<section id="content">
+		<div class="g12 nodrop">
+			<h1>#springMessage("app.financialEntityList")</h1>
+			<p>#springMessage("app.financialEntityList.description")</p>
+			#if( $!userInfo.Role == 1 || $!userInfo.Role == 3 )
+			<a href="/main-be/financialEntity/"><button class="i_plus icon">#springMessage("app.financialEntityList.new")</button></a>
+			#end
+		</div>
+		<table id="financialEntityRecords" class="datatable">
+			<thead>
+				<tr>
+					<th>#springMessage("app.financialEntityList.name")</th>
+					<th>#springMessage("data.country")</th>
+					<th>#springMessage("data.status")</th>
+					<th width="90">#springMessage("app.table.actions")</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="gradeX">
+				</tr>
+			</tbody>
+		</table>
+	</section>
+#parse("includes/footer.vm")
+</body>
+</html>

@@ -1,0 +1,18 @@
+# process common variables
+. ./common
+
+_Q="$1"
+_RANGEFROM=$2
+_RANGETO=$3
+_ORDER=$4
+_FIELDS=$5
+
+_URL="${_HOST}/bdb/area?authToken=$_TOKEN&q=$_Q&from=$_RANGEFROM&to=$_RANGETO&order=$_ORDER&fields=$_FIELDS"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`curl -k -X GET ${_URL}`
+echo ""
+echo "RESULT: $_RES"

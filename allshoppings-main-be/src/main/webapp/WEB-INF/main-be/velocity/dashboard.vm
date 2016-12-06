@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<title>#springMessage("app.title") | #springMessage("app.dashboard")</title>
+<meta name="description" content='#springMessage("app.dashboard.description")'>
+<meta name="author" content='#springMessage("app.url")'>
+
+#parse("includes/header.vm")
+
+<script src="/main-be/highcharts-3.0.1/js/highstock.js"></script>
+<script src="/main-be/highcharts-3.0.1/js/modules/exporting.js"></script>
+
+</head>
+<body>
+
+	#parse("includes/topmenu.vm") #parse("includes/leftmenu.vm")
+
+	<!-- content -->
+	<section id="content">
+
+		<div class="g12 nodrop">
+			<h1>Dashboard</h1>
+			<p>Ac&aacute; podra&aacute;s armar tu Dashboard con lo que
+				m&aacute;s te interese ver, con solo Drag and Drog:</p>
+		</div>
+
+		<div class="g6 widgets">
+			#parse("metrics/active_users.vm")
+			#parse("metrics/active_users_by_gender.vm")
+			#parse("metrics/active_male_users_by_age.vm")
+			#parse("metrics/active_devices.vm")
+			#parse("metrics/total_favorite_average.vm")
+		</div>
+		<div class="g6 widgets">
+			#parse("metrics/total_users.vm")
+			#parse("metrics/active_users_by_age.vm")
+			#parse("metrics/active_female_users_by_age.vm")
+			#parse("metrics/total_devices.vm")
+		</div>
+	</section>
+	#parse("includes/footer.vm")
+</body>
+</html>

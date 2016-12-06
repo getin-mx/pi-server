@@ -1,0 +1,47 @@
+#parse("/includes/macros.vm")
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+	<title>#springMessage("app.title") | #springMessage("app.shoppingList")</title>
+
+	<meta name="description" content='#springMessage("app.shoppingList.description")'>
+	<meta name="author" content='#springMessage("app.url")'>
+
+#parse("includes/header.vm")
+
+	<!-- local functionality script -->
+	<script src="/main-be/js/shoppingList.js"></script>
+</head>
+<body>
+#parse("includes/topmenu.vm")
+#parse("includes/leftmenu.vm")
+	<!-- content -->
+	<section id="content">
+		<div class="g12 nodrop">
+			<h1>#springMessage("app.shoppingList")</h1>
+			<p>#springMessage("app.shoppingList.description")</p>
+			#if( $!userInfo.Role == 1 || $!userInfo.Role == 3 )
+			<a href="/main-be/shopping/"><button class="i_plus icon">#springMessage("app.shoppingList.new")</button></a>
+			#end
+		</div>
+		<table id="shoppingRecords" class="datatable">
+			<thead>
+				<tr>
+					<th width="30"></th>
+					<th>#springMessage("app.shoppingList.name")</th>
+					<th>#springMessage("app.shoppingList.province")</th>
+					<th>#springMessage("app.shoppingList.country")</th>
+					<th>#springMessage("data.status")</th>
+					<th width="90">#springMessage("app.table.actions")</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="gradeX">
+				</tr>
+			</tbody>
+		</table>
+	</section>
+#parse("includes/footer.vm")
+</body>
+</html>

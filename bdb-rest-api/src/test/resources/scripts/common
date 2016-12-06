@@ -1,0 +1,18 @@
+#_HOST=http://127.0.0.1
+#_HOST=http://api.allshoppings.mobi
+#_HOST=http://origin.allshoppings.mobi:8082
+#_HOST=http://api.sandbox.allshoppings.mobi
+#_HOST=http://ubuntu-test1
+_HOST=http://127.0.0.1:8081
+#_HOST=http://legolas.getin.mx
+#_HOST=http://104.44.136.59
+
+export _HOST;
+export _UUID_IPHONE=776AE2D6-840A-45BF-A1D0-3873B54D6D72
+export _UUID_QUOTE=E54A6221-BD51-4CFD-8A38-DD61CC3BEE90
+export _UUID_ANDROID=d9ae567caf438b98@cinepolis_mx
+export _UUID_MAX=4d36f854b29fcdb8@cinepolis_mx
+export _UUID_ROM=146ad8700cf629ab@cinepolis_mx
+export _UUID_CLAUDIA=d76baf50f62739ba@cinepolis_mx
+
+. ./token.dat

@@ -1,0 +1,30 @@
+<script type="text/javascript">
+
+$(function() {
+	$.getJSON('/main-be/metrics/averageData?metricEntity=FavoriteShoppings&metricType=4&filter=&callback=?', function(data) {
+		$('#total_favorite_average_widget_shoppings')[0].innerHTML = data;
+	});
+	$.getJSON('/main-be/metrics/averageData?metricEntity=FavoriteBrands&metricType=4&filter=&callback=?', function(data) {
+		$('#total_favorite_average_widget_brands')[0].innerHTML = data;
+	});
+	$.getJSON('/main-be/metrics/averageData?metricEntity=FavoriteFinancialEntities&metricType=4&filter=&callback=?', function(data) {
+		$('#total_favorite_average_widget_financial_entities')[0].innerHTML = data;
+	});
+	$.getJSON('/main-be/metrics/averageData?metricEntity=FavoriteOffers&metricType=4&filter=&callback=?', function(data) {
+		$('#total_favorite_average_widget_offers')[0].innerHTML = data;
+	});
+});
+</script>
+
+<!-- Favorite Average -->
+<div class="widget number-widget" id="total_favorite_average_widget" data-collapsed="false" data-collapsible="false">
+	<h3 class="handle">Favoritos Promedio</h3>
+	<div>
+		<ul>
+			<li><a><span id="total_favorite_average_widget_shoppings"></span>Centros Comerciales por Usuario</a></li>
+			<li><a><span id="total_favorite_average_widget_brands"></span>Marcas por Usuario</a></li>
+			<li><a><span id="total_favorite_average_widget_financial_entities"></span>Clubes de Beneficio por Usuario</a></li>
+			<li><a><span id="total_favorite_average_widget_offers"></span>Ofertas Guardadas por Usuario</a></li>
+		</ul>
+	</div>
+</div>

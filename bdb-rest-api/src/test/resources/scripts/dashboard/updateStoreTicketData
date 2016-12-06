@@ -1,0 +1,20 @@
+if [ $# -ne 0 ]; then 
+   echo -e "Usage:\n\t$0\n"
+   exit 1;
+fi
+
+# process common variables
+. ../common
+. ../token.dat
+
+_URL="${_HOST}/bdb/dashboard/storeTicketData?authToken=$_TOKEN"
+_DATA=`cat updateStoreTicketData.data`
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`curl -k -X POST -H "Content-Type:application/json" -d "${_DATA}" ${_URL}`
+
+echo ""
+echo "RESULT: $_RES"

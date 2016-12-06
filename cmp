@@ -1,0 +1,8 @@
+#!/bin/bash
+
+rm -Rf /tmp/allshoppings/lib
+#mvn clean install -DskipTests
+mvn install -DskipTests
+find ./ -path ./allshoppings-rest-api/target/allshoppings-rest-api -prune -o -name '*.jar' -exec cp -v {} /tmp/allshoppings/lib/ \;
+find ./ -name '*.war' -exec cp -v {} /tmp/allshoppings/lib/ \;
+

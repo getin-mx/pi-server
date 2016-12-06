@@ -1,0 +1,19 @@
+if [ $# -ne 1 ]; then 
+   echo -e "Usage:\n\t$0 identifier\n"
+   exit 1;
+fi
+
+# process common variables
+. ./common
+
+_URL="${_HOST}/bdb/process?authToken=$_TOKEN"
+_DATA="{"identifier":"$1"}"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`curl -k -X DELETE -H "Content-Type:application/json" -d "${_DATA}" ${_URL}`
+echo ""
+echo "RESULT: $_RES"
+

@@ -1,0 +1,209 @@
+<?xml version="1.0"?>
+<!DOCTYPE orm SYSTEM "file:/javax/jdo/orm.dtd">
+<orm>
+    <package name="mobi.allshoppings.model">
+        <class name="AddressComponentsCache" table="AddressComponentsCache">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Area" table="Area">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="APDevice" table="APDevice">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="APDAssignation" table="APDAssignation">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="APDeviceMacMatch" table="APDeviceMacMatch">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="APHEntry" table="APHEntry">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="APHotspot" table="APHotspot">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="APUptime" table="APUptime">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="APDVisit" table="APDVisit">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Dummy" table="Dummy">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="BeaconHotspot" table="BeaconHotspot">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Brand" table="Brand">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="CampaignActivity" table="CampaignActivity">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="CampaignSpecial" table="CampaignSpecial">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Cinema" table="Cinema">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Checkin" table="Checkin">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="DashboardIndicatorAlias" table="DashboardIndicatorAlias">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="DashboardIndicatorData" table="DashboardIndicatorData">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="DeviceInfo" table="DeviceInfo">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="DeviceLocation" table="DeviceLocation">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="DeviceLocationHistory" table="DeviceLocationHistory">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="DeviceMessageLock" table="DeviceMessageLock">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="DeviceWifiLocationHistory" table="DeviceWifiLocationHistory">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="ExternalActivityLog" table="ExternalActivityLog">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="ExternalGeo" table="ExternalGeo">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Favorite" table="Favorite">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="FinancialEntity" table="FinancialEntity">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="FloorMap" table="FloorMap">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Friend" table="Friend">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="GeoEntity" table="GeoEntity">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="InvitationDetail" table="InvitationDetail">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Image" table="Image">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="MacVendor" table="MacVendor">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Movie" table="Movie">
+            <field name="key" column="_id" length="100"/>
+        </class>
+        
+        <class name="NotificationLog" table="NotificationLog">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Offer" table="Offer">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="OfferType" table="OfferType">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="PushMessageLog" table="PushMessageLog">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Process" table="Process">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Service" table="Service">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Shopping" table="Shopping">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Store" table="Store">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="StoreTicket" table="StoreTicket">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="SystemStatus" table="SystemStatus">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Showtime" table="Showtime">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="TFToken" table="TFToken">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="User" table="User">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="UserMenu" table="UserMenu">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="UserEntityCache" table="UserEntityCache">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="Voucher" table="Voucher">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="WifiSpot" table="WifiSpot">
+            <field name="key" column="_id" length="100"/>
+        </class>
+    </package>
+</orm>

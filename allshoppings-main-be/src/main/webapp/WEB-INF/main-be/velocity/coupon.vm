@@ -1,0 +1,90 @@
+#parse("/includes/macros.vm")
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+	<title>#springMessage("app.title") | #springMessage("app.validateCoupon")</title>
+
+	<meta name="description" content='#springMessage("app.validateCoupon.description")'>
+	<meta name="author" content='#springMessage("app.url")'>
+
+#parse("includes/header.vm")
+
+	<!-- local functionality script -->
+	<script src="js/coupon.js"></script>
+</head>
+<body>
+#parse("includes/topmenu.vm")
+#parse("includes/leftmenu.vm")
+	<!-- content -->
+	<section id="content">
+		<div class="g12 nodrop">
+			<table>
+				<tr>
+					<td style="text-align: left;">
+						<div class="g12 nodrop">
+							<h1>#springMessage("app.validateCoupon")</h1>
+							<p>#springMessage("app.validateCoupon.description")</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<div id="breadcrumbcontent">
+				<!-- Coupons Form -->
+				<div>
+					<form id="validateCouponForm" method="post" action="doValidateCoupon" autocomplete="off">
+						<fieldset>
+							<section>
+								<label>#springMessage("data.couponCode")</label>
+								<div>
+									<input style="width: 50%;" maxlength="10" type="text" id="couponCode" value="" required data-errortext='#springMessage("error.couponCode")'>
+									<button id="validateCouponSubmit" class="fr submit">#springMessage("app.button.submit")</button>
+								</div>
+							</section>
+
+							<section id="couponDetailsSection" style="display: none;">
+								<label>Datos del cupon</label>
+								<div>
+									<table class="coupon-details">
+										<tbody>
+											<tr>
+												<td width="110">
+													<a class="fancybox" id="couponDetailsAvatarRef" href="" title="">
+													<img id="couponDetailsAvatarId" src="" width="100" height="100" alt=""></a>
+												</td>
+												<td style="text-align: left;">
+													<div class="g12 nodrop">
+														<h1 id="couponDetailsName"></h1>
+														<p id="couponDetailsDescription"></p>
+														<div><span><b>Usuario: </b></span><span id="couponDetailsUser"></span></div>
+														<div><span><b>Fecha de Caducidad: </b></span><span id="couponDetailsValidity"></span></div>
+														<div><span><b>Estado del Cupon: </b></span><span id="couponDetailsRedeemStatus"></span></div>
+														<br/>
+														<p id="couponDetailsComments"></p>
+														<input type="hidden" id="couponDetailsInnerCouponCode" />
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<button id="couponDetailsRedeem" class="fr">#springMessage("app.button.redeem")</button>
+									<button id="couponDetailsCancel" class="fr">#springMessage("app.button.cancel")</button>
+								</div>
+							</section>
+							<!--
+							<section>
+								<div id="validateCouponFormMsg"></div>
+							</section>
+							-->
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</section>
+#parse("includes/footer.vm")
+</body>
+</html>

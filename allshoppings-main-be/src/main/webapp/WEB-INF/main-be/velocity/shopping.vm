@@ -1,0 +1,600 @@
+#parse("/includes/macros.vm")
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+#if( $update )
+	<title>#springMessage("app.title") | #springMessage("app.shopping.edit")</title>
+#else
+	<title>#springMessage("app.title") | #springMessage("app.shopping")</title>
+#end
+
+	<meta name="description" content='#springMessage("app.shopping.description")'>
+	<meta name="author" content='#springMessage("app.url")'>
+
+#parse("includes/header.vm")
+
+	<!-- local functionality script -->
+	<script type="text/javascript" src="https://maps.google.com/maps/api/js"></script>
+	<script type="text/javascript" src="/main-be/js/gmaps.js"></script>
+	<script src="/main-be/highcharts-3.0.1/js/highstock.js"></script>
+	<script src="/main-be/highcharts-3.0.1/js/modules/exporting.js"></script>
+	<script src="/main-be/js/shopping.js"></script>
+
+	#if( $canwrite == false )
+	<script>
+		$(document).ready(function() {
+			$.setReadOnly();
+		});
+	</script>
+	#end
+</head>
+<body>
+#parse("includes/topmenu.vm")
+#parse("includes/leftmenu.vm")
+	<!-- content -->
+	<section id="content">
+
+		<ul id="headbreadcrumb" class="breadcrumb" data-connect="breadcrumbcontent">
+			<li><a href="#">#springMessage("app.shopping.generalData")</a></li>
+			#if( $update )
+			<li><a id="bcLocation" href="#">#springMessage("app.shopping.location")</a></li>
+			<li><a href="#">#springMessage("app.shopping.media")</a></li>
+			<li><a href="#">#springMessage("app.shopping.invoicingData")</a></li>
+			<li><a href="#">#springMessage("app.audit")</a></li>
+			<!-- <li><a href="#">#springMessage("app.followers")</a></li> -->
+			<!-- <li><a href="#">#springMessage("app.visits")</a></li> -->
+				#if( $floorMap.size() != 0 )
+				<li><a id="bcFloorMaps" href="#">#springMessage("app.floorMaps")</a></li>
+				#end
+			#end
+		</ul>
+
+		<div class="g12 nodrop">
+			<table>
+				<tr>
+					<td width="110">
+					#if( $shopping.AvatarId )
+						<a class="fancybox" href="/img/$!shopping.AvatarId" title="$!shopping.Fullname"><img src="/img/$!shopping.AvatarId" width="100" height="100" alt=""></a>
+					#else
+						<a class="fancybox" href="/main-be/css/images/defaultavatar.png"><img src="/main-be/css/images/defaultavatar.png" width="100" height="100" alt=""></a>
+					#end
+					</td>
+					<td style="text-align: left;">
+						<div class="g12 nodrop">
+						#if( $update )
+							<h1>#springMessage("app.shopping.edit")</h1>
+						#else
+							<h1>#springMessage("app.shopping")</h1>
+						#end
+							<p>#springMessage("app.shopping.description")</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div>
+			<div id="breadcrumbcontent">
+				<!-- Shopping Profile -->
+				<div>
+					<form id="contactForm" method="post" action="doUpdateShopping" autocomplete="off">
+						<fieldset>
+							<label style="height: 30px;">
+								#springMessage("app.shopping.generalData")
+								#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/shoppingList';" >#springMessage("app.button.back")</button>
+								#end
+							</label>
+							
+							<section>
+								<label>#springMessage("data.shoppingName")</label>
+								<div>
+								<input style="width: 97% !important;" type="text" id="name" required data-errortext='#springMessage("error.name")' value="$!shopping.Name">
+								#if ($update)
+									<input type="hidden" id="shoppingid" value="$shopping.Identifier">
+									<input type="hidden" id="crudtype" value="edit">
+								#else
+									<input type="hidden" id="shoppingid" value="">
+									<input type="hidden" id="crudtype" value="create">
+								#end
+								</div>
+							</section>
+
+							<section>
+								<label for="avatar">#springMessage("data.avatar")</label>
+								<div>
+									<table>
+										<tr>
+											<td width="130" style="vertical-align: middle;">
+											#if( $shopping.AvatarId )
+												<a id="avatarAnchor" class="fancybox" href="/img/$!shopping.AvatarId" title="$!shopping.Fullname"><img id="avatarImage" src="/img/$!shopping.AvatarId" width="116" height="116" alt=""></a>
+											#else
+												<a id="avatarAnchor" class="fancybox" href="/main-be/css/images/defaultavatar.png" title=""><img id="avatarImage" src="/main-be/css/images/defaultavatar.png" width="116" height="116" alt=""></a>
+											#end
+											<input type="hidden" id="avatarId"/>
+											</td>
+											<td>
+												<input type="file" id="avatar">
+											</td>
+										</tr>
+									</table>
+								</div>
+							</section>
+
+							<section>
+								<label for="frontImage">#springMessage("data.frontImage")</label>
+								<div>
+									<table>
+										<tr>
+											<td width="130" style="vertical-align: middle;">
+											#if( $shopping.FrontImageId )
+												<a id="frontImageAnchor" class="fancybox" href="/img/$!shopping.FrontImageId" title="$!shopping.Fullname"><img id="frontImageImg" src="/img/$!shopping.FrontImageId" width="116" height="116" alt=""></a>
+											#else
+												<a id="frontImageAnchor" class="fancybox" href="/main-be/css/images/defaultavatar.png" title=""><img id="frontImageImg" src="/main-be/css/images/defaultavatar.png" width="116" height="116" alt=""></a>
+											#end
+											<input type="hidden" id="frontImageId"/>
+											</td>
+											<td>
+												<input type="file" id="frontImage">
+											</td>
+										</tr>
+									</table>
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.status")</label>
+								<div>
+									#select("status", $!shopping.Status, $svh.getStatusNames(${lang}), $svh.StatusValues)
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.briefDescription")</label>
+								<div>
+									<textarea id="description" class="html" rows="15" data-buttons="bold|italic|underline">$!shopping.description</textarea>
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.services")</label>
+								<div>
+									#multiselect("services", $!shopping.ServiceId, $serviceNames, $serviceIds)
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("app.shopping.customCheckinMessage")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="customCheckinMessage"  value="$!shopping.CustomCheckinMessage">
+								</div>
+							</section>
+
+							<label>#springMessage("app.shopping.contactData")</label>
+
+							<section>
+								<label>#springMessage("data.email")</label>
+								<div>
+									<input style="width: 97% !important;" type="email" id="mail" value="$!shopping.ContactInfo.Mail.Email">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.phoneAndMobile")</label>
+								<div>
+									<input style="width: 48% !important;" type="text" id="phone" value="$!shopping.ContactInfo.Phone">
+									<input style="width: 48% !important;" type="text" id="mobile" value="$!shopping.ContactInfo.Mobile">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.webpage")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="webURL"  placeholder="http://" value="$!shopping.ContactInfo.WebURL">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.facebook")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="facebookId" value="$!shopping.ContactInfo.FacebookId">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.twitter")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="twitterId" value="$!shopping.ContactInfo.TwitterId">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.googleId")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="googleId" value="$!shopping.ContactInfo.GoogleId">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.foursquareId")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="foursquareId" value="$!shopping.ContactInfo.FoursquareId">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.tiendeoId")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="tiendeoId" value="$!shopping.ContactInfo.TiendeoId">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.youtubeChannel")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="youtubeChannel" value="$!shopping.ContactInfo.YoutubeChannel">
+								</div>
+							</section>
+
+							<section>
+								<div>
+								#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/shoppingList';" >#springMessage("app.button.back")</button>
+								#end
+								</div>
+							</section>
+
+							<section>
+								<div id="contactFormMsg"></div>
+							</section>
+
+						</fieldset>
+					</form>
+				</div>
+
+				#if( $update )
+				<!-- Location -->
+				<div>
+					<form id="locationForm" method="post" action="doUpdateShoppingLocation" autocomplete="off">
+						<fieldset>
+							<input type="hidden" id="shoppingid" value="$shopping.Identifier">
+							<label style="height: 30px;">
+								#springMessage("app.shopping.location")
+								#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/shoppingList';" >#springMessage("app.button.back")</button>
+								#end
+							</label>
+
+							<section>
+								<label>#springMessage("data.timezone")</label>
+								<div>
+									#timezone("timezone", $!shopping.Timezone)
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.addressAndNumber")</label>
+								<div>
+									<input style="width: 48% !important;" type="text" id="streetName" value="$!shopping.Address.StreetName">
+									<input style="width: 48% !important;" type="text" id="streetNumber" value="$!shopping.Address.StreetNumber">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.citiAndZipCode")</label>
+								<div>
+									<input style="width: 48% !important;" type="text" id="city" value="$!shopping.Address.City">
+									<input style="width: 48% !important;" type="text" id="zipCode" value="$!shopping.Address.ZipCode">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.province")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="province" value="$!shopping.Address.Province">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.country")</label>
+								<div>
+									#select("country", $!shopping.Address.Country, $svh.getCountryNames(${lang}), $svh.getCountryNames(${lang}))
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.latitudeandlongitude")</label>
+								<div>
+									<input style="width: 120px !important;" data-regex="^[0-9 \- .]+$" id="latitude" value="$!shopping.Address.Latitude">
+									<input style="width: 120px !important;" data-regex="^[0-9 \- .]+$" id="longitude" value="$!shopping.Address.Longitude">
+									<button id="updateCoordinates" style="float: right;" >#springMessage("data.calculateCoordinates")</button>
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.fenceSize")</label>
+								<div>
+									<input style="width: 120px !important;" data-regex="^[0-9 ]+$" id="fenceSize" value="$!shopping.FenceSize">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.checkinAreaSize")</label>
+								<div>
+									<input style="width: 120px !important;" data-regex="^[0-9 ]+$" id="checkinAreaSize" value="$!shopping.CheckinAreaSize">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.map")</label>
+								<div>
+									<div id="map"></div>
+								</div>
+							</section>
+
+							<section>
+								<div>
+								#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/shoppingList';" >#springMessage("app.button.back")</button>
+								#end
+								</div>
+							</section>
+
+							<section>
+								<div id="locationFormMsg"></div>
+							</section>
+							
+						</fieldset>
+					</form>
+				</div>
+
+				<!-- Multimedia -->
+				<div>
+					<form id="mediaForm" method="post" action="doUpdateShoppingMedia" autocomplete="off">
+						<fieldset>
+							<input type="hidden" id="shoppingid" value="$shopping.Identifier">
+							<label style="height: 30px;">
+								#springMessage("app.shopping.media")
+								#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/shoppingList';" >#springMessage("app.button.back")</button>
+								#end
+							</label>
+
+							<section>
+								<label for="mediaUpload">#springMessage("app.shopping.uploadPhotos")<br>
+								<span>#springMessage("app.shopping.uploadPhotosMeasures")</span>
+								</label>
+								<div>
+									<input type="file" id="mediaUpload" multiple>
+								</div>
+							</section>
+
+							<section>
+								<label for="media">#springMessage("app.shopping.currentPhotos")</label>
+								<ul id="mediaGallery" class="gallery">
+								#foreach( $photo in $!shopping.PhotoId )
+									<li><a href="/img/$photo"><img src="/img/$photo" width="116" height="116" alt=""></a></li>
+								#end
+								</ul>
+							</section>
+
+							<section>
+								<div>
+								#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/shoppingList';" >#springMessage("app.button.back")</button>
+								#end
+								</div>
+							</section>
+
+							<section>
+								<div id="invoicingFormMsg"></div>
+							</section>
+							
+						</fieldset>
+					</form>
+				</div>
+
+				<!-- Invoicing Data -->
+				<div>
+					<form id="invoicingForm" method="post" action="doUpdateShoppingInvoicing" autocomplete="off">
+						<fieldset>
+							<input type="hidden" id="shoppingid" value="$shopping.Identifier">
+							<label style="height: 30px;">
+								#springMessage("app.shopping.invoicingData")
+								#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/shoppingList';" >#springMessage("app.button.back")</button>
+								#end
+							</label>
+
+							<section>
+								<label>#springMessage("data.companyName")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="companyName" value="$!shopping.InvoicingInfo.CompanyName">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.inscription")</label>
+								<div>
+									#select("inscription", $!shopping.InvoicingInfo.Inscription, $svh.getInscriptionsNames(${lang}), $svh.getInscriptionsNames(${lang}))
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.vatNumber")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="vatNumber" value="$!shopping.InvoicingInfo.VatNumber">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.addressAndNumber")</label>
+								<div>
+									<input style="width: 48% !important;" type="text" id="invoiceStreetName" value="$!shopping.InvoicingInfo.InvoiceStreetName">
+									<input style="width: 48% !important;" type="text" id="invoiceStreetNumber" value="$!shopping.InvoicingInfo.InvoiceStreetNumber">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.citiAndZipCode")</label>
+								<div>
+									<input style="width: 48% !important;" type="text" id="invoiceCity" value="$!shopping.InvoicingInfo.InvoiceCity">
+									<input style="width: 48% !important;" type="text" id="invoiceZipCode" value="$!shopping.InvoicingInfo.InvoiceZipCode">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.province")</label>
+								<div>
+									<input style="width: 97% !important;" type="text" id="invoiceProvince" value="$!shopping.InvoicingInfo.InvoiceProvince">
+								</div>
+							</section>
+
+							<section>
+								<label>#springMessage("data.country")</label>
+								<div>
+									#select("invoiceCountry", $!shopping.InvoicingInfo.InvoiceCountry, $svh.getCountryNames(${lang}), $svh.getCountryNames(${lang}))
+								</div>
+							</section>
+
+							<section>
+								<div>
+								#if( $canwrite == true )
+									<button class="fr submit">#springMessage("app.button.submit")</button>
+								#else
+									<button class="fr" onclick="window.location='/main-be/shoppingList';" >#springMessage("app.button.back")</button>
+								#end
+								</div>
+							</section>
+
+							<section>
+								<div id="invoicingFormMsg"></div>
+							</section>
+							
+						</fieldset>
+					</form>
+				</div>
+
+				<!-- Audit -->
+				<div>
+					<form id="policiesForm" autocomplete="off">
+						<fieldset>
+							<input type="hidden" id="offerid" value="$offer.Identifier">
+							<label style="height: 30px;">
+								#springMessage("app.audit")
+							</label>
+
+							<section>
+								<label for="creationDateTime">#springMessage("app.audit.creationDateTime")</label>
+								<div>
+									$svh.formatDate($shopping.creationDateTime) - $svh.formatTime($shopping.creationDateTime)
+								</div>
+							</section>
+
+							<section>
+								<label for="lastUpdate">#springMessage("app.audit.lastUpdate")</label>
+								<div>
+									$svh.formatDate($shopping.lastUpdate) - $svh.formatTime($shopping.lastUpdate)
+								</div>
+							</section>
+
+							<section>
+								<label for="lastUpdate">#springMessage("app.audit.owner")</label>
+								<div>
+									$shopping.acl.owner
+								</div>
+							</section>
+
+							<section>
+								<div id="auditFormMsg"></div>
+							</section>
+
+						</fieldset>
+					</form>
+				</div>
+
+				<!-- Followers -->
+				<div>
+					<fieldset>
+							<div class="g6 widgets">
+								#parse("metrics/total_favorites.vm")
+								#parse("metrics/total_followers_by_gender.vm")
+								#parse("metrics/total_female_followers_by_age.vm")
+							</div>
+
+							<div class="g6 widgets">
+								#parse("metrics/total_followers_devices_by_platform.vm")
+								#parse("metrics/total_followers_by_age.vm")
+								#parse("metrics/total_male_followers_by_age.vm")
+							</div>
+					</fieldset>
+				</div>
+
+				<!-- Visits -->
+				<div>
+					<fieldset>
+							<div class="g6 widgets">
+								#parse("metrics/total_checkins.vm")
+								#parse("metrics/total_checkins_by_duration.vm")
+								#parse("metrics/total_visitors_by_gender.vm")
+								#parse("metrics/total_female_visitors_by_age.vm")
+								#parse("metrics/total_visitors_devices_by_platform.vm")
+							</div>
+
+							<div class="g6 widgets">
+								#parse("metrics/total_checkins_by_day.vm")
+								#parse("metrics/total_checkins_by_hour.vm")
+								#parse("metrics/total_visitors_by_age.vm")
+								#parse("metrics/total_male_visitors_by_age.vm")
+							</div>
+					</fieldset>
+				</div>
+
+				<!-- Floor Maps -->
+				<div>
+					<fieldset>
+						#set($i=0)
+						#foreach($map in $floorMap)
+							#set($i=1+$i)
+							#if($i==1 || $i==((($floorMap.size()/2) - ($floorMap.size()%2)) + 1))
+							<div class="g6 widgets">
+							#end
+								<div class="widget" id="floor_map_widget_$i" data-icon="map" data-collapsed="false" data-collapsible="false">
+									<h3 class="handle">$map.Floor</h3>
+									<div>
+										<div id="floor_map_container" class="floor_map_container" style="height: 600px; min-width: 400px">
+											<iframe id="floor_map_iframe" class="floor_map_iframe" style="height: 600px; min-width: 400px;" src="/main-be/floorMap/$!map.Identifier">
+											</iframe>
+										</div>
+									</div>
+								</div>
+							#if($i==$floorMap.size() || $i==(($floorMap.size()/2) - ($floorMap.size()%2)))
+							</div>
+							#end
+						#end
+					</fieldset>
+				</div>
+
+				#end
+			</div>
+		</div>
+
+	</section>
+#parse("includes/footer.vm")
+</body>
+</html>

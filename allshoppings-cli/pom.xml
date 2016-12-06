@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>mobi.allshoppings</groupId>
+		<artifactId>pi-server</artifactId>
+		<version>0.1</version>
+	</parent>
+
+	<artifactId>allshoppings-cli</artifactId>
+
+	<name>AllShoppings Command Line Interface</name>
+	<url>http://www.allshoppings.mobi</url>
+
+	<scm>
+		<url>http://development.inodes-it.com/svn/repos/mobi.allshoppings/allshoppings-cli/trunk</url>
+		<connection>scm:svn:http://development.inodes-it.com/svn/repos/mobi.allshoppings/allshoppings-cli/trunk</connection>
+	</scm>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+
+	<organization>
+		<name>AllShoppings LLC</name>
+		<url>http://www.allshoppings.mobi</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>mhapanow</id>
+			<name>Matias Hapanowicz</name>
+			<email>mhapanowicz@allshoppings.mobi</email>
+			<url>http://www.allshoppings.mobi</url>
+			<organization>AllShoppings LLC</organization>
+			<organizationUrl>http://www.allshoppings.mobi</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<!-- Logger -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-jul</artifactId>
+			<version>2.3</version>
+		</dependency>
+
+		<!-- AllShoppings dependencies -->
+		<dependency>
+			<groupId>mobi.allshoppings</groupId>
+			<artifactId>cinepolis-services</artifactId>
+			<version>0.1</version>
+		</dependency>
+
+		<!-- Command line dependencies -->
+		<dependency>
+			<groupId>net.sf.jopt-simple</groupId>
+			<artifactId>jopt-simple</artifactId>
+			<version>4.7</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.2</version>
+					<configuration>
+						<source>1.7</source>
+						<target>1.7</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>
