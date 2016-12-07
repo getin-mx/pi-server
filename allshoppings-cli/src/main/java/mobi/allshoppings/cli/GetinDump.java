@@ -394,12 +394,21 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 			}
 			try {
-				brand = brandDao.get("grupochomarc_mx", true);
+				brand = brandDao.get("chomarc_mx", true);
 			} catch( Exception e ) {
 				brand = new Brand();
-				brand.setName("Grupo Chomarc");
+				brand.setName("Chomarc");
 				brand.setCountry("Mexico");
-				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "grupochomarc_mx"));
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "chomarc_mx"));
+				brandDao.create(brand);
+			}
+			try {
+				brand = brandDao.get("outletdeportes_mx", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Outlet Deportes");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "outletdeportes_mx"));
 				brandDao.create(brand);
 			}
 			// Stores ----------------------------------------------------------------------------------------------------
@@ -515,11 +524,30 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("288", "Areas México G58", "areasmexico_mx",null));
 
 			//300 start key hardcode
-			stores.add(new StoreAdapter("300", "Grupo Chomarc Adolfo Dominguez Anatole France", "grupochomarc_mx",null));
-			stores.add(new StoreAdapter("301", "Grupo Chomarc La Martina Antara", "grupochomarc_mx","antara"));
-			stores.add(new StoreAdapter("302", "Grupo Chomarc Adolfo Dominguez Galerías Atizapan", "grupochomarc_mx",null));
-			stores.add(new StoreAdapter("303", "Grupo Chomarc U by AD	Galerías Atizapan", "grupochomarc_mx",null));
-			stores.add(new StoreAdapter("304", "Grupo Chomarc La Martina Santa Fe", "grupochomarc_mx","centrosantafe"));
+			stores.add(new StoreAdapter("300", "Adolfo Dominguez Anatole France", "chomarc_mx",null));
+			stores.add(new StoreAdapter("301", "La Martina Antara", "chomarc_mx","antara"));
+			stores.add(new StoreAdapter("302", "Adolfo Dominguez Galerías Atizapan", "chomarc_mx",null));
+			stores.add(new StoreAdapter("303", "U by AD	Galerías Atizapan", "chomarc_mx",null));
+			stores.add(new StoreAdapter("304", "La Martina Santa Fe", "chomarc_mx","centrosantafe"));
+			stores.add(new StoreAdapter("305", "Fullsand AICM", "fullsand_mx", null));
+			
+			stores.add(new StoreAdapter("306", "Adolfo Dominguez Duraznos", "chomarc_mx",null));
+			stores.add(new StoreAdapter("307", "AGS AD	Altaria", "chomarc_mx",null));
+			stores.add(new StoreAdapter("308", "La Martina Antea Queretaro", "chomarc_mx",null));
+			stores.add(new StoreAdapter("309", "Adolfo Dominguez Lomas Verdes", "chomarc_mx",null));
+			stores.add(new StoreAdapter("310", "Adolfo Dominguez Emilio Castelar", "chomarc_mx",null));
+			
+			stores.add(new StoreAdapter("311", "La Martina Punta Norte", "chomarc_mx",null));
+			
+			stores.add(new StoreAdapter("312", "Outlet Deportes	Correo Mayor 48", "outletdeportes_mx",null));
+			stores.add(new StoreAdapter("313", "Outlet Deportes	Correo Mayor 71", "outletdeportes_mx",null));
+			stores.add(new StoreAdapter("314", "Outlet Deportes	Correo Mayor 81", "outletdeportes_mx",null));
+			
+			
+			
+			
+			
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
