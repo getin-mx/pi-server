@@ -68,7 +68,9 @@ implements BDBDashboardBzService, BDBPostBzService {
 			Date curDate = sdf.parse(fromDate);
 			Date limitDate = sdf.parse(toDate);
 			JSONArray jsonArray = new JSONArray();
+			JSONArray dateArray = new JSONArray();
 			while( curDate.before(limitDate) || curDate.equals(limitDate) ) {
+				dateArray.put(sdf.format(curDate));
 				StoreTicket obj = tmp.get(sdf.format(curDate));
 				if( obj == null ) {
 					jsonArray.put(0);
@@ -85,6 +87,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 			ret.put("toDate", toDate);
 			
 			ret.put("data", jsonArray);
+			ret.put("dates", dateArray);
 			return ret.toString();
 
 		} catch (ASException e) {
