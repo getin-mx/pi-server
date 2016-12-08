@@ -115,7 +115,7 @@
 		<property name="processHost" value="gandalf.getin.mx" />
 		<property name="processUser" value="getin" />
 		<property name="processPass" value="#zxcvasdf7890" />
-		<property name="processRunTimeLimit" value="10" />
+		<property name="processRunTimeLimit" value="14400000" />
 
 		<property name="cinepolisHotspots">
 			<list>
