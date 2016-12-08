@@ -411,6 +411,15 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "outletdeportes_mx"));
 				brandDao.create(brand);
 			}
+			try {
+				brand = brandDao.get("hrconsulting_ar", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("HR Consulting");
+				brand.setCountry("Argentina");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "hrconsulting_ar"));
+				brandDao.create(brand);
+			}
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -543,10 +552,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("313", "Outlet Deportes	Correo Mayor 71", "outletdeportes_mx",null));
 			stores.add(new StoreAdapter("314", "Outlet Deportes	Correo Mayor 81", "outletdeportes_mx",null));
 			
-			
-			
-			
-			
+			stores.add(new StoreAdapter("315", "HR Consulting Helguera", "hrconsulting_ar",null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
