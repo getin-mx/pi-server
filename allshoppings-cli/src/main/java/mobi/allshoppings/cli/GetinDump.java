@@ -420,6 +420,27 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "hrconsulting_ar"));
 				brandDao.create(brand);
 			}
+			try {
+				brand = brandDao.get("sallybeauty_mx", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Sally Beauty");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "sallybeauty_mx"));
+				brandDao.create(brand);
+			}
+			try {
+				brand = brandDao.get("roku_mx", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Roku");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "roku_mx"));
+				brandDao.create(brand);
+			}
+			
+			
+			
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -457,7 +478,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("209", "Adolfo Dominguez Interlomas", "adolfodominguez_mx", "interlomas"));
 
 			stores.add(new StoreAdapter("211", "Flormar Multiplaza", "flormar_pa", null));
-			stores.add(new StoreAdapter("264", "Flormar Metromall", "flormar_pa", null));
+			stores.add(new StoreAdapter("264", "Flormar Metromcentrocoyoacanall", "flormar_pa", null));
 			stores.add(new StoreAdapter("265", "Flormar Altaplaza", "flormar_pa", null));
 			stores.add(new StoreAdapter("266", "Flormar Multicentro", "flormar_pa", null));
 
@@ -545,14 +566,17 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("308", "La Martina Antea Queretaro", "chomarc_mx",null));
 			stores.add(new StoreAdapter("309", "Adolfo Dominguez Lomas Verdes", "chomarc_mx",null));
 			stores.add(new StoreAdapter("310", "Adolfo Dominguez Emilio Castelar", "chomarc_mx",null));
-			
 			stores.add(new StoreAdapter("311", "La Martina Punta Norte", "chomarc_mx",null));
-			
 			stores.add(new StoreAdapter("312", "Outlet Deportes	Correo Mayor 48", "outletdeportes_mx",null));
 			stores.add(new StoreAdapter("313", "Outlet Deportes	Correo Mayor 71", "outletdeportes_mx",null));
 			stores.add(new StoreAdapter("314", "Outlet Deportes	Correo Mayor 81", "outletdeportes_mx",null));
-			
 			stores.add(new StoreAdapter("315", "HR Consulting Helguera", "hrconsulting_ar",null));
+			
+			stores.add(new StoreAdapter("316","Sally Beauty	Perisur", "sallybeauty_mx","perisur"));
+			stores.add(new StoreAdapter("317","Sally Beauty	Centro Coyoacan", "sallybeauty_mx","centrocoyoacan")); 
+			stores.add(new StoreAdapter("318","Sally Beauty	Mega Coyoacan", "sallybeauty_mx",null)); 
+			stores.add(new StoreAdapter("319","Sally Beauty	Delta", "sallybeauty_mx","parquedelta"));
+			stores.add(new StoreAdapter("320","Sally Beauty	Metepec", "sallybeauty_mx",null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
