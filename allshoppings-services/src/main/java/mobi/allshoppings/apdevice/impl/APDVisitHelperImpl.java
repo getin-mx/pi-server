@@ -191,7 +191,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					}
 
 					didDao.deleteUsingSubentityIdAndElementIdAndDate(store.getIdentifier(),
-							Arrays.asList(new String[] { "apd_visitors", "apd_permanence" }), curDate, curDate);
+							Arrays.asList(new String[] { "apd_visitor", "apd_permanence" }), curDate, curDate);
 					mapper.createAPDVisitPerformanceDashboardForDay(curDate,
 							Arrays.asList(new String[] { store.getIdentifier() }));
 				}
