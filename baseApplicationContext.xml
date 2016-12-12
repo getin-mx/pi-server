@@ -239,6 +239,7 @@
 	<bean id="campaignactivity.dao.ref" class="mobi.allshoppings.dao.spi.CampaignActivityDAOJDOImpl" />
 	<bean id="checkin.dao.ref" class="mobi.allshoppings.dao.spi.CheckinDAOJDOImpl" />
 	<bean id="aphotspot.dao.ref" class="mobi.allshoppings.dao.spi.APHotspotDAOJDOImpl" />
+	<bean id="apdmablacklist.dao.ref" class="mobi.allshoppings.dao.spi.APDMABlackListDAOJDOImpl" />
 	<bean id="dashboardindicatoralias.dao.ref" class="mobi.allshoppings.dao.spi.DashboardIndicatorAliasDAOJDOImpl" />
 	<bean id="dashboardindicatordata.dao.ref" class="mobi.allshoppings.dao.spi.DashboardIndicatorDataDAOJDOImpl" />
 	<bean id="cinema.dao.ref" class="mobi.allshoppings.dao.spi.CinemaDAOJDOImpl" />
