@@ -92,6 +92,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	private Long dailyQuantity;
 	private String customUrl;
 	private String promotionType;
+	private String product;
 
 	@Persistent(defaultFetchGroup = "true")
 	@Embedded	
@@ -1053,6 +1054,27 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	}
 
 	/**
+	 * @return the product
+	 */
+	public String getProduct() {
+		return product;
+	}
+
+	/**
+	 * @param product the product to set
+	 */
+	public void setProduct(String product) {
+		this.product = product;
+	}
+
+	/**
+	 * @param policies the policies to set
+	 */
+	public void setPolicies(Text policies) {
+		this.policies = policies;
+	}
+
+	/**
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -1099,7 +1121,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 				+ ", genders=" + genders + ", ageFrom=" + ageFrom + ", ageTo=" + ageTo + ", country=" + country
 				+ ", timezone=" + timezone + ", trigger=" + trigger + ", span=" + span + ", quantity=" + quantity
 				+ ", dailyQuantity=" + dailyQuantity + ", customUrl=" + customUrl + ", promotionType=" + promotionType
-				+ ", acl=" + acl + ", expired=" + expired + "]";
+				+ ", product=" + product + ", acl=" + acl + ", expired=" + expired + "]";
 	}
 	
 }

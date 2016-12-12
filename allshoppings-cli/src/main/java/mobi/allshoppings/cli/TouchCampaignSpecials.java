@@ -43,6 +43,12 @@ public class TouchCampaignSpecials extends AbstractCLI {
 					obj.addAppId("cinepolis_mx");
 					obj.addAppId("amazing_mx");
 				}
+				if( obj.getIdentifier().equals("1430288511084"))
+					obj.setProduct("Boleto de Cine");
+				if( obj.getIdentifier().equals("1432724594627"))
+					obj.setProduct("Crepa de dos ingredientes");
+				if( obj.getIdentifier().equals("1432724531038"))
+					obj.setProduct("Bagui clasico o de pavo");
 				dao.update(obj);
 				
 			}

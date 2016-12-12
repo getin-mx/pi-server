@@ -6,10 +6,10 @@ public class CampaignSpecialBzFields extends BzFields {
 
 	protected CampaignSpecialBzFields() {
 		INTERNAL_ALWAYS_FIELDS.addAll(Arrays.asList(
-				"hostname"
+				"identifier"
 				));
 		INTERNAL_DEFAULT_FIELDS.addAll(Arrays.asList(
-				"hostname"
+				"identifier"
 				));
 		INTERNAL_INVALID_FIELDS.addAll(Arrays.asList(
 				"key"
@@ -29,6 +29,7 @@ public class CampaignSpecialBzFields extends BzFields {
 				"validFrom",
 				"validTo",
 				"lastUpdate",
+				"product",
 				"expired"
 				));
 		INTERNAL_LEVEL_ALL_FIELDS.addAll(Arrays.asList(
@@ -67,7 +68,7 @@ public class CampaignSpecialBzFields extends BzFields {
 				"dailyQuantity",
 				"customUrl",
 				"promotionType",
-				"acl",
+				"product",
 				"favorite",
 				"requester",
 				"expired"
