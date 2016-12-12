@@ -1,0 +1,19 @@
+if [ $# -lt 1 ]; then 
+   echo -e "Usage:\n\t$0 deviceId \n"
+   exit 1;
+fi
+
+# process common variables
+. ./common
+
+_URL="${_HOST}/app/externalActivityTrigger?authToken=$_TOKEN"
+_DATA="{\"longDevices\":[{\"coupons\":[\"00000000001\",\"00000000002\",\"00000000003\"],\"deviceUUID\":\"d9ae567caf438b98@cinepolis_mx\"}],\"actionPrepend\":\"tickets/\",\"imageUrl\":\"http://www.cinepolis.com/_MOVIL/Android/cartel/divergente-leal.jpg\",\"campaignSpecialId\":\"1430288511084\",\"description\":\"Cinépolis Paseo Interlomas - Divergente La Serie: Leal - 2016-03-23 21:25\",\"ignoreLocks\":true,\"entityId\":\"cinepolis_mx_449_78183\",\"devices\":[\"$1\"],\"brandId\":\"cinepolis_mx\",\"extras\":{\"screen\":\"Sala 6\",\"price\":44,\"rate\":\"B\",\"description\":\"Entrada a precio especial de $44.0\",\"cinema\":\"Cinépolis Paseo Interlomas\",\"movieGender\":\"Accion y Aventura\",\"name\":\"Divergente La Serie: Leal\",\"length\":\"121 min\",\"format\":\"SUB\",\"availableSeats\":113,\"showDateTime\":1458786300000,\"showtimeId\":\"cinepolis_mx_449_78183\"}}"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo "With data:" ${_DATA}
+echo ""
+
+_RES=`curl -k -X POST -H "Content-Type:application/json" -d "${_DATA}" ${_URL}`
+echo ""
+echo "RESULT: $_RES"

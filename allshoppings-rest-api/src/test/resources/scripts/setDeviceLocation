@@ -1,0 +1,18 @@
+if [ $# -ne 3 ]; then 
+   echo -e "Usage:\n\t$0 deviceUUID lat lon\n"
+   exit 1;
+fi
+
+# process common variables
+. ./common
+
+_URL="${_HOST}/app/deviceLocation?authToken=$_TOKEN"
+_DATA="{"deviceUUID":"$1","lat":"$2","lon":"$3"}"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`curl -k -X POST -H "Content-Type:application/json" -d "${_DATA}" ${_URL}`
+echo ""
+echo "RESULT: $_RES"

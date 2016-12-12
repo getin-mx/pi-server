@@ -1,0 +1,19 @@
+if [ $# -lt 1 ]; then 
+   echo -e "Usage:\n\t$0 deviceId \n"
+   exit 1;
+fi
+
+# process common variables
+. ./common
+
+_URL="${_HOST}/app/externalActivityTrigger?authToken=$_TOKEN"
+_DATA="{\"devices\":[\"$1\"],\"campaignSpecialId\":\"1432724531038\",\"actionPrepend\":\"promos/\",\"brandId\":\"cinepolis_mx\",\"extras\":{\"price\":35,\"cinema\":\"Cin&eacute;polis Plaza Morelia\",\"name\":\"Bagui de pavo o cl&aacute;sico\",\"validIn\":\"V&aacute;lido exclusivamente en Cinecaf&eacute;&copy; y/o Coffe Tree&copy; y/o Baguis&copy; que se ubiquen dentro del complejo \",\"validFrom\":1433160164289}}"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo "With data:" ${_DATA}
+echo ""
+
+_RES=`curl -k -X POST -H "Content-Type:application/json" -d "${_DATA}" ${_URL}`
+echo ""
+echo "RESULT: $_RES"

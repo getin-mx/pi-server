@@ -1,0 +1,18 @@
+if [ $# -ne 5 ]; then 
+   echo -e "Usage:\n\t$0 entityId kind (0: Shopping, 1: Brand, 2: Offer) share message facebook_token\n"
+   exit 1;
+fi
+
+# process common variables
+. ./common
+
+_URL="${_HOST}/app/comment?authToken=$_TOKEN"
+_DATA="{"entityId":"$1","kind":$2,"type":"fb","shared":"$3","message":"$4","fbToken":"$5"}"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`curl -k -X PUT -H "Content-Type:application/json" -d "${_DATA}" ${_URL}`
+echo ""
+echo "RESULT: $_RES"

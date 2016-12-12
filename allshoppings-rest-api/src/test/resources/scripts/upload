@@ -1,0 +1,17 @@
+if [ $# -ne 1 ]; then 
+   echo -e "Usage:\n\t$0 input_file\n"
+   exit 1;
+fi
+
+# process common variables
+. ./common
+
+_URL="${_HOST}/app/dump?authToken=$_TOKEN"
+
+echo ""
+echo "Calling: curl -k -X POST -H \"Content-Type:application/json\" --data @$1 ${_URL}"
+echo ""
+
+_RES=`curl -k -X POST -H "Content-Type:application/json" -H "Content-Encoding:utf-8" --data @$1 ${_URL}`
+echo ""
+echo "RESULT: $_RES"

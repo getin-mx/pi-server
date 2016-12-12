@@ -72,6 +72,8 @@
 				<entry key="/offers" value-ref="spring.offers.rest.resource" />
 				<entry key="/offers/{offerId}" value-ref="spring.offer.rest.resource" />
 				<entry key="/{kind}/{entityId}/offers" value-ref="spring.offers.rest.resource" />
+				<entry key="/campaignOffers" value-ref="spring.campaignspecials.rest.resource" />
+				<entry key="/campaignOffers/{identifier}" value-ref="spring.campaignspecial.rest.resource" />
 				
 				<entry key="/tools/forcepass" value-ref="spring.forcepass.rest.resource" />
 				<entry key="/replica" value-ref="spring.replica.rest.resource" />
@@ -147,6 +149,12 @@
 	</bean>
 	<bean id="spring.localtables.rest.resource" class="org.restlet.ext.spring.SpringFinder">
 		<lookup-method name="create" bean="localtables.rest.resource" />
+	</bean>
+	<bean id="spring.campaignspecials.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="campaignspecials.rest.resource" />
+	</bean>
+	<bean id="spring.campaignspecial.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="create" bean="campaignspecial.rest.resource" />
 	</bean>
 	<bean id="spring.brands.rest.resource" class="org.restlet.ext.spring.SpringFinder">
 		<lookup-method name="create" bean="brands.rest.resource" />

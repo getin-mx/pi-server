@@ -1,0 +1,24 @@
+if [ $# -ne 2 ]; then 
+   echo -e "Usage:\n\t$0 currentPassword newPassword\n"
+   exit 1;
+fi
+
+# process common variables
+. ./common
+
+_URL="${_HOST}/app/pass?authToken=$_TOKEN"
+_DATA="{"currentPassword":"$1","newPassword":"$2"}"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`curl -k -X POST -H "Content-Type:application/json" -d "${_DATA}" ${_URL}`
+echo ""
+echo "RESULT: $_RES"
+
+echo ""
+echo "Logging in with user $_USER"
+echo ""
+
+. ./login $_USER $2

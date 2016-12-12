@@ -1,0 +1,12 @@
+# process common variables
+. ./common
+
+_URL="${_HOST}/app/offerproposals?authToken=$_TOKEN&from=1&to=3&brandId=walmart_mx"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`curl -k -X GET ${_URL}`
+echo ""
+echo "RESULT: $_RES"

@@ -1,0 +1,17 @@
+{
+	"identifier": "mhapanowicz3@gmail.com",
+	"lang": "es",
+	"email": "mhapanowicz3@gmail.com",
+	"firstname": "Matias",
+	"lastname": "Hapanowicz",
+	"gender": "male",
+	"avatarId": "",
+	"birthDate": "1981-10-13T00:00:00-06:00",
+	"address.country": "Argentina",
+	"address.province": "Buenos Aires",
+	"address.city": "Moron",
+	"viewLocation.country": "Mexico",
+	"securitySettings": {
+		"password": "12345"
+	}
+}

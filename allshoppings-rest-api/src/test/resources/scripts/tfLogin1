@@ -1,0 +1,18 @@
+if [ $# -ne 3 ]; then 
+   echo -e "Usage:\n\t$0 user_id factor method\n"
+   exit 1;
+fi
+
+# process common variables
+. ./common
+
+_URL="${_HOST}/app/tfauth?userId=$1&factor=$2&method=$3"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`curl -k ${_URL}`
+echo ""
+echo "RESULT: $_RES"
+

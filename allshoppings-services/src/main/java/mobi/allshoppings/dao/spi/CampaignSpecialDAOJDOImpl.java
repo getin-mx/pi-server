@@ -7,15 +7,16 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.CampaignSpecialDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.CampaignSpecial;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Key;
+import mobi.allshoppings.tools.Range;
 
 public class CampaignSpecialDAOJDOImpl extends GenericDAOJDO<CampaignSpecial> implements CampaignSpecialDAO {
 
@@ -137,6 +138,78 @@ public class CampaignSpecialDAOJDOImpl extends GenericDAOJDO<CampaignSpecial> im
 				// force to read
 				for (CampaignSpecial obj : objs) {
 					ret.add(obj);
+				}
+			}
+			
+		} catch (Exception e) {
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		} finally {
+			pm.close();
+		}
+		
+		return ret;
+	}
+
+	/**
+	 * Get a list of campaign specials instances using its brandId and status
+	 * 
+	 * @param brandId
+	 *            The Identifier of the brand that the store belongs to
+	 * @param status
+	 *            A list of statuses to filter. If null, ignores the status
+	 *            property
+	 * @param order
+	 *            The property that will be used to order the obtained dataset
+	 */
+	@Override
+	public List<CampaignSpecial> getUsingAppAndBrandAndStatusAndRange(String appId, String brandId, List<Integer> status, Range range, String order, Boolean detachable) throws ASException {
+		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+		List<CampaignSpecial> ret = CollectionFactory.createList();
+
+		try {
+			Map<String, Object> parameters = CollectionFactory.createMap();
+			List<String> declaredParams = CollectionFactory.createList();
+			List<String> filters = CollectionFactory.createList();
+			
+			Query query = pm.newQuery(CampaignSpecial.class);
+
+			// Brand parameters
+			if( StringUtils.hasText(brandId)) {
+				declaredParams.add("String brandIdParam");
+				filters.add("brands.contains(brandIdParam)");
+				parameters.put("brandIdParam", brandId);
+			}
+
+			// AppId parameters
+			if( StringUtils.hasText(appId)) {
+				declaredParams.add("String appIdParam");
+				filters.add("appIds.contains(appIdParam)");
+				parameters.put("appIdParam", appId);
+			}
+
+			// Status parameters
+			if( status != null && status.size() > 0 ) {
+				filters.add(toListFilterCriteria("status", status, false));
+			}
+
+			// Setting query parameters
+			query.declareParameters(toParameterList(declaredParams));
+			query.setFilter(toWellParametrizedFilter(filters));
+			if(StringUtils.hasText(order)) query.setOrdering(order);
+			
+			if(range != null)
+				query.setRange(range.getFrom(), range.getTo());
+			
+			// Executes the query
+			@SuppressWarnings("unchecked")
+			List<CampaignSpecial> objs = (List<CampaignSpecial>)query.executeWithMap(parameters);
+			if (objs != null) {
+				// force to read
+				for (CampaignSpecial obj : objs) {
+					if( detachable )
+						ret.add(pm.detachCopy(obj));
+					else
+						ret.add(obj);
 				}
 			}
 			
