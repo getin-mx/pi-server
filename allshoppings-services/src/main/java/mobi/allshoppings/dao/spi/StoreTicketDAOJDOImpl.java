@@ -102,6 +102,7 @@ public class StoreTicketDAOJDOImpl extends GenericDAOJDO<StoreTicket> implements
 
 	}
 
+	
 	@Override
 	public StoreTicket getUsingStoreIdAndDate(String storeId, String date, boolean detachable) throws ASException {
 

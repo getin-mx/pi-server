@@ -1,6 +1,7 @@
 package mobi.allshoppings.dashboards;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 //import java.sql.Connection;
 //import java.sql.DriverManager;
 //import java.sql.ResultSet;
@@ -17,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.time.DateUtils;
+//import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.dao.APDVisitDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
+import mobi.allshoppings.dao.StoreTicketDAO;
 import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.FloorMapDAO;
@@ -53,6 +56,7 @@ import mobi.allshoppings.model.FloorMapJourney;
 import mobi.allshoppings.model.MacVendor;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.StoreTicket;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.WifiSpot;
 import mobi.allshoppings.model.interfaces.StatusAware;
@@ -63,7 +67,7 @@ import mobi.allshoppings.tools.Range;
 public class DashboardAPDeviceMapperService {
 
 	private static final Logger log = Logger.getLogger(DashboardAPDeviceMapperService.class.getName());
-
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	/**
 	 * Entity Kind to use
 	 */
@@ -104,6 +108,8 @@ public class DashboardAPDeviceMapperService {
 	private MacVendorDAO macVendorDao;
 	@Autowired
 	private APDVisitDAO apdvDao;
+	@Autowired
+	private StoreTicketDAO stDao;
 
 	@Autowired
 	private SystemConfiguration systemConfiguration;
@@ -880,7 +886,57 @@ public class DashboardAPDeviceMapperService {
 
 		return aliases;
 	}
+	
+	
+	public void createStoreTicketDataForDates(String fromDate,String toDate, String storeId) throws ASException,ParseException{
+		
+		log.log(Level.INFO, "Starting to create store tickets Dashboard for Day " + fromDate + " to: " + toDate +"..." );
+		long startTime = new Date().getTime();
+		
+		try {
+			Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
+			List<StoreTicket> tickets =  stDao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null, null, false);
+			
+			
+			Store store = storeDao.get(storeId);
+			if( store != null ) {
+				for( StoreTicket ticket: tickets){		
+					
+					DashboardIndicatorData obj;
+	
+					// visitor_total_tickets --------------------------------------------------------------------------------
+					// ------------------------------------------------------------------------------------------------------
+					
+					obj = buildBasicDashboardIndicatorData(
+							"apd_visitor", "Visitantes", "visitor_total_tickets",
+							"Tickets", sdf.parse(ticket.getDate()),
+							DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
+							store, null, store.getBrandId(), KIND_BRAND);
+	
+					if(indicatorsSet.containsKey(obj.getKey().getName())) 
+						obj = indicatorsSet.get(obj.getKey().getName());
+					obj.setDoubleValue(obj.getDoubleValue() + ticket.getQty());
+					indicatorsSet.put(obj.getKey().getName(), obj);
+				}
+				log.log(Level.INFO, "Starting Write Procedure...");
 
+				// Finally, save all the information
+				saveIndicatorSet(indicatorsSet);
+
+			} else {
+				// Store not found
+				log.log(Level.INFO, "Store with id " + storeId + " not found!");
+			}
+			
+		} catch (ASException e) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+		}
+		
+		long endTime = new Date().getTime();
+		log.log(Level.INFO, "Finished to create store tickets Dashboard for Day " + fromDate + " to: " + toDate + " total time: "+ (endTime - startTime) + "ms");
+	}
+	
+	
 	public DashboardIndicatorData buildBasicDashboardIndicatorData(
 			String elementId, String elementName, String elementSubId,
 			String elementSubName, Date date, String periodType,

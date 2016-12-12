@@ -14,5 +14,4 @@ public interface StoreTicketDAO extends GenericDAO<StoreTicket> {
 	Key createKey() throws ASException;
 	List<StoreTicket> getUsingStoreIdAndDatesAndRange(String storeId, String fromDate, String toDate, Range range, String order, boolean detachable) throws ASException;
 	StoreTicket getUsingStoreIdAndDate(String storeId, String date, boolean detachable) throws ASException;
-
 }

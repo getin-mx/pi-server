@@ -20,6 +20,7 @@ import mobi.allshoppings.bdb.bz.BDBPostBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dao.StoreTicketDAO;
+import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.Store;
@@ -39,7 +40,8 @@ implements BDBDashboardBzService, BDBPostBzService {
 	
 	@Autowired
 	private StoreTicketDAO dao;
-	
+	@Autowired
+	private DashboardAPDeviceMapperService mapper;
 	@Autowired
 	private StoreDAO storeDao;
 	
@@ -143,6 +145,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 				i++;
 				curDate = new Date(curDate.getTime() + ONE_DAY);
 			}
+			mapper.createStoreTicketDataForDates(fromDate, toDate, storeId);
 			
 			return generateJSONOkResponse().toString();
 			

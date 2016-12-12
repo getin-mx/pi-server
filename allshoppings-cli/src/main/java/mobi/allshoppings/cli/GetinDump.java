@@ -478,7 +478,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("209", "Adolfo Dominguez Interlomas", "adolfodominguez_mx", "interlomas"));
 
 			stores.add(new StoreAdapter("211", "Flormar Multiplaza", "flormar_pa", null));
-			stores.add(new StoreAdapter("264", "Flormar Metromcentrocoyoacanall", "flormar_pa", null));
+			stores.add(new StoreAdapter("264", "Flormar Metromall", "flormar_pa", null));
 			stores.add(new StoreAdapter("265", "Flormar Altaplaza", "flormar_pa", null));
 			stores.add(new StoreAdapter("266", "Flormar Multicentro", "flormar_pa", null));
 
@@ -577,6 +577,8 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("318","Sally Beauty	Mega Coyoacan", "sallybeauty_mx",null)); 
 			stores.add(new StoreAdapter("319","Sally Beauty	Delta", "sallybeauty_mx","parquedelta"));
 			stores.add(new StoreAdapter("320","Sally Beauty	Metepec", "sallybeauty_mx",null));
+			
+			stores.add(new StoreAdapter("321","Roku Condesa", "roku_mx",null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
