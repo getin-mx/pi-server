@@ -80,7 +80,7 @@ public class SendMovieTicketsService {
 			long locationUpdateLimit, List<String> restrictToDevices,
 			List<String> forcedDevices, boolean disableShowAfterSend,
 			List<String> cinemaIds, boolean useAltLocations,
-			boolean fakeCoupons, String forShowtime, boolean ignoreLocks) throws ASException,
+			boolean fakeCoupons, String forShowtime, boolean ignoreLocks, boolean disableOlder) throws ASException,
 			JSONException, ParseException {
 		
 		// Initialization settings
@@ -265,6 +265,7 @@ public class SendMovieTicketsService {
 					obj.put("brandId", cinema.getBrandId());
 					obj.put("imageUrl", movie.getAvatarId());
 					obj.put("ignoreLocks", ignoreLocks);
+					obj.put("disableOlder", disableOlder);
 					
 					obj.put("entityId", show.getIdentifier());
 					obj.put("description", cinema.getName() + " - " + movie.getName() + " - " + show.getShowDate() + " " + show.getShowTime());

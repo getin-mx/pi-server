@@ -38,7 +38,7 @@ public class SendMovieTicketsServiceTester extends TestCase {
 					3600000, Arrays.asList(new String[]{"d9ae567caf438b98@cinepolis_mx"}),
 					Arrays.asList(new String[]{"d9ae567caf438b98@cinepolis_mx"}),
 					false, Arrays.asList(new String[]{"cinepolis_mx_449"}), false, true, 
-					"cinepolis_mx_449_78183", true);
+					"cinepolis_mx_449_78183", true, true);
 
 		} catch( Throwable t ) {
 			t.printStackTrace();
@@ -60,7 +60,7 @@ public class SendMovieTicketsServiceTester extends TestCase {
 					3600000, Arrays.asList(new String[]{"776AE2D6-840A-45BF-A1D0-3873B54D6D72"}),
 					Arrays.asList(new String[]{"776AE2D6-840A-45BF-A1D0-3873B54D6D72"}),
 					false, Arrays.asList(new String[]{"cinepolis_mx_339"}), false, true, 
-					"cinepolis_mx_339_61309", true);
+					"cinepolis_mx_339_61309", true, true);
 
 
 		} catch( Throwable t ) {
@@ -81,7 +81,7 @@ public class SendMovieTicketsServiceTester extends TestCase {
 							+ "2A2C192578F597CEE6BC3EE8A26B9F7DB0DBA4B0CD8930FDC3D2BB0E7D1B8CC9",
 					300000 /* 5 minutes */, testDevices, null, false,
 					Arrays.asList(new String[] { "cinepolis_mx_449" }), true,
-					true, null, false);
+					true, null, false, true);
 
 		} catch( Throwable t ) {
 			t.printStackTrace();

@@ -43,7 +43,7 @@ public class SendPromoTicketsServiceTester extends TestCase {
 					3600000, Arrays.asList(new String[]{"776AE2D6-840A-45BF-A1D0-3873B54D6D72"}),
 					Arrays.asList(new String[]{"776AE2D6-840A-45BF-A1D0-3873B54D6D72"}),
 					Arrays.asList(new String[]{"cinepolis_mx_449"}), 
-					false, true, "1432724531038", true);
+					false, true, "1432724531038", true, true);
 
 		} catch( Throwable t ) {
 			t.printStackTrace();
@@ -64,7 +64,7 @@ public class SendPromoTicketsServiceTester extends TestCase {
 					3600000 /* 1 hour */, Arrays.asList(new String[]{"776AE2D6-840A-45BF-A1D0-3873B54D6D72"}),
 					Arrays.asList(new String[]{"776AE2D6-840A-45BF-A1D0-3873B54D6D72"}),
 					Arrays.asList(new String[]{"cinepolis_mx_339"}), 
-					false, true, null, true);
+					false, true, null, true, true);
 
 		} catch( Throwable t ) {
 			t.printStackTrace();
@@ -83,7 +83,7 @@ public class SendPromoTicketsServiceTester extends TestCase {
 							+ "2A2C192578F597CEE6BC3EE8A26B9F7DB0DBA4B0CD8930FDC3D2BB0E7D1B8CC9",
 							3600000 /* 1 hour */,
 							testDevices, null, Arrays.asList(new String[] { "cinepolis_mx_339" }), 
-							true, true, null, true);
+							true, true, null, true, true);
 
 
 		} catch( Throwable t ) {
@@ -103,7 +103,7 @@ public class SendPromoTicketsServiceTester extends TestCase {
 							+ "2A2C192578F597CEE6BC3EE8A26B9F7DB0DBA4B0CD8930FDC3D2BB0E7D1B8CC9",
 							3600000 /* 1 hour */,
 							null, null, Arrays.asList(new String[] { "cinepolis_mx_339", "cinepolis_mx_449", "cinepolis_mx_479" }), 
-							false, true, null, false);
+							false, true, null, false, true);
 
 
 		} catch( Throwable t ) {

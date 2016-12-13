@@ -25,7 +25,7 @@ public class CinepolisSendPromoTickets2 extends AbstractCLI {
 						+ "2A2C192578F597CEE6BC3EE8A26B9F7DB0DBA4B0CD8930FDC3D2BB0E7D1B8CC9",
 						3600000 /* 1 hour */,
 						null, null, Arrays.asList(new String[] { "cinepolis_mx_96" }), 
-						false, false, "1432724594627", false);
+						false, false, "1432724594627", false, true);
 		System.exit(0);
 
 	}

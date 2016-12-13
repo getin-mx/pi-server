@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Date;
 
 import joptsimple.OptionParser;
-
 import mobi.allshoppings.cinepolis.services.SendMovieTicketsService;
 
 
@@ -28,7 +27,7 @@ public class CinepolisSendShowTicketsTest extends AbstractCLI {
 						+ "2A2C192578F597CEE6BC3EE8A26B9F7DB0DBA4B0CD8930FDC3D2BB0E7D1B8CC9",
 				600000 /* 10 minutes */, TestDevices.testDevices, TestDevices.testDevices, false,
 				Arrays.asList(new String[] { "cinepolis_mx_339" }), true,
-				true, null, true);
+				true, null, true, true);
 		
 		System.exit(0);
 

@@ -44,7 +44,7 @@ public class GetinDump extends AbstractCLI {
 			BrandDAO brandDao = (BrandDAO)getApplicationContext().getBean("brand.dao.ref");
 			StoreDAO storeDao = (StoreDAO)getApplicationContext().getBean("store.dao.ref");
 			KeyHelper keyHelper = (KeyHelper)getApplicationContext().getBean("key.helper");
-			GeoCodingHelper geocoder = (GeoCodingHelper)getApplicationContext().getBean("geocoding.helper");
+//			GeoCodingHelper geocoder = (GeoCodingHelper)getApplicationContext().getBean("geocoding.helper");
 
 			log.log(Level.INFO, "Dumping Getin Data....");
 			// Shoppings

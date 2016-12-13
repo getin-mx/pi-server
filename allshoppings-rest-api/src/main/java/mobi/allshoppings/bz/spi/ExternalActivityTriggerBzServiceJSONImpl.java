@@ -79,7 +79,7 @@ implements ExternalActivityTriggerBzService {
 			log.log(Level.INFO, obj.toString());
 			
 			final Map<String, JSONArray> deviceCoupons = CollectionFactory.createMap();
-			final JSONArray longDevices = obj.getJSONArray("longDevices");
+			final JSONArray longDevices = obj.has("longDevices") ? obj.getJSONArray("longDevices") : new JSONArray();
 			
 			for(int i = 0; i < longDevices.length(); i++ ) {
 				JSONObject json = longDevices.getJSONObject(i);
@@ -101,6 +101,7 @@ implements ExternalActivityTriggerBzService {
 			eaLog.setDescription(obj.has("description") ? obj.getString("description") : null);
 			
 			boolean ignoreLocks = (obj.has("ignoreLocks") ? obj.getBoolean("ignoreLocks") : false);
+			boolean disableOlder = (obj.has("disableOlder") ? obj.getBoolean("disableOlder") : true);
 			
 			// Obtains all the referred devices and starts to send activities
 			List<DeviceInfo> devices = diDao.getUsingIdList(adapter.getDevices());
@@ -115,7 +116,8 @@ implements ExternalActivityTriggerBzService {
 							User user = userDao.get(device.getUserId());
 
 							// Stops displaying all the other campaigns
-							campaignHelper.setNonDisplayableForUser(device.getUserId());
+							if( disableOlder )
+								campaignHelper.setNonDisplayableForUser(device.getUserId());
 
 							// Creates the campaign activity
 							CampaignActivity ca = new CampaignActivity();
@@ -136,7 +138,7 @@ implements ExternalActivityTriggerBzService {
 							ca.setKey(caDao.createKey());
 							ca.setCustomUrl(campaignHelper.assingCustomUrl(cs, ca));
 
-							JSONObject extras = obj.getJSONObject("extras");
+							JSONObject extras = obj.has("extras") ? obj.getJSONObject("extras") : new JSONObject();
 							extras.put("suggestedCoupons", deviceCoupons.get(device.getIdentifier()));
 							
 							// Custom image processing

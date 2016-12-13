@@ -1,0 +1,20 @@
+# Script TestTicket
+if [ $# ‐lt 2 ]; then
+	echo ‐e "Usage:\n\t$0 deviceId campaignOffer \n"
+	exit 1;
+fi
+
+# process common variables
+. ./common
+
+_URL="${_HOST}/appv2/requestCoupon?authToken=$_TOKEN"
+_DATA="{"deviceUUID":"$1","campaignOfferId":"$2","test":true}"
+
+echo ""
+echo "Calling:" ${_URL}
+echo ""
+
+_RES=`curl -k -X POST -H "Content-Type:application/json" -d "${_DATA}" ${_URL}`
+
+echo ""
+echo "RESULT: $_RES"

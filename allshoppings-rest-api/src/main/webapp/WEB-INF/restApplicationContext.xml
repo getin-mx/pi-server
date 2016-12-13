@@ -61,6 +61,7 @@
   	<bean id="wifispots.rest.resource" class="mobi.allshoppings.bz.spi.WifiSpotListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dummy.rest.resource" class="mobi.allshoppings.bz.spi.DummyBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="externalactivitytrigger.rest.resource" class="mobi.allshoppings.bz.spi.ExternalActivityTriggerBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="requestcoupon.rest.resource" class="mobi.allshoppings.bz.spi.RequestCouponBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="testticket.rest.resource" class="mobi.allshoppings.bz.spi.TestTicketBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="devicemessagelock.rest.resource" class="mobi.allshoppings.bz.spi.DeviceMessageLockBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="clearmessagelock.rest.resource" class="mobi.allshoppings.bz.spi.ClearMessageLockBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
