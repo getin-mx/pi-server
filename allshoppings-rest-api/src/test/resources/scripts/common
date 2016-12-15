@@ -1,5 +1,5 @@
-_HOST=http://127.0.0.1
-#_HOST=http://api.allshoppings.mobi
+#_HOST=http://127.0.0.1
+_HOST=http://api.allshoppings.mobi
 #_HOST=http://api.sandbox.allshoppings.mobi
 #_HOST=http://ubuntu-test1
 #_HOST=http://127.0.0.1:8081
