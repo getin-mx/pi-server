@@ -70,6 +70,10 @@
             <field name="key" column="_id" length="100"/>
         </class>
 
+        <class name="DashboardConfiguration" table="DashboardConfiguration">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
         <class name="DashboardIndicatorAlias" table="DashboardIndicatorAlias">
             <field name="key" column="_id" length="100"/>
         </class>

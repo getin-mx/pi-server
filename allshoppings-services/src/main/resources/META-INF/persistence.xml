@@ -26,6 +26,7 @@
         <class>mobi.allshoppings.model.Checkin</class>
         <class>mobi.allshoppings.model.Cinema</class>
         <class>mobi.allshoppings.model.ContactInfo</class>
+        <class>mobi.allshoppings.model.DashboardConfiguration</class>
         <class>mobi.allshoppings.model.DashboardIndicatorAlias</class>
         <class>mobi.allshoppings.model.DashboardIndicatorData</class>
         <class>mobi.allshoppings.model.DeviceInfo</class>

@@ -15,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import mobi.allshoppings.bz.DashboardHeatmapTableHourBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
+import mobi.allshoppings.dao.DashboardConfigurationDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.DashboardConfiguration;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.tools.CollectionFactory;
 
@@ -33,6 +35,8 @@ implements DashboardHeatmapTableHourBzService {
 	
 	@Autowired
 	private DashboardIndicatorDataDAO dao;
+	@Autowired
+	private DashboardConfigurationDAO dcDao;
 
 	/**
 	 * Obtains information about a user
@@ -69,6 +73,12 @@ implements DashboardHeatmapTableHourBzService {
 					subentityId, periodType, fromStringDate, toStringDate,
 					movieId, voucherType, dayOfWeek, timezone, null, null, null, null);
 
+			// Gets dashboard configuration for this session
+			DashboardConfiguration config = new DashboardConfiguration(entityId, entityKind);
+			try {
+				config = dcDao.getUsingEntityIdAndEntityKind(entityId, entityKind, true);
+			} catch( Exception e ) {}
+			
 
 			// Data
 			Map<Integer, Map<Integer, Long>> yData = CollectionFactory.createMap();
@@ -94,7 +104,16 @@ implements DashboardHeatmapTableHourBzService {
 
 			// Sets data
 			for( DashboardIndicatorData obj : list ) {
-				Map<Integer, Long> xData = yData.get(obj.getTimeZone());
+
+				// Position calc according to the timezone
+				int position = obj.getTimeZone();
+				if( config.getTimezone().equals("-05:00")) {
+					position = position + 1;
+					if( position >= 24 )
+						position = position - 24;
+				}
+				
+				Map<Integer, Long> xData = yData.get(position);
 
 				// Sets the double value
 				Long val = xData.get(obj.getDayOfWeek()-1);
@@ -103,7 +122,7 @@ implements DashboardHeatmapTableHourBzService {
 				xData.put(obj.getDayOfWeek()-1, val);
 
 				// Sets the record count
-				xData = yCounter.get(obj.getTimeZone());
+				xData = yCounter.get(position);
 				val = xData.get(obj.getDayOfWeek()-1);
 				if( val == null ) val = 0L;
 				if( obj.getRecordCount() != null )

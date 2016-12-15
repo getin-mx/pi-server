@@ -19,10 +19,12 @@ import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bz.DashboardTimelineHourBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
+import mobi.allshoppings.dao.DashboardConfigurationDAO;
 import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.DashboardConfiguration;
 import mobi.allshoppings.model.DashboardIndicatorAlias;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.tools.CollectionFactory;
@@ -41,6 +43,8 @@ implements DashboardTimelineHourBzService {
 	private DashboardIndicatorDataDAO dao;
 	@Autowired
 	private DashboardIndicatorAliasDAO diAliasDao;
+	@Autowired
+	private DashboardConfigurationDAO dcDao;
 
 	/**
 	 * Obtains information about a user
@@ -81,6 +85,12 @@ implements DashboardTimelineHourBzService {
 					subentityId, periodType, fromStringDate, toStringDate,
 					movieId, voucherType, dayOfWeek, timezone, null, country, province, city);
 
+			// Gets dashboard configuration for this session
+			DashboardConfiguration config = new DashboardConfiguration(entityId, entityKind);
+			try {
+				config = dcDao.getUsingEntityIdAndEntityKind(entityId, entityKind, true);
+			} catch( Exception e ) {}
+			
 			List<String> categories = CollectionFactory.createList();
 
 			// Creates the order list and alias map
@@ -158,7 +168,15 @@ implements DashboardTimelineHourBzService {
 							counterArray[i] = new Integer(0);
 						}
 					}
+					
+					// Position calc according to the timezone
 					int position = hourMap.get(obj.getTimeZone());
+					if( config.getTimezone().equals("-05:00")) {
+						position = position + 1;
+						if( position >= 24 )
+							position = position - 24;
+					}
+					
 					if( average ) {
 						if( obj.getDoubleValue() != null )
 							valArray[position] += obj.getDoubleValue().intValue();
