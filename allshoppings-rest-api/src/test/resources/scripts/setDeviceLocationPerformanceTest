@@ -1,0 +1,3 @@
+#!/bin/bash
+
+for x in {1..10}; do ./setDeviceLocation 8b5b6887d4e03b86 $x 1 > /dev/null & done

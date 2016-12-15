@@ -1,0 +1,18 @@
+if [ $# -ne 2 ]; then 
+   echo -e "Usage:\n\t$0 floorMapId data_file\n"
+   exit 1;
+fi
+
+# process common variables
+. ./common
+
+_URL="${_HOST}/app/wifispots/$1?authToken=$_TOKEN"
+_DATA=`cat $2`
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`time curl -k -X POST -H "Content-Type:application/json" -d "${_DATA}" ${_URL}`
+echo ""
+echo "RESULT: $_RES"

@@ -1,0 +1,18 @@
+if [ $# -ne 1 ]; then 
+   echo -e "Usage:\n\t$0 challengeId\n"
+   exit 1;
+fi
+
+# process common variables
+. ./common
+
+_URL="${_HOST}/app/challenges/current?authToken=$_TOKEN"
+_DATA="{"challengeId":"$1"}"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`curl -k -X PUT -H "Content-Type:application/json" -d "${_DATA}" ${_URL}`
+echo ""
+echo "RESULT: $_RES"

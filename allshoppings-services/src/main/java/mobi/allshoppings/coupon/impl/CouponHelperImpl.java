@@ -34,7 +34,6 @@ import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.adapter.CouponAdapter;
 import mobi.allshoppings.model.adapter.GenericAdapterImpl;
 import mobi.allshoppings.push.PushMessageHelper;
-import mobi.allshoppings.ranking.PointsService;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Hash;
 import mobi.allshoppings.tools.I18NUtils;
@@ -62,8 +61,8 @@ public class CouponHelperImpl implements CouponHelper {
 	private PushMessageHelper pushMessageHelper;
 	@Autowired
 	private TrackerHelper trackerHelper;
-	@Autowired
-	private PointsService pointsService;
+//	@Autowired
+//	private PointsService pointsService;
 
 	/**
 	 * Obtains a coupon adapter using the campaign activity Identifier
@@ -232,15 +231,15 @@ public class CouponHelperImpl implements CouponHelper {
 			CouponAdapter coupon = getCouponByCode(couponCode, false, false, false, false);
 			User user = userDao.get(coupon.getUserId());
 
-			long points = pointsService.calculatePointsForAction(user.getIdentifier(), PointsService.ACTION_COUPON_REDEEMED,
-					EntityKind.KIND_CAMPAIGN_ACTIVITY, coupon.getIdentifier(), null);
+//			long points = pointsService.calculatePointsForAction(user.getIdentifier(), PointsService.ACTION_COUPON_REDEEMED,
+//					EntityKind.KIND_CAMPAIGN_ACTIVITY, coupon.getIdentifier(), null);
 					
 			log.log(Level.INFO, "User is " + user.getIdentifier());
 
 			Map<String, String> replacementValues = new HashMap<String, String>();
 			replacementValues.put("name", coupon.getName());
 			replacementValues.put("couponCode", coupon.getCouponCode());
-			replacementValues.put("points", String.valueOf(points));
+//			replacementValues.put("points", String.valueOf(points));
 			String message = I18NUtils.getI18NMessage("es_AR", "app.coupon.redeemMessage", replacementValues);
 
 			pushMessageHelper.sendNotification(user, "AllShoppings",
@@ -310,8 +309,8 @@ public class CouponHelperImpl implements CouponHelper {
 			
 			caDao.update(ca);
 
-			pointsService.enqueue(ca.getUserId(), PointsService.ACTION_COUPON_REDEEMED,
-					EntityKind.KIND_CAMPAIGN_ACTIVITY, ca.getIdentifier(), null);
+//			pointsService.enqueue(ca.getUserId(), PointsService.ACTION_COUPON_REDEEMED,
+//					EntityKind.KIND_CAMPAIGN_ACTIVITY, ca.getIdentifier(), null);
 
 		} else {
 			throw ASExceptionHelper.forbiddenException();

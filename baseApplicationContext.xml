@@ -194,7 +194,7 @@
 	<bean id="tracker.helper" class="mobi.allshoppings.tracker.impl.TrackerHelperNullImpl" />
 	<!-- <bean id="points.service" class="mobi.allshoppings.ranking.impl.PointsServiceNullImpl" scope="singleton" /> -->
 	<!-- <bean id="hotspot.service" class="mobi.allshoppings.geocoding.impl.HotspotServiceNullImpl" scope="singleton" /> -->
-	<bean id="coupon.helper" class="mobi.allshoppings.coupon.impl.CouponHelperNullImpl" scope="singleton" />
+	<bean id="coupon.helper" class="mobi.allshoppings.coupon.impl.CouponHelperImpl" scope="singleton" />
 	<!-- <bean id="lock.helper" class="mobi.allshoppings.lock.impl.LockHelperPIImpl" scope="singleton" /> -->
 	<!-- <bean id="queuetask.helper" class="mobi.allshoppings.task.QueueTaskHelperNullImpl" scope="singleton" /> -->
 	<bean id="push.message.helper" class="mobi.allshoppings.push.impl.PushMessageHelperImpl" scope="singleton" />

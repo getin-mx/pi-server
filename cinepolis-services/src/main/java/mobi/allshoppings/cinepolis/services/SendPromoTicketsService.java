@@ -79,7 +79,7 @@ public class SendPromoTicketsService {
 			long locationUpdateLimit, List<String> restrictToDevices,
 			List<String> forcedDevices, List<String> cinemaIds,
 			boolean useAltLocations, boolean fakeCoupons,
-			String forCampaignSpecialId, boolean ignoreLocks) throws ASException, JSONException,
+			String forCampaignSpecialId, boolean ignoreLocks, boolean disableOlder) throws ASException, JSONException,
 			ParseException {
 
 		// Initialization settings
@@ -97,7 +97,6 @@ public class SendPromoTicketsService {
 		HttpMessageConverter<?> formHttpMessageConverter = new MappingJackson2HttpMessageConverter();
 		HttpMessageConverter<?> stringHttpMessageConverternew = new StringHttpMessageConverter();
 		restTemplate.setMessageConverters(Arrays.asList(new HttpMessageConverter<?>[]{formHttpMessageConverter, stringHttpMessageConverternew}));
-
 
 		List<Integer> statuses = Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED});
 		List<Cinema> cinemas = cinemaIds == null ? cinemaDao.getUsingBrandAndStatusAndRange(BASE_ID, statuses, null, null) : cinemaDao.getUsingIdList(cinemaIds, true);
@@ -198,6 +197,7 @@ public class SendPromoTicketsService {
 			obj.put("actionPrepend", "promos/");
 			obj.put("brandId", cinema.getBrandId());
 			obj.put("ignoreLocks", ignoreLocks);
+			obj.put("disableOlder", disableOlder);
 
 			Map<String, Object> extras = CollectionFactory.createMap();
 			// FIXME: I'm hardcoded

@@ -1,0 +1,17 @@
+if [ $# -ne 2 ]; then
+   echo -e "Usage:\n\t$0 entityKind entityId\n"
+   exit 1;
+fi
+
+# process common variables
+. ./common
+
+_URL="${_HOST}/app/interest?entityKind=$1&entityId=$2&authToken=$_TOKEN"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`time curl -k -X GET ${_URL}`
+echo ""
+echo "RESULT: $_RES"

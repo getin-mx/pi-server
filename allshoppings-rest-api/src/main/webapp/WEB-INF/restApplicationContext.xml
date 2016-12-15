@@ -61,6 +61,7 @@
   	<bean id="wifispots.rest.resource" class="mobi.allshoppings.bz.spi.WifiSpotListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dummy.rest.resource" class="mobi.allshoppings.bz.spi.DummyBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="externalactivitytrigger.rest.resource" class="mobi.allshoppings.bz.spi.ExternalActivityTriggerBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="requestcoupon.rest.resource" class="mobi.allshoppings.bz.spi.RequestCouponBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="testticket.rest.resource" class="mobi.allshoppings.bz.spi.TestTicketBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="devicemessagelock.rest.resource" class="mobi.allshoppings.bz.spi.DeviceMessageLockBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="clearmessagelock.rest.resource" class="mobi.allshoppings.bz.spi.ClearMessageLockBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
@@ -77,6 +78,8 @@
   	<bean id="brand.rest.resource" class="mobi.allshoppings.bz.spi.BrandBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="offer.rest.resource" class="mobi.allshoppings.bz.spi.OfferBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="offers.rest.resource" class="mobi.allshoppings.bz.spi.OfferListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="campaignspecial.rest.resource" class="mobi.allshoppings.bz.spi.CampaignSpecialBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="campaignspecials.rest.resource" class="mobi.allshoppings.bz.spi.CampaignSpecialListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
 
   	<!-- <bean id="replica.rest.resource" class="mobi.allshoppings.bz.spi.ReplicaBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" /> -->
   	<bean id="forcepass.rest.resource" class="mobi.allshoppings.bz.spi.ForcePassBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />

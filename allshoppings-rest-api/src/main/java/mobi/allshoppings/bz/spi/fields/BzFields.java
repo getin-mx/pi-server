@@ -13,6 +13,8 @@ import mobi.allshoppings.bz.spi.APDeviceStatusBzServiceJSONImpl;
 import mobi.allshoppings.bz.spi.AreaListBzServiceJSONImpl;
 import mobi.allshoppings.bz.spi.BrandBzServiceJSONImpl;
 import mobi.allshoppings.bz.spi.BrandListBzServiceJSONImpl;
+import mobi.allshoppings.bz.spi.CampaignSpecialBzServiceJSONImpl;
+import mobi.allshoppings.bz.spi.CampaignSpecialListBzServiceJSONImpl;
 import mobi.allshoppings.bz.spi.ClearMessageLockBzServiceJSONImpl;
 import mobi.allshoppings.bz.spi.CouponBzServiceJSONImpl;
 import mobi.allshoppings.bz.spi.CouponListBzServiceJSONImpl;
@@ -44,6 +46,7 @@ import mobi.allshoppings.model.Area;
 import mobi.allshoppings.model.BeaconHotspot;
 import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.CampaignActivity;
+import mobi.allshoppings.model.CampaignSpecial;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.DeviceLocation;
 import mobi.allshoppings.model.DeviceLocationHistory;
@@ -122,6 +125,7 @@ public abstract class BzFields {
     public static final BzFields STORE = new StoreBzFields();
     public static final BzFields OFFER = new OfferBzFields();
     public static final BzFields SHOPPING = new ShoppingBzFields();
+    public static final BzFields CAMPAIGNSPECIAL = new CampaignSpecialBzFields();
 
     private static final Map<Class<? extends BzService>,BzFields> fieldsMap;
     private static final Map<Class<? extends ModelKey>,BzFields> modelFieldsMap;
@@ -158,6 +162,8 @@ public abstract class BzFields {
         fieldsMap.put(ShoppingBzServiceJSONImpl.class, SHOPPING);
         fieldsMap.put(APDeviceStatusBzServiceJSONImpl.class, APDEVICE);
         fieldsMap.put(APDeviceSignalBzServiceJSONImpl.class, APDEVICESIGNAL);
+        fieldsMap.put(CampaignSpecialBzServiceJSONImpl.class, CAMPAIGNSPECIAL);
+        fieldsMap.put(CampaignSpecialListBzServiceJSONImpl.class, CAMPAIGNSPECIAL);
 
         modelFieldsMap = new HashMap<Class<? extends ModelKey>, BzFields>();
         modelFieldsMap.put(DeviceInfo.class, DEVICEINFO);
@@ -179,6 +185,7 @@ public abstract class BzFields {
         modelFieldsMap.put(Shopping.class, SHOPPING);
         modelFieldsMap.put(APDevice.class, APDEVICE);
         modelFieldsMap.put(APDeviceSignal.class, APDEVICESIGNAL);
+        modelFieldsMap.put(CampaignSpecial.class, CAMPAIGNSPECIAL);
 
         adapterFieldsMap = new HashMap<Class<? extends IGenericAdapter>, BzFields>();
     

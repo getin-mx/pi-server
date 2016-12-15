@@ -1,0 +1,17 @@
+if [ $# -ne 2 ]; then 
+   echo -e "Usage:\n\t$0 entityId kind (0: Shopping, 1: Brand, 2: Offer, 6: Financial Entity)\n"
+   exit 1;
+fi
+
+# process common variables
+. ./common
+
+_URL="${_HOST}/app/favorites?authToken=$_TOKEN&entityId=$1&kind=$2"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+ _RES=`curl -k -X DELETE ${_URL}`
+echo ""
+echo "RESULT: $_RES"

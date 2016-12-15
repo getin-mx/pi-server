@@ -28,7 +28,6 @@ import mobi.allshoppings.model.interfaces.ACLAware;
 import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.model.interfaces.Indexable;
 import mobi.allshoppings.model.interfaces.ModelKey;
-import mobi.allshoppings.model.interfaces.Replicable;
 import mobi.allshoppings.model.interfaces.ViewLocationAware;
 import mobi.allshoppings.model.tools.ACL;
 import mobi.allshoppings.model.tools.ViewLocation;
@@ -36,7 +35,7 @@ import mobi.allshoppings.tools.CollectionFactory;
 
 @SuppressWarnings("serial")
 @PersistenceCapable(detachable="true")
-public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Identificable, Indexable, ViewLocationAware, ACLAware, Replicable {
+public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Identificable, Indexable, ViewLocationAware, ACLAware {
 
 	public static final String FILTER_ACTIVE_ONLY = "offersOnlyActive";
 	public static final String DEFAULT_PROMOTION_TYPE = "Checkin";
@@ -51,6 +50,8 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	private Set<String> brands;
 	@Persistent(defaultFetchGroup = "true")
 	private Set<String> stores;
+	@Persistent(defaultFetchGroup = "true")
+	private Set<String> appIds;
 
 	private String offerTypeId;
 	private String offerTypeName;
@@ -91,6 +92,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	private Long dailyQuantity;
 	private String customUrl;
 	private String promotionType;
+	private String product;
 
 	@Persistent(defaultFetchGroup = "true")
 	@Embedded	
@@ -193,6 +195,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * @param areas the area list to add
 	 */
 	public void addAreas(Collection<String> areas) {
+		if( areas == null ) areas = new HashSet<String>();
 		for(String s : areas) {
 			this.areaId.add(s);
 		}
@@ -274,6 +277,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * Clears the Shopping List
 	 */
 	public void clearShoppings() {
+		if( shoppings == null ) shoppings = new HashSet<String>();
 		this.shoppings.clear();
 	}
 	
@@ -282,6 +286,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * @param shopping the shopping to set
 	 */
 	public void addShopping(Shopping shopping) {
+		if( shoppings == null ) shoppings = new HashSet<String>();
 		if( shopping != null ) {
 			this.shoppings.add(shopping.getIdentifier());
 		}
@@ -292,6 +297,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * @param id Shopping id
 	 */
 	public void addShopping(String id) {
+		if( shoppings == null ) shoppings = new HashSet<String>();
 		if( StringUtils.hasText(id))
 			this.shoppings.add(id);
 	}
@@ -301,6 +307,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * @param shopping The shopping to remove
 	 */
 	public void removeShopping(Shopping shopping) {
+		if( shoppings == null ) shoppings = new HashSet<String>();
 		this.shoppings.remove(shopping.getIdentifier());
 	}
 	
@@ -309,6 +316,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * @param shopping The shopping to remove
 	 */
 	public void removeShopping(String shopping) {
+		if( shoppings == null ) shoppings = new HashSet<String>();
 		this.shoppings.remove(shopping);
 	}
 
@@ -316,6 +324,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * Clears brand list
 	 */
 	public void clearBrands() {
+		if( brands == null ) brands = new HashSet<String>();
 		this.brands.clear();
 	}
 	
@@ -324,6 +333,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * @param brand the brand to set
 	 */
 	public void addBrand(Brand brand) {
+		if( brands == null ) brands = new HashSet<String>();
 		if( brand != null ) {
 			this.brands.add(brand.getIdentifier());
 		}
@@ -334,6 +344,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * @param id Brand id
 	 */
 	public void addBrand(String id) {
+		if( brands == null ) brands = new HashSet<String>();
 		if( StringUtils.hasText(id))
 			this.brands.add(id);
 	}
@@ -343,6 +354,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * @param brand The brand to remove
 	 */
 	public void removeBrand(Brand brand) {
+		if( brands == null ) brands = new HashSet<String>();
 		this.brands.remove(brand.getIdentifier());
 	}
 
@@ -351,6 +363,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * @param brand The brand to remove
 	 */
 	public void removeBrand(String brand) {
+		if( brands == null ) brands = new HashSet<String>();
 		this.brands.remove(brand);
 	}
 
@@ -358,6 +371,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * Clears stores
 	 */
 	public void clearStores() {
+		if( stores == null ) stores = new HashSet<String>();
 		this.stores.clear();
 	}
 	
@@ -366,6 +380,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * @param store the store to set
 	 */
 	public void addStore(Store store) {
+		if( stores == null ) stores = new HashSet<String>();
 		if( store != null ) {
 			this.stores.add(store.getIdentifier());
 		}
@@ -376,6 +391,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * @param store the store to set
 	 */
 	public void addStore(String store) {
+		if( stores == null ) stores = new HashSet<String>();
 		if( store != null ) {
 			this.stores.add(store);
 		}
@@ -386,6 +402,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * @param store the store to remove
 	 */
 	public void removeStore(Store store) {
+		if( stores == null ) stores = new HashSet<String>();
 		this.stores.remove(store.getIdentifier());
 	}
 
@@ -394,9 +411,54 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	 * @param store the store to remove
 	 */
 	public void removeStore(String store) {
+		if( stores == null ) stores = new HashSet<String>();
 		this.stores.remove(store);
 	}
+
+	/**
+	 * Clears appIds
+	 */
+	public void clearAppIds() {
+		if( appIds == null ) appIds = new HashSet<String>();
+		this.appIds.clear();
+	}
 	
+	/**
+	 * Sets a new appId for this offer
+	 * @param store the store to set
+	 */
+	public void addAppId(String appId) {
+		if( appIds == null ) appIds = new HashSet<String>();
+		if( StringUtils.hasText(appId)) {
+			this.appIds.add(appId);
+		}
+	}
+
+	/**
+	 * Removes an appId from this offer
+	 * @param store the store to remove
+	 */
+	public void removeAppId(String appId) {
+		if( appIds == null ) appIds = new HashSet<String>();
+		this.stores.remove(appId);
+	}
+	
+	/**
+	 * @return the appIds
+	 */
+	public Set<String> getAppIds() {
+		if( appIds == null ) appIds = new HashSet<String>();
+		return appIds;
+	}
+
+	/**
+	 * @param appIds the appIds to set
+	 */
+	public void setAppIds(Set<String> appIds) {
+		if( appIds == null ) appIds = new HashSet<String>();
+		this.appIds = appIds;
+	}
+
 	/**
 	 * @return the offerTypeName
 	 */
@@ -494,47 +556,6 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	public void setValidTo(Date validTo) {
 		this.validTo = validTo;
 	}
-
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((key == null) ? 0 : key.hashCode());
-		return result;
-	}
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CampaignSpecial other = (CampaignSpecial) obj;
-		if (key == null) {
-			if (other.key != null)
-				return false;
-		} else if (!key.equals(other.key))
-			return false;
-		return true;
-	}
-	
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Offer [key=" + key + ", shoppingId=" + shoppings
-				+ ", storeId=" + stores + ", brandId=" + brands + "]";
-	}
-
 	/**
 	 * Adds an Image to the current photo Id array
 	 * @param photoId the Image Id to add
@@ -725,7 +746,6 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 		if( vl.getCountry().equals(country)) return true;
 		return false;
 	}
-
 
 	public String getNotifyFromHour() {
 		return notifyFromHour;
@@ -1033,4 +1053,75 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 		this.promotionType = promotionType;
 	}
 
+	/**
+	 * @return the product
+	 */
+	public String getProduct() {
+		return product;
+	}
+
+	/**
+	 * @param product the product to set
+	 */
+	public void setProduct(String product) {
+		this.product = product;
+	}
+
+	/**
+	 * @param policies the policies to set
+	 */
+	public void setPolicies(Text policies) {
+		this.policies = policies;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		return result;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CampaignSpecial other = (CampaignSpecial) obj;
+		if (key == null) {
+			if (other.key != null)
+				return false;
+		} else if (!key.equals(other.key))
+			return false;
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "CampaignSpecial [key=" + key + ", shoppings=" + shoppings + ", brands=" + brands + ", stores=" + stores
+				+ ", appIds=" + appIds + ", offerTypeId=" + offerTypeId + ", offerTypeName=" + offerTypeName
+				+ ", offerTypeRibbonText=" + offerTypeRibbonText + ", areaId=" + areaId + ", name=" + name
+				+ ", campaignId=" + campaignId + ", description=" + description + ", instructions=" + instructions
+				+ ", avatarId=" + avatarId + ", photoId=" + photoId + ", videoId=" + videoId + ", creationDateTime="
+				+ creationDateTime + ", policies=" + policies + ", validFrom=" + validFrom + ", validTo=" + validTo
+				+ ", lastUpdate=" + lastUpdate + ", availableFinancialEntities=" + availableFinancialEntities
+				+ ", notifyFromHour=" + notifyFromHour + ", notifyToHour=" + notifyToHour + ", notifyDays=" + notifyDays
+				+ ", genders=" + genders + ", ageFrom=" + ageFrom + ", ageTo=" + ageTo + ", country=" + country
+				+ ", timezone=" + timezone + ", trigger=" + trigger + ", span=" + span + ", quantity=" + quantity
+				+ ", dailyQuantity=" + dailyQuantity + ", customUrl=" + customUrl + ", promotionType=" + promotionType
+				+ ", product=" + product + ", acl=" + acl + ", expired=" + expired + "]";
+	}
+	
 }
