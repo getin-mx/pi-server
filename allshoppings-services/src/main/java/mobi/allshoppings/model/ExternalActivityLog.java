@@ -9,12 +9,12 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.interfaces.Replicable;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import com.inodes.datanucleus.model.Key;
 
 @PersistenceCapable(detachable="true")
 public class ExternalActivityLog implements ModelKey, Serializable, Identificable, Replicable {

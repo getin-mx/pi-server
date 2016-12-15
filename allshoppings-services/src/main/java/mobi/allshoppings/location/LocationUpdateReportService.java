@@ -10,15 +10,15 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.datastore.JDOConnection;
 
+import com.mongodb.DB;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+
 import mobi.allshoppings.dao.spi.DAOJDOPersistentManagerFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DeviceLocation;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import com.mongodb.DB;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 
 
 public class LocationUpdateReportService {

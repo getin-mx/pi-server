@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.dao.BrandDAO;
 import mobi.allshoppings.dao.FinancialEntityDAO;
@@ -25,8 +27,6 @@ import mobi.allshoppings.model.adapter.OfferAdapter;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CollectionUtils;
 import mobi.allshoppings.uec.UserEntityCacheBzService;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class OfferRestServerResource extends RestBaseServerResource {
 

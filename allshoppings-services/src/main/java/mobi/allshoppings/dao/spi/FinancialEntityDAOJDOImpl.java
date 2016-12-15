@@ -9,6 +9,10 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.auth.UserInfo;
 import mobi.allshoppings.dao.FinancialEntityDAO;
 import mobi.allshoppings.exception.ASException;
@@ -21,10 +25,6 @@ import mobi.allshoppings.model.tools.ViewLocation;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CustomDatatableFilter;
 import mobi.allshoppings.tools.Range;
-
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Key;
 
 public class FinancialEntityDAOJDOImpl extends GenericDAOJDO<FinancialEntity> implements FinancialEntityDAO {
 	private static final Logger log = Logger.getLogger(FinancialEntityDAOJDOImpl.class.getName());

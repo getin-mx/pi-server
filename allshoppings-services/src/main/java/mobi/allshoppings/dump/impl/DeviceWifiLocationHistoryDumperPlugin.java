@@ -1,13 +1,13 @@
 package mobi.allshoppings.dump.impl;
 
+import org.springframework.util.StringUtils;
+
 import mobi.allshoppings.dump.DumperPlugin;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.geocoding.WifiSpotService;
 import mobi.allshoppings.geocoding.impl.WifiSpotServiceImpl;
 import mobi.allshoppings.model.DeviceWifiLocationHistory;
 import mobi.allshoppings.model.interfaces.ModelKey;
-
-import org.springframework.util.StringUtils;
 
 public class DeviceWifiLocationHistoryDumperPlugin implements DumperPlugin<ModelKey> {
 

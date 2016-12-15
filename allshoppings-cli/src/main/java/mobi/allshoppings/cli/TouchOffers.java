@@ -4,6 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
+
 import joptsimple.OptionParser;
 import mobi.allshoppings.dao.ImageDAO;
 import mobi.allshoppings.dao.OfferDAO;
@@ -13,11 +18,6 @@ import mobi.allshoppings.image.ImageDownloader;
 import mobi.allshoppings.model.Offer;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.util.StringUtils;
 
 
 public class TouchOffers extends AbstractCLI {

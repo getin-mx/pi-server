@@ -2,11 +2,11 @@ package mobi.allshoppings.dao.spi;
 
 import java.util.logging.Logger;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.DummyDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.Dummy;
-
-import com.inodes.datanucleus.model.Key;
 
 public class DummyDAOJDOImpl extends GenericDAOJDO<Dummy> implements DummyDAO {
 	

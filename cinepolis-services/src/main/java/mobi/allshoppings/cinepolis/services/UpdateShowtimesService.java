@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.web.client.RestTemplate;
+
 import mobi.allshoppings.dao.MovieDAO;
 import mobi.allshoppings.dao.ShowtimeDAO;
 import mobi.allshoppings.dao.spi.MovieDAOJDOImpl;
@@ -19,8 +21,6 @@ import mobi.allshoppings.model.Showtime;
 import mobi.allshoppings.model.embedded.CinemaEmbedd;
 import mobi.allshoppings.model.embedded.MovieEmbedd;
 import mobi.allshoppings.model.interfaces.StatusAware;
-
-import org.springframework.web.client.RestTemplate;
 
 public class UpdateShowtimesService {
 

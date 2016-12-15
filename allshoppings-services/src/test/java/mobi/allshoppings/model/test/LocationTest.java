@@ -3,6 +3,8 @@ package mobi.allshoppings.model.test;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.dao.CinemaDAO;
 import mobi.allshoppings.dao.DeviceInfoDAO;
@@ -18,8 +20,6 @@ import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.DeviceLocation;
 import mobi.allshoppings.model.embedded.AlternateLocation;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.junit.Test;
 
 public class LocationTest extends TestCase {
 

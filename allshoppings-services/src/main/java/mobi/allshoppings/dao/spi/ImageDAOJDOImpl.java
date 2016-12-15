@@ -11,12 +11,12 @@ import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.ImageDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.Image;
-
-import com.inodes.datanucleus.model.Key;
 
 public class ImageDAOJDOImpl extends GenericDAOJDO<Image> implements ImageDAO {
 

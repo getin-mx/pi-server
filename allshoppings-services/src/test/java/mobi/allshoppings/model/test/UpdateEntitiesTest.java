@@ -2,6 +2,9 @@ package mobi.allshoppings.model.test;
 
 import java.util.List;
 
+import org.junit.Test;
+import org.springframework.util.StringUtils;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.dao.BrandDAO;
 import mobi.allshoppings.dao.OfferDAO;
@@ -12,9 +15,6 @@ import mobi.allshoppings.dao.spi.ShoppingDAOJDOImpl;
 import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.Offer;
 import mobi.allshoppings.model.Shopping;
-
-import org.junit.Test;
-import org.springframework.util.StringUtils;
 
 public class UpdateEntitiesTest extends TestCase {
 

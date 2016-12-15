@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
 import mobi.allshoppings.bz.DashboardFloorMapDataBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.bz.spi.fields.BzFields;
@@ -24,10 +28,6 @@ import mobi.allshoppings.model.adapter.FloorMapAdapter;
 import mobi.allshoppings.model.adapter.GenericAdapterImpl;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 
 /**

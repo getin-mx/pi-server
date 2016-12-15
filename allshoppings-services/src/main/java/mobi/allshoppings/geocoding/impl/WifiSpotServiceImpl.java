@@ -3,6 +3,10 @@ package mobi.allshoppings.geocoding.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import mobi.allshoppings.dao.FloorMapDAO;
 import mobi.allshoppings.dao.WifiSpotDAO;
 import mobi.allshoppings.dao.spi.FloorMapDAOJDOImpl;
@@ -16,10 +20,6 @@ import mobi.allshoppings.model.FloorMap;
 import mobi.allshoppings.model.WifiSpot;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class WifiSpotServiceImpl implements WifiSpotService {
 

@@ -1,13 +1,13 @@
 package mobi.allshoppings.cli;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+
 import joptsimple.OptionParser;
 import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
 
 
 public class ReportAPDevices extends AbstractCLI {

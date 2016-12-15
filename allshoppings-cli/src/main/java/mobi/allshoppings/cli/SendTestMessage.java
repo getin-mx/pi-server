@@ -1,5 +1,9 @@
 package mobi.allshoppings.cli;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.dao.DeviceInfoDAO;
@@ -7,10 +11,6 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.push.PushMessageHelper;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
 
 
 public class SendTestMessage extends AbstractCLI {

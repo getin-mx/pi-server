@@ -7,6 +7,10 @@ import java.util.Map;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.FavoriteDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -14,10 +18,6 @@ import mobi.allshoppings.model.Favorite;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
-
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Key;
 
 public class FavoriteDAOJDOImpl extends GenericDAOJDO<Favorite> implements FavoriteDAO {
 

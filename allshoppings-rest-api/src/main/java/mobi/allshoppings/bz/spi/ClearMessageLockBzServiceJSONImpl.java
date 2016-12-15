@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.ext.json.JsonRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mobi.allshoppings.bz.ClearMessageLockBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.bz.spi.fields.BzFields;
@@ -11,11 +16,6 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.lock.LockHelper;
 import mobi.allshoppings.model.DeviceMessageLock;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.restlet.ext.json.JsonRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**

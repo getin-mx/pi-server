@@ -6,13 +6,13 @@ import java.io.FileReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.util.StringUtils;
+
 import mobi.allshoppings.dao.VoucherDAO;
 import mobi.allshoppings.dao.spi.VoucherDAOJDOImpl;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.Voucher;
-
-import org.springframework.util.StringUtils;
 
 public class VistaLoyaltyImporterService {
 

@@ -7,13 +7,6 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.DeviceInfo;
-import mobi.allshoppings.model.PushMessageLog;
-import mobi.allshoppings.model.User;
-import mobi.allshoppings.push.PushMessageSender;
-
 import org.json.JSONObject;
 import org.springframework.util.StringUtils;
 
@@ -21,6 +14,13 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
+
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.DeviceInfo;
+import mobi.allshoppings.model.PushMessageLog;
+import mobi.allshoppings.model.User;
+import mobi.allshoppings.push.PushMessageSender;
 
 public class PushMessageSenderGCMImpl extends AbstractPushMessageSender implements PushMessageSender {
 

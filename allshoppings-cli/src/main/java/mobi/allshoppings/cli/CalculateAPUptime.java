@@ -4,17 +4,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
+
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.util.StringUtils;
 
 
 public class CalculateAPUptime extends AbstractCLI {

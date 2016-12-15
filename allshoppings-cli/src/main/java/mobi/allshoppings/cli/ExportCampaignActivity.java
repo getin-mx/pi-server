@@ -4,7 +4,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 
 import joptsimple.OptionParser;
-
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.location.CampaignActivityExporterService;

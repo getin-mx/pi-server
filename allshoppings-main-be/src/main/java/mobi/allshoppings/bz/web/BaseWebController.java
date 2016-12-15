@@ -8,6 +8,11 @@ import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Email;
+
 import mobi.allshoppings.auth.UserInfo;
 import mobi.allshoppings.bz.web.tools.DatatableHelper.ActionCondition;
 import mobi.allshoppings.dao.AreaDAO;
@@ -32,11 +37,6 @@ import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.model.tools.CountryHelper;
 import mobi.allshoppings.model.tools.ViewLocation;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Email;
 
 public class BaseWebController {
 

@@ -3,11 +3,11 @@ package mobi.allshoppings.dao;
 
 import java.util.List;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.Favorite;
 import mobi.allshoppings.model.User;
-
-import com.inodes.datanucleus.model.Key;
 
 public interface FavoriteDAO extends GenericDAO<Favorite> {
 

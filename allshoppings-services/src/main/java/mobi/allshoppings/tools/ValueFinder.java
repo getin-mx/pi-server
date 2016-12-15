@@ -1,11 +1,11 @@
 package mobi.allshoppings.tools;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.ContextLoader;
+
 import mobi.allshoppings.dao.GenericDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.interfaces.ModelKey;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.ContextLoader;
 
 public class ValueFinder {
 

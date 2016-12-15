@@ -2,11 +2,11 @@ package mobi.allshoppings.dao.spi;
 
 import java.util.logging.Logger;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.AddressComponentsCacheDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.AddressComponentsCache;
-
-import com.inodes.datanucleus.model.Key;
 
 public class AddressComponentsCacheDAOJDOImpl extends GenericDAOJDO<AddressComponentsCache> implements AddressComponentsCacheDAO {
 	

@@ -2,12 +2,12 @@ package com.inodes.util;
 
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-
 import org.apache.activemq.broker.jmx.QueueViewMBean;
 import org.junit.Test;
 
 import com.inodes.util.activemq.ActiveMQJMXConnection;
+
+import junit.framework.TestCase;
 
 public class ActiveMQJMXConnectionTester extends TestCase {
 

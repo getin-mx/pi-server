@@ -18,6 +18,11 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Key;
+import com.inodes.datanucleus.model.Text;
+
 import mobi.allshoppings.model.adapter.IAdaptable;
 import mobi.allshoppings.model.interfaces.ACLAware;
 import mobi.allshoppings.model.interfaces.Identificable;
@@ -28,11 +33,6 @@ import mobi.allshoppings.model.interfaces.ViewLocationAware;
 import mobi.allshoppings.model.tools.ACL;
 import mobi.allshoppings.model.tools.ViewLocation;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Key;
-import com.inodes.datanucleus.model.Text;
 
 @SuppressWarnings("serial")
 @PersistenceCapable(detachable="true")

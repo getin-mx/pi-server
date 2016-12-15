@@ -10,14 +10,14 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.model.embedded.AlternateLocation;
 import mobi.allshoppings.model.embedded.FormatPrice;
 import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import com.inodes.datanucleus.model.Key;
 
 @SuppressWarnings("serial")
 @PersistenceCapable(detachable="true")

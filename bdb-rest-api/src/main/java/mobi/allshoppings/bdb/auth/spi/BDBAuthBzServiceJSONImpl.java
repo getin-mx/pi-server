@@ -5,6 +5,13 @@ import java.util.Date;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.json.JSONObject;
+import org.restlet.ext.json.JsonRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.inodes.datanucleus.model.Email;
+
 import mobi.allshoppings.auth.AuthHelper;
 import mobi.allshoppings.bdb.auth.BDBAuthBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
@@ -14,13 +21,6 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.UserSecurity;
 import mobi.allshoppings.tools.CommonValidator;
-
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.json.JSONObject;
-import org.restlet.ext.json.JsonRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.inodes.datanucleus.model.Email;
 
 public class BDBAuthBzServiceJSONImpl extends BDBRestBaseServerResource implements BDBAuthBzService {
 	private static final String[] DEFAULT_FIELDS = { "identifier", "firstname", "lastname", "avatarId", "tokenValidity" };

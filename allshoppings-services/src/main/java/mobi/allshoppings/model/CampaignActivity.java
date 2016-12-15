@@ -11,15 +11,15 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import mobi.allshoppings.model.adapter.IAdaptable;
-import mobi.allshoppings.model.interfaces.Identificable;
-import mobi.allshoppings.model.interfaces.ModelKey;
-import mobi.allshoppings.model.interfaces.Replicable;
-
 import org.apache.commons.lang.time.DateUtils;
 
 import com.inodes.datanucleus.model.Key;
 import com.inodes.datanucleus.model.Text;
+
+import mobi.allshoppings.model.adapter.IAdaptable;
+import mobi.allshoppings.model.interfaces.Identificable;
+import mobi.allshoppings.model.interfaces.ModelKey;
+import mobi.allshoppings.model.interfaces.Replicable;
 
 @SuppressWarnings("serial")
 @PersistenceCapable(detachable="true")

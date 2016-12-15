@@ -10,6 +10,12 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Cursor;
+import com.inodes.datanucleus.model.JDOCursorHelper;
+
 import mobi.allshoppings.auth.UserInfo;
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.DeviceLocationDAO;
@@ -20,12 +26,6 @@ import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.DeviceLocation;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Cursor;
-import com.inodes.datanucleus.model.JDOCursorHelper;
 
 public class DeviceInfoDAOJDOImpl extends GenericDAOJDO<DeviceInfo> implements DeviceInfoDAO {
 	private static final Logger log = Logger.getLogger(DeviceInfoDAOJDOImpl.class.getName());

@@ -5,13 +5,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.cinepolis.services.ResetVistaVouchersService;
 import mobi.allshoppings.dao.VoucherDAO;
 import mobi.allshoppings.dao.spi.VoucherDAOJDOImpl;
 import mobi.allshoppings.model.Voucher;
-
-import org.junit.Test;
 
 public class ResetVistaVouchersServiceTester extends TestCase {
 

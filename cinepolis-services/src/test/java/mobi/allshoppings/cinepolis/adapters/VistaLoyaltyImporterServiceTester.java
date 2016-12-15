@@ -2,11 +2,11 @@ package mobi.allshoppings.cinepolis.adapters;
 
 import java.io.File;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.cinepolis.services.VistaLoyaltyImporterService;
 import mobi.allshoppings.model.Voucher;
-
-import org.junit.Test;
 
 public class VistaLoyaltyImporterServiceTester extends TestCase {
 

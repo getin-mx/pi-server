@@ -4,6 +4,12 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.ext.json.JsonRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
 import mobi.allshoppings.bz.FavoritesBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.bz.spi.fields.BzFields;
@@ -21,12 +27,6 @@ import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.ranking.PointsService;
 import mobi.allshoppings.uec.UserEntityCacheBzService;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.restlet.ext.json.JsonRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 
 /**

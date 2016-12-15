@@ -1,5 +1,9 @@
 package mobi.allshoppings.bdb.bz.spi;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
 import mobi.allshoppings.bdb.bz.BDBCrudBzService;
 import mobi.allshoppings.dao.BrandDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
@@ -8,10 +12,6 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
-
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 public class BDBStoreBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<Store> implements BDBCrudBzService {
 

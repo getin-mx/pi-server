@@ -1,12 +1,12 @@
 package mobi.allshoppings.model.test;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.dao.CinemaDAO;
 import mobi.allshoppings.dao.spi.CinemaDAOJDOImpl;
 import mobi.allshoppings.model.Cinema;
 import mobi.allshoppings.model.interfaces.StatusAware;
-
-import org.junit.Test;
 
 public class CinemaTest extends TestCase {
 

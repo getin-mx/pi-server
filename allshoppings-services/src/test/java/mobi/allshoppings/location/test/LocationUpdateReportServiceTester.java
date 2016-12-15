@@ -3,10 +3,10 @@ package mobi.allshoppings.location.test;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.location.LocationUpdateReportService;
-
-import org.junit.Test;
 
 public class LocationUpdateReportServiceTester extends TestCase {
 

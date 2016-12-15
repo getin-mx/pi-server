@@ -1,13 +1,13 @@
 package mobi.allshoppings.push.test;
 
-import mobi.allshoppings.dao.DeviceInfoDAO;
-import mobi.allshoppings.model.DeviceInfo;
-import mobi.allshoppings.push.PushMessageHelper;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+
+import mobi.allshoppings.dao.DeviceInfoDAO;
+import mobi.allshoppings.model.DeviceInfo;
+import mobi.allshoppings.push.PushMessageHelper;
 
 @ContextConfiguration(locations = {"../../test/testApplicationContext.xml"})
 public class PushHelperTester extends AbstractJUnit4SpringContextTests {

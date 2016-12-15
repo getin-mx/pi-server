@@ -12,6 +12,10 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.GeoEntityDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -26,10 +30,6 @@ import mobi.allshoppings.model.tools.KeyHelper;
 import mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tx.PersistenceProvider;
-
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Key;
 
 public class GeoEntityDAOJDOImpl extends GenericDAOJDO<GeoEntity> implements GeoEntityDAO {
 

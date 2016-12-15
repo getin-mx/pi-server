@@ -1,9 +1,9 @@
 package mobi.allshoppings.cinepolis.adapters;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.cinepolis.services.UpdateCinepolisCinemasService;
-
-import org.junit.Test;
 
 public class UpdateCinemasServiceTester extends TestCase {
 

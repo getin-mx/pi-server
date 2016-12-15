@@ -8,13 +8,13 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.DeviceMessageLockDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DeviceMessageLock;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import com.inodes.datanucleus.model.Key;
 
 public class DeviceMessageLockDAOJDOImpl extends GenericDAOJDO<DeviceMessageLock> implements DeviceMessageLockDAO {
 	

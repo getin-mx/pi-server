@@ -3,11 +3,11 @@ package mobi.allshoppings.cli;
 import java.util.Arrays;
 import java.util.List;
 
+import com.inodes.util.CollectionFactory;
+
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.jetty.JettyServer;
-
-import com.inodes.util.CollectionFactory;
 
 public class StartServer extends AbstractCLI {
 

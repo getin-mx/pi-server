@@ -12,11 +12,11 @@ public class DAOJDOPersistentManagerFactory {
 	private static final PersistenceManagerFactory sharedManagerFactory = JDOHelper.getPersistenceManagerFactory(FileLoader.getResource(
 			"datastore.properties", FileLoader.PRECEDENCE_SYSTEMPATH) != null 
 			? new File(FileLoader.getResource("datastore.properties",	FileLoader.PRECEDENCE_SYSTEMPATH).getFile())
-			: new File("/home/mhapanowicz/workspace-aspi/pi-server/datastore.properties"));
+			: new File("/home/getin-dev/workspace/pi-server/datastore.properties"));
     private static final PersistenceManagerFactory sharedGXManagerFactory = JDOHelper.getPersistenceManagerFactory(FileLoader.getResource(
 			"datastore.properties", FileLoader.PRECEDENCE_SYSTEMPATH) != null 
 			? new File(FileLoader.getResource("datastore.properties",	FileLoader.PRECEDENCE_SYSTEMPATH).getFile())
-			: new File("/home/mhapanowicz/workspace-aspi/pi-server/datastore.properties"));
+			: new File("/home/getin-dev/workspace/pi-server/datastore.properties"));
 
     private DAOJDOPersistentManagerFactory() {
 //    	sharedGXManagerFactory.setDetachAllOnCommit(true);

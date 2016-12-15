@@ -1,16 +1,16 @@
 package mobi.allshoppings.cli;
 
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.image.ImageDownloader;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
+
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.image.ImageDownloader;
 
 
 public class DownloadImage extends AbstractCLI {

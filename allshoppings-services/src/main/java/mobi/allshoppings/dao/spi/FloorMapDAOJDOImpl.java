@@ -8,6 +8,8 @@ import javax.jdo.Query;
 
 import org.apache.commons.collections.CollectionUtils;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.auth.UserInfo;
 import mobi.allshoppings.dao.FloorMapDAO;
 import mobi.allshoppings.exception.ASException;
@@ -19,8 +21,6 @@ import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CustomDatatableFilter;
 import mobi.allshoppings.tools.Range;
-
-import com.inodes.datanucleus.model.Key;
 
 public class FloorMapDAOJDOImpl extends GenericDAOJDO<FloorMap> implements FloorMapDAO {
 

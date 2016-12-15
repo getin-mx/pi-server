@@ -12,6 +12,13 @@ import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Cursor;
+import com.inodes.datanucleus.model.JDOCursorHelper;
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.UserEntityCacheDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -24,13 +31,6 @@ import mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
 import mobi.allshoppings.tools.SystemStatusService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Cursor;
-import com.inodes.datanucleus.model.JDOCursorHelper;
-import com.inodes.datanucleus.model.Key;
 
 public class UserEntityCacheDAOJDOImpl extends GenericDAOJDO<UserEntityCache> implements UserEntityCacheDAO {
 

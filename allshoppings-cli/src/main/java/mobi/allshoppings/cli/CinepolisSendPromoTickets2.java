@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Date;
 
 import joptsimple.OptionParser;
-
 import mobi.allshoppings.cinepolis.services.SendPromoTicketsService;
 
 

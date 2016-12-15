@@ -1,10 +1,10 @@
 package mobi.allshoppings.dao;
 
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.Dummy;
-
-import com.inodes.datanucleus.model.Key;
 
 public interface DummyDAO extends GenericDAO<Dummy> {
 

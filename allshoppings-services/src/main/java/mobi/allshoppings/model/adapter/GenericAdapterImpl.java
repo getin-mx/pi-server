@@ -8,14 +8,14 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConversionException;
+import org.apache.commons.beanutils.PropertyUtils;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CollectionUtils;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.ConversionException;
-import org.apache.commons.beanutils.PropertyUtils;
 
 
 public class GenericAdapterImpl<T extends IGenericAdapter> {

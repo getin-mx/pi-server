@@ -9,6 +9,13 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONException;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
+
 import mobi.allshoppings.cinepolis.vista.voucher.VistaVoucherService;
 import mobi.allshoppings.dao.CinemaDAO;
 import mobi.allshoppings.dao.DeviceInfoDAO;
@@ -33,13 +40,6 @@ import mobi.allshoppings.model.Voucher;
 import mobi.allshoppings.model.embedded.AlternateLocation;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.json.JSONException;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 public class SendMovieTicketsService {
 

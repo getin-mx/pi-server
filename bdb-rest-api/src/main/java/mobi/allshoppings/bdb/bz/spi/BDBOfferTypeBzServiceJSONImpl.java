@@ -1,12 +1,12 @@
 package mobi.allshoppings.bdb.bz.spi;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mobi.allshoppings.bdb.bz.BDBCrudBzService;
 import mobi.allshoppings.dao.OfferTypeDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.OfferType;
-
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class BDBOfferTypeBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<OfferType> implements BDBCrudBzService {
 

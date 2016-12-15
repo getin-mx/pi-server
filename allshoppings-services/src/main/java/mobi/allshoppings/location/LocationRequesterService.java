@@ -7,6 +7,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.DeviceLocationDAO;
 import mobi.allshoppings.dao.spi.DeviceInfoDAOJDOImpl;
@@ -21,11 +26,6 @@ import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CollectionUtils;
 import mobi.allshoppings.tools.Range;
-
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 
 public class LocationRequesterService {
 

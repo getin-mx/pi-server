@@ -6,9 +6,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +16,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.inodes.util.FileLoader;
+
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
 
 
 public class CLI {

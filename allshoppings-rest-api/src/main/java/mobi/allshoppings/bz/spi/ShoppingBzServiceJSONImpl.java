@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.bz.ShoppingBzService;
 import mobi.allshoppings.bz.spi.fields.BzFields;
@@ -26,10 +30,6 @@ import mobi.allshoppings.model.adapter.GenericAdapterImpl;
 import mobi.allshoppings.model.adapter.ShoppingAdapter;
 import mobi.allshoppings.model.adapter.StoreAdapter;
 import mobi.allshoppings.model.tools.StatusHelper;
-
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 
 /**

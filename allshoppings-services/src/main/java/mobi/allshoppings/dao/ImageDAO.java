@@ -1,9 +1,9 @@
 package mobi.allshoppings.dao;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.Image;
-
-import com.inodes.datanucleus.model.Key;
 
 public interface ImageDAO extends GenericDAO<Image> {
 	

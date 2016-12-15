@@ -3,16 +3,16 @@ package mobi.allshoppings.model.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-import mobi.allshoppings.dao.DummyDAO;
-import mobi.allshoppings.dao.spi.DummyDAOJDOImpl;
-import mobi.allshoppings.model.Dummy;
-
 import org.junit.Test;
 
 import com.inodes.datanucleus.model.Blob;
 import com.inodes.datanucleus.model.Email;
 import com.inodes.datanucleus.model.Text;
+
+import junit.framework.TestCase;
+import mobi.allshoppings.dao.DummyDAO;
+import mobi.allshoppings.dao.spi.DummyDAOJDOImpl;
+import mobi.allshoppings.model.Dummy;
 
 public class DummyTest extends TestCase {
 

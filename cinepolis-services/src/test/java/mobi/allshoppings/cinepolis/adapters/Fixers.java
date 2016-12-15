@@ -6,6 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Test;
+
+import com.inodes.datanucleus.model.Text;
+import com.inodes.util.CollectionFactory;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.dao.CampaignActivityDAO;
 import mobi.allshoppings.dao.CinemaDAO;
@@ -24,13 +31,6 @@ import mobi.allshoppings.model.Showtime;
 import mobi.allshoppings.model.Voucher;
 import mobi.allshoppings.tools.CollectionUtils;
 import mobi.allshoppings.tools.Range;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.junit.Test;
-
-import com.inodes.datanucleus.model.Text;
-import com.inodes.util.CollectionFactory;
 
 public class Fixers extends TestCase {
 

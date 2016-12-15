@@ -12,6 +12,13 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.apache.commons.lang.time.DateUtils;
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Cursor;
+import com.inodes.datanucleus.model.JDOCursorHelper;
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.auth.UserInfo;
 import mobi.allshoppings.dao.CampaignActivityDAO;
 import mobi.allshoppings.exception.ASException;
@@ -22,13 +29,6 @@ import mobi.allshoppings.model.User;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
 import mobi.allshoppings.tx.PersistenceProvider;
-
-import org.apache.commons.lang.time.DateUtils;
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Cursor;
-import com.inodes.datanucleus.model.JDOCursorHelper;
-import com.inodes.datanucleus.model.Key;
 
 public class CampaignActivityDAOJDOImpl extends GenericDAOJDO<CampaignActivity> implements CampaignActivityDAO {
 

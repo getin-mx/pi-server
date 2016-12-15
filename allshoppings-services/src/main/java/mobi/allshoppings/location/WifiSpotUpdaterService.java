@@ -7,16 +7,16 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.util.StringUtils;
+
+import com.google.common.io.Files;
+
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.impl.DumperHelperImpl;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.geocoding.WifiSpotService;
 import mobi.allshoppings.geocoding.impl.WifiSpotServiceImpl;
 import mobi.allshoppings.model.DeviceWifiLocationHistory;
-
-import org.springframework.util.StringUtils;
-
-import com.google.common.io.Files;
 
 
 public class WifiSpotUpdaterService {

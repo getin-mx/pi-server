@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
 import mobi.allshoppings.bz.NearMeBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.bz.spi.fields.BzFields;
@@ -32,10 +36,6 @@ import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.adapter.LocationAwareAdapter;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
-
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 /**
  *

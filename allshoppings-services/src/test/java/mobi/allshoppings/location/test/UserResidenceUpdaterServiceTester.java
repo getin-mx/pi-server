@@ -3,12 +3,12 @@ package mobi.allshoppings.location.test;
 import java.text.SimpleDateFormat;
 import java.util.Set;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.geocoding.GeoCodingHelper;
 import mobi.allshoppings.geocoding.impl.GeoCodingHelperGMapsImpl;
 import mobi.allshoppings.location.UserResidenceUpdaterService;
-
-import org.junit.Test;
 
 public class UserResidenceUpdaterServiceTester extends TestCase {
 

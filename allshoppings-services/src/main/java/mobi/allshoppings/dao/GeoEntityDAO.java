@@ -2,14 +2,14 @@ package mobi.allshoppings.dao;
 
 import java.util.List;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.geocoding.GeoPoint;
 import mobi.allshoppings.model.GeoEntity;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.adapter.LocationAwareAdapter;
 import mobi.allshoppings.tx.PersistenceProvider;
-
-import com.inodes.datanucleus.model.Key;
 
 public interface GeoEntityDAO extends GenericDAO<GeoEntity> {
 

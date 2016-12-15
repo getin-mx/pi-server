@@ -4,17 +4,17 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import mobi.allshoppings.bz.RequestDeviceLocationBzService;
-import mobi.allshoppings.bz.RestBaseServerResource;
-import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.push.PushMessageHelper;
-import mobi.allshoppings.tools.CollectionFactory;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import mobi.allshoppings.bz.RequestDeviceLocationBzService;
+import mobi.allshoppings.bz.RestBaseServerResource;
+import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.push.PushMessageHelper;
+import mobi.allshoppings.tools.CollectionFactory;
 
 /**
  *

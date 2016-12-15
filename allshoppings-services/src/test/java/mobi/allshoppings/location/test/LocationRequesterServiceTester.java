@@ -3,10 +3,10 @@ package mobi.allshoppings.location.test;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.location.LocationRequesterService;
-
-import org.junit.Test;
 
 public class LocationRequesterServiceTester extends TestCase {
 

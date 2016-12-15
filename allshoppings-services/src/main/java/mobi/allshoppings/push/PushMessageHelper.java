@@ -3,14 +3,14 @@ package mobi.allshoppings.push;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONObject;
+
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.PushMessageLog;
 import mobi.allshoppings.model.User;
-
-import org.json.JSONObject;
-
-import com.inodes.datanucleus.model.Key;
 
 public interface PushMessageHelper {
 

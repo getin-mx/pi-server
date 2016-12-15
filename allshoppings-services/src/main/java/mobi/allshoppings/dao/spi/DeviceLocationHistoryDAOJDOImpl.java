@@ -9,6 +9,12 @@ import java.util.Map;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Cursor;
+import com.inodes.datanucleus.model.JDOCursorHelper;
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.DeviceLocationHistoryDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -17,12 +23,6 @@ import mobi.allshoppings.model.DeviceLocationHistory;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
 import mobi.allshoppings.tx.PersistenceProvider;
-
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Cursor;
-import com.inodes.datanucleus.model.JDOCursorHelper;
-import com.inodes.datanucleus.model.Key;
 
 public class DeviceLocationHistoryDAOJDOImpl extends GenericDAOJDO<DeviceLocationHistory> implements DeviceLocationHistoryDAO {
 	

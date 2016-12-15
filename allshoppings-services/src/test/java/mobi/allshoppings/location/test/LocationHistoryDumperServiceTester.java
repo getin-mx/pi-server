@@ -4,12 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.impl.DumperHelperImpl;
 import mobi.allshoppings.model.DeviceLocationHistory;
-
-import org.junit.Test;
 
 public class LocationHistoryDumperServiceTester extends TestCase {
 

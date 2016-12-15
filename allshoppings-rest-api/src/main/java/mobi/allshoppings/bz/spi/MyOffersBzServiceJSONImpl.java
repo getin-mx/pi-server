@@ -9,6 +9,11 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.inodes.util.CollectionFactory;
+
 import mobi.allshoppings.bz.MyOffersBzService;
 import mobi.allshoppings.bz.spi.fields.BzFields;
 import mobi.allshoppings.dao.FavoriteDAO;
@@ -23,11 +28,6 @@ import mobi.allshoppings.model.adapter.GenericAdapterImpl;
 import mobi.allshoppings.model.adapter.OfferAdapter;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.Range;
-
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.inodes.util.CollectionFactory;
 
 /**
  *

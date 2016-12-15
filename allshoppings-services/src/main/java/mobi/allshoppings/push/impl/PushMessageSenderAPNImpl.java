@@ -5,18 +5,18 @@ import java.util.logging.Logger;
 
 import javax.net.ssl.SSLHandshakeException;
 
+import org.json.JSONObject;
+import org.springframework.util.StringUtils;
+
+import com.notnoop.apns.APNS;
+import com.notnoop.apns.ApnsService;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.PushMessageLog;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.push.PushMessageSender;
-
-import org.json.JSONObject;
-import org.springframework.util.StringUtils;
-
-import com.notnoop.apns.APNS;
-import com.notnoop.apns.ApnsService;
 
 public class PushMessageSenderAPNImpl extends AbstractPushMessageSender implements PushMessageSender {
 

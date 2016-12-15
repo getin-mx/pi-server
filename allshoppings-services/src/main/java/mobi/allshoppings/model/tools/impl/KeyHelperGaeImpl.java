@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
-import mobi.allshoppings.model.interfaces.ModelKey;
-import mobi.allshoppings.model.tools.KeyHelper;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.inodes.datanucleus.model.Key;
 import com.inodes.datanucleus.model.KeyFactory;
+
+import mobi.allshoppings.model.interfaces.ModelKey;
+import mobi.allshoppings.model.tools.KeyHelper;
 
 public class KeyHelperGaeImpl implements KeyHelper, Serializable {
 

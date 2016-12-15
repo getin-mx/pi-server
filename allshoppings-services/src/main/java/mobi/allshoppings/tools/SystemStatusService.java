@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
 import mobi.allshoppings.dao.SystemStatusDAO;
 import mobi.allshoppings.dao.spi.SystemStatusDAOJDOImpl;
 import mobi.allshoppings.exception.ASException;
@@ -12,9 +15,6 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.SystemStatus;
 import mobi.allshoppings.model.interfaces.ModelKey;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 public class SystemStatusService {
 	

@@ -13,6 +13,18 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import com.google.code.geocoder.Geocoder;
+import com.google.code.geocoder.GeocoderRequestBuilder;
+import com.google.code.geocoder.model.GeocodeResponse;
+import com.google.code.geocoder.model.GeocoderRequest;
+import com.google.code.geocoder.model.GeocoderStatus;
+
 import mobi.allshoppings.dao.AddressComponentsCacheDAO;
 import mobi.allshoppings.dao.BrandDAO;
 import mobi.allshoppings.dao.DeviceLocationDAO;
@@ -41,18 +53,6 @@ import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.model.tools.ViewLocation;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.URLParamEncoder;
-
-import org.apache.commons.io.IOUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
-import com.google.code.geocoder.Geocoder;
-import com.google.code.geocoder.GeocoderRequestBuilder;
-import com.google.code.geocoder.model.GeocodeResponse;
-import com.google.code.geocoder.model.GeocoderRequest;
-import com.google.code.geocoder.model.GeocoderStatus;
 
 public class GeoCodingHelperGMapsImpl implements GeoCodingHelper {
 

@@ -4,14 +4,14 @@ package mobi.allshoppings.dao;
 import java.util.Date;
 import java.util.List;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.Offer;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.tools.ViewLocation;
 import mobi.allshoppings.tools.Range;
 import mobi.allshoppings.tx.PersistenceProvider;
-
-import com.inodes.datanucleus.model.Key;
 
 public interface OfferDAO extends GenericDAO<Offer> {
 

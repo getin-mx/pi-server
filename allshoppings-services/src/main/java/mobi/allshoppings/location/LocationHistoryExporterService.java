@@ -13,6 +13,16 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.datastore.JDOConnection;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.google.gson.Gson;
+import com.inodes.datanucleus.model.Key;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.DeviceLocationHistoryDAO;
 import mobi.allshoppings.dao.spi.DAOJDOPersistentManagerFactory;
@@ -25,16 +35,6 @@ import mobi.allshoppings.geocoding.impl.GeoCodingHelperGMapsImpl;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.DeviceLocationHistory;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.google.gson.Gson;
-import com.inodes.datanucleus.model.Key;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 
 public class LocationHistoryExporterService {
 

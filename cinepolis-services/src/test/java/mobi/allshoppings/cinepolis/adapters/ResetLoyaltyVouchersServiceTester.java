@@ -6,14 +6,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.cinepolis.services.ResetLoyaltyVouchersService;
 import mobi.allshoppings.cinepolis.vista.voucher.VistaVoucherService;
 import mobi.allshoppings.dao.VoucherDAO;
 import mobi.allshoppings.dao.spi.VoucherDAOJDOImpl;
 import mobi.allshoppings.model.Voucher;
-
-import org.junit.Test;
 
 public class ResetLoyaltyVouchersServiceTester extends TestCase {
 

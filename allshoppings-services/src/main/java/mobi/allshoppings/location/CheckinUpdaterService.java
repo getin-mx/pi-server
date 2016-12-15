@@ -9,6 +9,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONObject;
+
+import com.google.gson.Gson;
+
 import mobi.allshoppings.dao.CheckinDAO;
 import mobi.allshoppings.dao.GenericDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
@@ -27,10 +31,6 @@ import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.json.JSONObject;
-
-import com.google.gson.Gson;
 
 
 public class CheckinUpdaterService {

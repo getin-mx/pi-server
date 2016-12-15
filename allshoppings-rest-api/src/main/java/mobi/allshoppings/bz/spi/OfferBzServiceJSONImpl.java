@@ -4,6 +4,9 @@ package mobi.allshoppings.bz.spi;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mobi.allshoppings.bz.OfferBzService;
 import mobi.allshoppings.bz.spi.fields.BzFields;
 import mobi.allshoppings.campaign.CampaignHelper;
@@ -21,9 +24,6 @@ import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.adapter.GenericAdapterImpl;
 import mobi.allshoppings.model.adapter.OfferAdapter;
 import mobi.allshoppings.task.QueueTaskHelper;
-
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**

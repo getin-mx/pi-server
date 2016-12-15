@@ -19,14 +19,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import mobi.allshoppings.dao.VoucherDAO;
-import mobi.allshoppings.dao.spi.VoucherDAOJDOImpl;
-import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.Voucher;
-import mobi.allshoppings.tools.CollectionFactory;
-import mx.com.cineticket.inetvis.vista.loyalty.InvokeLoyalty;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
@@ -34,6 +26,14 @@ import org.springframework.ws.soap.client.core.SoapActionCallback;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import mobi.allshoppings.dao.VoucherDAO;
+import mobi.allshoppings.dao.spi.VoucherDAOJDOImpl;
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.Voucher;
+import mobi.allshoppings.tools.CollectionFactory;
+import mx.com.cineticket.inetvis.vista.loyalty.InvokeLoyalty;
 
 public class VistaLoyaltyService extends WebServiceGatewaySupport {
 

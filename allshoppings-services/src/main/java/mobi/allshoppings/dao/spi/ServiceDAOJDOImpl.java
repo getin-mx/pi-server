@@ -2,11 +2,11 @@ package mobi.allshoppings.dao.spi;
 
 import java.util.logging.Logger;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.ServiceDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.Service;
-
-import com.inodes.datanucleus.model.Key;
 
 public class ServiceDAOJDOImpl extends GenericDAOJDO<Service> implements ServiceDAO {
 	@SuppressWarnings("unused")

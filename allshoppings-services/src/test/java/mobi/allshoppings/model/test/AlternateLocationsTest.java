@@ -2,14 +2,14 @@ package mobi.allshoppings.model.test;
 
 import java.util.List;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.dao.CinemaDAO;
 import mobi.allshoppings.dao.spi.CinemaDAOJDOImpl;
 import mobi.allshoppings.model.Cinema;
 import mobi.allshoppings.model.embedded.AlternateLocation;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.junit.Test;
 
 public class AlternateLocationsTest extends TestCase {
 

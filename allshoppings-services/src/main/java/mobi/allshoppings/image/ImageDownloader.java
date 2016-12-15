@@ -3,17 +3,17 @@ package mobi.allshoppings.image;
 import java.net.URL;
 import java.util.UUID;
 
-import mobi.allshoppings.dao.ImageDAO;
-import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.Image;
-
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import com.inodes.datanucleus.model.Blob;
 import com.inodes.datanucleus.model.Key;
+
+import mobi.allshoppings.dao.ImageDAO;
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.Image;
 
 public class ImageDownloader {
 

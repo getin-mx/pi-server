@@ -2,9 +2,9 @@ package mobi.allshoppings.cli;
 
 import java.io.IOException;
 
-import joptsimple.OptionParser;
-
 import org.springframework.context.ApplicationContext;
+
+import joptsimple.OptionParser;
 
 public abstract class AbstractCLI {
 

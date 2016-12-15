@@ -2,11 +2,11 @@ package mobi.allshoppings.dao.spi;
 
 import java.util.logging.Logger;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.AreaDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.Area;
-
-import com.inodes.datanucleus.model.Key;
 
 public class AreaDAOJDOImpl extends GenericDAOJDO<Area> implements AreaDAO {
 	@SuppressWarnings("unused")

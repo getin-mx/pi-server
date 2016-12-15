@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 
+import org.springframework.util.StringUtils;
+
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.tools.MultiLang;
-
-import org.springframework.util.StringUtils;
 
 public class GenericModelKeyComparator implements Comparator<ModelKey> {
 

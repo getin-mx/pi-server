@@ -3,15 +3,15 @@ package mobi.allshoppings.bz.spi;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONObject;
+import org.restlet.ext.json.JsonRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mobi.allshoppings.auth.AuthHelper;
 import mobi.allshoppings.bz.ForcePassBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.dao.UserDAO;
 import mobi.allshoppings.model.User;
-
-import org.json.JSONObject;
-import org.restlet.ext.json.JsonRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *

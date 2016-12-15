@@ -8,6 +8,10 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.auth.UserInfo;
 import mobi.allshoppings.dao.NotificationLogDAO;
 import mobi.allshoppings.exception.ASException;
@@ -16,10 +20,6 @@ import mobi.allshoppings.model.NotificationLog;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
-
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Key;
 
 public class NotificationLogDAOJDOImpl extends GenericDAOJDO<NotificationLog> implements NotificationLogDAO {
 	private static final Logger log = Logger.getLogger(NotificationLogDAOJDOImpl.class.getName());

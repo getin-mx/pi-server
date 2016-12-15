@@ -10,6 +10,9 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mobi.allshoppings.bz.DashboardTopDataBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
@@ -17,9 +20,6 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.json.JSONArray;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**

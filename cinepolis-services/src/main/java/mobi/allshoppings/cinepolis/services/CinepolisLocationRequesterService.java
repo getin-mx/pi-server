@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.inodes.util.CollectionFactory;
+
 import mobi.allshoppings.dao.CinemaDAO;
 import mobi.allshoppings.dao.ShowtimeDAO;
 import mobi.allshoppings.dao.spi.CinemaDAOJDOImpl;
@@ -21,8 +23,6 @@ import mobi.allshoppings.model.Cinema;
 import mobi.allshoppings.model.Showtime;
 import mobi.allshoppings.model.embedded.AlternateLocation;
 import mobi.allshoppings.model.interfaces.StatusAware;
-
-import com.inodes.util.CollectionFactory;
 
 public class CinepolisLocationRequesterService {
 

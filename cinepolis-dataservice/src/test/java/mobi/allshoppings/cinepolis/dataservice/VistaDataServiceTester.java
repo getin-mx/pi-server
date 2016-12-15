@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.cinepolis.services.VistaDataService;
 import mobi.allshoppings.dao.CinemaDAO;
@@ -17,8 +19,6 @@ import mobi.allshoppings.model.Cinema;
 import mobi.allshoppings.model.Movie;
 import mobi.allshoppings.model.Showtime;
 import mobi.allshoppings.model.interfaces.StatusAware;
-
-import org.junit.Test;
 
 public class VistaDataServiceTester extends TestCase {
 

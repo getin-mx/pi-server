@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import joptsimple.OptionParser;
-
 import mobi.allshoppings.dao.DeviceLocationDAO;
 import mobi.allshoppings.dao.spi.DeviceLocationDAOJDOImpl;
 import mobi.allshoppings.model.DeviceLocation;

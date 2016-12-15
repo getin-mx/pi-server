@@ -12,17 +12,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.model.SystemConfiguration;
-import mobi.allshoppings.model.interfaces.Indexable;
-import mobi.allshoppings.model.interfaces.ModelKey;
-import mobi.allshoppings.model.tools.ASScoredDocument;
-import mobi.allshoppings.model.tools.ASSearchField;
-import mobi.allshoppings.model.tools.IndexHelper;
-import mobi.allshoppings.model.tools.MultiLang;
-import mobi.allshoppings.tools.CollectionFactory;
-import mobi.allshoppings.tools.ValueFinder;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -36,6 +25,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.inodes.datanucleus.model.Email;
 import com.inodes.datanucleus.model.Key;
 import com.inodes.datanucleus.model.Text;
+
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.model.SystemConfiguration;
+import mobi.allshoppings.model.interfaces.Indexable;
+import mobi.allshoppings.model.interfaces.ModelKey;
+import mobi.allshoppings.model.tools.ASScoredDocument;
+import mobi.allshoppings.model.tools.ASSearchField;
+import mobi.allshoppings.model.tools.IndexHelper;
+import mobi.allshoppings.model.tools.MultiLang;
+import mobi.allshoppings.tools.CollectionFactory;
+import mobi.allshoppings.tools.ValueFinder;
 
 public class IndexHelperSolrImpl implements IndexHelper {
 

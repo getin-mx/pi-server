@@ -4,10 +4,10 @@ package mobi.allshoppings.dao;
 import java.util.Date;
 import java.util.List;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.Checkin;
-
-import com.inodes.datanucleus.model.Key;
 
 public interface CheckinDAO extends GenericDAO<Checkin	> {
 

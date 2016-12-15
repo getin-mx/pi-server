@@ -3,10 +3,10 @@ package mobi.allshoppings.location.test;
 import java.io.File;
 import java.text.SimpleDateFormat;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.location.LocationHistoryExporterService;
-
-import org.junit.Test;
 
 public class LocationHistoryExporterServiceTester extends TestCase {
 

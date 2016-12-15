@@ -5,13 +5,13 @@ import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.DeviceWifiLocationHistoryDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DeviceWifiLocationHistory;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import com.inodes.datanucleus.model.Key;
 
 public class DeviceWifiLocationHistoryDAOJDOImpl extends GenericDAOJDO<DeviceWifiLocationHistory> implements DeviceWifiLocationHistoryDAO {
 	

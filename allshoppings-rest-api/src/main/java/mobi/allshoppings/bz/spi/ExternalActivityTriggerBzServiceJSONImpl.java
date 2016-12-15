@@ -7,6 +7,15 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.ext.json.JsonRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Text;
+
 import mobi.allshoppings.bz.ExternalActivityTriggerBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.campaign.CampaignHelper;
@@ -28,15 +37,6 @@ import mobi.allshoppings.model.Image;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.push.PushMessageHelper;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.restlet.ext.json.JsonRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Text;
 
 
 /**

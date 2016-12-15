@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.gson.Gson;
+
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.spi.DeviceInfoDAOJDOImpl;
 import mobi.allshoppings.dump.DumperHelper;
@@ -22,8 +24,6 @@ import mobi.allshoppings.geocoding.impl.GeoCodingHelperGMapsImpl;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.DeviceLocationHistory;
 import mobi.allshoppings.model.DeviceWifiLocationHistory;
-
-import com.google.gson.Gson;
 
 /**
  * This class testing dump or export information features 

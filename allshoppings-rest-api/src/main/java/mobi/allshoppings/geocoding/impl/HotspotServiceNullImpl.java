@@ -3,6 +3,8 @@ package mobi.allshoppings.geocoding.impl;
 import java.util.Date;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mobi.allshoppings.dao.CheckinDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -15,8 +17,6 @@ import mobi.allshoppings.model.adapter.HotSpotAdapter;
 import mobi.allshoppings.tx.BaseTransactionableTask;
 import mobi.allshoppings.tx.PersistenceProvider;
 import mobi.allshoppings.tx.TransactionFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class HotspotServiceNullImpl implements HotspotService {

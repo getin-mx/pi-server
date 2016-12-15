@@ -8,6 +8,14 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Text;
+
 import mobi.allshoppings.campaign.CampaignHelper;
 import mobi.allshoppings.coupon.CouponHelper;
 import mobi.allshoppings.dao.CampaignActivityDAO;
@@ -31,14 +39,6 @@ import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Hash;
 import mobi.allshoppings.tools.I18NUtils;
 import mobi.allshoppings.tracker.TrackerHelper;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Text;
 
 public class CouponHelperImpl implements CouponHelper {
 

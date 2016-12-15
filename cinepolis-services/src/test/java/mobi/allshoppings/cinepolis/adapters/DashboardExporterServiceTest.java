@@ -3,10 +3,10 @@ package mobi.allshoppings.cinepolis.adapters;
 import java.io.File;
 import java.text.SimpleDateFormat;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.cinepolis.services.DashboardExporterService;
-
-import org.junit.Test;
 
 public class DashboardExporterServiceTest extends TestCase {
 

@@ -15,6 +15,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.util.StringUtils;
+
+import com.google.gson.Gson;
+
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.impl.DumperHelperImpl;
 import mobi.allshoppings.exception.ASException;
@@ -24,10 +28,6 @@ import mobi.allshoppings.geocoding.impl.GeoCodingHelperGMapsImpl;
 import mobi.allshoppings.model.Address;
 import mobi.allshoppings.model.DeviceLocationHistory;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.springframework.util.StringUtils;
-
-import com.google.gson.Gson;
 
 
 public class UserResidenceUpdaterService {

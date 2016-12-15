@@ -11,6 +11,13 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.json.JSONObject;
+import org.restlet.ext.json.JsonRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.inodes.datanucleus.model.Email;
+
 import mobi.allshoppings.auth.AuthBzService;
 import mobi.allshoppings.auth.AuthHelper;
 import mobi.allshoppings.bz.RestBaseServerResource;
@@ -27,13 +34,6 @@ import mobi.allshoppings.tools.CommonValidator;
 import mobi.allshoppings.tx.BaseTransactionableTask;
 import mobi.allshoppings.tx.PersistenceProvider;
 import mobi.allshoppings.tx.TransactionFactory;
-
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.json.JSONObject;
-import org.restlet.ext.json.JsonRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.inodes.datanucleus.model.Email;
 
 public class AuthBzServiceJSONImpl extends RestBaseServerResource implements AuthBzService {
 	private static final String[] DEFAULT_FIELDS = { "identifier", "firstname", "password", "email", "gender", "birthDate", "lastname", "avatarId", "trackingCode", "tokenValidity", "points", "checkinCount", "friendCount", "viewLocation.country" };

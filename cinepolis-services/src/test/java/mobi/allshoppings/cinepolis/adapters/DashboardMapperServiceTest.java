@@ -2,10 +2,10 @@ package mobi.allshoppings.cinepolis.adapters;
 
 import java.text.SimpleDateFormat;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.cinepolis.services.DashboardMapperService;
-
-import org.junit.Test;
 
 public class DashboardMapperServiceTest extends TestCase {
 

@@ -3,12 +3,12 @@ package mobi.allshoppings.dao;
 
 import java.util.List;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.Cinema;
 import mobi.allshoppings.tools.Range;
 import mobi.allshoppings.tx.PersistenceProvider;
-
-import com.inodes.datanucleus.model.Key;
 
 public interface CinemaDAO extends GenericDAO<Cinema> {
 

@@ -2,10 +2,10 @@ package mobi.allshoppings.location.test;
 
 import java.text.SimpleDateFormat;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.location.CheckinUpdaterService;
-
-import org.junit.Test;
 
 public class CheckinUpdaterServiceTester extends TestCase {
 

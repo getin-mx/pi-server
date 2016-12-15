@@ -2,11 +2,11 @@ package mobi.allshoppings.dao.spi;
 
 import java.util.logging.Logger;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.BeaconHotspotDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.BeaconHotspot;
-
-import com.inodes.datanucleus.model.Key;
 
 public class BeaconHotspotDAOJDOImpl extends GenericDAOJDO<BeaconHotspot> implements BeaconHotspotDAO {
 	

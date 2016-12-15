@@ -3,6 +3,11 @@ package mobi.allshoppings.bz.spi;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.ext.json.JsonRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mobi.allshoppings.bz.DeviceMessageBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.dao.DeviceInfoDAO;
@@ -10,11 +15,6 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.push.PushMessageHelper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.restlet.ext.json.JsonRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**

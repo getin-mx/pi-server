@@ -1,11 +1,11 @@
 package mobi.allshoppings.model.test;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.dao.VoucherDAO;
 import mobi.allshoppings.dao.spi.VoucherDAOJDOImpl;
 import mobi.allshoppings.model.Voucher;
-
-import org.junit.Test;
 
 public class VoucherTxSequenceTester extends TestCase {
 

@@ -12,6 +12,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
 import mobi.allshoppings.bz.DashboardTableDataBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.dao.CinemaDAO;
@@ -23,11 +28,6 @@ import mobi.allshoppings.model.Cinema;
 import mobi.allshoppings.model.DashboardIndicatorAlias;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.json.JSONArray;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 
 /**

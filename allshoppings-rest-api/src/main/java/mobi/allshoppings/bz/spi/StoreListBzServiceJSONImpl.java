@@ -7,6 +7,9 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.bz.StoreListBzService;
 import mobi.allshoppings.bz.spi.fields.BzFields;
@@ -17,9 +20,6 @@ import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.UserEntityCache;
 import mobi.allshoppings.tools.Range;
-
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *

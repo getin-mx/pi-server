@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.cinepolis.services.SendPromoTicketsService;
-
-import org.junit.Test;
 
 public class SendPromoTicketsServiceTester extends TestCase {
 

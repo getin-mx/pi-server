@@ -31,7 +31,6 @@ import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.dao.APDVisitDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
-import mobi.allshoppings.dao.StoreTicketDAO;
 import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.FloorMapDAO;
@@ -39,6 +38,7 @@ import mobi.allshoppings.dao.FloorMapJourneyDAO;
 import mobi.allshoppings.dao.MacVendorDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
+import mobi.allshoppings.dao.StoreTicketDAO;
 import mobi.allshoppings.dao.WifiSpotDAO;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.impl.DumperHelperImpl;
@@ -760,54 +760,9 @@ public class DashboardAPDeviceMapperService {
 				}
 
 			}
-
-			// Looks for tickets
-//			stmt = conn.createStatement();
-//			rs = stmt.executeQuery("SELECT "
-//					+ "id_store, "
-//					+ "read_at, "
-//					+ "tickets "
-//					+ "from ticket where "
-//					+ "read_at >= date('" + dateSDF.format(dateFrom) + "') and "
-//					+ "read_at <= date('" + dateSDF.format(dateTo) + "')");
-//			if( rs.first()) {
-//				while(!rs.isAfterLast()) {
-//					int storeId = rs.getInt("id_store");
-//					Date readAt = rs.getTimestamp("read_at");
-//					int tickets = rs.getInt("tickets"); 
-//
-//					try {
-//						Store store = storeCache.get(String.valueOf(storeId));
-//						if( store != null ) {
-//							DashboardIndicatorData obj;
-//
-//							// visitor_total_tickets --------------------------------------------------------------------------------
-//							// ------------------------------------------------------------------------------------------------------
-//							obj = buildBasicDashboardIndicatorData(
-//									"apd_visitor", "Visitantes", "visitor_total_tickets",
-//									"Tickets", readAt,
-//									DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-//									store, null, store.getBrandId(), KIND_BRAND);
-//
-//							if(indicatorsSet.containsKey(obj.getKey().getName())) 
-//								obj = indicatorsSet.get(obj.getKey().getName());
-//							obj.setDoubleValue(obj.getDoubleValue() + tickets);
-//							indicatorsSet.put(obj.getKey().getName(), obj);
-//
-//						} else {
-//							// Store not found
-//							log.log(Level.INFO, "Store with external id " + storeId + " not found!");
-//						}
-//
-//					} catch( ASException e ) {
-//						// Store not found
-//						log.log(Level.INFO, "Store with external id " + storeId + " not found!");
-//					}
-//
-//					rs.next();
-//				}
-//			}
-
+			// Looks for tickets			
+			createStoreTicketDataForDates(sdf.format(date), sdf.format(date), entityId);
+			
 			log.log(Level.INFO, "Starting Write Procedure...");
 
 			// Finally, save all the information

@@ -10,6 +10,9 @@ import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mobi.allshoppings.dao.TFTokenDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -18,9 +21,6 @@ import mobi.allshoppings.model.TFToken;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.UserSecurity;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class AuthHelper {
 	private static final char HEXES[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};

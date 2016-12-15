@@ -3,10 +3,10 @@ package mobi.allshoppings.dao;
 
 import java.util.List;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.InvitationDetail;
-
-import com.inodes.datanucleus.model.Key;
 
 public interface InvitationDetailDAO extends GenericDAO<InvitationDetail> {
 

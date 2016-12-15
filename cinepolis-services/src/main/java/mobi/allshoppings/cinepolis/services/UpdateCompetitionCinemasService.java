@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.client.RestTemplate;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.geocoding.GeoPoint;
 import mobi.allshoppings.model.Cinema;
 import mobi.allshoppings.model.interfaces.StatusAware;
-
-import org.springframework.web.client.RestTemplate;
 
 public class UpdateCompetitionCinemasService extends UpdateCinemasService {
 

@@ -11,13 +11,13 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.model.interfaces.Indexable;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.interfaces.Replicable;
 import mobi.allshoppings.model.tools.MultiLang;
-
-import com.inodes.datanucleus.model.Key;
 
 @SuppressWarnings("serial")
 @PersistenceCapable

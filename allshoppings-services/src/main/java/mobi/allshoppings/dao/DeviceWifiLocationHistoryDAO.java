@@ -3,10 +3,10 @@ package mobi.allshoppings.dao;
 
 import java.util.List;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.DeviceWifiLocationHistory;
-
-import com.inodes.datanucleus.model.Key;
 
 public interface DeviceWifiLocationHistoryDAO extends GenericDAO<DeviceWifiLocationHistory> {
 	

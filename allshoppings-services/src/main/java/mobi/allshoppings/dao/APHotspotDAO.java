@@ -3,10 +3,10 @@ package mobi.allshoppings.dao;
 
 import java.util.Date;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.APHotspot;
-
-import com.inodes.datanucleus.model.Key;
 
 public interface APHotspotDAO extends GenericDAO<APHotspot> {
 

@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.bz.TableListBzService;
 import mobi.allshoppings.bz.spi.fields.BzFields;
@@ -23,9 +26,6 @@ import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.UserEntityCache;
 import mobi.allshoppings.tools.CollectionUtils;
 import mobi.allshoppings.uec.UserEntityCacheBzService;
-
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *

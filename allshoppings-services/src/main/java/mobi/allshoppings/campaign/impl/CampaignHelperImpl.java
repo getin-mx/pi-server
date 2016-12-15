@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.time.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
 import mobi.allshoppings.campaign.CampaignHelper;
 import mobi.allshoppings.coupon.CouponHelper;
 import mobi.allshoppings.dao.BrandDAO;
@@ -37,10 +41,6 @@ import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.push.PushMessageHelper;
-
-import org.apache.commons.lang.time.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 public class CampaignHelperImpl implements CampaignHelper {
 

@@ -2,11 +2,11 @@ package mobi.allshoppings.dao.spi;
 
 import java.util.logging.Logger;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.DashboardIndicatorAlias;
-
-import com.inodes.datanucleus.model.Key;
 
 public class DashboardIndicatorAliasDAOJDOImpl extends GenericDAOJDO<DashboardIndicatorAlias> implements DashboardIndicatorAliasDAO {
 

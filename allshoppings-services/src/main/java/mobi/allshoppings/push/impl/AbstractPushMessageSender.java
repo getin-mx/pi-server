@@ -1,13 +1,13 @@
 package mobi.allshoppings.push.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.PushMessageLogDAO;
 import mobi.allshoppings.dao.UserDAO;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.push.PushMessageHelper;
 import mobi.allshoppings.tracker.TrackerHelper;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractPushMessageSender {
 

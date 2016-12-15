@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.web.client.RestTemplate;
+
 import mobi.allshoppings.dao.CinemaDAO;
 import mobi.allshoppings.dao.MovieDAO;
 import mobi.allshoppings.dao.spi.CinemaDAOJDOImpl;
@@ -16,8 +18,6 @@ import mobi.allshoppings.model.Cinema;
 import mobi.allshoppings.model.Movie;
 import mobi.allshoppings.model.embedded.CinemaEmbedd;
 import mobi.allshoppings.model.interfaces.StatusAware;
-
-import org.springframework.web.client.RestTemplate;
 
 public class UpdateMoviesService {
 

@@ -1,11 +1,11 @@
 package mobi.allshoppings.exporter.test;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.dao.ExternalGeoDAO;
 import mobi.allshoppings.dao.spi.ExternalGeoDAOJDOImpl;
 import mobi.allshoppings.exporter.ExternalGeoImporter;
-
-import org.junit.Test;
 
 public class ImportExternalGeoTester extends TestCase {
 

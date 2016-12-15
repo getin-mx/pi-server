@@ -7,15 +7,15 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.InvitationDetailDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.InvitationDetail;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Key;
 
 public class InvitationDetailDAOJDOImpl extends GenericDAOJDO<InvitationDetail> implements InvitationDetailDAO {
 

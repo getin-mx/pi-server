@@ -3,7 +3,6 @@ package mobi.allshoppings.cli;
 import java.util.Arrays;
 
 import joptsimple.OptionParser;
-
 import mobi.allshoppings.cinepolis.services.CinepolisLocationRequesterService;
 
 

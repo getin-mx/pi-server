@@ -5,6 +5,14 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.ext.json.JsonRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Text;
+
 import mobi.allshoppings.bz.CouponBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.bz.spi.fields.BzFields;
@@ -23,14 +31,6 @@ import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.adapter.CouponAdapter;
 import mobi.allshoppings.ranking.PointsService;
 import mobi.allshoppings.task.QueueTaskHelper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.restlet.ext.json.JsonRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Text;
 
 /**
  *

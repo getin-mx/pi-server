@@ -8,6 +8,11 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.TFTokenDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -15,11 +20,6 @@ import mobi.allshoppings.model.TFToken;
 import mobi.allshoppings.model.tools.KeyHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tx.PersistenceProvider;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
-import com.inodes.datanucleus.model.Key;
 
 public class TFTokenDAOJDOImpl extends GenericDAOJDO<TFToken> implements TFTokenDAO {
 

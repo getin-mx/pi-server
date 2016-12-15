@@ -7,9 +7,7 @@ import javax.xml.ws.WebServiceRef;
 
 import nz.co.vista.services.wsvistawebclient_datatypes._1.DataResponse;
 import nz.co.vista.services.wsvistawebclient_datatypes._1.GetSessionInfoRequest;
-
 import oracle.webservices.ClientConstants;
-
 import weblogic.wsee.jws.jaxws.owsm.SecurityPoliciesFeature;
 
 // !THE CHANGES MADE TO THIS FILE WILL BE DESTROYED IF REGENERATED!

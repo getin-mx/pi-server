@@ -5,12 +5,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.Range;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public interface QueueTaskHelper {
 

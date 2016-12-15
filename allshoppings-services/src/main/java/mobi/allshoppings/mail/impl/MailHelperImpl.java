@@ -18,17 +18,17 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.mail.MailHelper;
-import mobi.allshoppings.model.SystemConfiguration;
-import mobi.allshoppings.model.User;
-
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.context.ContextLoader;
+
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.mail.MailHelper;
+import mobi.allshoppings.model.SystemConfiguration;
+import mobi.allshoppings.model.User;
 
 public class MailHelperImpl implements MailHelper {
 

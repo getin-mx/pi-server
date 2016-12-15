@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.springframework.util.StringUtils;
+
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.cinepolis.services.ResetVistaVouchersService;
@@ -13,10 +17,6 @@ import mobi.allshoppings.dao.spi.VoucherDAOJDOImpl;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.Voucher;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.springframework.util.StringUtils;
 
 
 public class CinepolisConfirmVistaVouchers extends AbstractCLI {

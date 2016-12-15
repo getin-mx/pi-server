@@ -5,13 +5,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.impl.DeviceWifiLocationHistoryDumperPlugin;
 import mobi.allshoppings.dump.impl.DumperHelperImpl;
 import mobi.allshoppings.model.DeviceWifiLocationHistory;
-
-import org.junit.Test;
 
 public class WifiLocationHistoryDumperServiceTester extends TestCase {
 

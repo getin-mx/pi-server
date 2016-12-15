@@ -3,13 +3,13 @@ package mobi.allshoppings.dao;
 import java.util.Collection;
 import java.util.List;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.FinancialEntity;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.tools.ViewLocation;
 import mobi.allshoppings.tools.Range;
-
-import com.inodes.datanucleus.model.Key;
 
 public interface FinancialEntityDAO extends GenericDAO<FinancialEntity> {
 

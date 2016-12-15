@@ -5,11 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 
-import mobi.allshoppings.dao.ImageDAO;
-import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.Image;
-
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.krysalis.barcode4j.BarcodeGenerator;
@@ -17,6 +12,11 @@ import org.krysalis.barcode4j.BarcodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inodes.datanucleus.model.Blob;
+
+import mobi.allshoppings.dao.ImageDAO;
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.Image;
 
 public class BarcodeService {
 

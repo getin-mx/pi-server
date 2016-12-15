@@ -3,15 +3,15 @@ package mobi.allshoppings.cli;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.springframework.util.StringUtils;
+
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.location.WifiSpotUpdaterService;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.springframework.util.StringUtils;
 
 
 public class UpdateWifiSpots extends AbstractCLI {

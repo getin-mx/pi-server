@@ -11,14 +11,14 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import mobi.allshoppings.auth.UserInfo;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.UserSecurity;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.model.tools.CountryHelper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 @SuppressWarnings("serial")
 public class SpringVelocityHelper implements Serializable {

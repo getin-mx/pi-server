@@ -2,18 +2,18 @@ package mobi.allshoppings.cli;
 
 import java.util.List;
 
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import mobi.allshoppings.apdevice.APDeviceHelper;
-import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.exception.ASExceptionHelper;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
 
 import com.inodes.util.CollectionFactory;
+
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import mobi.allshoppings.apdevice.APDeviceHelper;
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.exception.ASExceptionHelper;
 
 
 public class UpdateAPDevice extends AbstractCLI {

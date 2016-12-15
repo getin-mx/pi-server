@@ -4,15 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.springframework.util.StringUtils;
+
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.location.UserResidenceUpdaterService;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.springframework.util.StringUtils;
 
 
 public class UpdateUserResidence extends AbstractCLI {

@@ -1,10 +1,10 @@
 package mobi.allshoppings.dao.spi;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.SystemStatusDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.SystemStatus;
-
-import com.inodes.datanucleus.model.Key;
 
 public class SystemStatusDAOJDOImpl extends GenericDAOJDO<SystemStatus> implements SystemStatusDAO {
 

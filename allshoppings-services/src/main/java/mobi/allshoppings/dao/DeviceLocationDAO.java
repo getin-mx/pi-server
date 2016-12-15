@@ -4,13 +4,13 @@ package mobi.allshoppings.dao;
 import java.util.Date;
 import java.util.List;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.geocoding.GeoCodingHelper;
 import mobi.allshoppings.geocoding.GeoPoint;
 import mobi.allshoppings.model.DeviceLocation;
 import mobi.allshoppings.tools.Range;
-
-import com.inodes.datanucleus.model.Key;
 
 public interface DeviceLocationDAO extends GenericDAO<DeviceLocation> {
 

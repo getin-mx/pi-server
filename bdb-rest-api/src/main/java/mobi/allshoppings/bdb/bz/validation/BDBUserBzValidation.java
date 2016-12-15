@@ -1,10 +1,10 @@
 package mobi.allshoppings.bdb.bz.validation;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mobi.allshoppings.dao.UserDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.User;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This class contains others validation to do when the User is created. More

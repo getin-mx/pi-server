@@ -5,6 +5,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
+
 import mobi.allshoppings.coupon.CouponHelper;
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.DeviceMessageLockDAO;
@@ -15,13 +22,6 @@ import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.DeviceMessageLock;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.SystemConfiguration;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 public class LockHelperPIImpl implements LockHelper {
 

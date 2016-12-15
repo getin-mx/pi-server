@@ -8,6 +8,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.ws.BindingProvider;
 
+import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.tools.CollectionFactory;
@@ -16,12 +21,6 @@ import nz.co.vista.services.wsvistawebclient_datatypes._1.GetSessionInfoRequest;
 import nz.co.vista.services.wsvistawebclient_servicecontracts._1.DataService;
 import nz.co.vista.services.wsvistawebclient_servicecontracts._1.DataService_Service;
 import oracle.webservices.ClientConstants;
-
-import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import weblogic.wsee.jws.jaxws.owsm.SecurityPoliciesFeature;
 
 public class VistaDataService extends WebServiceGatewaySupport {

@@ -2,11 +2,11 @@ package mobi.allshoppings.dao.spi;
 
 import java.util.logging.Logger;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.OfferTypeDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.OfferType;
-
-import com.inodes.datanucleus.model.Key;
 
 public class OfferTypeDAOJDOImpl extends GenericDAOJDO<OfferType> implements OfferTypeDAO {
 	@SuppressWarnings("unused")

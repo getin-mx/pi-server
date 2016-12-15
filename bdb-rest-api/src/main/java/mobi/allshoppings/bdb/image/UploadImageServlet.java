@@ -12,10 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import mobi.allshoppings.dao.ImageDAO;
-import mobi.allshoppings.model.Image;
-import mobi.allshoppings.model.SystemConfiguration;
-
 import org.apache.click.extras.gae.MemoryFileItemFactory;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -27,6 +23,10 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.inodes.datanucleus.model.Blob;
+
+import mobi.allshoppings.dao.ImageDAO;
+import mobi.allshoppings.model.Image;
+import mobi.allshoppings.model.SystemConfiguration;
 
 
 @SuppressWarnings("serial")

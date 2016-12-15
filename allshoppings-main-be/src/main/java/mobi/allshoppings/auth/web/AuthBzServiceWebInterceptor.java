@@ -5,10 +5,10 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import mobi.allshoppings.bz.web.tools.SpringVelocityHelper;
-
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.support.RequestContextUtils;
+
+import mobi.allshoppings.bz.web.tools.SpringVelocityHelper;
 
 public class AuthBzServiceWebInterceptor
 extends HandlerInterceptorAdapter {

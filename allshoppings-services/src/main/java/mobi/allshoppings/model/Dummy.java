@@ -9,13 +9,13 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import mobi.allshoppings.model.interfaces.Identificable;
-import mobi.allshoppings.model.interfaces.ModelKey;
-
 import com.inodes.datanucleus.model.Blob;
 import com.inodes.datanucleus.model.Email;
 import com.inodes.datanucleus.model.Key;
 import com.inodes.datanucleus.model.Text;
+
+import mobi.allshoppings.model.interfaces.Identificable;
+import mobi.allshoppings.model.interfaces.ModelKey;
 
 @SuppressWarnings("serial")
 @PersistenceCapable(detachable="true")

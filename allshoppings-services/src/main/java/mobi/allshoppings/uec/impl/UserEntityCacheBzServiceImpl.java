@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.util.StringUtils;
+
 import mobi.allshoppings.dao.BrandDAO;
 import mobi.allshoppings.dao.DeviceLocationDAO;
 import mobi.allshoppings.dao.FavoriteDAO;
@@ -45,8 +47,6 @@ import mobi.allshoppings.model.tools.ViewLocation;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CollectionUtils;
 import mobi.allshoppings.uec.UserEntityCacheBzService;
-
-import org.springframework.util.StringUtils;
 
 public class UserEntityCacheBzServiceImpl implements UserEntityCacheBzService {
 

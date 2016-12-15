@@ -8,11 +8,11 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.interfaces.Replicable;
-
-import com.inodes.datanucleus.model.Key;
 
 @PersistenceCapable(detachable="true")
 public class AddressComponentsCache implements ModelKey, Serializable, Identificable, Replicable {

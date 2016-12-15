@@ -2,6 +2,11 @@ package mobi.allshoppings.index.test;
 
 import java.util.List;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+
 import mobi.allshoppings.dao.AreaDAO;
 import mobi.allshoppings.dao.OfferTypeDAO;
 import mobi.allshoppings.dao.ServiceDAO;
@@ -16,11 +21,6 @@ import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.tools.IndexHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
-
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 @ContextConfiguration(locations = {"../../test/testApplicationContext.xml"})
 public class IndexHelperTester extends AbstractJUnit4SpringContextTests {
