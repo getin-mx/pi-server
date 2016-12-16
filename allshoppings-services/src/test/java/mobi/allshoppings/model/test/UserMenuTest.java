@@ -37,10 +37,10 @@ public class UserMenuTest extends TestCase {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.main", "fa-laptop", "Main Page"));
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-laptop", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-laptop", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
-				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Trafico Vehicular"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-laptop", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.applications", "fa-laptop", "Aplicaciones"));
@@ -71,7 +71,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.setKey(userMenuDao.createKey("alberto@getin.mx"));
 				userMenuDao.create(um);
@@ -98,7 +98,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.setKey(userMenuDao.createKey("astrid@getin.mx"));
@@ -126,7 +126,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.setKey(userMenuDao.createKey("daniel@getin.mx"));
@@ -154,7 +154,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.setKey(userMenuDao.createKey("francisco@getin.mx"));
@@ -182,7 +182,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.setKey(userMenuDao.createKey("anabell@getin.mx"));
@@ -210,7 +210,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.setKey(userMenuDao.createKey("mariajose@getin.mx"));
@@ -252,7 +252,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.setKey(userMenuDao.createKey("matias@getin.mx"));
@@ -321,9 +321,9 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
-				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Trafico Vehicular"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.setKey(userMenuDao.createKey("sportium_mx"));
 				userMenuDao.create(um);
 			}
@@ -348,7 +348,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("bathandbodyworks_mx"));
 				userMenuDao.create(um);
 			}
@@ -373,7 +373,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("delicafe_mx"));
 				userMenuDao.create(um);
 			}
@@ -398,7 +398,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("campobaja_mx"));
 				userMenuDao.create(um);
 			}
@@ -423,7 +423,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.mtheatmap", "fa-building", "Heat Map"));
 				um.setKey(userMenuDao.createKey("modatelas_mx"));
 				userMenuDao.create(um);
@@ -449,7 +449,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("botanicus_mx"));
 				userMenuDao.create(um);
 			}
@@ -474,7 +474,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("prada_mx"));
 				userMenuDao.create(um);
 			}
@@ -499,7 +499,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("sbarro_mx"));
 				userMenuDao.create(um);
 			}
@@ -524,7 +524,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("sunglasshut_mx"));
 				userMenuDao.create(um);
 			}
@@ -549,7 +549,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("squalo_mx"));
 				userMenuDao.create(um);
 			}
@@ -574,7 +574,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("areasmexico_mx"));
 				userMenuDao.create(um);
 			}
@@ -599,7 +599,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("saavedra_mx"));
 				userMenuDao.create(um);
 			}
@@ -624,7 +624,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.demovisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.demovisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.demomap", "fa-map-marker", "Mapas"));
 				um.getEntries().add(new UserMenuEntry("index.demoheatmap", "fa-map-marker", "Heatmap"));
 				um.getEntries().add(new UserMenuEntry("index.demoareas", "fa-area-chart", "Areas de Afluencia"));
@@ -652,7 +652,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.demovisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.demovisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.demomap", "fa-map-marker", "Mapas"));
 				um.setKey(userMenuDao.createKey("devlyn_mx"));
 				userMenuDao.create(um);
@@ -678,7 +678,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.demovisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.demovisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.demomap", "fa-map-marker", "Mapas"));
 				um.setKey(userMenuDao.createKey("demo2_mx"));
 				userMenuDao.create(um);
@@ -731,7 +731,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("invicta_mx"));
 				userMenuDao.create(um);
 			}
@@ -758,7 +758,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("chilimbalam_mx"));
 				userMenuDao.create(um);
 			}
@@ -785,7 +785,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("maskota_mx"));
 				userMenuDao.create(um);
 			}
@@ -812,7 +812,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("blulagoon_mx"));
 				userMenuDao.create(um);
 			}
@@ -839,7 +839,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("sallybeauty_mx"));
 				userMenuDao.create(um);
 			}
@@ -865,7 +865,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("roku_mx"));
 				userMenuDao.create(um);
 			}
@@ -892,7 +892,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("outletdeportes_mx"));
 				userMenuDao.create(um);
 			}
@@ -943,7 +943,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("flormar_pa"));
 				userMenuDao.create(um);
 			}
@@ -968,7 +968,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("adolfodominguez_mx"));
 				userMenuDao.create(um);
 			}
@@ -993,7 +993,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("watchmywatch_mx"));
 				userMenuDao.create(um);
 			}
@@ -1018,7 +1018,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("fincasantaveracruz_mx"));
 				userMenuDao.create(um);
 			}
@@ -1045,7 +1045,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("fullsand_mx"));
 				userMenuDao.create(um);
 			}
@@ -1070,7 +1070,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.setKey(userMenuDao.createKey("vickyform_mx"));
 				userMenuDao.create(um);
@@ -1096,7 +1096,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Trafico"));
+//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.apddetails", "fa-file-excel-o", "Detalles"));
 				um.setKey(userMenuDao.createKey("agasys_mx"));
 				userMenuDao.create(um);
