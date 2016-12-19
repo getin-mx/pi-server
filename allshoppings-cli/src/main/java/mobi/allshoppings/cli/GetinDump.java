@@ -571,19 +571,28 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("313", "Outlet Deportes	Correo Mayor 71", "outletdeportes_mx",null));
 			stores.add(new StoreAdapter("314", "Outlet Deportes	Correo Mayor 81", "outletdeportes_mx",null));
 			stores.add(new StoreAdapter("315", "HR Consulting Helguera", "hrconsulting_ar",null));
-			
 			stores.add(new StoreAdapter("316","Sally Beauty	Perisur", "sallybeauty_mx","perisur"));
 			stores.add(new StoreAdapter("317","Sally Beauty	Centro Coyoacan", "sallybeauty_mx","centrocoyoacan")); 
 			stores.add(new StoreAdapter("318","Sally Beauty	Mega Coyoacan", "sallybeauty_mx",null)); 
 			stores.add(new StoreAdapter("319","Sally Beauty	Delta", "sallybeauty_mx","parquedelta"));
 			stores.add(new StoreAdapter("320","Sally Beauty	Metepec", "sallybeauty_mx",null));
-			
 			stores.add(new StoreAdapter("321","Roku Condesa", "roku_mx",null));
 			stores.add(new StoreAdapter("322", "Fullsand Galerías Guadalajara", "fullsand_mx", null));
-				
 			stores.add(new StoreAdapter("323", "Saavedra La nueva orizaba ", "saavedra_mx", null));
 			stores.add(new StoreAdapter("324", "Saavedra La Parroquia", "saavedra_mx", null));
-		
+
+			stores.add(new StoreAdapter("325", "La Martina Cancún", "chomarc_mx",null));
+			stores.add(new StoreAdapter("326", "Adolfo Dominguez Los Cabos", "chomarc_mx",null)); 
+			stores.add(new StoreAdapter("327", "Adolfo Dominguez Mérida", "chomarc_mx",null));
+			stores.add(new StoreAdapter("328", "Adolfo Dominguez Outlet Veracruz", "chomarc_mx",null)); 
+			stores.add(new StoreAdapter("329", "Adolfo Dominguez Xalapa", "chomarc_mx",null));
+			stores.add(new StoreAdapter("330", "Adolfo Dominguez Outlet Xalapa", "chomarc_mx",null));
+			stores.add(new StoreAdapter("331", "Adolfo Dominguez Coaztacoalcos", "chomarc_mx",null));
+			stores.add(new StoreAdapter("332", "Adolfo Dominguez Monterrey", "chomarc_mx",null)); 
+			stores.add(new StoreAdapter("333", "UNO de 50 Monterrey", "chomarc_mx",null)); 
+			stores.add(new StoreAdapter("334", "Adolfo Dominguez Tabasco", "chomarc_mx",null));
+			stores.add(new StoreAdapter("335", "Adolfo Dominguez Veracruz", "chomarc_mx",null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
