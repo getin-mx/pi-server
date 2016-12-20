@@ -26,6 +26,10 @@
             <field name="key" column="_id" length="100"/>
         </class>
 
+        <class name="APDMAEmployee" table="APDMAEmployee">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
         <class name="APHEntry" table="APHEntry">
             <field name="key" column="_id" length="100"/>
         </class>

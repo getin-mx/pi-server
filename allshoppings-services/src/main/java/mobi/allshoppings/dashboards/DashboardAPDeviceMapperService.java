@@ -666,7 +666,7 @@ public class DashboardAPDeviceMapperService {
 								}
 							}
 
-						} else {
+						} else if( v.getCheckinType().equals(APDVisit.CHECKIN_VISIT) ) {
 
 							// visitor_total_visits ---------------------------------------------------------------------------------
 							// ------------------------------------------------------------------------------------------------------
