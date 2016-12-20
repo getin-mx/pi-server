@@ -1,28 +1,16 @@
 package mobi.allshoppings.bz.spi;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.apdevice.APHHelper;
@@ -39,30 +27,18 @@ import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APDeviceTriggerEntry;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
-import mobi.allshoppings.model.SystemConfiguration;
-import mobi.allshoppings.task.QueueTaskHelper;
 
 /**
  *
  */
-@SuppressWarnings("deprecation")
 public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerResource implements ReportAccessPointHotSpotBzService {
 
 	private static final Logger log = Logger.getLogger(ReportAccessPointHotSpotBzServiceJSONImpl.class.getName());
-	private static final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm:ss");
 
 	@Autowired
 	private APDeviceDAO apdDao;
 	@Autowired
 	private APHotspotDAO dao;
-//	@Autowired
-//	private DeviceInfoDAO diDao;
-//	@Autowired
-//	private LockHelper lockHelper;
-	@Autowired
-	private SystemConfiguration systemConfiguration;
-	@Autowired
-	private QueueTaskHelper queueHelper;
 	@Autowired
 	private APDeviceHelper apdHelper;
 	@Autowired
@@ -71,21 +47,6 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 	private APHHelper aphHelper;
 	@Autowired
 	private APHEntryDAO apheDao;
-
-	private static RestTemplate restTemplate;
-	private static HttpHeaders requestHeaders;
-	
-	static {
-		requestHeaders = new HttpHeaders();
-		requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-		requestHeaders.setAccept(Arrays.asList( new MediaType[] {MediaType.APPLICATION_JSON}));
-
-		restTemplate = new RestTemplate();
-		restTemplate.getMessageConverters().clear();
-		restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-		
-	    sdfTime.setTimeZone(TimeZone.getTimeZone("UTC"));
-	}
 
 	@Override
 	public String post(final JsonRepresentation entity) {
@@ -99,8 +60,6 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 
 			log.log(Level.INFO, "Reporting " + data.length() + " AP Members from " + hostname);
 			log.log(Level.FINEST, obj.toString());
-
-//			Date now = new Date();
 
 			for( int i = 0; i < data.length(); i++ ) {
 
@@ -117,12 +76,7 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 					aphotspot.setKey(dao.createKey());
 
 					if(!aphotspot.getMac().startsWith("broadcast")) {
-
-						if(systemConfiguration.isEnqueueHistoryReplicableObjects()) {
-							queueHelper.enqueueTransientInReplica(aphotspot);
-						} else {
-							dao.create(aphotspot);
-						}
+						dao.create(aphotspot);
 
 						// Updates APHEntries
 						try {
@@ -229,46 +183,5 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 			markEnd(start);
 		}
 
-	}
-
-	
-	// Replicate record on getin server
-	public String replicateRecord(APHotspot rec) throws ASException {
-
-		if( StringUtils.hasText(systemConfiguration.getGetinURI())) {
-
-			try {
-
-				JSONObject meta = new JSONObject();
-				String record = "BM-0.1 " + sdfTime.format(rec.getCreationDateTime()) + " " + rec.getMac() + " RSSI:" + rec.getSignalDB();
-				meta.put("record", record);
-				JSONObject data = new JSONObject();
-				data.put("type", "sensor");
-				data.put("meta", meta);
-				JSONObject obj = new JSONObject();
-				obj.put("data", data);
-
-				String url = systemConfiguration.getGetinURI() + "/api/sensors/" + rec.getHostname();
-				log.log(Level.INFO, "Reporting to " + url + " with " + obj.toString());
-
-				@SuppressWarnings("resource")
-				HttpClient httpclient = new DefaultHttpClient();
-				HttpPost httppost = new HttpPost(url);
-
-				httppost.setHeader("Accept", "application/vnd.api+json");
-				httppost.setHeader("Content-type", "application/vnd.api+json");
-				httppost.setEntity(new StringEntity(obj.toString()));
-
-				// Execute HTTP Post Request
-				HttpResponse res = httpclient.execute(httppost);
-				return res.getStatusLine().toString();
-
-			} catch( Exception e ) {
-				throw ASExceptionHelper.defaultException(e.getMessage(), e);
-			}
-
-		} else {
-			return "Not Needed";
-		}
 	}
 }
