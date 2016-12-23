@@ -72,8 +72,41 @@ public class APDeviceMacMatchDAOJDOImpl extends GenericDAOJDO<APDeviceMacMatch> 
 		} finally  {
 			pm.close();
 		}
-
 	}
 
+	@Override
+	public void deleteUsingHostname(String hostname) throws ASException {
 
+		PersistenceManager pm;
+		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+
+		try{
+			Map<String, Object> parameters = CollectionFactory.createMap();
+			List<String> declaredParams = CollectionFactory.createList();
+			List<String> filters = CollectionFactory.createList();
+
+			Query query = pm.newQuery(clazz);
+
+			// Hostname Parameter
+			if(StringUtils.hasText(hostname)) {
+				declaredParams.add("String hostnameParam");
+				filters.add("hostname == hostnameParam");
+				parameters.put("hostnameParam", hostname);
+			}
+			
+			query.declareParameters(toParameterList(declaredParams));
+			query.setFilter(toWellParametrizedFilter(filters));
+
+			query.deletePersistentAll(parameters);
+			
+		} catch(Exception e) {
+			if(!( e instanceof ASException )) {
+				throw ASExceptionHelper.defaultException(e.getMessage(), e);
+			} else {
+				throw e;
+			}
+		} finally  {
+			pm.close();
+		}
+	}
 }

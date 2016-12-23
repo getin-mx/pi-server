@@ -27,6 +27,7 @@ import mobi.allshoppings.model.APDeviceMacMatch;
 import mobi.allshoppings.model.DeviceLocationHistory;
 import mobi.allshoppings.model.ExternalGeo;
 import mobi.allshoppings.tools.CollectionFactory;
+import mobi.allshoppings.tx.PersistenceProvider;
 
 public class ExternalGeoImporter {
 
@@ -43,8 +44,8 @@ public class ExternalGeoImporter {
 	
 	private DumperHelper<DeviceLocationHistory> dump;
 
-	public void importFromGpsRecords(String venue, String period, String hostname, Date fromDate, 
-			Date toDate, String baseDir, String fromHour, String toHour, boolean workDays) throws ASException {
+	public void importFromGpsRecords(String entityId, Integer entityKind, String period, String hostname, Date fromDate, 
+			Date toDate, String baseDir, String fromHour, String toHour, boolean workDays, Integer type) throws ASException {
 		
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -54,7 +55,7 @@ public class ExternalGeoImporter {
 		
 		// First delete previous data
 		log.log(Level.INFO, "Deleting previous data...");
-		dao.deleteUsingVenueAndPeriod(null, venue, period);
+		dao.deleteUsingEntityIdAndPeriod((PersistenceProvider)null, entityId, entityKind, type, period);
 		
 		try {
 			
@@ -108,7 +109,8 @@ public class ExternalGeoImporter {
 								val.setType(ExternalGeo.TYPE_GPS);
 								val.setLat(Double.valueOf(gp.getLat()).floatValue());
 								val.setLon(Double.valueOf(gp.getLon()).floatValue());
-								val.setVenue(venue);
+								val.setEntityId(entityId);;
+								val.setEntityKind(entityKind);;
 								val.setPeriod(period);
 								val.setKey(dao.createKey());
 							}

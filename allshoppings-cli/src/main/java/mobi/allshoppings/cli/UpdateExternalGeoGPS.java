@@ -22,7 +22,9 @@ public class UpdateExternalGeoGPS extends AbstractCLI {
 		if( base == null ) parser = new OptionParser();
 		else parser = base;
 		parser.accepts( "hostname", "APDevice Hostname (for example ashs-0016)" ).withRequiredArg().ofType( String.class );
-		parser.accepts( "venue", "Venue Name (for example Sportium_Cuautitlan)" ).withRequiredArg().ofType( String.class );
+		parser.accepts( "entityId", "Entity Id" ).withRequiredArg().ofType( String.class );
+		parser.accepts( "entityKind", "Entity Kind" ).withRequiredArg().ofType( Integer.class );
+		parser.accepts( "type", "ExternalGeo.type" ).withRequiredArg().ofType( Integer.class );
 		parser.accepts( "period", "Period (for example 2016-04)" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "fromDate", "Date to start gps readings (for example 2016-06-01)" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "toDate", "Date to end gps readings (for example 2016-07-01)" ).withRequiredArg().ofType( String.class );
@@ -46,13 +48,15 @@ public class UpdateExternalGeoGPS extends AbstractCLI {
 			OptionSet options = parser.parse(args);
 
 			String hostname = null;
-			String venue = null;
+			String entityId = null;
+			Integer entityKind = null;
 			String period = null;
 			String outDir = null;
 			String sFromDate = null;
 			String sToDate = null;
 			String toHour = null;
 			String fromHour = null;
+			Integer type = null;
 			boolean workDays = false;
 			
 			Date fromDate = null;
@@ -64,7 +68,9 @@ public class UpdateExternalGeoGPS extends AbstractCLI {
 				if( options.has("toDate")) sToDate = (String)options.valueOf("toDate");
 
 				hostname = (String)options.valueOf("hostname");
-				venue = (String)options.valueOf("venue");
+				entityId = (String)options.valueOf("entityId");
+				entityKind = (Integer)options.valueOf("entityKind");
+				type = (Integer)options.valueOf("type");
 				period = (String)options.valueOf("period");
 				outDir = (String)options.valueOf("outDir");
 				
@@ -80,7 +86,7 @@ public class UpdateExternalGeoGPS extends AbstractCLI {
 				if( sFromDate != null ) {
 					fromDate = sdf.parse(sFromDate);
 				} else {
-					fromDate = sdf.parse("2015-01-01");
+					fromDate = sdf.parse("2016-01-01");
 				}
 				
 				if( sToDate != null ) {
@@ -95,9 +101,8 @@ public class UpdateExternalGeoGPS extends AbstractCLI {
 			}
 			
 			
-			venue = venue.replaceAll("_", " ");
-			log.log(Level.INFO, "Updating External Geo with GPS References for " + hostname + " in period " + period + " and venue " + venue);
-			importer.importFromGpsRecords(venue, period, hostname, fromDate, toDate, outDir, fromHour, toHour, workDays);
+			log.log(Level.INFO, "Updating External Geo with GPS References for " + hostname + " in period " + period + " and entityId " + entityId);
+			importer.importFromGpsRecords(entityId, entityKind, period, hostname, fromDate, toDate, outDir, fromHour, toHour, workDays, type);
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

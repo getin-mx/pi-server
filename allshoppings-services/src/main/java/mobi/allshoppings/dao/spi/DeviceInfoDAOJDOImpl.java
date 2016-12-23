@@ -237,9 +237,10 @@ public class DeviceInfoDAOJDOImpl extends GenericDAOJDO<DeviceInfo> implements D
 
 			Map<String, Object> parameters = CollectionFactory.createMap();
 			Query query = pm.newQuery(DeviceInfo.class);	
-			query.declareParameters("String macParm");
-			query.setFilter("mac == macParm");
+			query.declareParameters("String macParm, String macParm2");
+			query.setFilter("mac == macParm || mac == macParm2");
 			parameters.put("macParm", mac.toUpperCase());
+			parameters.put("macParm2", mac.toLowerCase());
 			
 			@SuppressWarnings("unchecked")
 			List<DeviceInfo> result = (List<DeviceInfo>)query.executeWithMap(parameters);

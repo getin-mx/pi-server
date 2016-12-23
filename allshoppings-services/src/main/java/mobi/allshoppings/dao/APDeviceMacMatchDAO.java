@@ -12,5 +12,6 @@ public interface APDeviceMacMatchDAO extends GenericDAO<APDeviceMacMatch> {
 
 	Key createKey() throws ASException;
 	List<APDeviceMacMatch> getUsingHostname(String hostname) throws ASException;
+	void deleteUsingHostname(String hostname) throws ASException;
 
 }
