@@ -13,9 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.BrandDAO;
+import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.Brand;
+import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.model.adapter.NameAndIdAdapter;
@@ -34,6 +36,9 @@ implements BDBDashboardBzService {
 
 	@Autowired
 	private BrandDAO brandDao;
+
+	@Autowired
+	private StoreDAO storeDao;
 
 	/**
 	 * Obtains a list of FloorMap points
@@ -66,6 +71,15 @@ implements BDBDashboardBzService {
 				if( user.getSecuritySettings().getRole().equals(Role.BRAND)) {
 					Brand b = brandDao.get(user.getIdentifier(), true);
 					brandList.add(b);
+				} else  if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
+					for( String storeId : user.getSecuritySettings().getStores()) {
+						try {
+							Store store = storeDao.get(storeId, true);
+							Brand b = brandDao.get(store.getBrandId(), true);
+							if(!brandList.contains(b)) 
+								brandList.add(b);
+						} catch( Exception e ) {}
+					}
 				}
 			}
 

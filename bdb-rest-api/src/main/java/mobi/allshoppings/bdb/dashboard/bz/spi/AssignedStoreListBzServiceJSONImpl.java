@@ -19,6 +19,7 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.model.adapter.NameAndIdAdapter;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
@@ -48,7 +49,6 @@ implements BDBDashboardBzService {
 		JSONObject returnValue = null;
 		try {
 			// obtain the id and validates the auth token
-			@SuppressWarnings("unused")
 			User user = getUserFromToken();
 			List<Store> storeList = CollectionFactory.createList();
 			long diff = 0;
@@ -71,6 +71,17 @@ implements BDBDashboardBzService {
 				List<Store> tmpList = CollectionFactory.createList();
 				for( Store store : storeList ) {
 					if(StringUtils.hasText(store.getExternalId())) {
+						tmpList.add(store);
+					}
+				}
+				storeList.clear();
+				storeList.addAll(tmpList);
+			}
+			
+			if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
+				List<Store> tmpList = CollectionFactory.createList();
+				for( Store store : storeList ) {
+					if(user.getSecuritySettings().getStores().contains(store.getIdentifier())) {
 						tmpList.add(store);
 					}
 				}

@@ -27,6 +27,8 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DashboardConfiguration;
 import mobi.allshoppings.model.DashboardIndicatorAlias;
 import mobi.allshoppings.model.DashboardIndicatorData;
+import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -57,7 +59,7 @@ implements DashboardTimelineHourBzService {
 		long start = markStart();
 		try {
 			// obtain the id and validates the auth token
-			// obtainUserIdentifier();
+			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
 			Integer entityKind = obtainIntegerValue("entityKind", null);
@@ -148,53 +150,55 @@ implements DashboardTimelineHourBzService {
 					counterMap.put(key, valArray);
 				}
 			}
-
+			
 			for(DashboardIndicatorData obj : list) {
-				String key = obj.getElementSubName();
-				String orderKey = obj.getElementSubId();
-				if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
-					aliasMap.put(orderKey, key);
-					Long[] valArray = resultMap.get(key);
-					if( valArray == null ) {
-						valArray = new Long[hourMap.keySet().size()];
-						for( int i = 0; i < hourMap.keySet().size(); i++ ) {
-							valArray[i] = new Long(0);
+				if( isValidForUser(user, obj)) {
+					String key = obj.getElementSubName();
+					String orderKey = obj.getElementSubId();
+					if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
+						aliasMap.put(orderKey, key);
+						Long[] valArray = resultMap.get(key);
+						if( valArray == null ) {
+							valArray = new Long[hourMap.keySet().size()];
+							for( int i = 0; i < hourMap.keySet().size(); i++ ) {
+								valArray[i] = new Long(0);
+							}
 						}
-					}
-					Integer[] counterArray = counterMap.get(key);
-					if( counterArray == null ) {
-						counterArray = new Integer[hourMap.keySet().size()];
-						for( int i = 0; i < hourMap.keySet().size(); i++ ) {
-							counterArray[i] = new Integer(0);
+						Integer[] counterArray = counterMap.get(key);
+						if( counterArray == null ) {
+							counterArray = new Integer[hourMap.keySet().size()];
+							for( int i = 0; i < hourMap.keySet().size(); i++ ) {
+								counterArray[i] = new Integer(0);
+							}
 						}
+
+						// Position calc according to the timezone
+						int position = hourMap.get(obj.getTimeZone());
+						if( config.getTimezone().equals("-05:00")) {
+							position = position + 1;
+							if( position >= 24 )
+								position = position - 24;
+						}
+
+						if( average ) {
+							if( obj.getDoubleValue() != null )
+								valArray[position] += obj.getDoubleValue().intValue();
+							else 
+								log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
+
+							if( obj.getRecordCount() != null )
+								counterArray[position] += obj.getRecordCount().intValue();
+							else 
+								log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
+
+						} else {
+							if( obj.getDoubleValue() != null )
+								valArray[position] += obj.getDoubleValue().intValue();
+							else 
+								log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
+						}
+						resultMap.put(key, valArray);
 					}
-					
-					// Position calc according to the timezone
-					int position = hourMap.get(obj.getTimeZone());
-					if( config.getTimezone().equals("-05:00")) {
-						position = position + 1;
-						if( position >= 24 )
-							position = position - 24;
-					}
-					
-					if( average ) {
-						if( obj.getDoubleValue() != null )
-							valArray[position] += obj.getDoubleValue().intValue();
-						else 
-							log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
-						
-						if( obj.getRecordCount() != null )
-							counterArray[position] += obj.getRecordCount().intValue();
-						else 
-							log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
-						
-					} else {
-						if( obj.getDoubleValue() != null )
-							valArray[position] += obj.getDoubleValue().intValue();
-						else 
-							log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
-					}
-					resultMap.put(key, valArray);
 				}
 			}
 
@@ -304,6 +308,16 @@ implements DashboardTimelineHourBzService {
 		} finally {
 			markEnd(start);
 		}
+	}
+
+	public boolean isValidForUser(User user, DashboardIndicatorData data) {
+		if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
+			if( user.getSecuritySettings().getStores().contains(data.getSubentityId()))
+				return true;
+			else
+				return false;
+		} else 
+			return true;
 	}
 	
 	public String getHourName(int hour) {

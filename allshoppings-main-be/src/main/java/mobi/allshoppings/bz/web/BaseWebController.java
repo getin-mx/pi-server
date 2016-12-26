@@ -133,7 +133,7 @@ public class BaseWebController {
 				roleNames.add("Mall Manager");
 				roleIds.add(UserSecurity.Role.BRAND);
 				roleNames.add("Brand Manager");
-				roleIds.add(UserSecurity.Role.FINANCIAL);
+				roleIds.add(UserSecurity.Role.STORE);
 				roleNames.add("Financial Entity");
 				roleIds.add(UserSecurity.Role.DATAENTRY);
 				roleNames.add("Data Entry");
@@ -154,7 +154,7 @@ public class BaseWebController {
 				roleNames.add("Mall Manager");
 				roleIds.add(UserSecurity.Role.BRAND);
 				roleNames.add("Brand Manager");
-				roleIds.add(UserSecurity.Role.FINANCIAL);
+				roleIds.add(UserSecurity.Role.STORE);
 				roleNames.add("Financial Entity");
 				roleIds.add(UserSecurity.Role.DATAENTRY);
 				roleNames.add("Data Entry");
@@ -277,7 +277,7 @@ public class BaseWebController {
 			List<String> availableCountries = CollectionFactory.createList();
 			UserInfo u = (UserInfo)request.getSession().getAttribute("userInfo");
 			
-			if( u.getRole() == UserSecurity.Role.FINANCIAL ) {
+			if( u.getRole() == UserSecurity.Role.STORE ) {
 				for( String feId : u.getFinancialEntities()) {
 					FinancialEntity obj = financialEntityDao.get(feId, true);
 					financialEntityIds.add(obj.getIdentifier());
@@ -361,7 +361,7 @@ public class BaseWebController {
 				if(!availableCountryIds.contains(s.getCountry()))
 					availableCountryIds.add(s.getCountry());
 			}
-		} else if( u.getRole() == Role.FINANCIAL ) {
+		} else if( u.getRole() == Role.STORE ) {
 			for( String feId : u.getFinancialEntities() ) {
 				FinancialEntity s = financialEntityDao.get(feId, true);
 				if( !availableCountryIds.contains(s.getCountry()))
@@ -478,7 +478,7 @@ public class BaseWebController {
 
 				if( u.getRole() == UserSecurity.Role.COUNTRY_ADMIN || u.getRole() == UserSecurity.Role.DATAENTRY || u.getRole() == UserSecurity.Role.READ_ONLY ) {
 					availableCountries = u.getAvailableCountries(); 
-				} else if ( u.getRole() == UserSecurity.Role.FINANCIAL ) {
+				} else if ( u.getRole() == UserSecurity.Role.STORE ) {
 					for( String feId : u.getFinancialEntities() ) {
 						FinancialEntity obj = financialEntityDao.get(feId, true);
 						if( !availableCountries.contains(obj.getCountry()))
@@ -551,7 +551,7 @@ public class BaseWebController {
 
 				if( u.getRole() == UserSecurity.Role.COUNTRY_ADMIN || u.getRole() == UserSecurity.Role.DATAENTRY || u.getRole() == UserSecurity.Role.READ_ONLY ) {
 					availableCountries = u.getAvailableCountries(); 
-				} else if ( u.getRole() == UserSecurity.Role.FINANCIAL ) {
+				} else if ( u.getRole() == UserSecurity.Role.STORE ) {
 					for( String feId : u.getFinancialEntities() ) {
 						FinancialEntity obj = financialEntityDao.get(feId, true);
 						if( !availableCountries.contains(obj.getCountry()))
@@ -719,7 +719,7 @@ public class BaseWebController {
 						if(!availableCountries.contains(s.getAddress().getCountry())) 
 							availableCountries.add(s.getAddress().getCountry());
 					}
-				} else if( u.getRole() == Role.FINANCIAL ) {
+				} else if( u.getRole() == Role.STORE ) {
 					for( String feId : u.getFinancialEntities() ) {
 						FinancialEntity s = financialEntityDao.get(feId, true);
 						if( !availableCountries.contains(s.getCountry()))

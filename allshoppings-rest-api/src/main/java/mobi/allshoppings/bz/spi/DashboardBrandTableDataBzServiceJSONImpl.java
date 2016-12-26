@@ -25,6 +25,8 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
 
@@ -56,7 +58,7 @@ implements DashboardBrandTableDataBzService {
 		long start = markStart();
 		try {
 			// obtain the id and validates the auth token
-			// obtainUserIdentifier();
+			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
 			Integer entityKind = obtainIntegerValue("entityKind", null);
@@ -70,7 +72,12 @@ implements DashboardBrandTableDataBzService {
 			Boolean onlyExternalIds = obtainBooleanValue("onlyExternalIds", false);
 
 			// Get all the stores that matches the brand
-			List<Store> stores = storeDao.getUsingBrandAndStatus(entityId, Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), "name"); 
+			List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), "name"); 
+			List<Store> stores = CollectionFactory.createList();
+			for( Store store : tmpStores ) {
+				if( isValidForUser(user, store))
+					stores.add(store);
+			}
 			
 			// Ordered Store List
 			List<String> storeNames = CollectionFactory.createList();
@@ -293,6 +300,16 @@ implements DashboardBrandTableDataBzService {
 		}
 	}
 	
+	public boolean isValidForUser(User user, Store store) {
+		if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
+			if( user.getSecuritySettings().getStores().contains(store.getIdentifier()))
+				return true;
+			else
+				return false;
+		} else 
+			return true;
+	}
+
 	public String getDateName(Date date) {
 		StringBuffer sb = new StringBuffer();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");

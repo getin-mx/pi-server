@@ -26,6 +26,8 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DashboardIndicatorAlias;
 import mobi.allshoppings.model.DashboardIndicatorData;
+import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -55,7 +57,7 @@ implements DashboardTimelineDataBzService {
 		long start = markStart();
 		try {
 			// obtain the id and validates the auth token
-			// obtainUserIdentifier();
+			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
 			Integer entityKind = obtainIntegerValue("entityKind", null);
@@ -133,21 +135,23 @@ implements DashboardTimelineDataBzService {
 			}
 
 			for(DashboardIndicatorData obj : list) {
-				Date objDate = DateUtils.truncate(obj.getDate(), Calendar.DATE);
-				String key = obj.getElementSubName();
-				String orderKey = obj.getElementSubId();
-				if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
-					aliasMap.put(orderKey, key);
-					Integer[] valArray = resultMap.get(key);
-					if( valArray == null ) {
-						valArray = new Integer[dateMap.keySet().size()];
-						for( int i = 0; i < dateMap.keySet().size(); i++ ) {
-							valArray[i] = new Integer(0);
+				if( isValidForUser(user, obj)) {
+					Date objDate = DateUtils.truncate(obj.getDate(), Calendar.DATE);
+					String key = obj.getElementSubName();
+					String orderKey = obj.getElementSubId();
+					if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
+						aliasMap.put(orderKey, key);
+						Integer[] valArray = resultMap.get(key);
+						if( valArray == null ) {
+							valArray = new Integer[dateMap.keySet().size()];
+							for( int i = 0; i < dateMap.keySet().size(); i++ ) {
+								valArray[i] = new Integer(0);
+							}
 						}
+						int position = dateMap.get(objDate);
+						valArray[position] += obj.getDoubleValue().intValue();
+						resultMap.put(key, valArray);
 					}
-					int position = dateMap.get(objDate);
-					valArray[position] += obj.getDoubleValue().intValue();
-					resultMap.put(key, valArray);
 				}
 			}
 
@@ -239,7 +243,17 @@ implements DashboardTimelineDataBzService {
 			markEnd(start);
 		}
 	}
-	
+
+	public boolean isValidForUser(User user, DashboardIndicatorData data) {
+		if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
+			if( user.getSecuritySettings().getStores().contains(data.getSubentityId()))
+				return true;
+			else
+				return false;
+		} else 
+			return true;
+	}
+
 	public String getDateName(Date date) {
 		StringBuffer sb = new StringBuffer();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");

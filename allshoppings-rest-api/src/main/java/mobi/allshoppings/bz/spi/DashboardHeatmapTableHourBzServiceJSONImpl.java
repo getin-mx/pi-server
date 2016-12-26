@@ -21,6 +21,8 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DashboardConfiguration;
 import mobi.allshoppings.model.DashboardIndicatorData;
+import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -49,7 +51,7 @@ implements DashboardHeatmapTableHourBzService {
 		long start = markStart();
 		try {
 			// obtain the id and validates the auth token
-			// obtainUserIdentifier();
+			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
 			Integer entityKind = obtainIntegerValue("entityKind", null);
@@ -104,32 +106,33 @@ implements DashboardHeatmapTableHourBzService {
 
 			// Sets data
 			for( DashboardIndicatorData obj : list ) {
+				if( isValidForUser(user, obj)) {
+					// Position calc according to the timezone
+					int position = obj.getTimeZone();
+					if( config.getTimezone().equals("-05:00")) {
+						position = position + 1;
+						if( position >= 24 )
+							position = position - 24;
+					}
 
-				// Position calc according to the timezone
-				int position = obj.getTimeZone();
-				if( config.getTimezone().equals("-05:00")) {
-					position = position + 1;
-					if( position >= 24 )
-						position = position - 24;
+					Map<Integer, Long> xData = yData.get(position);
+
+					// Sets the double value
+					Long val = xData.get(obj.getDayOfWeek()-1);
+					if( val == null ) val = 0L;
+					val += obj.getDoubleValue().intValue();
+					xData.put(obj.getDayOfWeek()-1, val);
+
+					// Sets the record count
+					xData = yCounter.get(position);
+					val = xData.get(obj.getDayOfWeek()-1);
+					if( val == null ) val = 0L;
+					if( obj.getRecordCount() != null )
+						val += obj.getRecordCount();
+					else 
+						log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
+					xData.put(obj.getDayOfWeek()-1, val);
 				}
-				
-				Map<Integer, Long> xData = yData.get(position);
-
-				// Sets the double value
-				Long val = xData.get(obj.getDayOfWeek()-1);
-				if( val == null ) val = 0L;
-				val += obj.getDoubleValue().intValue();
-				xData.put(obj.getDayOfWeek()-1, val);
-
-				// Sets the record count
-				xData = yCounter.get(position);
-				val = xData.get(obj.getDayOfWeek()-1);
-				if( val == null ) val = 0L;
-				if( obj.getRecordCount() != null )
-					val += obj.getRecordCount();
-				else 
-					log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
-				xData.put(obj.getDayOfWeek()-1, val);
 			}
 			
 			// Checks Average
@@ -231,6 +234,16 @@ implements DashboardHeatmapTableHourBzService {
 		} finally {
 			markEnd(start);
 		}
+	}
+
+	public boolean isValidForUser(User user, DashboardIndicatorData data) {
+		if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
+			if( user.getSecuritySettings().getStores().contains(data.getSubentityId()))
+				return true;
+			else
+				return false;
+		} else 
+			return true;
 	}
 
 	@SuppressWarnings("rawtypes")

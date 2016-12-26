@@ -20,6 +20,8 @@ import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DashboardIndicatorData;
+import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -46,7 +48,7 @@ implements DashboardHeatmapTableDataBzService {
 		long start = markStart();
 		try {
 			// obtain the id and validates the auth token
-			// obtainUserIdentifier();
+			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
 			Integer entityKind = obtainIntegerValue("entityKind", null);
@@ -84,29 +86,30 @@ implements DashboardHeatmapTableDataBzService {
 			totals.put(DashboardIndicatorData.TIME_ZONE_NIGHT, 0);
 			
 			for( DashboardIndicatorData obj : list ) {
-				
-				String key = obj.getElementSubName();
-				if(!obj.getTimeZone().equals(DashboardIndicatorData.TIME_ZONE_ALL) && StringUtils.hasText(key)) {
-					// Data for this timezone
-					data = dataSet.get(key);
-					if( data == null ) data = CollectionFactory.createMap();
-					value = data.get(obj.getTimeZone());
-					if( value == null ) value = 0;
-					value++;
-					data.put(obj.getTimeZone(), value);
+				if( isValidForUser(user, obj)) {
+					String key = obj.getElementSubName();
+					if(!obj.getTimeZone().equals(DashboardIndicatorData.TIME_ZONE_ALL) && StringUtils.hasText(key)) {
+						// Data for this timezone
+						data = dataSet.get(key);
+						if( data == null ) data = CollectionFactory.createMap();
+						value = data.get(obj.getTimeZone());
+						if( value == null ) value = 0;
+						value++;
+						data.put(obj.getTimeZone(), value);
 
-					totals.put(obj.getTimeZone(), totals.get(obj.getTimeZone()) + 1);
+						totals.put(obj.getTimeZone(), totals.get(obj.getTimeZone()) + 1);
 
-					// Data for total timezones
-					value = data.get(DashboardIndicatorData.TIME_ZONE_ALL);
-					if( value == null ) value = 0;
-					value++;
-					data.put(DashboardIndicatorData.TIME_ZONE_ALL, value);
-					dataSet.put(key, data);
-					
-					totals.put(DashboardIndicatorData.TIME_ZONE_ALL, totals.get(DashboardIndicatorData.TIME_ZONE_ALL) + 1);
-					
-					toBeOrderedDataSet.put(key, value);
+						// Data for total timezones
+						value = data.get(DashboardIndicatorData.TIME_ZONE_ALL);
+						if( value == null ) value = 0;
+						value++;
+						data.put(DashboardIndicatorData.TIME_ZONE_ALL, value);
+						dataSet.put(key, data);
+
+						totals.put(DashboardIndicatorData.TIME_ZONE_ALL, totals.get(DashboardIndicatorData.TIME_ZONE_ALL) + 1);
+
+						toBeOrderedDataSet.put(key, value);
+					}
 				}
 			}
 			
@@ -240,6 +243,16 @@ implements DashboardHeatmapTableDataBzService {
 		} finally {
 			markEnd(start);
 		}
+	}
+
+	public boolean isValidForUser(User user, DashboardIndicatorData data) {
+		if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
+			if( user.getSecuritySettings().getStores().contains(data.getSubentityId()))
+				return true;
+			else
+				return false;
+		} else 
+			return true;
 	}
 
 	@SuppressWarnings("rawtypes")

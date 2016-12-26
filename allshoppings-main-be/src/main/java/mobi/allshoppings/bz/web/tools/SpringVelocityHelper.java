@@ -486,7 +486,7 @@ public class SpringVelocityHelper implements Serializable {
 		ret.add(String.valueOf(UserSecurity.Role.USER));
 		ret.add(String.valueOf(UserSecurity.Role.SHOPPING));
 		ret.add(String.valueOf(UserSecurity.Role.BRAND));
-		ret.add(String.valueOf(UserSecurity.Role.FINANCIAL));
+		ret.add(String.valueOf(UserSecurity.Role.STORE));
 		ret.add(String.valueOf(UserSecurity.Role.DATAENTRY));
 		ret.add(String.valueOf(UserSecurity.Role.COUNTRY_ADMIN));
 		ret.add(String.valueOf(UserSecurity.Role.ADMIN));
