@@ -107,7 +107,7 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 			for( String mac : macs ) {
 				try {
 					List<DeviceInfo> l2 = diDao.getUsingMAC(mac);
-					if(!CollectionUtils.isEmpty(list)) {
+					if(!CollectionUtils.isEmpty(l2)) {
 						for( DeviceInfo di : l2 ) {
 							APDeviceMacMatch obj = new APDeviceMacMatch();
 							obj.setDeviceUUID(di.getDeviceUUID());

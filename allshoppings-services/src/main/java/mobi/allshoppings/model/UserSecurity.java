@@ -75,9 +75,9 @@ public class UserSecurity implements Serializable {
 		static final int BRAND = 7;
 
 		/**
-		 * Financial Entity Manager
+		 * Store Manager
 		 */
-		static final int FINANCIAL = 9;
+		static final int STORE = 9;
 
 		/**
 		 * Data Entry
@@ -180,6 +180,11 @@ public class UserSecurity implements Serializable {
 	 * Brands this user has access for, just thinking in Brand Manager Role
 	 */
 	private List<String> brands;
+
+	/**
+	 * Store this user has access for, just thinking in Store Manager Role
+	 */
+	private List<String> stores;
 
 	/**
 	 * Financial Entities this user has access for, just thinking in Financial Entity Role
@@ -368,6 +373,49 @@ public class UserSecurity implements Serializable {
 	 */
 	public void clearShoppings() {
 		shoppings.clear();
+	}
+
+	/**
+	 * @return the stores
+	 */
+	public List<String> getStores() {
+		return stores;
+	}
+
+	/**
+	 * @param stores the stores to set
+	 */
+	public void setStores(List<String> stores) {
+		this.stores = stores;
+	}
+
+	/**
+	 * Adds a new store to the available store list
+	 * 
+	 * @param store
+	 *            The store id to add
+	 */
+	public void addStore(String store) {
+		if(!stores.contains(store))
+			stores.add(store);
+	}
+
+	/**
+	 * Removes a store from the available store list
+	 * 
+	 * @param store
+	 *            The store id to remove
+	 */
+	public void removeStore(String store) {
+		if(stores.contains(store))
+			stores.remove(store);
+	}
+
+	/**
+	 * Clears the available store list
+	 */
+	public void clearStore() {
+		stores.clear();
 	}
 
 	/**

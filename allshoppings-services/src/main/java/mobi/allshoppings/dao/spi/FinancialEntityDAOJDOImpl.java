@@ -191,17 +191,7 @@ public class FinancialEntityDAOJDOImpl extends GenericDAOJDO<FinancialEntity> im
 	public CustomDatatableFilter buildCustomFilter(final UserInfo userInfo) {
 		if( userInfo != null && userInfo.getRole() == UserSecurity.Role.ADMIN)
 			return null;
-		
-		if( userInfo != null && userInfo.getRole() == UserSecurity.Role.FINANCIAL) {
-			return new CustomDatatableFilter() {
-				@Override
-				public void delegateFilter(Query query, Map<String, Object> parameters) {
-					parameters.put("keysParam", userInfo.getFinancialEntities());
-					query.declareParameters("java.util.List keysParam");
-					query.setFilter("keysParam.contains(key)");
-				}
-			};
-		} else {
+		else {
 			return super.buildCustomFilter(userInfo);
 		}
 	}
@@ -214,10 +204,6 @@ public class FinancialEntityDAOJDOImpl extends GenericDAOJDO<FinancialEntity> im
 	public boolean safeAndInLimits(FinancialEntity obj, UserInfo userInfo) {
 		if( userInfo != null && userInfo.getRole() == UserSecurity.Role.ADMIN)
 			return true;
-		
-		if( userInfo != null && userInfo.getRole() == UserSecurity.Role.FINANCIAL) {
-			return userInfo.getFinancialEntities().contains(obj.getIdentifier());
-		}
 		
 		return super.safeAndInLimits(obj, userInfo);
 	}
