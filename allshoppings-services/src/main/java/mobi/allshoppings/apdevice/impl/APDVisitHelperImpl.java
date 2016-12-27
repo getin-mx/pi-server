@@ -750,9 +750,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		visit.setApheSource(source.getIdentifier());
 		visit.setCheckinStarted(date);
 		if(isEmployee)
-			visit.setCheckinType(APDVisit.CHECKIN_VISIT);
-		else
 			visit.setCheckinType(APDVisit.CHECKIN_EMPLOYEE);
+		else
+			visit.setCheckinType(APDVisit.CHECKIN_VISIT);
 		visit.setEntityId(entityId);
 		visit.setEntityKind(entityKind);
 		visit.setMac(source.getMac());
