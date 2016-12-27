@@ -2,12 +2,12 @@ package mobi.allshoppings.cli;
 
 import java.util.List;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
 
-import com.inodes.datanucleus.model.Key;
-import com.inodes.util.CollectionFactory;
+
+
+
+
+
 
 import joptsimple.OptionParser;
 import mobi.allshoppings.dao.BrandDAO;
@@ -22,6 +22,13 @@ import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.model.tools.KeyHelper;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+
+import com.inodes.datanucleus.model.Key;
+import com.inodes.util.CollectionFactory;
 
 
 public class GetinDump extends AbstractCLI {
@@ -438,7 +445,16 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "roku_mx"));
 				brandDao.create(brand);
 			}
-			
+
+				try {
+					brand = brandDao.get("saboreateycafe_mx", true);
+				} catch( Exception e ) {
+					brand = new Brand();
+					brand.setName("Saboreaté Y Café");
+					brand.setCountry("Mexico");
+					brand.setKey((Key)keyHelper.obtainKey(Brand.class, "saboreateycafe_mx"));
+					brandDao.create(brand);
+				}
 			
 			
 			// Stores ----------------------------------------------------------------------------------------------------
@@ -562,7 +578,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("305", "Fullsand AICM", "fullsand_mx", null));
 			
 			stores.add(new StoreAdapter("306", "Adolfo Dominguez Duraznos", "chomarc_mx",null));
-			stores.add(new StoreAdapter("307", "AGS AD	Altaria", "chomarc_mx",null));
+			stores.add(new StoreAdapter("307", "Adolfo Dominguez Aguascalientes", "chomarc_mx",null));
 			stores.add(new StoreAdapter("308", "La Martina Antea Queretaro", "chomarc_mx",null));
 			stores.add(new StoreAdapter("309", "Adolfo Dominguez Lomas Verdes", "chomarc_mx",null));
 			stores.add(new StoreAdapter("310", "Adolfo Dominguez Emilio Castelar", "chomarc_mx",null));
@@ -592,6 +608,13 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("333", "UNO de 50 Monterrey", "chomarc_mx",null)); 
 			stores.add(new StoreAdapter("334", "Adolfo Dominguez Tabasco", "chomarc_mx",null));
 			stores.add(new StoreAdapter("335", "Adolfo Dominguez Veracruz", "chomarc_mx",null));
+
+			stores.add(new StoreAdapter("336", "Saboreaté Y Café Alameda", "saboreateycafe_mx",null));
+			stores.add(new StoreAdapter("337", "Getin lab - Piso 4", "getin_mx",null));
+
+			stores.add(new StoreAdapter("338", "Outlet Deportes San Je 1", "outletdeportes_mx",null));
+			
+			
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {

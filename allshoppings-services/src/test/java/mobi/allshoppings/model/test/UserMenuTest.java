@@ -872,6 +872,59 @@ public class UserMenuTest extends TestCase {
 				um.setKey(userMenuDao.createKey("roku_mx"));
 				userMenuDao.create(um);
 			}
+			User saboreateycafe = null;
+			try {
+				saboreateycafe = userDao.get("saboreateycafe_mx", true);
+				userDao.delete(saboreateycafe);
+				throw new Exception();
+			} catch( Exception e ) {
+				saboreateycafe = new User();
+				saboreateycafe.setFirstname("saboreateycafe");
+				saboreateycafe.setLastname("Mexico");
+				saboreateycafe.setEmail("saboreateycafe@allshoppings.mobi");
+				saboreateycafe.getSecuritySettings().setRole(Role.BRAND);
+				saboreateycafe.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				saboreateycafe.setKey((Key)keyHelper.obtainKey(User.class, "saboreateycafe_mx"));
+				userDao.create(saboreateycafe);
+			}
+
+			try {
+				um = userMenuDao.get("saboreateycafe_mx", true);
+				userMenuDao.delete("saboreateycafe_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("saboreateycafe_mx"));
+				userMenuDao.create(um);
+			}
+			
+			User getin = null;
+			try {
+				getin = userDao.get("getin_mx", true);
+				userDao.delete(getin);
+				throw new Exception();
+			} catch( Exception e ) {
+				getin = new User();
+				getin.setFirstname("getin");
+				getin.setLastname("Mexico");
+				getin.setEmail("getin@allshoppings.mobi");
+				getin.getSecuritySettings().setRole(Role.BRAND);
+				getin.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				getin.setKey((Key)keyHelper.obtainKey(User.class, "getin_mx"));
+				userDao.create(getin);
+			}
+
+			try {
+				um = userMenuDao.get("getin_mx", true);
+				userMenuDao.delete("getin_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("getin_mx"));
+				userMenuDao.create(um);
+			}
 			
 			User outletdeportes = null;
 			try {
@@ -1099,8 +1152,8 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.getEntries().add(new UserMenuEntry("index.apddetails", "fa-file-excel-o", "Detalles"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				//um.getEntries().add(new UserMenuEntry("index.apddetails", "fa-file-excel-o", "Detalles"));
 				um.setKey(userMenuDao.createKey("agasys_mx"));
 				userMenuDao.create(um);
 			}
