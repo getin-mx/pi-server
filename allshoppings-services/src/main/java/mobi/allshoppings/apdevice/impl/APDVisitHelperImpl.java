@@ -221,6 +221,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			curDate = new Date(curDate.getTime() + 86400000);
 		}
 	}
+
 	/**
 	 * 
 	 * Generate a list of MacAddress of blacklist
@@ -230,35 +231,35 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @throws ASException
 	 */
 	public List<String> getBlackListByStore(Store store) throws ASException{
-	//declare list for macs
-	List<String> macs = CollectionFactory.createList();
-	log.log(Level.INFO, "Initial macs:  " + macs.size() + " macs");
-	
-	macs.clear();
-	//--- Start black list ------------
-	//Load blackListbyShopping for shopping
-	if( StringUtils.hasText(store.getShoppingId())) {
-		List<APDMABlackList> blackListbyShopping = apmaBlDao.getUsingEntityIdAndRange(store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, false);
-		for( APDMABlackList shop : blackListbyShopping ) {
+		//declare list for macs
+		List<String> macs = CollectionFactory.createList();
+		log.log(Level.INFO, "Initial macs:  " + macs.size() + " macs");
+
+		macs.clear();
+		//--- Start black list ------------
+		//Load blackListbyShopping for shopping
+		if( StringUtils.hasText(store.getShoppingId())) {
+			List<APDMABlackList> blackListbyShopping = apmaBlDao.getUsingEntityIdAndRange(store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, false);
+			for( APDMABlackList shop : blackListbyShopping ) {
 				if (!macs.contains(shop.getMac().toUpperCase().trim())){
 					macs.add(shop.getMac().toUpperCase().trim());	
 				}
+			}
+			log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load black list for Shopping: " + blackListbyShopping.size() + " macs");
 		}
-		log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load black list for Shopping: " + blackListbyShopping.size() + " macs");
-	}
-	
-	//Load blackListbyShopping for brand
-	List<APDMABlackList> blackListbyBrand = apmaBlDao.getUsingEntityIdAndRange(store.getBrandId(), EntityKind.KIND_BRAND, null, null, false);
+
+		//Load blackListbyShopping for brand
+		List<APDMABlackList> blackListbyBrand = apmaBlDao.getUsingEntityIdAndRange(store.getBrandId(), EntityKind.KIND_BRAND, null, null, false);
 		for( APDMABlackList brand : blackListbyBrand ) {
 			if (!macs.contains(brand.getMac().toUpperCase().trim())){
 				macs.add(brand.getMac().toUpperCase().trim());	
 			}
 		}
 		log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load black list for Brand: " + blackListbyBrand.size() + " macs");
-	
-	
-	//Load blackListbyShopping for store
-	List<APDMABlackList> blackListbyStore = apmaBlDao.getUsingEntityIdAndRange(store.getIdentifier(), EntityKind.KIND_STORE, null, null, false);
+
+
+		//Load blackListbyShopping for store
+		List<APDMABlackList> blackListbyStore = apmaBlDao.getUsingEntityIdAndRange(store.getIdentifier(), EntityKind.KIND_STORE, null, null, false);
 		for( APDMABlackList st : blackListbyStore ) {
 			if (!macs.contains(st.getMac().toUpperCase().trim())){
 				macs.add(st.getMac().toUpperCase().trim());	
@@ -266,12 +267,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		}
 		//Load blackListbyShopping for store
 		log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load black list for Store: " + blackListbyStore.size() + " macs");
-	
-	
-	log.log(Level.INFO, "TOTAL Mamcs: " + macs.size() + " macs");
-	
-	//--- End black list --------------
-	return macs;
+
+
+		log.log(Level.INFO, "TOTAL Mamcs: " + macs.size() + " macs");
+
+		//--- End black list --------------
+		return macs;
 	}
 	
 	/**
@@ -283,35 +284,35 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @throws ASException
 	 */
 	public List<String> getEmployeeListByStore(Store store) throws ASException{
-	//declare list for macs
-	List<String> macs = CollectionFactory.createList();
-	log.log(Level.INFO, "Initial macs:  " + macs.size() + " macs");
-	
-	macs.clear();
-	//--- Start black list ------------
-	//Load blackListbyShopping for shopping
-	if( StringUtils.hasText(store.getShoppingId())) {
-		List<APDMAEmployee> employeesbyShopping = apmaEDao.getUsingEntityIdAndRange(store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, false);
-		for( APDMAEmployee emp_shop : employeesbyShopping ) {
+		//declare list for macs
+		List<String> macs = CollectionFactory.createList();
+		log.log(Level.INFO, "Initial macs:  " + macs.size() + " macs");
+
+		macs.clear();
+		//--- Start black list ------------
+		//Load blackListbyShopping for shopping
+		if( StringUtils.hasText(store.getShoppingId())) {
+			List<APDMAEmployee> employeesbyShopping = apmaEDao.getUsingEntityIdAndRange(store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, false);
+			for( APDMAEmployee emp_shop : employeesbyShopping ) {
 				if (!macs.contains(emp_shop.getMac().toUpperCase().trim())){
 					macs.add(emp_shop.getMac().toUpperCase().trim());	
 				}
+			}
+			log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load Employees in list for Shopping: " + employeesbyShopping.size() + " macs");
 		}
-		log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load Employees in list for Shopping: " + employeesbyShopping.size() + " macs");
-	}
-	
-	//Load blackListbyShopping for brand
-	List<APDMAEmployee> employeesbyBrand = apmaEDao.getUsingEntityIdAndRange(store.getBrandId(), EntityKind.KIND_BRAND, null, null, false);
+
+		//Load blackListbyShopping for brand
+		List<APDMAEmployee> employeesbyBrand = apmaEDao.getUsingEntityIdAndRange(store.getBrandId(), EntityKind.KIND_BRAND, null, null, false);
 		for( APDMAEmployee emp_brand : employeesbyBrand ) {
 			if (!macs.contains(emp_brand.getMac().toUpperCase().trim())){
 				macs.add(emp_brand.getMac().toUpperCase().trim());	
 			}
 		}
 		log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load Employees in list for Brand: " + employeesbyBrand.size() + " macs");
-	
-	
-	//Load blackListbyShopping for store
-	List<APDMAEmployee> employeesbyStore = apmaEDao.getUsingEntityIdAndRange(store.getIdentifier(), EntityKind.KIND_STORE, null, null, false);
+
+
+		//Load blackListbyShopping for store
+		List<APDMAEmployee> employeesbyStore = apmaEDao.getUsingEntityIdAndRange(store.getIdentifier(), EntityKind.KIND_STORE, null, null, false);
 		for( APDMAEmployee emp_sto : employeesbyStore ) {
 			if (!macs.contains(emp_sto.getMac().toUpperCase().trim())){
 				macs.add(emp_sto.getMac().toUpperCase().trim());	
@@ -319,12 +320,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		}
 		//Load blackListbyShopping for store
 		log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load Employees list for Store: " + employeesbyStore.size() + " macs");
-	
-	
-	log.log(Level.INFO, "TOTAL Mamcs: " + macs.size() + " macs");
-	
-	//--- End black list --------------
-	return macs;
+
+
+		log.log(Level.INFO, "TOTAL Mamcs: " + macs.size() + " macs");
+
+		//--- End black list --------------
+		return macs;
 	}
 	
 	/**
@@ -353,25 +354,27 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	@Override
 	public List<APDVisit> aphEntryToVisits(List<APHEntry> entries, Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, List<String> employeeListMacs) throws ASException {
 
-		
 		// Validates entries
 		if( CollectionUtils.isEmpty(entries))
 			throw ASExceptionHelper.invalidArgumentsException();
 
+		// Work variables
 		List<APDVisit> ret = CollectionFactory.createList();
-		Boolean isEmployee = false;
-		
+		Boolean isEmployee = false;		
 		
 		// Merges all the time slots
 		List<Integer> slots = CollectionFactory.createList();
 		if( entries.size() > 1 ) {
 			for( APHEntry entry : entries ) {
+				// Checks for BlackList
 				if(!blackListMacs.contains(entry.getMac().toUpperCase().trim())){
 					List<Integer> tmpSlots = aphHelper.timeslotToList(entry.getArtificialRssi());
 					for( Integer i : tmpSlots ) {
 						if(!slots.contains(i))
 							slots.add(i);
 					}
+					// If the mac address is contained in the employee list,
+					// then activates the empoloyee flag
 					if(employeeListMacs.contains(entry.getMac().toUpperCase().trim())){
 						isEmployee= true;
 					}
@@ -379,14 +382,16 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			}
 			Collections.sort(slots);
 		} else {
+			// Checks for BlackList
 			if(!blackListMacs.contains(entries.get(0).getMac().toUpperCase().trim())){
 				slots = aphHelper.timeslotToList(entries.get(0).getArtificialRssi());
+				// If the mac address is contained in the employee list,
+				// then activates the empoloyee flag
 				if(employeeListMacs.contains(entries.get(0).getMac().toUpperCase().trim())){
 					isEmployee= true;
 				}
 			}
 		}
-
 		
 		if(slots.isEmpty())
 			return ret;
@@ -417,8 +422,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		}
 
 		// Defines temporary work variables
-
-		
 		Integer lastSlot = null;
 		Integer lastVisitSlot = null;
 		APDVisit currentVisit = null;
@@ -448,8 +451,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					if( lastSlot != null && slot != (lastSlot + 1)) {
 						if( currentVisit != null ) {
 							currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
-							addPermanenceCheck(currentVisit, currentPeasant, dev, isEmployee);
-							if(isVisitValid(currentVisit, dev, isEmployee))
+							addPermanenceCheck(currentVisit, currentPeasant, dev);
+							if(isVisitValid(currentVisit, dev))
 								ret.add(currentVisit);
 							currentVisit = null;
 						}
@@ -467,47 +470,39 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					if( dev.getPeasantPowerThreshold() == null 
 							|| value >= dev.getPeasantPowerThreshold() ) {
 
-
-
-
-						
-						//check for black list
-						if(!blackListMacs.contains(currentPeasant.getMac().toUpperCase().trim())){
-							// Add a new peasant if there is no peasant active
-							if( currentPeasant == null)
-								currentPeasant = createPeasant(curEntry, curDate, null, assignments.get(curEntry.getHostname()));
-							
-							// Checks for power for visit
-							if( value >= dev.getVisitPowerThreshold()) {
-								if( currentVisit == null )
-									currentVisit = createVisit(curEntry, curDate, null, assignments.get(curEntry.getHostname()),isEmployee);
-								lastVisitSlot = slot;
-							} else {
-								// Closes the visit if it was too far for more time than specified in visit gap threshold
-								if( currentVisit != null ) {
-									// 30DB Tolerance ... it should be a parameter
-									if( value > (dev.getVisitPowerThreshold() - 30)) {
-										lastVisitSlot = slot;
-									} else {
-										if((( slot - lastVisitSlot ) * 3) > dev.getVisitGapThreshold()) {
-											currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
-											addPermanenceCheck(currentVisit, currentPeasant, dev, isEmployee);
-											if(isVisitValid(currentVisit, dev, isEmployee))
-												ret.add(currentVisit);
-											currentVisit = null;
-										}
+						// Add a new peasant if there is no peasant active
+						if( currentPeasant == null )
+							currentPeasant = createPeasant(curEntry, curDate, null, assignments.get(curEntry.getHostname()));
+						// Checks for power for visit
+						if( value >= dev.getVisitPowerThreshold()) {
+							if( currentVisit == null )
+								currentVisit = createVisit(curEntry, curDate, null, assignments.get(curEntry.getHostname()), isEmployee);
+							lastVisitSlot = slot;
+						} else {
+							// Closes the visit if it was too far for more time than specified in visit gap threshold
+							if( currentVisit != null ) {
+								// 30DB Tolerance ... it should be a parameter
+								if( value > (dev.getVisitPowerThreshold() - 30)) {
+									lastVisitSlot = slot;
+								} else {
+									if((( slot - lastVisitSlot ) * 3) > dev.getVisitGapThreshold()) {
+										currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+										addPermanenceCheck(currentVisit, currentPeasant, dev);
+										if(isVisitValid(currentVisit, dev))
+											ret.add(currentVisit);
+										currentVisit = null;
 									}
 								}
 							}
 						}
-					
+
 					} else {
 					
 						// Closes open visits
 						if( currentVisit != null ) {
 							currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
-							addPermanenceCheck(currentVisit, currentPeasant, dev, isEmployee);
-							if(isVisitValid(currentVisit, dev, isEmployee))
+							addPermanenceCheck(currentVisit, currentPeasant, dev);
+							if(isVisitValid(currentVisit, dev))
 								ret.add(currentVisit);
 							currentVisit = null;
 						}
@@ -534,8 +529,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		try {
 			if( currentVisit != null ) {
 				currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
-				addPermanenceCheck(currentVisit, currentPeasant, apd.get(curEntry.getHostname()),isEmployee);
-				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname()),isEmployee))
+				addPermanenceCheck(currentVisit, currentPeasant, apd.get(curEntry.getHostname()));
+				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname())))
 					ret.add(currentVisit);
 				currentVisit = null;
 			}
@@ -557,7 +552,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		return ret;
 	}
 
-	private void addPermanenceCheck(APDVisit visit, APDVisit peasant, APDevice device, Boolean isEmployee ) {
+	private void addPermanenceCheck(APDVisit visit, APDVisit peasant, APDevice device ) {
 		long time = (long)(visit.getCheckinFinished().getTime() - visit.getCheckinStarted().getTime()) / 60000;
 		if( time >= device.getVisitCountThreshold())
 			visit.setHidePermanence(false);
@@ -565,7 +560,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			visit.setHidePermanence(true);
 		
 		try {
-			if (isVisitValid(visit, device, isEmployee) && peasant != null && (peasant.getCheckinStarted().before(visit.getCheckinStarted())
+			if (isVisitValid(visit, device) && peasant != null && (peasant.getCheckinStarted().before(visit.getCheckinStarted())
 					|| peasant.getCheckinStarted().equals(visit.getCheckinStarted())))
 				peasant.setHidePermanence(true);
 		} catch(Exception e ) {}
@@ -582,13 +577,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @return true if valid, false if not
 	 * @throws ParseException
 	 */
-	private boolean isVisitValid(APDVisit visit, APDevice device,Boolean isEmployee) throws ParseException {
+	private boolean isVisitValid(APDVisit visit, APDevice device) throws ParseException {
 		
 		int time = (int)(visit.getCheckinFinished().getTime() - visit.getCheckinStarted().getTime()) / 60000;
 		
-		// validate isEmployee
-		if(isEmployee)
-			return false;
 		// Validate Minimum time for visit  
 		if( time < device.getVisitTimeThreshold())
 			return false;
@@ -695,6 +687,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @throws ParseException
 	 */
 	private boolean isPeasantValid(APDVisit visit, APDevice device,Boolean isEmployee) throws ParseException {
+		
+		// Employees DOESN't generate Peasants!
+		if( isEmployee )
+			return false;
 		
 		// Validate Hour of day
 		int t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
