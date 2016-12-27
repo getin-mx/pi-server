@@ -106,7 +106,7 @@ public class ExternalGeoImporter {
 								val = new ExternalGeo();
 								val.setConnections(0);
 								val.setExternalReference("GPS");
-								val.setType(ExternalGeo.TYPE_GPS);
+								val.setType(type);
 								val.setLat(Double.valueOf(gp.getLat()).floatValue());
 								val.setLon(Double.valueOf(gp.getLon()).floatValue());
 								val.setEntityId(entityId);;
