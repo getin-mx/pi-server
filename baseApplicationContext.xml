@@ -209,6 +209,7 @@
 	<bean id="process.helper" class="mobi.allshoppings.process.impl.ProcessHelperImpl" scope="singleton" />
 	<bean id="aphentry.helper" class="mobi.allshoppings.apdevice.impl.APHHelperImpl" scope="singleton" />
 	<bean id="apdvisit.helper" class="mobi.allshoppings.apdevice.impl.APDVisitHelperImpl" scope="singleton" />
+	<bean id="floormapjourney.helper" class="mobi.allshoppings.apdevice.impl.FloorMapJourneyHelperImpl" scope="singleton" />
 	<bean id="external.geo.importer" class="mobi.allshoppings.exporter.ExternalGeoImporter" scope="singleton" />
 	<bean id="dashboard.apdevice.mapper" class="mobi.allshoppings.dashboards.DashboardAPDeviceMapperService" scope="singleton" />
 	
