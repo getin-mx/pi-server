@@ -613,9 +613,18 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("337", "Getin lab - Piso 4", "getin_mx",null));
 
 			stores.add(new StoreAdapter("338", "Outlet Deportes San Je 1", "outletdeportes_mx",null));
+			stores.add(new StoreAdapter("339", "Outlet Deportes	Tepeyac", "outletdeportes_mx",null));
+			stores.add(new StoreAdapter("340", "Outlet Deportes	Gran Sur", "outletdeportes_mx",null));
+			stores.add(new StoreAdapter("341", "Outlet Deportes	San Je 3", "outletdeportes_mx",null));
+			stores.add(new StoreAdapter("342", "Outlet Deportes	San Cosme", "outletdeportes_mx",null));
+			stores.add(new StoreAdapter("343", "Outlet Deportes	Portal", "outletdeportes_mx",null));
+			stores.add(new StoreAdapter("344", "Outlet Deportes	Zapamundi", "outletdeportes_mx",null));
+			stores.add(new StoreAdapter("345", "Outlet Deportes	Tacuba", "outletdeportes_mx",null));
+			stores.add(new StoreAdapter("346", "Outlet Deportes	Eje Central", "outletdeportes_mx",null));
+			stores.add(new StoreAdapter("347", "Outlet Deportes	Isabel la Catolica", "outletdeportes_mx",null));
 			
-			
-			
+			stores.add(new StoreAdapter("348", "Botanicus San Miguel Umarán", "botanicus_mx", null));
+			stores.add(new StoreAdapter("349", "Botanicus San Miguel Insurgentes", "botanicus_mx", null));			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
