@@ -2,6 +2,7 @@ package mobi.allshoppings.apdevice.impl;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,10 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 	public void process() throws ASException{
 
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		HashMap<Integer, String> map2 = new HashMap<Integer, String>();
 		String myWord;
 		List<FloorMapJourney> fmj = fmjDao.getAll();
-		List<Integer> mvalue;
+		
 
 		for (FloorMapJourney curr : fmj){
 			List<String> word =	curr.getWord();
@@ -38,13 +40,11 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 			int count = map.get(myWord);
 			count++;
 			map.put(myWord, count);
-			
 		}
 		
-		//map2 = reverse(map);
-		mvalue = mostValuable(map);
-		
-		//results = select(array, map2);
+		map2 = reverse(map);
+		HashMap<Integer, String> mvalue = mostValuable(map2);
+
 		
 	}
 
@@ -61,41 +61,55 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 		return ret;
 	}
 	
-	public void reverse(HashMap<String, String> map) {
-	/*	HashMap<String, String> ret;
-		
-		for( Map.Entry<String, String> elem : map) {
-			key = element;
-			val = map.get(element);
-			
-			array = ret.get(val);
-			array.push(key)
-			ret.put(val);
+	public HashMap<Integer, String> reverse(HashMap<String, Integer> map) {
+		HashMap<Integer, String> ret = new HashMap<Integer, String>();
+
+		for(Map.Entry<String, Integer> entry : map.entrySet()){
+			ret.put(entry.getValue(), entry.getKey());
 		}
-		*/
+		return ret;
 	}
 	/**
 	 * 
 	 * @param map
 	 * @return
 	 */
-	public List<Integer> mostValuable(HashMap<String, Integer> map) {
+	public HashMap<Integer, String> mostValuable(HashMap<Integer, String> map2) {
 	
-		List<Integer> ret = CollectionFactory.createList();
+		HashMap<Integer, String> ret = new HashMap<Integer, String>();
 		//keys = map.getKeys.sort;
-		List<String> keys = CollectionFactory.createList();;
-		for ( String key : map.keySet() ) {
-			keys.add(key);
+		List<Integer> keys = CollectionFactory.createList();;
+		
+		for (Map.Entry<Integer, String> entry : map2.entrySet() ) {
+			keys.add(entry.getKey());
 		}
 		keys.sort(null);
 		
 		for(int  i = keys.size(); i > 0 && ret.size() < 10; i--) {
-			ret.add(map.get((keys.get(i))));
+			ret.put(keys.get(i),map2.get(i));
+			log.info("("+i+"): " + "key: " +  keys.get(i) + "Value: " + map2.get(i));
 		}
 		return ret;
-
 }
+/*
+	public void select(List<Integer> mostValue, HashMap<Integer, String> map) {
+
+		array ret;
+		
+		for(int i = 0; i < 10 && ret.size < 10; i++) {
+			key = array[i];
+			val = map.get(key);
+			for( each element in val ) {
+				ret.push(element);
+				if( ret.size > 10 ) return ret;
+			}
+		}
+		
+		return ret;
+
+	}
 	
+	*/
 	
 	
 	
