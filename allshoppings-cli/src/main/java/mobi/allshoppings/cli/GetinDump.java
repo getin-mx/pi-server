@@ -624,7 +624,14 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("347", "Outlet Deportes	Isabel la Catolica", "outletdeportes_mx",null));
 			
 			stores.add(new StoreAdapter("348", "Botanicus San Miguel Umarán", "botanicus_mx", null));
-			stores.add(new StoreAdapter("349", "Botanicus San Miguel Insurgentes", "botanicus_mx", null));			
+			stores.add(new StoreAdapter("349", "Botanicus San Miguel Insurgentes", "botanicus_mx", null));
+			stores.add(new StoreAdapter("350", "Outlet Deportes Puebla 3","outletdeportes_mx", null));
+			stores.add(new StoreAdapter("351", "Outlet Deportes Puebla 2","outletdeportes_mx", null));
+			stores.add(new StoreAdapter("352", "Outlet Deportes Huinala MTY","outletdeportes_mx", null));
+			stores.add(new StoreAdapter("353", "Outlet Deportes Leon 1","outletdeportes_mx", null));
+			stores.add(new StoreAdapter("354", "Outlet Deportes Leon 2","outletdeportes_mx", null));
+			stores.add(new StoreAdapter("355", "Outlet Deportes Leon 3","outletdeportes_mx", null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
@@ -645,7 +652,7 @@ public class GetinDump extends AbstractCLI {
 							: storeDao.createKey(obj.getShoppingId(), obj.getBrandId()));
 					storeDao.create(store);
 				}
-			}
+			} 	
 
 			// Set Sportium stores lat and lon
 //			setLatLon(geocoder, storeDao, "56", 19.4952773, -99.2490495);
