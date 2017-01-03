@@ -608,10 +608,8 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("333", "UNO de 50 Monterrey", "chomarc_mx",null)); 
 			stores.add(new StoreAdapter("334", "Adolfo Dominguez Tabasco", "chomarc_mx",null));
 			stores.add(new StoreAdapter("335", "Adolfo Dominguez Veracruz", "chomarc_mx",null));
-
 			stores.add(new StoreAdapter("336", "Saboreaté Y Café Alameda", "saboreateycafe_mx",null));
 			stores.add(new StoreAdapter("337", "Getin lab - Piso 4", "getin_mx",null));
-
 			stores.add(new StoreAdapter("338", "Outlet Deportes San Je 1", "outletdeportes_mx",null));
 			stores.add(new StoreAdapter("339", "Outlet Deportes	Tepeyac", "outletdeportes_mx",null));
 			stores.add(new StoreAdapter("340", "Outlet Deportes	Gran Sur", "outletdeportes_mx",null));
@@ -631,6 +629,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("353", "Outlet Deportes Leon 1","outletdeportes_mx", null));
 			stores.add(new StoreAdapter("354", "Outlet Deportes Leon 2","outletdeportes_mx", null));
 			stores.add(new StoreAdapter("355", "Outlet Deportes Leon 3","outletdeportes_mx", null));
+			stores.add(new StoreAdapter("356", "Outlet Deportes Hilvana Queretaro","outletdeportes_mx", null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
