@@ -1,5 +1,6 @@
 package mobi.allshoppings.apdevice.impl;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import mobi.allshoppings.tools.CollectionFactory;
  *
  */
 public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
+	
 	/**
 	 * 
 	 */
@@ -26,10 +28,12 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 	@Autowired
 	private FloorMapJourneyDAO fmjDao;
 	
+	private int LIMIT = 10;
+	
 	public void process() throws ASException{
 
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
-		HashMap<Integer, String> map2 = new HashMap<Integer, String>();
+		HashMap<Integer, String[]> map2 = new HashMap<Integer, String[]>();
 		String myWord;
 		List<FloorMapJourney> fmj = fmjDao.getAll();
 		
@@ -43,9 +47,8 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 		}
 		
 		map2 = reverse(map);
-		HashMap<Integer, String> mvalue = mostValuable(map2);
-
-		
+		HashMap<Integer, String[]> mvalue = mostValuable(map2);
+		select(mvalue);
 	}
 
 	/**
@@ -61,28 +64,47 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 		return ret;
 	}
 	
-	public HashMap<Integer, String> reverse(HashMap<String, Integer> map) {
-		HashMap<Integer, String> ret = new HashMap<Integer, String>();
-
+	public HashMap<Integer, String[]> reverse(HashMap<String, Integer> map) {
+		HashMap<Integer, String[]> ret = new HashMap<Integer, String[]>();
+		int i = 0;
+		int value = 0;
+		String currkey;
+		int currvalue ;
+		String[] fullwords = new String[10];
+		
 		for(Map.Entry<String, Integer> entry : map.entrySet()){
-			ret.put(entry.getValue(), entry.getKey());
+			currvalue = entry.getValue();
+			currkey = entry.getKey();
+			
+			if(currvalue == value){
+				fullwords[i] = currkey;
+				i++;
+			}
+			else{
+				ret.put(currvalue,fullwords);
+				fullwords = new String[10];
+				i=0;
+			}
 		}
+    
 		return ret;
 	}
+
 	/**
 	 * 
 	 * @param map
 	 * @return
 	 */
-	public HashMap<Integer, String> mostValuable(HashMap<Integer, String> map2) {
+	public HashMap<Integer, String[]> mostValuable(HashMap<Integer, String[]> map2) {
 	
-		HashMap<Integer, String> ret = new HashMap<Integer, String>();
+		HashMap<Integer, String[]> ret = new HashMap<Integer, String[]>();
 		//keys = map.getKeys.sort;
 		List<Integer> keys = CollectionFactory.createList();;
 		
-		for (Map.Entry<Integer, String> entry : map2.entrySet() ) {
+		for (Map.Entry<Integer, String[]> entry : map2.entrySet() ) {
 			keys.add(entry.getKey());
 		}
+		
 		keys.sort(null);
 		
 		for(int  i = keys.size(); i > 0 && ret.size() < 10; i--) {
@@ -91,27 +113,21 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 		}
 		return ret;
 }
-/*
-	public void select(List<Integer> mostValue, HashMap<Integer, String> map) {
 
-		array ret;
-		
-		for(int i = 0; i < 10 && ret.size < 10; i++) {
-			key = array[i];
-			val = map.get(key);
-			for( each element in val ) {
-				ret.push(element);
-				if( ret.size > 10 ) return ret;
-			}
+	public HashMap<Integer, String[]> select(HashMap<Integer, String[]> mostValue) {
+		HashMap<Integer, String[]> ret = new HashMap<Integer, String[]>();
+		int currkey;
+		String currvalue[];
+
+		for(Map.Entry<Integer, String[]> entry : mostValue.entrySet()){
+			currvalue = entry.getValue();
+			currkey = entry.getKey();
+			if(ret.size() < LIMIT)
+				ret.put(currkey,currvalue);
+			else
+				break;
+			
 		}
-		
 		return ret;
-
 	}
-	
-	*/
-	
-	
-	
-
 }

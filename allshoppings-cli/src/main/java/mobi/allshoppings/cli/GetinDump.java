@@ -559,7 +559,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("275", "Squalo Playa 1", "squalo_mx", null));
 			stores.add(new StoreAdapter("276", "Squalo Monterrey", "squalo_mx", "galeriasvalleoriente"));
 			stores.add(new StoreAdapter("281", "Sunglass Hut Lerma Outlet", "sunglasshut_mx", null));
-			stores.add(new StoreAdapter("282", "Sbarro Buenavista", "sbarro_mx", "forumbuenavista"));
+			stores.add(new StoreAdapter("282", "Sbarro Oasis", "sbarro_mx", "forumbuenavista"));
 			stores.add(new StoreAdapter("283", "Prada Perisur", "prada_mx", "perisur"));
 			stores.add(new StoreAdapter("284", "Prada Satelite", "prada_mx", "plazasatelite"));
 			stores.add(new StoreAdapter("290", "Prada Santa Fe", "prada_mx", "centrosantafe"));
