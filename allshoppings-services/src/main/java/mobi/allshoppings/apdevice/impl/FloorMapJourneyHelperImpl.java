@@ -64,6 +64,11 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 		return ret;
 	}
 	
+	/**
+	 * 
+	 * @param map
+	 * @return
+	 */
 	public HashMap<Integer, String[]> reverse(HashMap<String, Integer> map) {
 		HashMap<Integer, String[]> ret = new HashMap<Integer, String[]>();
 		int i = 0;
@@ -113,7 +118,11 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 		}
 		return ret;
 }
-
+	/**
+	 * 
+	 * @param mostValue
+	 * @return
+	 */
 	public HashMap<Integer, String[]> select(HashMap<Integer, String[]> mostValue) {
 		HashMap<Integer, String[]> ret = new HashMap<Integer, String[]>();
 		int currkey;
