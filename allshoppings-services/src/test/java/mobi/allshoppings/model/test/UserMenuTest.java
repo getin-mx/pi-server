@@ -687,6 +687,31 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 
+			User demo3 = null;
+			try {
+				demo3 = userDao.get("demo3_mx", true);
+			} catch( Exception e ) {
+				demo3 = new User();
+				demo3.setFirstname("Demo");
+				demo3.setLastname("Mexico");
+				demo3.setEmail("demo3@allshoppings.mobi");
+				demo3.getSecuritySettings().setRole(Role.BRAND);
+				demo3.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				demo3.setKey((Key)keyHelper.obtainKey(User.class, "demo3_mx"));
+				userDao.create(demo3);
+			}
+
+			try {
+				um = userMenuDao.get("demo3_mx", true);
+				userMenuDao.delete("demo3_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.demovisits3", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("demo3_mx"));
+				userMenuDao.create(um);
+			}
+
 			User droc = null;
 			try {
 				droc = userDao.get("droc_mx", true);
