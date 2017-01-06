@@ -904,7 +904,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				saboreateycafe = new User();
-				saboreateycafe.setFirstname("saboreateycafe");
+				saboreateycafe.setFirstname("Saboreaté y Café");
 				saboreateycafe.setLastname("Mexico");
 				saboreateycafe.setEmail("saboreateycafe@allshoppings.mobi");
 				saboreateycafe.getSecuritySettings().setRole(Role.BRAND);
