@@ -105,7 +105,7 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 			keys.add(entry.getKey());
 		}
 		
-		keys.sort(null);
+		//keys.sort(null);
 		
 		for(int  i = keys.size(); i > 0 && ret.size() < 10; i--) {
 			ret.put(keys.get(i),map2.get(i));
