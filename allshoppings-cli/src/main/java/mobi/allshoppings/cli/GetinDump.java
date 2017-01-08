@@ -1,6 +1,7 @@
-package mobi.allshoppings.cli;
+	package mobi.allshoppings.cli;
 
 import java.util.List;
+
 
 
 
@@ -445,17 +446,24 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "roku_mx"));
 				brandDao.create(brand);
 			}
-
-				try {
-					brand = brandDao.get("saboreateycafe_mx", true);
-				} catch( Exception e ) {
-					brand = new Brand();
-					brand.setName("Saboreaté Y Café");
-					brand.setCountry("Mexico");
-					brand.setKey((Key)keyHelper.obtainKey(Brand.class, "saboreateycafe_mx"));
-					brandDao.create(brand);
-				}
-			
+			try {
+				brand = brandDao.get("saboreateycafe_mx", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Saboreaté y Café ");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "saboreateycafe_mx"));
+				brandDao.create(brand);
+			}
+			try {
+				brand = brandDao.get("volaris_mx", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Volaris");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "volaris_mx"));
+				brandDao.create(brand);
+			}
 			
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
