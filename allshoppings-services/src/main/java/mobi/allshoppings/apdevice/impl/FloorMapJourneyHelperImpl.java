@@ -156,14 +156,12 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 		for (Map.Entry<Integer, String[]> entry : map2.entrySet()) {
 			keys.add(entry.getKey());
 		}
-
-		keys.sort(null);
-		System.out.println("keys: " + keys + "size: " + keys.size());
-
-		for (int i = keys.size() - 1; i >= 0 && ret.size() < 10; i--) {
-			log.info("(" + i + "): " + "key: " + keys.get(i) + "Value: "
-					+ map2.get(i));
-			ret.put(keys.get(i), map2.get(i));
+		
+		//keys.sort(null);
+		
+		for(int  i = keys.size()- 1; i >= 0 && ret.size() < 10; i--) {
+			log.info("("+i+"): " + "key: " +  keys.get(i) + "Value: " + map2.get(i));
+			ret.put(keys.get(i),map2.get(i));
 		}
 		return ret;
 	}
