@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,24 +28,22 @@ import mobi.allshoppings.tools.Range;
 public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 
 
-	private static final Logger log = Logger
-			.getLogger(FloorMapJourneyHelperImpl.class.getName());
+	private static final Logger log = Logger.getLogger(FloorMapJourneyHelperImpl.class.getName());
 
 	@Autowired
 	private FloorMapJourneyDAO fmjDao = new FloorMapJourneyDAOJDOImpl();
-
-	private int LIMIT = 10;
+	
 	/**
 	 * 
 	 */
-	public void process() throws ASException {
+	public void process(Integer limit,Range range) throws ASException {
 
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		Map<Integer, List<String>> map2 = new HashMap<Integer, List<String>>();
 		String myWord;
 		Integer count = new Integer(0);
 		//get elements
-		Range range = new Range(0, 500);
+		
 		List<FloorMapJourney> fmj = fmjDao.getUsingRange(range);
 		//iterate
 		for (FloorMapJourney curr : fmj) {
@@ -59,17 +58,17 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 			map.put(myWord, count);
 		}
 
-		System.out.println("map.size ==>" + map.size());
-		System.out.println("map: " + map);
+		log.log(Level.INFO, "map.size ==>" + map.size());
+		log.log(Level.INFO,"map: " + map);
 
 		map2 = reverse(map);
-		System.out.println("map2: " + map2);
+		log.log(Level.INFO,"map2: " + map2);
 
-		System.out.println("------- ");
+		log.log(Level.INFO,"------- ");
 		// HashMap<Integer, String[]> mvalue = mostValuable(map2);
 		// System.out.println("mvalue: "+ mvalue);
-		List<String> result = select(map2);
-		System.out.println("result: " + result);
+		List<String> result = select(map2,limit);
+		log.log(Level.INFO,"result: " + result);
 	}
 	/**
 	 * 
@@ -169,7 +168,7 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 	/**
 	 * 
 	 */
-	public List<String> select(Map<Integer, List<String>> mostValue) {
+	public List<String> select(Map<Integer, List<String>> mostValue,Integer limit) {
 
 		List<String> ret = CollectionFactory.createList();
 		int currkey;
@@ -178,12 +177,12 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 		for (Entry<Integer, List<String>> entry : mostValue.entrySet()) {
 			currvalue = entry.getValue();
 			currkey = entry.getKey();
-			System.out.println("currkey:: " + currkey + "(size):: " + currvalue.size());
-			if (ret.size() < LIMIT) {
+			log.log(Level.INFO,"currkey:: " + currkey + "(size):: " + currvalue.size());
+			if (ret.size() < limit) {
 				Iterator<String> iterator = currvalue.iterator();
 				while (iterator.hasNext()) {
 					ret.add(iterator.next());
-					if (ret.size() >= LIMIT) {
+					if (ret.size() >= limit) {
 						break;
 					}
 
