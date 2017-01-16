@@ -1432,6 +1432,253 @@ public class UserMenuTest extends TestCase {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "leonardooneto@chomarc_mx"));
 				userDao.create(user);
 			}
+			// Sportium --------------------------------------------------------------------
+			
+			//Lomas Verdes
+			try {
+				um = userMenuDao.get("lomasverdes@sportium", true);
+				userMenuDao.delete("lomasverdes@sportium");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("lomasverdes@sportium"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("lomasverdes@sportium", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Lomas Verdes");
+				user.setLastname("");
+				user.setEmail("lomasverdes@sportium");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("f2a79040-fefe-48f2-bd5d-e2db54ef5f23"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "lomasverdes@sportium"));
+				userDao.create(user);
+			}
+			//satelite
+			try {
+				um = userMenuDao.get("satelite@sportium", true);
+				userMenuDao.delete("satelite@sportium");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("satelite@sportium"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("satelite@sportium", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Satelite");
+				user.setLastname("");
+				user.setEmail("satelite@sportium");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("1471039822461"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "satelite@sportium"));
+				userDao.create(user);
+			}
+			//Cuautitlan
+			try {
+				um = userMenuDao.get("cuautitlan@sportium", true);
+				userMenuDao.delete("cuautitlan@sportium");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("cuautitlan@sportium"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("cuautitlan@sportium", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Cuautitlan");
+				user.setLastname("");
+				user.setEmail("cuautitlan@sportium");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("d0f83d5d-e451-45ee-ad41-e2b4da086f2f"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "cuautitlan@sportium"));
+				userDao.create(user);
+			}
+			//Arboledas
+			try {
+				um = userMenuDao.get("arboledas@sportium", true);
+				userMenuDao.delete("arboledas@sportium");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("arboledas@sportium"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("arboledas@sportium", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Arboledas");
+				user.setLastname("");
+				user.setEmail("arboledas@sportium");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("8cd52856-7e34-4f19-8c45-e25e325d4ff9"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "arboledas@sportium"));
+				userDao.create(user);
+			}
+			//Coyoacan
+			try {
+				um = userMenuDao.get("coyoacan@sportium", true);
+				userMenuDao.delete("coyoacan@sportium");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("coyoacan@sportium"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("coyoacan@sportium", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Coyoacan");
+				user.setLastname("");
+				user.setEmail("coyoacan@sportium");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("67af6e6e-9f11-4948-9887-65679bfd3d69"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "coyoacan@sportium"));
+				userDao.create(user);
+			}
+			//Del valle
+			try {
+				um = userMenuDao.get("delvalle@sportium", true);
+				userMenuDao.delete("delvalle@sportium");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("delvalle@sportium"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("delvalle@sportium", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Del valle");
+				user.setLastname("");
+				user.setEmail("delvalle@sportium");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("970b5795-ad0a-49ac-a7eb-110d826c7b8f"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "delvalle@sportium"));
+				userDao.create(user);
+			}
+			//San Angel
+			try {
+				um = userMenuDao.get("sanangel@sportium", true);
+				userMenuDao.delete("sanangel@sportium");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("sanangel@sportium"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("sanangel@sportium", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("San Angel");
+				user.setLastname("");
+				user.setEmail("sanangel@sportium");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("109ec028-6749-4332-9427-a39ccbfe7244"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "sanangel@sportium"));
+				userDao.create(user);
+			}
+			//Desierto
+			try {
+				um = userMenuDao.get("desierto@sportium", true);
+				userMenuDao.delete("desierto@sportium");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("desierto@sportium"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("desierto@sportium", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Desierto");
+				user.setLastname("");
+				user.setEmail("desierto@sportium");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("c726776f-0a96-43d1-ae97-4169e595e5c6"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "desierto@sportium"));
+				userDao.create(user);
+			}
+			//Santa Fe
+			try {
+				um = userMenuDao.get("santafe@sportium", true);
+				userMenuDao.delete("santafe@sportium");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("santafe@sportium"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("santafe@sportium", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Santa Fe");
+				user.setLastname("");
+				user.setEmail("santafe@sportium");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("1471039822614"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "santafe@sportium"));
+				userDao.create(user);
+			}
+			// End Sportium --------------------------------------------------------------------
+			
 			
 		} catch( Throwable e ) {
 			e.printStackTrace();
