@@ -10,7 +10,7 @@ public class FloorMapJourneyHelperTest extends TestCase {
 	public void test0001() {
 		FloorMapJourneyHelperImpl fmjh = new FloorMapJourneyHelperImpl();
 		try {
-			fmjh.process();
+//			fmjh.process();
 			
 		} catch( Throwable e ) {
 			e.printStackTrace();
