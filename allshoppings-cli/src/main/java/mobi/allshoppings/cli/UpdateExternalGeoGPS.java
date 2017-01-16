@@ -2,16 +2,20 @@ package mobi.allshoppings.cli;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.exporter.ExternalGeoImporter;
+import mobi.allshoppings.model.APDAssignation;
 
 
 public class UpdateExternalGeoGPS extends AbstractCLI {
@@ -43,6 +47,7 @@ public class UpdateExternalGeoGPS extends AbstractCLI {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			ExternalGeoImporter importer = (ExternalGeoImporter)getApplicationContext().getBean("external.geo.importer");
+			APDAssignationDAO apdaDao = (APDAssignationDAO)getApplicationContext().getBean("apdassignation.dao.ref");
 
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
 			OptionSet options = parser.parse(args);
@@ -98,6 +103,15 @@ public class UpdateExternalGeoGPS extends AbstractCLI {
 			} catch( Exception e ) {
 				usage(parser);
 				System.exit(-1);
+			}
+			
+			if( !StringUtils.hasText(hostname)) {
+				List<APDAssignation> list = apdaDao.getUsingEntityIdAndEntityKind(entityId, entityKind);
+				if( list.size() > 0 ) {
+					hostname = list.get(0).getHostname();
+				} else {
+					throw ASExceptionHelper.invalidArgumentsException("hostname");
+				}
 			}
 			
 			
