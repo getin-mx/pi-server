@@ -3,6 +3,7 @@ package mobi.allshoppings.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.inodes.datanucleus.model.Key;
 
@@ -16,4 +17,6 @@ public interface APDVisitDAO extends GenericDAO<APDVisit	> {
 	List<APDVisit> getUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date fromDate, Date toDate, Range range, boolean detachable) throws ASException;
 	void deleteUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date fromDate, Date toDate) throws ASException;
 	List<APDVisit> getUsingStoresAndDate(List<String> stores, Date fromDate, Date toDate, Range range, boolean detachable) throws ASException;
+	Map<Integer, Integer> getRepetitions(List<String> entityIds, Integer entityKind, Integer checkinType, Date fromDate, Date toDate) throws ASException;
+	
 }

@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +39,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
+import com.google.common.io.Files;
 import com.inodes.datanucleus.model.Blob;
 import com.inodes.datanucleus.model.Email;
 import com.inodes.datanucleus.model.Key;
@@ -48,9 +50,12 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 import mobi.allshoppings.apdevice.APDeviceHelper;
+import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APDeviceMacMatchDAO;
+import mobi.allshoppings.dao.APHEntryDAO;
+import mobi.allshoppings.dao.APHotspotDAO;
 import mobi.allshoppings.dao.APUptimeDAO;
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.MacVendorDAO;
@@ -65,6 +70,7 @@ import mobi.allshoppings.mail.MailHelper;
 import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APDeviceMacMatch;
+import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.APUptime;
 import mobi.allshoppings.model.DeviceInfo;
@@ -117,6 +123,12 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	private StoreDAO storeDao;
 	@Autowired
 	private IndexHelper indexHelper;
+	@Autowired
+	private APHotspotDAO aphDao;
+	@Autowired
+	private APHHelper aphHelper;
+	@Autowired
+	private APHEntryDAO apheDao;
 	
 	private DumperHelper<APHotspot> dumpHelper;
 
@@ -1093,4 +1105,129 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		} catch( Exception e ) {}
 	}
 
+	@Override
+	public void importRecordsFromFileSystem(String dir, String backupDir, Date fakeDeviationStartDate) throws ASException {
+	
+		File inputDir = new File(dir);
+		File outputDir = new File(backupDir);
+		
+		long firstUnixTime = 0;
+		long deviationOffset = 0;
+		
+		// Validates input directory
+		if(!inputDir.exists() || !inputDir.isDirectory())
+			throw ASExceptionHelper.invalidArgumentsException("input dir is not a directory");
+		
+		// Validates output directory
+		if(outputDir.exists()) {
+			if(!outputDir.isDirectory())
+				throw ASExceptionHelper.invalidArgumentsException("output dir is not a directory");
+		} else {
+			boolean res = outputDir.mkdirs();
+			if(!res)
+				throw ASExceptionHelper.defaultException("Cannot create output directory", null);
+		}
+		
+		// Gets the first unixtime needed
+		if( null != fakeDeviationStartDate )
+			firstUnixTime = (long)(fakeDeviationStartDate.getTime() / 1000);		
+		
+		// Get directory contents and start iteration
+		List<File> contents = new ArrayList<File>(Arrays.asList(inputDir.listFiles()));
+		Collections.sort(contents);
+		for( File file : contents ) {
+			// Just use .dat files
+			if( file.getName().endsWith(".dat")) {
+				
+				long fileUnixTime = Long.parseLong(file.getName().split(".dat")[0]);
+				// Charge file offset
+				if( firstUnixTime > 0 && deviationOffset == 0 ) 
+					deviationOffset = firstUnixTime - fileUnixTime;
+				
+				try {
+					String jsonText = getFileContents(file);
+					JSONObject json = new JSONObject(jsonText);
+
+					// Do main process
+
+					String hostname = json.getString("hostname");
+
+					JSONArray data = json.getJSONArray("data");
+
+					log.log(Level.INFO, "Reporting " + data.length() + " AP Members from " + hostname);
+					log.log(Level.FINEST, json.toString());
+
+					for( int i = 0; i < data.length(); i++ ) {
+
+						try {
+							JSONObject ele = (JSONObject)data.get(i);
+
+							APHotspot aphotspot = new APHotspot();
+							aphotspot.setHostname(hostname);
+							aphotspot.setFirstSeen(new Date((ele.getLong("firstSeen") + deviationOffset) * 1000));
+							aphotspot.setLastSeen(new Date((ele.getLong("lastSeen") + deviationOffset) * 1000));
+							aphotspot.setMac(ele.getString("mac").toLowerCase());
+							aphotspot.setSignalDB(ele.getInt("signalDB"));
+							aphotspot.setCount(ele.getInt("count"));
+							aphotspot.setKey(aphDao.createKey());
+							
+							// Just for offset setting... modify the creation date time
+							aphotspot.setCreationDateTime(new Date((fileUnixTime + deviationOffset) * 1000));
+
+							if(!aphotspot.getMac().startsWith("broadcast")) {
+								aphDao.create(aphotspot);
+
+								// Updates APHEntries
+								try {
+									aphHelper.setUseCache(false);
+									APHEntry aphe = aphHelper.setFramedRSSI(aphotspot);
+									aphHelper.artificiateRSSI(aphe);
+									if( StringUtils.hasText(aphe.getIdentifier())) {
+										apheDao.update(aphe);
+									} else {
+										aphe.setKey(apheDao.createKey(aphe));
+										apheDao.create(aphe);
+									}
+								} catch( Exception e ) {
+									log.log(Level.SEVERE, "Error updating APHEntries", e);
+								}
+							}
+							
+						} catch( Exception e ) {
+							log.log(Level.SEVERE, e.getMessage(), e);
+						}
+					}
+					
+				} catch( Exception e ) {
+					log.log(Level.SEVERE, e.getMessage(), e);
+				}
+				
+				// Backups the file
+				try {
+					Files.move(file, new File(outputDir.getAbsoluteFile() + File.separator + file.getName()));
+				} catch( Exception e ) {
+					throw ASExceptionHelper.defaultException(e.getMessage(), e);
+				}
+			}
+		}
+	}
+	
+	
+	private String getFileContents(File inputFile) throws Exception {
+		BufferedReader br = new BufferedReader(new FileReader(inputFile));
+		try {
+		    StringBuilder sb = new StringBuilder();
+		    String line = br.readLine();
+
+		    while (line != null) {
+		        sb.append(line);
+		        sb.append(System.lineSeparator());
+		        line = br.readLine();
+		    }
+		    return(sb.toString());
+		} finally {
+		    br.close();
+		}
+
+	}
 }
