@@ -34,9 +34,9 @@ public class BDBCountryListBzServiceJSONImpl extends BDBRestBaseServerResource i
 			User user = getUserFromToken();
 
 			List<NameAndIdAdapter> countries = CollectionFactory.createList();
-			countries.add(new NameAndIdAdapter("argentina","Argentina",null));
-			countries.add(new NameAndIdAdapter("mexico","México",null));
-			countries.add(new NameAndIdAdapter("panama","Panamá",null));
+			countries.add(new NameAndIdAdapter("Argentina","Argentina",null));
+			countries.add(new NameAndIdAdapter("Mexico","México",null));
+			countries.add(new NameAndIdAdapter("Panama","Panamá",null));
 			
 			// Get the output fields
 			String[] fields = this.obtainOutputFields(NameAndIdAdapter.class, null);
