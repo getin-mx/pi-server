@@ -242,6 +242,17 @@ public class GetinDump extends AbstractCLI {
 				shopping.setKey(shoppingDao.createKey("plazacarso"));
 				shoppingDao.create(shopping);
 			}
+			try {
+				shopping = shoppingDao.get("plazaloreto", true);
+			} catch( Exception e ) {
+				shopping = new Shopping();
+				shopping.setName("Plaza Loreto");
+				shopping.setCheckinAreaSize(200);
+				shopping.setFenceSize(200);
+				shopping.getAddress().setCountry("Mexico");
+				shopping.setKey(shoppingDao.createKey("plazaloreto"));
+				shoppingDao.create(shopping);
+			}
 
 			// Brands ----------------------------------------------------------------------------------------------------
 			Brand brand;
@@ -475,7 +486,24 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "volaris_mx"));
 				brandDao.create(brand);
 			}
-			
+			try {
+				brand = brandDao.get("latabernadelleon_mx", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("La Taberna Del León");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "latabernadelleon_mx"));
+				brandDao.create(brand);
+			}
+			try {
+				brand = brandDao.get("demo4_mx", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Demo 4");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "demo4_mx"));
+				brandDao.create(brand);
+			}
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -658,6 +686,23 @@ public class GetinDump extends AbstractCLI {
 
 			stores.add(new StoreAdapter("362", "Getin lab - Piso 5", "getin_mx",null));
 
+			stores.add(new StoreAdapter("363", "Modatelas Ermita", "modatelas_mx", null));
+			stores.add(new StoreAdapter("364", "Modatelas Ermita II", "modatelas_mx", null));
+			stores.add(new StoreAdapter("365", "Modatelas Iztapalapa", "modatelas_mx", null));
+			stores.add(new StoreAdapter("366", "Modatelas Zaragoza", "modatelas_mx", null));
+			stores.add(new StoreAdapter("367", "Modatelas Coacalco II", "modatelas_mx", null));
+			stores.add(new StoreAdapter("368", "Modatelas Coacalco III", "modatelas_mx", null));
+			stores.add(new StoreAdapter("369", "La Taberna Del León Loreto", "latabernadelleon_mx", null));
+			stores.add(new StoreAdapter("370", "Demo4 Santa Fe", "demo4_mx", null));
+			stores.add(new StoreAdapter("371", "Demo4 Coacalco", "demo4_mx", null));
+			stores.add(new StoreAdapter("372", "Demo4 Toreo", "demo4_mx", null));
+			stores.add(new StoreAdapter("373", "Demo4 Tlalnepantla", "demo4_mx", null));
+			stores.add(new StoreAdapter("374", "Modatelas Tlalnepantla I", "modatelas_mx", null));
+			stores.add(new StoreAdapter("375", "Modatelas Tlalnepantla III", "modatelas_mx", null));
+			stores.add(new StoreAdapter("376", "Modatelas Naucalpan", "modatelas_mx", null));
+			stores.add(new StoreAdapter("377", "Modatelas Ixtapaluca", "modatelas_mx", null));
+			stores.add(new StoreAdapter("378", "Modatelas Ixtapaluca II", "modatelas_mx", null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
