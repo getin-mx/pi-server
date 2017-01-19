@@ -15,5 +15,6 @@ public interface APDVisitHelper {
 	void generateAPDVisits(List<String> brandIds, List<String> storeIds, Date fromDate, Date toDate, boolean deletePreviousRecords, boolean updateDashboards) throws ASException;
 	List<APDVisit> aphEntryToVisits(APHEntry entry, Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache,List<String> blackListMacs, List<String> employeeListMacs) throws ASException;
 	List<APDVisit> aphEntryToVisits(List<APHEntry> entries, Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, List<String> employeeListMacs) throws ASException;
+	void fakeVisitsWith(String storeId, String fakeWithStoreId, Date fromDate, Date toDate ) throws ASException;
 	
 }

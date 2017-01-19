@@ -71,7 +71,7 @@ public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVi
 			if(null != entityKind) {
 				declaredParams.add("Integer entityKindParam");
 				filters.add("entityKind == entityKindParam");
-				parameters.put("entityKindParam", entityId);
+				parameters.put("entityKindParam", entityKind);
 			}
 
 			// fromDate Parameter

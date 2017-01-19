@@ -13,19 +13,20 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.apdevice.APDVisitHelper;
 import mobi.allshoppings.apdevice.APHHelper;
-import mobi.allshoppings.dao.spi.APDMABlackListDAOJDOImpl;
-import mobi.allshoppings.dao.spi.APDMAEmployeeDAOJDOImpl;
 import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.dao.APDVisitDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.StoreDAO;
+import mobi.allshoppings.dao.spi.APDMABlackListDAOJDOImpl;
+import mobi.allshoppings.dao.spi.APDMAEmployeeDAOJDOImpl;
 import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -40,10 +41,6 @@ import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
-
-import org.springframework.util.StringUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class APDVisitHelperImpl implements APDVisitHelper {
 
@@ -797,4 +794,120 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		return peasant;
 	}
+	
+	@Override
+	public void fakeVisitsWith(String storeId, String fakeWithStoreId, Date fromDate, Date toDate ) throws ASException {
+				
+		List<APDVisit> list1 = apdvDao.getUsingEntityIdAndEntityKindAndDate(storeId, EntityKind.KIND_STORE, fromDate, toDate, null, false);
+		List<APDVisit> list2 = apdvDao.getUsingEntityIdAndEntityKindAndDate(fakeWithStoreId, EntityKind.KIND_STORE, fromDate, toDate, null, false);
+		
+		List<APDVisit> lp = CollectionFactory.createList();
+		List<APDVisit> lv = CollectionFactory.createList();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("HH");
+		
+		Map<Integer, Integer> l1p = CollectionFactory.createMap();
+		Map<Integer, Integer> l1v = CollectionFactory.createMap();
+		Map<Integer, Integer> l2p = CollectionFactory.createMap();
+		Map<Integer, Integer> l2v = CollectionFactory.createMap();
+		int l2pc = 0;
+		int l2vc = 0;
+		int l1pc = 0;
+		int l1vc = 0;
+		
+		for( APDVisit obj : list2 ) {
+			if(obj.getCheckinType().equals(APDVisit.CHECKIN_PEASANT)) {
+				l2pc++;
+				int key = Integer.parseInt(sdf.format(obj.getCheckinStarted()));
+				Integer val = l2p.get(key);
+				if( val == null ) val = 0;
+				val++;
+				l2p.put(key, val);
+			}
+			if(obj.getCheckinType().equals(APDVisit.CHECKIN_VISIT)) {
+				l2vc++;
+				int key = Integer.parseInt(sdf.format(obj.getCheckinStarted()));
+				Integer val = l2v.get(key);
+				if( val == null ) val = 0;
+				val++;
+				l2v.put(key, val);
+			}
+		}
+		
+		for( APDVisit obj : list1 ) {
+			if(obj.getCheckinType().equals(APDVisit.CHECKIN_PEASANT)) {
+				l1pc++;
+				lp.add(obj);
+			}
+			if(obj.getCheckinType().equals(APDVisit.CHECKIN_VISIT)) {
+				l1vc++;
+				lv.add(obj);
+			}
+		}
+
+		int idx = 0;
+		int x = 0;
+		for( int i = 11; i < 20; i++ ) {
+			int xl2p = l2p.get(i);
+			float perc = (xl2p * 100 / l2pc);
+			
+			int count = (int)(perc * l1pc / 100);
+			log.log(Level.INFO, count + " peasants for " + storeId + " and hour " + i);			
+			
+			x = 0;
+			while(x < count && idx < lp.size()) {
+				APDVisit obj = lp.get(idx);
+				idx++;
+				x++;
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(obj.getCheckinStarted());
+				cal.set(Calendar.HOUR_OF_DAY, i);
+				obj.setCheckinStarted(cal.getTime());
+				cal.setTime(obj.getCheckinFinished());
+				cal.set(Calendar.HOUR_OF_DAY, i);
+				obj.setCheckinFinished(cal.getTime());
+				if(obj.getCheckinFinished().before(obj.getCheckinStarted())) {
+					cal.setTime(obj.getCheckinFinished());
+					cal.set(Calendar.HOUR_OF_DAY, i+1);
+					obj.setCheckinFinished(cal.getTime());
+				}
+				apdvDao.update(obj);
+			}
+			
+		}
+
+	
+		idx = 0;
+		x = 0;
+		for( int i = 11; i < 20; i++ ) {
+			int xl2v = l2v.get(i);
+			float perc = (xl2v * 100 / l2vc);
+			
+			int count = (int)(perc * l1vc / 100);
+			log.log(Level.INFO, count + " visits for " + storeId + " and hour " + i);
+
+			x = 0;
+			while(x < count && idx < lv.size()) {
+				APDVisit obj = lv.get(idx);
+				idx++;
+				x++;
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(obj.getCheckinStarted());
+				cal.set(Calendar.HOUR_OF_DAY, i);
+				obj.setCheckinStarted(cal.getTime());
+				cal.setTime(obj.getCheckinFinished());
+				cal.set(Calendar.HOUR_OF_DAY, i);
+				obj.setCheckinFinished(cal.getTime());
+				if(obj.getCheckinFinished().before(obj.getCheckinStarted())) {
+					cal.setTime(obj.getCheckinFinished());
+					cal.set(Calendar.HOUR_OF_DAY, i+1);
+					obj.setCheckinFinished(cal.getTime());
+				}
+				apdvDao.update(obj);
+			}
+			
+		}
+
+	}
+	
 }
