@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import mobi.allshoppings.apdevice.FloorMapJourneyHelper;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.FloorMapJourneyDAO;
@@ -28,6 +29,10 @@ implements BDBDashboardBzService {
 
 	@Autowired
 	private FloorMapJourneyDAO fmjDao;
+	
+	@Autowired
+	private FloorMapJourneyHelper helper;
+	
 
 	/**
 	 * Obtains a Dashboard report prepared to form a User Journey graph
@@ -57,10 +62,15 @@ implements BDBDashboardBzService {
 				toRange = 20;
 			
 			Range range = new Range(fromRange,toRange);
-			String order = "dataCount DESC";
+//			String order = "dataCount DESC";
 			
-			List<FloorMapJourney> list = fmjDao.getUsingFloorMapAndMacAndDate(floorMapId, mac, fromDate, toDate, range, order); 
-
+			
+			//List<FloorMapJourney> list = helper.process(10,range);
+			List<FloorMapJourney> list = helper.process(floorMapId, mac, fromDate, toDate, range);
+			//List<FloorMapJourney> list = fmjDao.getUsingFloorMapAndMacAndDate(floorMapId, mac, fromDate, toDate, range, order); 
+			
+			
+			
 			returnValue = this.getJSONRepresentationFromArrayOfObjects(
 					list, this.obtainOutputFields(FloorMapJourney.class));
 

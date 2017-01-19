@@ -36,15 +36,21 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 	/**
 	 * 
 	 */
-	public void process(Integer limit,Range range) throws ASException {
+	public List<FloorMapJourney> process(String floorMapId, String mac, String fromDate, String toDate, Range range) throws ASException {
 
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		Map<Integer, List<String>> map2 = new HashMap<Integer, List<String>>();
+		
+		Map<String, FloorMapJourney> res = new HashMap<String, FloorMapJourney>();
+		FloorMapJourney elem;
+		
+		List<FloorMapJourney> ret = CollectionFactory.createList();
 		String myWord;
 		Integer count = new Integer(0);
 		//get elements
-		
-		List<FloorMapJourney> fmj = fmjDao.getUsingRange(range);
+		String order = "dataCount DESC";
+		//TODO: change method getUsingRange by getUsingFloorMapAndMacAndDate
+		List<FloorMapJourney> fmj = fmjDao.getUsingFloorMapAndMacAndDate(floorMapId, mac, fromDate, toDate,null,null);
 		//iterate
 		for (FloorMapJourney curr : fmj) {
 			List<String> word = curr.getWord();
@@ -54,21 +60,51 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 				count = 1;
 			else
 				count++;
-			// System.out.println("<"+ myWord + ">"+" : "+ count);
+			
 			map.put(myWord, count);
+			
+			elem = res.get(myWord);
+			if(null == elem){
+				res.put(myWord, curr);
+			}
+			else{
+				if(curr.getDataCount()< elem.getDataCount()){
+					res.put(myWord, elem);
+				}
+			}
+			
+			// System.out.println("<"+ myWord + ">"+" : "+ count);
+
 		}
 
 		log.log(Level.INFO, "map.size ==>" + map.size());
 		log.log(Level.INFO,"map: " + map);
 
+		
+		log.log(Level.INFO, "map.size ==>" + res.size());
+		log.log(Level.INFO,"map: " + res);
+
+		
 		map2 = reverse(map);
 		log.log(Level.INFO,"map2: " + map2);
 
 		log.log(Level.INFO,"------- ");
 		// HashMap<Integer, String[]> mvalue = mostValuable(map2);
 		// System.out.println("mvalue: "+ mvalue);
-		List<String> result = select(map2,limit);
+		
+		//TODO change hard value 10 by real limit
+		//List<String> result = select(map2,10);
+		
+		List<String> result = select(map2,10);
 		log.log(Level.INFO,"result: " + result);
+
+		for (String word : result) {
+			ret.add(res.get(word));
+		}
+		log.log(Level.INFO,"res:: "+res);
+		
+		
+		return ret;
 	}
 	/**
 	 * 
@@ -164,7 +200,7 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 		}
 		return ret;
 	}
-
+	
 	/**
 	 * 
 	 */
