@@ -493,7 +493,7 @@ public class APHHelperImpl implements APHHelper {
 			String key = String.valueOf(elements.get(elements.size() -1));
 			obj.getArtificialRssi().put(key, obj.getRssi().get(key));
 		}
-				
+		
 		
 	}
 
@@ -642,7 +642,7 @@ public class APHHelperImpl implements APHHelper {
 		
 		// Gets the input data
 		long totals = 0;
-		log.log(Level.INFO, "Processing External AP Records");
+		log.log(Level.INFO, "Processing External AP Records from " + fromDate + " to " + toDate);
 		List<ExternalAPHotspot> list = eaphDao.getUsingHostnameAndDates(null, fromDate, toDate);
 		for( ExternalAPHotspot obj : list ) {
 			if( totals % 1000 == 0 ) 
@@ -656,7 +656,7 @@ public class APHHelperImpl implements APHHelper {
 		}
 		
 		// Write to the database
-		log.log(Level.INFO, "Writing Database");
+		log.log(Level.INFO, "Writing Database with " + cache.keySet().size() + " objects");
 		Iterator<String> x = cache.keySet().iterator();
 		while(x.hasNext()) {
 			String key = x.next();
