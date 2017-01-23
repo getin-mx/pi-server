@@ -806,8 +806,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("HH");
 		
-		Map<Integer, Integer> l1p = CollectionFactory.createMap();
-		Map<Integer, Integer> l1v = CollectionFactory.createMap();
 		Map<Integer, Integer> l2p = CollectionFactory.createMap();
 		Map<Integer, Integer> l2v = CollectionFactory.createMap();
 		int l2pc = 0;

@@ -38,6 +38,10 @@
             <field name="key" column="_id" length="100"/>
         </class>
 
+        <class name="ExternalAPHotspot" table="ExternalAPHotspot">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
         <class name="APUptime" table="APUptime">
             <field name="key" column="_id" length="100"/>
         </class>

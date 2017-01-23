@@ -715,8 +715,6 @@ public class UserMenuTest extends TestCase {
 			User demo4 = null;
 			try {
 				demo4 = userDao.get("demo4_mx", true);
-				userMenuDao.delete("demo4_mx");
-				throw new Exception();
 			} catch( Exception e ) {
 				demo4 = new User();
 				demo4.setFirstname("Demo 4");
@@ -1006,6 +1004,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
 				um.setKey(userMenuDao.createKey("outletdeportes_mx"));
 				userMenuDao.create(um);
 			}

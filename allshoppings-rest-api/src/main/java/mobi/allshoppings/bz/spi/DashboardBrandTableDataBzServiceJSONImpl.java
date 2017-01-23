@@ -46,7 +46,8 @@ implements DashboardBrandTableDataBzService {
 	private StoreDAO storeDao;
 
 	private DecimalFormat df = new DecimalFormat("##.00");
-
+	private SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+	
 	/**
 	 * Obtains information about a user
 	 * 
@@ -134,30 +135,50 @@ implements DashboardBrandTableDataBzService {
 						storeId, null, fromStringDate, toStringDate,
 						null, null, null, null, null, country, province, city);
 				value = 0D;
+				Map<String, Double> datesCache = CollectionFactory.createMap();
+				Date d1 = sdf2.parse(fromStringDate);
+				Date d2 = sdf2.parse(toStringDate);
+				while( d1.before(d2) || d1.equals(d2)) {
+					datesCache.put(sdf2.format(d1), totalValue);
+					d1 = new Date(d1.getTime() + 86400000);
+				}
+				
 				for(DashboardIndicatorData obj : list) {
 					value += obj.getDoubleValue();
 					
+					Double dValue = datesCache.get(obj.getStringDate());
+					if( dValue == null ) dValue = 0D;
+					dValue += obj.getDoubleValue();
+					datesCache.put(obj.getStringDate(), dValue);
+				}
+				
+				Iterator<String> it = datesCache.keySet().iterator();
+				while(it.hasNext()) {
+					String key = it.next();
+					Date d = sdf2.parse(key);
+					Double val = datesCache.get(key);
+					
 					// internally calculates lower
-					if( obj.getDoubleValue() < lower ) { 
-						storeData.put("lower", Double.valueOf(obj.getDate().getTime()));
-						lower = obj.getDoubleValue();
+					if( val < lower ) { 
+						storeData.put("lower", Double.valueOf(d.getTime()));
+						lower = val;
 					}
-					if( obj.getDoubleValue() < totalLower ) { 
-						totalsData.put("lower", Double.valueOf(obj.getDate().getTime()));
-						totalLower = obj.getDoubleValue();
+					if( val < totalLower ) { 
+						totalsData.put("lower", Double.valueOf(d.getTime()));
+						totalLower = val;
 					}
 					
 					// internally calculates higher
-					if( obj.getDoubleValue() > higher ) {
-						storeData.put("higher", Double.valueOf(obj.getDate().getTime()));
-						higher = obj.getDoubleValue();
+					if( val > higher ) {
+						storeData.put("higher", Double.valueOf(d.getTime()));
+						higher = val;
 					}
-					if( obj.getDoubleValue() > totalHigher ) { 
-						totalsData.put("higher", Double.valueOf(obj.getDate().getTime()));
-						totalHigher = obj.getDoubleValue();
+					if( val > totalHigher ) { 
+						totalsData.put("higher", Double.valueOf(d.getTime()));
+						totalHigher = val;
 					}
-					
 				}
+				
 				storeData.put("visits", value);
 				totalValue = totalsData.get("visits");
 				if( totalValue == null ) totalValue = 0D;

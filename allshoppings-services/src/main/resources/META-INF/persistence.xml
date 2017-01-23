@@ -17,6 +17,7 @@
         <class>mobi.allshoppings.model.APDMAEmployee</class>
         <class>mobi.allshoppings.model.APHEntry</class>
         <class>mobi.allshoppings.model.APHotspot</class>
+        <class>mobi.allshoppings.model.ExternalAPHotspot</class>
         <class>mobi.allshoppings.model.APUptime</class>
         <class>mobi.allshoppings.model.APDVisit</class>
         <class>mobi.allshoppings.model.Area</class>

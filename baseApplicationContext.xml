@@ -243,6 +243,7 @@
 	<bean id="campaignactivity.dao.ref" class="mobi.allshoppings.dao.spi.CampaignActivityDAOJDOImpl" />
 	<bean id="checkin.dao.ref" class="mobi.allshoppings.dao.spi.CheckinDAOJDOImpl" />
 	<bean id="aphotspot.dao.ref" class="mobi.allshoppings.dao.spi.APHotspotDAOJDOImpl" />
+	<bean id="externalaphotspot.dao.ref" class="mobi.allshoppings.dao.spi.ExternalAPHotspotDAOJDOImpl" />
 	<bean id="apdmablacklist.dao.ref" class="mobi.allshoppings.dao.spi.APDMABlackListDAOJDOImpl" />
 	<bean id="apdmaemployee.dao.ref" class="mobi.allshoppings.dao.spi.APDMAEmployeeDAOJDOImpl" />
 	<bean id="dashboardconfiguration.dao.ref" class="mobi.allshoppings.dao.spi.DashboardConfigurationDAOJDOImpl" />
