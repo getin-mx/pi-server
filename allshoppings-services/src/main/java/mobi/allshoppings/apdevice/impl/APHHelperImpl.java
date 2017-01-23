@@ -23,6 +23,7 @@ import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.DeviceInfoDAO;
+import mobi.allshoppings.dao.ExternalAPHotspotDAO;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.impl.DumperHelperImpl;
 import mobi.allshoppings.exception.ASException;
@@ -31,6 +32,7 @@ import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.DeviceInfo;
+import mobi.allshoppings.model.ExternalAPHotspot;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CollectionUtils;
 
@@ -41,7 +43,8 @@ public class APHHelperImpl implements APHHelper {
 	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static final Gson gson = new Gson();
 	private static final DecimalFormat df = new DecimalFormat("00");
-
+	private static final long ONE_HOUR = 3600000;
+	
 	private Map<String, APHEntry> cache;
 
 	@Autowired
@@ -52,6 +55,8 @@ public class APHHelperImpl implements APHHelper {
 	private APDeviceHelper apdHelper;
 	@Autowired
 	private DeviceInfoDAO diDao;
+	@Autowired
+	private ExternalAPHotspotDAO eaphDao;
 	
 	private DumperHelper<APHotspot> dumpHelper;
 	private boolean cacheBuilt = false;
@@ -106,6 +111,16 @@ public class APHHelperImpl implements APHHelper {
 		return getHash(obj.getHostname(), obj.getMac(), obj.getCreationDateTime()); 
 	}
 
+	/**
+	 * Gets the internal hash code based in an APHotspot
+	 * @param obj
+	 * @return
+	 */
+	@Override
+	public String getHash(ExternalAPHotspot obj) {
+		return getHash(obj.getHostname(), obj.getMac(), obj.getCreationDateTime()); 
+	}
+
 	
 	/**
 	 * Gets the internal hash code based in an APHEntry
@@ -124,6 +139,16 @@ public class APHHelperImpl implements APHHelper {
 	 */
 	@Override
 	public APHEntry apHotpostToaphEntry(APHotspot obj) {
+		return new APHEntry(obj.getHostname(), obj.getMac(), sdf.format(obj.getCreationDateTime()));
+	}
+
+	/**
+	 * Converts an APHotspot into a APHEntry representation
+	 * @param obj
+	 * @return
+	 */
+	@Override
+	public APHEntry apHotpostToaphEntry(ExternalAPHotspot obj) {
 		return new APHEntry(obj.getHostname(), obj.getMac(), sdf.format(obj.getCreationDateTime()));
 	}
 
@@ -201,6 +226,44 @@ public class APHHelperImpl implements APHHelper {
 	}
 
 	/**
+	 * Obtains an APHEntry representation from cache
+	 * @param obj
+	 * @return
+	 */
+	public APHEntry getFromCache(ExternalAPHotspot obj) {
+		String hash = getHash(obj);
+		APHEntry ret = null;
+		if( useCache ) {
+			ret = cache.get(hash);
+		}
+		if( null == ret ) {
+			try {
+				if( cacheBuilt == true && useCache ) 
+					throw ASExceptionHelper.notFoundException();
+				
+				ret = apheDao.get(hash, true);
+			} catch( ASException e ) {
+				ret = apHotpostToaphEntry(obj);
+				try {
+					if( scanInDevices ) {
+						List<DeviceInfo> di = diDao.getUsingMAC(obj.getMac());
+						if( di.size() > 0 ) {
+							ret.setDevicePlatform(di.get(0).getDevicePlatform());
+						} else {
+							throw ASExceptionHelper.notFoundException();
+						}
+					} else {
+						throw ASExceptionHelper.notFoundException();
+					}
+				} catch( ASException e1 ) {
+					ret.setDevicePlatform(apdHelper.getDevicePlatform(obj.getMac(), null));
+				}
+			}
+		}
+		return ret;
+	}
+
+	/**
 	 * Inserts an APHEntry representation in the cache
 	 * @param obj
 	 * @return
@@ -244,6 +307,28 @@ public class APHHelperImpl implements APHHelper {
 	 * Sets the correct RSSI in a placed frame Frames are divided in the seconds
 	 * of the day / 20
 	 * 
+	 * @param aphe
+	 *            The referred APHEntry
+	 * @param fromDate
+	 *            The date to frame
+	 * @param rssi
+	 *            The RSSI to set into the frame
+	 * @return The modified APHEntry
+	 */
+	@Override
+	public APHEntry repeatFramedRSSI(APHEntry aphe, Date fromDate, Date toDate, Integer rssi) {
+		Date forDate = new Date(fromDate.getTime());
+		while( forDate.before(toDate) || forDate.equals(toDate)) {
+			setFramedRSSI(aphe, forDate, rssi);
+			forDate = new Date(forDate.getTime() + 20000);
+		}
+		return aphe;
+	}
+
+	/**
+	 * Sets the correct RSSI in a placed frame Frames are divided in the seconds
+	 * of the day / 20
+	 * 
 	 * @param aph
 	 *            The APHotspot from which the RSSI will be taken from
 	 * @return The modified APHEntry
@@ -252,6 +337,21 @@ public class APHHelperImpl implements APHHelper {
 	public APHEntry setFramedRSSI(APHotspot aph) {
 		APHEntry aphe = getFromCache(aph);
 		return putInCache(setFramedRSSI(aphe, aph.getCreationDateTime(), aph.getSignalDB()));
+	}
+	
+	/**
+	 * Sets the correct RSSI in a placed frame Frames are divided in the seconds
+	 * of the day / 20
+	 * 
+	 * @param aph
+	 *            The APHotspot from which the RSSI will be taken from
+	 * @return The modified APHEntry
+	 */
+	@Override
+	public APHEntry setFramedRSSI(ExternalAPHotspot aph) {
+		APHEntry aphe = getFromCache(aph);
+		
+		return putInCache(repeatFramedRSSI(aphe, aph.getFirstSeen(), aph.getLastSeen(), aph.getSignalDB()));
 	}
 	
 	/**
@@ -399,7 +499,7 @@ public class APHHelperImpl implements APHHelper {
 	 *            Initial value
 	 * @param last
 	 *            Last timeslot index
-	 * @param lastValue
+	 * 	@param lastValue
 	 *            Last Value
 	 * @return a Map with the interpolated intermediate values
 	 */
@@ -484,6 +584,70 @@ public class APHHelperImpl implements APHHelper {
 			totals++;
 		}
 
+		// Write to the database
+		log.log(Level.INFO, "Writing Database");
+		Iterator<String> x = cache.keySet().iterator();
+		while(x.hasNext()) {
+			String key = x.next();
+			APHEntry aphe = cache.get(key);
+			artificiateRSSI(aphe);
+			if( aphe.getDataCount() > 0 ) {
+				aphe.setKey(apheDao.createKey(aphe));
+				try {
+					apheDao.createOrUpdate(aphe);
+				} catch( Exception e ) {
+					log.log(Level.SEVERE, e.getMessage(), e);
+				}
+			}
+		}
+		
+		log.log(Level.INFO, "Process Ended");
+
+	}
+
+	/**
+	 * Generates the APHEntries tables from external APH
+	 * 
+	 * @param fromDate
+	 *            Initial date
+	 * @param toDate
+	 *            Final date
+	 * @param apdevices
+	 *            Devices to match
+	 */
+	@Override
+	public void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, List<String> apdevices, boolean buildCache) throws ASException {
+
+		// Populates the apdevices list if empty
+		if(CollectionUtils.isEmpty(apdevices)) {
+			apdevices = CollectionFactory.createList();
+			List<APDevice> list = dao.getAll(true);
+			for( APDevice obj : list ) {
+				apdevices.add(obj.getHostname());
+			}
+		}
+
+		// Pre build cache
+		if( buildCache ) {
+			log.log(Level.INFO, "Building Cache");
+			buildCache(fromDate, new Date(toDate.getTime() - 86400000), apdevices);
+		}
+		
+		// Gets the input data
+		long totals = 0;
+		log.log(Level.INFO, "Processing External AP Records");
+		List<ExternalAPHotspot> list = eaphDao.getUsingHostnameAndDates(null, fromDate, toDate);
+		for( ExternalAPHotspot obj : list ) {
+			if( totals % 1000 == 0 ) 
+				log.log(Level.INFO, "Processing records " + totals + " of " + list.size());
+			
+			totals++;
+			
+			if( obj.getLastSeen() == null )
+				obj.setLastSeen(new Date(obj.getFirstSeen().getTime() + ONE_HOUR));
+			setFramedRSSI(obj);
+		}
+		
 		// Write to the database
 		log.log(Level.INFO, "Writing Database");
 		Iterator<String> x = cache.keySet().iterator();

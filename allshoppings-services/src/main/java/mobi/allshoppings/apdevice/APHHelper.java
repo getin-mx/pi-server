@@ -8,6 +8,7 @@ import java.util.Map;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
+import mobi.allshoppings.model.ExternalAPHotspot;
 
 public interface APHHelper {
 
@@ -16,7 +17,9 @@ public interface APHHelper {
 	String getHash(String hostname, String mac, Date date);
 	String getHash(APHotspot obj);
 	String getHash(APHEntry obj);
+	String getHash(ExternalAPHotspot obj);
 	APHEntry apHotpostToaphEntry(APHotspot obj);
+	APHEntry apHotpostToaphEntry(ExternalAPHotspot obj);
 	APHEntry getFromCache(APHotspot obj);
 	APHEntry getFromCache(String hostname, String mac, String date);
 	int stringToOffsetTime(String t) throws Exception;
@@ -31,11 +34,14 @@ public interface APHHelper {
 
 	// Helper methods
 	void buildCache(Date fromDate, Date toDate, List<String> apdevices) throws ASException;
+	APHEntry repeatFramedRSSI(APHEntry aphe, Date fromDate, Date toDate, Integer rssi);
 	APHEntry setFramedRSSI(APHEntry aphe, Date forDate, Integer rssi);
 	APHEntry setFramedRSSI(APHotspot aph);
+	APHEntry setFramedRSSI(ExternalAPHotspot aph);
 	List<Integer> timeslotToList(Map<String, ?> slots);
 	void artificiateRSSI(APHEntry obj) throws ASException;
 	void artificiateRSSI(List<String> apdevices, Date fromDate, Date toDate) throws ASException;
 	void generateAPHEntriesFromDump(String baseDir, Date fromDate, Date toDate, List<String> apdevices, boolean buildCache) throws ASException;
+	void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, List<String> apdevices, boolean buildCache) throws ASException;
 
 }

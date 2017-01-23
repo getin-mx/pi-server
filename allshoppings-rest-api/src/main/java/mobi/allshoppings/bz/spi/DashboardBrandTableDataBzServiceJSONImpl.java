@@ -159,21 +159,22 @@ implements DashboardBrandTableDataBzService {
 					Double val = datesCache.get(key);
 					
 					// internally calculates lower
-					if( val < lower ) { 
+					if( val < lower || !storeData.containsKey("lower") || val == lower && d.getTime() > storeData.get("lower")) { 
 						storeData.put("lower", Double.valueOf(d.getTime()));
 						lower = val;
 					}
-					if( val < totalLower ) { 
+					
+					if( val < totalLower || !totalsData.containsKey("lower") || val == totalLower && d.getTime() > totalsData.get("lower")) { 
 						totalsData.put("lower", Double.valueOf(d.getTime()));
 						totalLower = val;
 					}
 					
 					// internally calculates higher
-					if( val > higher ) {
+					if( val > higher ||  !storeData.containsKey("higher") || val == higher && d.getTime() > storeData.get("higher")) {
 						storeData.put("higher", Double.valueOf(d.getTime()));
 						higher = val;
 					}
-					if( val > totalHigher ) { 
+					if( val > totalHigher ||  !totalsData.containsKey("higher") || val == totalHigher && d.getTime() > totalsData.get("higher")) {
 						totalsData.put("higher", Double.valueOf(d.getTime()));
 						totalHigher = val;
 					}
