@@ -448,9 +448,16 @@ public class APHHelperImpl implements APHHelper {
 	public void artificiateRSSI(APHEntry obj) throws ASException {
 		
 		// Obtains the APDevice definition for reference
-		APDevice apd = dao.get(obj.getHostname(), true);
-		int maxDistance = (int)(apd.getVisitGapThreshold() != null ? apd.getVisitGapThreshold() * 3 : 30);
-		
+		APDevice apd = null;
+		int maxDistance = 0;
+
+		try {
+			apd = dao.get(obj.getHostname(), true);
+			maxDistance = (int)(apd.getVisitGapThreshold() != null ? apd.getVisitGapThreshold() * 3 : 30);
+		} catch( Exception e ) {
+			maxDistance = 30;
+		}
+
 		// Clears all Artificial generated RSSI
 		obj.getArtificialRssi().clear();
 		List<Integer> elements = timeslotToList(obj.getRssi());
