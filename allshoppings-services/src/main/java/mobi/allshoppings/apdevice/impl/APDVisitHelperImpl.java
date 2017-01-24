@@ -151,7 +151,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
 						List<APDVisit> objs = CollectionFactory.createList();
 						for(APHEntry entry : entries ) {
-							//check full black list
+							aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
 							List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
 								for(APDVisit visit : visitList )
 									if(!objs.contains(visit))
@@ -180,6 +180,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							if(!cache.containsKey(entry.getMac()))
 								cache.put(entry.getMac(), new ArrayList<APHEntry>());
 							
+							aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
 							cache.get(entry.getMac()).add(entry);
 						}
 						
@@ -285,7 +286,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
 						List<APDVisit> objs = CollectionFactory.createList();
 						for(APHEntry entry : entries ) {
-							//check full black list
+							aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
 							List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
 								for(APDVisit visit : visitList )
 									if(!objs.contains(visit))
@@ -315,6 +316,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							if(!cache.containsKey(entry.getMac()))
 								cache.put(entry.getMac(), new ArrayList<APHEntry>());
 							
+							aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
 							cache.get(entry.getMac()).add(entry);
 						}
 						
