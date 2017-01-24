@@ -44,6 +44,7 @@
   	<bean id="dashboard.apuptime.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.APUptimeDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.dashboardconfigurationdata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.DashboardConfigurationDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.assignedbrandlist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.AssignedBrandListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.assignedshoppinglist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.AssignedShoppingListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.assignedstorelist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.AssignedStoreListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.floormaplist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.FloorMapListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.floormapdata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.FloorMapDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />

@@ -49,6 +49,7 @@
 				<!-- Dashboard Entries -->
 				<entry key="/dashboard/apuptime" 				value-ref="spring.dashboard.apuptime.rest.resource" />
 				<entry key="/dashboard/assignedBrandList" 		value-ref="spring.dashboard.assignedbrandlist.rest.resource" />
+				<entry key="/dashboard/assignedShoppingList" 	value-ref="spring.dashboard.assignedshoppinglist.rest.resource" />
 				<entry key="/dashboard/assignedStoreList" 		value-ref="spring.dashboard.assignedstorelist.rest.resource" />
 				<entry key="/dashboard/floormapList" 			value-ref="spring.dashboard.floormaplist.rest.resource" />
 				<entry key="/dashboard/floormapData" 			value-ref="spring.dashboard.floormapdata.rest.resource" />
@@ -129,6 +130,9 @@
  	</bean>
  	<bean id="spring.dashboard.assignedbrandlist.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboard.assignedbrandlist.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.assignedshoppinglist.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.assignedshoppinglist.rest.resource" />
  	</bean>
  	<bean id="spring.dashboard.assignedstorelist.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboard.assignedstorelist.rest.resource" />

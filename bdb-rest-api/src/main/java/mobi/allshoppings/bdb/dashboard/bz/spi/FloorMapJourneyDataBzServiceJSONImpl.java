@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import mobi.allshoppings.apdevice.FloorMapJourneyHelper;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
-import mobi.allshoppings.dao.FloorMapJourneyDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.FloorMapJourney;
@@ -27,9 +26,6 @@ implements BDBDashboardBzService {
 
 	private static final Logger log = Logger.getLogger(FloorMapJourneyDataBzServiceJSONImpl.class.getName());
 
-	@Autowired
-	private FloorMapJourneyDAO fmjDao;
-	
 	@Autowired
 	private FloorMapJourneyHelper helper;
 	
@@ -62,12 +58,8 @@ implements BDBDashboardBzService {
 				toRange = 20;
 			
 			Range range = new Range(fromRange,toRange);
-//			String order = "dataCount DESC";
 			
-			
-			//List<FloorMapJourney> list = helper.process(10,range);
 			List<FloorMapJourney> list = helper.process(floorMapId, mac, fromDate, toDate, range);
-			//List<FloorMapJourney> list = fmjDao.getUsingFloorMapAndMacAndDate(floorMapId, mac, fromDate, toDate, range, order); 
 			
 			
 			

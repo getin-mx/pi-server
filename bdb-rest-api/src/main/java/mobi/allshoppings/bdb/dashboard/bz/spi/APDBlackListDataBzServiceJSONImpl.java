@@ -1,14 +1,11 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +16,9 @@ import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBPostBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.APDMABlackListDAO;
-import mobi.allshoppings.dao.StoreDAO;
-import mobi.allshoppings.dao.StoreTicketDAO;
-import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDMABlackList;
-import mobi.allshoppings.model.DashboardIndicatorData;
-import mobi.allshoppings.model.Store;
-import mobi.allshoppings.model.StoreTicket;
 
 
 /**
@@ -38,15 +29,15 @@ extends BDBRestBaseServerResource
 implements BDBDashboardBzService, BDBPostBzService {
 
 	private static final Logger log = Logger.getLogger(APDBlackListDataBzServiceJSONImpl.class.getName());
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	private static final long ONE_DAY = 86400000;
+//	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//	private static final long ONE_DAY = 86400000;
 	
 	@Autowired
 	private APDMABlackListDAO dao;
-	@Autowired
-	private DashboardAPDeviceMapperService mapper;
-	@Autowired
-	private StoreDAO storeDao;
+//	@Autowired
+//	private DashboardAPDeviceMapperService mapper;
+//	@Autowired
+//	private StoreDAO storeDao;
 	
 	/**
 	 * Obtains a Dashboard report prepared to form a shopping center heatmap
@@ -103,9 +94,9 @@ implements BDBDashboardBzService, BDBPostBzService {
 			// obtain the id and validates the auth token
 			obtainUserIdentifier(true);
 			
-			JSONObject json = entity.getJsonObject();
-			String entityId = json.getString("entityId");
-			String entityKind = json.getString("entityKind");
+//			JSONObject json = entity.getJsonObject();
+//			String entityId = json.getString("entityId");
+//			String entityKind = json.getString("entityKind");
 			
 			
 			return generateJSONOkResponse().toString();

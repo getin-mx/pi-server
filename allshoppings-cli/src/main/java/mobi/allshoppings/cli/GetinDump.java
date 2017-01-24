@@ -1,28 +1,8 @@
 	package mobi.allshoppings.cli;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-
-
-
-
-
-
-
-
-
-import joptsimple.OptionParser;
-import mobi.allshoppings.dao.BrandDAO;
-import mobi.allshoppings.dao.ShoppingDAO;
-import mobi.allshoppings.dao.StoreDAO;
-import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.geocoding.GeoCodingHelper;
-import mobi.allshoppings.model.AddressComponentsCache;
-import mobi.allshoppings.model.Brand;
-import mobi.allshoppings.model.Shopping;
-import mobi.allshoppings.model.Store;
-import mobi.allshoppings.model.interfaces.StatusAware;
-import mobi.allshoppings.model.tools.KeyHelper;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -31,10 +11,29 @@ import org.springframework.context.ApplicationContext;
 import com.inodes.datanucleus.model.Key;
 import com.inodes.util.CollectionFactory;
 
+import joptsimple.OptionParser;
+import mobi.allshoppings.dao.APDAssignationDAO;
+import mobi.allshoppings.dao.BrandDAO;
+import mobi.allshoppings.dao.ExternalAPHotspotDAO;
+import mobi.allshoppings.dao.ShoppingDAO;
+import mobi.allshoppings.dao.StoreDAO;
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.geocoding.GeoCodingHelper;
+import mobi.allshoppings.model.APDAssignation;
+import mobi.allshoppings.model.AddressComponentsCache;
+import mobi.allshoppings.model.Brand;
+import mobi.allshoppings.model.EntityKind;
+import mobi.allshoppings.model.Shopping;
+import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.interfaces.StatusAware;
+import mobi.allshoppings.model.tools.KeyHelper;
+
 
 public class GetinDump extends AbstractCLI {
 
 	private static final Logger log = Logger.getLogger(GetinDump.class.getName());
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	public static void setApplicationContext(ApplicationContext ctx) {
 		context = ctx;
@@ -52,6 +51,9 @@ public class GetinDump extends AbstractCLI {
 			BrandDAO brandDao = (BrandDAO)getApplicationContext().getBean("brand.dao.ref");
 			StoreDAO storeDao = (StoreDAO)getApplicationContext().getBean("store.dao.ref");
 			KeyHelper keyHelper = (KeyHelper)getApplicationContext().getBean("key.helper");
+			ExternalAPHotspotDAO eaphDao = (ExternalAPHotspotDAO)getApplicationContext().getBean("externalaphotspot.dao.ref");
+			APDAssignationDAO apdaDao = (APDAssignationDAO)getApplicationContext().getBean("apdassignation.dao.ref");
+			
 //			GeoCodingHelper geocoder = (GeoCodingHelper)getApplicationContext().getBean("geocoding.helper");
 
 			log.log(Level.INFO, "Dumping Getin Data....");
@@ -725,16 +727,20 @@ public class GetinDump extends AbstractCLI {
 				}
 			} 	
 
-			// Set Sportium stores lat and lon
-//			setLatLon(geocoder, storeDao, "56", 19.4952773, -99.2490495);
-//			setLatLon(geocoder, storeDao, "175", 19.5079268, -99.2222704);
-//			setLatLon(geocoder, storeDao, "176", 19.6391546, -99.2251587);
-//			setLatLon(geocoder, storeDao, "177", 19.5471315, -99.2024959);
-//			setLatLon(geocoder, storeDao, "178", 19.3278346, -99.1494134);
-//			setLatLon(geocoder, storeDao, "179", 19.3737203, -99.1655293);
-//			setLatLon(geocoder, storeDao, "180", 19.3451124, -99.1900544);
-//			setLatLon(geocoder, storeDao, "181", 19.3427192, -99.2265813);
-//			setLatLon(geocoder, storeDao, "182", 19.3772541, -99.2575977);
+			// Assing antennas for droc
+			List<String> externalDevices = eaphDao.getExternalHostnames();
+			for(String hostname : externalDevices) {
+				List<APDAssignation> li = apdaDao.getUsingHostnameAndDate(hostname, new Date());
+				if( li.isEmpty() ) {
+					APDAssignation assig = new APDAssignation();
+					assig.setEntityId("mundoe");
+					assig.setEntityKind(EntityKind.KIND_SHOPPING);
+					assig.setHostname(hostname);
+					assig.setFromDate(sdf.parse("2016-12-17"));
+					assig.setKey(apdaDao.createKey(assig));
+					apdaDao.create(assig);
+				}
+			}
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
