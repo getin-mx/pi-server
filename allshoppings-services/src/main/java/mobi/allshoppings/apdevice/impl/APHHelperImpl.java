@@ -118,7 +118,7 @@ public class APHHelperImpl implements APHHelper {
 	 */
 	@Override
 	public String getHash(ExternalAPHotspot obj) {
-		return getHash(obj.getHostname(), obj.getMac(), obj.getCreationDateTime()); 
+		return getHash(obj.getHostname(), obj.getMac(), obj.getFirstSeen()); 
 	}
 
 	
@@ -149,7 +149,7 @@ public class APHHelperImpl implements APHHelper {
 	 */
 	@Override
 	public APHEntry apHotpostToaphEntry(ExternalAPHotspot obj) {
-		return new APHEntry(obj.getHostname(), obj.getMac(), sdf.format(obj.getCreationDateTime()));
+		return new APHEntry(obj.getHostname(), obj.getMac(), sdf.format(obj.getFirstSeen()));
 	}
 
 	/**

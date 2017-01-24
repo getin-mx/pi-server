@@ -29,6 +29,7 @@ public class GenerateAPDVisits extends AbstractCLI {
 		parser.accepts( "toDate", "Date To" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "brandIds", "List of comma separated brands").withRequiredArg().ofType( String.class );
 		parser.accepts( "storeIds", "List of comma separated stores (superseeds brandIds)").withRequiredArg().ofType( String.class );
+		parser.accepts( "shoppingIds", "List of comma separated shoppings (superseeds brandIds and storeIds)").withRequiredArg().ofType( String.class );
 		return parser;
 	}
 
@@ -50,8 +51,10 @@ public class GenerateAPDVisits extends AbstractCLI {
 			Date toDate = null;
 			String brandIds = null;
 			String storeIds = null;
+			String shoppingIds = null;
 			List<String> brands = CollectionFactory.createList();
 			List<String> stores = CollectionFactory.createList();
+			List<String> shoppings = CollectionFactory.createList();
 			
 			try {
 				if( options.has("fromDate")) sFromDate = (String)options.valueOf("fromDate");
@@ -86,13 +89,25 @@ public class GenerateAPDVisits extends AbstractCLI {
 							stores.add(s.trim());
 					}
 				}
+
+				if(options.has("shoppingIds")) {
+					shoppingIds = (String)options.valueOf("shoppingIds");
+					String tmp[] = shoppingIds.split(",");
+					for( String s : tmp ) {
+						if(!shoppings.contains(s.trim()))
+							shoppings.add(s.trim());
+					}
+				}
 			} catch( Exception e ) {
 				e.printStackTrace();
 				usage(parser);
 			}
 
 			log.log(Level.INFO, "Generating APDVisits");
-			helper.generateAPDVisits(brands, stores, fromDate, toDate, true, true);
+			if( shoppings.isEmpty() )
+				helper.generateAPDVisits(brands, stores, fromDate, toDate, true, true);
+			else
+				helper.generateAPDVisits(shoppings, fromDate, toDate, true, true);
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
