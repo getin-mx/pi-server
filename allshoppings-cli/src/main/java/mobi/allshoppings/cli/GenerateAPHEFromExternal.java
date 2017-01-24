@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.apdevice.APHHelper;
+import mobi.allshoppings.dao.ExternalAPHotspotDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.tools.CollectionFactory;
@@ -39,6 +40,7 @@ public class GenerateAPHEFromExternal extends AbstractCLI {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			APHHelper helper = (APHHelper)getApplicationContext().getBean("aphentry.helper");
+			ExternalAPHotspotDAO eaphDao = (ExternalAPHotspotDAO)getApplicationContext().getBean("externalaphotspot.dao.ref");
 
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
 			OptionSet options = parser.parse(args);
@@ -77,17 +79,16 @@ public class GenerateAPHEFromExternal extends AbstractCLI {
 			log.log(Level.INFO, "Generating APHEntries");
 			List<String> apdevices = CollectionFactory.createList();
 			if(StringUtils.hasText(hostname)) apdevices.add(hostname);
+			else apdevices = eaphDao.getExternalHostnames(); 
 			helper.setScanInDevices(false);
 
 			Date ffromDate = new Date(fromDate.getTime());
 			Date ftoDate = new Date(fromDate.getTime());
 			while( ftoDate.before(toDate)) {
-
 				ffromDate = new Date(ftoDate.getTime());
 				ftoDate = new Date(ftoDate.getTime() + TWENTY_FOUR_HOURS);
 				
 				helper.generateAPHEntriesFromExternalAPH(ffromDate, ftoDate, apdevices, true);
-
 			}
 
 		} catch( Exception e ) {
