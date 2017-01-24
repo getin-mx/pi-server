@@ -13,6 +13,7 @@ import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.EntityKind;
 
 
 public class FakeVisits extends AbstractCLI {
@@ -65,13 +66,13 @@ public class FakeVisits extends AbstractCLI {
 					Arrays.asList(new String[] { "apd_visitor", "apd_permanence" }), fromDate, fromDate);
 
 			mapper.createAPDVisitPerformanceDashboardForDay(fromDate,
-					Arrays.asList(new String[] { "6b8056c1-9249-40a1-8c7a-780433e75fb5" }));
+					Arrays.asList(new String[] { "6b8056c1-9249-40a1-8c7a-780433e75fb5" }), EntityKind.KIND_STORE);
 			mapper.createAPDVisitPerformanceDashboardForDay(fromDate,
-					Arrays.asList(new String[] { "6ca437b4-6e74-4ca2-a3fa-9c6da8480df5" }));
+					Arrays.asList(new String[] { "6ca437b4-6e74-4ca2-a3fa-9c6da8480df5" }), EntityKind.KIND_STORE);
 			mapper.createAPDVisitPerformanceDashboardForDay(fromDate,
-					Arrays.asList(new String[] { "6f7df967-01db-46b7-a43f-defc15a08dc4" }));
+					Arrays.asList(new String[] { "6f7df967-01db-46b7-a43f-defc15a08dc4" }), EntityKind.KIND_STORE);
 			mapper.createAPDVisitPerformanceDashboardForDay(fromDate,
-					Arrays.asList(new String[] { "ef825453-5e5d-47bb-aab1-da06af02f282" }));
+					Arrays.asList(new String[] { "ef825453-5e5d-47bb-aab1-da06af02f282" }), EntityKind.KIND_STORE);
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

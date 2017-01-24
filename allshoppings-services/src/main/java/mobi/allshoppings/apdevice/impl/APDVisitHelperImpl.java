@@ -43,6 +43,7 @@ import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
+import mobi.allshoppings.tools.Range;
 
 public class APDVisitHelperImpl implements APDVisitHelper {
 
@@ -104,6 +105,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Map<String, APDevice> apdCache = CollectionFactory.createMap();
 		Map<String, APDAssignation> assignmentsCache = CollectionFactory.createMap();
 		boolean cacheBuilt = false;
+		Range range = null;
 
 		if(!CollectionUtils.isEmpty(storeIds)) {
 			stores = storeDao.getUsingIdList(storeIds);
@@ -144,7 +146,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						
 						log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
 						List<APHEntry> entries = apheDao.getUsingHostnameAndDates(
-								Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, false);
+								Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, range, false);
 
 						log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
 						List<APDVisit> objs = CollectionFactory.createList();
@@ -173,7 +175,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						}
 
 						log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and " + curDate + "...");
-						List<APHEntry> entries = apheDao.getUsingHostnameAndDates(hostnames, curDate, curDate, false);
+						List<APHEntry> entries = apheDao.getUsingHostnameAndDates(hostnames, curDate, curDate, range, false);
 						for( APHEntry entry : entries ) {
 							if(!cache.containsKey(entry.getMac()))
 								cache.put(entry.getMac(), new ArrayList<APHEntry>());
@@ -215,7 +217,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					didDao.deleteUsingSubentityIdAndElementIdAndDate(store.getIdentifier(),
 							Arrays.asList(new String[] { "apd_visitor", "apd_permanence" }), curDate, curDate);
 					mapper.createAPDVisitPerformanceDashboardForDay(curDate,
-							Arrays.asList(new String[] { store.getIdentifier() }));
+							Arrays.asList(new String[] { store.getIdentifier() }), EntityKind.KIND_STORE);
 				}
 
 			}
@@ -242,6 +244,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Map<String, APDevice> apdCache = CollectionFactory.createMap();
 		Map<String, APDAssignation> assignmentsCache = CollectionFactory.createMap();
 		boolean cacheBuilt = false;
+		Range range = null;
 
 		if(!CollectionUtils.isEmpty(shoppingIds)) {
 			shoppings = shoppingDao.getUsingIdList(shoppingIds);
@@ -277,7 +280,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						
 						log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
 						List<APHEntry> entries = apheDao.getUsingHostnameAndDates(
-								Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, false);
+								Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, range, false);
 
 						log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
 						List<APDVisit> objs = CollectionFactory.createList();
@@ -306,7 +309,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						}
 
 						log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and " + curDate + "...");
-						List<APHEntry> entries = apheDao.getUsingHostnameAndDates(hostnames, curDate, curDate, false);
+						
+						List<APHEntry> entries = apheDao.getUsingHostnameAndDates(hostnames, curDate, curDate, range, false);
 						for( APHEntry entry : entries ) {
 							if(!cache.containsKey(entry.getMac()))
 								cache.put(entry.getMac(), new ArrayList<APHEntry>());
@@ -348,7 +352,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					didDao.deleteUsingSubentityIdAndElementIdAndDate(shopping.getIdentifier(),
 							Arrays.asList(new String[] { "apd_visitor", "apd_permanence" }), curDate, curDate);
 					mapper.createAPDVisitPerformanceDashboardForDay(curDate,
-							Arrays.asList(new String[] { shopping.getIdentifier() }));
+							Arrays.asList(new String[] { shopping.getIdentifier() }), EntityKind.KIND_SHOPPING);
 				}
 
 			}
@@ -584,7 +588,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					APDevice dev = apd.get(curEntry.getHostname());
 					
 					// Closes open visits in case of slot continuity disruption
-					if( lastSlot != null && slot != (lastSlot + 1)) {
+					if( lastSlot != null && slot != (lastSlot + 1) && (slot - lastSlot) > (dev.getVisitGapThreshold() * 3)) {
 						if( currentVisit != null ) {
 							currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
 							addPermanenceCheck(currentVisit, currentPeasant, dev);

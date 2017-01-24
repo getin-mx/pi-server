@@ -367,7 +367,7 @@ public class APHHelperImpl implements APHHelper {
 		
 		cache.clear();
 		
-		List<APHEntry> list = apheDao.getUsingHostnameAndDates(apdevices, fromDate, toDate, true);
+		List<APHEntry> list = apheDao.getUsingHostnameAndDates(apdevices, fromDate, toDate, null, true);
 		for( APHEntry obj : list ) 
 			cache.put(getHash(obj), obj);
 		
@@ -424,7 +424,7 @@ public class APHHelperImpl implements APHHelper {
 			for( String hostname : apdevices ) {
 				long counter = 0;
 				log.log(Level.INFO, "Processing " + hostname + " for date " + d1);
-				List<APHEntry> list = apheDao.getUsingHostnameAndDates(Arrays.asList( new String[] {hostname}), d1, d2, true);
+				List<APHEntry> list = apheDao.getUsingHostnameAndDates(Arrays.asList( new String[] {hostname}), d1, d2, null, true);
 				for( APHEntry obj : list ) {
 					artificiateRSSI(obj);
 					apheDao.update(obj);

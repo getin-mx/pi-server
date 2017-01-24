@@ -18,6 +18,7 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.tools.CollectionFactory;
+import mobi.allshoppings.tools.Range;
 
 public class APHEntryDAOJDOImpl extends GenericDAOJDO<APHEntry> implements APHEntryDAO {
 	
@@ -37,7 +38,7 @@ public class APHEntryDAOJDOImpl extends GenericDAOJDO<APHEntry> implements APHEn
 	}
 	
 	@Override
-	public List<APHEntry> getUsingHostnameAndDates(List<String> hostname, Date fromDate, Date toDate, boolean detachable) throws ASException {
+	public List<APHEntry> getUsingHostnameAndDates(List<String> hostname, Date fromDate, Date toDate, Range range, boolean detachable) throws ASException {
 
 		List<APHEntry> ret = CollectionFactory.createList();
 		PersistenceManager pm;
@@ -73,6 +74,9 @@ public class APHEntryDAOJDOImpl extends GenericDAOJDO<APHEntry> implements APHEn
 
 			query.declareParameters(toParameterList(declaredParams));
 			query.setFilter(toWellParametrizedFilter(filters));
+			
+			if( null != range )
+				query.setRange(range.getFrom(), range.getTo());
 			
 			@SuppressWarnings("unchecked")
 			List<APHEntry> list = (List<APHEntry>)query.executeWithMap(parameters);
