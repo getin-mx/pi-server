@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import joptsimple.OptionParser;
 import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.dao.APDeviceDAO;
+import mobi.allshoppings.dao.ExternalAPHotspotDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDevice;
@@ -35,6 +36,7 @@ public class TouchAPDevices extends AbstractCLI {
 	public static void main(String args[]) throws ASException {
 		try {
 			APDeviceDAO apdeviceDao = (APDeviceDAO)getApplicationContext().getBean("apdevice.dao.ref");
+			ExternalAPHotspotDAO eaphDao = (ExternalAPHotspotDAO)getApplicationContext().getBean("externalaphotspot.dao.ref");
 			APDeviceHelper apdeviceHelper = (APDeviceHelper)getApplicationContext().getBean("apdevice.helper");
 
 			log.log(Level.INFO, "Touching apdevices....");
@@ -54,6 +56,34 @@ public class TouchAPDevices extends AbstractCLI {
 				
 				apdeviceDao.update(obj);
 				apdeviceHelper.updateAssignationsUsingAPDevice(obj.getHostname());
+			}
+			
+			
+			// External Antennas
+			List<String> externalHostnames = eaphDao.getExternalHostnames();
+			for( String hostname : externalHostnames ) {
+				APDevice obj = null;
+				try {
+					obj = apdeviceDao.get(hostname);
+				} catch( Exception e ) {
+					obj = new APDevice();
+					obj.setHostname(hostname);
+					obj.setExternal(true);
+					obj.setKey(apdeviceDao.createKey(hostname));
+					apdeviceDao.create(obj);
+				}
+
+				log.log(Level.INFO, "Touching " + obj.getIdentifier() + "...");
+
+				if( null == obj.getStatus() ) 
+					obj.setStatus(StatusAware.STATUS_ENABLED);
+
+				if( null == obj.getReportStatus() )
+					obj.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
+				
+				apdeviceDao.update(obj);
+				apdeviceHelper.updateAssignationsUsingAPDevice(obj.getHostname());
+
 			}
 			
 			list = apdeviceDao.getAll();

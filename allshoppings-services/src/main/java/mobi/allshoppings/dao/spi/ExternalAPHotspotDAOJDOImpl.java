@@ -7,10 +7,12 @@ import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.jdo.datastore.JDOConnection;
 
 import org.springframework.util.StringUtils;
 
 import com.inodes.datanucleus.model.Key;
+import com.mongodb.DB;
 
 import mobi.allshoppings.dao.ExternalAPHotspotDAO;
 import mobi.allshoppings.exception.ASException;
@@ -244,6 +246,36 @@ public class ExternalAPHotspotDAOJDOImpl extends GenericDAOJDO<ExternalAPHotspot
 		} finally  {
 			pm.close();
 		}
+	}
+	
+	@Override
+	public List<String> getExternalHostnames() throws ASException {
+		PersistenceManager pm;
+		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+
+		try{
+			
+			// Obtains DB Connection
+			JDOConnection jdoConn = pm.getDataStoreConnection();
+			DB db = (DB)jdoConn.getNativeConnection();
+			
+			@SuppressWarnings("unchecked")
+			List<String> results = db.getCollection("ExternalAPHotspot").distinct("hostname");
+
+			jdoConn.close();
+			
+			return results;
+			
+		} catch(Exception e) {
+			if(!( e instanceof ASException )) {
+				throw ASExceptionHelper.defaultException(e.getMessage(), e);
+			} else {
+				throw e;
+			}
+		} finally  {
+			pm.close();
+		}
 
 	}
+	
 }

@@ -45,6 +45,7 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	private String wanIp;
 	private String publicIp;
 	private Date lastInfoUpdate;
+	private Boolean external;
 
 	// Geo location
 	private String country;
@@ -110,6 +111,44 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 		this.creationDateTime = new Date();
 		this.status = StatusAware.STATUS_ENABLED;
 		this.reportStatus = REPORT_STATUS_NOT_REPORTED;
+		this.external = false;
+		
+		visitTimeThreshold = 0L;
+		visitGapThreshold = 10L;
+		visitPowerThreshold = -60L;
+		visitMaxThreshold = 480L;
+		peasantPowerThreshold = -80L;
+		visitCountThreshold = 0L;
+		daysToNotRepit = 0;
+	    
+	    timezone = "CDT";
+	    visitsOnMon = true;
+	    visitsOnTue = true;
+	    visitsOnWed = true;
+	    visitsOnThu = true;
+	    visitsOnFri = true;
+	    visitsOnSat = true;
+	    visitsOnSun = true;
+	    visitStartMon = "08:00";
+	    visitEndMon = "02:00";
+	    visitStartTue = "08:00";
+	    visitEndTue = "02:00";
+	    visitStartWed = "08:00";
+	    visitEndWed = "02:00";
+	    visitStartThu = "08:00";
+	    visitEndThu = "02:00";
+	    visitStartFri = "08:00";
+	    visitEndFri = "02:00";
+	    visitStartSat = "08:00";
+	    visitEndSat = "02:00";
+	    visitStartSun = "08:00";
+	    visitEndSun = "02:00";
+	    monitorStart = "08:00";
+	    monitorEnd = "02:00";
+	    passStart = "05:00";
+	    passEnd = "03:00";
+	    negative = false;
+
 	}
 	
 	/**
@@ -1009,6 +1048,21 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 		this.peasantPowerThreshold = peasantPowerThreshold;
 	}
 
+	/**
+	 * @return the external
+	 */
+	public Boolean getExternal() {
+		if( null == external ) return false;
+		return external;
+	}
+
+	/**
+	 * @param external the external to set
+	 */
+	public void setExternal(Boolean external) {
+		this.external = external;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -1017,15 +1071,15 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 		return "APDevice [key=" + key + ", hostname=" + hostname + ", description=" + description + ", couples="
 				+ couples + ", model=" + model + ", mode=" + mode + ", version=" + version + ", tunnelIp=" + tunnelIp
 				+ ", lanIp=" + lanIp + ", wanIp=" + wanIp + ", publicIp=" + publicIp + ", lastInfoUpdate="
-				+ lastInfoUpdate + ", country=" + country + ", province=" + province + ", city=" + city + ", lat=" + lat
-				+ ", lon=" + lon + ", visitTimeThreshold=" + visitTimeThreshold + ", visitGapThreshold="
-				+ visitGapThreshold + ", visitPowerThreshold=" + visitPowerThreshold + ", visitMaxThreshold="
-				+ visitMaxThreshold + ", peasantPowerThreshold=" + peasantPowerThreshold + ", visitCountThreshold="
-				+ visitCountThreshold + ", daysToNotRepit=" + daysToNotRepit + ", timezone=" + timezone
-				+ ", visitsOnMon=" + visitsOnMon + ", visitsOnTue=" + visitsOnTue + ", visitsOnWed=" + visitsOnWed
-				+ ", visitsOnThu=" + visitsOnThu + ", visitsOnFri=" + visitsOnFri + ", visitsOnSat=" + visitsOnSat
-				+ ", visitsOnSun=" + visitsOnSun + ", visitStartMon=" + visitStartMon + ", visitEndMon=" + visitEndMon
-				+ ", visitStartTue=" + visitStartTue + ", visitEndTue=" + visitEndTue + ", visitStartWed="
+				+ lastInfoUpdate + ", external=" + external + ", country=" + country + ", province=" + province
+				+ ", city=" + city + ", lat=" + lat + ", lon=" + lon + ", visitTimeThreshold=" + visitTimeThreshold
+				+ ", visitGapThreshold=" + visitGapThreshold + ", visitPowerThreshold=" + visitPowerThreshold
+				+ ", visitMaxThreshold=" + visitMaxThreshold + ", peasantPowerThreshold=" + peasantPowerThreshold
+				+ ", visitCountThreshold=" + visitCountThreshold + ", daysToNotRepit=" + daysToNotRepit + ", timezone="
+				+ timezone + ", visitsOnMon=" + visitsOnMon + ", visitsOnTue=" + visitsOnTue + ", visitsOnWed="
+				+ visitsOnWed + ", visitsOnThu=" + visitsOnThu + ", visitsOnFri=" + visitsOnFri + ", visitsOnSat="
+				+ visitsOnSat + ", visitsOnSun=" + visitsOnSun + ", visitStartMon=" + visitStartMon + ", visitEndMon="
+				+ visitEndMon + ", visitStartTue=" + visitStartTue + ", visitEndTue=" + visitEndTue + ", visitStartWed="
 				+ visitStartWed + ", visitEndWed=" + visitEndWed + ", visitStartThu=" + visitStartThu + ", visitEndThu="
 				+ visitEndThu + ", visitStartFri=" + visitStartFri + ", visitEndFri=" + visitEndFri + ", visitStartSat="
 				+ visitStartSat + ", visitEndSat=" + visitEndSat + ", visitStartSun=" + visitStartSun + ", visitEndSun="
