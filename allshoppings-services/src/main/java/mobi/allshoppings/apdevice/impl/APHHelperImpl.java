@@ -436,7 +436,7 @@ public class APHHelperImpl implements APHHelper {
 			d2 = new Date(d1.getTime() + 86400000);
 		}
 	}
-	
+
 	/**
 	 * Calculates an artificial RSSI in the spaces between gaps
 	 * 
@@ -449,12 +449,31 @@ public class APHHelperImpl implements APHHelper {
 		
 		// Obtains the APDevice definition for reference
 		APDevice apd = null;
-		int maxDistance = 0;
 
 		try {
 			apd = dao.get(obj.getHostname(), true);
-			maxDistance = (int)(apd.getVisitGapThreshold() != null ? apd.getVisitGapThreshold() * 3 : 30);
 		} catch( Exception e ) {
+		}
+
+		artificiateRSSI(obj, apd);
+	}
+	
+	/**
+	 * Calculates an artificial RSSI in the spaces between gaps
+	 * 
+	 * @param obj
+	 *            The APHEntry object to analyze
+	 * @throws ASException
+	 */
+	@Override
+	public void artificiateRSSI(APHEntry obj, APDevice apd) throws ASException {
+		
+		// Obtains the APDevice definition for reference
+		int maxDistance = 0;
+
+		if( null != apd ) {
+			maxDistance = (int)(apd.getVisitGapThreshold() != null ? apd.getVisitGapThreshold() * 3 : 30);
+		} else {
 			maxDistance = 30;
 		}
 

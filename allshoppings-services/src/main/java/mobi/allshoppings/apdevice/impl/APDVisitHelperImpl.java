@@ -421,6 +421,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		// Defines temporary work variables
 		Integer lastSlot = null;
 		Integer lastVisitSlot = null;
+		Integer lastPeasantSlot = null;
 		APDVisit currentVisit = null;
 		APDVisit currentPeasant = null;
 		APHEntry curEntry = null;
@@ -470,6 +471,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						// Add a new peasant if there is no peasant active
 						if( currentPeasant == null )
 							currentPeasant = createPeasant(curEntry, curDate, null, assignments.get(curEntry.getHostname()));
+						lastPeasantSlot = slot;
 						// Checks for power for visit
 						if( value >= dev.getVisitPowerThreshold()) {
 							if( currentVisit == null )
@@ -494,21 +496,23 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						}
 
 					} else {
-					
-						// Closes open visits
-						if( currentVisit != null ) {
-							currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
-							addPermanenceCheck(currentVisit, currentPeasant, dev);
-							if(isVisitValid(currentVisit, dev))
-								ret.add(currentVisit);
-							currentVisit = null;
-						}
-
-						if( currentPeasant != null ) {
-							currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
-							if(isPeasantValid(currentPeasant, dev,isEmployee))
-								ret.add(currentPeasant);
-							currentPeasant = null;
+						if((( slot - lastPeasantSlot ) * 3) > dev.getVisitGapThreshold()) {
+						
+							// Closes open visits
+							if( currentVisit != null ) {
+								currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+								addPermanenceCheck(currentVisit, currentPeasant, dev);
+								if(isVisitValid(currentVisit, dev))
+									ret.add(currentVisit);
+								currentVisit = null;
+							}
+	
+							if( currentPeasant != null ) {
+								currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+								if(isPeasantValid(currentPeasant, dev,isEmployee))
+									ret.add(currentPeasant);
+								currentPeasant = null;
+							}
 						}
 					}
 

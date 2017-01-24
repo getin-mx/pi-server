@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.ExternalAPHotspot;
@@ -40,6 +41,7 @@ public interface APHHelper {
 	APHEntry setFramedRSSI(ExternalAPHotspot aph);
 	List<Integer> timeslotToList(Map<String, ?> slots);
 	void artificiateRSSI(APHEntry obj) throws ASException;
+	void artificiateRSSI(APHEntry obj, APDevice apd) throws ASException;
 	void artificiateRSSI(List<String> apdevices, Date fromDate, Date toDate) throws ASException;
 	void generateAPHEntriesFromDump(String baseDir, Date fromDate, Date toDate, List<String> apdevices, boolean buildCache) throws ASException;
 	void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, List<String> apdevices, boolean buildCache) throws ASException;
