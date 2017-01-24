@@ -75,6 +75,7 @@ public class TouchAPDevices extends AbstractCLI {
 
 				log.log(Level.INFO, "Touching " + obj.getIdentifier() + "...");
 
+				obj.setVisitGapThreshold(180L);
 				if( null == obj.getStatus() ) 
 					obj.setStatus(StatusAware.STATUS_ENABLED);
 
