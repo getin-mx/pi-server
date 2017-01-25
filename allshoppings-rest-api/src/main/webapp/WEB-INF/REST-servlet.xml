@@ -22,6 +22,7 @@
 				<entry key="/dashoard/tableData" value-ref="spring.dashboardtabledata.rest.resource" />
 				<entry key="/dashoard/brandTableData" value-ref="spring.dashboardbrandtabledata.rest.resource" />
 				<entry key="/dashoard/brandTableData2" value-ref="spring.dashboardbrandtabledata2.rest.resource" />
+				<entry key="/dashoard/shoppingTableData" value-ref="spring.dashboardshoppingtabledata.rest.resource" />
 				<entry key="/dashoard/topData" value-ref="spring.dashboardtopdata.rest.resource" />
 				<entry key="/dashoard/relationData" value-ref="spring.dashboardrelationdata.rest.resource" />
 				<entry key="/dashoard/heatmapTableData" value-ref="spring.dashboardheatmaptabledata.rest.resource" />
@@ -125,6 +126,9 @@
  	</bean>
  	<bean id="spring.dashboardbrandtabledata2.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboardbrandtabledata2.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardshoppingtabledata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardshoppingtabledata.rest.resource" />
  	</bean>
  	<bean id="spring.dashboardrelationdata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboardrelationdata.rest.resource" />

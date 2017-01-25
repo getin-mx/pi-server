@@ -80,6 +80,13 @@ implements BDBDashboardBzService {
 								shoppingList.add(b);
 						} catch( Exception e ) {}
 					}
+				} else {
+					for( String identifier : user.getSecuritySettings().getShoppings()) {
+						try {
+							Shopping o = shoppingDao.get(identifier, true);
+							shoppingList.add(o);
+						} catch( Exception e ) {}
+					}
 				}
 			}
 

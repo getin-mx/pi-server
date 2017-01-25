@@ -764,6 +764,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.setKey(userMenuDao.createKey("droc_mx"));
 				userMenuDao.create(um);

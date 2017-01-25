@@ -36,6 +36,7 @@
   	<bean id="dashboardtabledata.rest.resource" class="mobi.allshoppings.bz.spi.DashboardTableDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardbrandtabledata.rest.resource" class="mobi.allshoppings.bz.spi.DashboardBrandTableDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardbrandtabledata2.rest.resource" class="mobi.allshoppings.bz.spi.DashboardBrandTableData2BzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboardshoppingtabledata.rest.resource" class="mobi.allshoppings.bz.spi.DashboardShoppingTableDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardrelationdata.rest.resource" class="mobi.allshoppings.bz.spi.DashboardRelationDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardheatmaptabledata.rest.resource" class="mobi.allshoppings.bz.spi.DashboardHeatmapTableDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardheatmaptablehour.rest.resource" class="mobi.allshoppings.bz.spi.DashboardHeatmapTableHourBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
