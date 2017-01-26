@@ -125,7 +125,8 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 						if(!dmac.equals("00:00:00:00:00:00") && !dmac.equals("ff:ff:ff:ff:ff:ff")) {
 							List<String> devs = devices.get(dmac);
 							if( devs == null ) devs = CollectionFactory.createList();
-							devs.add(identifier);
+							if( !devs.contains(identifier))
+								devs.add(identifier);
 							devices.put(dmac, devs);
 						}
 					}
@@ -262,13 +263,12 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 						} catch( Exception e ) {
 							// nothing to do 
 						}
-						
-						try {
-							log.log(Level.INFO, "Writing " + list.size() + " peasants for " + identifier + "...");
-							apdmmDao.createOrUpdate(null, list, true);
-						} catch( Exception e ) {
-							log.log(Level.SEVERE, e.getMessage(), e);
-						}
+					}
+					try {
+						log.log(Level.INFO, "Writing " + list.size() + " peasants for " + identifier + "...");
+						apdmmDao.createOrUpdate(null, list, true);
+					} catch( Exception e ) {
+						log.log(Level.SEVERE, e.getMessage(), e);
 					}
 				}
 
@@ -295,12 +295,12 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 							// nothing to do 
 						}
 						
-						try {
-							log.log(Level.INFO, "Writing " + list.size() + " visitors for " + identifier + "...");
-							apdmmDao.createOrUpdate(null, list, true);
-						} catch( Exception e ) {
-							log.log(Level.SEVERE, e.getMessage(), e);
-						}
+					}
+					try {
+						log.log(Level.INFO, "Writing " + list.size() + " visitors for " + identifier + "...");
+						apdmmDao.createOrUpdate(null, list, true);
+					} catch( Exception e ) {
+						log.log(Level.SEVERE, e.getMessage(), e);
 					}
 				}
 			}			
