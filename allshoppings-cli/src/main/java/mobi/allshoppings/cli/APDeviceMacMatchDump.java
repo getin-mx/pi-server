@@ -243,7 +243,6 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 				if( peasants != null ) {
 					log.log(Level.INFO, "Generating Peasants Mac List for entity id " + identifier + " with " + peasants.size() + " elements ...");
 					List<APDeviceMacMatch> list = CollectionFactory.createList();
-					String lastKey = null;
 					for( String mac : peasants ) {
 						try {
 							List<String> l2 = devices.get(mac);
@@ -256,9 +255,7 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 									obj.setEntityId(identifier);
 									obj.setEntityKind(entityKind);
 									obj.setType(APDVisit.CHECKIN_PEASANT);
-									while( obj.getIdentifier() == null || obj.getIdentifier().equals(lastKey) )
-										obj.setKey(apdmmDao.createKey());
-									lastKey = obj.getIdentifier();
+									obj.setKey(apdmmDao.createKey(obj));
 									list.add(obj);
 								}
 							}
@@ -281,7 +278,6 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 					for( String mac : visits ) {
 						try {
 							List<String> l2 = devices.get(mac);
-							String lastKey = null;
 							if(!CollectionUtils.isEmpty(l2)) {
 								for( String di : l2 ) {
 									APDeviceMacMatch obj = new APDeviceMacMatch();
@@ -291,9 +287,7 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 									obj.setEntityId(identifier);
 									obj.setEntityKind(entityKind);
 									obj.setType(APDVisit.CHECKIN_VISIT);
-									while( obj.getIdentifier() == null || obj.getIdentifier().equals(lastKey) )
-										obj.setKey(apdmmDao.createKey());
-									lastKey = obj.getIdentifier();
+									obj.setKey(apdmmDao.createKey(obj));
 									list.add(obj);
 								}
 							}

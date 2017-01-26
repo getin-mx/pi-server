@@ -2,8 +2,6 @@ package mobi.allshoppings.dao.spi;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
@@ -29,9 +27,9 @@ public class APDeviceMacMatchDAOJDOImpl extends GenericDAOJDO<APDeviceMacMatch> 
 	}
 
 	@Override
-	public Key createKey() throws ASException {
-		String seed = UUID.randomUUID().toString() + new Random().nextInt((int)System.nanoTime());
-		return keyHelper.createStringUniqueKey(clazz, seed);
+	public Key createKey(APDeviceMacMatch seed) throws ASException {
+		String identifier = seed.getMac() + ":" + seed.getDeviceUUID() + ":" + seed.getEntityId() + ":" + seed.getType();
+		return keyHelper.createStringUniqueKey(clazz, identifier);
 	}
 	
 	@Override

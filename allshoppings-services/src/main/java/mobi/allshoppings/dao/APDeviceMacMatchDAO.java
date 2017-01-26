@@ -10,7 +10,7 @@ import mobi.allshoppings.model.APDeviceMacMatch;
 
 public interface APDeviceMacMatchDAO extends GenericDAO<APDeviceMacMatch> {
 
-	Key createKey() throws ASException;
+	Key createKey(APDeviceMacMatch seed) throws ASException;
 	List<APDeviceMacMatch> getUsingHostname(String hostname) throws ASException;
 	void deleteUsingHostname(String hostname) throws ASException;
 
