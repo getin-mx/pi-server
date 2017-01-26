@@ -640,22 +640,25 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						}
 
 					} else {
-						if((( slot - lastPeasantSlot ) * 3) > dev.getVisitGapThreshold()) {
-						
-							// Closes open visits
-							if( currentVisit != null ) {
-								currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
-								addPermanenceCheck(currentVisit, currentPeasant, dev);
-								if(isVisitValid(currentVisit, dev))
-									ret.add(currentVisit);
-								currentVisit = null;
-							}
-	
-							if( currentPeasant != null ) {
-								currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
-								if(isPeasantValid(currentPeasant, dev,isEmployee))
-									ret.add(currentPeasant);
-								currentPeasant = null;
+						if( lastPeasantSlot != null ) {
+							if( dev.getVisitGapThreshold() == null ) dev.setVisitGapThreshold(10L);
+							if((( slot - lastPeasantSlot ) * 3) > dev.getVisitGapThreshold()) {
+
+								// Closes open visits
+								if( currentVisit != null ) {
+									currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+									addPermanenceCheck(currentVisit, currentPeasant, dev);
+									if(isVisitValid(currentVisit, dev))
+										ret.add(currentVisit);
+									currentVisit = null;
+								}
+
+								if( currentPeasant != null ) {
+									currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+									if(isPeasantValid(currentPeasant, dev,isEmployee))
+										ret.add(currentPeasant);
+									currentPeasant = null;
+								}
 							}
 						}
 					}
