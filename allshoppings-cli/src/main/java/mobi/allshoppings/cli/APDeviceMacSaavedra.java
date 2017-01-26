@@ -107,7 +107,7 @@ public class APDeviceMacSaavedra extends AbstractCLI {
 									obj.setDeviceUUID(di.getDeviceUUID());
 									obj.setHostname(hostname);
 									obj.setMac(mac);
-									obj.setKey(apdmmDao.createKey());
+									obj.setKey(apdmmDao.createKey(obj));
 									list.add(obj);
 								}
 							}

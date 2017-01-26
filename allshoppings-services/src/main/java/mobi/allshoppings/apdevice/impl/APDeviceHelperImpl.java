@@ -517,7 +517,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 							match.setDeviceUUID(di.getDeviceUUID());
 							match.setMac(obj.mac);
 							match.setHostname(obj.hostname);
-							match.setKey(apdmDao.createKey());
+							match.setKey(apdmDao.createKey(match));
 							apdmDao.create(match);
 							processed++;
 						}
