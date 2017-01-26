@@ -160,7 +160,8 @@ implements BDBDashboardBzService, BDBPostBzService {
 		} catch (Exception e) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 			return getJSONRepresentationFromException(ASExceptionHelper.defaultException(e.getMessage(), e)).toString();
-		} finally {			markEnd(start);
+		} finally {			
+			markEnd(start);
 		}
 	}
 }

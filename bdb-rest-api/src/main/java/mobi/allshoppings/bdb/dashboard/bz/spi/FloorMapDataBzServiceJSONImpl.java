@@ -7,11 +7,14 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.restlet.ext.json.JsonRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
+import mobi.allshoppings.bdb.bz.BDBPostBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.CinemaDAO;
 import mobi.allshoppings.dao.FloorMapDAO;
@@ -34,7 +37,7 @@ import mobi.allshoppings.tools.CollectionFactory;
  */
 public class FloorMapDataBzServiceJSONImpl
 extends BDBRestBaseServerResource
-implements BDBDashboardBzService {
+implements BDBDashboardBzService, BDBPostBzService {
 
 	private static final Logger log = Logger.getLogger(FloorMapDataBzServiceJSONImpl.class.getName());
 
@@ -121,6 +124,51 @@ implements BDBDashboardBzService {
 			log.log(Level.SEVERE, e.getMessage(), e);
 			return getJSONRepresentationFromException(ASExceptionHelper.defaultException(e.getMessage(), e)).toString();
 		} finally {
+			markEnd(start);
+		}
+	}
+
+	@Override
+	public String change(JsonRepresentation entity) {
+		long start = markStart();
+		try {
+			// obtain the id and validates the auth token
+			// obtainUserIdentifier(true);
+			
+			JSONObject json = entity.getJsonObject();
+			String identifier = json.getString("identifier");
+
+			FloorMap floormap = floormapDao.get(identifier, true);
+			
+			JSONArray arr = json.getJSONArray("data");
+			for( int i = 0; i < arr.length(); i++ ) {
+				JSONObject el = arr.getJSONObject(i);
+				String elIdentifier = el.getString("identifier");
+				int elX = el.getInt("x");
+				int elY = el.getInt("y");
+				
+				WifiSpot obj = wifispotDao.get(elIdentifier);
+				obj.setX(elX);
+				obj.setY(elY);
+				wifispotDao.update(obj);
+			}
+			
+			floormapDao.update(floormap);
+			
+			return generateJSONOkResponse().toString();
+			
+		} catch (ASException e) {
+			if( e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENEXPIRED_CODE || 
+					e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENMISSING_CODE) {
+				log.log(Level.INFO, e.getMessage());
+			} else {
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
+			return getJSONRepresentationFromException(e).toString();
+		} catch (Exception e) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+			return getJSONRepresentationFromException(ASExceptionHelper.defaultException(e.getMessage(), e)).toString();
+		} finally {			
 			markEnd(start);
 		}
 	}
