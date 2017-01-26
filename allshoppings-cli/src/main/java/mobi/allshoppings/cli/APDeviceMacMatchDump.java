@@ -86,6 +86,7 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 				usage(parser);
 			}
 
+			
 			log.log(Level.INFO, "Getting info from APDVisit...");
 			Map<String,Map<Integer,HashSet<String>>> cache = CollectionFactory.createMap();
 			
@@ -93,23 +94,68 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 			pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 			pm.currentTransaction().begin();
 
-			// Phase 1 
-			// Read all mac addresses
-			
-			log.log(Level.INFO, "Processing Query for APDVisit...");
-			
 			JDOConnection jdoConn = pm.getDataStoreConnection();
 			DB db = (DB)jdoConn.getNativeConnection();
+
+			// Phase 1
+			// Read all recorded mac addresses
+
+			log.log(Level.INFO, "Getting info from DeviceInfo...");
+			
+			Map<String,List<String>> devices = CollectionFactory.createMap();
+			
 			BasicDBObject fields = new BasicDBObject();
-			fields.put("entityId", 1);
+			fields.put("deviceUUID", 1);
 			fields.put("mac", 1);
-			fields.put("checkinType", 1);
-			DBCursor c1 = db.getCollection("APDVisit").find(new BasicDBObject(),fields);
+			DBCursor c1 = db.getCollection("DeviceInfo").find(new BasicDBObject(),fields);
 			c1.addOption(com.mongodb.Bytes.QUERYOPTION_NOTIMEOUT);
 			Iterator<DBObject> i = c1.iterator();
 
 			log.log(Level.INFO, "Processing " + c1.size() + " results...");
 			long count = 0;
+			// Fetches the visit list
+			while(i.hasNext()) {
+				DBObject dbo = i.next();
+				if( dbo.containsField("deviceUUID") && dbo.containsField("mac")) {
+					String identifier = (String)dbo.get("deviceUUID");
+					String dmac = (String)dbo.get("mac");
+
+					if(StringUtils.hasText(dmac)) {
+						dmac = dmac.toLowerCase();
+						if(!dmac.equals("00:00:00:00:00:00") && !dmac.equals("ff:ff:ff:ff:ff:ff")) {
+							List<String> devs = devices.get(dmac);
+							if( devs == null ) devs = CollectionFactory.createList();
+							devs.add(identifier);
+							devices.put(dmac, devs);
+						}
+					}
+				}
+				
+				count++;
+				if(count % 5000 == 0 ) {
+					log.log(Level.INFO, "Processing APDVisit Record " + count + " of " + c1.size());
+				}
+				
+//				if( count > 10000 ) break;
+			}
+
+			log.log(Level.INFO, devices.size() + " obtained records from DeviceInfo...");
+
+			// Phase 2 
+			// Read all mac addresses
+			
+			log.log(Level.INFO, "Processing Query for APDVisit...");
+			
+			fields = new BasicDBObject();
+			fields.put("entityId", 1);
+			fields.put("mac", 1);
+			fields.put("checkinType", 1);
+			c1 = db.getCollection("APDVisit").find(new BasicDBObject(),fields);
+			c1.addOption(com.mongodb.Bytes.QUERYOPTION_NOTIMEOUT);
+			i = c1.iterator();
+
+			log.log(Level.INFO, "Processing " + c1.size() + " results...");
+			count = 0;
 			// Fetches the visit list
 			while(i.hasNext()) {
 				DBObject dbo = i.next();
@@ -121,7 +167,7 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 					if( entityIds.isEmpty() || entityIds.contains(identifier)) {
 						if(dmac != null ) {
 							dmac = dmac.toLowerCase();
-							if(!dmac.equals("00:00:00:00:00:00") && !dmac.equals("ff:ff:ff:ff:ff:ff")) {
+							if(devices.containsKey(dmac)) {
 								Map<Integer, HashSet<String>> cache2 = cache.get(identifier);
 								if( cache2 == null ) cache2 = CollectionFactory.createMap();
 								HashSet<String> macs = cache2.get(checkinType);
@@ -135,54 +181,12 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 				}
 				
 				count++;
-				if(count % 100 == 0 ) {
+				if(count % 5000 == 0 ) {
 					log.log(Level.INFO, "Processing APDVisit Record " + count + " of " + c1.size());
 				}
 				
 //				if( count > 10000 ) break;
 			}
-
-			// Phase 2
-			// Read all recorded mac addresses
-
-			log.log(Level.INFO, "Getting info from DeviceInfo...");
-			
-			Map<String,List<String>> devices = CollectionFactory.createMap();
-			
-			fields = new BasicDBObject();
-			fields.put("deviceUUID", 1);
-			fields.put("mac", 1);
-			c1 = db.getCollection("DeviceInfo").find(new BasicDBObject(),fields);
-			c1.addOption(com.mongodb.Bytes.QUERYOPTION_NOTIMEOUT);
-			i = c1.iterator();
-
-			log.log(Level.INFO, "Processing " + c1.size() + " results...");
-			count = 0;
-			// Fetches the visit list
-			while(i.hasNext()) {
-				DBObject dbo = i.next();
-				if( dbo.containsField("deviceUUID") && dbo.containsField("mac")) {
-					String identifier = (String)dbo.get("deviceUUID");
-					String dmac = (String)dbo.get("mac");
-
-					if(StringUtils.hasText(dmac)) {
-						dmac = dmac.toLowerCase();
-						List<String> devs = devices.get(dmac);
-						if( devs == null ) devs = CollectionFactory.createList();
-						devs.add(identifier);
-						devices.put(dmac, devs);
-					}
-				}
-				
-				count++;
-				if(count % 100 == 0 ) {
-					log.log(Level.INFO, "Processing APDVisit Record " + count + " of " + c1.size());
-				}
-				
-//				if( count > 10000 ) break;
-			}
-
-			log.log(Level.INFO, devices.size() + " obtained records from DeviceInfo...");
 
 			jdoConn.close();
 			pm.currentTransaction().commit();
@@ -239,6 +243,7 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 				if( peasants != null ) {
 					log.log(Level.INFO, "Generating Peasants Mac List for entity id " + identifier + " with " + peasants.size() + " elements ...");
 					List<APDeviceMacMatch> list = CollectionFactory.createList();
+					String lastKey = null;
 					for( String mac : peasants ) {
 						try {
 							List<String> l2 = devices.get(mac);
@@ -251,7 +256,9 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 									obj.setEntityId(identifier);
 									obj.setEntityKind(entityKind);
 									obj.setType(APDVisit.CHECKIN_PEASANT);
-									obj.setKey(apdmmDao.createKey());
+									while( obj.getIdentifier() == null || obj.getIdentifier().equals(lastKey) )
+										obj.setKey(apdmmDao.createKey());
+									lastKey = obj.getIdentifier();
 									list.add(obj);
 								}
 							}
@@ -274,6 +281,7 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 					for( String mac : visits ) {
 						try {
 							List<String> l2 = devices.get(mac);
+							String lastKey = null;
 							if(!CollectionUtils.isEmpty(l2)) {
 								for( String di : l2 ) {
 									APDeviceMacMatch obj = new APDeviceMacMatch();
@@ -283,7 +291,9 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 									obj.setEntityId(identifier);
 									obj.setEntityKind(entityKind);
 									obj.setType(APDVisit.CHECKIN_VISIT);
-									obj.setKey(apdmmDao.createKey());
+									while( obj.getIdentifier() == null || obj.getIdentifier().equals(lastKey) )
+										obj.setKey(apdmmDao.createKey());
+									lastKey = obj.getIdentifier();
 									list.add(obj);
 								}
 							}
