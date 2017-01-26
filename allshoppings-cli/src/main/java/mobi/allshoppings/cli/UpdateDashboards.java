@@ -27,7 +27,7 @@ public class UpdateDashboards extends AbstractCLI {
 		parser.accepts( "fromDate", "Date From" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "toDate", "Date To" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "outDir", "Output Directory (for example, /tmp/dump)").withRequiredArg().ofType( String.class );
-		parser.accepts( "phases", "Phases to process, separated by comma. 0: APDevices, 1: Wifi HeatMaps, 2: APDevice HeatMaps, 3: FloorMap Tracking").withRequiredArg().ofType( String.class );
+		parser.accepts( "phases", "Phases to process, separated by comma. 0: APDevices, 1: Wifi HeatMaps, 2: APDevice HeatMaps, 3: FloorMap Tracking, 4: APDVisits, 5: External APDevice Heatmaps").withRequiredArg().ofType( String.class );
 		parser.accepts( "entityIds", "Comma separated entity Ids to process (just for phase 0)").withRequiredArg().ofType( String.class );
 		return parser;
 	}

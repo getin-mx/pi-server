@@ -662,7 +662,7 @@ public class APHHelperImpl implements APHHelper {
 		// Gets the input data
 		long totals = 0;
 		log.log(Level.INFO, "Processing External AP Records from " + fromDate + " to " + toDate);
-		List<ExternalAPHotspot> list = eaphDao.getUsingHostnameAndDates(null, fromDate, toDate);
+		List<ExternalAPHotspot> list = eaphDao.getUsingHostnameAndDates((String)null, fromDate, toDate);
 		for( ExternalAPHotspot obj : list ) {
 			if( totals % 1000 == 0 ) 
 				log.log(Level.INFO, "Processing records " + totals + " of " + list.size());

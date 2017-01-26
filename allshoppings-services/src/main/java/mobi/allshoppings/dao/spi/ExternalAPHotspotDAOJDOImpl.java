@@ -9,6 +9,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.datastore.JDOConnection;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.inodes.datanucleus.model.Key;
@@ -103,6 +104,65 @@ public class ExternalAPHotspotDAOJDOImpl extends GenericDAOJDO<ExternalAPHotspot
 			if(StringUtils.hasText(hostname)) {
 				declaredParams.add("String hostnameParam");
 				filters.add("hostname == hostnameParam");
+				parameters.put("hostnameParam", hostname);
+			}
+			
+			// From Date Parameter
+			if( null != fromDate ) {
+				declaredParams.add("java.util.Date fromDateParam");
+				filters.add("firstSeen >= fromDateParam");
+				parameters.put("fromDateParam", fromDate);
+			}
+
+			// To Date Parameter
+			if( null != toDate ) {
+				declaredParams.add("java.util.Date toDateParam");
+				filters.add("firstSeen <= toDateParam");
+				parameters.put("toDateParam", toDate);
+			}
+
+			query.declareParameters(toParameterList(declaredParams));
+			query.setFilter(toWellParametrizedFilter(filters));
+
+			@SuppressWarnings("unchecked")
+			List<ExternalAPHotspot> objs = (List<ExternalAPHotspot>)query.executeWithMap(parameters);
+			if (objs != null) {
+				// force to read
+				for (ExternalAPHotspot obj : objs) {
+					ret.add(obj);
+				}
+			}
+			return ret;
+
+		} catch(Exception e) {
+			if(!( e instanceof ASException )) {
+				throw ASExceptionHelper.defaultException(e.getMessage(), e);
+			} else {
+				throw e;
+			}
+		} finally  {
+			pm.close();
+		}
+
+	}
+
+	@Override
+	public List<ExternalAPHotspot> getUsingHostnameAndDates(List<String> hostname, Date fromDate, Date toDate) throws ASException {
+		PersistenceManager pm;
+		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+		List<ExternalAPHotspot> ret = CollectionFactory.createList();
+
+		try{
+			Map<String, Object> parameters = CollectionFactory.createMap();
+			List<String> declaredParams = CollectionFactory.createList();
+			List<String> filters = CollectionFactory.createList();
+
+			Query query = pm.newQuery(clazz);
+
+			// Hostname Parameter
+			if(!CollectionUtils.isEmpty(hostname)) {
+				declaredParams.add("java.util.List hostnameParam");
+				filters.add("hostnameParam.contains(hostname)");
 				parameters.put("hostnameParam", hostname);
 			}
 			

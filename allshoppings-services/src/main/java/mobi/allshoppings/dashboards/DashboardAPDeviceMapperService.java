@@ -33,6 +33,7 @@ import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
+import mobi.allshoppings.dao.ExternalAPHotspotDAO;
 import mobi.allshoppings.dao.FloorMapDAO;
 import mobi.allshoppings.dao.FloorMapJourneyDAO;
 import mobi.allshoppings.dao.MacVendorDAO;
@@ -52,6 +53,7 @@ import mobi.allshoppings.model.DashboardIndicatorAlias;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.DeviceWifiLocationHistory;
 import mobi.allshoppings.model.EntityKind;
+import mobi.allshoppings.model.ExternalAPHotspot;
 import mobi.allshoppings.model.FloorMap;
 import mobi.allshoppings.model.FloorMapJourney;
 import mobi.allshoppings.model.MacVendor;
@@ -111,6 +113,8 @@ public class DashboardAPDeviceMapperService {
 	private APDVisitDAO apdvDao;
 	@Autowired
 	private StoreTicketDAO stDao;
+	@Autowired
+	private ExternalAPHotspotDAO eaphDao;
 
 	@Autowired
 	private SystemConfiguration systemConfiguration;
@@ -127,6 +131,7 @@ public class DashboardAPDeviceMapperService {
 	public static final int PHASE_APDEVICE_HEATMAP = 2;
 	public static final int PHASE_FLOORMAP_TRACKING = 3;
 	public static final int PHASE_APDVISIT = 4;
+	public static final int PHASE_EXTERNAL_APDEVICE_HEATMAP = 5;
 
 	// General Driver ----------------------------------------------------------------------------------------------------------------------------------------
 	public void createDashboardDataForDays(String baseDir, Date fromDate, Date toDate, List<String> entityIds, List<Integer> phases) throws ASException {
@@ -142,8 +147,11 @@ public class DashboardAPDeviceMapperService {
 				if( CollectionUtils.isEmpty(phases) || phases.contains(PHASE_APDEVICE_HEATMAP))
 					createAPDeviceHeatmapDashboardForDay(baseDir, curDate);
 
+				if( CollectionUtils.isEmpty(phases) || phases.contains(PHASE_EXTERNAL_APDEVICE_HEATMAP))
+					createExternalAPDeviceHeatmapDashboardForDay(entityIds, curDate);
+
 				if( CollectionUtils.isEmpty(phases) || phases.contains(PHASE_FLOORMAP_TRACKING))
-					createFloorMapTrackingForDay(curDate);
+					createFloorMapTrackingForDay(curDate, entityIds);
 
 				if( CollectionUtils.isEmpty(phases) || phases.contains(PHASE_APDVISIT))
 					createAPDVisitPerformanceDashboardForDay(curDate, entityIds, null);
@@ -349,8 +357,138 @@ public class DashboardAPDeviceMapperService {
 
 	}
 
+	// External APD Heatmap
+	public void createExternalAPDeviceHeatmapDashboardForDay(List<String> entityIds, Date date) throws ASException {
+
+		log.log(Level.INFO, "Starting to create External APDevice Heatmap Dashboard for Day " + date + "...");
+		long startTime = new Date().getTime();
+
+		Date processDate = DateUtils.truncate(date, Calendar.DAY_OF_MONTH);
+		Date limitDate = DateUtils.addDays(processDate, 1);
+
+		log.log(Level.INFO, "ProcessDate " + processDate);
+		log.log(Level.INFO, "LimitDate " + limitDate);
+
+		Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
+
+		List<String> pList = CollectionFactory.createList();
+		
+		if( entityIds == null || entityIds.isEmpty())
+			pList.addAll(floorMapCache.keySet());
+		else
+			pList.addAll(entityIds);
+
+		for( String floorMapIdentifier : pList) {
+			try {
+				FloorMap floorMap = floorMapDao.get(floorMapIdentifier, true);
+				List<WifiSpot> wifiSpotList = wifiSpotDao.getUsingFloorMapId(floorMap.getIdentifier());
+				Shopping shopping = null;
+				Store store = null;
+				int entityKind = EntityKind.KIND_SHOPPING;
+
+				try {
+					shopping = shoppingDao.get(floorMap.getShoppingId(), true);
+					entityKind = EntityKind.KIND_SHOPPING;
+				} catch( Exception e ) {}
+
+				try {
+					store = storeDao.get(floorMap.getShoppingId(), true);
+					entityKind = EntityKind.KIND_STORE;
+				} catch( Exception e ) {}
+
+				List<String> devices = CollectionFactory.createList();
+
+				for( WifiSpot ws : wifiSpotList ) {
+					if( StringUtils.hasText(ws.getApDevice())) {
+						if( !devices.contains(ws.getApDevice()))
+							devices.add(ws.getApDevice());
+					}
+				}
+
+				if((shopping != null || store != null) && !devices.isEmpty()) {
+
+					// All Wifi Data
+					List<ExternalAPHotspot> list = eaphDao.getUsingHostnameAndDates(devices, processDate, limitDate);
+					for( ExternalAPHotspot hotspot : list ) {
+
+						for( WifiSpot wifiSpot : wifiSpotList ) {
+							if( wifiSpot.getApDevice().equals(hotspot.getHostname())) {
+
+								// Checkin data
+								DashboardIndicatorData obj;
+
+								// heatmap ----------------------------------------------------------------------------------------------
+								// ------------------------------------------------------------------------------------------------------
+								if( EntityKind.KIND_SHOPPING == entityKind ) {
+									obj = buildBasicDashboardIndicatorData(
+											"heatmap", "Heat Map", wifiSpot.getIdentifier(),
+											wifiSpot.getZoneName(), hotspot.getFirstSeen(),
+											DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
+											null, floorMap.getFloor(), shopping.getIdentifier(), KIND_SHOPPING);
+								} else {
+									obj = buildBasicDashboardIndicatorData(
+											"heatmap", "Heat Map", wifiSpot.getIdentifier(),
+											wifiSpot.getZoneName(), hotspot.getFirstSeen(),
+											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getIdentifier(),
+											store, floorMap.getFloor(), store.getIdentifier(), KIND_SHOPPING);
+								}
+
+								if(indicatorsSet.containsKey(obj.getKey().getName())) 
+									obj = indicatorsSet.get(obj.getKey().getName());
+
+								obj.setDoubleValue(obj.getDoubleValue() + (100 - hotspot.getSignalDB()));
+
+								indicatorsSet.put(obj.getKey().getName(), obj);
+
+								// heatmap ----------------------------------------------------------------------------------------------
+								// ------------------------------------------------------------------------------------------------------
+								if( EntityKind.KIND_SHOPPING == entityKind ) {
+									obj = buildBasicDashboardIndicatorData(
+											"heatmap_data", "Heat Map Data", wifiSpot.getIdentifier(),
+											wifiSpot.getIdentifier(), hotspot.getFirstSeen(),
+											DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
+											null, floorMap.getFloor(), shopping.getIdentifier(), KIND_SHOPPING);
+								} else {
+									obj = buildBasicDashboardIndicatorData(
+											"heatmap_data", "Heat Map Data", wifiSpot.getIdentifier(),
+											wifiSpot.getIdentifier(), hotspot.getFirstSeen(),
+											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getIdentifier(),
+											store, floorMap.getFloor(), store.getIdentifier(), KIND_SHOPPING);
+								}
+								obj.setSubentityId(wifiSpot.getFloorMapId());
+								obj.setSubentityName(floorMap.getFloor());
+
+								if(indicatorsSet.containsKey(obj.getKey().getName())) 
+									obj = indicatorsSet.get(obj.getKey().getName());
+
+								obj.setDoubleValue(obj.getDoubleValue() + (100 - hotspot.getSignalDB()));
+
+								indicatorsSet.put(obj.getKey().getName(), obj);
+
+							}
+						}
+					}
+				}
+			} catch( Exception e ) {
+				if( !(e instanceof JSONException )) {
+					log.log(Level.SEVERE, e.getMessage(), e);
+				}
+			}
+		}
+
+		log.log(Level.INFO, "Starting Write Procedure...");
+
+		// Finally, save all the information
+		saveIndicatorSet(indicatorsSet);
+
+		long endTime = new Date().getTime();
+		log.log(Level.INFO, "Finished to create APDevice Heatmap Dashboard for Day " + date + " in " + (endTime - startTime) + "ms");
+
+	}
+
+
 	// Floor Map Tracking --------------------------------------------------------------------------------------------------------------------------------
-	public void createFloorMapTrackingForDay(Date date) throws ASException {
+	public void createFloorMapTrackingForDay(Date date, List<String> entityIds) throws ASException {
 
 		log.log(Level.INFO, "Starting to create Floor Map Tracking Dashboard for Day " + date + "...");
 		long startTime = new Date().getTime();
@@ -361,8 +499,14 @@ public class DashboardAPDeviceMapperService {
 		log.log(Level.INFO, "ProcessDate " + processDate);
 		log.log(Level.INFO, "LimitDate " + limitDate);
 
+		List<String> pList = CollectionFactory.createList();
+		if( entityIds == null || entityIds.isEmpty())
+			pList.addAll(systemConfiguration.getFloorMapTracking());
+		else
+			pList.addAll(entityIds);
+		
 		try {
-			for( String floorMapIdentifier : systemConfiguration.getFloorMapTracking() ) {
+			for( String floorMapIdentifier : pList ) {
 				FloorMap fm = floorMapDao.get(floorMapIdentifier, true);
 				Map<String, WifiSpot> apMap = CollectionFactory.createMap();
 

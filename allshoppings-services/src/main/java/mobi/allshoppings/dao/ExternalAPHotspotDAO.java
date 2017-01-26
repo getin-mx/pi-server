@@ -16,6 +16,7 @@ public interface ExternalAPHotspotDAO extends GenericDAO<ExternalAPHotspot> {
 	ExternalAPHotspot getLastUsingHostnameAndMac(String hostname, String mac) throws ASException;
 	ExternalAPHotspot getPreviousUsingHostnameAndMac(String hostname, String mac) throws ASException;
 	List<ExternalAPHotspot> getUsingHostnameAndDates(String hostname, Date fromDate, Date toDate) throws ASException;
+	List<ExternalAPHotspot> getUsingHostnameAndDates(List<String> hostname, Date fromDate, Date toDate) throws ASException;
 	List<String> getExternalHostnames() throws ASException;
 	
 }
