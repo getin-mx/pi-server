@@ -14,9 +14,9 @@
 		<module>datanucleus-gae-mappings</module>
 		<module>cinepolis-services</module>
 		<module>allshoppings-cli</module>
-		<module>cinepolis-vista-loyalty</module>
+<!-- 		<module>cinepolis-vista-loyalty</module>
 		<module>cinepolis-vista-voucher</module>
-		<module>allshoppings-rest-api</module>
+ -->		<module>allshoppings-rest-api</module>
 		<module>allshoppings-services</module>
 		<module>cinepolis-dataservice</module>
 		<module>gcm-server</module>

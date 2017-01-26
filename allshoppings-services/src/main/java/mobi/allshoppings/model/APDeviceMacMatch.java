@@ -18,6 +18,9 @@ public class APDeviceMacMatch implements ModelKey, Serializable, Identificable {
 
 	private static final long serialVersionUID = 1L;
 	
+	public static final int TYPE_PEASANT = 0;
+	public static final int TYPE_VISIT = 1;
+	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
 	private Key key;
@@ -25,6 +28,9 @@ public class APDeviceMacMatch implements ModelKey, Serializable, Identificable {
 	private String hostname;
 	private String mac;
 	private String deviceUUID;
+	private String entityId;
+	private Integer entityKind;
+	private Integer type;
 	
 	private Date creationDateTime;
 	private Date lastUpdate;
@@ -130,6 +136,48 @@ public class APDeviceMacMatch implements ModelKey, Serializable, Identificable {
 		this.lastUpdate = lastUpdate;
 	}
 
+	/**
+	 * @return the entityId
+	 */
+	public String getEntityId() {
+		return entityId;
+	}
+
+	/**
+	 * @param entityId the entityId to set
+	 */
+	public void setEntityId(String entityId) {
+		this.entityId = entityId;
+	}
+
+	/**
+	 * @return the entityKind
+	 */
+	public Integer getEntityKind() {
+		return entityKind;
+	}
+
+	/**
+	 * @param entityKind the entityKind to set
+	 */
+	public void setEntityKind(Integer entityKind) {
+		this.entityKind = entityKind;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public Integer getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -166,10 +214,9 @@ public class APDeviceMacMatch implements ModelKey, Serializable, Identificable {
 	 */
 	@Override
 	public String toString() {
-		return "APDeviceMacMatch [key=" + key + ", hostname=" + hostname
-				+ ", mac=" + mac + ", deviceUUID=" + deviceUUID
-				+ ", creationDateTime=" + creationDateTime + ", lastUpdate="
-				+ lastUpdate + "]";
+		return "APDeviceMacMatch [key=" + key + ", hostname=" + hostname + ", mac=" + mac + ", deviceUUID=" + deviceUUID
+				+ ", entityId=" + entityId + ", entityKind=" + entityKind + ", type=" + type + ", creationDateTime="
+				+ creationDateTime + ", lastUpdate=" + lastUpdate + "]";
 	}
 
 }
