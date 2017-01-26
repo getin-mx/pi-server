@@ -337,5 +337,53 @@ public class ExternalAPHotspotDAOJDOImpl extends GenericDAOJDO<ExternalAPHotspot
 		}
 
 	}
-	
+
+	@Override
+	public Date getLastEntryDate(List<String> hostname) throws ASException {
+		PersistenceManager pm;
+		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+
+		Date last = null;
+		
+		try{
+			for(String h : hostname ) {
+
+				Map<String, Object> parameters = CollectionFactory.createMap();
+				List<String> declaredParams = CollectionFactory.createList();
+				List<String> filters = CollectionFactory.createList();
+
+				Query query = pm.newQuery(clazz);
+
+				// Hostname Parameter
+				declaredParams.add("String hostnameParam");
+				filters.add("hostname == hostnameParam");
+				parameters.put("hostnameParam", h);
+
+				query.declareParameters(toParameterList(declaredParams));
+				query.setFilter(toWellParametrizedFilter(filters));
+				query.setOrdering("firstSeen DESC");
+				query.setRange(0,1);
+
+				@SuppressWarnings("unchecked")
+				List<ExternalAPHotspot> list = (List<ExternalAPHotspot>)query.executeWithMap(parameters);
+				if( list.size() > 0 ) {
+					if( last == null || last.before(list.get(0).getFirstSeen()))
+						last = list.get(0).getFirstSeen();
+				}
+
+			}
+			
+			return last;
+
+		} catch(Exception e) {
+			if(!( e instanceof ASException )) {
+				throw ASExceptionHelper.defaultException(e.getMessage(), e);
+			} else {
+				throw e;
+			}
+		} finally  {
+			pm.close();
+		}
+	}
+
 }

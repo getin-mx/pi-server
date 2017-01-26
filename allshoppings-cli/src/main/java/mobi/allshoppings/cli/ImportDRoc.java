@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ public class ImportDRoc extends AbstractCLI {
 	public static void main(String args[]) throws ASException {
 		try {
 			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			ExternalAPHotspotDAO eaphDao = (ExternalAPHotspotDAO)getApplicationContext().getBean("externalaphotspot.dao.ref");
 			
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
@@ -73,6 +75,8 @@ public class ImportDRoc extends AbstractCLI {
 			Connection conn = null;
 			Statement stmt = null;
 			ResultSet rs = null;
+			
+			Date lastDate = null;
 			
 			int EVENT_JOIN = 0;
 			int EVENT_LEAVE = 1;
@@ -122,13 +126,25 @@ public class ImportDRoc extends AbstractCLI {
 					}
 				}
 
+				if( fromLast ) {
+					List<String> data = CollectionFactory.createList();
+					for(String hostname : hostnames ) {
+						String hostParts[] = hostname.split(",");
+						hostname = "droc-" + hostParts[1];
+						data.add(hostname);
+					}
+					lastDate = eaphDao.getLastEntryDate(data);
+				}
+				
 				{
 					// Build Query Count
 					StringBuffer sb  = new StringBuffer();
 					sb.append(queryca);
 
 					if( fromLast ) {
-						
+						sb.append("ReceivedAt > timestamp('");
+						sb.append(sdf.format(lastDate));
+						sb.append("') and ");
 					} else {
 						if( fromDate != null ) {
 							sb.append("ReceivedAt > timestamp('");
@@ -178,7 +194,9 @@ public class ImportDRoc extends AbstractCLI {
 					sb.append(query2a);
 
 					if( fromLast ) {
-						
+						sb.append("ReceivedAt > timestamp('");
+						sb.append(sdf.format(lastDate));
+						sb.append("') and ");
 					} else {
 						if( fromDate != null ) {
 							sb.append("ReceivedAt > timestamp('");
