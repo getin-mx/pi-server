@@ -42,7 +42,6 @@ import mobi.allshoppings.model.ExternalGeo;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
-import mobi.allshoppings.tx.PersistenceProvider;
 
 public class ExternalGeoImporter {
 
@@ -89,14 +88,14 @@ public class ExternalGeoImporter {
 			}
 
 			// First delete previous data
-			log.log(Level.INFO, "Deleting previous data...");
-			if( entityIds.isEmpty() ) {
-				dao.deleteUsingEntityIdAndPeriod((PersistenceProvider)null, null, entityKind, null, period);
-			} else {
-				for( String eid : entityIds ) {
-					dao.deleteUsingEntityIdAndPeriod((PersistenceProvider)null, eid, entityKind, null, period);
-				}
-			}
+//			log.log(Level.INFO, "Deleting previous data...");
+//			if( entityIds.isEmpty() ) {
+//				dao.deleteUsingEntityIdAndPeriod((PersistenceProvider)null, null, entityKind, null, period);
+//			} else {
+//				for( String eid : entityIds ) {
+//					dao.deleteUsingEntityIdAndPeriod((PersistenceProvider)null, eid, entityKind, null, period);
+//				}
+//			}
 
 			// Obtains a list of all the matched mac addresses
 			log.log(Level.INFO, "Reading Matches...");
