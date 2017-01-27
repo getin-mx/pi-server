@@ -61,8 +61,10 @@ implements BDBDashboardBzService {
 			}
 			
 			List<ExternalGeo> list = null;
-			List<Integer> typeList = type == null ? Arrays.asList(new Integer[] { ExternalGeo.TYPE_GPS,
-					ExternalGeo.TYPE_GPS_HOME, ExternalGeo.TYPE_GPS_WORK, ExternalGeo.TYPE_WIFI })
+			List<Integer> typeList = type == null
+					? Arrays.asList(new Integer[] { ExternalGeo.TYPE_GPS, ExternalGeo.TYPE_GPS_HOME,
+							ExternalGeo.TYPE_GPS_WORK, ExternalGeo.TYPE_GPS_HOME_PEASANT,
+							ExternalGeo.TYPE_GPS_WORK_PEASANT, ExternalGeo.TYPE_WIFI })
 					: Arrays.asList(new Integer[] { type });			
 			
 			for( Integer myType : typeList ) {

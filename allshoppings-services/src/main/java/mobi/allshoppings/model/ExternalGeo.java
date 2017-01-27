@@ -21,6 +21,8 @@ public class ExternalGeo implements ModelKey, Serializable, Identificable, Repli
 	
 	public static final Integer TYPE_GPS_WORK = 3;
 	public static final Integer TYPE_GPS_HOME = 2;
+	public static final Integer TYPE_GPS_WORK_PEASANT = 5;
+	public static final Integer TYPE_GPS_HOME_PEASANT = 4;
 	public static final Integer TYPE_GPS = 1;
 	public static final Integer TYPE_WIFI = 0;
 
