@@ -928,6 +928,111 @@ public class UserMenuTest extends TestCase {
 				um.setKey(userMenuDao.createKey("roku_mx"));
 				userMenuDao.create(um);
 			}
+			User grupopavel = null;
+			try {
+				grupopavel = userDao.get("grupopavel_mx", true);
+				userDao.delete(grupopavel);
+				throw new Exception();
+			} catch( Exception e ) {
+				grupopavel = new User();
+				grupopavel.setFirstname("Grupo Pavel");
+				grupopavel.setLastname("Mexico");
+				grupopavel.setEmail("grupopavel@allshoppings.mobi");
+				grupopavel.getSecuritySettings().setRole(Role.BRAND);
+				grupopavel.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				grupopavel.setKey((Key)keyHelper.obtainKey(User.class, "grupopavel_mx"));
+				userDao.create(grupopavel);
+			}
+
+			try {
+				um = userMenuDao.get("grupopavel_mx", true);
+				userMenuDao.delete("grupopavel_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("grupopavel_mx"));
+				userMenuDao.create(um);
+			}
+			User latabernadelleon = null;
+			try {
+				latabernadelleon = userDao.get("latabernadelleon_mx", true);
+				userDao.delete(latabernadelleon);
+				throw new Exception();
+			} catch( Exception e ) {
+				latabernadelleon = new User();
+				latabernadelleon.setFirstname("La Taberna del León");
+				latabernadelleon.setLastname("Mexico");
+				latabernadelleon.setEmail("latabernadelleon@allshoppings.mobi");
+				latabernadelleon.getSecuritySettings().setRole(Role.BRAND);
+				latabernadelleon.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				latabernadelleon.setKey((Key)keyHelper.obtainKey(User.class, "latabernadelleon_mx"));
+				userDao.create(latabernadelleon);
+			}
+
+			try {
+				um = userMenuDao.get("latabernadelleon_mx", true);
+				userMenuDao.delete("latabernadelleon_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("latabernadelleon_mx"));
+				userMenuDao.create(um);
+			}
+			
+			User marketintelligence = null;
+			try {
+				marketintelligence = userDao.get("marketintelligence_mx", true);
+				userDao.delete(marketintelligence);
+				throw new Exception();
+			} catch( Exception e ) {
+				marketintelligence = new User();
+				marketintelligence.setFirstname("Market Intelligence");
+				marketintelligence.setLastname("Mexico");
+				marketintelligence.setEmail("marketintelligence@allshoppings.mobi");
+				marketintelligence.getSecuritySettings().setRole(Role.BRAND);
+				marketintelligence.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				marketintelligence.setKey((Key)keyHelper.obtainKey(User.class, "marketintelligence_mx"));
+				userDao.create(marketintelligence);
+			}
+
+			try {
+				um = userMenuDao.get("marketintelligence_mx", true);
+				userMenuDao.delete("marketintelligence_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("marketintelligence_mx"));
+				userMenuDao.create(um);
+			}
+			User alansolorio = null;
+			try {
+				alansolorio = userDao.get("alansolorio_mx", true);
+				userDao.delete(alansolorio);
+				throw new Exception();
+			} catch( Exception e ) {
+				alansolorio = new User();
+				alansolorio.setFirstname("Alan Solorio");
+				alansolorio.setLastname("Mexico");
+				alansolorio.setEmail("alansolorio@allshoppings.mobi");
+				alansolorio.getSecuritySettings().setRole(Role.BRAND);
+				alansolorio.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				alansolorio.setKey((Key)keyHelper.obtainKey(User.class, "alansolorio_mx"));
+				userDao.create(alansolorio);
+			}
+
+			try {
+				um = userMenuDao.get("alansolorio_mx", true);
+				userMenuDao.delete("alansolorio_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("alansolorio_mx"));
+				userMenuDao.create(um);
+			}
 			User saboreateycafe = null;
 			try {
 				saboreateycafe = userDao.get("saboreateycafe_mx", true);
