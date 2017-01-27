@@ -163,69 +163,72 @@ public class ExternalGeoImporter {
 
 				while( it.hasNext() ) {
 
-					count++;
-					JSONObject json = it.next();
-					// Filter for only use matched devices
-					if( json != null && json.has("deviceUUID") && devices.containsKey(json.getString("deviceUUID"))) {
+					try {
+						count++;
+						JSONObject json = it.next();
+						// Filter for only use matched devices
+						if( json != null && json.has("deviceUUID") && devices.containsKey(json.getString("deviceUUID"))) {
 
-						String uuid = json.getString("deviceUUID");
-						@SuppressWarnings("deprecation")
-						Date d = new Date(json.getString("lastUpdate"));
-						int hour = Integer.valueOf(sdfHour.format(d));
-						
-						Map<Integer, HashSet<String>> devices2 = devices.get(uuid);
-						Iterator<Integer> itx = devices2.keySet().iterator();
-						while( itx.hasNext()) {
-							Integer type = itx.next();
-							HashSet<String> ids = devices2.get(type);
-							for( String id : ids ) {
-								try {
-									// round the position
-									GeoPoint gp = geocoder.decodeGeohash(geocoder.encodeGeohash(json.getDouble("lat"), json.getDouble("lon")).substring(0,7));
-									// And insert it on the cache
-									Map<GeoPoint, ExternalGeo> cache2 = cache.get(uuid);
-									if( cache2 == null ) cache2 = CollectionFactory.createMap();
-									
-									ExternalGeo val = cache2.get(gp);
-									if( val == null ) {
-										val = new ExternalGeo();
-										val.setConnections(0);
-										val.setExternalReference("GPS");
-										if( type == APDVisit.CHECKIN_PEASANT ) {
-											if( hour >= 2 && hour <= 5 ) {
-												val.setType(ExternalGeo.TYPE_GPS_HOME_PEASANT);
+							String uuid = json.getString("deviceUUID");
+							@SuppressWarnings("deprecation")
+							Date d = new Date(json.getString("lastUpdate"));
+							int hour = Integer.valueOf(sdfHour.format(d));
+
+							Map<Integer, HashSet<String>> devices2 = devices.get(uuid);
+							Iterator<Integer> itx = devices2.keySet().iterator();
+							while( itx.hasNext()) {
+								Integer type = itx.next();
+								HashSet<String> ids = devices2.get(type);
+								for( String id : ids ) {
+									try {
+										// round the position
+										GeoPoint gp = geocoder.decodeGeohash(geocoder.encodeGeohash(json.getDouble("lat"), json.getDouble("lon")).substring(0,7));
+										// And insert it on the cache
+										Map<GeoPoint, ExternalGeo> cache2 = cache.get(uuid);
+										if( cache2 == null ) cache2 = CollectionFactory.createMap();
+
+										ExternalGeo val = cache2.get(gp);
+										if( val == null ) {
+											val = new ExternalGeo();
+											val.setConnections(0);
+											val.setExternalReference("GPS");
+											if( type == APDVisit.CHECKIN_PEASANT ) {
+												if( hour >= 2 && hour <= 5 ) {
+													val.setType(ExternalGeo.TYPE_GPS_HOME_PEASANT);
+												} else {
+													val.setType(ExternalGeo.TYPE_GPS_WORK_PEASANT);
+												}
 											} else {
-												val.setType(ExternalGeo.TYPE_GPS_WORK_PEASANT);
+												if( hour >= 2 && hour <= 5 ) {
+													val.setType(ExternalGeo.TYPE_GPS_HOME);
+												} else {
+													val.setType(ExternalGeo.TYPE_GPS_WORK);
+												}
 											}
-										} else {
-											if( hour >= 2 && hour <= 5 ) {
-												val.setType(ExternalGeo.TYPE_GPS_HOME);
-											} else {
-												val.setType(ExternalGeo.TYPE_GPS_WORK);
-											}
+											val.setLat(Double.valueOf(gp.getLat()).floatValue());
+											val.setLon(Double.valueOf(gp.getLon()).floatValue());
+											val.setEntityId(id);
+											val.setEntityKind(entityKind);
+											val.setPeriod(period);
+											val.setKey(dao.createKey());
 										}
-										val.setLat(Double.valueOf(gp.getLat()).floatValue());
-										val.setLon(Double.valueOf(gp.getLon()).floatValue());
-										val.setEntityId(id);
-										val.setEntityKind(entityKind);
-										val.setPeriod(period);
-										val.setKey(dao.createKey());
-									}
-									val.setConnections(val.getConnections() + 1);
-									cache2.put(gp, val);
+										val.setConnections(val.getConnections() + 1);
+										cache2.put(gp, val);
 
-									cache.put(uuid, cache2);
-									processed++;
-								} catch( Exception e ) {
-									log.log(Level.SEVERE, e.getMessage(), e);
+										cache.put(uuid, cache2);
+										processed++;
+									} catch( Exception e ) {
+										log.log(Level.SEVERE, e.getMessage(), e);
+									}
 								}
 							}
+
 						}
 
-					}
-
-					if( count % 5000 == 0 )
-						log.log(Level.INFO, json.getString("creationDateTime") + " - " + count + " records processed with " + processed + " results...");
+						if( count % 5000 == 0 )
+							log.log(Level.INFO, json.getString("creationDateTime") + " - " + count + " records processed with " + processed + " results...");
+					} catch(Exception e) {}
+					
 
 				}
 
