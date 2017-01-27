@@ -122,7 +122,7 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 
 					if(StringUtils.hasText(dmac)) {
 						dmac = dmac.toLowerCase();
-						if(!dmac.equals("00:00:00:00:00:00") && !dmac.equals("ff:ff:ff:ff:ff:ff")) {
+						if(!dmac.equals("00:00:00:00:00:00") && !dmac.equals("ff:ff:ff:ff:ff:ff") && !dmac.equals("02:00:00:00:00:00") && !dmac.equals("00:00:00:00:00:01")) {
 							List<String> devs = devices.get(dmac);
 							if( devs == null ) devs = CollectionFactory.createList();
 							if( !devs.contains(identifier))

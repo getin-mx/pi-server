@@ -27,9 +27,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.datastore.JDOConnection;
-
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.IOUtils;
@@ -45,23 +42,18 @@ import com.inodes.datanucleus.model.Email;
 import com.inodes.datanucleus.model.Key;
 import com.inodes.datanucleus.model.Text;
 import com.jcraft.jsch.JSchException;
-import com.mongodb.DB;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
-import mobi.allshoppings.dao.APDeviceMacMatchDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.APHotspotDAO;
 import mobi.allshoppings.dao.APUptimeDAO;
-import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.MacVendorDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
-import mobi.allshoppings.dao.spi.DAOJDOPersistentManagerFactory;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.impl.DumperHelperImpl;
 import mobi.allshoppings.exception.ASException;
@@ -69,11 +61,9 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.mail.MailHelper;
 import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.APDevice;
-import mobi.allshoppings.model.APDeviceMacMatch;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.APUptime;
-import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.MacVendor;
 import mobi.allshoppings.model.Shopping;
@@ -101,10 +91,6 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 
 	@Autowired
 	private APDeviceDAO dao;
-	@Autowired
-	private APDeviceMacMatchDAO apdmDao;
-	@Autowired
-	private DeviceInfoDAO diDao;
 	@Autowired
 	private MailHelper mailHelper;
 	@Autowired
@@ -469,79 +455,6 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			String key = x.next();
 			APUptime apu = cache.get(key);
 			apuDao.update(apu);
-		}
-	}
-
-	public void updateAPDeviceMacMatch() throws ASException {
-
-		// Creates JDO Connection
-		PersistenceManager pm;
-		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
-		pm.currentTransaction().begin();
-
-		// Gets Native connection from JDO
-		JDOConnection jdoConn = pm.getDataStoreConnection();
-		DB db = (DB)jdoConn.getNativeConnection();
-
-		try {
-			long count = 0;
-			long processed = 0;
-			long initTime = new Date().getTime();
-			long batchSize = 1000;
-
-			// Drops the last collection
-			db.getCollection(APDeviceMacMatch.class.getSimpleName()).drop();
-
-			DBCursor c = db.getCollection("GetinMac").find();
-			c.addOption(com.mongodb.Bytes.QUERYOPTION_NOTIMEOUT);
-			Iterator<DBObject> i = c.iterator();
-
-			// Counts the total records to export
-			long totalRecords = c.count();
-			log.log(Level.INFO, totalRecords + " records found in GetinMac collection");
-
-			while(i.hasNext()) {
-				// Gets the DB Object
-				DBObject dbo = i.next();
-
-				// Converts the object
-				GetinMac obj = new GetinMac();
-				setPropertiesFromDBObject(dbo, obj);
-
-				try {
-					// Tries to find the match
-					List<DeviceInfo> list = diDao.getUsingMAC(obj.mac);
-					if(!CollectionUtils.isEmpty(list)) {
-						for( DeviceInfo di : list ) {
-							APDeviceMacMatch match = new APDeviceMacMatch();
-							match.setDeviceUUID(di.getDeviceUUID());
-							match.setMac(obj.mac);
-							match.setHostname(obj.hostname);
-							match.setKey(apdmDao.createKey(match));
-							apdmDao.create(match);
-							processed++;
-						}
-					}
-				} catch( ASException e ) {
-					// Do nothing by now
-				}
-
-				count++;
-				obj = null;
-
-				if( count % batchSize == 0 )
-					log.log(Level.INFO, "Processed " + count + " of " + totalRecords + " with " + processed + " results...");
-
-			}
-
-			long finalTime = new Date().getTime();
-			log.log(Level.INFO, "Finally Processed " + count + " of " + totalRecords + " with " + processed + " results in " + (finalTime - initTime) + "ms");
-		} catch( Exception e ) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-			throw ASExceptionHelper.defaultException(e.getMessage(), e);
-		} finally {
-			jdoConn.close();
-			pm.currentTransaction().commit();
 		}
 	}
 
