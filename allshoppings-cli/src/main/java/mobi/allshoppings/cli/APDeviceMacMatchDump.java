@@ -205,30 +205,16 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 				HashSet<String> peasants = cache2.get(APDVisit.CHECKIN_PEASANT);
 				HashSet<String> visits = cache2.get(APDVisit.CHECKIN_VISIT);
 				HashSet<String> nPeasants = new HashSet<String>();
-				HashSet<String> nVisits = new HashSet<String>();
 
-				if( peasants != null ) {
+				if( peasants != null && visits != null ) {
 					log.log(Level.INFO, "Processing " + peasants.size() + " peasants for entityId " + identifier);
 					Iterator<String> i2 = peasants.iterator();
 					while(i2.hasNext()) {
 						String dmac = i2.next();
-						if(devices.containsKey(dmac))
+						if(!visits.contains(dmac))
 							nPeasants.add(dmac);
 					}
 					cache2.put(APDVisit.CHECKIN_PEASANT, nPeasants);
-				}
-				
-				
-				if( peasants != null && visits != null ) {
-					log.log(Level.INFO, "Processing " + visits.size() + " visitors for entityId " + identifier);
-					Iterator<String> i2 = visits.iterator();
-					while(i2.hasNext()) {
-						String dmac = i2.next();
-						if(devices.containsKey(dmac))
-							if(!nPeasants.contains(dmac))
-								nVisits.add(dmac);
-					}
-					cache2.put(APDVisit.CHECKIN_VISIT, nVisits);
 				}
 			}
 

@@ -78,6 +78,31 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 
+			User erick = null;
+			try {
+				erick = userDao.get("erick@yogome.com", true);
+			} catch( Exception e ) {
+				erick = new User();
+				erick.setFirstname("erick");
+				erick.setLastname("");
+				erick.setEmail("erick@yogome.com");
+				erick.getSecuritySettings().setRole(Role.ADMIN);
+				erick.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				erick.setKey((Key)keyHelper.obtainKey(User.class, "erick@yogome.com"));
+				userDao.create(erick);
+			}
+
+			try {
+				um = userMenuDao.get("erick@yogome.com", true);
+				userMenuDao.delete("erick@yogome.com");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.devicemessage", "fa-laptop", "Envio de Mensajes"));
+				um.setKey(userMenuDao.createKey("erick@yogome.com"));
+				userMenuDao.create(um);
+			}
+
 			User astrid = null;
 			try {
 				astrid = userDao.get("astrid@getin.mx", true);
@@ -733,6 +758,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
 				um.setKey(userMenuDao.createKey("demo4_mx"));
 				userMenuDao.create(um);
 			}
@@ -1004,6 +1030,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
 				um.setKey(userMenuDao.createKey("marketintelligence_mx"));
 				userMenuDao.create(um);
 			}
