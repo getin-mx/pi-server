@@ -14,6 +14,7 @@
 				<entry key="/dashoard/storesFilter" value-ref="spring.dashboardstoresfilter.rest.resource" />
 				<entry key="/dashoard/timelineDataByCinema" value-ref="spring.dashboardtimelinedatabycinema.rest.resource" />
 				<entry key="/dashoard/timelineDataByProvince" value-ref="spring.dashboardtimelinedatabyprovince.rest.resource" />
+				<entry key="/dashoard/repetitions" value-ref="spring.dashboardrepetitions.rest.resource" />
 				<entry key="/dashoard/timelineData" value-ref="spring.dashboardtimelinedata.rest.resource" />
 				<entry key="/dashoard/timelineHour" value-ref="spring.dashboardtimelinehour.rest.resource" />
 				<entry key="/dashoard/timelineGDT" value-ref="spring.dashboardtimelinegdt.rest.resource" />
@@ -90,6 +91,9 @@
  	</bean>
  	<bean id="spring.cinema.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="cinema.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboardrepetitions.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboardrepetitions.rest.resource" />
  	</bean>
  	<bean id="spring.dashboardtimelinehour.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboardtimelinehour.rest.resource" />
