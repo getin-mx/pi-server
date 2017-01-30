@@ -1,5 +1,7 @@
 package mobi.allshoppings.cli;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Level;
@@ -9,13 +11,19 @@ import org.springframework.util.StringUtils;
 
 import joptsimple.OptionParser;
 import mobi.allshoppings.apdevice.APDeviceHelper;
+import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.ExternalAPHotspotDAO;
+import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.APDevice;
+import mobi.allshoppings.model.EntityKind;
+import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.interfaces.StatusAware;
+import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -38,6 +46,30 @@ public class TouchAPDevices extends AbstractCLI {
 			APDeviceDAO apdeviceDao = (APDeviceDAO)getApplicationContext().getBean("apdevice.dao.ref");
 			ExternalAPHotspotDAO eaphDao = (ExternalAPHotspotDAO)getApplicationContext().getBean("externalaphotspot.dao.ref");
 			APDeviceHelper apdeviceHelper = (APDeviceHelper)getApplicationContext().getBean("apdevice.helper");
+			StoreDAO storeDao = (StoreDAO)getApplicationContext().getBean("store.dao.ref");
+			APDAssignationDAO apdaDao = (APDAssignationDAO)getApplicationContext().getBean("apdassignation.dao.ref");
+			
+			log.log(Level.INFO, "Scanning assignations....");
+
+			List<Store> stores = CollectionFactory.createList();
+			List<String> brands  = Arrays.asList("grupochomarc_mx","chomarc_mx","sportium_mx","modatelas_mx","saavedra_mx","delicafe_mx","flormar_pa","roku_mx","blulagoon_mx");
+			for( String brand : brands ) {
+				List<Store> tmp = storeDao.getUsingBrandAndStatus(brand, StatusHelper.statusActive(), null);
+				for( Store store : tmp ) {
+					stores.add(store);
+				}
+			}
+			List<APDAssignation> assigs = CollectionFactory.createList();
+			for(Store store : stores ) {
+				List<APDAssignation> tmp = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, new Date());
+				for(APDAssignation assig : tmp ) {
+					assigs.add(assig);
+				}
+			}
+			List<String> astrid = CollectionFactory.createList();
+			for(APDAssignation assig : assigs) {
+				astrid.add(assig.getHostname());
+			}
 
 			log.log(Level.INFO, "Touching apdevices....");
 			List<APDevice> list = apdeviceDao.getAll(true);
@@ -53,6 +85,17 @@ public class TouchAPDevices extends AbstractCLI {
 				
 				if( null == obj.getReportStatus() )
 					obj.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
+				
+				if( obj.getReportMailList() != null && obj.getReportMailList().size() > 0  ) {
+					List<String> mails = CollectionFactory.createList();
+					mails.addAll(Arrays.asList("matias@getin.mx","anabell@getin.mx","francisco@getin.mx","daniel@getin.mx","ingrid@getin.mx"));
+					if(astrid.contains(obj.getHostname())) {
+						mails.add("astrid@getin.mx");
+					} else {
+						mails.add("mariajose@getin.mx");
+					}
+					obj.setReportMailList(mails);
+				}
 				
 				apdeviceDao.update(obj);
 				apdeviceHelper.updateAssignationsUsingAPDevice(obj.getHostname());
@@ -71,7 +114,7 @@ public class TouchAPDevices extends AbstractCLI {
 					obj.setExternal(true);
 					obj.setKey(apdeviceDao.createKey(hostname));
 					apdeviceDao.create(obj);
-				}
+				} 
 
 				log.log(Level.INFO, "Touching " + obj.getIdentifier() + "...");
 

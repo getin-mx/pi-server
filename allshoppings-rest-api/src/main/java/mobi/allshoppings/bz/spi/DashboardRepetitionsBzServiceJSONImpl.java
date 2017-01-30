@@ -70,11 +70,11 @@ implements DashboardTimelineHourBzService {
 			}
 			
 			Map<Integer, Integer> repetitions = apdvDao.getRepetitions(ids,
-					EntityKind.KIND_STORE, APDVisit.CHECKIN_VISIT, sdf.parse(fromStringDate), sdf.parse(toStringDate));
+					EntityKind.KIND_STORE, APDVisit.CHECKIN_PEASANT, sdf.parse(fromStringDate), sdf.parse(toStringDate));
 
 			JSONArray series = new JSONArray();
 			JSONObject serie = new JSONObject();
-			serie.put("name", "Visitas");
+			serie.put("name", "Paseantes");
 			serie.put("type", "column");
 			JSONArray data = new JSONArray();
 			Iterator<Integer> i = repetitions.keySet().iterator();

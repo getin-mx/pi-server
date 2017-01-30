@@ -994,8 +994,10 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			apd.setReportable(true);
 			if( apd.getReportMailList() == null )
 				apd.setReportMailList(new ArrayList<String>());
-			apd.getReportMailList().clear();
-			apd.getReportMailList().addAll(systemConfiguration.getApdReportMailList());
+			if( apd.getReportMailList().isEmpty()) {
+				apd.getReportMailList().clear();
+				apd.getReportMailList().addAll(systemConfiguration.getApdReportMailList());
+			}
 		}
 		
 		dao.update(apd);

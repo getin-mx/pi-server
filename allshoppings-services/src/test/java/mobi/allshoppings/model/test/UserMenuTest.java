@@ -285,6 +285,34 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 
+			User ingrid = null;
+			try {
+				ingrid = userDao.get("ingrid@getin.mx", true);
+			} catch( Exception e ) {
+				ingrid = new User();
+				ingrid.setFirstname("Ingrid");
+				ingrid.setLastname("");
+				ingrid.setEmail("ingrid@getin.mx");
+				ingrid.getSecuritySettings().setRole(Role.ADMIN);
+				ingrid.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				ingrid.setKey((Key)keyHelper.obtainKey(User.class, "ingrid@getin.mx"));
+				userDao.create(ingrid);
+			}
+
+			try {
+				um = userMenuDao.get("ingrid@getin.mx", true);
+				userMenuDao.delete("ingrid@getin.mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("ingrid@getin.mx"));
+				userMenuDao.create(um);
+			}
+
 			User liverpool = null;
 			try {
 				liverpool = userDao.get("liverpool_mx", true);
