@@ -72,6 +72,9 @@ implements DashboardTimelineHourBzService {
 			Map<Integer, Integer> repetitions = apdvDao.getRepetitions(ids,
 					EntityKind.KIND_STORE, APDVisit.CHECKIN_PEASANT, sdf.parse(fromStringDate), sdf.parse(toStringDate));
 
+			Map<Integer, Integer> repetitionsV = apdvDao.getRepetitions(ids,
+					EntityKind.KIND_STORE, APDVisit.CHECKIN_VISIT, sdf.parse(fromStringDate), sdf.parse(toStringDate));
+
 			JSONArray series = new JSONArray();
 			JSONObject serie = new JSONObject();
 			serie.put("name", "Paseantes");
@@ -84,7 +87,19 @@ implements DashboardTimelineHourBzService {
 			}
 			serie.put("data", data);
 			series.put(serie);
-			
+
+			serie = new JSONObject();
+			serie.put("name", "Visitantes");
+			serie.put("type", "spline");
+			data = new JSONArray();
+			i = repetitionsV.keySet().iterator();
+			while(i.hasNext()) {
+				Integer key = i.next();
+				data.put(repetitionsV.get(key));
+			}
+			serie.put("data", data);
+			series.put(serie);
+
 			JSONArray categories = new JSONArray();
 			int max = repetitions.size();
 			int count = 0;
