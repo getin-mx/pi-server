@@ -368,7 +368,56 @@ public class UserMenuTest extends TestCase {
 				sportium.setKey((Key)keyHelper.obtainKey(User.class, "sportium_mx"));
 				userDao.create(sportium);
 			}
-
+			User volaris = null;
+			try {
+				volaris = userDao.get("volaris_mx", true);
+				userDao.delete(volaris);
+				throw new Exception();
+			} catch( Exception e ) {
+				volaris = new User();
+				volaris.setFirstname("Volaris");
+				volaris.setLastname("Mexico");
+				volaris.setEmail("volaris@allshoppings.mobi");
+				volaris.getSecuritySettings().setRole(Role.BRAND);
+				volaris.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				volaris.setKey((Key)keyHelper.obtainKey(User.class, "volaris_mx"));
+				userDao.create(volaris);
+			}
+			try {
+				um = userMenuDao.get("volaris_mx", true);
+				userMenuDao.delete("volaris_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("volaris_mx"));
+				userMenuDao.create(um);
+			}
+			User bestbuy = null;
+			try {
+				bestbuy = userDao.get("bestbuy_mx", true);
+				userDao.delete(bestbuy);
+				throw new Exception();
+			} catch( Exception e ) {
+				bestbuy = new User();
+				bestbuy.setFirstname("Best Buy");
+				bestbuy.setLastname("Mexico");
+				bestbuy.setEmail("bestbuy@allshoppings.mobi");
+				bestbuy.getSecuritySettings().setRole(Role.BRAND);
+				bestbuy.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				bestbuy.setKey((Key)keyHelper.obtainKey(User.class, "bestbuy_mx"));
+				userDao.create(bestbuy);
+			}
+			try {
+				um = userMenuDao.get("bestbuy_mx", true);
+				userMenuDao.delete("bestbuy_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("bestbuy_mx"));
+				userMenuDao.create(um);
+			}
 			try {
 				um = userMenuDao.get("sportium_mx", true);
 				userMenuDao.delete("sportium_mx");
