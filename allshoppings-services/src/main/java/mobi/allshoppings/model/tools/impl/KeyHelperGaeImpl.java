@@ -93,6 +93,7 @@ public class KeyHelperGaeImpl implements KeyHelper, Serializable {
 				.replace("Ò", "o")
 				.replace("Ù", "u")
 				.replace("Ñ", "n")
+				.replace("\t", "_")
 				.trim()
 				.replaceAll(" ", "");
 		val = StringUtils.stripAccents(val);
