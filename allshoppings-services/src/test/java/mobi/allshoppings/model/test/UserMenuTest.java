@@ -1552,7 +1552,8 @@ public class UserMenuTest extends TestCase {
 						.setStores(Arrays.asList("93ec0988-c44a-402e-bbe4-83d1e377a559",
 								"d22be9e5-74a7-4671-aa7e-1a464bb748b7", "2ed6fea4-efb3-4aef-bc5c-af1e3d712b4b",
 								"cc13c199-5969-4010-aedb-bf01a4428786", "ba26aea6-dda1-4bfe-a270-23350be7105e",
-								"95d98d90-ba0b-42e1-843b-4a0e5c09db4b", "62c734bd-15fa-4bc5-a542-d38dd30e4546"));
+								"95d98d90-ba0b-42e1-843b-4a0e5c09db4b", "62c734bd-15fa-4bc5-a542-d38dd30e4546",
+								"94b9e9fc-3f73-4926-9890-fe0d924952fc"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "beatrizcors@chomarc_mx"));
 				userDao.create(user);
 			}
@@ -1609,8 +1610,7 @@ public class UserMenuTest extends TestCase {
 				user.getSecuritySettings()
 						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				user.getSecuritySettings()
-						.setStores(Arrays.asList("81b52571-3bd3-44e3-bed9-9e592d568f04",
-								"06a99c76-c4ca-4952-a99f-3576c7e4dce0"));
+						.setStores(Arrays.asList("1480464171515","28b335d2-9bf2-48c3-a335-d2ae4314247a","4beba5a8-3987-489e-9ef7-8be65d3c1b27","81b52571-3bd3-44e3-bed9-9e592d568f04","06a99c76-c4ca-4952-a99f-3576c7e4dce0"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "rogersilva@chomarc_mx"));
 				userDao.create(user);
 			}
@@ -1642,7 +1642,8 @@ public class UserMenuTest extends TestCase {
 						.setStores(Arrays.asList("93ec0988-c44a-402e-bbe4-83d1e377a559",
 								"d22be9e5-74a7-4671-aa7e-1a464bb748b7", "2ed6fea4-efb3-4aef-bc5c-af1e3d712b4b",
 								"cc13c199-5969-4010-aedb-bf01a4428786", "ba26aea6-dda1-4bfe-a270-23350be7105e",
-								"95d98d90-ba0b-42e1-843b-4a0e5c09db4b", "62c734bd-15fa-4bc5-a542-d38dd30e4546"));
+								"95d98d90-ba0b-42e1-843b-4a0e5c09db4b", "62c734bd-15fa-4bc5-a542-d38dd30e4546",
+								"94b9e9fc-3f73-4926-9890-fe0d924952fc"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "ginatena@chomarc_mx"));
 				userDao.create(user);
 			}
@@ -1671,6 +1672,32 @@ public class UserMenuTest extends TestCase {
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("5dce55ee-8506-4b70-b7a7-aee2a7e6cbb4"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "leonardooneto@chomarc_mx"));
+				userDao.create(user);
+			}
+			// Dakab_mx -------------------------------------------------------------------
+			try {
+				um = userMenuDao.get("dakab_mx", true);
+				userMenuDao.delete("dakab_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("dakab_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("dakab_mx", true);
+				userDao.delete(user);
+				throw new Exception();
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("dakab@allshoppings.mobi");
+				user.setLastname("");
+				user.setEmail("dakab_mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");	user.getSecuritySettings().setStores(Arrays.asList("1474331820269","1484249039313","71143dcf-9a92-49f9-901d-47cd23e4ce12","9e8793b4-750d-464a-b0cb-c4bfcd7f4e4b","d83ddb08-0f8a-4926-a09f-9b4ea1c86bc1"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "dakab_mx"));
 				userDao.create(user);
 			}
 			// Sportium --------------------------------------------------------------------
