@@ -763,7 +763,9 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("416", "Best Buy Lateral 4", "bestbuy_mx", "centrosantafe"));
 			stores.add(new StoreAdapter("417", "Best Buy Lateral 5", "bestbuy_mx", "centrosantafe"));
 			stores.add(new StoreAdapter("418", "Best Buy Central", "bestbuy_mx", "centrosantafe"));
-
+			stores.add(new StoreAdapter("419", "Modatelas La Aurora", "modatelas_mx", null));
+			stores.add(new StoreAdapter("420", "Modatelas Las Maravillas", "modatelas_mx", null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
