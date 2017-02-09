@@ -122,105 +122,111 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Date curDate = new Date(fromDate.getTime());
 		while( curDate.before(toDate) || (fromDate.equals(toDate) && curDate.equals(toDate))) {
 
-			
-			for( Store store : stores ) {
+			try {
+				for( Store store : stores ) {
 
-				
-				List<String> blackListMacs =getBlackListByStore(store);
-				List<String> employeeListMacs = getEmployeeListByStore(store);
-				
-				// Try to delete previous records if needed
-				if(deletePreviousRecords) {
-					apdvDao.deleteUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE,
-							curDate, new Date(curDate.getTime() + 86400000));
-				}
-				
-				List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate);
-				if( !CollectionUtils.isEmpty(assigs)) {
-					if( assigs.size() == 1 ) {
-						
-						assignmentsCache.clear();
-						assignmentsCache.put(assigs.get(0).getHostname(), assigs.get(0));
-						if(!apdCache.containsKey(assigs.get(0).getHostname()))
-							apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(), true));
-						
-						log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
-						List<APHEntry> entries = apheDao.getUsingHostnameAndDates(
-								Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, range, false);
+					try {
+						List<String> blackListMacs =getBlackListByStore(store);
+						List<String> employeeListMacs = getEmployeeListByStore(store);
 
-						log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
-						List<APDVisit> objs = CollectionFactory.createList();
-						for(APHEntry entry : entries ) {
-							aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
-							List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
-								for(APDVisit visit : visitList )
-									if(!objs.contains(visit))
-									objs.add(visit);
+						// Try to delete previous records if needed
+						if(deletePreviousRecords) {
+							apdvDao.deleteUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE,
+									curDate, new Date(curDate.getTime() + 86400000));
 						}
 
-						log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
-						try {
-							apdvDao.createOrUpdate(null, objs, true);
-						} catch( Exception e ) {}
+						List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate);
+						if( !CollectionUtils.isEmpty(assigs)) {
+							if( assigs.size() == 1 ) {
 
-					} else {
-						Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
-						List<String> hostnames = CollectionFactory.createList();
-						assignmentsCache.clear();
-						for( APDAssignation assig : assigs ) { 
-							hostnames.add(assig.getHostname());
-							assignmentsCache.put(assig.getHostname(), assig);
-							if(!apdCache.containsKey(assig.getHostname()))
-								apdCache.put(assig.getHostname(), apdDao.get(assig.getHostname(), true));
+								assignmentsCache.clear();
+								assignmentsCache.put(assigs.get(0).getHostname(), assigs.get(0));
+								if(!apdCache.containsKey(assigs.get(0).getHostname()))
+									apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(), true));
+
+								log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
+								List<APHEntry> entries = apheDao.getUsingHostnameAndDates(
+										Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, range, false);
+
+								log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
+								List<APDVisit> objs = CollectionFactory.createList();
+								for(APHEntry entry : entries ) {
+									aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
+									List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
+									for(APDVisit visit : visitList )
+										if(!objs.contains(visit))
+											objs.add(visit);
+								}
+
+								log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
+								try {
+									apdvDao.createOrUpdate(null, objs, true);
+								} catch( Exception e ) {}
+
+							} else {
+								Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
+								List<String> hostnames = CollectionFactory.createList();
+								assignmentsCache.clear();
+								for( APDAssignation assig : assigs ) { 
+									hostnames.add(assig.getHostname());
+									assignmentsCache.put(assig.getHostname(), assig);
+									if(!apdCache.containsKey(assig.getHostname()))
+										apdCache.put(assig.getHostname(), apdDao.get(assig.getHostname(), true));
+								}
+
+								log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and " + curDate + "...");
+								List<APHEntry> entries = apheDao.getUsingHostnameAndDates(hostnames, curDate, curDate, range, false);
+								for( APHEntry entry : entries ) {
+									if(!cache.containsKey(entry.getMac()))
+										cache.put(entry.getMac(), new ArrayList<APHEntry>());
+
+									aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
+									cache.get(entry.getMac()).add(entry);
+								}
+
+								log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
+								List<APDVisit> objs = CollectionFactory.createList();
+								Iterator<String> i = cache.keySet().iterator();
+								while(i.hasNext()) {
+									String key = i.next();
+									List<APHEntry> e = cache.get(key);
+									List<APDVisit> visitList = aphEntryToVisits(e, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
+									for(APDVisit visit : visitList )
+										if(!objs.contains(visit))
+											objs.add(visit);
+								}
+
+								log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
+								try {
+									apdvDao.createOrUpdate(null, objs, true);
+								} catch( Exception e ) {}
+
+							}
 						}
 
-						log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and " + curDate + "...");
-						List<APHEntry> entries = apheDao.getUsingHostnameAndDates(hostnames, curDate, curDate, range, false);
-						for( APHEntry entry : entries ) {
-							if(!cache.containsKey(entry.getMac()))
-								cache.put(entry.getMac(), new ArrayList<APHEntry>());
-							
-							aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
-							cache.get(entry.getMac()).add(entry);
+						// Try to update dashboard if needed
+						if(updateDashboards) {
+							if(!cacheBuilt) {
+								try {
+									mapper.buildCaches(false);
+									cacheBuilt = true;
+								} catch( Exception e ) {
+									throw ASExceptionHelper.defaultException(e.getMessage(), e);
+								}
+							}
+
+							didDao.deleteUsingSubentityIdAndElementIdAndDate(store.getIdentifier(),
+									Arrays.asList(new String[] { "apd_visitor", "apd_permanence" }), curDate, curDate);
+							mapper.createAPDVisitPerformanceDashboardForDay(curDate,
+									Arrays.asList(new String[] { store.getIdentifier() }), EntityKind.KIND_STORE);
 						}
-						
-						log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
-						List<APDVisit> objs = CollectionFactory.createList();
-						Iterator<String> i = cache.keySet().iterator();
-						while(i.hasNext()) {
-							String key = i.next();
-							List<APHEntry> e = cache.get(key);
-							List<APDVisit> visitList = aphEntryToVisits(e, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
-							for(APDVisit visit : visitList )
-								if(!objs.contains(visit))
-									objs.add(visit);
-						}
-						
-						log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
-						try {
-							apdvDao.createOrUpdate(null, objs, true);
-						} catch( Exception e ) {}
-						
+					} catch( Exception e ) {
+						log.log(Level.SEVERE, e.getMessage(), e);
 					}
-				}
-				
-				// Try to update dashboard if needed
-				if(updateDashboards) {
-					if(!cacheBuilt) {
-						try {
-							mapper.buildCaches(false);
-							cacheBuilt = true;
-						} catch( Exception e ) {
-							throw ASExceptionHelper.defaultException(e.getMessage(), e);
-						}
-					}
 
-					didDao.deleteUsingSubentityIdAndElementIdAndDate(store.getIdentifier(),
-							Arrays.asList(new String[] { "apd_visitor", "apd_permanence" }), curDate, curDate);
-					mapper.createAPDVisitPerformanceDashboardForDay(curDate,
-							Arrays.asList(new String[] { store.getIdentifier() }), EntityKind.KIND_STORE);
-				}
-
+				} 
+			} catch( Exception e1 ) {
+				log.log(Level.SEVERE, e1.getMessage(), e1);
 			}
 			
 			curDate = new Date(curDate.getTime() + 86400000);
@@ -257,106 +263,115 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Date curDate = new Date(fromDate.getTime());
 		while( curDate.before(toDate) || (fromDate.equals(toDate) && curDate.equals(toDate))) {
 
-			
-			for( Shopping shopping : shoppings ) {
+			try {
 
-				
-				List<String> blackListMacs = CollectionFactory.createList();
-				List<String> employeeListMacs = CollectionFactory.createList();
-				
-				// Try to delete previous records if needed
-				if(deletePreviousRecords) {
-					apdvDao.deleteUsingEntityIdAndEntityKindAndDate(shopping.getIdentifier(), EntityKind.KIND_SHOPPING,
-							curDate, new Date(curDate.getTime() + 86400000));
-				}
-				
-				List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(shopping.getIdentifier(), EntityKind.KIND_SHOPPING, curDate);
-				if( !CollectionUtils.isEmpty(assigs)) {
-					if( assigs.size() == 1 ) {
-						
-						assignmentsCache.clear();
-						assignmentsCache.put(assigs.get(0).getHostname(), assigs.get(0));
-						if(!apdCache.containsKey(assigs.get(0).getHostname()))
-							apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(), true));
-						
-						log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
-						List<APHEntry> entries = apheDao.getUsingHostnameAndDates(
-								Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, range, false);
+				for( Shopping shopping : shoppings ) {
 
-						log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
-						List<APDVisit> objs = CollectionFactory.createList();
-						for(APHEntry entry : entries ) {
-							aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
-							List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
-								for(APDVisit visit : visitList )
-									if(!objs.contains(visit))
-									objs.add(visit);
+					try {
+
+						List<String> blackListMacs = CollectionFactory.createList();
+						List<String> employeeListMacs = CollectionFactory.createList();
+
+						// Try to delete previous records if needed
+						if(deletePreviousRecords) {
+							apdvDao.deleteUsingEntityIdAndEntityKindAndDate(shopping.getIdentifier(), EntityKind.KIND_SHOPPING,
+									curDate, new Date(curDate.getTime() + 86400000));
 						}
 
-						log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
-						try {
-							apdvDao.createOrUpdate(null, objs, true);
-						} catch( Exception e ) {}
+						List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(shopping.getIdentifier(), EntityKind.KIND_SHOPPING, curDate);
+						if( !CollectionUtils.isEmpty(assigs)) {
+							if( assigs.size() == 1 ) {
 
-					} else {
-						Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
-						List<String> hostnames = CollectionFactory.createList();
-						assignmentsCache.clear();
-						for( APDAssignation assig : assigs ) { 
-							hostnames.add(assig.getHostname());
-							assignmentsCache.put(assig.getHostname(), assig);
-							if(!apdCache.containsKey(assig.getHostname()))
-								apdCache.put(assig.getHostname(), apdDao.get(assig.getHostname(), true));
+								assignmentsCache.clear();
+								assignmentsCache.put(assigs.get(0).getHostname(), assigs.get(0));
+								if(!apdCache.containsKey(assigs.get(0).getHostname()))
+									apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(), true));
+
+								log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
+								List<APHEntry> entries = apheDao.getUsingHostnameAndDates(
+										Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, range, false);
+
+								log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
+								List<APDVisit> objs = CollectionFactory.createList();
+								for(APHEntry entry : entries ) {
+									aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
+									List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
+									for(APDVisit visit : visitList )
+										if(!objs.contains(visit))
+											objs.add(visit);
+								}
+
+								log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
+								try {
+									apdvDao.createOrUpdate(null, objs, true);
+								} catch( Exception e ) {}
+
+							} else {
+								Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
+								List<String> hostnames = CollectionFactory.createList();
+								assignmentsCache.clear();
+								for( APDAssignation assig : assigs ) { 
+									hostnames.add(assig.getHostname());
+									assignmentsCache.put(assig.getHostname(), assig);
+									if(!apdCache.containsKey(assig.getHostname()))
+										apdCache.put(assig.getHostname(), apdDao.get(assig.getHostname(), true));
+								}
+
+								log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and " + curDate + "...");
+
+								List<APHEntry> entries = apheDao.getUsingHostnameAndDates(hostnames, curDate, curDate, range, false);
+								for( APHEntry entry : entries ) {
+									if(!cache.containsKey(entry.getMac()))
+										cache.put(entry.getMac(), new ArrayList<APHEntry>());
+
+									aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
+									cache.get(entry.getMac()).add(entry);
+								}
+
+								log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
+								List<APDVisit> objs = CollectionFactory.createList();
+								Iterator<String> i = cache.keySet().iterator();
+								while(i.hasNext()) {
+									String key = i.next();
+									List<APHEntry> e = cache.get(key);
+									List<APDVisit> visitList = aphEntryToVisits(e, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
+									for(APDVisit visit : visitList )
+										if(!objs.contains(visit))
+											objs.add(visit);
+								}
+
+								log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
+								try {
+									apdvDao.createOrUpdate(null, objs, true);
+								} catch( Exception e ) {}
+
+							}
 						}
 
-						log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and " + curDate + "...");
-						
-						List<APHEntry> entries = apheDao.getUsingHostnameAndDates(hostnames, curDate, curDate, range, false);
-						for( APHEntry entry : entries ) {
-							if(!cache.containsKey(entry.getMac()))
-								cache.put(entry.getMac(), new ArrayList<APHEntry>());
-							
-							aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
-							cache.get(entry.getMac()).add(entry);
+						// Try to update dashboard if needed
+						if(updateDashboards) {
+							if(!cacheBuilt) {
+								try {
+									mapper.buildCaches(false);
+									cacheBuilt = true;
+								} catch( Exception e ) {
+									throw ASExceptionHelper.defaultException(e.getMessage(), e);
+								}
+							}
+
+							didDao.deleteUsingSubentityIdAndElementIdAndDate(shopping.getIdentifier(),
+									Arrays.asList(new String[] { "apd_visitor", "apd_permanence" }), curDate, curDate);
+							mapper.createAPDVisitPerformanceDashboardForDay(curDate,
+									Arrays.asList(new String[] { shopping.getIdentifier() }), EntityKind.KIND_SHOPPING);
 						}
-						
-						log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
-						List<APDVisit> objs = CollectionFactory.createList();
-						Iterator<String> i = cache.keySet().iterator();
-						while(i.hasNext()) {
-							String key = i.next();
-							List<APHEntry> e = cache.get(key);
-							List<APDVisit> visitList = aphEntryToVisits(e, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
-							for(APDVisit visit : visitList )
-								if(!objs.contains(visit))
-									objs.add(visit);
-						}
-						
-						log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
-						try {
-							apdvDao.createOrUpdate(null, objs, true);
-						} catch( Exception e ) {}
-						
+
+					} catch( Exception e ) {
+						log.log(Level.SEVERE, e.getMessage(), e);
 					}
 				}
-				
-				// Try to update dashboard if needed
-				if(updateDashboards) {
-					if(!cacheBuilt) {
-						try {
-							mapper.buildCaches(false);
-							cacheBuilt = true;
-						} catch( Exception e ) {
-							throw ASExceptionHelper.defaultException(e.getMessage(), e);
-						}
-					}
 
-					didDao.deleteUsingSubentityIdAndElementIdAndDate(shopping.getIdentifier(),
-							Arrays.asList(new String[] { "apd_visitor", "apd_permanence" }), curDate, curDate);
-					mapper.createAPDVisitPerformanceDashboardForDay(curDate,
-							Arrays.asList(new String[] { shopping.getIdentifier() }), EntityKind.KIND_SHOPPING);
-				}
-
+			} catch( Exception e1 ) {
+				log.log(Level.SEVERE, e1.getMessage(), e1);
 			}
 			
 			curDate = new Date(curDate.getTime() + 86400000);
