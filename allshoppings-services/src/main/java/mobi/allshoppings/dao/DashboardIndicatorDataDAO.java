@@ -28,6 +28,14 @@ public interface DashboardIndicatorDataDAO extends GenericDAO<DashboardIndicator
 			String order, String country, String province, String city)
 			throws ASException;
 
+	List<DashboardIndicatorData> getUsingFilters(String entityId,
+			Integer entityKind, List<String> elementId, List<String> elementSubId,
+			String shoppingId, String subentityId, String periodType,
+			String fromStringDate, String toStringDate, String movieId,
+			String voucherType, Integer dayOfWeek, Integer timeZone, String order, 
+			String country, String province, String city)
+			throws ASException;
+
 	void deleteUsingSubentityIdAndElementIdAndDate(String subentityId,
 			List<String> elementId, Date fromDate, Date toDate)
 			throws ASException;

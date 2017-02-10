@@ -1,6 +1,7 @@
 package mobi.allshoppings.bz.spi;
 
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,9 +10,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bz.DashboardHeatmapTableHourBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
@@ -70,8 +73,11 @@ implements DashboardHeatmapTableHourBzService {
 			Boolean toMinutes = obtainBooleanValue("toMinutes", false);
 			Boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
 			
+			List<String> lElementId = StringUtils.hasText(elementId) ? Arrays.asList(elementId.split(",")) : null;
+			List<String> lElementSubId = StringUtils.hasText(elementSubId) ? Arrays.asList(elementSubId.split(",")) : null;
+			
 			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
-					entityKind, elementId, elementSubId, shoppingId,
+					entityKind, lElementId, lElementSubId, shoppingId,
 					subentityId, periodType, fromStringDate, toStringDate,
 					movieId, voucherType, dayOfWeek, timezone, null, null, null, null);
 
@@ -83,15 +89,41 @@ implements DashboardHeatmapTableHourBzService {
 			
 
 			// Data
-			Map<Integer, Map<Integer, Long>> yData = CollectionFactory.createMap();
-			Map<Integer, Map<Integer, Long>> yCounter = CollectionFactory.createMap();
+			Map<String, Map<Integer, Map<Integer, Long>>> yData = CollectionFactory.createMap();
+			Map<String, Map<Integer, Map<Integer, Long>>> yCounter = CollectionFactory.createMap();
 
 			// y Categories
 			List<String> yCategories = CollectionFactory.createList();
 			for( int i = 0; i < 24; i++ ) {
 				yCategories.add(i + ":00");
-				yData.put(i, new HashMap<Integer, Long>());
-				yCounter.put(i, new HashMap<Integer, Long>());
+			}
+
+			// Creates a collection with elementSubIds returned from the persisted objects
+			if( CollectionUtils.isEmpty(lElementSubId)) {
+				lElementSubId = CollectionFactory.createList();
+				for( DashboardIndicatorData obj : list ) {
+					if( isValidForUser(user, obj)) {
+						if(!lElementSubId.contains(obj.getElementSubId()))
+							lElementSubId.add(obj.getElementSubId());
+					}
+				}
+			}
+			if( CollectionUtils.isEmpty(lElementSubId)) {
+				lElementSubId = Arrays.asList("default");
+			}
+			
+			// Creates the initial data
+			for(String ele : lElementSubId ) {
+				Map<Integer, Map<Integer, Long>> ySubData = CollectionFactory.createMap();
+				Map<Integer, Map<Integer, Long>> ySubCounter = CollectionFactory.createMap();
+
+				for( int i = 0; i < 24; i++ ) {
+					ySubData.put(i, new HashMap<Integer, Long>());
+					ySubCounter.put(i, new HashMap<Integer, Long>());
+				}
+				
+				yData.put(ele, ySubData);
+				yCounter.put(ele, ySubCounter);
 			}
 			
 			// x Categories
@@ -115,7 +147,7 @@ implements DashboardHeatmapTableHourBzService {
 							position = position - 24;
 					}
 
-					Map<Integer, Long> xData = yData.get(position);
+					Map<Integer, Long> xData = yData.get(obj.getElementSubId()).get(position);
 
 					// Sets the double value
 					Long val = xData.get(obj.getDayOfWeek()-1);
@@ -124,7 +156,7 @@ implements DashboardHeatmapTableHourBzService {
 					xData.put(obj.getDayOfWeek()-1, val);
 
 					// Sets the record count
-					xData = yCounter.get(position);
+					xData = yCounter.get(obj.getElementSubId()).get(position);
 					val = xData.get(obj.getDayOfWeek()-1);
 					if( val == null ) val = 0L;
 					if( obj.getRecordCount() != null )
@@ -137,24 +169,28 @@ implements DashboardHeatmapTableHourBzService {
 			
 			// Checks Average
 			if( average ) {
-				Iterator<Integer> i1 = yData.keySet().iterator();
-				while( i1.hasNext() ) {
-					Integer key1 = i1.next();
-					Map<Integer, Long> xData = yData.get(key1);
-					Map<Integer, Long> xCounter = yCounter.get(key1);
-					Iterator<Integer> i2 = xData.keySet().iterator();
-					while( i2.hasNext() ) {
-						Integer key2 = i2.next();
-						Long val = xData.get(key2);
-						if( val != null ) {
-							Long count = xCounter.get(key2);
-							if( count != null && count != 0 ) {
-								if( toMinutes ) {
-									val = val / count / 60000;
-								} else {
-									val = val / count;
+				Iterator<String> ix = lElementSubId.iterator();
+				while(ix.hasNext()) {
+					String ele = ix.next();
+					Iterator<Integer> i1 = yData.get(ele).keySet().iterator();
+					while( i1.hasNext() ) {
+						Integer key1 = i1.next();
+						Map<Integer, Long> xData = yData.get(ele).get(key1);
+						Map<Integer, Long> xCounter = yCounter.get(ele).get(key1);
+						Iterator<Integer> i2 = xData.keySet().iterator();
+						while( i2.hasNext() ) {
+							Integer key2 = i2.next();
+							Long val = xData.get(key2);
+							if( val != null ) {
+								Long count = xCounter.get(key2);
+								if( count != null && count != 0 ) {
+									if( toMinutes ) {
+										val = val / count / 60000;
+									} else {
+										val = val / count;
+									}
+									xData.put(key2, val);
 								}
-								xData.put(key2, val);
 							}
 						}
 					}
@@ -163,20 +199,27 @@ implements DashboardHeatmapTableHourBzService {
 			
 			// Checks Erase Blanks
 			if( eraseBlanks ) {
-				List<String> newYCategories = CollectionFactory.createList();
-				for( int i = 0; i < 24; i++ ) {
-					Map<Integer, Long> xData = yData.get(i);
-					if( xData.size() > 0 ) 
-						newYCategories.add(i + ":00");
-					else
-						yData.remove(i);
+
+				Iterator<String> ix = lElementSubId.iterator();
+				while(ix.hasNext()) {
+					String ele = ix.next();
+
+					List<String> newYCategories = CollectionFactory.createList();
+					for( int i = 0; i < 24; i++ ) {
+						Map<Integer, Long> xData = yData.get(ele).get(i);
+						if( xData.size() > 0 ) 
+							newYCategories.add(i + ":00");
+						else
+							yData.get(ele).remove(i);
+					}
+					yCategories = newYCategories;
+
 				}
-				yCategories = newYCategories;
 			}
 
 			// Creates the yPositions map
 			Map<Integer, Integer> yPositions = CollectionFactory.createMap();
-			Iterator<Integer> i = yData.keySet().iterator();
+			Iterator<Integer> i = yData.get(lElementSubId.get(0)).keySet().iterator();
 			int count = 0;
 			while(i.hasNext()) {
 				Integer key = i.next();
@@ -202,7 +245,7 @@ implements DashboardHeatmapTableHourBzService {
 			JSONArray dataJson = new JSONArray();
 			JSONArray element = new JSONArray();
 			for( int y = 0; y < 24; y++ ) {
-				Map<Integer, Long> xData = yData.get(y);
+				Map<Integer, Long> xData = yData.get(lElementSubId.get(0)).get(y);
 				if( xData != null ) {
 					for( int x = 0; x <= 7; x++ ) {
 						Long val = xData.get(x);
@@ -211,6 +254,17 @@ implements DashboardHeatmapTableHourBzService {
 							element.put(x);
 							element.put(yPositions.get(y));
 							element.put(val);
+							
+							for(int j = 1; j < lElementSubId.size(); j++ ) {
+								Map<Integer, Long> xTmpData = yData.get(lElementSubId.get(j)).get(y);
+								if( xTmpData != null ) {
+									Long tmpVal = xTmpData.get(x);
+									if( tmpVal != null ) {
+										element.put(tmpVal);
+									}
+								}								
+							}
+							
 							dataJson.put(element);
 						}
 					}
