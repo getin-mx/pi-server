@@ -270,6 +270,8 @@ public class GetinDump extends AbstractCLI {
 			Brand brand;
 			try {
 				brand = brandDao.get("bestbuy_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Best Buy");
@@ -581,7 +583,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("264", "Flormar Metromall", "flormar_pa", null));
 			stores.add(new StoreAdapter("265", "Flormar Altaplaza", "flormar_pa", null));
 			stores.add(new StoreAdapter("266", "Flormar Multicentro", "flormar_pa", null));
-			stores.add(new StoreAdapter("213", "Blulagoon Coyoacan Piloto", "blulagoon_mx", "centrocoyoacan"));
+			stores.add(new StoreAdapter("213", "Blu Lagoon Coyoacan Piloto", "blulagoon_mx", "centrocoyoacan"));
 			stores.add(new StoreAdapter("218", "+Kota Parque Delta", "maskota_mx", "parquedelta"));
 			stores.add(new StoreAdapter("221", "Deli Cafe Copr Chedraui", "delicafe_mx", null));
 			stores.add(new StoreAdapter("222", "Deli Cafe Dos Vistas", "delicafe_mx", null));
@@ -651,8 +653,8 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("306", "Adolfo Dominguez Duraznos", "chomarc_mx",null));
 			stores.add(new StoreAdapter("307", "Adolfo Dominguez Aguascalientes", "chomarc_mx",null));
 			stores.add(new StoreAdapter("308", "La Martina Antea Queretaro", "chomarc_mx",null));
-			stores.add(new StoreAdapter("309", "Outlet AD Lomas Verdes", "chomarc_mx",null));
-			stores.add(new StoreAdapter("310", "Outlet AD Castelar", "chomarc_mx",null));
+			stores.add(new StoreAdapter("309", "Adolfo Dominguez Outlet Lomas Verdes", "chomarc_mx",null));
+			stores.add(new StoreAdapter("310", "Adolfo Dominguez Outlet Castelar", "chomarc_mx",null));
 			stores.add(new StoreAdapter("311", "La Martina Punta Norte", "chomarc_mx",null));
 			stores.add(new StoreAdapter("312", "Outlet Deportes	Correo Mayor 48", "outletdeportes_mx",null));
 			stores.add(new StoreAdapter("313", "Outlet Deportes	Correo Mayor 71", "outletdeportes_mx",null));
@@ -665,13 +667,13 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("320","Sally Beauty	Metepec", "sallybeauty_mx",null));
 			stores.add(new StoreAdapter("321","Roku Condesa", "roku_mx",null));
 			stores.add(new StoreAdapter("322", "Fullsand Galerías Guadalajara", "fullsand_mx", null));
-			stores.add(new StoreAdapter("323", "Saavedra La nueva orizaba ", "saavedra_mx", null));
-			stores.add(new StoreAdapter("324", "Saavedra La Parroquia", "saavedra_mx", null));
+			stores.add(new StoreAdapter("323", "La Nueva Orizaba Central de Abastos", "saavedra_mx", null));
+			stores.add(new StoreAdapter("324", "La Parroquia Central de Abastos", "saavedra_mx", null));
 			stores.add(new StoreAdapter("325", "La Martina Cancún", "chomarc_mx",null));
 			stores.add(new StoreAdapter("326", "Adolfo Dominguez Los Cabos", "chomarc_mx",null)); 
 			stores.add(new StoreAdapter("327", "Adolfo Dominguez Mérida", "chomarc_mx",null));
-			stores.add(new StoreAdapter("328", "Outlet AD Veracuz", "chomarc_mx",null)); 
-			stores.add(new StoreAdapter("329", "Outlet AD Xalapa", "chomarc_mx",null));
+			stores.add(new StoreAdapter("328", "Adolfo Dominguez Outlet Veracuz", "chomarc_mx",null)); 
+			stores.add(new StoreAdapter("329", "Adolfo Dominguez Xalapa", "chomarc_mx",null));
 			stores.add(new StoreAdapter("330", "Adolfo Dominguez Outlet Xalapa", "chomarc_mx",null));
 			stores.add(new StoreAdapter("331", "Adolfo Dominguez Coaztacoalcos", "chomarc_mx",null));
 			stores.add(new StoreAdapter("332", "Adolfo Dominguez Monterrey", "chomarc_mx",null)); 
@@ -700,10 +702,10 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("355", "Outlet Deportes Leon 3","outletdeportes_mx", null));
 			stores.add(new StoreAdapter("356", "Outlet Deportes Hilvana Queretaro","outletdeportes_mx", null));
 			stores.add(new StoreAdapter("357", "Botanicus Valle de Bravo", "botanicus_mx", null));
-			stores.add(new StoreAdapter("358", "Blulagoon Santa Teresa", "blulagoon_mx", null));
-			stores.add(new StoreAdapter("359", "Blulagoon Plaza Carso", "blulagoon_mx", "plazacarso"));
-			stores.add(new StoreAdapter("360", "Blulagoon Coyoacán", "blulagoon_mx", null));
-			stores.add(new StoreAdapter("361", "Blulagoon Melissa Duraznos", "blulagoon_mx", null));
+			stores.add(new StoreAdapter("358", "Blu Lagoon Santa Teresa", "blulagoon_mx", null));
+			stores.add(new StoreAdapter("359", "Blu Lagoon Plaza Carso", "blulagoon_mx", "plazacarso"));
+			stores.add(new StoreAdapter("360", "Blu Lagoon Coyoacán", "blulagoon_mx", null));
+			stores.add(new StoreAdapter("361", "Melissa Duraznos", "blulagoon_mx", null));
 			stores.add(new StoreAdapter("362", "Getin lab - Piso 5", "getin_mx",null));
 			stores.add(new StoreAdapter("363", "Modatelas Ermita", "modatelas_mx", null));
 			stores.add(new StoreAdapter("364", "Modatelas Ermita II", "modatelas_mx", null));
@@ -724,9 +726,9 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("379", "Market Intelligence	Corregio 1", "marketintelligence_mx", null));
 			stores.add(new StoreAdapter("380", "Grupo Pavel Tumi", "grupopavel_mx", null));
 			stores.add(new StoreAdapter("381", "Grupo Pavel Inglot", "grupopavel_mx", null));
-			stores.add(new StoreAdapter("382", "Modatelas Ermita", "modatelas_mx", null));
-			stores.add(new StoreAdapter("383", "Modatelas Coacalco II", "modatelas_mx", null)); 
-			stores.add(new StoreAdapter("384", "Modatelas Coacalco III", "modatelas_mx", null)); 
+			//stores.add(new StoreAdapter("382", "Modatelas Ermita", "modatelas_mx", null));
+			//stores.add(new StoreAdapter("383", "Modatelas Coacalco II", "modatelas_mx", null)); 
+			//stores.add(new StoreAdapter("384", "Modatelas Coacalco III", "modatelas_mx", null)); 
 			stores.add(new StoreAdapter("385", "Modatelas Romero Rubio", "modatelas_mx", null));
 			stores.add(new StoreAdapter("386", "Modatelas Izcalli", "modatelas_mx", null)); 
 			stores.add(new StoreAdapter("387", "Modatelas Express Tepotzotlan", "modatelas_mx", null)); 
@@ -751,8 +753,19 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("406", "Volaris Banda Tansportadora 1", "volaris_mx", null));
 			stores.add(new StoreAdapter("407", "Volaris Banda Tansportadora 2", "volaris_mx", null));
 			stores.add(new StoreAdapter("408", "Volaris Banda Tansportadora 3", "volaris_mx", null));
-
-
+			stores.add(new StoreAdapter("409", "Best Buy Caja 1", "bestbuy_mx", "centrosantafe"));
+			stores.add(new StoreAdapter("410", "Best Buy Caja 2", "bestbuy_mx", "centrosantafe"));
+			stores.add(new StoreAdapter("411", "Best Buy Caja 3", "bestbuy_mx", "centrosantafe"));
+			stores.add(new StoreAdapter("412", "Best Buy Caja 4", "bestbuy_mx", "centrosantafe"));
+			stores.add(new StoreAdapter("413", "Best Buy Lateral 1", "bestbuy_mx", "centrosantafe"));
+			stores.add(new StoreAdapter("414", "Best Buy Lateral 2", "bestbuy_mx", "centrosantafe"));
+			stores.add(new StoreAdapter("415", "Best Buy Lateral 3", "bestbuy_mx", "centrosantafe"));
+			stores.add(new StoreAdapter("416", "Best Buy Lateral 4", "bestbuy_mx", "centrosantafe"));
+			stores.add(new StoreAdapter("417", "Best Buy Lateral 5", "bestbuy_mx", "centrosantafe"));
+			stores.add(new StoreAdapter("418", "Best Buy Central", "bestbuy_mx", "centrosantafe"));
+			stores.add(new StoreAdapter("419", "Modatelas La Aurora", "modatelas_mx", null));
+			stores.add(new StoreAdapter("420", "Modatelas Las Maravillas", "modatelas_mx", null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
