@@ -46,8 +46,10 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 			String country, String province, String city)
 			throws ASException {
 
-		return getUsingFilters(entityId, entityKind, Arrays.asList(new String[] {elementId}), elementSubId, shoppingId, subentityId, 
-				periodType, fromStringDate, toStringDate, movieId, voucherType, dayOfWeek, timeZone, order, country, province, city);
+		return getUsingFilters(entityId, entityKind,
+				StringUtils.hasText(elementId) ? Arrays.asList(new String[] { elementId }) : null, elementSubId,
+				shoppingId, subentityId, periodType, fromStringDate, toStringDate, movieId, voucherType, dayOfWeek,
+				timeZone, order, country, province, city);
 	}
 
 	@Override
@@ -58,8 +60,10 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 			String voucherType, Integer dayOfWeek, Integer timeZone, String order, 
 			String country, String province, String city)
 			throws ASException {
-		return getUsingFilters(entityId, entityKind, elementId, Arrays.asList(new String[] {elementSubId}), shoppingId, subentityId, 
-				periodType, fromStringDate, toStringDate, movieId, voucherType, dayOfWeek, timeZone, order, country, province, city);
+		return getUsingFilters(entityId, entityKind, elementId,
+				StringUtils.hasText(elementSubId) ? Arrays.asList(new String[] { elementSubId }) : null, shoppingId,
+				subentityId, periodType, fromStringDate, toStringDate, movieId, voucherType, dayOfWeek, timeZone, order,
+				country, province, city);
 	}
 	
 	@Override

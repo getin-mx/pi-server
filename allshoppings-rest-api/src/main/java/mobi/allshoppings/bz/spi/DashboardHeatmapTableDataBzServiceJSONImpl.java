@@ -226,7 +226,6 @@ implements DashboardHeatmapTableDataBzService {
 				ret.put("ordered", orderedJson);
 			}
 			
-			
 			return ret.toString();
 			
 		} catch (ASException e) {

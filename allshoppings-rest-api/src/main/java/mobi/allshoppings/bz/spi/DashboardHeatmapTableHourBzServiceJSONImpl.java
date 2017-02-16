@@ -2,11 +2,13 @@ package mobi.allshoppings.bz.spi;
 
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -196,14 +198,17 @@ implements DashboardHeatmapTableHourBzService {
 					}
 				}
 			}
-			
+
+			int maxIdx = 0;
+			int idx = 0;
 			// Checks Erase Blanks
 			if( eraseBlanks ) {
 
+				int maxVal = 0;
 				Iterator<String> ix = lElementSubId.iterator();
 				while(ix.hasNext()) {
-					String ele = ix.next();
 
+					String ele = ix.next();
 					List<String> newYCategories = CollectionFactory.createList();
 					for( int i = 0; i < 24; i++ ) {
 						Map<Integer, Long> xData = yData.get(ele).get(i);
@@ -212,14 +217,22 @@ implements DashboardHeatmapTableHourBzService {
 						else
 							yData.get(ele).remove(i);
 					}
-					yCategories = newYCategories;
-
+					if( newYCategories.size() >= maxVal ) {
+						maxVal = newYCategories.size();
+						yCategories = newYCategories;
+						maxIdx = idx;
+					}
+					idx++;
 				}
 			}
 
 			// Creates the yPositions map
 			Map<Integer, Integer> yPositions = CollectionFactory.createMap();
-			Iterator<Integer> i = yData.get(lElementSubId.get(0)).keySet().iterator();
+			Set<Integer> keySet = yData.get(lElementSubId.get(maxIdx)).keySet();
+			List<Integer> keyList = CollectionFactory.createList();
+			keyList.addAll(keySet);
+			Collections.sort(keyList);
+			Iterator<Integer> i = keyList.iterator();
 			int count = 0;
 			while(i.hasNext()) {
 				Integer key = i.next();
@@ -268,6 +281,31 @@ implements DashboardHeatmapTableHourBzService {
 							dataJson.put(element);
 						}
 					}
+				} else if( lElementSubId.size() > 1 ){
+					xData = yData.get(lElementSubId.get(1)).get(y);
+					if( xData != null ) {
+						for( int x = 0; x <= 7; x++ ) {
+							Long val = xData.get(x);
+							if( val != null ) {
+								element = new JSONArray();
+								element.put(x);
+								element.put(yPositions.get(y));
+								element.put(0);
+								
+								for(int j = 1; j < lElementSubId.size(); j++ ) {
+									Map<Integer, Long> xTmpData = yData.get(lElementSubId.get(j)).get(y);
+									if( xTmpData != null ) {
+										Long tmpVal = xTmpData.get(x);
+										if( tmpVal != null ) {
+											element.put(tmpVal);
+										}
+									}								
+								}
+								
+								dataJson.put(element);
+							}
+						}
+					}					
 				}
 			}
 			ret.put("data", dataJson);
