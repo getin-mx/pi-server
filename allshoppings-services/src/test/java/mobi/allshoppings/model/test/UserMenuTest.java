@@ -47,6 +47,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.applications", "fa-laptop", "Aplicaciones"));
 				um.getEntries().add(new UserMenuEntry("index.brands", "fa-laptop", "Cadenas"));
 				um.getEntries().add(new UserMenuEntry("index.shoppings", "fa-laptop", "Centros Comerciales"));
+				um.getEntries().add(new UserMenuEntry("index.storeemployees", "fa-users", "Employees"));
 				um.setKey(userMenuDao.createKey("admin"));
 				userMenuDao.create(um);
 			}
@@ -486,6 +487,31 @@ public class UserMenuTest extends TestCase {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("delicafe_mx"));
+				userMenuDao.create(um);
+			}
+			
+			User montedepiedad = null;
+			try {
+				montedepiedad = userDao.get("montedepiedad_mx", true);
+			} catch( Exception e ) {
+				montedepiedad = new User();
+				montedepiedad.setFirstname("Monte De Piedad");
+				montedepiedad.setLastname("Mexico");
+				montedepiedad.setEmail("montedepiedad@allshoppings.mobi");
+				montedepiedad.getSecuritySettings().setRole(Role.BRAND);
+				montedepiedad.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				montedepiedad.setKey((Key)keyHelper.obtainKey(User.class, "montedepiedad_mx"));
+				userDao.create(montedepiedad);
+			}
+
+			try {
+				um = userMenuDao.get("montedepiedad_mx", true);
+				userMenuDao.delete("montedepiedad_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("montedepiedad_mx"));
 				userMenuDao.create(um);
 			}
 
@@ -1700,7 +1726,7 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
-				user.setFirstname("dakab@allshoppings.mobi");
+				user.setFirstname("Dakab");
 				user.setLastname("");
 				user.setEmail("dakab_mx");
 				user.getSecuritySettings().setRole(Role.STORE);

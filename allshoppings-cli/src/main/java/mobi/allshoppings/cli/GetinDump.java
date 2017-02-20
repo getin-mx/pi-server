@@ -675,7 +675,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("328", "Adolfo Dominguez Outlet Veracuz", "chomarc_mx",null)); 
 			stores.add(new StoreAdapter("329", "Adolfo Dominguez Xalapa", "chomarc_mx",null));
 			stores.add(new StoreAdapter("330", "Adolfo Dominguez Outlet Xalapa", "chomarc_mx",null));
-			stores.add(new StoreAdapter("331", "Adolfo Dominguez Coaztacoalcos", "chomarc_mx",null));
+			stores.add(new StoreAdapter("331", "Adolfo Dominguez Coatzacoalcos", "chomarc_mx",null));
 			stores.add(new StoreAdapter("332", "Adolfo Dominguez Monterrey", "chomarc_mx",null)); 
 			stores.add(new StoreAdapter("333", "UNO de 50 Monterrey", "chomarc_mx",null)); 
 			stores.add(new StoreAdapter("334", "Adolfo Dominguez Tabasco", "chomarc_mx",null));
@@ -765,6 +765,23 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("418", "Best Buy Central", "bestbuy_mx", "centrosantafe"));
 			stores.add(new StoreAdapter("419", "Modatelas La Aurora", "modatelas_mx", null));
 			stores.add(new StoreAdapter("420", "Modatelas Las Maravillas", "modatelas_mx", null));
+			stores.add(new StoreAdapter("421", "Fullsand Acapulco Diamante", "fullsand_mx", null));
+			
+			stores.add(new StoreAdapter("422", "Prada Coyoacan", "prada_mx", null));
+			stores.add(new StoreAdapter("423", "Prada Xalapa", "prada_mx", null));
+			stores.add(new StoreAdapter("424", "Prada Galerias Atizapan", "prada_mx", null));
+			stores.add(new StoreAdapter("425", "Prada Galerias Tabasco", "prada_mx", null));
+			stores.add(new StoreAdapter("426", "Prada Altabrisa (Tabasco II)", "prada_mx", null));
+			stores.add(new StoreAdapter("427", "Prada Galerias Serdan", "prada_mx", null));
+			stores.add(new StoreAdapter("428", "Prada Parque Toreo", "prada_mx", null));
+			stores.add(new StoreAdapter("429", "Prada Plaza Mayor", "prada_mx", null));
+			stores.add(new StoreAdapter("430", "Prada Outlet Punta Norte", "prada_mx", null));  
+			stores.add(new StoreAdapter("431", "Prada Outlet Galerias", "prada_mx", null));
+			stores.add(new StoreAdapter("432", "Prada Outlet Mulza", "prada_mx", null));
+			
+			stores.add(new StoreAdapter("433", "Monte de Piedad - 96", "montedepiedad_mx", null));
+			stores.add(new StoreAdapter("434", "Monte de Piedad - 61", "montedepiedad_mx", null));
+			stores.add(new StoreAdapter("435", "Monte de Piedad - 305", "montedepiedad_mx", null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
