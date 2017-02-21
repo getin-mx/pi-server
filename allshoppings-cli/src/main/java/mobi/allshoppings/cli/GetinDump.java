@@ -765,8 +765,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("418", "Best Buy Central", "bestbuy_mx", "centrosantafe"));
 			stores.add(new StoreAdapter("419", "Modatelas La Aurora", "modatelas_mx", null));
 			stores.add(new StoreAdapter("420", "Modatelas Las Maravillas", "modatelas_mx", null));
-			stores.add(new StoreAdapter("421", "Fullsand Acapulco Diamante", "fullsand_mx", null));
-			
+			stores.add(new StoreAdapter("421", "Fullsand Acapulco Diamante", "fullsand_mx", null));			
 			stores.add(new StoreAdapter("422", "Prada Coyoacan", "prada_mx", null));
 			stores.add(new StoreAdapter("423", "Prada Xalapa", "prada_mx", null));
 			stores.add(new StoreAdapter("424", "Prada Galerias Atizapan", "prada_mx", null));
@@ -778,10 +777,12 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("430", "Prada Outlet Punta Norte", "prada_mx", null));  
 			stores.add(new StoreAdapter("431", "Prada Outlet Galerias", "prada_mx", null));
 			stores.add(new StoreAdapter("432", "Prada Outlet Mulza", "prada_mx", null));
-			
 			stores.add(new StoreAdapter("433", "Monte de Piedad - 96", "montedepiedad_mx", null));
 			stores.add(new StoreAdapter("434", "Monte de Piedad - 61", "montedepiedad_mx", null));
 			stores.add(new StoreAdapter("435", "Monte de Piedad - 305", "montedepiedad_mx", null));
+			
+			stores.add(new StoreAdapter("436", "Botanicus Tlanepantla", "botanicus_mx", null));
+			
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
