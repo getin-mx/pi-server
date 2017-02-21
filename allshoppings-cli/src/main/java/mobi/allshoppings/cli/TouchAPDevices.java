@@ -75,6 +75,7 @@ public class TouchAPDevices extends AbstractCLI {
 			List<APDevice> list = apdeviceDao.getAll(true);
 			for( APDevice obj : list ) {
 				log.log(Level.INFO, "Touching " + obj.getIdentifier() + "...");
+				obj.completeDefaults();
 				if(StringUtils.hasText(obj.getDescription()))
 					obj.setDescription(obj.getDescription().replaceAll("_", " "));
 				else

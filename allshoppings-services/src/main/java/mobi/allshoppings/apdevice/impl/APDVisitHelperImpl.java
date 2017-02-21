@@ -561,7 +561,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		} else {
 			apd.putAll(apdCache);
 		}
-
+		
 		// Adds all the assignments in the cache
 		Map<String,APDAssignation> assignments = CollectionFactory.createMap();
 		if( assignmentsCache == null || assignmentsCache.size() == 0 ) {
@@ -603,6 +603,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 					Date curDate = aphHelper.slotToDate(curEntry.getDate(), slot);
 					APDevice dev = apd.get(curEntry.getHostname());
+					dev.completeDefaults();
 					
 					// Closes open visits in case of slot continuity disruption
 					if( lastSlot != null && slot != (lastSlot + 1) && (slot - lastSlot) > (dev.getVisitGapThreshold() * 3)) {
@@ -964,8 +965,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	@Override
 	public void fakeVisitsWith(String storeId, String fakeWithStoreId, Date fromDate, Date toDate ) throws ASException {
 				
-		List<APDVisit> list1 = apdvDao.getUsingEntityIdAndEntityKindAndDate(storeId, EntityKind.KIND_STORE, fromDate, toDate, null, false);
-		List<APDVisit> list2 = apdvDao.getUsingEntityIdAndEntityKindAndDate(fakeWithStoreId, EntityKind.KIND_STORE, fromDate, toDate, null, false);
+		List<APDVisit> list1 = apdvDao.getUsingEntityIdAndEntityKindAndDate(storeId, EntityKind.KIND_STORE, fromDate, toDate, null, null, null, false);
+		List<APDVisit> list2 = apdvDao.getUsingEntityIdAndEntityKindAndDate(fakeWithStoreId, EntityKind.KIND_STORE, fromDate, toDate, null, null, null, false);
 		
 		List<APDVisit> lp = CollectionFactory.createList();
 		List<APDVisit> lv = CollectionFactory.createList();

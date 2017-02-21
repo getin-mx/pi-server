@@ -29,6 +29,8 @@
   	<bean id="service.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBServiceBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="offertype.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBOfferTypeBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
 
+  	<bean id="aphentry.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBAPHEntryBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="apdvisit.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBAPDVisitBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="apdevice.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBAPDeviceBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="apdassignation.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBAPDAssignationBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="shopping.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBShoppingBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />

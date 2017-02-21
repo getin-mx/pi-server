@@ -679,7 +679,7 @@ public class DashboardAPDeviceMapperService {
 			
 			// Looks for all visit records
 			Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
-			List<APDVisit> list = apdvDao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, dateFrom, dateTo, range, false);
+			List<APDVisit> list = apdvDao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, dateFrom, dateTo, null, range, null, false);
 			log.log(Level.INFO, list.size() + " records to process... ");
 			for(APDVisit v : list ) {
 

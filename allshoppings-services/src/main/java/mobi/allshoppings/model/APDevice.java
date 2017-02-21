@@ -113,42 +113,46 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 		this.reportStatus = REPORT_STATUS_NOT_REPORTED;
 		this.external = false;
 		
-		visitTimeThreshold = 0L;
-		visitGapThreshold = 10L;
-		visitPowerThreshold = -60L;
-		visitMaxThreshold = 480L;
-		peasantPowerThreshold = -80L;
-		visitCountThreshold = 0L;
-		daysToNotRepit = 0;
-	    
-	    timezone = "CDT";
-	    visitsOnMon = true;
-	    visitsOnTue = true;
-	    visitsOnWed = true;
-	    visitsOnThu = true;
-	    visitsOnFri = true;
-	    visitsOnSat = true;
-	    visitsOnSun = true;
-	    visitStartMon = "08:00";
-	    visitEndMon = "02:00";
-	    visitStartTue = "08:00";
-	    visitEndTue = "02:00";
-	    visitStartWed = "08:00";
-	    visitEndWed = "02:00";
-	    visitStartThu = "08:00";
-	    visitEndThu = "02:00";
-	    visitStartFri = "08:00";
-	    visitEndFri = "02:00";
-	    visitStartSat = "08:00";
-	    visitEndSat = "02:00";
-	    visitStartSun = "08:00";
-	    visitEndSun = "02:00";
-	    monitorStart = "08:00";
-	    monitorEnd = "02:00";
-	    passStart = "05:00";
-	    passEnd = "03:00";
-	    negative = false;
+		completeDefaults();
+	}
+	
+	public void completeDefaults() {
 
+		if( visitTimeThreshold == null) visitTimeThreshold = 0L;
+		if( visitGapThreshold == null) visitGapThreshold = 10L;
+		if( visitPowerThreshold == null) visitPowerThreshold = -60L;
+		if( visitMaxThreshold == null) visitMaxThreshold = 480L;
+		if( peasantPowerThreshold == null) peasantPowerThreshold = -80L;
+		if( visitCountThreshold == null) visitCountThreshold = 0L;
+		if( daysToNotRepit == null) daysToNotRepit = 0;
+	    
+		if( timezone == null) timezone = "CDT";
+		if( visitsOnMon == null) visitsOnMon = true;
+		if( visitsOnTue == null) visitsOnTue = true;
+		if( visitsOnWed == null) visitsOnWed = true;
+		if( visitsOnThu == null) visitsOnThu = true;
+		if( visitsOnFri == null) visitsOnFri = true;
+		if( visitsOnSat == null) visitsOnSat = true;
+		if( visitsOnSun == null) visitsOnSun = true;
+		if( visitStartMon == null) visitStartMon = "11:00";
+		if( visitEndMon == null) visitEndMon = "20:00";
+	    if( visitStartTue == null) visitStartTue = "11:00";
+	    if( visitEndTue == null) visitEndTue = "20:00";
+	    if( visitStartWed == null) visitStartWed = "11:00";
+	    if( visitEndWed == null) visitEndWed = "20:00";
+	    if( visitStartThu == null) visitStartThu = "11:00";
+	    if( visitEndThu == null) visitEndThu = "20:00";
+	    if( visitStartFri == null) visitStartFri = "11:00";
+	    if( visitEndFri == null) visitEndFri = "20:00";
+	    if( visitStartSat == null) visitStartSat = "11:00";
+	    if( visitEndSat == null) visitEndSat = "20:00";
+	    if( visitStartSun == null) visitStartSun = "11:00";
+	    if( visitEndSun == null) visitEndSun = "20:00";
+	    if( monitorStart == null) monitorStart = "09:00";
+	    if( monitorEnd == null) monitorEnd = "21:00";
+	    if( passStart == null) passStart = "05:00";
+	    if( passEnd == null) passEnd = "03:00";
+	    if( negative == null) negative = false;
 	}
 	
 	/**

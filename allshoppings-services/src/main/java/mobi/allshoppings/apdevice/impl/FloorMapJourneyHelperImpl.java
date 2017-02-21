@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -47,8 +47,7 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 		List<FloorMapJourney> ret = CollectionFactory.createList();
 		String myWord;
 		Integer count = new Integer(0);
-		//get elements
-		String order = "dataCount DESC";
+
 		//TODO: change method getUsingRange by getUsingFloorMapAndMacAndDate
 		List<FloorMapJourney> fmj = fmjDao.getUsingFloorMapAndMacAndDate(floorMapId, mac, fromDate, toDate,null,null);
 		//iterate

@@ -1,6 +1,7 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -9,12 +10,16 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
+import mobi.allshoppings.dao.APDVisitDAO;
+import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.tools.CollectionFactory;
 
@@ -27,9 +32,16 @@ extends BDBRestBaseServerResource
 implements BDBDashboardBzService {
 
 	private static final Logger log = Logger.getLogger(APHEntryDataBzServiceJSONImpl.class.getName());
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@Autowired
 	private APHHelper aphHelper;
+
+	@Autowired
+	private APHEntryDAO dao;
+	
+	@Autowired
+	private APDVisitDAO apdvDao;
 
 	/**
 	 * Obtains a Dashboard report prepared to form a APHEntry graph
@@ -44,11 +56,11 @@ implements BDBDashboardBzService {
 			// obtain the id and validates the auth token
 			obtainUserIdentifier(true);
 
+			String identifier = obtainStringValue("identifier", null);
 			String hostnameList = obtainStringValue("hostnames", null);
 			String mac = obtainStringValue("mac", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			Boolean original = obtainBooleanValue("original", false);
-//			String toStringDate = obtainStringValue("toStringDate", null);
 
 			int fromHour = 0;
 			int toHour = 4320;
@@ -61,39 +73,140 @@ implements BDBDashboardBzService {
 				toHour = aphHelper.stringToOffsetTime(toStringHour); 
 			} catch( Exception e ) {}
 			
-			String[] hostnames = hostnameList.split(",");
 			List<APHEntry> entries = CollectionFactory.createList();
-			for( String hostname : hostnames ) {
-				entries.add(aphHelper.getFromCache(hostname, mac, fromStringDate));
+			if (StringUtils.hasText(identifier)) {
+				APHEntry obj = dao.get(identifier);
+				entries.add(aphHelper.getFromCache(obj.getHostname(), obj.getMac(), obj.getDate()));
+			} else {
+				String[] hostnames = hostnameList.split(",");
+				for (String hostname : hostnames) {
+					entries.add(aphHelper.getFromCache(hostname, mac, fromStringDate));
+				}
 			}
 
+			List<APDVisit> visits = CollectionFactory.createList();
+			Map<Long, Integer> values = CollectionFactory.createMap();
+			
 			JSONArray series = new JSONArray();
+
+			if( !original ) {
+				for( APHEntry entry : entries ) {
+					JSONObject serie = new JSONObject();
+					JSONArray data = new JSONArray();
+					Map<String, Integer> candidate = entry.getRssi();
+					for(int i = fromHour; i < toHour; i++) {
+						if( candidate.containsKey(String.valueOf(i))) {
+							JSONArray ele = new JSONArray();
+							long key = sdf.parse(entry.getDate()).getTime() + (i*20000); 
+							ele.put(key);
+							ele.put(candidate.get(String.valueOf(i)));
+							data.put(ele);
+							
+							Integer val = values.get(key);
+							if( val == null ) val = new Integer(-200);
+							if( candidate.get(String.valueOf(i)) > val )
+								val = candidate.get(String.valueOf(i));
+							values.put(key, val);
+							
+						} else {
+							JSONArray ele = new JSONArray();
+							ele.put(sdf.parse(entry.getDate()).getTime() + (i*20000));
+							ele.put((Integer)null);
+							data.put(ele);
+						}
+					}
+					serie.put("data", data);
+					serie.put("name", entry.getHostname());
+					serie.put("type", "spline");
+					serie.put("yAxis", 0);
+					series.put(serie);
+				}
+			}
+			
 			for( APHEntry entry : entries ) {
 				JSONObject serie = new JSONObject();
 				JSONArray data = new JSONArray();
 				Map<String, Integer> candidate = (entry.getArtificialRssi().size() > 0 && !original) ? entry.getArtificialRssi() : entry.getRssi();
 				for(int i = fromHour; i < toHour; i++) {
 					if( candidate.containsKey(String.valueOf(i))) {
-						data.put(candidate.get(String.valueOf(i)));
+						JSONArray ele = new JSONArray();
+						long key = sdf.parse(entry.getDate()).getTime() + (i*20000); 
+						ele.put(key);
+						ele.put(candidate.get(String.valueOf(i)));
+						data.put(ele);
+						
+						Integer val = values.get(key);
+						if( val == null ) val = new Integer(-200);
+						if( candidate.get(String.valueOf(i)) > val )
+							val = candidate.get(String.valueOf(i));
+						values.put(key, val);
+						
 					} else {
-						data.put((Integer)null);
+						JSONArray ele = new JSONArray();
+						ele.put(sdf.parse(entry.getDate()).getTime() + (i*20000));
+						ele.put((Integer)null);
+						data.put(ele);
 					}
 				}
 				serie.put("data", data);
 				serie.put("name", entry.getHostname());
 				serie.put("type", "spline");
+				serie.put("yAxis", 1);
 				series.put(serie);
+				
+				if(!original)
+					visits.addAll(apdvDao.getUsingAPHE(entry.getIdentifier(), false));
+				
 			}
 			
-			JSONArray categories = new JSONArray();
-			for(int i = fromHour; i < toHour; i++) {
-				categories.put(aphHelper.slotToTime(i));
+			if(!original) {
+				for(APDVisit visit : visits ) {
+					
+					long vstart = visit.getCheckinStarted().getTime();
+					long vend = visit.getCheckinFinished().getTime();
+
+					JSONObject serie = new JSONObject();
+					JSONArray data = new JSONArray();
+
+					while( vstart <= vend ) {
+
+						JSONArray ele = new JSONArray();
+						long key = vstart; 
+						ele.put(key);
+						ele.put(values.get(key));
+						data.put(ele);
+
+						vstart += 20000;
+					}
+
+					String name = "";
+					int yAxis = 0;
+					if( visit.getCheckinType().equals(APDVisit.CHECKIN_VISIT)) {
+						name = "Visita";
+						yAxis = 3;
+					}
+					else if( visit.getCheckinType().equals(APDVisit.CHECKIN_PEASANT)) {
+						name = "Paseante";
+						yAxis = 2;
+					}
+					else if( visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE)) {
+						name = "Empleado";
+						yAxis = 3;
+					}
+					
+					serie.put("data", data);
+					serie.put("name", name);
+					serie.put("type", "spline");
+					serie.put("checkinType", visit.getCheckinType());
+					serie.put("yAxis", yAxis);
+					series.put(serie);
+
+				}
 			}
 			
 			// Returns the final value
 			JSONObject ret = new JSONObject();
 			ret.put("series", series);
-			ret.put("categories", categories);
 			return ret.toString();
 			
 		} catch (ASException e) {

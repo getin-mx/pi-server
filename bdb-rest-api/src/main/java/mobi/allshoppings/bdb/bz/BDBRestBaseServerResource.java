@@ -71,6 +71,10 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	protected static final String COUNTRY = "country";
 	protected static final String STATUS = "status";
 	protected static final String ORDER = "order";
+	protected static final String ENTITY_ID = "entityId";
+	protected static final String ENTITY_KIND = "entityKind";
+	protected static final String DATE = "date";
+	protected static final String CHECKIN_TYPE = "checkinType";
 	protected static final String ROLE = "role";
 	protected static final String DEFAULT_LEVEL = "all";
 	protected static final String FIELDS = "fields";

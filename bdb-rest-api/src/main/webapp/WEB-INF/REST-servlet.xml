@@ -42,6 +42,10 @@
 				<entry key="/apdevice/{identifier}" 		value-ref="spring.apdevice.rest.resource" />
 				<entry key="/apdassignation" 				value-ref="spring.apdassignation.rest.resource" />
 				<entry key="/apdassignation/{identifier}" 	value-ref="spring.apdassignation.rest.resource" />
+				<entry key="/aphentry" 						value-ref="spring.aphentry.rest.resource" />
+				<entry key="/aphentry/{identifier}" 		value-ref="spring.aphentry.rest.resource" />
+				<entry key="/apdvisit" 						value-ref="spring.apdvisit.rest.resource" />
+				<entry key="/apdvisit/{identifier}" 		value-ref="spring.apdvisit.rest.resource" />
 				<entry key="/process" 						value-ref="spring.process.rest.resource" />
 				<entry key="/process/{identifier}" 			value-ref="spring.process.rest.resource" />
 				<entry key="/requestProcess" 				value-ref="spring.requestprocess.rest.resource" />
@@ -79,6 +83,12 @@
  	</bean>
  	<bean id="spring.user.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="user.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.aphentry.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="aphentry.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.apdvisit.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="apdvisit.rest.resource" />
  	</bean>
  	<bean id="spring.area.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="area.rest.resource" />

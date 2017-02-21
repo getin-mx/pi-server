@@ -14,9 +14,20 @@ import mobi.allshoppings.tools.Range;
 public interface APDVisitDAO extends GenericDAO<APDVisit	> {
 
 	Key createKey(APDVisit obj) throws ASException;
-	List<APDVisit> getUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date fromDate, Date toDate, Range range, boolean detachable) throws ASException;
-	void deleteUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date fromDate, Date toDate) throws ASException;
-	List<APDVisit> getUsingStoresAndDate(List<String> stores, Date fromDate, Date toDate, Range range, boolean detachable) throws ASException;
-	Map<Integer, Integer> getRepetitions(List<String> entityIds, Integer entityKind, Integer checkinType, Date fromDate, Date toDate) throws ASException;
+
+	List<APDVisit> getUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date fromDate, Date toDate,
+			Integer checkinType, Range range, Map<String, String> attributes, boolean detachable) throws ASException;
+
+	void deleteUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date fromDate, Date toDate)
+			throws ASException;
+
+	List<APDVisit> getUsingStoresAndDate(List<String> stores, Date fromDate, Date toDate, Range range,
+			boolean detachable) throws ASException;
+
+	Map<Integer, Integer> getRepetitions(List<String> entityIds, Integer entityKind, Integer checkinType, Date fromDate,
+			Date toDate) throws ASException;
+
+	List<APDVisit> getUsingAPHE(String identifier, boolean detachable) throws ASException;
 	
+	Map<Integer, Integer> countUsingAPHE(String identifier) throws ASException;
 }

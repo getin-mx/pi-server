@@ -47,7 +47,9 @@ public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVi
 	}
 
 	@Override
-	public List<APDVisit> getUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date fromDate, Date toDate, Range range, boolean detachable) throws ASException {
+	public List<APDVisit> getUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date fromDate,
+			Date toDate, Integer checkinType, Range range, Map<String, String> attributes, boolean detachable)
+			throws ASException {
 
 		List<APDVisit> ret = CollectionFactory.createList();
 		PersistenceManager pm;
@@ -74,6 +76,13 @@ public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVi
 				parameters.put("entityKindParam", entityKind);
 			}
 
+			// entityKind Parameter
+			if(null != checkinType) {
+				declaredParams.add("Integer checkinTypeParam");
+				filters.add("checkinType == checkinTypeParam");
+				parameters.put("checkinTypeParam", checkinType);
+			}
+
 			// fromDate Parameter
 			if(null != fromDate) {
 				declaredParams.add("java.util.Date fromDateParam");
@@ -90,6 +99,14 @@ public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVi
 
 			query.declareParameters(toParameterList(declaredParams));
 			query.setFilter(toWellParametrizedFilter(filters));
+			
+			// Do a counting of records
+			if( attributes != null ) {
+				query.setResult("count(this)");
+				Long count = Long.parseLong(query.executeWithMap(parameters).toString());
+				attributes.put("recordCount", String.valueOf(count));
+				query.setResult(null);
+			}
 			
 			if( range != null ) 
 				query.setRange(range.getFrom(), range.getTo());
@@ -181,6 +198,110 @@ public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVi
 				} else {
 					ret.add(obj);
 				}
+			}
+			log.log(Level.INFO, "APDVisitDao query results copied");
+			
+			query.closeAll();
+			return ret;
+			
+		} catch(Exception e) {
+			if(!( e instanceof ASException )) {
+				throw ASExceptionHelper.defaultException(e.getMessage(), e);
+			} else {
+				throw e;
+			}
+		} finally  {
+			pm.close();
+		}
+
+	}
+
+	@Override
+	public List<APDVisit> getUsingAPHE(String identifier, boolean detachable) throws ASException {
+		
+		List<APDVisit> ret = CollectionFactory.createList();
+		PersistenceManager pm;
+		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+		
+		try{
+			Map<String, Object> parameters = CollectionFactory.createMap();
+			List<String> declaredParams = CollectionFactory.createList();
+			List<String> filters = CollectionFactory.createList();
+
+			Query query = pm.newQuery(clazz);
+
+			// identifier Parameter
+			declaredParams.add("String identifierParam");
+			filters.add("apheSource == identifierParam");
+			parameters.put("identifierParam", identifier);
+
+			query.declareParameters(toParameterList(declaredParams));
+			query.setFilter(toWellParametrizedFilter(filters));
+			
+			log.log(Level.INFO, "APDVisitDao query executing...");
+
+			@SuppressWarnings("unchecked")
+			List<APDVisit> list = (List<APDVisit>)query.executeWithMap(parameters);
+			log.log(Level.INFO, "APDVisitDao query executed... copying results...");
+
+			for(APDVisit obj : list ) {
+				if(detachable) {
+					ret.add(pm.detachCopy(obj));
+				} else {
+					ret.add(obj);
+				}
+			}
+			log.log(Level.INFO, "APDVisitDao query results copied");
+			
+			query.closeAll();
+			return ret;
+			
+		} catch(Exception e) {
+			if(!( e instanceof ASException )) {
+				throw ASExceptionHelper.defaultException(e.getMessage(), e);
+			} else {
+				throw e;
+			}
+		} finally  {
+			pm.close();
+		}
+		
+	}
+	
+	@Override
+	public Map<Integer, Integer> countUsingAPHE(String identifier) throws ASException {
+
+		Map<Integer, Integer> ret = CollectionFactory.createMap();
+		
+		PersistenceManager pm;
+		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+		
+		try{
+			Map<String, Object> parameters = CollectionFactory.createMap();
+			List<String> declaredParams = CollectionFactory.createList();
+			List<String> filters = CollectionFactory.createList();
+
+			Query query = pm.newQuery(clazz);
+
+			// identifier Parameter
+			declaredParams.add("String identifierParam");
+			filters.add("apheSource == identifierParam");
+			parameters.put("identifierParam", identifier);
+
+			query.declareParameters(toParameterList(declaredParams));
+			query.setFilter(toWellParametrizedFilter(filters));
+			
+			log.log(Level.INFO, "APDVisitDao query executing...");
+
+			@SuppressWarnings("unchecked")
+			List<APDVisit> list = (List<APDVisit>)query.executeWithMap(parameters);
+			log.log(Level.INFO, "APDVisitDao query executed... copying results...");
+
+			for(APDVisit obj : list ) {
+				Integer val = ret.get(obj.getCheckinType());
+				if( val == null ) val = new Integer(0);
+				val++;
+				ret.put(obj.getCheckinType(), val);
 			}
 			log.log(Level.INFO, "APDVisitDao query results copied");
 			

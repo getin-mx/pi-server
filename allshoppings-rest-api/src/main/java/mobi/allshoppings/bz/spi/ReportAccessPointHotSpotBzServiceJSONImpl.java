@@ -139,6 +139,7 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 			APDevice device = null;
 			try {
 				device = apdDao.get(hostname, true);
+				device.completeDefaults();
 				device.setLastRecordDate(new Date());
 				device.setLastRecordCount(data.length());
 				apdDao.update(device);
