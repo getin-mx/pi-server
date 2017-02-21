@@ -37,6 +37,7 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 				"entityId",
 				"entityKind",
 				"checkinStarted",
+				"checkinFinished",
 				"checkinType",
 				"apheSource"
 		};

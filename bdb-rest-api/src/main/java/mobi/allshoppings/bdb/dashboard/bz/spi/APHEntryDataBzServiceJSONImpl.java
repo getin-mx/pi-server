@@ -2,6 +2,7 @@ package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
 import java.text.SimpleDateFormat;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -12,14 +13,18 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
+import com.google.gson.Gson;
+
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.APDVisitDAO;
+import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDVisit;
+import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.tools.CollectionFactory;
 
@@ -42,6 +47,9 @@ implements BDBDashboardBzService {
 	
 	@Autowired
 	private APDVisitDAO apdvDao;
+	
+	@Autowired
+	private APDeviceDAO apdDao;
 
 	/**
 	 * Obtains a Dashboard report prepared to form a APHEntry graph
@@ -62,6 +70,8 @@ implements BDBDashboardBzService {
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			Boolean original = obtainBooleanValue("original", false);
 
+			APDevice dev = null;
+			
 			int fromHour = 0;
 			int toHour = 4320;
 			try { 
@@ -89,11 +99,14 @@ implements BDBDashboardBzService {
 			
 			JSONArray series = new JSONArray();
 
+			// Natural RSSI
 			if( !original ) {
 				for( APHEntry entry : entries ) {
 					JSONObject serie = new JSONObject();
 					JSONArray data = new JSONArray();
 					Map<String, Integer> candidate = entry.getRssi();
+					boolean hasFirst = false;
+					int max = getLastPosition(entry);
 					for(int i = fromHour; i < toHour; i++) {
 						if( candidate.containsKey(String.valueOf(i))) {
 							JSONArray ele = new JSONArray();
@@ -108,11 +121,15 @@ implements BDBDashboardBzService {
 								val = candidate.get(String.valueOf(i));
 							values.put(key, val);
 							
+							hasFirst = true;
+							
 						} else {
-							JSONArray ele = new JSONArray();
-							ele.put(sdf.parse(entry.getDate()).getTime() + (i*20000));
-							ele.put((Integer)null);
-							data.put(ele);
+							if(hasFirst && i <= max) {
+								JSONArray ele = new JSONArray();
+								ele.put(sdf.parse(entry.getDate()).getTime() + (i*20000));
+								ele.put((Integer)null);
+								data.put(ele);
+							}
 						}
 					}
 					serie.put("data", data);
@@ -123,10 +140,17 @@ implements BDBDashboardBzService {
 				}
 			}
 			
+			// Main Selected RSSI (Natural or Artificial... depending on service parameters )
 			for( APHEntry entry : entries ) {
+				
+				if( dev == null )
+					dev = apdDao.get(entry.getHostname());
+				
 				JSONObject serie = new JSONObject();
 				JSONArray data = new JSONArray();
 				Map<String, Integer> candidate = (entry.getArtificialRssi().size() > 0 && !original) ? entry.getArtificialRssi() : entry.getRssi();
+				boolean hasFirst = false;
+				int max = getLastPosition(entry);
 				for(int i = fromHour; i < toHour; i++) {
 					if( candidate.containsKey(String.valueOf(i))) {
 						JSONArray ele = new JSONArray();
@@ -140,12 +164,16 @@ implements BDBDashboardBzService {
 						if( candidate.get(String.valueOf(i)) > val )
 							val = candidate.get(String.valueOf(i));
 						values.put(key, val);
+
+						hasFirst = true;
 						
 					} else {
-						JSONArray ele = new JSONArray();
-						ele.put(sdf.parse(entry.getDate()).getTime() + (i*20000));
-						ele.put((Integer)null);
-						data.put(ele);
+						if( hasFirst && i <= max) {
+							JSONArray ele = new JSONArray();
+							ele.put(sdf.parse(entry.getDate()).getTime() + (i*20000));
+							ele.put((Integer)null);
+							data.put(ele);
+						}
 					}
 				}
 				serie.put("data", data);
@@ -158,6 +186,8 @@ implements BDBDashboardBzService {
 					visits.addAll(apdvDao.getUsingAPHE(entry.getIdentifier(), false));
 				
 			}
+			
+			// Visits 
 			
 			if(!original) {
 				for(APDVisit visit : visits ) {
@@ -207,6 +237,7 @@ implements BDBDashboardBzService {
 			// Returns the final value
 			JSONObject ret = new JSONObject();
 			ret.put("series", series);
+			ret.put("apdevice", new JSONObject(new Gson().toJson(dev)));
 			return ret.toString();
 			
 		} catch (ASException e) {
@@ -225,4 +256,15 @@ implements BDBDashboardBzService {
 		}
 	}
 
+	int getLastPosition(APHEntry obj) {
+		int ret = 0;
+		Iterator<String> i = obj.getRssi().keySet().iterator();
+		while(i.hasNext()) {
+			int val = Integer.valueOf(i.next());
+			if( val > ret )
+				ret = val;
+		}
+		return ret;
+	}
+	
 }
