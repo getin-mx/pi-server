@@ -75,15 +75,15 @@
   		<property name="defaultAppId" value="allshoppings"/>
   		<property name="defaultInternalToken" value="2A2C192578F597CEE6BC3EE8A26B9F7DB0DBA4B0CD8930FDC3D2BB0E7D1B8CC9"/>
   		<property name="getinURI" value="http://develop.getin.mx:8001"/>
-  		<property name="generalAppMail" value="root@allshoppings.mobi" />
-  		<property name="generalAppMailName" value="AllShoppings.mobi" />
-		<property name="mailFrom" value="noreply@allshoppings.mobi" />
-		<property name="mailFromName" value="AllShoppings" />
-		<property name="replyTo" value="info@allshoppings.mobi" />
-		<property name="smtpServer" value="smtp-relay.gmail.com" />
+  		<property name="generalAppMail" value="contacto@getin.mx" />
+  		<property name="generalAppMailName" value="GetIn" />
+		<property name="mailFrom" value="contacto@getin.mx" />
+		<property name="mailFromName" value="GetIn" />
+		<property name="replyTo" value="contacto@getin.mx" />
+		<property name="smtpServer" value="smtp.gmail.com" />
 		<property name="smtpPort" value="587" />
-		<property name="smtpUser" value="root@allshoppings.mobi" />
-		<property name="smtpPassword" value="rootman02" />
+		<property name="smtpUser" value="contacto@getin.mx" />
+		<property name="smtpPassword" value="Getin2017" />
 		<property name="smtpEncription" value="tls" />
 		<property name="solrUrl" value="http://aragorn.getin.mx:8983/solr/allshoppings" />
 		<property name="getinSqlUrl" value="jdbc:mysql://getinold.allshoppings.mobi:3306/getin?user=api&amp;password=VZ52sBPTeg33rq7w" />

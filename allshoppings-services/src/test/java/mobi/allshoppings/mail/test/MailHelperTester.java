@@ -19,7 +19,7 @@ public class MailHelperTester extends AbstractJUnit4SpringContextTests {
     	try {
     		User user = new User();
     		user.setEmail("mhapanowicz@gmail.com");
-    		mailHelper.sendMessage(user, "AllShoppings Service", "Prueba de Antenas");
+    		mailHelper.sendMessage(user, "Getin Service", "Prueba de Antenas");
     	} catch(Throwable e ) {
     		e.printStackTrace();
     	}
