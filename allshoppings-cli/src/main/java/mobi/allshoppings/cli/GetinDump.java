@@ -282,6 +282,8 @@ public class GetinDump extends AbstractCLI {
 
 			try {
 				brand = brandDao.get("invicta_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Invicta");
@@ -292,6 +294,8 @@ public class GetinDump extends AbstractCLI {
 
 			try {
 				brand = brandDao.get("blulagoon_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Blu Lagoon");
@@ -302,6 +306,8 @@ public class GetinDump extends AbstractCLI {
 
 			try {
 				brand = brandDao.get("flormar_pa", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Flormar");
@@ -312,6 +318,8 @@ public class GetinDump extends AbstractCLI {
 
 			try {
 				brand = brandDao.get("bathandbodyworks_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Bath and Body Works");
@@ -322,6 +330,8 @@ public class GetinDump extends AbstractCLI {
 
 			try {
 				brand = brandDao.get("delicafe_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Deli Cafe");
@@ -332,6 +342,8 @@ public class GetinDump extends AbstractCLI {
 
 			try {
 				brand = brandDao.get("modatelas_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Modatelas");
@@ -342,6 +354,8 @@ public class GetinDump extends AbstractCLI {
 
 			try {
 				brand = brandDao.get("botanicus_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Botanicus");
@@ -352,6 +366,8 @@ public class GetinDump extends AbstractCLI {
 			
 			try {
 				brand = brandDao.get("saavedra_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Saavedra");
@@ -372,6 +388,8 @@ public class GetinDump extends AbstractCLI {
 
 			try {
 				brand = brandDao.get("agasys_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Agasys");
@@ -381,6 +399,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("squalo_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Squalo");
@@ -390,6 +410,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("sunglasshut_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Sunglass Hut");
@@ -399,6 +421,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("sbarro_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Sbarro");
@@ -430,6 +454,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("montedepiedad_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Monte De Piedad");
@@ -439,6 +465,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("chomarc_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Chomarc");
@@ -448,6 +476,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("outletdeportes_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Outlet Deportes");
@@ -457,6 +487,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("hrconsulting_ar", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("HR Consulting");
@@ -466,6 +498,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("sallybeauty_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Sally Beauty");
@@ -475,6 +509,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("roku_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Roku");
@@ -484,6 +520,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("saboreateycafe_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Saboreaté y Café ");
@@ -493,6 +531,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("volaris_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Volaris");
@@ -502,6 +542,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("latabernadelleon_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("La Taberna Del León");
@@ -511,6 +553,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("demo4_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Demo 4");
@@ -520,6 +564,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("marketintelligence_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Market Intelligence");
@@ -529,6 +575,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("grupopavel_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Grupo Pavel");
@@ -538,6 +586,8 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("alansolorio_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Alan Solorio");
