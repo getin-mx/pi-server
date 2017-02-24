@@ -265,6 +265,20 @@ public class GetinDump extends AbstractCLI {
 				shopping.setKey(shoppingDao.createKey("plazaloreto"));
 				shoppingDao.create(shopping);
 			}
+			try {
+				shopping = shoppingDao.get("grandsanfrancisco", true);
+			} catch( Exception e ) {
+				shopping = new Shopping();
+				shopping.setName("Grand San Francisco");
+				shopping.setCheckinAreaSize(200);
+				shopping.setFenceSize(200);
+				shopping.getAddress().setCountry("Mexico");
+				shopping.setKey(shoppingDao.createKey("grandsanfrancisco"));
+				shoppingDao.create(shopping);
+			}
+			
+			
+			
 
 			// Brands ----------------------------------------------------------------------------------------------------
 			Brand brand;
@@ -595,6 +609,18 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "alansolorio_mx"));
 				brandDao.create(brand);
 			}
+			try {
+				brand = brandDao.get("annik_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("AnniK");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "annik_mx"));
+				brandDao.create(brand);
+			}
+			
 			
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
@@ -830,9 +856,37 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("433", "Monte de Piedad - 96", "montedepiedad_mx", null));
 			stores.add(new StoreAdapter("434", "Monte de Piedad - 61", "montedepiedad_mx", null));
 			stores.add(new StoreAdapter("435", "Monte de Piedad - 305", "montedepiedad_mx", null));
-			
 			stores.add(new StoreAdapter("436", "Botanicus Tlanepantla", "botanicus_mx", null));
+			stores.add(new StoreAdapter("437", "Modatelas Los Reyes", "modatelas_mx", null));
+			stores.add(new StoreAdapter("438", "Modatelas Córdoba", "modatelas_mx", null));
+			stores.add(new StoreAdapter("439", "Modatelas Cd. Mendoza", "modatelas_mx", null));
+			stores.add(new StoreAdapter("440", "Modatelas Cd Juarez", "modatelas_mx", null));
+			stores.add(new StoreAdapter("441", "Modatelas Cd. Juarez II", "modatelas_mx", null));
+			stores.add(new StoreAdapter("442", "Modatelas Coatzacoalcos", "modatelas_mx", null));
+			stores.add(new StoreAdapter("443", "Modatelas Minatitlán", "modatelas_mx", null));
+			stores.add(new StoreAdapter("444", "Modatelas Fantasy Oaxaca", "modatelas_mx", null));
+			stores.add(new StoreAdapter("445", "Modatelas Chihuahua II", "modatelas_mx", null));
+			stores.add(new StoreAdapter("446", "Modatelas Juchitán", "modatelas_mx", null));
+			stores.add(new StoreAdapter("447", "Modatelas Miahuatlan", "modatelas_mx", null));
+			stores.add(new StoreAdapter("448", "Modatelas Pinotepa", "modatelas_mx", null));
+			stores.add(new StoreAdapter("449", "Modatelas Oaxaca III", "modatelas_mx", null));
+			stores.add(new StoreAdapter("450", "Modatelas Chihuahua III", "modatelas_mx", null));
+			stores.add(new StoreAdapter("451", "Modatelas Nicolas Romero II", "modatelas_mx", null));
+			stores.add(new StoreAdapter("452", "Modatelas Oaxaca IV", "modatelas_mx", null));
+			stores.add(new StoreAdapter("453", "Modatelas Martínez de la Torre", "modatelas_mx", null));
+			stores.add(new StoreAdapter("454", "Modatelas Cd Camargo", "modatelas_mx", null));
+			stores.add(new StoreAdapter("455", "Modatelas Veracruz III", "modatelas_mx", null));
+			stores.add(new StoreAdapter("456", "Modatelas Cd Juarez III", "modatelas_mx", null));
+			stores.add(new StoreAdapter("457", "Modatelas Tuxpan", "modatelas_mx", null));
+			stores.add(new StoreAdapter("458", "Modatelas Puerto Escondido", "modatelas_mx", null));
+			stores.add(new StoreAdapter("459", "Modatelas Salina Cruz", "modatelas_mx", null));
+			stores.add(new StoreAdapter("460", "Modatelas Cosamaloapan", "modatelas_mx", null));
+			stores.add(new StoreAdapter("461", "Modatelas Tierra Blanca", "modatelas_mx", null));
+			stores.add(new StoreAdapter("462", "Modatelas Parral", "modatelas_mx", null));
+			stores.add(new StoreAdapter("463", "Modatelas Chihuahua IV", "modatelas_mx", null));
 			
+			stores.add(new StoreAdapter("464", "Annik Desierto de los Leones", "annik_mx", "grandsanfrancisco"));
+			stores.add(new StoreAdapter("465", "Annik San Jerónimo", "annik_mx", null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
