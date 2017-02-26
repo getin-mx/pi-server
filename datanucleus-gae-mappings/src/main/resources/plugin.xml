@@ -47,5 +47,9 @@
             literal-class="org.datanucleus.store.rdbms.sql.expression.ObjectLiteral"
             expression-class="org.datanucleus.store.rdbms.sql.expression.ObjectExpression"/>
     </extension>
+
+    <extension point="org.datanucleus.cache_level1">
+        <cache name="FakeCache" class-name="com.inodes.datanucleus.cache.FakeCache"/>
+    </extension>
     
 </plugin>
