@@ -90,6 +90,18 @@ public class BDBAPDMAEmployeeBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<
 				obj.setFromDate(sdf.parse(sdf.format(new Date())));
 			} catch (ParseException e) {
 			}
+		else
+			try {
+				obj.setFromDate(sdf.parse(sdf.format(obj.getFromDate())));
+			} catch (ParseException e) {
+			}
+		
+		if( null != obj.getToDate())
+			try {
+				obj.setToDate(sdf.parse(sdf.format(obj.getToDate())));
+			} catch (ParseException e) {
+			}
+
 	}
 
 	public String list() {
