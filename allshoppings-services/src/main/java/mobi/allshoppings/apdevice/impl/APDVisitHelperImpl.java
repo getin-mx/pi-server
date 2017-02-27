@@ -395,7 +395,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		//--- Start black list ------------
 		//Load blackListbyShopping for shopping
 		if( StringUtils.hasText(store.getShoppingId())) {
-			List<APDMABlackList> blackListbyShopping = apmaBlDao.getUsingEntityIdAndRange(store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, false);
+			List<APDMABlackList> blackListbyShopping = apmaBlDao.getUsingEntityIdAndRange(store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, null, false);
 			for( APDMABlackList shop : blackListbyShopping ) {
 				if (!macs.contains(shop.getMac().toUpperCase().trim())){
 					macs.add(shop.getMac().toUpperCase().trim());	
@@ -405,7 +405,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		}
 
 		//Load blackListbyShopping for brand
-		List<APDMABlackList> blackListbyBrand = apmaBlDao.getUsingEntityIdAndRange(store.getBrandId(), EntityKind.KIND_BRAND, null, null, false);
+		List<APDMABlackList> blackListbyBrand = apmaBlDao.getUsingEntityIdAndRange(store.getBrandId(), EntityKind.KIND_BRAND, null, null, null, false);
 		for( APDMABlackList brand : blackListbyBrand ) {
 			if (!macs.contains(brand.getMac().toUpperCase().trim())){
 				macs.add(brand.getMac().toUpperCase().trim());	
@@ -415,7 +415,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 
 		//Load blackListbyShopping for store
-		List<APDMABlackList> blackListbyStore = apmaBlDao.getUsingEntityIdAndRange(store.getIdentifier(), EntityKind.KIND_STORE, null, null, false);
+		List<APDMABlackList> blackListbyStore = apmaBlDao.getUsingEntityIdAndRange(store.getIdentifier(), EntityKind.KIND_STORE, null, null, null, false);
 		for( APDMABlackList st : blackListbyStore ) {
 			if (!macs.contains(st.getMac().toUpperCase().trim())){
 				macs.add(st.getMac().toUpperCase().trim());	
@@ -425,7 +425,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load black list for Store: " + blackListbyStore.size() + " macs");
 
 
-		log.log(Level.INFO, "TOTAL Mamcs: " + macs.size() + " macs");
+		log.log(Level.INFO, "TOTAL Blacklist Entries: " + macs.size() + " macs");
 
 		//--- End black list --------------
 		return macs;
@@ -448,7 +448,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		//--- Start black list ------------
 		//Load blackListbyShopping for shopping
 		if( StringUtils.hasText(store.getShoppingId())) {
-			List<APDMAEmployee> employeesbyShopping = apmaEDao.getUsingEntityIdAndRange(store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, false);
+			List<APDMAEmployee> employeesbyShopping = apmaEDao.getUsingEntityIdAndRange(store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, null, false);
 			for( APDMAEmployee emp_shop : employeesbyShopping ) {
 				if (!macs.contains(emp_shop.getMac().toUpperCase().trim())){
 					macs.add(emp_shop.getMac().toUpperCase().trim());	
@@ -458,7 +458,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		}
 
 		//Load blackListbyShopping for brand
-		List<APDMAEmployee> employeesbyBrand = apmaEDao.getUsingEntityIdAndRange(store.getBrandId(), EntityKind.KIND_BRAND, null, null, false);
+		List<APDMAEmployee> employeesbyBrand = apmaEDao.getUsingEntityIdAndRange(store.getBrandId(), EntityKind.KIND_BRAND, null, null, null, false);
 		for( APDMAEmployee emp_brand : employeesbyBrand ) {
 			if (!macs.contains(emp_brand.getMac().toUpperCase().trim())){
 				macs.add(emp_brand.getMac().toUpperCase().trim());	
@@ -468,7 +468,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 
 		//Load blackListbyShopping for store
-		List<APDMAEmployee> employeesbyStore = apmaEDao.getUsingEntityIdAndRange(store.getIdentifier(), EntityKind.KIND_STORE, null, null, false);
+		List<APDMAEmployee> employeesbyStore = apmaEDao.getUsingEntityIdAndRange(store.getIdentifier(), EntityKind.KIND_STORE, null, null, null, false);
 		for( APDMAEmployee emp_sto : employeesbyStore ) {
 			if (!macs.contains(emp_sto.getMac().toUpperCase().trim())){
 				macs.add(emp_sto.getMac().toUpperCase().trim());	
@@ -478,7 +478,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load Employees list for Store: " + employeesbyStore.size() + " macs");
 
 
-		log.log(Level.INFO, "TOTAL Mamcs: " + macs.size() + " macs");
+		log.log(Level.INFO, "TOTAL Employees: " + macs.size() + " macs");
 
 		//--- End black list --------------
 		return macs;

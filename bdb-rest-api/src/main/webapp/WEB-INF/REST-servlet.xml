@@ -46,6 +46,10 @@
 				<entry key="/aphentry/{identifier}" 		value-ref="spring.aphentry.rest.resource" />
 				<entry key="/apdvisit" 						value-ref="spring.apdvisit.rest.resource" />
 				<entry key="/apdvisit/{identifier}" 		value-ref="spring.apdvisit.rest.resource" />
+				<entry key="/apdmaemployee" 				value-ref="spring.apdmaemployee.rest.resource" />
+				<entry key="/apdmaemployee/{identifier}" 	value-ref="spring.apdmaemployee.rest.resource" />
+				<entry key="/apdmablacklist" 				value-ref="spring.apdmablacklist.rest.resource" />
+				<entry key="/apdmablacklist/{identifier}" 	value-ref="spring.apdmablacklist.rest.resource" />
 				<entry key="/process" 						value-ref="spring.process.rest.resource" />
 				<entry key="/process/{identifier}" 			value-ref="spring.process.rest.resource" />
 				<entry key="/requestProcess" 				value-ref="spring.requestprocess.rest.resource" />
@@ -116,6 +120,12 @@
  	</bean>
  	<bean id="spring.apdevice.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="apdevice.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.apdmaemployee.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="apdmaemployee.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.apdmablacklist.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="apdmablacklist.rest.resource" />
  	</bean>
  	<bean id="spring.apdassignation.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="apdassignation.rest.resource" />

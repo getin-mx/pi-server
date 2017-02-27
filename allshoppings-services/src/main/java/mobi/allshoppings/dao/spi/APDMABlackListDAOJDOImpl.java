@@ -22,22 +22,18 @@ public class APDMABlackListDAOJDOImpl extends GenericDAOJDO<APDMABlackList> impl
 
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(APDMABlackListDAOJDOImpl.class.getName());
-
+	
 	public APDMABlackListDAOJDOImpl() {
 		super(APDMABlackList.class);
 	}
 
 	@Override
-	public Key createKey(APDMABlackList seed) throws ASException {
-		if(!StringUtils.hasText(seed.getMac()) || !StringUtils.hasText(seed.getEntityId())){
-			throw ASExceptionHelper.notAcceptedException();
-		}
-		return (Key)keyHelper.obtainKey(APDMABlackList.class, keyHelper.resolveKey(seed.getEntityId() 
-				+ ":" + seed.getEntityKind() + ":" + seed.getMac()));
+	public Key createKey() throws ASException {
+		return keyHelper.createStringUniqueKey(clazz);
 	}
 
 	@Override
-	public List<APDMABlackList> getUsingEntityIdAndRange(String entityId, Integer entityKind, Range range, String order, boolean detachable) throws ASException {
+	public List<APDMABlackList> getUsingEntityIdAndRange(String entityId, Integer entityKind, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
 		List<APDMABlackList> returnedObjs = CollectionFactory.createList();
 
 		PersistenceManager pm;
@@ -66,6 +62,14 @@ public class APDMABlackListDAOJDOImpl extends GenericDAOJDO<APDMABlackList> impl
 
 			query.declareParameters(toParameterList(declaredParams));
 			query.setFilter(toWellParametrizedFilter(filters));
+
+			// Do a counting of records
+			if( attributes != null ) {
+				query.setResult("count(this)");
+				Long count = Long.parseLong(query.executeWithMap(parameters).toString());
+				attributes.put("recordCount", String.valueOf(count));
+				query.setResult(null);
+			}
 
 			// Adds a cursor to the ranged query
 			if( range != null ) 

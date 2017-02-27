@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -11,10 +12,11 @@ import javax.jdo.annotations.PrimaryKey;
 import com.inodes.datanucleus.model.Key;
 
 import mobi.allshoppings.model.interfaces.Identificable;
+import mobi.allshoppings.model.interfaces.Indexable;
 import mobi.allshoppings.model.interfaces.ModelKey;
 
 @PersistenceCapable(detachable="true")
-public class APDMABlackList implements ModelKey, Serializable, Identificable {
+public class APDMABlackList implements ModelKey, Serializable, Identificable, Indexable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -28,6 +30,9 @@ public class APDMABlackList implements ModelKey, Serializable, Identificable {
 	private String description;
 	private Date creationDateTime;
 	private Date lastUpdate;
+
+	@NotPersistent
+	private boolean doIndexNow = true;
 
 	public APDMABlackList() {
 		super();
@@ -195,6 +200,16 @@ public class APDMABlackList implements ModelKey, Serializable, Identificable {
 		return "APDMABlackList [key=" + key + ", entityId=" + entityId + ", entityKind=" + entityKind + ", mac=" + mac
 				+ ", description=" + description + ", creationDateTime=" + creationDateTime + ", lastUpdate="
 				+ lastUpdate + "]";
+	}
+
+	@Override
+	public boolean doIndex() {
+		return doIndexNow;
+	}
+
+	@Override
+	public void disableIndexing(boolean val) {
+		this.doIndexNow = !val;
 	}
 
 }

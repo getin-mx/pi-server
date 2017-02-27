@@ -1,6 +1,5 @@
 package mobi.allshoppings.dao.spi;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -24,23 +23,17 @@ public class APDMAEmployeeDAOJDOImpl extends GenericDAOJDO<APDMAEmployee> implem
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(APDMAEmployeeDAOJDOImpl.class.getName());
 	
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
 	public APDMAEmployeeDAOJDOImpl() {
 		super(APDMAEmployee.class);
 	}
 
 	@Override
-	public Key createKey(APDMAEmployee seed) throws ASException {
-		if(!StringUtils.hasText(seed.getMac()) || !StringUtils.hasText(seed.getEntityId())){
-			throw ASExceptionHelper.notAcceptedException();
-		}
-		return (Key)keyHelper.obtainKey(APDMAEmployee.class, keyHelper.resolveKey(seed.getEntityId() 
-				+ ":" + seed.getEntityKind() + ":" + seed.getMac() + sdf.format(seed.getFromDate())));
+	public Key createKey() throws ASException {
+		return keyHelper.createStringUniqueKey(clazz);
 	}
 
 	@Override
-	public List<APDMAEmployee> getUsingEntityIdAndRange(String entityId, Integer entityKind, Range range, String order, boolean detachable) throws ASException {
+	public List<APDMAEmployee> getUsingEntityIdAndRange(String entityId, Integer entityKind, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
 		List<APDMAEmployee> returnedObjs = CollectionFactory.createList();
 
 		PersistenceManager pm;
@@ -69,6 +62,14 @@ public class APDMAEmployeeDAOJDOImpl extends GenericDAOJDO<APDMAEmployee> implem
 
 			query.declareParameters(toParameterList(declaredParams));
 			query.setFilter(toWellParametrizedFilter(filters));
+
+			// Do a counting of records
+			if( attributes != null ) {
+				query.setResult("count(this)");
+				Long count = Long.parseLong(query.executeWithMap(parameters).toString());
+				attributes.put("recordCount", String.valueOf(count));
+				query.setResult(null);
+			}
 
 			// Adds a cursor to the ranged query
 			if( range != null ) 

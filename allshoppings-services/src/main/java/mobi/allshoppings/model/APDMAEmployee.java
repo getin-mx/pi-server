@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -11,10 +12,11 @@ import javax.jdo.annotations.PrimaryKey;
 import com.inodes.datanucleus.model.Key;
 
 import mobi.allshoppings.model.interfaces.Identificable;
+import mobi.allshoppings.model.interfaces.Indexable;
 import mobi.allshoppings.model.interfaces.ModelKey;
 
 @PersistenceCapable(detachable="true")
-public class APDMAEmployee implements ModelKey, Serializable, Identificable {
+public class APDMAEmployee implements ModelKey, Serializable, Identificable, Indexable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -33,6 +35,9 @@ public class APDMAEmployee implements ModelKey, Serializable, Identificable {
 	private Date lastUpdate;
 	private Date fromDate;
 	private Date toDate;
+
+	@NotPersistent
+	private boolean doIndexNow = true;
 
 	public APDMAEmployee() {
 		super();
@@ -261,6 +266,16 @@ public class APDMAEmployee implements ModelKey, Serializable, Identificable {
 				+ ", userId=" + userId + ", deviceUUID=" + deviceUUID + ", devicePlatform=" + devicePlatform
 				+ ", description=" + description + ", creationDateTime=" + creationDateTime + ", lastUpdate="
 				+ lastUpdate + ", fromDate=" + fromDate + ", toDate=" + toDate + "]";
+	}
+
+	@Override
+	public boolean doIndex() {
+		return doIndexNow;
+	}
+
+	@Override
+	public void disableIndexing(boolean val) {
+		this.doIndexNow = !val;
 	}
 
 }

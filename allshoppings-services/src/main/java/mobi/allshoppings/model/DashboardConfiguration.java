@@ -26,6 +26,7 @@ public class DashboardConfiguration implements ModelKey, Serializable, Identific
 
 	private String entityId;
 	private Integer entityKind;
+	private String visitsComments;
 	
 	private String timezone;
 	private String storeLabel;
@@ -152,6 +153,20 @@ public class DashboardConfiguration implements ModelKey, Serializable, Identific
 		this.storeLabel = storeLabel;
 	}
 
+	/**
+	 * @return the visitsComments
+	 */
+	public String getVisitsComments() {
+		return visitsComments;
+	}
+
+	/**
+	 * @param visitsComments the visitsComments to set
+	 */
+	public void setVisitsComments(String visitsComments) {
+		this.visitsComments = visitsComments;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -189,8 +204,8 @@ public class DashboardConfiguration implements ModelKey, Serializable, Identific
 	@Override
 	public String toString() {
 		return "DashboardConfiguration [key=" + key + ", creationDateTime=" + creationDateTime + ", lastUpdate="
-				+ lastUpdate + ", entityId=" + entityId + ", entityKind=" + entityKind + ", timezone=" + timezone
-				+ ", storeLabel=" + storeLabel + "]";
+				+ lastUpdate + ", entityId=" + entityId + ", entityKind=" + entityKind + ", visitsComments="
+				+ visitsComments + ", timezone=" + timezone + ", storeLabel=" + storeLabel + "]";
 	}
 
 }
