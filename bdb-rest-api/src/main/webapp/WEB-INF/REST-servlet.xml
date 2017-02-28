@@ -55,6 +55,7 @@
 				<entry key="/requestProcess" 				value-ref="spring.requestprocess.rest.resource" />
 				
 				<!-- Dashboard Entries -->
+				<entry key="/dashboard/opentimes" 				value-ref="spring.dashboard.opentimes.rest.resource" />
 				<entry key="/dashboard/apuptime" 				value-ref="spring.dashboard.apuptime.rest.resource" />
 				<entry key="/dashboard/assignedBrandList" 		value-ref="spring.dashboard.assignedbrandlist.rest.resource" />
 				<entry key="/dashboard/assignedShoppingList" 	value-ref="spring.dashboard.assignedshoppinglist.rest.resource" />
@@ -145,6 +146,9 @@
 
 
 	<!-- Dashboard Recources -->
+ 	<bean id="spring.dashboard.opentimes.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.opentimes.rest.resource" />
+ 	</bean>
  	<bean id="spring.dashboard.apuptime.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboard.apuptime.rest.resource" />
  	</bean>

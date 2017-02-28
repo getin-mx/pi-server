@@ -45,6 +45,7 @@
 
 
 	<!-- Dashboard Services -->
+  	<bean id="dashboard.opentimes.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.OpenTimesDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.apuptime.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.APUptimeDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.dashboardconfigurationdata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.DashboardConfigurationDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.assignedbrandlist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.AssignedBrandListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
