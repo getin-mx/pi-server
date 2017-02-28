@@ -265,8 +265,16 @@ extends BDBRestBaseServerResource {
 			
 			// Staus filter
 			List<Integer> statusList = null;
-			if( StringUtils.hasText(status))
-				statusList = Arrays.asList(new Integer[] {Integer.parseInt(status)});
+			if( StringUtils.hasText(status)) {
+				if( status.contains(",")) {
+					String tmpStatus[] = status.split(",");
+					statusList = CollectionFactory.createList();
+					for( String t : tmpStatus ) 
+						statusList.add(Integer.parseInt(t));
+				} else {
+					statusList = Arrays.asList(new Integer[] {Integer.parseInt(status)});
+				}
+			}
 
 			// retrieve all elements
 			long millisPre = new Date().getTime();
@@ -279,7 +287,7 @@ extends BDBRestBaseServerResource {
 								myClazz.getName(), q, user.getSecuritySettings().getRole().equals(Role.ADMIN) 
 								? null : user.getViewLocation(),
 								StringUtils.hasText(status) 
-								? Arrays.asList(new Integer[] {Integer.valueOf(status)}) : null, range, 
+								? statusList : null, range, 
 								additionalFields, order, lang);
 			} else {
 				list = myDao.getUsingStatusAndRange(statusList, range, order, attributes, true);
