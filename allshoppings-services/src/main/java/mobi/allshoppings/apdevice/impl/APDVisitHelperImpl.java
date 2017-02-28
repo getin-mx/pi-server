@@ -222,7 +222,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						}
 
 						// Try to update dashboard if needed
-						if(updateDashboards) {
+						if(updateDashboards && !onlyEmployees) {
 							if(!cacheBuilt) {
 								try {
 									mapper.buildCaches(false);
@@ -384,7 +384,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						}
 
 						// Try to update dashboard if needed
-						if(updateDashboards) {
+						if(updateDashboards && !onlyEmployees) {
 							if(!cacheBuilt) {
 								try {
 									mapper.buildCaches(false);
