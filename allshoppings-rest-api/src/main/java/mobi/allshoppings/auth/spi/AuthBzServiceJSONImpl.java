@@ -22,10 +22,12 @@ import mobi.allshoppings.auth.AuthBzService;
 import mobi.allshoppings.auth.AuthHelper;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.bz.spi.UserBzServiceJSONImpl;
+import mobi.allshoppings.dao.AuditLogDAO;
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.UserDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.AuditLog;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.tools.KeyHelper;
@@ -45,6 +47,8 @@ public class AuthBzServiceJSONImpl extends RestBaseServerResource implements Aut
 	private UserDAO dao;
 	@Autowired
 	private DeviceInfoDAO deviceInfoDao;
+	@Autowired
+	private AuditLogDAO alDao;
 	@Autowired
 	private AuthHelper authHelper;
 	@Autowired
@@ -235,6 +239,14 @@ public class AuthBzServiceJSONImpl extends RestBaseServerResource implements Aut
 						log.log(Level.SEVERE, e.getMessage(), e);
 					}
 
+					// Saves Audit Log
+					AuditLog al = new AuditLog();
+					al.setUserId(user.getIdentifier());
+					al.setEventDate(new Date());
+					al.setEventType(AuditLog.EVENT_LOGIN);
+					al.setKey(alDao.createKey());
+					alDao.create(al);
+					
 					// track action
 		    		trackerHelper.enqueue( user, getRequestIP(),
 		    				getRequestAgent(), getFullRequestURI(),

@@ -21,6 +21,7 @@
         <class>mobi.allshoppings.model.APUptime</class>
         <class>mobi.allshoppings.model.APDVisit</class>
         <class>mobi.allshoppings.model.Area</class>
+        <class>mobi.allshoppings.model.AuditLog</class>
         <class>mobi.allshoppings.model.Brand</class>
         <class>mobi.allshoppings.model.BeaconHotspot</class>
         <class>mobi.allshoppings.model.CampaignActivity</class>

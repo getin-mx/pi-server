@@ -15,9 +15,11 @@ import com.inodes.datanucleus.model.Email;
 import mobi.allshoppings.auth.AuthHelper;
 import mobi.allshoppings.bdb.auth.BDBAuthBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
+import mobi.allshoppings.dao.AuditLogDAO;
 import mobi.allshoppings.dao.UserDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.AuditLog;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.UserSecurity;
 import mobi.allshoppings.tools.CommonValidator;
@@ -30,6 +32,8 @@ public class BDBAuthBzServiceJSONImpl extends BDBRestBaseServerResource implemen
 
 	@Autowired
 	private UserDAO dao;
+	@Autowired
+	private AuditLogDAO alDao;
 	@Autowired
 	private AuthHelper authHelper;
 	@Autowired
@@ -149,6 +153,13 @@ public class BDBAuthBzServiceJSONImpl extends BDBRestBaseServerResource implemen
 						jsonOut.put("email", user.getEmail());
 						jsonOut.put("role", user.getSecuritySettings().getRole());
 						
+						// Saves Audit Log
+						AuditLog al = new AuditLog();
+						al.setUserId(user.getIdentifier());
+						al.setEventDate(new Date());
+						al.setEventType(AuditLog.EVENT_LOGIN);
+						al.setKey(alDao.createKey());
+						alDao.create(al);
 
 						// track action
 						trackerHelper.enqueue( user, getRequestIP(),
@@ -202,7 +213,6 @@ public class BDBAuthBzServiceJSONImpl extends BDBRestBaseServerResource implemen
 		}catch (Exception e) {
 			jsonOut = this.getJSONRepresentationFromException(e);
 		}
-
 
 		return jsonOut.toString();
 	}

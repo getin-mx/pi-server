@@ -259,6 +259,7 @@
 	<bean id="apdevicetriggerentry.dao.ref" class="mobi.allshoppings.dao.spi.APDeviceTriggerEntryDAOJDOImpl" />
 	<bean id="apdevicemacmatch.dao.ref" class="mobi.allshoppings.dao.spi.APDeviceMacMatchDAOJDOImpl" />
 	<bean id="apuptime.dao.ref" class="mobi.allshoppings.dao.spi.APUptimeDAOJDOImpl" />
+	<bean id="auditlog.dao.ref" class="mobi.allshoppings.dao.spi.AuditLogDAOJDOImpl" />
 	<bean id="devicemessagelock.dao.ref" class="mobi.allshoppings.dao.spi.DeviceMessageLockDAOJDOImpl" />
 	<bean id="beaconhotspot.dao.ref" class="mobi.allshoppings.dao.spi.BeaconHotspotDAOJDOImpl" />
 	<bean id="addresscomponentscache.dao.ref" class="mobi.allshoppings.dao.spi.AddressComponentsCacheDAOJDOImpl" />

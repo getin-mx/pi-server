@@ -50,6 +50,10 @@
             <field name="key" column="_id" length="100"/>
         </class>
 
+        <class name="AuditLog" table="AuditLog">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
         <class name="Dummy" table="Dummy">
             <field name="key" column="_id" length="100"/>
         </class>

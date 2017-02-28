@@ -47,6 +47,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.applications", "fa-laptop", "Aplicaciones"));
 				um.getEntries().add(new UserMenuEntry("index.brands", "fa-laptop", "Cadenas"));
@@ -110,6 +111,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("astrid@getin.mx"));
 				userMenuDao.create(um);
 			}
@@ -143,6 +145,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("daniel@getin.mx"));
 				userMenuDao.create(um);
 			}
@@ -176,6 +179,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("francisco@getin.mx"));
 				userMenuDao.create(um);
 			}
@@ -209,6 +213,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("anabell@getin.mx"));
 				userMenuDao.create(um);
 			}
@@ -242,6 +247,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("mariajose@getin.mx"));
 				userMenuDao.create(um);
 			}
@@ -289,6 +295,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("matias@getin.mx"));
 				userMenuDao.create(um);
 			}
@@ -322,6 +329,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("ingrid@getin.mx"));
 				userMenuDao.create(um);
 			}
