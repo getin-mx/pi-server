@@ -5,10 +5,13 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.restlet.ext.json.JsonRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
+import mobi.allshoppings.bdb.bz.BDBPostBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.DashboardConfigurationDAO;
 import mobi.allshoppings.exception.ASException;
@@ -23,7 +26,7 @@ import mobi.allshoppings.model.User;
  */
 public class DashboardConfigurationDataBzServiceJSONImpl
 extends BDBRestBaseServerResource
-implements BDBDashboardBzService {
+implements BDBDashboardBzService, BDBPostBzService {
 
 	private static final Logger log = Logger.getLogger(DashboardConfigurationDataBzServiceJSONImpl.class.getName());
 
@@ -77,6 +80,56 @@ implements BDBDashboardBzService {
 		} catch (Exception e) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 			return getJSONRepresentationFromException(ASExceptionHelper.defaultException(e.getMessage(), e)).toString();
+		} finally {
+			markEnd(start);
+		}
+	}
+
+	@Override
+	public String change(JsonRepresentation entity) {
+		long start = markStart();
+		try {
+
+			// validate authToken
+			final User user = getUserFromToken();
+			final JSONObject obj = entity.getJsonObject();
+
+			final String entityId = obj.getString("entityId");
+			final Integer entityKind = obj.getInt("entityKind");
+
+			DashboardConfiguration modObj;
+			boolean doUpdate = true;
+			try {
+				modObj = dao.getUsingEntityIdAndEntityKind(entityId, entityKind, true);
+			} catch( Exception e ) {
+				modObj = new DashboardConfiguration(entityId, entityKind);
+				modObj.setKey(dao.createKey(modObj));
+				doUpdate = false;
+			}
+			setPropertiesFromJSONObject(obj, modObj, EMPTY_SET);
+
+			if( doUpdate )
+				dao.update(modObj);
+			else
+				dao.create(modObj);
+
+			// track action
+			trackerHelper.enqueue( user, getRequestIP(),
+					getRequestAgent(), getFullRequestURI(),
+					getI18NMessage("es_AR", "DashboardConfigurationDataBzService.put"), 
+					null, null);
+
+			return getJSONRepresentationFromObject(modObj, obtainOutputFields(DashboardConfiguration.class)).toString();
+			
+		} catch (JSONException e) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+			return getJSONRepresentationFromException(ASExceptionHelper.defaultException(e.getMessage(), e)).toString();
+		} catch (Exception e) {
+			if( e instanceof ASException && ((ASException)e).getErrorCode() == ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE)
+				return getJSONRepresentationFromException(ASExceptionHelper.notFoundException()).toString();
+			
+			log.log(Level.SEVERE, e.getMessage(), e);
+			return getJSONRepresentationFromException(e).toString();
 		} finally {
 			markEnd(start);
 		}

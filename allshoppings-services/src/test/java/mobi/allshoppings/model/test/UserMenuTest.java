@@ -44,6 +44,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
 				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
@@ -52,34 +53,6 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.shoppings", "fa-laptop", "Centros Comerciales"));
 				um.getEntries().add(new UserMenuEntry("index.storeemployees", "fa-users", "Employees"));
 				um.setKey(userMenuDao.createKey("admin"));
-				userMenuDao.create(um);
-			}
-
-			User alberto = null;
-			try {
-				alberto = userDao.get("alberto@getin.mx", true);
-			} catch( Exception e ) {
-				alberto = new User();
-				alberto.setFirstname("Alberto");
-				alberto.setLastname("");
-				alberto.setEmail("alberto@getin.mx");
-				alberto.getSecuritySettings().setRole(Role.ADMIN);
-				alberto.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				alberto.setKey((Key)keyHelper.obtainKey(User.class, "alberto@getin.mx"));
-				userDao.create(alberto);
-			}
-
-			try {
-				um = userMenuDao.get("alberto@getin.mx", true);
-				userMenuDao.delete("alberto@getin.mx");
-				throw new Exception();
-			} catch( Exception e ) {
-				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
-				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
-				um.setKey(userMenuDao.createKey("alberto@getin.mx"));
 				userMenuDao.create(um);
 			}
 
@@ -131,6 +104,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
@@ -163,6 +137,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
@@ -195,6 +170,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
@@ -227,6 +203,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
@@ -259,6 +236,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
@@ -305,6 +283,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
@@ -337,6 +316,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));

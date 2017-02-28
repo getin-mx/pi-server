@@ -41,6 +41,7 @@ public class DashboardConfiguration implements ModelKey, Serializable, Identific
 		this.entityKind = entityKind;
 		this.storeLabel = "Tienda";
 		this.timezone = "SERVER";
+		this.visitsComments = "";
 	}
 	
 	/**
