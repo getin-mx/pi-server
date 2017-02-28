@@ -30,6 +30,7 @@ public class GenerateAPDVisits extends AbstractCLI {
 		parser.accepts( "brandIds", "List of comma separated brands").withRequiredArg().ofType( String.class );
 		parser.accepts( "storeIds", "List of comma separated stores (superseeds brandIds)").withRequiredArg().ofType( String.class );
 		parser.accepts( "shoppingIds", "List of comma separated shoppings (superseeds brandIds and storeIds)").withRequiredArg().ofType( String.class );
+		parser.accepts( "onlyEmployees", "Only process employees").withRequiredArg().ofType( Boolean.class );
 		return parser;
 	}
 
@@ -45,6 +46,7 @@ public class GenerateAPDVisits extends AbstractCLI {
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
 			OptionSet options = parser.parse(args);
 
+			boolean onlyEmployees = false;
 			String sFromDate = null;
 			String sToDate = null;
 			Date fromDate = null;
@@ -98,6 +100,11 @@ public class GenerateAPDVisits extends AbstractCLI {
 							shoppings.add(s.trim());
 					}
 				}
+				
+				if(options.has("onlyEmployees")) {
+					onlyEmployees = (Boolean)options.valueOf("onlyEmployees");
+				}
+				
 			} catch( Exception e ) {
 				e.printStackTrace();
 				usage(parser);
@@ -105,9 +112,9 @@ public class GenerateAPDVisits extends AbstractCLI {
 
 			log.log(Level.INFO, "Generating APDVisits");
 			if( shoppings.isEmpty() )
-				helper.generateAPDVisits(brands, stores, fromDate, toDate, true, true);
+				helper.generateAPDVisits(brands, stores, fromDate, toDate, true, true, onlyEmployees);
 			else
-				helper.generateAPDVisits(shoppings, fromDate, toDate, true, true);
+				helper.generateAPDVisits(shoppings, fromDate, toDate, true, true, onlyEmployees);
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

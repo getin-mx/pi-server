@@ -99,7 +99,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public void generateAPDVisits(List<String> brandIds, List<String> storeIds, Date fromDate, Date toDate, boolean deletePreviousRecords, boolean updateDashboards) throws ASException {
+	public void generateAPDVisits(List<String> brandIds, List<String> storeIds, Date fromDate, Date toDate, boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees) throws ASException {
 
 		List<Store> stores = CollectionFactory.createList();
 		Map<String, APDevice> apdCache = CollectionFactory.createMap();
@@ -132,7 +132,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						// Try to delete previous records if needed
 						if(deletePreviousRecords) {
 							apdvDao.deleteUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE,
-									curDate, new Date(curDate.getTime() + 86400000));
+									curDate, new Date(curDate.getTime() + 86400000), 
+									onlyEmployees ? APDVisit.CHECKIN_EMPLOYEE : null);
 						}
 
 						List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate);
@@ -148,14 +149,27 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								List<APHEntry> entries = apheDao.getUsingHostnameAndDates(
 										Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, range, false);
 
+								// Employee check
+								if( onlyEmployees ) {
+									List<APHEntry> tmp = CollectionFactory.createList();
+									tmp.addAll(entries);
+									entries.clear();
+									for( APHEntry entry : tmp ) {
+										if(employeeListMacs.contains(entry.getMac().toUpperCase()))
+											entries.add(entry);
+									}
+								}
+								
 								log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
 								List<APDVisit> objs = CollectionFactory.createList();
 								for(APHEntry entry : entries ) {
 									aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
 									List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
 									for(APDVisit visit : visitList )
-										if(!objs.contains(visit))
+										if(!objs.contains(visit)) {
+											if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
 											objs.add(visit);
+										}
 								}
 
 								log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
@@ -193,7 +207,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									List<APDVisit> visitList = aphEntryToVisits(e, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
 									for(APDVisit visit : visitList )
 										if(!objs.contains(visit))
-											objs.add(visit);
+											if(!objs.contains(visit)) {
+												if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
+												objs.add(visit);
+											}
 								}
 
 								log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
@@ -245,7 +262,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public void generateAPDVisits(List<String> shoppingIds, Date fromDate, Date toDate, boolean deletePreviousRecords, boolean updateDashboards) throws ASException {
+	public void generateAPDVisits(List<String> shoppingIds, Date fromDate, Date toDate, boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees) throws ASException {
 
 		List<Shopping> shoppings = CollectionFactory.createList();
 		Map<String, APDevice> apdCache = CollectionFactory.createMap();
@@ -275,7 +292,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						// Try to delete previous records if needed
 						if(deletePreviousRecords) {
 							apdvDao.deleteUsingEntityIdAndEntityKindAndDate(shopping.getIdentifier(), EntityKind.KIND_SHOPPING,
-									curDate, new Date(curDate.getTime() + 86400000));
+									curDate, new Date(curDate.getTime() + 86400000),
+									onlyEmployees ? APDVisit.CHECKIN_EMPLOYEE : null);
 						}
 
 						List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(shopping.getIdentifier(), EntityKind.KIND_SHOPPING, curDate);
@@ -291,6 +309,17 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								List<APHEntry> entries = apheDao.getUsingHostnameAndDates(
 										Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, range, false);
 
+								// Employee check
+								if( onlyEmployees ) {
+									List<APHEntry> tmp = CollectionFactory.createList();
+									tmp.addAll(entries);
+									entries.clear();
+									for( APHEntry entry : tmp ) {
+										if(employeeListMacs.contains(entry.getMac().toUpperCase()))
+											entries.add(entry);
+									}
+								}
+								
 								log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
 								List<APDVisit> objs = CollectionFactory.createList();
 								for(APHEntry entry : entries ) {
@@ -298,7 +327,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
 									for(APDVisit visit : visitList )
 										if(!objs.contains(visit))
-											objs.add(visit);
+											if(!objs.contains(visit)) {
+												if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
+												objs.add(visit);
+											}
 								}
 
 								log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
@@ -337,7 +369,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									List<APDVisit> visitList = aphEntryToVisits(e, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
 									for(APDVisit visit : visitList )
 										if(!objs.contains(visit))
-											objs.add(visit);
+											if(!objs.contains(visit)) {
+												if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
+												objs.add(visit);
+											}
 								}
 
 								log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");

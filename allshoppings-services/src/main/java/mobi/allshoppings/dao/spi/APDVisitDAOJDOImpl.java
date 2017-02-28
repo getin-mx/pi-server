@@ -321,7 +321,7 @@ public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVi
 	}
 
 	@Override
-	public void deleteUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date fromDate, Date toDate) throws ASException {
+	public void deleteUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date fromDate, Date toDate, Integer checkinType) throws ASException {
 
 		PersistenceManager pm;
 		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
@@ -359,6 +359,13 @@ public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVi
 				declaredParams.add("java.util.Date toDateParam");
 				filters.add("checkinStarted <= toDateParam");
 				parameters.put("toDateParam", toDate);
+			}
+
+			// entityId Parameter
+			if(null != checkinType) {
+				declaredParams.add("Integer checkinTypeParam");
+				filters.add("checkinType == checkinTypeParam");
+				parameters.put("checkinTypeParam", checkinType);
 			}
 
 			query.declareParameters(toParameterList(declaredParams));
