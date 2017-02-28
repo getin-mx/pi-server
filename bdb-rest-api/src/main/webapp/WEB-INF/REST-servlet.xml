@@ -50,6 +50,7 @@
 				<entry key="/apdmaemployee/{identifier}" 	value-ref="spring.apdmaemployee.rest.resource" />
 				<entry key="/apdmablacklist" 				value-ref="spring.apdmablacklist.rest.resource" />
 				<entry key="/apdmablacklist/{identifier}" 	value-ref="spring.apdmablacklist.rest.resource" />
+				<entry key="/auditlog" 						value-ref="spring.auditlog.rest.resource" />
 				<entry key="/process" 						value-ref="spring.process.rest.resource" />
 				<entry key="/process/{identifier}" 			value-ref="spring.process.rest.resource" />
 				<entry key="/requestProcess" 				value-ref="spring.requestprocess.rest.resource" />
@@ -140,6 +141,9 @@
  	</bean>
  	<bean id="spring.process.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="process.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.auditlog.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="auditlog.rest.resource" />
  	</bean>
 	<bean id="spring.requestprocess.rest.resource" class="org.restlet.ext.spring.SpringFinder">
 	 	<lookup-method name="create" bean="requestprocess.rest.resource" />

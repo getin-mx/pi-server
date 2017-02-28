@@ -41,6 +41,7 @@
   	<bean id="offer.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBOfferBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
 
   	<bean id="process.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBProcessBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="auditlog.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBAuditLogBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="requestprocess.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBRequestProcessBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
 
 

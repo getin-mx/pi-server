@@ -1,0 +1,17 @@
+# process common variables
+. ./common
+
+_USER="$1"
+_TYPE=$2
+_RANGEFROM=$3
+_RANGETO=$4
+
+_URL="${_HOST}/bdb/auditlog?authToken=$_TOKEN&userId=$_USER&eventType=$_TYPE&from=$_RANGEFROM&to=$_RANGETO"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`curl -k -X GET ${_URL}`
+echo ""
+echo "RESULT: $_RES"
