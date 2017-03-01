@@ -2,6 +2,7 @@ package mobi.allshoppings.bz.spi;
 
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,7 @@ implements DashboardTimelineHourBzService {
 			getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
+			Integer entityKind = obtainIntegerValue("entityKind", null);
 			String subentityId = obtainStringValue("subentityId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
@@ -68,13 +70,24 @@ implements DashboardTimelineHourBzService {
 			} else {
 				ids.add(subentityId);
 			}
+
+			Map<Integer, Integer> repetitions = null;
+			Map<Integer, Integer> repetitionsV = null;
+
+			if( EntityKind.KIND_SHOPPING == entityKind ) {
+				repetitions = apdvDao.getRepetitions(Arrays.asList(entityId),
+						EntityKind.KIND_SHOPPING, APDVisit.CHECKIN_PEASANT, sdf.parse(fromStringDate), sdf.parse(toStringDate));
+
+				repetitionsV = apdvDao.getRepetitions(Arrays.asList(entityId),
+						EntityKind.KIND_SHOPPING, APDVisit.CHECKIN_VISIT, sdf.parse(fromStringDate), sdf.parse(toStringDate));
+			} else {
+				repetitions = apdvDao.getRepetitions(ids,
+						EntityKind.KIND_STORE, APDVisit.CHECKIN_PEASANT, sdf.parse(fromStringDate), sdf.parse(toStringDate));
+
+				repetitionsV = apdvDao.getRepetitions(ids,
+						EntityKind.KIND_STORE, APDVisit.CHECKIN_VISIT, sdf.parse(fromStringDate), sdf.parse(toStringDate));
+			}
 			
-			Map<Integer, Integer> repetitions = apdvDao.getRepetitions(ids,
-					EntityKind.KIND_STORE, APDVisit.CHECKIN_PEASANT, sdf.parse(fromStringDate), sdf.parse(toStringDate));
-
-			Map<Integer, Integer> repetitionsV = apdvDao.getRepetitions(ids,
-					EntityKind.KIND_STORE, APDVisit.CHECKIN_VISIT, sdf.parse(fromStringDate), sdf.parse(toStringDate));
-
 			JSONArray series = new JSONArray();
 			JSONObject serie = new JSONObject();
 			serie.put("name", "Paseantes");
