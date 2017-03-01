@@ -262,6 +262,10 @@ implements DashboardHeatmapTableHourBzService {
 				if( xData != null ) {
 					for( int x = 0; x <= 7; x++ ) {
 						Long val = xData.get(x);
+						if( val == null && lElementSubId.size() > 1 && yData.get(lElementSubId.get(1)).containsKey(y)) {
+							if( yData.get(lElementSubId.get(1)).get(y).containsKey(x))
+								val = 0L;
+						}
 						if( val != null ) {
 							element = new JSONArray();
 							element.put(x);

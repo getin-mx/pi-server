@@ -15,15 +15,18 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.APDMAEmployeeDAO;
 import mobi.allshoppings.dao.APDVisitDAO;
+import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDMAEmployee;
 import mobi.allshoppings.model.APDVisit;
+import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
@@ -50,6 +53,10 @@ implements BDBDashboardBzService {
 	private APDMAEmployeeDAO apdmaeDao;
 	@Autowired
 	private APDVisitDAO apdvDao;
+	@Autowired
+	private APHEntryDAO apheDao;
+	@Autowired
+	private APHHelper aphHelper;
 
 	/**
 	 * Obtains information about a user
@@ -118,32 +125,34 @@ implements BDBDashboardBzService {
 			while(curDate.before(toDate) || curDate.equals(toDate)) {
 				for( Store store : stores ) {
 
-						Date postDate = new Date(curDate.getTime() + ONE_DAY);
+					Date postDate = new Date(curDate.getTime() + ONE_DAY);
 
-						List<APDVisit> emps = apdvDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate, postDate, APDVisit.CHECKIN_EMPLOYEE, null, null, false);
-						for( APDVisit apdv : emps ) {
-							Map<String, Map<Date, List<Date>>> data2 = data.get(store.getIdentifier());
-							if( data2 == null ) data2 = CollectionFactory.createMap();
-							Map<Date, List<Date>> data3 = data2.get(apdv.getMac());
-							if( data3 == null ) data3 = CollectionFactory.createMap();
-							List<Date> data4 = data3.get(curDate);
-							if( data4 == null ) {
-								data4 = CollectionFactory.createList();
-								data4.add(null);
-								data4.add(null);
-							}
-							
-							if( data4.get(0) == null || apdv.getCheckinStarted().before(data4.get(0)))
-								data4.set(0, apdv.getCheckinStarted());
+					//FIXME: Change the APDVisit List for the raw APHEntries to avoid employees not seen by Store Calibration limits 
+					List<APDVisit> emps = apdvDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate, postDate, APDVisit.CHECKIN_EMPLOYEE, null, null, false);
+					for( APDVisit apdv : emps ) {
+						APHEntry aphe = apheDao.get(apdv.getApheSource()); 
 
-							if( data4.get(1) == null || apdv.getCheckinFinished().after(data4.get(1)))
-								data4.set(1, apdv.getCheckinFinished());
-							
-							data3.put(curDate, data4);
-							data2.put(apdv.getMac(), data3);
-							data.put(store.getIdentifier(), data2);
-									
+						Map<String, Map<Date, List<Date>>> data2 = data.get(store.getIdentifier());
+						if( data2 == null ) data2 = CollectionFactory.createMap();
+						Map<Date, List<Date>> data3 = data2.get(apdv.getMac());
+						if( data3 == null ) data3 = CollectionFactory.createMap();
+						List<Date> data4 = data3.get(curDate);
+						if( data4 == null ) {
+							data4 = CollectionFactory.createList();
+							data4.add(null);
+							data4.add(null);
 						}
+
+						List<Integer> times = aphHelper.timeslotToList(aphe.getArtificialRssi());
+
+						data4.set(0, aphHelper.slotToDate(aphe.getDate(), times.get(0)));
+						data4.set(1, aphHelper.slotToDate(aphe.getDate(), times.get(times.size()-1)));
+
+						data3.put(curDate, data4);
+						data2.put(apdv.getMac(), data3);
+						data.put(store.getIdentifier(), data2);
+
+					}
 
 				}
 				curDate = new Date(curDate.getTime() + ONE_DAY);
