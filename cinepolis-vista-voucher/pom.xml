@@ -133,7 +133,7 @@
 					<schemas>
 						<schema>
 							<!-- <url><![CDATA[http://cinepolis-vpn.allshoppings.mobi:8020/WSVistaVoucher/WSVistaVoucher.asmx?WSDL]]></url> -->
-							<url><![CDATA[http://development.inodes-it.com/cinepolis/wsdl/WSVistaVoucher.wsdl]]></url>
+							<url><![CDATA[http://dashboard.getin.mx/cinepolis/wsdl/WSVistaVoucher.wsdl]]></url>
 						</schema>
 					</schemas>
 				</configuration>

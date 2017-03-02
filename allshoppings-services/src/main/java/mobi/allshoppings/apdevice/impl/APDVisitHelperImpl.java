@@ -20,14 +20,14 @@ import org.springframework.util.StringUtils;
 import mobi.allshoppings.apdevice.APDVisitHelper;
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.dao.APDAssignationDAO;
+import mobi.allshoppings.dao.APDMABlackListDAO;
+import mobi.allshoppings.dao.APDMAEmployeeDAO;
 import mobi.allshoppings.dao.APDVisitDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
-import mobi.allshoppings.dao.spi.APDMABlackListDAOJDOImpl;
-import mobi.allshoppings.dao.spi.APDMAEmployeeDAOJDOImpl;
 import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -74,10 +74,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	private APHEntryDAO apheDao;
 	
 	@Autowired
-	private APDMABlackListDAOJDOImpl apmaBlDao;
+	private APDMABlackListDAO apmaBlDao;
 	
 	@Autowired
-	private APDMAEmployeeDAOJDOImpl apmaEDao;
+	private APDMAEmployeeDAO apmaEDao;
 
 	@Autowired
 	private DashboardIndicatorDataDAO didDao;

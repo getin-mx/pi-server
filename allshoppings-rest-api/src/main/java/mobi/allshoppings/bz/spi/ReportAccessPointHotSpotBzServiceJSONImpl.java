@@ -12,7 +12,6 @@ import org.restlet.ext.json.JsonRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.apdevice.IAPDeviceTrigger;
 import mobi.allshoppings.bz.ReportAccessPointHotSpotBzService;
@@ -39,8 +38,8 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 	private APDeviceDAO apdDao;
 	@Autowired
 	private APHotspotDAO dao;
-	@Autowired
-	private APDeviceHelper apdHelper;
+//	@Autowired
+//	private APDeviceHelper apdHelper;
 	@Autowired
 	private APDeviceTriggerEntryDAO triggerDao;
 	@Autowired
@@ -155,21 +154,21 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 				apdDao.create(device);
 			}
 			
-			// Submits a check for the antennas
-			final String deviceHostname = device.getHostname();
-			if(device.getLastInfoUpdate() == null 
-					|| ( new Date().getTime() - device.getLastInfoUpdate().getTime()) > 14400000) {
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							apdHelper.updateAPDeviceInfo(deviceHostname);
-						} catch (ASException e) {
-							log.log(Level.SEVERE, e.getMessage(), e);
-						}
-					}
-				}).start();
-			}
+//			// Submits a check for the antennas
+//			final String deviceHostname = device.getHostname();
+//			if(device.getLastInfoUpdate() == null 
+//					|| ( new Date().getTime() - device.getLastInfoUpdate().getTime()) > 14400000) {
+//				new Thread(new Runnable() {
+//					@Override
+//					public void run() {
+//						try {
+//							apdHelper.updateAPDeviceInfo(deviceHostname);
+//						} catch (ASException e) {
+//							log.log(Level.SEVERE, e.getMessage(), e);
+//						}
+//					}
+//				}).start();
+//			}
 			
 			// And sends the return message
 			return generateJSONOkResponse().toString();

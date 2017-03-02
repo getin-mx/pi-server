@@ -132,7 +132,7 @@
 					<schemas>
 						<schema>
 							<!-- <url><![CDATA[http://cinepolis-vpn.allshoppings.mobi:8030/visloyalty/vistaLoyalty.asmx?WSDL]]></url> -->
-							<url><![CDATA[http://development.inodes-it.com/cinepolis/wsdl/vistaLoyalty.wsdl]]></url>
+							<url><![CDATA[http://dashboard.getin.mx/cinepolis/wsdl/vistaLoyalty.wsdl]]></url>
 						</schema>
 					</schemas>
 				</configuration>

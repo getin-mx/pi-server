@@ -434,6 +434,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 			obj.getLastUpdate();
 
 			if( cacheHelper != null ) cacheHelper.put(getCacheKey(clazz, keyHelper.obtainIdentifierFromKey(obj.getKey())), obj);
+			pm.evict(obj);
 		}catch(ASException ASException){
 			if(pp == null && pm.currentTransaction().isActive()){
 				pm.currentTransaction().rollback();

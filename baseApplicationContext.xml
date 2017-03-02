@@ -14,6 +14,7 @@
 
 	<!-- ** Activates AOP ** -->
 	<aop:aspectj-autoproxy />
+	<aop:config proxy-target-class="true" />
 
 	<!-- ** Simple beans ** -->
 	<bean id="system.configuration" class="mobi.allshoppings.model.SystemConfiguration" scope="singleton" >
@@ -272,5 +273,8 @@
 	<bean id="devicelocationhistory.dao.ref" class="mobi.allshoppings.dao.spi.DeviceLocationHistoryDAOJDOImpl" />
 	<bean id="devicewifilocationhistory.dao.ref" class="mobi.allshoppings.dao.spi.DeviceWifiLocationHistoryDAOJDOImpl" />
 	<bean id="usermenu.dao.ref" class="mobi.allshoppings.dao.spi.UserMenuDAOJDOImpl" />
+
+	<!-- ** AOP implementation ** -->
+	<!-- <bean id="systemcode.audit.advisor" class="mobi.allshoppings.aop.SystemCodeAuditAdvisor" /> -->
 												
 </beans>

@@ -1,12 +1,13 @@
 package mobi.allshoppings.test;
 
 
+import junit.framework.TestCase;
 import mobi.allshoppings.apdevice.impl.FloorMapJourneyHelperImpl;
 import mobi.allshoppings.tools.Range;
-import junit.framework.TestCase;
 
 public class FloorMapJourneyHelperTest extends TestCase {
 	
+	@SuppressWarnings("unused")
 	public void test0001() {
 		FloorMapJourneyHelperImpl fmjh = new FloorMapJourneyHelperImpl();
 		try {
