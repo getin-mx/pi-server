@@ -54,7 +54,8 @@ public class VisitDetailExportServlet extends HttpServlet {
 			byte[] b = exporter.createCSVRepresentation(req.getParameter("authToken"),
 					"http://dashboard.allshoppings.mobi/appv2/", req.getParameter("shoppingId"),
 					req.getParameter("brandId"), req.getParameter("storeId"),
-					sdf.parse(req.getParameter("fromStringDate")), sdf.parse(req.getParameter("toStringDate")));
+					sdf.parse(req.getParameter("fromStringDate")), sdf.parse(req.getParameter("toStringDate")), 
+					false);
 
 			long end = new Date().getTime();
 			log.log(Level.INFO, "VisitDetailExport finished in " + (end-start) + "ms");

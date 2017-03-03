@@ -38,7 +38,7 @@ public class CSVVisitDetailExport {
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm:ss");
 	
-	public byte[] createCSVRepresentation(String authToken, String baseUrl, String shoppingId, String brandId, String storeId, Date dateFrom, Date dateTo) throws ASException {
+	public byte[] createCSVRepresentation(String authToken, String baseUrl, String shoppingId, String brandId, String storeId, Date dateFrom, Date dateTo, boolean onlyRepeated) throws ASException {
 		
 		// Get the Brand
 		Brand brand = null;
@@ -81,7 +81,8 @@ public class CSVVisitDetailExport {
 			// Get Visits list
 			List<APDVisit> list = null;
 			if( StringUtils.hasText(shoppingId)) {
-				list = apdvDao.getUsingEntityIdAndEntityKindAndDate(shoppingId, EntityKind.KIND_SHOPPING, dateFrom, dateTo, APDVisit.CHECKIN_VISIT, null, null, false);
+				Map<String, String> attributes = CollectionFactory.createMap();
+				list = apdvDao.getUsingEntityIdAndEntityKindAndDate(shoppingId, EntityKind.KIND_SHOPPING, dateFrom, dateTo, APDVisit.CHECKIN_VISIT, null, attributes, false);
 			} else {
 				list = apdvDao.getUsingStoresAndDate(storeIds, dateFrom, dateTo, null, false); 
 			}
@@ -101,7 +102,7 @@ public class CSVVisitDetailExport {
 				Store st = storeCache.get(obj.getEntityId());
 				if( null != obj ) {
 					Long count = macCountCache.get(obj.getMac());
-					if( null != count && count > 1 ) {
+					if( !onlyRepeated || null != count && count > 1 ) {
 						if( st != null ) {
 							sb.append("\"").append(st.getExternalId()).append("\",");
 						} else if(shopping != null){

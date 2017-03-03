@@ -93,7 +93,7 @@ public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVi
 			// toDate Parameter
 			if(null != toDate) {
 				declaredParams.add("java.util.Date toDateParam");
-				filters.add("checkinStarted <= toDateParam");
+				filters.add("checkinStarted < toDateParam");
 				parameters.put("toDateParam", toDate);
 			}
 
