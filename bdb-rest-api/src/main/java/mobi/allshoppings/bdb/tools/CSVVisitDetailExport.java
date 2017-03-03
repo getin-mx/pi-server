@@ -13,11 +13,14 @@ import com.inodes.util.CollectionFactory;
 
 import mobi.allshoppings.dao.APDVisitDAO;
 import mobi.allshoppings.dao.BrandDAO;
+import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.Brand;
+import mobi.allshoppings.model.EntityKind;
+import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.interfaces.StatusAware;
 
@@ -29,14 +32,23 @@ public class CSVVisitDetailExport {
 	private StoreDAO storeDao;
 	@Autowired
 	private APDVisitDAO apdvDao;
+	@Autowired
+	private ShoppingDAO shoppingDao;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm:ss");
 	
-	public byte[] createCSVRepresentation(String authToken, String baseUrl, String brandId, String storeId, Date dateFrom, Date dateTo) throws ASException {
+	public byte[] createCSVRepresentation(String authToken, String baseUrl, String shoppingId, String brandId, String storeId, Date dateFrom, Date dateTo) throws ASException {
 		
 		// Get the Brand
-		Brand brand = brandDao.get(brandId, true);
+		Brand brand = null;
+		if( StringUtils.hasText(brandId))
+			brand = brandDao.get(brandId, true);
+
+		// Get the shopping
+		Shopping shopping = null;
+		if( StringUtils.hasText(shoppingId))
+			shopping = shoppingDao.get(shoppingId, true);
 		
 		// Get the Stores
 		Map<String, Store> storeCache = CollectionFactory.createMap();
@@ -46,16 +58,18 @@ public class CSVVisitDetailExport {
 			storeIds.add(store.getIdentifier());
 			storeCache.put(store.getIdentifier(), store);
 		} else {
-			List<Store> stores = storeDao.getUsingBrandAndStatus(brand.getIdentifier(), Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), null);
-			for(Store obj : stores ) {
-				if( StringUtils.hasText(obj.getExternalId())) {
-					storeIds.add(obj.getIdentifier());
-					storeCache.put(obj.getIdentifier(), obj);
+			if( brand != null ) {
+				List<Store> stores = storeDao.getUsingBrandAndStatus(brand.getIdentifier(), Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), null);
+				for(Store obj : stores ) {
+					if( StringUtils.hasText(obj.getExternalId())) {
+						storeIds.add(obj.getIdentifier());
+						storeCache.put(obj.getIdentifier(), obj);
+					}
 				}
 			}
 		}
 
-		if( storeIds.isEmpty() ) 
+		if( storeIds.isEmpty() && !StringUtils.hasText(shoppingId) ) 
 			throw ASExceptionHelper.notAcceptedException();
 		
 		// Data Format ------------------------------------------------------------------------------------------------------
@@ -65,8 +79,13 @@ public class CSVVisitDetailExport {
 			StringBuffer sb = new StringBuffer();
 			
 			// Get Visits list
-			List<APDVisit> list = apdvDao.getUsingStoresAndDate(storeIds, dateFrom, dateTo, null, false); 
-
+			List<APDVisit> list = null;
+			if( StringUtils.hasText(shoppingId)) {
+				list = apdvDao.getUsingEntityIdAndEntityKindAndDate(shoppingId, EntityKind.KIND_SHOPPING, dateFrom, dateTo, APDVisit.CHECKIN_VISIT, null, null, false);
+			} else {
+				list = apdvDao.getUsingStoresAndDate(storeIds, dateFrom, dateTo, null, false); 
+			}
+			
 			// First pass is to count mac address ocurrences
 			Map<String, Long> macCountCache = CollectionFactory.createMap();
 			for( APDVisit obj : list ) {
@@ -83,8 +102,12 @@ public class CSVVisitDetailExport {
 				if( null != obj ) {
 					Long count = macCountCache.get(obj.getMac());
 					if( null != count && count > 1 ) {
-						sb.append("\"").append(st.getExternalId())
-						.append("\",\"").append(obj.getMac())
+						if( st != null ) {
+							sb.append("\"").append(st.getExternalId()).append("\",");
+						} else if(shopping != null){
+							sb.append("\"").append(shopping.getName()).append("\",");
+						}
+						sb.append("\"").append(obj.getMac())
 						.append("\",\"").append(sdf.format(obj.getCheckinStarted()))
 						.append("\",\"").append(sdfTime.format(obj.getCheckinStarted()))
 						.append("\",\"").append(getPermanence(obj.getCheckinStarted(), obj.getCheckinFinished()))

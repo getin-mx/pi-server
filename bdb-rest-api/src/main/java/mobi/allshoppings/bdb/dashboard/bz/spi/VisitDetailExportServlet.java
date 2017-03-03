@@ -52,7 +52,8 @@ public class VisitDetailExportServlet extends HttpServlet {
 		try {
 			//FIXME: URL Hardcoded
 			byte[] b = exporter.createCSVRepresentation(req.getParameter("authToken"),
-					"http://dashboard.allshoppings.mobi/appv2/", req.getParameter("brandId"), req.getParameter("storeId"),
+					"http://dashboard.allshoppings.mobi/appv2/", req.getParameter("shoppingId"),
+					req.getParameter("brandId"), req.getParameter("storeId"),
 					sdf.parse(req.getParameter("fromStringDate")), sdf.parse(req.getParameter("toStringDate")));
 
 			long end = new Date().getTime();

@@ -777,7 +777,6 @@ public class UserMenuTest extends TestCase {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.demovisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.demomap", "fa-map-marker", "Mapas"));
-				um.getEntries().add(new UserMenuEntry("index.demoheatmap", "fa-map-marker", "Heatmap"));
 				um.getEntries().add(new UserMenuEntry("index.demoareas", "fa-area-chart", "Areas de Afluencia"));
 				um.setKey(userMenuDao.createKey("demo_mx"));
 				userMenuDao.create(um);
