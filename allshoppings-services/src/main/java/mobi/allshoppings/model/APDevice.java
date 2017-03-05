@@ -32,6 +32,7 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	// Basic APDevice data
 	private String hostname;
 	private String description;
+	private String area;
 	@Persistent(defaultFetchGroup = "true")
 	private List<String> couples;
 	
@@ -1067,31 +1068,46 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 		this.external = external;
 	}
 
+	/**
+	 * @return the area
+	 */
+	public String getArea() {
+		return area;
+	}
+
+	/**
+	 * @param area the area to set
+	 */
+	public void setArea(String area) {
+		this.area = area;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "APDevice [key=" + key + ", hostname=" + hostname + ", description=" + description + ", couples="
-				+ couples + ", model=" + model + ", mode=" + mode + ", version=" + version + ", tunnelIp=" + tunnelIp
-				+ ", lanIp=" + lanIp + ", wanIp=" + wanIp + ", publicIp=" + publicIp + ", lastInfoUpdate="
-				+ lastInfoUpdate + ", external=" + external + ", country=" + country + ", province=" + province
-				+ ", city=" + city + ", lat=" + lat + ", lon=" + lon + ", visitTimeThreshold=" + visitTimeThreshold
-				+ ", visitGapThreshold=" + visitGapThreshold + ", visitPowerThreshold=" + visitPowerThreshold
-				+ ", visitMaxThreshold=" + visitMaxThreshold + ", peasantPowerThreshold=" + peasantPowerThreshold
-				+ ", visitCountThreshold=" + visitCountThreshold + ", daysToNotRepit=" + daysToNotRepit + ", timezone="
-				+ timezone + ", visitsOnMon=" + visitsOnMon + ", visitsOnTue=" + visitsOnTue + ", visitsOnWed="
-				+ visitsOnWed + ", visitsOnThu=" + visitsOnThu + ", visitsOnFri=" + visitsOnFri + ", visitsOnSat="
-				+ visitsOnSat + ", visitsOnSun=" + visitsOnSun + ", visitStartMon=" + visitStartMon + ", visitEndMon="
-				+ visitEndMon + ", visitStartTue=" + visitStartTue + ", visitEndTue=" + visitEndTue + ", visitStartWed="
-				+ visitStartWed + ", visitEndWed=" + visitEndWed + ", visitStartThu=" + visitStartThu + ", visitEndThu="
-				+ visitEndThu + ", visitStartFri=" + visitStartFri + ", visitEndFri=" + visitEndFri + ", visitStartSat="
-				+ visitStartSat + ", visitEndSat=" + visitEndSat + ", visitStartSun=" + visitStartSun + ", visitEndSun="
-				+ visitEndSun + ", monitorStart=" + monitorStart + ", monitorEnd=" + monitorEnd + ", passStart="
-				+ passStart + ", passEnd=" + passEnd + ", negative=" + negative + ", reportable=" + reportable
-				+ ", reportStatus=" + reportStatus + ", reportMailList=" + reportMailList + ", status=" + status
-				+ ", creationDateTime=" + creationDateTime + ", lastRecordDate=" + lastRecordDate + ", lastRecordCount="
-				+ lastRecordCount + ", lastUpdate=" + lastUpdate + ", doIndexNow=" + doIndexNow + "]";
+		return "APDevice [key=" + key + ", hostname=" + hostname + ", description=" + description + ", area=" + area
+				+ ", couples=" + couples + ", model=" + model + ", mode=" + mode + ", version=" + version
+				+ ", tunnelIp=" + tunnelIp + ", lanIp=" + lanIp + ", wanIp=" + wanIp + ", publicIp=" + publicIp
+				+ ", lastInfoUpdate=" + lastInfoUpdate + ", external=" + external + ", country=" + country
+				+ ", province=" + province + ", city=" + city + ", lat=" + lat + ", lon=" + lon
+				+ ", visitTimeThreshold=" + visitTimeThreshold + ", visitGapThreshold=" + visitGapThreshold
+				+ ", visitPowerThreshold=" + visitPowerThreshold + ", visitMaxThreshold=" + visitMaxThreshold
+				+ ", peasantPowerThreshold=" + peasantPowerThreshold + ", visitCountThreshold=" + visitCountThreshold
+				+ ", daysToNotRepit=" + daysToNotRepit + ", timezone=" + timezone + ", visitsOnMon=" + visitsOnMon
+				+ ", visitsOnTue=" + visitsOnTue + ", visitsOnWed=" + visitsOnWed + ", visitsOnThu=" + visitsOnThu
+				+ ", visitsOnFri=" + visitsOnFri + ", visitsOnSat=" + visitsOnSat + ", visitsOnSun=" + visitsOnSun
+				+ ", visitStartMon=" + visitStartMon + ", visitEndMon=" + visitEndMon + ", visitStartTue="
+				+ visitStartTue + ", visitEndTue=" + visitEndTue + ", visitStartWed=" + visitStartWed + ", visitEndWed="
+				+ visitEndWed + ", visitStartThu=" + visitStartThu + ", visitEndThu=" + visitEndThu + ", visitStartFri="
+				+ visitStartFri + ", visitEndFri=" + visitEndFri + ", visitStartSat=" + visitStartSat + ", visitEndSat="
+				+ visitEndSat + ", visitStartSun=" + visitStartSun + ", visitEndSun=" + visitEndSun + ", monitorStart="
+				+ monitorStart + ", monitorEnd=" + monitorEnd + ", passStart=" + passStart + ", passEnd=" + passEnd
+				+ ", negative=" + negative + ", reportable=" + reportable + ", reportStatus=" + reportStatus
+				+ ", reportMailList=" + reportMailList + ", status=" + status + ", creationDateTime=" + creationDateTime
+				+ ", lastRecordDate=" + lastRecordDate + ", lastRecordCount=" + lastRecordCount + ", lastUpdate="
+				+ lastUpdate + ", doIndexNow=" + doIndexNow + "]";
 	}
 
 	@Override
