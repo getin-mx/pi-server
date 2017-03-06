@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import mobi.allshoppings.apdevice.FloorMapJourneyHelper;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.FloorMapJourneyDAO;
@@ -27,8 +26,8 @@ implements BDBDashboardBzService {
 
 	private static final Logger log = Logger.getLogger(FloorMapJourneyDataBzServiceJSONImpl.class.getName());
 
-	@Autowired
-	private FloorMapJourneyHelper helper;
+//	@Autowired
+//	private FloorMapJourneyHelper helper;
 	@Autowired
 	private FloorMapJourneyDAO dao;
 	

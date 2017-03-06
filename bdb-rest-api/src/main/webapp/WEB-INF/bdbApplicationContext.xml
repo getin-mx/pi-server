@@ -68,5 +68,6 @@
 	<!-- Utils & Helpers -->
   	<bean id="dashboardexport.util" class="mobi.allshoppings.bdb.tools.XSSFDashboardExport" scope="singleton" />
   	<bean id="csvdetailsexport.util" class="mobi.allshoppings.bdb.tools.CSVVisitDetailExport" scope="singleton" />
+  	<bean id="csvapdevicesexport.util" class="mobi.allshoppings.bdb.tools.CSVAPDeviceExport" scope="singleton" />
 	
 </beans>
