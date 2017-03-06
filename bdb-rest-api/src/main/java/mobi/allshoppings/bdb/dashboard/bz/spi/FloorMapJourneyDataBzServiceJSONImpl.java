@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import mobi.allshoppings.apdevice.FloorMapJourneyHelper;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
+import mobi.allshoppings.dao.FloorMapJourneyDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.FloorMapJourney;
@@ -28,6 +29,8 @@ implements BDBDashboardBzService {
 
 	@Autowired
 	private FloorMapJourneyHelper helper;
+	@Autowired
+	private FloorMapJourneyDAO dao;
 	
 
 	/**
@@ -59,8 +62,9 @@ implements BDBDashboardBzService {
 			
 			Range range = new Range(fromRange,toRange);
 			
-			List<FloorMapJourney> list = helper.process(floorMapId, mac, fromDate, toDate, range);
+//			List<FloorMapJourney> list = helper.process(floorMapId, mac, fromDate, toDate, range);
 			
+			List<FloorMapJourney> list = dao.getUsingFloorMapAndMacAndDate(floorMapId, mac, fromDate, toDate, range, "wordLength DESC");
 			
 			
 			returnValue = this.getJSONRepresentationFromArrayOfObjects(
