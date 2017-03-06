@@ -1,17 +1,22 @@
 package mobi.allshoppings.dao.spi;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.jdo.datastore.JDOConnection;
 
 import org.apache.commons.collections.CollectionUtils;
 
 import com.inodes.datanucleus.model.Key;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
 
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.exception.ASException;
@@ -110,44 +115,23 @@ public class APHEntryDAOJDOImpl extends GenericDAOJDO<APHEntry> implements APHEn
 		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		
 		try{
-			Map<String, Object> parameters = CollectionFactory.createMap();
-			List<String> declaredParams = CollectionFactory.createList();
-			List<String> filters = CollectionFactory.createList();
 
-			Query query = pm.newQuery(clazz);
+			// Obtains DB Connection
+			JDOConnection jdoConn = pm.getDataStoreConnection();
+			DB db = (DB)jdoConn.getNativeConnection();
 
-			// Hostname Parameter
-			if(!CollectionUtils.isEmpty(hostname)) {
-				declaredParams.add("java.util.List hostnameParam");
-				filters.add("hostnameParam.contains(hostname)");
-				parameters.put("hostnameParam", hostname);
-			}
+			BasicDBObject query = new BasicDBObject("$and", Arrays.asList(
+					new BasicDBObject("hostname", new BasicDBObject("$in", hostname.toArray(new String[hostname.size()]))),
+					new BasicDBObject("date", sdf.format(fromDate))
+					));
 
-			// fromDate Parameter
-			if(null != fromDate) {
-				declaredParams.add("String fromDateParam");
-				filters.add("date >= fromDateParam");
-				parameters.put("fromDateParam", sdf.format(fromDate));
-			}
-
-			// toDate Parameter
-			if(null != fromDate) {
-				declaredParams.add("String toDateParam");
-				filters.add("date <= toDateParam");
-				parameters.put("toDateParam", sdf.format(toDate));
-			}
-
-			query.setResult("mac");
-			query.declareParameters(toParameterList(declaredParams));
-			query.setFilter(toWellParametrizedFilter(filters));
-			
 			@SuppressWarnings("unchecked")
-			List<String> list = (List<String>)query.executeWithMap(parameters);
-			for(String obj : list ) {
-				if(!ret.contains(obj))
-					ret.add(obj);
+			Iterator<String> c = db.getCollection("APHEntry").distinct("mac",query).iterator();
+			while(c.hasNext()) {
+				ret.add(c.next());
 			}
-			
+			jdoConn.close();
+
 			return ret;
 			
 		} catch(Exception e) {

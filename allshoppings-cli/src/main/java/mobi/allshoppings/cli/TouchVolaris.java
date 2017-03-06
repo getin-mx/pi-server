@@ -91,6 +91,7 @@ public class TouchVolaris extends AbstractCLI {
 			for( APDevice obj : list ) {
 				obj.setPeasantPowerThreshold(-80L);
 				obj.setVisitPowerThreshold(-45L);
+				obj.setVisitTimeThreshold(3L);
 				apdeviceDao.update(obj);
 				apdeviceHelper.updateAssignationsUsingAPDevice(obj.getHostname());
 				index.add(obj);

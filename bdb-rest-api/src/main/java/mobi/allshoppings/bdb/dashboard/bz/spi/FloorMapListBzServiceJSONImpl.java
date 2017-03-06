@@ -15,6 +15,7 @@ import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.FloorMapDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
+import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.User;
@@ -38,6 +39,8 @@ implements BDBDashboardBzService {
 	private FloorMapDAO floormapDao;
 	@Autowired
 	private ShoppingDAO shoppingDao;
+	@Autowired
+	private StoreDAO storeDao;
 
 	/**
 	 * Obtains a list of FloorMap points
@@ -56,6 +59,7 @@ implements BDBDashboardBzService {
 			// inject adapter options
 			Map<String,Object> options = CollectionFactory.createMap();
 			options.put(FloorMapAdapter.OPTIONS_SHOPPINGDAO, shoppingDao);
+			options.put(FloorMapAdapter.OPTIONS_STOREDAO, storeDao);
 
 			long millisPre = new Date().getTime();
 			List<FloorMapAdapter> list = null;

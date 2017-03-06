@@ -19,6 +19,7 @@ import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.CinemaDAO;
 import mobi.allshoppings.dao.FloorMapDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
+import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dao.WifiSpotDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -47,6 +48,8 @@ implements BDBDashboardBzService, BDBPostBzService {
 	private FloorMapDAO floormapDao;
 	@Autowired
 	private ShoppingDAO shoppingDao;
+	@Autowired
+	private StoreDAO storeDao;
 	@Autowired
 	private WifiSpotDAO wifispotDao;
 	
@@ -81,6 +84,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 				// inject adapter options
 				Map<String,Object> options = CollectionFactory.createMap();
 				options.put(FloorMapAdapter.OPTIONS_SHOPPINGDAO, shoppingDao);
+				options.put(FloorMapAdapter.OPTIONS_STOREDAO, storeDao);
 
 				long millisPre = new Date().getTime();
 				List<FloorMapAdapter> list = new GenericAdapterImpl<FloorMapAdapter>()

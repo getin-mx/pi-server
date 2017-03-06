@@ -536,6 +536,7 @@ public class DashboardAPDeviceMapperService {
 						log.log(Level.INFO, "Processing record " + count + " of " + macs.size() + "...");
 					
 					count++;
+//					if( count > 100 ) break;
 					
 					List<APHEntry> aphes = CollectionFactory.createList();
 					for( String apDeviceId : apDeviceIds) {
@@ -568,8 +569,8 @@ public class DashboardAPDeviceMapperService {
 							
 							// Search for max visit time threshold
 							APDevice apd = apDevices.get(entry.getHostname());
-							if( apd.getVisitTimeThreshold() > maxVisitTimeThreshold)
-								maxVisitTimeThreshold = apd.getVisitTimeThreshold().intValue();
+							if( apd.getVisitMaxThreshold() > maxVisitTimeThreshold)
+								maxVisitTimeThreshold = apd.getVisitMaxThreshold().intValue();
 							
 							// Try basic rules
 							int distance = (int)((myMaximalSlot - myMinimalSlot) / 3);
