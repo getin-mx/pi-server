@@ -75,17 +75,8 @@ public class FloorMapJourneyHelperImpl implements FloorMapJourneyHelper {
 			// System.out.println("<"+ myWord + ">"+" : "+ count);
 
 		}
-
-		log.log(Level.INFO, "map.size ==>" + map.size());
-		log.log(Level.INFO,"map: " + map);
-
-		
-		log.log(Level.INFO, "map.size ==>" + res.size());
-		log.log(Level.INFO,"map: " + res);
-
 		
 		map2 = reverse(map);
-		log.log(Level.INFO,"map2: " + map2);
 
 		log.log(Level.INFO,"------- ");
 		// HashMap<Integer, String[]> mvalue = mostValuable(map2);

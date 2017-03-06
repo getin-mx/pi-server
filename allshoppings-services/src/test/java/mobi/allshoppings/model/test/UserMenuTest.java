@@ -401,6 +401,7 @@ public class UserMenuTest extends TestCase {
 				volaris.setEmail("volaris@allshoppings.mobi");
 				volaris.getSecuritySettings().setRole(Role.BRAND);
 				volaris.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				volaris.getSecuritySettings().setShoppings(Arrays.asList("a9f9d78e-d5f6-42b5-97be-2a84aca5165d"));
 				volaris.setKey((Key)keyHelper.obtainKey(User.class, "volaris_mx"));
 				userDao.create(volaris);
 			}
@@ -411,6 +412,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.patternheatmap", "fa-building", "Patrones"));
 				um.setKey(userMenuDao.createKey("volaris_mx"));
 				userMenuDao.create(um);
 			}
@@ -555,6 +557,8 @@ public class UserMenuTest extends TestCase {
 			User modatelas = null;
 			try {
 				modatelas = userDao.get("modatelas_mx", true);
+				userDao.delete(modatelas);
+				throw new Exception();
 			} catch( Exception e ) {
 				modatelas = new User();
 				modatelas.setFirstname("Modatelas");
@@ -563,6 +567,7 @@ public class UserMenuTest extends TestCase {
 				modatelas.getSecuritySettings().setRole(Role.BRAND);
 				modatelas.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				modatelas.setKey((Key)keyHelper.obtainKey(User.class, "modatelas_mx"));
+				modatelas.getSecuritySettings().setShoppings(Arrays.asList("740547b3-5c3a-492c-a2f8-bc88345fcc5d"));
 				userDao.create(modatelas);
 			}
 
@@ -573,7 +578,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.getEntries().add(new UserMenuEntry("index.mtheatmap", "fa-building", "Heat Map"));
+				um.getEntries().add(new UserMenuEntry("index.patternheatmap", "fa-building", "Patrones"));
 				um.setKey(userMenuDao.createKey("modatelas_mx"));
 				userMenuDao.create(um);
 			}
