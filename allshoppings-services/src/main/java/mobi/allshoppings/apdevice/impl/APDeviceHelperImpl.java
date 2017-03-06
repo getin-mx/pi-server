@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import com.google.common.io.Files;
+import com.ibm.icu.util.Calendar;
 import com.inodes.datanucleus.model.Blob;
 import com.inodes.datanucleus.model.Email;
 import com.inodes.datanucleus.model.Key;
@@ -86,6 +87,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	public static final long ONE_DAY = 24 * 60 * 60 * 1000;
 	
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private static final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
 
 	private static final Logger log = Logger.getLogger(APDeviceHelperImpl.class.getName());
 
@@ -323,7 +325,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	public void reportDownDevices() throws ASException {
 
 		Date limitDate = new Date(new Date().getTime() - SIXTY_MINUTES);
-
+		
 		List<APDevice> list = dao.getAll(true);
 		for( APDevice device : list ) {
 
@@ -334,28 +336,30 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 				if(device.getReportable() != null && device.getReportable() && device.getReportMailList() != null && device.getReportMailList().size() > 0 ) {
 					if( device.getStatus().equals(StatusAware.STATUS_ENABLED) && device.getReportStatus().equals(APDevice.REPORT_STATUS_NOT_REPORTED)) {
 
-						String mailText = "The device " + device.getHostname()
-						+ " referent of " + device.getDescription()
-						+ " is not sending mac addresses since "
-						+ device.getLastRecordDate()
-						+ "<br/><br/>Detailed record is:<br/><br/>"
-						+ device.toString();
-						String mailTitle = "Device " + device.getDescription() + " is Down!!!";
+						if( onReportTime(device)) {
+							String mailText = "The device " + device.getHostname()
+							+ " referent of " + device.getDescription()
+							+ " is not sending mac addresses since "
+							+ device.getLastRecordDate()
+							+ "<br/><br/>Detailed record is:<br/><br/>"
+							+ device.toString();
+							String mailTitle = "Device " + device.getDescription() + " is Down!!!";
 
-						for( String mail : device.getReportMailList() ) {
-							User fake = new User();
-							fake.setEmail(mail);
-							try {
-								mailHelper.sendMessage(fake, mailTitle, mailText);
-							} catch( Exception e ) {
-								// If mail server rejected the message, keep going
-								log.log(Level.SEVERE, e.getMessage(), e);
+							for( String mail : device.getReportMailList() ) {
+								User fake = new User();
+								fake.setEmail(mail);
+								try {
+									mailHelper.sendMessage(fake, mailTitle, mailText);
+								} catch( Exception e ) {
+									// If mail server rejected the message, keep going
+									log.log(Level.SEVERE, e.getMessage(), e);
+								}
 							}
-						}
 
-						device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
-						dao.update(device);
-						indexHelper.indexObject(device);
+							device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
+							dao.update(device);
+							indexHelper.indexObject(device);
+						}
 					}
 				}
 			} 
@@ -367,23 +371,25 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 					if( device.getReportStatus() == null ) device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
 					if( device.getStatus().equals(StatusAware.STATUS_ENABLED) && device.getReportStatus().equals(APDevice.REPORT_STATUS_REPORTED)) {
 
-						String mailText = "The device " + device.getHostname() + " referent of " + device.getDescription() + " is back alive!";
-						String mailTitle = "Device " + device.getDescription() + " is Back to Normal!!!";
+						if( onReportTime(device)) {
+							String mailText = "The device " + device.getHostname() + " referent of " + device.getDescription() + " is back alive!";
+							String mailTitle = "Device " + device.getDescription() + " is Back to Normal!!!";
 
-						for( String mail : device.getReportMailList() ) {
-							User fake = new User();
-							fake.setEmail(mail);
-							try {
-								mailHelper.sendMessage(fake, mailTitle, mailText);
-							} catch( Exception e ) {
-								// If mail server rejected the message, keep going
-								log.log(Level.SEVERE, e.getMessage(), e);
+							for( String mail : device.getReportMailList() ) {
+								User fake = new User();
+								fake.setEmail(mail);
+								try {
+									mailHelper.sendMessage(fake, mailTitle, mailText);
+								} catch( Exception e ) {
+									// If mail server rejected the message, keep going
+									log.log(Level.SEVERE, e.getMessage(), e);
+								}
 							}
-						}
 
-						device.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
-						dao.update(device);
-						indexHelper.indexObject(device);
+							device.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
+							dao.update(device);
+							indexHelper.indexObject(device);
+						}
 					}
 				}
 			}
@@ -392,6 +398,101 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		}
 	}
 
+	private boolean onReportTime(APDevice device) {
+		boolean doReport = false;
+
+		try {
+			Date from;
+			Date to;
+			Date now = sdfTime.parse(sdfTime.format(new Date()));
+			Calendar cal = Calendar.getInstance();
+			
+			cal.setTime(new Date());
+			int dof = cal.get(Calendar.DAY_OF_WEEK);
+			switch( dof ) {
+			case Calendar.SUNDAY:
+				if(device.getVisitsOnSun()) {
+					from = sdfTime.parse(device.getVisitStartSun());
+					from = new Date(from.getTime() + 1800000);
+					to = sdfTime.parse(device.getVisitEndSun());
+					to = new Date(to.getTime() - 1800000);
+					if(to.before(from)) to = new Date(to.getTime() + 86400000);
+					if( from.before(now) && to.after(now))
+						doReport = true;
+				}
+				break;
+			case Calendar.MONDAY:
+				if(device.getVisitsOnMon()) {
+					from = sdfTime.parse(device.getVisitStartMon());
+					from = new Date(from.getTime() + 1800000);
+					to = sdfTime.parse(device.getVisitEndMon());
+					to = new Date(to.getTime() - 1800000);
+					if(to.before(from)) to = new Date(to.getTime() + 86400000);
+					if( from.before(now) && to.after(now))
+						doReport = true;
+				}
+				break;
+			case Calendar.TUESDAY:
+				if(device.getVisitsOnTue()) {
+					from = sdfTime.parse(device.getVisitStartTue());
+					from = new Date(from.getTime() + 1800000);
+					to = sdfTime.parse(device.getVisitEndTue());
+					to = new Date(to.getTime() - 1800000);
+					if(to.before(from)) to = new Date(to.getTime() + 86400000);
+					if( from.before(now) && to.after(now))
+						doReport = true;
+				}
+				break;
+			case Calendar.WEDNESDAY:
+				if(device.getVisitsOnWed()) {
+					from = sdfTime.parse(device.getVisitStartWed());
+					from = new Date(from.getTime() + 1800000);
+					to = sdfTime.parse(device.getVisitEndWed());
+					to = new Date(to.getTime() - 1800000);
+					if(to.before(from)) to = new Date(to.getTime() + 86400000);
+					if( from.before(now) && to.after(now))
+						doReport = true;
+				}
+				break;
+			case Calendar.THURSDAY:
+				if(device.getVisitsOnThu()) {
+					from = sdfTime.parse(device.getVisitStartThu());
+					from = new Date(from.getTime() + 1800000);
+					to = sdfTime.parse(device.getVisitEndThu());
+					to = new Date(to.getTime() - 1800000);
+					if(to.before(from)) to = new Date(to.getTime() + 86400000);
+					if( from.before(now) && to.after(now))
+						doReport = true;
+				}
+				break;
+			case Calendar.FRIDAY:
+				if(device.getVisitsOnFri()) {
+					from = sdfTime.parse(device.getVisitStartFri());
+					from = new Date(from.getTime() + 1800000);
+					to = sdfTime.parse(device.getVisitEndFri());
+					to = new Date(to.getTime() - 1800000);
+					if(to.before(from)) to = new Date(to.getTime() + 86400000);
+					if( from.before(now) && to.after(now))
+						doReport = true;
+				}
+				break;
+			case Calendar.SATURDAY:
+				if(device.getVisitsOnSat()) {
+					from = sdfTime.parse(device.getVisitStartSat());
+					from = new Date(from.getTime() + 1800000);
+					to = sdfTime.parse(device.getVisitEndSat());
+					to = new Date(to.getTime() - 1800000);
+					if(to.before(from)) to = new Date(to.getTime() + 86400000);
+					if( from.before(now) && to.after(now))
+						doReport = true;
+				}
+				break;
+			}
+		} catch( Exception e ) {}
+		
+		return doReport;
+	}
+	
 	public void calculateUptimeFromDump(String baseDir, Date fromDate, Date toDate, List<String> apdevices) throws ASException {
 
 		Map<String, APUptime> cache = CollectionFactory.createMap();
