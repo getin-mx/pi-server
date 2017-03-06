@@ -621,6 +621,17 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 			}
 			
+			try {
+				brand = brandDao.get("pameladeharo_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Pamela de Haro");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "pameladeharo_mx"));
+				brandDao.create(brand);
+			}
 			
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
@@ -889,7 +900,10 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("465", "Annik San Jerónimo", "annik_mx", null));
 			stores.add(new StoreAdapter("466", "Fullsand La Quinta Playa del Carmen", "fullsand_mx", null));
 			stores.add(new StoreAdapter("467", "Volaris AICM Nacional", "volaris_mx", null));
-			
+
+			stores.add(new StoreAdapter("468", "Pamela de Haro Athos", "pameladeharo_mx", null));
+			stores.add(new StoreAdapter("469", "Pamela de Haro Emilio Castelar", "pameladeharo_mx", null));
+
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {

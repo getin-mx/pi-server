@@ -1480,6 +1480,31 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 
+			User pameladeharo = null;
+			try {
+				pameladeharo = userDao.get("pameladeharo_mx", true);
+			} catch( Exception e ) {
+				pameladeharo = new User();
+				pameladeharo.setFirstname("Pamela de Haro");
+				pameladeharo.setLastname("Mexico");
+				pameladeharo.setEmail("pameladeharo@allshoppings.mobi");
+				pameladeharo.getSecuritySettings().setRole(Role.BRAND);
+				pameladeharo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				pameladeharo.setKey((Key)keyHelper.obtainKey(User.class, "pameladeharo_mx"));
+				userDao.create(pameladeharo);
+			}
+
+			try {
+				um = userMenuDao.get("pameladeharo_mx", true);
+				userMenuDao.delete("pameladeharo_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("pameladeharo_mx"));
+				userMenuDao.create(um);
+			}
+
 			User vickyform = null;
 			try {
 				vickyform = userDao.get("vickyform_mx", true);
