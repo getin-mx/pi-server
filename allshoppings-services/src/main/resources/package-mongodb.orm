@@ -114,6 +114,10 @@
             <field name="key" column="_id" length="100"/>
         </class>
 
+        <class name="ExternalGeo" table="ExportUnit">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
         <class name="ExternalActivityLog" table="ExternalActivityLog">
             <field name="key" column="_id" length="100"/>
         </class>

@@ -212,6 +212,7 @@
 	<bean id="aphentry.helper" class="mobi.allshoppings.apdevice.impl.APHHelperImpl" scope="singleton" />
 	<bean id="apdvisit.helper" class="mobi.allshoppings.apdevice.impl.APDVisitHelperImpl" scope="singleton" />
 	<bean id="floormapjourney.helper" class="mobi.allshoppings.apdevice.impl.FloorMapJourneyHelperImpl" scope="singleton" />
+	<bean id="export.helper" class="mobi.allshoppings.exporter.impl.ExportHelperImpl" scope="singleton" />
 	<bean id="external.geo.importer" class="mobi.allshoppings.exporter.ExternalGeoImporter" scope="singleton" />
 	<bean id="dashboard.apdevice.mapper" class="mobi.allshoppings.dashboards.DashboardAPDeviceMapperService" scope="singleton" />
 	
@@ -265,6 +266,7 @@
 	<bean id="devicemessagelock.dao.ref" class="mobi.allshoppings.dao.spi.DeviceMessageLockDAOJDOImpl" />
 	<bean id="beaconhotspot.dao.ref" class="mobi.allshoppings.dao.spi.BeaconHotspotDAOJDOImpl" />
 	<bean id="addresscomponentscache.dao.ref" class="mobi.allshoppings.dao.spi.AddressComponentsCacheDAOJDOImpl" />
+	<bean id="exportunit.dao.ref" class="mobi.allshoppings.dao.spi.ExportUnitDAOJDOImpl" />
 	<bean id="externalgeo.dao.ref" class="mobi.allshoppings.dao.spi.ExternalGeoDAOJDOImpl" />
 	<bean id="externalactivitylog.dao.ref" class="mobi.allshoppings.dao.spi.ExternalActivityLogDAOJDOImpl" />
 	<bean id="process.dao.ref" class="mobi.allshoppings.dao.spi.ProcessDAOJDOImpl" />

@@ -37,6 +37,7 @@
         <class>mobi.allshoppings.model.DeviceLocationHistory</class>
         <class>mobi.allshoppings.model.DeviceMessageLock</class>
         <class>mobi.allshoppings.model.DeviceWifiLocationHistory</class>
+        <class>mobi.allshoppings.model.ExportUnit</class>
         <class>mobi.allshoppings.model.ExternalActivityLog</class>
         <class>mobi.allshoppings.model.Dummy</class>
         <class>mobi.allshoppings.model.Favorite</class>
