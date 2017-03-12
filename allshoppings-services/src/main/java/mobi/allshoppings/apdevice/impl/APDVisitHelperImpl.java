@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +27,7 @@ import mobi.allshoppings.dao.APDVisitDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
+import mobi.allshoppings.dao.InnerZoneDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
@@ -39,9 +41,11 @@ import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.EntityKind;
+import mobi.allshoppings.model.InnerZone;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.interfaces.StatusAware;
+import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
 
@@ -83,6 +87,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	private DashboardIndicatorDataDAO didDao;
 	
 	@Autowired
+	private InnerZoneDAO innerzoneDao;
+
+	@Autowired
 	private DashboardAPDeviceMapperService mapper;
 
 	/**
@@ -106,7 +113,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Map<String, APDAssignation> assignmentsCache = CollectionFactory.createMap();
 		boolean cacheBuilt = false;
 		Range range = null;
-
+		
 		if(!CollectionUtils.isEmpty(storeIds)) {
 			stores = storeDao.getUsingIdList(storeIds);
 		} else if(!CollectionUtils.isEmpty(brandIds)) {
@@ -250,6 +257,50 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		}
 	}
 
+	public Map<String, Integer> getEntities(List<String> shoppingIds, List<String> brandIds, List<String> storeIds) throws ASException {
+		Map<String, Integer> ret = CollectionFactory.createMap();
+
+		if( shoppingIds != null )
+			for( String shopping : shoppingIds )
+				ret.put(shopping, EntityKind.KIND_SHOPPING);
+		
+		if( brandIds != null )
+			for( String brand : brandIds ) {
+				List<Store> stores = storeDao.getUsingBrandAndStatus(brand, StatusHelper.statusActive(), null);
+				for( Store store : stores )
+					ret.put(store.getIdentifier(), EntityKind.KIND_STORE);
+			}
+
+		if( storeIds != null )
+			for( String store : storeIds )
+				ret.put(store, EntityKind.KIND_STORE);
+		
+		ret = aggregateZones(ret);
+		
+		return ret;
+	}
+
+	public Map<String, Integer> aggregateZones(Map<String, Integer> map) throws ASException {
+		
+		Map<String, Integer> newmap = CollectionFactory.createMap();
+		Set<String> keys = CollectionFactory.createSet();
+		keys.addAll(map.keySet());
+		Iterator<String> i = keys.iterator();
+		while(i.hasNext()) {
+			String entityId = i.next();
+			Integer entityKind = map.get(entityId);
+			List<InnerZone> zones = innerzoneDao.getUsingEntityIdAndRange(entityId, entityKind, null, null, null, false);
+			newmap = CollectionFactory.createMap();
+			for( InnerZone zone : zones ) 
+				newmap.put(zone.getIdentifier(), EntityKind.KIND_INNER_ZONE);
+			newmap = aggregateZones(newmap);
+			map.putAll(newmap);
+		}
+		
+		return map;
+	}
+	
+	
 	/**
 	 * Writes a list of APDVisits in the database
 	 * 
@@ -264,26 +315,34 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	@Override
 	public void generateAPDVisits(List<String> shoppingIds, Date fromDate, Date toDate, boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees) throws ASException {
 
-		List<Shopping> shoppings = CollectionFactory.createList();
 		Map<String, APDevice> apdCache = CollectionFactory.createMap();
 		Map<String, APDAssignation> assignmentsCache = CollectionFactory.createMap();
 		boolean cacheBuilt = false;
 		Range range = null;
 
-		if(!CollectionUtils.isEmpty(shoppingIds)) {
-			shoppings = shoppingDao.getUsingIdList(shoppingIds);
-		} else {
-			shoppings.addAll(shoppingDao.getUsingStatusAndRange( 
-					Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), null, null));
-		}
+		List<String> subShoppingIds = CollectionFactory.createList();
 		
+		if(!CollectionUtils.isEmpty(shoppingIds)) {
+			subShoppingIds.addAll(shoppingIds);
+		} else {
+			List<Shopping> shoppings = CollectionFactory.createList();
+			shoppings.addAll(shoppingDao.getUsingStatusAndRange( 
+				Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), null, null));
+			for(Shopping shopping : shoppings ) 
+				subShoppingIds.add(shopping.getIdentifier());
+		}
+
+		Map<String, Integer> entities = getEntities(subShoppingIds, null, null);
+
 		Date curDate = new Date(fromDate.getTime());
 		while( curDate.before(toDate) || (fromDate.equals(toDate) && curDate.equals(toDate))) {
 
 			try {
 
-				for( Shopping shopping : shoppings ) {
+				for( String entityId : entities.keySet() ) {
 
+					Integer entityKind = entities.get(entityId);
+					
 					try {
 
 						List<String> blackListMacs = CollectionFactory.createList();
@@ -291,12 +350,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 						// Try to delete previous records if needed
 						if(deletePreviousRecords) {
-							apdvDao.deleteUsingEntityIdAndEntityKindAndDate(shopping.getIdentifier(), EntityKind.KIND_SHOPPING,
+							apdvDao.deleteUsingEntityIdAndEntityKindAndDate(entityId, entityKind,
 									curDate, new Date(curDate.getTime() + 86400000),
 									onlyEmployees ? APDVisit.CHECKIN_EMPLOYEE : null);
 						}
 
-						List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(shopping.getIdentifier(), EntityKind.KIND_SHOPPING, curDate);
+						List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, curDate);
 						if( !CollectionUtils.isEmpty(assigs)) {
 							if( assigs.size() == 1 ) {
 
@@ -394,10 +453,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								}
 							}
 
-							didDao.deleteUsingSubentityIdAndElementIdAndDate(shopping.getIdentifier(),
+							didDao.deleteUsingSubentityIdAndElementIdAndDate(entityId,
 									Arrays.asList(new String[] { "apd_visitor", "apd_permanence" }), curDate, curDate);
 							mapper.createAPDVisitPerformanceDashboardForDay(curDate,
-									Arrays.asList(new String[] { shopping.getIdentifier() }), EntityKind.KIND_SHOPPING);
+									Arrays.asList(new String[] { entityId }), entityKind);
 						}
 
 					} catch( Exception e ) {

@@ -46,6 +46,7 @@
         <class>mobi.allshoppings.model.FloorMapJourney</class>
         <class>mobi.allshoppings.model.Friend</class>
         <class>mobi.allshoppings.model.GeoEntity</class>
+        <class>mobi.allshoppings.model.InnerZone</class>
         <class>mobi.allshoppings.model.InvoicingInfo</class>
         <class>mobi.allshoppings.model.InvitationDetail</class>
         <class>mobi.allshoppings.model.Image</class>

@@ -195,13 +195,13 @@ public class ExportHelperImpl implements ExportHelper {
 						// Creates the statement and executes the insert
 						StringBuffer sb = new StringBuffer();
 						sb.append(
-								"INSERT INTO `apd_visit` ("
+								"REPLACE INTO `apd_visit` ("
 								+ "`visit_id`, `entity_id`, `entity_kind`, "
 								+ "`mac`, `device_platform`, `checkin_type`, "
 								+ "`checkin_started`, `checkin_finished`, "
 								+ "`creation_datetime`, `last_update`"
 								+ ") VALUES (");
-						
+
 						sb.append("'").append(identifier).append("', ");
 						sb.append("'").append(entityId).append("', ");
 						sb.append("'").append(entityKind).append("', ");
@@ -213,8 +213,13 @@ public class ExportHelperImpl implements ExportHelper {
 						sb.append("'").append(sdf.format(creationDateTime)).append("', ");
 						sb.append("'").append(sdf.format(objLastUpdate)).append("')");
 
-						stmt = conn.createStatement();
-						stmt.executeUpdate(sb.toString());
+						try {
+							stmt = conn.createStatement();
+							stmt.executeUpdate(sb.toString());
+						} catch( Exception e ) {
+							log.log(Level.SEVERE, e.getMessage(), e);
+							log.log(Level.INFO, sb.toString());
+						}
 
 					}
 				}

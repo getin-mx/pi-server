@@ -441,6 +441,33 @@ public class UserMenuTest extends TestCase {
 				um.setKey(userMenuDao.createKey("bestbuy_mx"));
 				userMenuDao.create(um);
 			}
+
+			User clubcasablanca = null;
+			try {
+				clubcasablanca = userDao.get("clubcasablanca_mx", true);
+				userDao.delete(clubcasablanca);
+				throw new Exception();
+			} catch( Exception e ) {
+				clubcasablanca = new User();
+				clubcasablanca.setFirstname("Club Casablanca");
+				clubcasablanca.setLastname("Mexico");
+				clubcasablanca.setEmail("clubcasablanca@allshoppings.mobi");
+				clubcasablanca.getSecuritySettings().setRole(Role.BRAND);
+				clubcasablanca.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				clubcasablanca.setKey((Key)keyHelper.obtainKey(User.class, "clubcasablanca_mx"));
+				userDao.create(clubcasablanca);
+			}
+			try {
+				um = userMenuDao.get("clubcasablanca_mx", true);
+				userMenuDao.delete("clubcasablanca_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("clubcasablanca_mx"));
+				userMenuDao.create(um);
+			}
+			
 			try {
 				um = userMenuDao.get("sportium_mx", true);
 				userMenuDao.delete("sportium_mx");
@@ -1065,14 +1092,14 @@ public class UserMenuTest extends TestCase {
 				userDao.delete(sallybeauty);
 				throw new Exception();
 			} catch( Exception e ) {
-				sallybeauty = new User();
-				sallybeauty.setFirstname("Sally Beauty");
-				sallybeauty.setLastname("Mexico");
-				sallybeauty.setEmail("sallybeauty@allshoppings.mobi");
-				sallybeauty.getSecuritySettings().setRole(Role.BRAND);
-				sallybeauty.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				sallybeauty.setKey((Key)keyHelper.obtainKey(User.class, "sallybeauty_mx"));
-				userDao.create(sallybeauty);
+//				sallybeauty = new User();
+//				sallybeauty.setFirstname("Sally Beauty");
+//				sallybeauty.setLastname("Mexico");
+//				sallybeauty.setEmail("sallybeauty@allshoppings.mobi");
+//				sallybeauty.getSecuritySettings().setRole(Role.BRAND);
+//				sallybeauty.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+//				sallybeauty.setKey((Key)keyHelper.obtainKey(User.class, "sallybeauty_mx"));
+//				userDao.create(sallybeauty);
 			}
 
 			try {

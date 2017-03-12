@@ -27,6 +27,7 @@ public class EntityKind {
 	public static final int KIND_CAMPAIGN_ACTIVITY = 17;
 	public static final int KIND_GEO_ACTION_ZONE = 18;
 	public static final int KIND_PROCESS = 19;
+	public static final int KIND_INNER_ZONE = 20;
 	
 	public static final Map<String, Integer> kindMap = new HashMap<String, Integer>();
 	
@@ -83,6 +84,10 @@ public class EntityKind {
 		kindMap.put("geoActionZones", KIND_GEO_ACTION_ZONE);
 		kindMap.put("process", KIND_PROCESS);
 		kindMap.put("processes", KIND_PROCESS);
+		kindMap.put("innerZone", KIND_INNER_ZONE);
+		kindMap.put("innerzone", KIND_INNER_ZONE);
+		kindMap.put("innerZones", KIND_INNER_ZONE);
+		kindMap.put("innerzones", KIND_INNER_ZONE);
 	}
 	
 	public static Class<?> getClassByKind(Integer entityKind) {
@@ -127,6 +132,8 @@ public class EntityKind {
 			return null;
 		case KIND_PROCESS:
 			return Process.class;
+		case KIND_INNER_ZONE:
+			return InnerZone.class;
 		default:
 			return null;
 		}
@@ -199,6 +206,8 @@ public class EntityKind {
 			return "Geo Action Zone";
 		case EntityKind.KIND_PROCESS:
 			return "Proceso";
+		case EntityKind.KIND_INNER_ZONE:
+			return "Zona";
 		}
 		return null;
 	}
@@ -246,6 +255,8 @@ public class EntityKind {
 				return "geoActionZones";
 			case EntityKind.KIND_PROCESS:
 				return "processes";
+			case EntityKind.KIND_INNER_ZONE:
+				return "innerZones";
 			}
 		} else {
 			switch( entityKind ) {
@@ -289,6 +300,8 @@ public class EntityKind {
 				return "geoActionZone";
 			case EntityKind.KIND_PROCESS:
 				return "process";
+			case EntityKind.KIND_INNER_ZONE:
+				return "innerZone";
 			}
 		}
 		return null;

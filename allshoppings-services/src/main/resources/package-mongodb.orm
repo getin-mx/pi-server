@@ -114,7 +114,7 @@
             <field name="key" column="_id" length="100"/>
         </class>
 
-        <class name="ExternalGeo" table="ExportUnit">
+        <class name="ExportUnit" table="ExportUnit">
             <field name="key" column="_id" length="100"/>
         </class>
 
@@ -143,6 +143,10 @@
         </class>
 
         <class name="GeoEntity" table="GeoEntity">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="InnerZone" table="InnerZone">
             <field name="key" column="_id" length="100"/>
         </class>
 

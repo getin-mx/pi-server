@@ -224,6 +224,7 @@
 	<bean id="floormapjourney.dao.ref" class="mobi.allshoppings.dao.spi.FloorMapJourneyDAOJDOImpl" />
 	<bean id="wifispot.dao.ref" class="mobi.allshoppings.dao.spi.WifiSpotDAOJDOImpl" />
 	<bean id="image.dao.ref" class="mobi.allshoppings.dao.spi.ImageDAOJDOImpl" />
+	<bean id="innerzone.dao.ref" class="mobi.allshoppings.dao.spi.InnerZoneDAOJDOImpl" />
 
 	<bean id="invitationdetail.dao.ref" class="mobi.allshoppings.dao.spi.InvitationDetailDAOJDOImpl" />
 	<bean id="area.dao.ref" class="mobi.allshoppings.dao.spi.AreaDAOJDOImpl" />

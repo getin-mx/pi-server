@@ -632,7 +632,19 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "pameladeharo_mx"));
 				brandDao.create(brand);
 			}
-			
+
+			try {
+				brand = brandDao.get("clubcasablanca_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Club Casablanca");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "clubcasablanca_mx"));
+				brandDao.create(brand);
+			}
+
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -903,6 +915,14 @@ public class GetinDump extends AbstractCLI {
 
 			stores.add(new StoreAdapter("468", "Pamela de Haro Athos", "pameladeharo_mx", null));
 			stores.add(new StoreAdapter("469", "Pamela de Haro Emilio Castelar", "pameladeharo_mx", null));
+
+			stores.add(new StoreAdapter("470", "Auxiliar 1", "clubcasablanca_mx", null));
+			stores.add(new StoreAdapter("471", "Auxiliar 2", "clubcasablanca_mx", null));
+			stores.add(new StoreAdapter("472", "Auxiliar 3", "clubcasablanca_mx", null));
+			stores.add(new StoreAdapter("473", "Auxiliar 4", "clubcasablanca_mx", null));
+			stores.add(new StoreAdapter("474", "Fitness Center", "clubcasablanca_mx", null));
+
+			stores.add(new StoreAdapter("475", "Outlet Deportes Isabel la Catolica II", "outletdeportes_mx",null));
 
 			Store store;
 			for(StoreAdapter obj : stores ) {

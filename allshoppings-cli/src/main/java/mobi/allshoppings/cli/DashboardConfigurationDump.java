@@ -64,7 +64,22 @@ public class DashboardConfigurationDump extends AbstractCLI {
 				dcDao.update(dc);
 			else
 				dcDao.create(dc);
-			
+
+			// Club Casablanca
+			try {
+				dc = dcDao.getUsingEntityIdAndEntityKind("clubcasablanca_mx", EntityKind.KIND_BRAND, true);
+				forUpdate = true;
+			} catch( Exception e ) {
+				dc = new DashboardConfiguration("clubcasablanca_mx",EntityKind.KIND_BRAND);
+				dc.setKey(dcDao.createKey(dc));
+				forUpdate = false;
+			}
+			dc.setStoreLabel("Salon");
+			if( forUpdate ) 
+				dcDao.update(dc);
+			else
+				dcDao.create(dc);
+
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

@@ -677,6 +677,7 @@ public class DashboardAPDeviceMapperService {
 			String entityId = null;
 			if( !CollectionUtils.isEmpty( entityIds ))
 				entityId = entityIds.get(0);
+			String shoppingId = null;
 			
 			// Looks for all visit records
 			Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
@@ -687,33 +688,32 @@ public class DashboardAPDeviceMapperService {
 				try {
 					Store store = null;
 					Shopping shopping = null;
-					
+										
 					if( entityKind == null ) entityKind = EntityKind.KIND_BRAND;
 					
-					if( EntityKind.KIND_SHOPPING == entityKind ) {
-						shopping = shoppingCache.get(String.valueOf(v.getEntityId()));
-					} else {
+					if( entityKind.equals(EntityKind.KIND_BRAND)) {
 						store = storeCache.get(String.valueOf(v.getEntityId()));
+						entityId = store.getBrandId();
+						shoppingId = store.getShoppingId();
+					} else if( entityKind.equals(EntityKind.KIND_SHOPPING)) {
+						shopping = shoppingCache.get(String.valueOf(v.getEntityId()));
+						entityId = shopping.getIdentifier();
+						shoppingId = shopping.getIdentifier();
+					} else if( entityKind.equals(EntityKind.KIND_INNER_ZONE)) {
+						shoppingId = entityId;
 					}
+					
 					
 					if( store != null || shopping != null ) {
 						DashboardIndicatorData obj;
 
 						// visitor_total_records --------------------------------------------------------------------------------
 						// ------------------------------------------------------------------------------------------------------
-						if( EntityKind.KIND_SHOPPING == entityKind ) {
-							obj = buildBasicDashboardIndicatorData(
-									"apd_visitor", "Visitantes", "visitor_total_records",
-									"Total", v.getCheckinStarted(),
-									DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-									null, null, shopping.getIdentifier(), KIND_SHOPPING);
-						} else {
-							obj = buildBasicDashboardIndicatorData(
-									"apd_visitor", "Visitantes", "visitor_total_records",
-									"Total", v.getCheckinStarted(),
-									DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-									store, null, store.getBrandId(), KIND_BRAND);
-						}
+						obj = buildBasicDashboardIndicatorData(
+								"apd_visitor", "Visitantes", "visitor_total_records",
+								"Total", v.getCheckinStarted(),
+								DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+								null, null, entityId, entityKind);
 						
 						if(indicatorsSet.containsKey(obj.getKey().getName())) 
 							obj = indicatorsSet.get(obj.getKey().getName());
@@ -722,38 +722,22 @@ public class DashboardAPDeviceMapperService {
 
 						// Device selector
 						if( v.getDevicePlatform().equalsIgnoreCase("ios")) {
-							if( EntityKind.KIND_SHOPPING == entityKind ) {
-								obj = buildBasicDashboardIndicatorData(
-										"apd_visitor", "Visitantes", "visitor_total_records_ios",
-										"Total iOS", v.getCheckinStarted(),
-										DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-										null, null, shopping.getIdentifier(), KIND_SHOPPING);
-							} else {
-								obj = buildBasicDashboardIndicatorData(
-										"apd_visitor", "Visitantes", "visitor_total_records_ios",
-										"Total iOS", v.getCheckinStarted(),
-										DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-										store, null, store.getBrandId(), KIND_BRAND);
-							}
+							obj = buildBasicDashboardIndicatorData(
+									"apd_visitor", "Visitantes", "visitor_total_records_ios",
+									"Total iOS", v.getCheckinStarted(),
+									DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+									null, null, entityId, entityKind);
 
 							if(indicatorsSet.containsKey(obj.getKey().getName())) 
 								obj = indicatorsSet.get(obj.getKey().getName());
 							obj.setDoubleValue(obj.getDoubleValue() + 1);
 							indicatorsSet.put(obj.getKey().getName(), obj);
 						} else if( v.getDevicePlatform().equalsIgnoreCase("android")) {
-							if( EntityKind.KIND_SHOPPING == entityKind ) {
-								obj = buildBasicDashboardIndicatorData(
-										"apd_visitor", "Visitantes", "visitor_total_records_android",
-										"Total Android", v.getCheckinStarted(),
-										DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-										null, null, shopping.getIdentifier(), KIND_SHOPPING);
-							} else {
-								obj = buildBasicDashboardIndicatorData(
-										"apd_visitor", "Visitantes", "visitor_total_records_android",
-										"Total Android", v.getCheckinStarted(),
-										DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-										store, null, store.getBrandId(), KIND_BRAND);
-							}
+							obj = buildBasicDashboardIndicatorData(
+									"apd_visitor", "Visitantes", "visitor_total_records_android",
+									"Total Android", v.getCheckinStarted(),
+									DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+									null, null, entityId, entityKind);
 
 							if(indicatorsSet.containsKey(obj.getKey().getName())) 
 								obj = indicatorsSet.get(obj.getKey().getName());
@@ -765,19 +749,11 @@ public class DashboardAPDeviceMapperService {
 
 							// visitor_total_peasents -------------------------------------------------------------------------------
 							// ------------------------------------------------------------------------------------------------------
-							if( EntityKind.KIND_SHOPPING == entityKind ) {
-								obj = buildBasicDashboardIndicatorData(
-										"apd_visitor", "Visitantes", "visitor_total_peasents",
-										"Paseantes", v.getCheckinStarted(),
-										DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-										null, null, shopping.getIdentifier(), KIND_SHOPPING);
-							} else {
-								obj = buildBasicDashboardIndicatorData(
-										"apd_visitor", "Visitantes", "visitor_total_peasents",
-										"Paseantes", v.getCheckinStarted(),
-										DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-										store, null, store.getBrandId(), KIND_BRAND);
-							}
+							obj = buildBasicDashboardIndicatorData(
+									"apd_visitor", "Visitantes", "visitor_total_peasents",
+									"Paseantes", v.getCheckinStarted(),
+									DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+									null, null, entityId, entityKind);
 
 							if(indicatorsSet.containsKey(obj.getKey().getName())) 
 								obj = indicatorsSet.get(obj.getKey().getName());
@@ -786,38 +762,22 @@ public class DashboardAPDeviceMapperService {
 
 							// Device selector
 							if( v.getDevicePlatform().equalsIgnoreCase("ios")) {
-								if( EntityKind.KIND_SHOPPING == entityKind ) {
-									obj = buildBasicDashboardIndicatorData(
-											"apd_visitor", "Visitantes", "visitor_total_peasents_ios",
-											"Paseantes iOS", v.getCheckinStarted(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-											null, null, shopping.getIdentifier(), KIND_SHOPPING);
-								} else {
-									obj = buildBasicDashboardIndicatorData(
-											"apd_visitor", "Visitantes", "visitor_total_peasents_ios",
-											"Paseantes iOS", v.getCheckinStarted(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-											store, null, store.getBrandId(), KIND_BRAND);
-								}
+								obj = buildBasicDashboardIndicatorData(
+										"apd_visitor", "Visitantes", "visitor_total_peasents_ios",
+										"Paseantes iOS", v.getCheckinStarted(),
+										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+										null, null, entityId, entityKind);
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
 								obj.setDoubleValue(obj.getDoubleValue() + 1);
 								indicatorsSet.put(obj.getKey().getName(), obj);
 							} else if( v.getDevicePlatform().equalsIgnoreCase("android")) {
-								if( EntityKind.KIND_SHOPPING == entityKind ) {
-									obj = buildBasicDashboardIndicatorData(
-											"apd_visitor", "Visitantes", "visitor_total_peasents_android",
-											"Paseantes Android", v.getCheckinStarted(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-											null, null, shopping.getIdentifier(), KIND_SHOPPING);
-								} else {
-									obj = buildBasicDashboardIndicatorData(
-											"apd_visitor", "Visitantes", "visitor_total_peasents_android",
-											"Paseantes Android", v.getCheckinStarted(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-											store, null, store.getBrandId(), KIND_BRAND);
-								}
+								obj = buildBasicDashboardIndicatorData(
+										"apd_visitor", "Visitantes", "visitor_total_peasents_android",
+										"Paseantes Android", v.getCheckinStarted(),
+										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+										null, null, entityId, entityKind);
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
@@ -829,19 +789,11 @@ public class DashboardAPDeviceMapperService {
 
 								// permanence_hourly_peasents ---------------------------------------------------------------------------
 								// ------------------------------------------------------------------------------------------------------
-								if( EntityKind.KIND_SHOPPING == entityKind ) {
-									obj = buildBasicDashboardIndicatorData(
-											"apd_permanence", "Permanencia", "permanence_hourly_peasents",
-											"Paseantes", v.getCheckinStarted(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-											null, null, shopping.getIdentifier(), KIND_SHOPPING);
-								} else {
-									obj = buildBasicDashboardIndicatorData(
-											"apd_permanence", "Permanencia", "permanence_hourly_peasents",
-											"Paseantes", v.getCheckinStarted(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-											store, null, store.getBrandId(), KIND_BRAND);
-								}
+								obj = buildBasicDashboardIndicatorData(
+										"apd_permanence", "Permanencia", "permanence_hourly_peasents",
+										"Paseantes", v.getCheckinStarted(),
+										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+										null, null, entityId, entityKind);
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
@@ -851,19 +803,11 @@ public class DashboardAPDeviceMapperService {
 
 								// Device selector
 								if( v.getDevicePlatform().equalsIgnoreCase("ios")) {
-									if( EntityKind.KIND_SHOPPING == entityKind ) {
-										obj = buildBasicDashboardIndicatorData(
-												"apd_permanence", "Permanencia", "permanence_hourly_peasents_ios",
-												"Paseantes iOS", v.getCheckinStarted(),
-												DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-												null, null, shopping.getIdentifier(), KIND_SHOPPING);
-									} else {
-										obj = buildBasicDashboardIndicatorData(
-												"apd_permanence", "Permanencia", "permanence_hourly_peasents_ios",
-												"Paseantes iOS", v.getCheckinStarted(),
-												DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-												store, null, store.getBrandId(), KIND_BRAND);
-									}
+									obj = buildBasicDashboardIndicatorData(
+											"apd_permanence", "Permanencia", "permanence_hourly_peasents_ios",
+											"Paseantes iOS", v.getCheckinStarted(),
+											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+											null, null, entityId, entityKind);
 
 									if(indicatorsSet.containsKey(obj.getKey().getName())) 
 										obj = indicatorsSet.get(obj.getKey().getName());
@@ -871,19 +815,11 @@ public class DashboardAPDeviceMapperService {
 									obj.setRecordCount(obj.getRecordCount() + 1);
 									indicatorsSet.put(obj.getKey().getName(), obj);
 								} else if( v.getDevicePlatform().equalsIgnoreCase("android")) {
-									if( EntityKind.KIND_SHOPPING == entityKind ) {
-										obj = buildBasicDashboardIndicatorData(
-												"apd_permanence", "Permanencia", "permanence_hourly_peasents_android",
-												"Paseantes Android", v.getCheckinStarted(),
-												DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-												null, null, shopping.getIdentifier(), KIND_SHOPPING);
-									} else {
-										obj = buildBasicDashboardIndicatorData(
-												"apd_permanence", "Permanencia", "permanence_hourly_peasents_android",
-												"Paseantes Android", v.getCheckinStarted(),
-												DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-												store, null, store.getBrandId(), KIND_BRAND);
-									}
+									obj = buildBasicDashboardIndicatorData(
+											"apd_permanence", "Permanencia", "permanence_hourly_peasents_android",
+											"Paseantes Android", v.getCheckinStarted(),
+											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+											null, null, entityId, entityKind);
 
 									if(indicatorsSet.containsKey(obj.getKey().getName())) 
 										obj = indicatorsSet.get(obj.getKey().getName());
@@ -897,19 +833,11 @@ public class DashboardAPDeviceMapperService {
 
 							// visitor_total_visits ---------------------------------------------------------------------------------
 							// ------------------------------------------------------------------------------------------------------
-							if( EntityKind.KIND_SHOPPING == entityKind ) {
-								obj = buildBasicDashboardIndicatorData(
-										"apd_visitor", "Visitantes", "visitor_total_visits",
-										"Visitas", v.getCheckinStarted(),
-										DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-										null, null, shopping.getIdentifier(), KIND_SHOPPING);
-							} else {
-								obj = buildBasicDashboardIndicatorData(
-										"apd_visitor", "Visitantes", "visitor_total_visits",
-										"Visitas", v.getCheckinStarted(),
-										DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-										store, null, store.getBrandId(), KIND_BRAND);
-							}
+							obj = buildBasicDashboardIndicatorData(
+									"apd_visitor", "Visitantes", "visitor_total_visits",
+									"Visitas", v.getCheckinStarted(),
+									DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+									null, null, entityId, entityKind);
 
 							if(indicatorsSet.containsKey(obj.getKey().getName())) 
 								obj = indicatorsSet.get(obj.getKey().getName());
@@ -918,38 +846,22 @@ public class DashboardAPDeviceMapperService {
 
 							// Device selector
 							if( v.getDevicePlatform().equalsIgnoreCase("ios")) {
-								if( EntityKind.KIND_SHOPPING == entityKind ) {
-									obj = buildBasicDashboardIndicatorData(
-											"apd_visitor", "Visitantes", "visitor_total_visits_ios",
-											"Visitas iOS", v.getCheckinStarted(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-											null, null, shopping.getIdentifier(), KIND_SHOPPING);
-								} else {
-									obj = buildBasicDashboardIndicatorData(
-											"apd_visitor", "Visitantes", "visitor_total_visits_ios",
-											"Visitas iOS", v.getCheckinStarted(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-											store, null, store.getBrandId(), KIND_BRAND);
-								}
+								obj = buildBasicDashboardIndicatorData(
+										"apd_visitor", "Visitantes", "visitor_total_visits_ios",
+										"Visitas iOS", v.getCheckinStarted(),
+										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+										null, null, entityId, entityKind);
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
 								obj.setDoubleValue(obj.getDoubleValue() + 1);
 								indicatorsSet.put(obj.getKey().getName(), obj);
 							} else if( v.getDevicePlatform().equalsIgnoreCase("android")) {
-								if( EntityKind.KIND_SHOPPING == entityKind ) {
-									obj = buildBasicDashboardIndicatorData(
-											"apd_visitor", "Visitantes", "visitor_total_visits_android",
-											"Visitas Android", v.getCheckinStarted(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-											null, null, shopping.getIdentifier(), KIND_SHOPPING);
-								} else {
-									obj = buildBasicDashboardIndicatorData(
-											"apd_visitor", "Visitantes", "visitor_total_visits_android",
-											"Visitas Android", v.getCheckinStarted(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-											store, null, store.getBrandId(), KIND_BRAND);
-								}
+								obj = buildBasicDashboardIndicatorData(
+										"apd_visitor", "Visitantes", "visitor_total_visits_android",
+										"Visitas Android", v.getCheckinStarted(),
+										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+										null, null, entityId, entityKind);
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
@@ -960,19 +872,11 @@ public class DashboardAPDeviceMapperService {
 							if( true != v.getHidePermanence()) {
 								// permanence_hourly_visits -------------------------------------------------------------------------------
 								// ------------------------------------------------------------------------------------------------------
-								if( EntityKind.KIND_SHOPPING == entityKind ) {
-									obj = buildBasicDashboardIndicatorData(
-											"apd_permanence", "Permanencia", "permanence_hourly_visits",
-											"Visitas", v.getCheckinStarted(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-											null, null, shopping.getIdentifier(), KIND_SHOPPING);
-								} else {
-									obj = buildBasicDashboardIndicatorData(
-											"apd_permanence", "Permanencia", "permanence_hourly_visits",
-											"Visitas", v.getCheckinStarted(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-											store, null, store.getBrandId(), KIND_BRAND);
-								}
+								obj = buildBasicDashboardIndicatorData(
+										"apd_permanence", "Permanencia", "permanence_hourly_visits",
+										"Visitas", v.getCheckinStarted(),
+										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+										null, null, entityId, entityKind);
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
@@ -982,19 +886,11 @@ public class DashboardAPDeviceMapperService {
 
 								// Device selector
 								if( v.getDevicePlatform().equalsIgnoreCase("ios")) {
-									if( EntityKind.KIND_SHOPPING == entityKind ) {
-										obj = buildBasicDashboardIndicatorData(
-												"apd_permanence", "Permanencia", "permanence_hourly_visits_ios",
-												"Visitas iOS", v.getCheckinStarted(),
-												DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-												null, null, shopping.getIdentifier(), KIND_SHOPPING);
-									} else {
-										obj = buildBasicDashboardIndicatorData(
-												"apd_permanence", "Permanencia", "permanence_hourly_visits_ios",
-												"Visitas iOS", v.getCheckinStarted(),
-												DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-												store, null, store.getBrandId(), KIND_BRAND);
-									}
+									obj = buildBasicDashboardIndicatorData(
+											"apd_permanence", "Permanencia", "permanence_hourly_visits_ios",
+											"Visitas iOS", v.getCheckinStarted(),
+											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+											null, null, entityId, entityKind);
 
 									if(indicatorsSet.containsKey(obj.getKey().getName())) 
 										obj = indicatorsSet.get(obj.getKey().getName());
@@ -1002,19 +898,11 @@ public class DashboardAPDeviceMapperService {
 									obj.setRecordCount(obj.getRecordCount() + 1);
 									indicatorsSet.put(obj.getKey().getName(), obj);
 								} else if( v.getDevicePlatform().equalsIgnoreCase("android")) {
-									if( EntityKind.KIND_SHOPPING == entityKind ) {
-										obj = buildBasicDashboardIndicatorData(
-												"apd_permanence", "Permanencia", "permanence_hourly_visits_android",
-												"Visitas Android", v.getCheckinStarted(),
-												DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-												null, null, shopping.getIdentifier(), KIND_SHOPPING);
-									} else {
-										obj = buildBasicDashboardIndicatorData(
-												"apd_permanence", "Permanencia", "permanence_hourly_visits_android",
-												"Visitas Android", v.getCheckinStarted(),
-												DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-												store, null, store.getBrandId(), KIND_BRAND);
-									}
+									obj = buildBasicDashboardIndicatorData(
+											"apd_permanence", "Permanencia", "permanence_hourly_visits_android",
+											"Visitas Android", v.getCheckinStarted(),
+											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+											null, null, entityId, entityKind);
 
 									if(indicatorsSet.containsKey(obj.getKey().getName())) 
 										obj = indicatorsSet.get(obj.getKey().getName());
