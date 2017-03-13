@@ -36,6 +36,7 @@ import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.ExternalAPHotspotDAO;
 import mobi.allshoppings.dao.FloorMapDAO;
 import mobi.allshoppings.dao.FloorMapJourneyDAO;
+import mobi.allshoppings.dao.InnerZoneDAO;
 import mobi.allshoppings.dao.MacVendorDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
@@ -56,6 +57,7 @@ import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.ExternalAPHotspot;
 import mobi.allshoppings.model.FloorMap;
 import mobi.allshoppings.model.FloorMapJourney;
+import mobi.allshoppings.model.InnerZone;
 import mobi.allshoppings.model.MacVendor;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
@@ -113,6 +115,8 @@ public class DashboardAPDeviceMapperService {
 	private APDVisitDAO apdvDao;
 	@Autowired
 	private StoreTicketDAO stDao;
+	@Autowired
+	private InnerZoneDAO innerzoneDao;
 	@Autowired
 	private ExternalAPHotspotDAO eaphDao;
 
@@ -678,6 +682,7 @@ public class DashboardAPDeviceMapperService {
 			if( !CollectionUtils.isEmpty( entityIds ))
 				entityId = entityIds.get(0);
 			String shoppingId = null;
+			String subentityId = null;
 			
 			// Looks for all visit records
 			Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
@@ -688,23 +693,29 @@ public class DashboardAPDeviceMapperService {
 				try {
 					Store store = null;
 					Shopping shopping = null;
+					InnerZone zone = null;
 										
 					if( entityKind == null ) entityKind = EntityKind.KIND_BRAND;
+					if( entityKind.equals(EntityKind.KIND_STORE)) entityKind = EntityKind.KIND_BRAND;
 					
 					if( entityKind.equals(EntityKind.KIND_BRAND)) {
 						store = storeCache.get(String.valueOf(v.getEntityId()));
 						entityId = store.getBrandId();
 						shoppingId = store.getShoppingId();
+						subentityId = store.getIdentifier();
 					} else if( entityKind.equals(EntityKind.KIND_SHOPPING)) {
 						shopping = shoppingCache.get(String.valueOf(v.getEntityId()));
 						entityId = shopping.getIdentifier();
 						shoppingId = shopping.getIdentifier();
+						subentityId = shopping.getIdentifier();
 					} else if( entityKind.equals(EntityKind.KIND_INNER_ZONE)) {
+						zone = innerzoneDao.get(entityId);
 						shoppingId = entityId;
+						subentityId = entityId;
 					}
 					
 					
-					if( store != null || shopping != null ) {
+					if( store != null || shopping != null || zone != null ) {
 						DashboardIndicatorData obj;
 
 						// visitor_total_records --------------------------------------------------------------------------------
@@ -713,7 +724,7 @@ public class DashboardAPDeviceMapperService {
 								"apd_visitor", "Visitantes", "visitor_total_records",
 								"Total", v.getCheckinStarted(),
 								DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-								null, null, entityId, entityKind);
+								store, null, entityId, entityKind);
 						
 						if(indicatorsSet.containsKey(obj.getKey().getName())) 
 							obj = indicatorsSet.get(obj.getKey().getName());
@@ -726,7 +737,7 @@ public class DashboardAPDeviceMapperService {
 									"apd_visitor", "Visitantes", "visitor_total_records_ios",
 									"Total iOS", v.getCheckinStarted(),
 									DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-									null, null, entityId, entityKind);
+									store, null, entityId, entityKind);
 
 							if(indicatorsSet.containsKey(obj.getKey().getName())) 
 								obj = indicatorsSet.get(obj.getKey().getName());
@@ -737,7 +748,7 @@ public class DashboardAPDeviceMapperService {
 									"apd_visitor", "Visitantes", "visitor_total_records_android",
 									"Total Android", v.getCheckinStarted(),
 									DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-									null, null, entityId, entityKind);
+									store, null, entityId, entityKind);
 
 							if(indicatorsSet.containsKey(obj.getKey().getName())) 
 								obj = indicatorsSet.get(obj.getKey().getName());
@@ -753,7 +764,7 @@ public class DashboardAPDeviceMapperService {
 									"apd_visitor", "Visitantes", "visitor_total_peasents",
 									"Paseantes", v.getCheckinStarted(),
 									DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-									null, null, entityId, entityKind);
+									store, null, entityId, entityKind);
 
 							if(indicatorsSet.containsKey(obj.getKey().getName())) 
 								obj = indicatorsSet.get(obj.getKey().getName());
@@ -766,7 +777,7 @@ public class DashboardAPDeviceMapperService {
 										"apd_visitor", "Visitantes", "visitor_total_peasents_ios",
 										"Paseantes iOS", v.getCheckinStarted(),
 										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-										null, null, entityId, entityKind);
+										store, null, entityId, entityKind);
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
@@ -777,7 +788,7 @@ public class DashboardAPDeviceMapperService {
 										"apd_visitor", "Visitantes", "visitor_total_peasents_android",
 										"Paseantes Android", v.getCheckinStarted(),
 										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-										null, null, entityId, entityKind);
+										store, null, entityId, entityKind);
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
@@ -793,7 +804,7 @@ public class DashboardAPDeviceMapperService {
 										"apd_permanence", "Permanencia", "permanence_hourly_peasents",
 										"Paseantes", v.getCheckinStarted(),
 										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-										null, null, entityId, entityKind);
+										store, null, entityId, entityKind);
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
@@ -807,7 +818,7 @@ public class DashboardAPDeviceMapperService {
 											"apd_permanence", "Permanencia", "permanence_hourly_peasents_ios",
 											"Paseantes iOS", v.getCheckinStarted(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-											null, null, entityId, entityKind);
+											store, null, entityId, entityKind);
 
 									if(indicatorsSet.containsKey(obj.getKey().getName())) 
 										obj = indicatorsSet.get(obj.getKey().getName());
@@ -819,7 +830,7 @@ public class DashboardAPDeviceMapperService {
 											"apd_permanence", "Permanencia", "permanence_hourly_peasents_android",
 											"Paseantes Android", v.getCheckinStarted(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-											null, null, entityId, entityKind);
+											store, null, entityId, entityKind);
 
 									if(indicatorsSet.containsKey(obj.getKey().getName())) 
 										obj = indicatorsSet.get(obj.getKey().getName());
@@ -837,7 +848,7 @@ public class DashboardAPDeviceMapperService {
 									"apd_visitor", "Visitantes", "visitor_total_visits",
 									"Visitas", v.getCheckinStarted(),
 									DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-									null, null, entityId, entityKind);
+									store, null, entityId, entityKind);
 
 							if(indicatorsSet.containsKey(obj.getKey().getName())) 
 								obj = indicatorsSet.get(obj.getKey().getName());
@@ -850,7 +861,7 @@ public class DashboardAPDeviceMapperService {
 										"apd_visitor", "Visitantes", "visitor_total_visits_ios",
 										"Visitas iOS", v.getCheckinStarted(),
 										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-										null, null, entityId, entityKind);
+										store, null, entityId, entityKind);
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
@@ -861,7 +872,7 @@ public class DashboardAPDeviceMapperService {
 										"apd_visitor", "Visitantes", "visitor_total_visits_android",
 										"Visitas Android", v.getCheckinStarted(),
 										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-										null, null, entityId, entityKind);
+										store, null, entityId, entityKind);
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
@@ -876,7 +887,7 @@ public class DashboardAPDeviceMapperService {
 										"apd_permanence", "Permanencia", "permanence_hourly_visits",
 										"Visitas", v.getCheckinStarted(),
 										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-										null, null, entityId, entityKind);
+										store, null, entityId, entityKind);
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
@@ -890,7 +901,7 @@ public class DashboardAPDeviceMapperService {
 											"apd_permanence", "Permanencia", "permanence_hourly_visits_ios",
 											"Visitas iOS", v.getCheckinStarted(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-											null, null, entityId, entityKind);
+											store, null, entityId, entityKind);
 
 									if(indicatorsSet.containsKey(obj.getKey().getName())) 
 										obj = indicatorsSet.get(obj.getKey().getName());
@@ -902,7 +913,7 @@ public class DashboardAPDeviceMapperService {
 											"apd_permanence", "Permanencia", "permanence_hourly_visits_android",
 											"Visitas Android", v.getCheckinStarted(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-											null, null, entityId, entityKind);
+											store, null, entityId, entityKind);
 
 									if(indicatorsSet.containsKey(obj.getKey().getName())) 
 										obj = indicatorsSet.get(obj.getKey().getName());
@@ -924,8 +935,8 @@ public class DashboardAPDeviceMapperService {
 
 			}
 			// Looks for ticket
-			if( !entityKind.equals(EntityKind.KIND_SHOPPING))
-				createStoreTicketDataForDates(sdf.format(date), sdf.format(date), entityId);
+			if( entityKind.equals(EntityKind.KIND_BRAND))
+				createStoreTicketDataForDates(sdf.format(date), sdf.format(date), subentityId);
 			
 			log.log(Level.INFO, "Starting Write Procedure...");
 
