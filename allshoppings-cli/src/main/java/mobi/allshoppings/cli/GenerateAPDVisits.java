@@ -31,6 +31,7 @@ public class GenerateAPDVisits extends AbstractCLI {
 		parser.accepts( "storeIds", "List of comma separated stores (superseeds brandIds)").withRequiredArg().ofType( String.class );
 		parser.accepts( "shoppingIds", "List of comma separated shoppings (superseeds brandIds and storeIds)").withRequiredArg().ofType( String.class );
 		parser.accepts( "onlyEmployees", "Only process employees").withRequiredArg().ofType( Boolean.class );
+		parser.accepts( "onlyDashboards", "Only process dashboards with preexisting APDVisit data").withRequiredArg().ofType( Boolean.class );
 		return parser;
 	}
 
@@ -47,6 +48,7 @@ public class GenerateAPDVisits extends AbstractCLI {
 			OptionSet options = parser.parse(args);
 
 			boolean onlyEmployees = false;
+			boolean onlyDashboards = false;
 			String sFromDate = null;
 			String sToDate = null;
 			Date fromDate = null;
@@ -104,7 +106,11 @@ public class GenerateAPDVisits extends AbstractCLI {
 				if(options.has("onlyEmployees")) {
 					onlyEmployees = (Boolean)options.valueOf("onlyEmployees");
 				}
-				
+
+				if(options.has("onlyDashboards")) {
+					onlyDashboards = (Boolean)options.valueOf("onlyDashboards");
+				}
+
 			} catch( Exception e ) {
 				e.printStackTrace();
 				usage(parser);
@@ -112,9 +118,9 @@ public class GenerateAPDVisits extends AbstractCLI {
 
 			log.log(Level.INFO, "Generating APDVisits");
 			if( shoppings.isEmpty() )
-				helper.generateAPDVisits(brands, stores, fromDate, toDate, true, true, onlyEmployees);
+				helper.generateAPDVisits(brands, stores, fromDate, toDate, true, true, onlyEmployees, onlyDashboards);
 			else
-				helper.generateAPDVisits(shoppings, fromDate, toDate, true, true, onlyEmployees);
+				helper.generateAPDVisits(shoppings, fromDate, toDate, true, true, onlyEmployees, onlyDashboards);
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

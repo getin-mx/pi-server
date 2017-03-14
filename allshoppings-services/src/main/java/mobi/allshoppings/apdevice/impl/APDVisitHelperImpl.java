@@ -106,7 +106,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public void generateAPDVisits(List<String> brandIds, List<String> storeIds, Date fromDate, Date toDate, boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees) throws ASException {
+	public void generateAPDVisits(List<String> brandIds, List<String> storeIds, Date fromDate, Date toDate, boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards) throws ASException {
 
 		List<Store> stores = CollectionFactory.createList();
 		Map<String, APDevice> apdCache = CollectionFactory.createMap();
@@ -133,101 +133,104 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				for( Store store : stores ) {
 
 					try {
-						List<String> blackListMacs =getBlackListByStore(store);
-						List<String> employeeListMacs = getEmployeeListByStore(store);
+						if(!onlyDashboards) {
 
-						// Try to delete previous records if needed
-						if(deletePreviousRecords) {
-							apdvDao.deleteUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE,
-									curDate, new Date(curDate.getTime() + 86400000), 
-									onlyEmployees ? APDVisit.CHECKIN_EMPLOYEE : null);
-						}
+							List<String> blackListMacs =getBlackListByStore(store);
+							List<String> employeeListMacs = getEmployeeListByStore(store);
 
-						List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate);
-						if( !CollectionUtils.isEmpty(assigs)) {
-							if( assigs.size() == 1 ) {
+							// Try to delete previous records if needed
+							if(deletePreviousRecords) {
+								apdvDao.deleteUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE,
+										curDate, new Date(curDate.getTime() + 86400000), 
+										onlyEmployees ? APDVisit.CHECKIN_EMPLOYEE : null);
+							}
 
-								assignmentsCache.clear();
-								assignmentsCache.put(assigs.get(0).getHostname(), assigs.get(0));
-								if(!apdCache.containsKey(assigs.get(0).getHostname()))
-									apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(), true));
+							List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate);
+							if( !CollectionUtils.isEmpty(assigs)) {
+								if( assigs.size() == 1 ) {
 
-								log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
-								List<APHEntry> entries = apheDao.getUsingHostnameAndDates(
-										Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, range, false);
+									assignmentsCache.clear();
+									assignmentsCache.put(assigs.get(0).getHostname(), assigs.get(0));
+									if(!apdCache.containsKey(assigs.get(0).getHostname()))
+										apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(), true));
 
-								// Employee check
-								if( onlyEmployees ) {
-									List<APHEntry> tmp = CollectionFactory.createList();
-									tmp.addAll(entries);
-									entries.clear();
-									for( APHEntry entry : tmp ) {
-										if(employeeListMacs.contains(entry.getMac().toUpperCase()))
-											entries.add(entry);
-									}
-								}
-								
-								log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
-								List<APDVisit> objs = CollectionFactory.createList();
-								for(APHEntry entry : entries ) {
-									aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
-									List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
-									for(APDVisit visit : visitList )
-										if(!objs.contains(visit)) {
-											if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
-											objs.add(visit);
+									log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
+									List<APHEntry> entries = apheDao.getUsingHostnameAndDates(
+											Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, range, false);
+
+									// Employee check
+									if( onlyEmployees ) {
+										List<APHEntry> tmp = CollectionFactory.createList();
+										tmp.addAll(entries);
+										entries.clear();
+										for( APHEntry entry : tmp ) {
+											if(employeeListMacs.contains(entry.getMac().toUpperCase()))
+												entries.add(entry);
 										}
-								}
+									}
 
-								log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
-								try {
-									apdvDao.createOrUpdate(null, objs, true);
-								} catch( Exception e ) {}
-
-							} else {
-								Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
-								List<String> hostnames = CollectionFactory.createList();
-								assignmentsCache.clear();
-								for( APDAssignation assig : assigs ) { 
-									hostnames.add(assig.getHostname());
-									assignmentsCache.put(assig.getHostname(), assig);
-									if(!apdCache.containsKey(assig.getHostname()))
-										apdCache.put(assig.getHostname(), apdDao.get(assig.getHostname(), true));
-								}
-
-								log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and " + curDate + "...");
-								List<APHEntry> entries = apheDao.getUsingHostnameAndDates(hostnames, curDate, curDate, range, false);
-								for( APHEntry entry : entries ) {
-									if(!cache.containsKey(entry.getMac()))
-										cache.put(entry.getMac(), new ArrayList<APHEntry>());
-
-									aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
-									cache.get(entry.getMac()).add(entry);
-								}
-
-								log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
-								List<APDVisit> objs = CollectionFactory.createList();
-								Iterator<String> i = cache.keySet().iterator();
-								while(i.hasNext()) {
-									String key = i.next();
-									List<APHEntry> e = cache.get(key);
-									List<APDVisit> visitList = aphEntryToVisits(e, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
-									for(APDVisit visit : visitList )
-										if(!objs.contains(visit))
+									log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
+									List<APDVisit> objs = CollectionFactory.createList();
+									for(APHEntry entry : entries ) {
+										aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
+										List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
+										for(APDVisit visit : visitList )
 											if(!objs.contains(visit)) {
 												if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
-												objs.add(visit);
+													objs.add(visit);
 											}
+									}
+
+									log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
+									try {
+										apdvDao.createOrUpdate(null, objs, true);
+									} catch( Exception e ) {}
+
+								} else {
+									Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
+									List<String> hostnames = CollectionFactory.createList();
+									assignmentsCache.clear();
+									for( APDAssignation assig : assigs ) { 
+										hostnames.add(assig.getHostname());
+										assignmentsCache.put(assig.getHostname(), assig);
+										if(!apdCache.containsKey(assig.getHostname()))
+											apdCache.put(assig.getHostname(), apdDao.get(assig.getHostname(), true));
+									}
+
+									log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and " + curDate + "...");
+									List<APHEntry> entries = apheDao.getUsingHostnameAndDates(hostnames, curDate, curDate, range, false);
+									for( APHEntry entry : entries ) {
+										if(!cache.containsKey(entry.getMac()))
+											cache.put(entry.getMac(), new ArrayList<APHEntry>());
+
+										aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
+										cache.get(entry.getMac()).add(entry);
+									}
+
+									log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
+									List<APDVisit> objs = CollectionFactory.createList();
+									Iterator<String> i = cache.keySet().iterator();
+									while(i.hasNext()) {
+										String key = i.next();
+										List<APHEntry> e = cache.get(key);
+										List<APDVisit> visitList = aphEntryToVisits(e, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
+										for(APDVisit visit : visitList )
+											if(!objs.contains(visit))
+												if(!objs.contains(visit)) {
+													if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
+														objs.add(visit);
+												}
+									}
+
+									log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
+									try {
+										apdvDao.createOrUpdate(null, objs, true);
+									} catch( Exception e ) {}
+
 								}
-
-								log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
-								try {
-									apdvDao.createOrUpdate(null, objs, true);
-								} catch( Exception e ) {}
-
 							}
 						}
-
+						
 						// Try to update dashboard if needed
 						if(updateDashboards && !onlyEmployees) {
 							if(!cacheBuilt) {
@@ -313,7 +316,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public void generateAPDVisits(List<String> shoppingIds, Date fromDate, Date toDate, boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees) throws ASException {
+	public void generateAPDVisits(List<String> shoppingIds, Date fromDate, Date toDate, boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards) throws ASException {
 
 		Map<String, APDevice> apdCache = CollectionFactory.createMap();
 		Map<String, APDAssignation> assignmentsCache = CollectionFactory.createMap();
@@ -345,100 +348,103 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					
 					try {
 
-						List<String> blackListMacs = CollectionFactory.createList();
-						List<String> employeeListMacs = CollectionFactory.createList();
+						if(!onlyDashboards) {
 
-						// Try to delete previous records if needed
-						if(deletePreviousRecords) {
-							apdvDao.deleteUsingEntityIdAndEntityKindAndDate(entityId, entityKind,
-									curDate, new Date(curDate.getTime() + 86400000),
-									onlyEmployees ? APDVisit.CHECKIN_EMPLOYEE : null);
-						}
+							List<String> blackListMacs = CollectionFactory.createList();
+							List<String> employeeListMacs = CollectionFactory.createList();
 
-						List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, curDate);
-						if( !CollectionUtils.isEmpty(assigs)) {
-							if( assigs.size() == 1 ) {
+							// Try to delete previous records if needed
+							if(deletePreviousRecords) {
+								apdvDao.deleteUsingEntityIdAndEntityKindAndDate(entityId, entityKind,
+										curDate, new Date(curDate.getTime() + 86400000),
+										onlyEmployees ? APDVisit.CHECKIN_EMPLOYEE : null);
+							}
 
-								assignmentsCache.clear();
-								assignmentsCache.put(assigs.get(0).getHostname(), assigs.get(0));
-								if(!apdCache.containsKey(assigs.get(0).getHostname()))
-									apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(), true));
+							List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, curDate);
+							if( !CollectionUtils.isEmpty(assigs)) {
+								if( assigs.size() == 1 ) {
 
-								log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
-								List<APHEntry> entries = apheDao.getUsingHostnameAndDates(
-										Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, range, false);
+									assignmentsCache.clear();
+									assignmentsCache.put(assigs.get(0).getHostname(), assigs.get(0));
+									if(!apdCache.containsKey(assigs.get(0).getHostname()))
+										apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(), true));
 
-								// Employee check
-								if( onlyEmployees ) {
-									List<APHEntry> tmp = CollectionFactory.createList();
-									tmp.addAll(entries);
-									entries.clear();
-									for( APHEntry entry : tmp ) {
-										if(employeeListMacs.contains(entry.getMac().toUpperCase()))
-											entries.add(entry);
+									log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
+									List<APHEntry> entries = apheDao.getUsingHostnameAndDates(
+											Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, range, false);
+
+									// Employee check
+									if( onlyEmployees ) {
+										List<APHEntry> tmp = CollectionFactory.createList();
+										tmp.addAll(entries);
+										entries.clear();
+										for( APHEntry entry : tmp ) {
+											if(employeeListMacs.contains(entry.getMac().toUpperCase()))
+												entries.add(entry);
+										}
 									}
+
+									log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
+									List<APDVisit> objs = CollectionFactory.createList();
+									for(APHEntry entry : entries ) {
+										aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
+										List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
+										for(APDVisit visit : visitList )
+											if(!objs.contains(visit))
+												if(!objs.contains(visit)) {
+													if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
+														objs.add(visit);
+												}
+									}
+
+									log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
+									try {
+										apdvDao.createOrUpdate(null, objs, true);
+									} catch( Exception e ) {}
+
+								} else {
+									Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
+									List<String> hostnames = CollectionFactory.createList();
+									assignmentsCache.clear();
+									for( APDAssignation assig : assigs ) { 
+										hostnames.add(assig.getHostname());
+										assignmentsCache.put(assig.getHostname(), assig);
+										if(!apdCache.containsKey(assig.getHostname()))
+											apdCache.put(assig.getHostname(), apdDao.get(assig.getHostname(), true));
+									}
+
+									log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and " + curDate + "...");
+
+									List<APHEntry> entries = apheDao.getUsingHostnameAndDates(hostnames, curDate, curDate, range, false);
+									for( APHEntry entry : entries ) {
+										if(!cache.containsKey(entry.getMac()))
+											cache.put(entry.getMac(), new ArrayList<APHEntry>());
+
+										aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
+										cache.get(entry.getMac()).add(entry);
+									}
+
+									log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
+									List<APDVisit> objs = CollectionFactory.createList();
+									Iterator<String> i = cache.keySet().iterator();
+									while(i.hasNext()) {
+										String key = i.next();
+										List<APHEntry> e = cache.get(key);
+										List<APDVisit> visitList = aphEntryToVisits(e, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
+										for(APDVisit visit : visitList )
+											if(!objs.contains(visit))
+												if(!objs.contains(visit)) {
+													if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
+														objs.add(visit);
+												}
+									}
+
+									log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
+									try {
+										apdvDao.createOrUpdate(null, objs, true);
+									} catch( Exception e ) {}
+
 								}
-								
-								log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
-								List<APDVisit> objs = CollectionFactory.createList();
-								for(APHEntry entry : entries ) {
-									aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
-									List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
-									for(APDVisit visit : visitList )
-										if(!objs.contains(visit))
-											if(!objs.contains(visit)) {
-												if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
-												objs.add(visit);
-											}
-								}
-
-								log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
-								try {
-									apdvDao.createOrUpdate(null, objs, true);
-								} catch( Exception e ) {}
-
-							} else {
-								Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
-								List<String> hostnames = CollectionFactory.createList();
-								assignmentsCache.clear();
-								for( APDAssignation assig : assigs ) { 
-									hostnames.add(assig.getHostname());
-									assignmentsCache.put(assig.getHostname(), assig);
-									if(!apdCache.containsKey(assig.getHostname()))
-										apdCache.put(assig.getHostname(), apdDao.get(assig.getHostname(), true));
-								}
-
-								log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and " + curDate + "...");
-
-								List<APHEntry> entries = apheDao.getUsingHostnameAndDates(hostnames, curDate, curDate, range, false);
-								for( APHEntry entry : entries ) {
-									if(!cache.containsKey(entry.getMac()))
-										cache.put(entry.getMac(), new ArrayList<APHEntry>());
-
-									aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
-									cache.get(entry.getMac()).add(entry);
-								}
-
-								log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
-								List<APDVisit> objs = CollectionFactory.createList();
-								Iterator<String> i = cache.keySet().iterator();
-								while(i.hasNext()) {
-									String key = i.next();
-									List<APHEntry> e = cache.get(key);
-									List<APDVisit> visitList = aphEntryToVisits(e, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
-									for(APDVisit visit : visitList )
-										if(!objs.contains(visit))
-											if(!objs.contains(visit)) {
-												if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
-												objs.add(visit);
-											}
-								}
-
-								log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
-								try {
-									apdvDao.createOrUpdate(null, objs, true);
-								} catch( Exception e ) {}
-
 							}
 						}
 

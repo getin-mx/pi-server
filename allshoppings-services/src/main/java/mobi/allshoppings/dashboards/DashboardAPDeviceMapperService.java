@@ -76,8 +76,6 @@ public class DashboardAPDeviceMapperService {
 	/**
 	 * Entity Kind to use
 	 */
-	public static final int KIND_BRAND = 1;
-	public static final int KIND_SHOPPING = 0;
 	public static final long TWENTY_FOUR_HOURS = 86400000;
 
 	private static final SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -128,6 +126,7 @@ public class DashboardAPDeviceMapperService {
 	private Map<String, WifiSpot> wifiSpotCache;
 	private Map<String, FloorMap> floorMapCache;
 	private Map<String, MacVendor> macVendorCache;
+	private Map<String, InnerZone> zoneCache;
 
 	// Phases
 	public static final int PHASE_APDEVICE = 0;
@@ -213,7 +212,7 @@ public class DashboardAPDeviceMapperService {
 										"heatmap", "Heat Map", wifiSpot.getIdentifier(),
 										wifiSpot.getZoneName(), location.getCreationDateTime(),
 										DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-										null, floorMap.getFloor(), shopping.getIdentifier(), KIND_SHOPPING);
+										null, floorMap.getFloor(), shopping.getIdentifier(), EntityKind.KIND_SHOPPING);
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
@@ -228,7 +227,7 @@ public class DashboardAPDeviceMapperService {
 										"heatmap_data", "Heat Map Data", wifiSpot.getIdentifier(),
 										wifiSpot.getIdentifier(), location.getCreationDateTime(),
 										DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-										null, floorMap.getFloor(), shopping.getIdentifier(), KIND_SHOPPING);
+										null, floorMap.getFloor(), shopping.getIdentifier(), EntityKind.KIND_SHOPPING);
 								obj.setSubentityId(wifiSpot.getFloorMapId());
 								obj.setSubentityName(floorMap.getFloor());
 
@@ -310,7 +309,7 @@ public class DashboardAPDeviceMapperService {
 											"heatmap", "Heat Map", wifiSpot.getIdentifier(),
 											wifiSpot.getZoneName(), hotspot.getCreationDateTime(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getIdentifier(),
-											store, floorMap.getFloor(), store.getIdentifier(), KIND_SHOPPING);
+											store, floorMap.getFloor(), store.getIdentifier(), EntityKind.KIND_SHOPPING);
 
 									if(indicatorsSet.containsKey(obj.getKey().getName())) 
 										obj = indicatorsSet.get(obj.getKey().getName());
@@ -325,7 +324,7 @@ public class DashboardAPDeviceMapperService {
 											"heatmap_data", "Heat Map Data", wifiSpot.getIdentifier(),
 											wifiSpot.getIdentifier(), hotspot.getCreationDateTime(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getIdentifier(),
-											store, floorMap.getFloor(), store.getIdentifier(), KIND_SHOPPING);
+											store, floorMap.getFloor(), store.getIdentifier(), EntityKind.KIND_SHOPPING);
 									obj.setSubentityId(wifiSpot.getFloorMapId());
 									obj.setSubentityName(floorMap.getFloor());
 
@@ -428,13 +427,13 @@ public class DashboardAPDeviceMapperService {
 											"heatmap", "Heat Map", wifiSpot.getIdentifier(),
 											wifiSpot.getZoneName(), hotspot.getFirstSeen(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-											null, floorMap.getFloor(), shopping.getIdentifier(), KIND_SHOPPING);
+											null, floorMap.getFloor(), shopping.getIdentifier(), EntityKind.KIND_SHOPPING);
 								} else {
 									obj = buildBasicDashboardIndicatorData(
 											"heatmap", "Heat Map", wifiSpot.getIdentifier(),
 											wifiSpot.getZoneName(), hotspot.getFirstSeen(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getIdentifier(),
-											store, floorMap.getFloor(), store.getIdentifier(), KIND_SHOPPING);
+											store, floorMap.getFloor(), store.getIdentifier(), EntityKind.KIND_SHOPPING);
 								}
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
@@ -451,13 +450,13 @@ public class DashboardAPDeviceMapperService {
 											"heatmap_data", "Heat Map Data", wifiSpot.getIdentifier(),
 											wifiSpot.getIdentifier(), hotspot.getFirstSeen(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-											null, floorMap.getFloor(), shopping.getIdentifier(), KIND_SHOPPING);
+											null, floorMap.getFloor(), shopping.getIdentifier(), EntityKind.KIND_SHOPPING);
 								} else {
 									obj = buildBasicDashboardIndicatorData(
 											"heatmap_data", "Heat Map Data", wifiSpot.getIdentifier(),
 											wifiSpot.getIdentifier(), hotspot.getFirstSeen(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getIdentifier(),
-											store, floorMap.getFloor(), store.getIdentifier(), KIND_SHOPPING);
+											store, floorMap.getFloor(), store.getIdentifier(), EntityKind.KIND_SHOPPING);
 								}
 								obj.setSubentityId(wifiSpot.getFloorMapId());
 								obj.setSubentityName(floorMap.getFloor());
@@ -1041,7 +1040,7 @@ public class DashboardAPDeviceMapperService {
 							"apd_visitor", "Visitantes", "visitor_total_tickets",
 							"Tickets", sdf.parse(ticket.getDate()),
 							DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
-							store, null, store.getBrandId(), KIND_BRAND);
+							store, null, store.getBrandId(), EntityKind.KIND_BRAND);
 	
 					if(indicatorsSet.containsKey(obj.getKey().getName())) 
 						obj = indicatorsSet.get(obj.getKey().getName());
@@ -1099,13 +1098,20 @@ public class DashboardAPDeviceMapperService {
 			obj.setCountry(store.getAddress().getCountry());
 			obj.setCity(store.getAddress().getCity());
 			obj.setProvince(store.getAddress().getProvince());
-		} else if( entityKind == KIND_SHOPPING ) {
+		} else if( entityKind.equals(EntityKind.KIND_SHOPPING)) {
 			Shopping shopping = shoppingCache.get(entityId);
 			obj.setSubentityId(entityId);
 			obj.setSubentityName(shopping.getName());
 			obj.setCountry(shopping.getAddress().getCountry());
 			obj.setCity(shopping.getAddress().getCity());
 			obj.setProvince(shopping.getAddress().getProvince());
+		} else if( entityKind.equals(EntityKind.KIND_INNER_ZONE)) {
+			InnerZone zone = zoneCache.get(entityId);
+			obj.setSubentityId(entityId);
+			obj.setSubentityName(zone.getName());
+			obj.setCountry(null);
+			obj.setCity(null);
+			obj.setProvince(null);
 		}
 		obj.setVoucherType(null);
 		obj.setPeriodType(periodType);
@@ -1142,6 +1148,13 @@ public class DashboardAPDeviceMapperService {
 		shoppingCache = CollectionFactory.createMap();
 		for(Shopping shopping : shoppings ) {
 			shoppingCache.put(shopping.getIdentifier(), shopping);
+		}
+
+		List<InnerZone> zones = innerzoneDao.getUsingLastUpdateStatusAndRange(null, null, false,
+				Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, null, null, false);
+		zoneCache = CollectionFactory.createMap();
+		for(InnerZone zone : zones ) {
+			zoneCache.put(zone.getIdentifier(), zone);
 		}
 
 		List<WifiSpot> wifiSpots = wifiSpotDao.getUsingLastUpdateStatusAndRange(null, null, false,
