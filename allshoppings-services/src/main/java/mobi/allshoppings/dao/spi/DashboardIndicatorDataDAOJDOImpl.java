@@ -65,9 +65,22 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 				subentityId, periodType, fromStringDate, toStringDate, movieId, voucherType, dayOfWeek, timeZone, order,
 				country, province, city);
 	}
-	
+
 	@Override
 	public List<DashboardIndicatorData> getUsingFilters(String entityId,
+			Integer entityKind, List<String> elementId, List<String> elementSubId,
+			String shoppingId, String subentityId, String periodType,
+			String fromStringDate, String toStringDate, String movieId,
+			String voucherType, Integer dayOfWeek, Integer timeZone, String order, 
+			String country, String province, String city)
+			throws ASException {
+		return getUsingFilters(Arrays.asList(entityId), entityKind, elementId, elementSubId, shoppingId, subentityId,
+				periodType, fromStringDate, toStringDate, movieId, voucherType, dayOfWeek, timeZone, order, country,
+				province, city);
+	}
+	
+	@Override
+	public List<DashboardIndicatorData> getUsingFilters(List<String> entityId,
 			Integer entityKind, List<String> elementId, List<String> elementSubId,
 			String shoppingId, String subentityId, String periodType,
 			String fromStringDate, String toStringDate, String movieId,
@@ -89,12 +102,12 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 			List<String> declaredParams = CollectionFactory.createList();
 			List<String> filters = CollectionFactory.createList();
 
-			if(StringUtils.hasText(entityId)) {
-				declaredParams.add("String entityIdParm");
-				filters.add("entityId == entityIdParm");
+			if(!CollectionUtils.isEmpty(entityId)) {
+				declaredParams.add("java.util.List entityIdParm");
+				filters.add("entityIdParm.contains(entityId)");
 				parameters.put("entityIdParm", entityId);
 			}
-			
+
 			if(entityKind != null ) {
 				declaredParams.add("Integer entityKindParm");
 				filters.add("entityKind == entityKindParm");

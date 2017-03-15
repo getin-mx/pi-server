@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bz.DashboardShoppingTableDataBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
@@ -40,7 +41,7 @@ extends RestBaseServerResource
 implements DashboardShoppingTableDataBzService {
 
 	private static final Logger log = Logger.getLogger(DashboardShoppingTableDataBzServiceJSONImpl.class.getName());
-	
+
 	@Autowired
 	private DashboardIndicatorDataDAO dao;
 	@Autowired
@@ -50,7 +51,7 @@ implements DashboardShoppingTableDataBzService {
 
 	private DecimalFormat df = new DecimalFormat("##.00");
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	
+
 	/**
 	 * Obtains information about a user
 	 * 
@@ -85,76 +86,76 @@ implements DashboardShoppingTableDataBzService {
 					return o1.getName().compareTo(o2.getName());
 				}
 			});
-			initializeTableRecords(table, fromStringDate, toStringDate);
-			
+			List<String> entityIds = initializeTableRecords(table, fromStringDate, toStringDate);
+
 			// Starts to Collect the data
 			List<DashboardIndicatorData> list;
-			for( DashboardRecordRep rec : table.getRecords()) {
 
-				// peasents
-				list = dao.getUsingFilters(rec.getEntityId(),
-						rec.getEntityKind(), Arrays.asList(new String[] {"apd_visitor"}), "visitor_total_peasents", null,
-						rec.getEntityId(), null, fromStringDate, toStringDate,
-						null, null, null, null, null, country, province, city);
+			// peasents, visits, and tickets
+			list = dao.getUsingFilters(entityIds, null, Arrays.asList("apd_visitor"),
+					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets"), null,
+					null, null, fromStringDate, toStringDate, null, null, null, null, null, country,
+					province, city);
 
-				for(DashboardIndicatorData obj : list)
-					rec.setPeasants(rec.getPeasants() + obj.getDoubleValue().longValue());
+			for(DashboardIndicatorData obj : list) {
 
-				// visits
-				list = dao.getUsingFilters(rec.getEntityId(),
-						rec.getEntityKind(), Arrays.asList(new String[] {"apd_visitor"}), "visitor_total_visits", null,
-						rec.getEntityId(), null, fromStringDate, toStringDate,
-						null, null, null, null, null, country, province, city);
-
-				for(DashboardIndicatorData obj : list) {
-					rec.setVisitors(rec.getVisitors() + obj.getDoubleValue().longValue());
-					rec.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
+				DashboardRecordRep rec = table.findRecordWithEntityId(obj.getEntityId(), obj.getEntityKind());
+				if( null != rec ) {
+					if( obj.getElementSubId().equals("visitor_total_peasents"))
+						rec.setPeasants(rec.getPeasants() + obj.getDoubleValue().longValue());
+					else if( obj.getElementSubId().equals("visitor_total_visits")) {
+						rec.setVisitors(rec.getVisitors() + obj.getDoubleValue().longValue());
+						rec.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
+					} else if( obj.getElementSubId().equals("visitor_total_tickets"))
+						rec.setTickets(rec.getTickets() + obj.getDoubleValue().longValue());
 				}
-
-				// tickets
-				list = dao.getUsingFilters(rec.getEntityId(),
-						rec.getEntityKind(), Arrays.asList(new String[] {"apd_visitor"}), "visitor_total_tickets", null,
-						rec.getEntityId(), null, fromStringDate, toStringDate,
-						null, null, null, null, null, country, province, city);
-
-				for(DashboardIndicatorData obj : list)
-					rec.setTickets(rec.getTickets() + obj.getDoubleValue().longValue());
-
-				// permanence
-				list = dao.getUsingFilters(rec.getEntityId(),
-						rec.getEntityKind(), Arrays.asList(new String[] {"apd_permanence"}), "permanence_hourly_visits", null,
-						rec.getEntityId(), null, fromStringDate, toStringDate,
-						null, null, null, null, null, country, province, city);
-
-				{
-					List<Long> c = CollectionFactory.createList();
-					for( DashboardIndicatorData obj : list )
-						try {
-							c.add((long)(obj.getDoubleValue() / obj.getRecordCount()));
-						} catch( Exception e ){}
-
-					Collections.sort(c);
-					if( c.size() == 0 ) 
-						rec.setPermanenceInMillis(0l);
-					else
-						if( c.size() % 2 == 0 && c.size() >= 2 ) {
-							int med = (int)(c.size() / 2);
-							rec.setPermanenceInMillis((c.get(med-1) + c.get(med)) / 2);
-						} else
-							rec.setPermanenceInMillis(c.get((int)Math.floor(c.size() / 2)));
-				}
-				
 			}
-			
+
+			// permanence
+			list = dao.getUsingFilters(entityIds,
+					null, Arrays.asList("apd_permanence"), Arrays.asList("permanence_hourly_visits"), null,
+					null, null, fromStringDate, toStringDate,
+					null, null, null, null, null, country, province, city);
+
+			{
+				Map<String, List<Long>> d = CollectionFactory.createMap();
+				for( DashboardIndicatorData obj : list )
+					try {
+						List<Long> c = d.get(obj.getEntityId());
+						if( c == null ) c = CollectionFactory.createList();
+						c.add((long)(obj.getDoubleValue() / obj.getRecordCount()));
+						d.put(obj.getEntityId(), c);
+					} catch( Exception e ){}
+
+				Iterator<String> i = d.keySet().iterator();
+				while( i.hasNext() ) {
+					String key = i.next();
+					DashboardRecordRep rec = table.findRecordWithEntityId(key, null);
+					if( null != rec ) {
+
+						List<Long> c = d.get(key);
+						Collections.sort(c);
+						if( c.size() == 0 ) 
+							rec.setPermanenceInMillis(0l);
+						else
+							if( c.size() % 2 == 0 && c.size() >= 2 ) {
+								int med = (int)(c.size() / 2);
+								rec.setPermanenceInMillis((c.get(med-1) + c.get(med)) / 2);
+							} else
+								rec.setPermanenceInMillis(c.get((int)Math.floor(c.size() / 2)));
+					}
+				}
+			}
+
 			// Creates the final JSON Array
 			JSONArray jsonArray = new JSONArray();
 			jsonArray.put(table.getJSONHeaders());
 			table.addJSONRecords(jsonArray);
 			jsonArray.put(table.getJSONTotals());
-			
+
 			// Returns the final value
 			return jsonArray.toString();
-			
+
 		} catch (ASException e) {
 			if( e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENEXPIRED_CODE || 
 					e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENMISSING_CODE) {
@@ -170,15 +171,15 @@ implements DashboardShoppingTableDataBzService {
 			markEnd(start);
 		}
 	}
-	
+
 	public String getDateName(Date date) {
 		StringBuffer sb = new StringBuffer();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
-		
+
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		int dof = cal.get(Calendar.DAY_OF_WEEK);
-		
+
 		switch(dof) {
 		case Calendar.SUNDAY:
 			sb.append("Dom ");
@@ -204,12 +205,14 @@ implements DashboardShoppingTableDataBzService {
 		}
 
 		sb.append(sdf.format(date));
-		
+
 		return sb.toString();
 	}
 
-	public void initializeTableRecords(DashboardTableRep table, String fromStringDate, String toStringDate)
+	public List<String> initializeTableRecords(DashboardTableRep table, String fromStringDate, String toStringDate)
 			throws ASException {
+
+		List<String> ret = CollectionFactory.createList();
 
 		for (Shopping shopping : table.getShoppings()) {
 			table.getRecords().add(new DashboardRecordRep(table, 0, shopping.getIdentifier(), EntityKind.KIND_SHOPPING,
@@ -225,25 +228,40 @@ implements DashboardShoppingTableDataBzService {
 				List<InnerZone> zonesl2 = innerZoneDao.getUsingEntityIdAndRange(zonel1.getIdentifier(),
 						EntityKind.KIND_INNER_ZONE, null, "name", null, true);
 				if( zonesl2.size() > 0 ) table.getRecords().get(table.getRecords().size()-1).setHeader(true);
-				
+
 				for (InnerZone zonel2 : zonesl2) {
 					table.getRecords().add(new DashboardRecordRep(null, 2, zonel2.getIdentifier(), EntityKind.KIND_INNER_ZONE,
 							zonel2.getName(), fromStringDate, toStringDate));
 				}
 			}
 		}
+
+		for( DashboardRecordRep rec : table.getRecords()) {
+			if( StringUtils.hasText(rec.getEntityId()))
+				ret.add(rec.getEntityId());
+		}
+
+		return ret;
+
 	}
-	
+
 	public class DashboardTableRep {
 		private List<Shopping> shoppings;
 		private List<DashboardRecordRep> records;
-		private DashboardRecordRep totals;
 
 		public DashboardTableRep() {
 			shoppings = CollectionFactory.createList();
 			records = CollectionFactory.createList();
 		}
-		
+
+		public DashboardRecordRep findRecordWithEntityId(String entityId, Integer entityKind) {
+			for(DashboardRecordRep rec : records ) {
+				if( rec.getEntityId().equals(entityId) && (entityKind == null || rec.getEntityKind().equals(entityKind))) 
+					return rec;
+			}
+			return null;
+		}
+
 		/**
 		 * @return the shoppings
 		 */
@@ -269,18 +287,6 @@ implements DashboardShoppingTableDataBzService {
 			this.records = records;
 		}
 		/**
-		 * @return the totals
-		 */
-		public DashboardRecordRep getTotals() {
-			return totals;
-		}
-		/**
-		 * @param totals the totals to set
-		 */
-		public void setTotals(DashboardRecordRep totals) {
-			this.totals = totals;
-		}
-		/**
 		 * Gets all the headers in a JSON Array
 		 * @return
 		 */
@@ -298,7 +304,7 @@ implements DashboardShoppingTableDataBzService {
 			titles.put("Día más Alto");
 			titles.put("Día más Bajo");
 			titles.put("Permanencia Promedio");
-			
+
 			return titles;
 		}
 
@@ -308,20 +314,20 @@ implements DashboardShoppingTableDataBzService {
 		 * @throws ASException
 		 */
 		public JSONArray getJSONTotals() throws ASException {
-			
+
 			DashboardRecordRep totals = new DashboardRecordRep(null, 0, null, null, "Totales", null, null);
 			List<Long> c = CollectionFactory.createList();
-			
+
 			for( DashboardRecordRep rec : records ) {
 				if( rec.getLevel() == 0 ) {
 					totals.setPeasants(totals.getPeasants() + rec.getPeasants());
 					totals.setVisitors(totals.getVisitors() + rec.getVisitors());
 					totals.setTickets(totals.getTickets() + rec.getTickets());
 					c.add(rec.getPermanenceInMillis());
-					
+
 					Map<String, Long> datesCache = totals.getDatesCache();
 					Map<String, Long> recDatesCache = rec.getDatesCache();
-					
+
 					Iterator<String> i = recDatesCache.keySet().iterator();
 					while(i.hasNext()) {
 						String key = i.next();
@@ -345,9 +351,9 @@ implements DashboardShoppingTableDataBzService {
 					totals.setPermanenceInMillis((c.get(med-1) + c.get(med)) / 2);
 				} else
 					totals.setPermanenceInMillis(c.get((int)Math.floor(c.size() / 2)));
-			
+
 			return totals.toJSONArray();
-			
+
 		}
 
 		/**
@@ -357,13 +363,13 @@ implements DashboardShoppingTableDataBzService {
 		 * @throws ASException
 		 */
 		public JSONArray addJSONRecords(JSONArray array) throws ASException {
-			
+
 			if( array == null)
 				array = new JSONArray();
-			
+
 			for( DashboardRecordRep rec : records )
 				array.put(rec.toJSONArray());
-			
+
 			return array;
 		}
 	}
@@ -385,14 +391,14 @@ implements DashboardShoppingTableDataBzService {
 
 		public DashboardRecordRep(DashboardTableRep parent, int level, String entityId, Integer entityKind, String title, String fromStringDate, String toStringDate) {
 			super();
-			
+
 			this.parent = parent;
-			
+
 			this.entityId = entityId;
 			this.entityKind = entityKind;
 			this.level = level;
 			this.title = title;
-			
+
 			peasants = 0l;
 			visitors = 0l;
 			tickets = 0l;
@@ -436,11 +442,11 @@ implements DashboardShoppingTableDataBzService {
 				h1 = "<b>";
 				h2 = "</b>";
 			}
-			
+
 			String tit = title;
 			for( int x = 0; x < level; x++ )
 				tit = "&nbsp;&nbsp;" + tit;
-			
+
 			row.put(h1 + tit + h2);
 			row.put(h1 + String.valueOf(peasants) + h2);
 			row.put(h1 + String.valueOf(visitors) + h2);
@@ -703,6 +709,6 @@ implements DashboardShoppingTableDataBzService {
 		public void setParent(DashboardTableRep parent) {
 			this.parent = parent;
 		}
-		
+
 	}
 }
