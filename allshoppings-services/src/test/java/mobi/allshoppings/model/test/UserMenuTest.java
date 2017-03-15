@@ -1201,6 +1201,7 @@ public class UserMenuTest extends TestCase {
 				marketintelligence = new User();
 				marketintelligence.setFirstname("Market Intelligence");
 				marketintelligence.setLastname("Mexico");
+				marketintelligence.setAvatarId("d1ba036f-5f6c-4c85-a17a-3b03323d0f8c.png");
 				marketintelligence.setEmail("marketintelligence@allshoppings.mobi");
 				marketintelligence.getSecuritySettings().setRole(Role.BRAND);
 				marketintelligence.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");

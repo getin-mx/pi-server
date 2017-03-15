@@ -923,6 +923,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("474", "Fitness Center", "clubcasablanca_mx", null));
 
 			stores.add(new StoreAdapter("475", "Outlet Deportes Isabel la Catolica II", "outletdeportes_mx",null));
+			stores.add(new StoreAdapter("476", "Fullsand Américas Cancún", "fullsand_mx", null));			
 
 			Store store;
 			for(StoreAdapter obj : stores ) {
