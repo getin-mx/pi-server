@@ -62,7 +62,7 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	private Long visitMaxThreshold;
 	private Long peasantPowerThreshold;
 	private Long visitCountThreshold;
-	private Integer daysToNotRepit;
+	private Integer repeatThreshold;
     
     // Times
     private String timezone;
@@ -91,7 +91,6 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
     private String monitorEnd;
     private String passStart;
     private String passEnd;
-    private Boolean negative;
 
 	// Status data
 	private Boolean reportable;
@@ -125,7 +124,7 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 		if( visitMaxThreshold == null) visitMaxThreshold = 480L;
 		if( peasantPowerThreshold == null) peasantPowerThreshold = -80L;
 		if( visitCountThreshold == null) visitCountThreshold = 0L;
-		if( daysToNotRepit == null) daysToNotRepit = 0;
+		if( repeatThreshold == null ) repeatThreshold = 5;
 	    
 		if( timezone == null) timezone = "CDT";
 		if( visitsOnMon == null) visitsOnMon = true;
@@ -153,7 +152,6 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	    if( monitorEnd == null) monitorEnd = "21:00";
 	    if( passStart == null) passStart = "05:00";
 	    if( passEnd == null) passEnd = "03:00";
-	    if( negative == null) negative = false;
 	}
 	
 	/**
@@ -295,17 +293,17 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	}
 
 	/**
-	 * @return the daysToNotRepit
+	 * @return the repeatThreshold
 	 */
-	public Integer getDaysToNotRepit() {
-		return daysToNotRepit;
+	public Integer getRepeatThreshold() {
+		return repeatThreshold;
 	}
 
 	/**
-	 * @param daysToNotRepit the daysToNotRepit to set
+	 * @param repeatThreshold the repeatThreshold to set
 	 */
-	public void setDaysToNotRepit(Integer daysToNotRepit) {
-		this.daysToNotRepit = daysToNotRepit;
+	public void setRepeatThreshold(Integer repeatThreshold) {
+		this.repeatThreshold = repeatThreshold;
 	}
 
 	/**
@@ -743,20 +741,6 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	}
 
 	/**
-	 * @return the negative
-	 */
-	public Boolean getNegative() {
-		return negative;
-	}
-
-	/**
-	 * @param negative the negative to set
-	 */
-	public void setNegative(Boolean negative) {
-		this.negative = negative;
-	}
-
-	/**
 	 * @return the doIndexNow
 	 */
 	public boolean isDoIndexNow() {
@@ -1082,6 +1066,16 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 		this.area = area;
 	}
 
+	@Override
+	public boolean doIndex() {
+		return doIndexNow;
+	}
+
+	@Override
+	public void disableIndexing(boolean val) {
+		this.doIndexNow = !val;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -1095,7 +1089,7 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 				+ ", visitTimeThreshold=" + visitTimeThreshold + ", visitGapThreshold=" + visitGapThreshold
 				+ ", visitPowerThreshold=" + visitPowerThreshold + ", visitMaxThreshold=" + visitMaxThreshold
 				+ ", peasantPowerThreshold=" + peasantPowerThreshold + ", visitCountThreshold=" + visitCountThreshold
-				+ ", daysToNotRepit=" + daysToNotRepit + ", timezone=" + timezone + ", visitsOnMon=" + visitsOnMon
+				+ ", repeatThreshold=" + repeatThreshold + ", timezone=" + timezone + ", visitsOnMon=" + visitsOnMon
 				+ ", visitsOnTue=" + visitsOnTue + ", visitsOnWed=" + visitsOnWed + ", visitsOnThu=" + visitsOnThu
 				+ ", visitsOnFri=" + visitsOnFri + ", visitsOnSat=" + visitsOnSat + ", visitsOnSun=" + visitsOnSun
 				+ ", visitStartMon=" + visitStartMon + ", visitEndMon=" + visitEndMon + ", visitStartTue="
@@ -1104,20 +1098,10 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 				+ visitStartFri + ", visitEndFri=" + visitEndFri + ", visitStartSat=" + visitStartSat + ", visitEndSat="
 				+ visitEndSat + ", visitStartSun=" + visitStartSun + ", visitEndSun=" + visitEndSun + ", monitorStart="
 				+ monitorStart + ", monitorEnd=" + monitorEnd + ", passStart=" + passStart + ", passEnd=" + passEnd
-				+ ", negative=" + negative + ", reportable=" + reportable + ", reportStatus=" + reportStatus
-				+ ", reportMailList=" + reportMailList + ", status=" + status + ", creationDateTime=" + creationDateTime
-				+ ", lastRecordDate=" + lastRecordDate + ", lastRecordCount=" + lastRecordCount + ", lastUpdate="
-				+ lastUpdate + ", doIndexNow=" + doIndexNow + "]";
-	}
-
-	@Override
-	public boolean doIndex() {
-		return doIndexNow;
-	}
-
-	@Override
-	public void disableIndexing(boolean val) {
-		this.doIndexNow = !val;
+				+ ", reportable=" + reportable + ", reportStatus=" + reportStatus + ", reportMailList=" + reportMailList
+				+ ", status=" + status + ", creationDateTime=" + creationDateTime + ", lastRecordDate=" + lastRecordDate
+				+ ", lastRecordCount=" + lastRecordCount + ", lastUpdate=" + lastUpdate + ", doIndexNow=" + doIndexNow
+				+ "]";
 	}
 
 }

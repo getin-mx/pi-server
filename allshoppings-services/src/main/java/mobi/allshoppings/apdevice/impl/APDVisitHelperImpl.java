@@ -598,7 +598,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		entries.add(entry);
 		return aphEntryToVisits(entries, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
 	}	
-	
+
 	/**
 	 * Converts an APHEntry to a visit list
 	 * 
@@ -607,8 +607,253 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @return A list with created visits
 	 * @throws ASException
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	public List<APDVisit> aphEntryToVisits(List<APHEntry> entries, Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, List<String> employeeListMacs) throws ASException {
+		
+		int COMMON = 0;
+		int CASABLANCA = 1;
+		
+		List<String> casablancaHosts = Arrays.asList("gihs-0328","gihs-0329","gihs-0331","gihs-0326","gihs-0327");
+		
+		int mode = 0;
+		for( APHEntry entry : entries ) {
+			if( casablancaHosts.contains(entry.getHostname()))
+				mode = CASABLANCA;
+		}
+		
+		switch(mode) {
+		case 1:
+			return aphEntryToVisitsCasablanca(entries, apdCache, assignmentsCache, blackListMacs, employeeListMacs);
+		default:
+			return aphEntryToVisitsCommon(entries, apdCache, assignmentsCache, blackListMacs, employeeListMacs);
+		}
+	}
+
+	/**
+	 * Converts an APHEntry to a visit list (Commons version)
+	 * 
+	 * @param entry
+	 *            The entry to convert
+	 * @return A list with created visits
+	 * @throws ASException
+	 */
+	private List<APDVisit> aphEntryToVisitsCasablanca(List<APHEntry> entries, Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, List<String> employeeListMacs) throws ASException {
+
+		// Validates entries
+		if( CollectionUtils.isEmpty(entries))
+			throw ASExceptionHelper.invalidArgumentsException();
+
+		// Work variables
+		List<APDVisit> ret = CollectionFactory.createList();
+		Boolean isEmployee = false;		
+		
+		// Merges all the time slots
+		List<Integer> slots = CollectionFactory.createList();
+		if( entries.size() > 1 ) {
+			for( APHEntry entry : entries ) {
+				// Checks for BlackList
+				if(!blackListMacs.contains(entry.getMac().toUpperCase().trim())){
+					List<Integer> tmpSlots = aphHelper.timeslotToList(entry.getArtificialRssi());
+					for( Integer i : tmpSlots ) {
+						if(!slots.contains(i))
+							slots.add(i);
+					}
+					// If the mac address is contained in the employee list,
+					// then activates the empoloyee flag
+					if(employeeListMacs.contains(entry.getMac().toUpperCase().trim())){
+						isEmployee= true;
+					}
+				}
+			}
+			Collections.sort(slots);
+		} else {
+			// Checks for BlackList
+			if(!blackListMacs.contains(entries.get(0).getMac().toUpperCase().trim())){
+				slots = aphHelper.timeslotToList(entries.get(0).getArtificialRssi());
+				// If the mac address is contained in the employee list,
+				// then activates the empoloyee flag
+				if(employeeListMacs.contains(entries.get(0).getMac().toUpperCase().trim())){
+					isEmployee= true;
+				}
+			}
+		}
+		
+		if(slots.isEmpty())
+			return ret;
+		
+		// Adds all the devices in the cache
+		Map<String,APDevice> apd = CollectionFactory.createMap();
+		if( apdCache == null || apdCache.size() == 0 ) {
+			for( APHEntry entry : entries ) {
+				apd.put(entry.getHostname(), apdDao.get(entry.getHostname(), true));
+			}
+		} else {
+			apd.putAll(apdCache);
+		}
+		
+		// Adds all the assignments in the cache
+		Map<String,APDAssignation> assignments = CollectionFactory.createMap();
+		if( assignmentsCache == null || assignmentsCache.size() == 0 ) {
+			for( APHEntry entry : entries ) {
+				try {
+					assignments.put(entry.getHostname(),
+							apdaDao.getOneUsingHostnameAndDate(entry.getHostname(), sdf.parse(entry.getDate())));
+				} catch( Exception e ) {
+					log.log(Level.SEVERE, "Error parsing date " + entry.getDate(), e);
+				}
+			}
+		} else {
+			assignments.putAll(assignmentsCache);
+		}
+
+		// Defines temporary work variables
+		Integer lastSlot = null;
+		Integer lastVisitSlot = null;
+		Integer lastPeasantSlot = null;
+		APDVisit currentVisit = null;
+		APDVisit currentPeasant = null;
+		APHEntry curEntry = null;
+		
+		// Now iterate the slots on each entry
+		for(Integer slot : slots ) {
+			try {
+				
+				// Identifies the power and device
+				Integer value = null;
+				for( APHEntry entry : entries ) {
+					Integer tValue = entry.getArtificialRssi().get(String.valueOf(slot));
+					if( tValue != null && (value == null || tValue > value)) {
+						value = tValue;
+						curEntry = entry;
+					}
+				}
+
+				if( value != null ) {
+
+					Date curDate = aphHelper.slotToDate(curEntry.getDate(), slot);
+					APDevice dev = apd.get(curEntry.getHostname());
+					dev.completeDefaults();
+					
+					// Closes open visits in case of slot continuity disruption
+					if( lastSlot != null && slot != (lastSlot + 1) && (slot - lastSlot) > (dev.getVisitGapThreshold() * 3)) {
+						if( currentVisit != null ) {
+							currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+							addPermanenceCheck(currentVisit, currentPeasant, dev);
+							if(isVisitValid(currentVisit, dev))
+								ret.add(currentVisit);
+							currentVisit = null;
+						}
+
+						if( currentPeasant != null ) {
+							currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+							if(isPeasantValid(currentPeasant, dev, isEmployee))
+								ret.add(currentPeasant);
+							currentPeasant = null;
+						}
+					}
+
+					
+					// If there is a peasant threshold
+					if( dev.getPeasantPowerThreshold() == null 
+							|| value >= dev.getPeasantPowerThreshold() ) {
+
+						// Add a new peasant if there is no peasant active
+						if( currentPeasant == null )
+							currentPeasant = createPeasant(curEntry, curDate, null, assignments.get(curEntry.getHostname()));
+						lastPeasantSlot = slot;
+						// Checks for power for visit
+						if( value >= dev.getVisitPowerThreshold()) {
+							if( currentVisit == null )
+								currentVisit = createVisit(curEntry, curDate, null, assignments.get(curEntry.getHostname()), isEmployee);
+							lastVisitSlot = slot;
+						} else {
+							// Closes the visit if it was too far for more time than specified in visit gap threshold
+							if( currentVisit != null ) {
+								// 30DB Tolerance ... it should be a parameter
+								if( value > (dev.getVisitPowerThreshold() - 30)) {
+									lastVisitSlot = slot;
+								} else {
+									if(( slot - lastVisitSlot ) > (dev.getVisitGapThreshold() * 3)) {
+										currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+										addPermanenceCheck(currentVisit, currentPeasant, dev);
+										if(isVisitValid(currentVisit, dev))
+											ret.add(currentVisit);
+										currentVisit = null;
+									}
+								}
+							}
+						}
+
+					} else {
+						if( lastPeasantSlot != null ) { 
+							if(( slot - lastPeasantSlot ) > (dev.getVisitGapThreshold() * 3)) {
+
+								// Closes open visits
+								if( currentVisit != null ) {
+									currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+									addPermanenceCheck(currentVisit, currentPeasant, dev);
+									if(isVisitValid(currentVisit, dev))
+										ret.add(currentVisit);
+									currentVisit = null;
+								}
+
+								if( currentPeasant != null ) {
+									currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+									if(isPeasantValid(currentPeasant, dev,isEmployee))
+										ret.add(currentPeasant);
+									currentPeasant = null;
+								}
+							}
+						}
+					}
+
+				}
+				
+				// Updates the last slot
+				lastSlot = slot;
+				
+			} catch( Exception e ) {
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
+
+		// Closes open visits in case of slot continuity disruption
+		try {
+			if( currentVisit != null ) {
+				currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+				addPermanenceCheck(currentVisit, currentPeasant, apd.get(curEntry.getHostname()));
+				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname())))
+					ret.add(currentVisit);
+				currentVisit = null;
+			}
+		} catch( Exception e ) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+		}
+
+		try {
+			if( currentPeasant != null ) {
+				currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+				if(isPeasantValid(currentPeasant, apd.get(curEntry.getHostname()),isEmployee))
+					ret.add(currentPeasant);
+				currentPeasant = null;
+			}
+		} catch( Exception e ) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+		}
+
+		return ret;
+	}
+
+	/**
+	 * Converts an APHEntry to a visit list (Commons version)
+	 * 
+	 * @param entry
+	 *            The entry to convert
+	 * @return A list with created visits
+	 * @throws ASException
+	 */
+	private List<APDVisit> aphEntryToVisitsCommon(List<APHEntry> entries, Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, List<String> employeeListMacs) throws ASException {
 
 		// Validates entries
 		if( CollectionUtils.isEmpty(entries))

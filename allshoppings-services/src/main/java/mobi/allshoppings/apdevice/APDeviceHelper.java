@@ -24,7 +24,6 @@ public interface APDeviceHelper {
 	void restartAPDevice(String identifier) throws ASException;
 	void restartAPDevice(APDevice apdevice) throws ASException;
 	void tryRestartAPDevices() throws ASException;
-	void importParametersFromLegacy(List<String> hostnames) throws ASException;
 	APDevice geoIp(APDevice apd) throws ASException;
 	void updateAssignationsUsingAPDevice(String hostname) throws ASException;
 	void unassignUsingAPDevice(String hostname) throws ASException;
