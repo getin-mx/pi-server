@@ -55,6 +55,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	private static final SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
 	private static final SimpleDateFormat tf2 = new SimpleDateFormat("HHmm");
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private static final int VISIT_PERCENTAGE = 25;
 
 	@Autowired
 	private APDVisitDAO apdvDao;
@@ -766,10 +767,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						if( value >= dev.getVisitPowerThreshold()) {
 							if( currentVisit == null )
 								currentVisit = createVisit(curEntry, curDate, null, assignments.get(curEntry.getHostname()), isEmployee);
+							currentVisit.addInRangeSegment();
 							lastVisitSlot = slot;
 						} else {
 							// Closes the visit if it was too far for more time than specified in visit gap threshold
 							if( currentVisit != null ) {
+								currentVisit.addOffRangeSegment();
 								// 30DB Tolerance ... it should be a parameter
 								if( value > (dev.getVisitPowerThreshold() - 30)) {
 									lastVisitSlot = slot;
@@ -787,6 +790,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 					} else {
 						if( lastPeasantSlot != null ) { 
+							if( currentVisit != null )
+								currentVisit.addOffRangeSegment();
+							
 							if(( slot - lastPeasantSlot ) > (dev.getVisitGapThreshold() * 3)) {
 
 								// Closes open visits
@@ -842,6 +848,31 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			log.log(Level.SEVERE, e.getMessage(), e);
 		}
 
+		
+		// Checks for max visits per day using RepeatThreshold
+		int repepatThreshold = 0;
+		for( APHEntry entry : entries ) {
+			APDevice dev = apd.get(entry.getHostname());
+			if(dev.getRepeatThreshold() > repepatThreshold)
+				repepatThreshold = dev.getRepeatThreshold();
+		}
+
+		int count = 0;
+		for( APDVisit visit : ret ) {
+			if( visit.getCheckinType().equals(APDVisit.CHECKIN_VISIT))
+				count++;
+		}
+		if( count > repepatThreshold ) {
+			List<APDVisit> tmp = CollectionFactory.createList();
+			tmp.addAll(ret);
+			ret.clear();
+			for( APDVisit v : tmp ) {
+				if(!v.getCheckinType().equals(APDVisit.CHECKIN_VISIT))
+					ret.add(v);
+			}
+		}
+		// End Checks for max visits per day using RepeatThreshold
+		
 		return ret;
 	}
 
@@ -1180,6 +1211,13 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		if( t < ts || t >= te )
 			return false;
 
+		// Total segments percentage check
+		if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
+				&& null != visit.getTotalSegments() && visit.getTotalSegments() > 0 ) {
+			if((visit.getInRangeSegments() * 100 / visit.getTotalSegments()) < VISIT_PERCENTAGE)
+				return false;
+		}
+		
 		// If validations are passed, return true
 		return true;
 	}

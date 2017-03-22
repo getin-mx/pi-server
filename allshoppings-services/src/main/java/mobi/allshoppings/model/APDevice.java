@@ -32,9 +32,6 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	// Basic APDevice data
 	private String hostname;
 	private String description;
-	private String area;
-	@Persistent(defaultFetchGroup = "true")
-	private List<String> couples;
 	
 
 	// Model and installed data
@@ -63,6 +60,9 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	private Long peasantPowerThreshold;
 	private Long visitCountThreshold;
 	private Integer repeatThreshold;
+	
+	private Long visitDecay;
+	private Long peasantDecay;
     
     // Times
     private String timezone;
@@ -125,6 +125,8 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 		if( peasantPowerThreshold == null) peasantPowerThreshold = -80L;
 		if( visitCountThreshold == null) visitCountThreshold = 0L;
 		if( repeatThreshold == null ) repeatThreshold = 5;
+		if( visitDecay == null ) visitDecay = visitGapThreshold;
+		if( peasantDecay == null ) peasantDecay = visitGapThreshold; 
 	    
 		if( timezone == null) timezone = "CDT";
 		if( visitsOnMon == null) visitsOnMon = true;
@@ -376,20 +378,6 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 		this.lastRecordCount = lastRecordCount;
 	}
 	
-	/**
-	 * @return the couples
-	 */
-	public List<String> getCouples() {
-		return couples;
-	}
-
-	/**
-	 * @param couples the couples to set
-	 */
-	public void setCouples(List<String> couples) {
-		this.couples = couples;
-	}
-
 	/**
 	 * @return the country
 	 */
@@ -1053,17 +1041,31 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	}
 
 	/**
-	 * @return the area
+	 * @return the visitDecay
 	 */
-	public String getArea() {
-		return area;
+	public Long getVisitDecay() {
+		return visitDecay;
 	}
 
 	/**
-	 * @param area the area to set
+	 * @param visitDecay the visitDecay to set
 	 */
-	public void setArea(String area) {
-		this.area = area;
+	public void setVisitDecay(Long visitDecay) {
+		this.visitDecay = visitDecay;
+	}
+
+	/**
+	 * @return the peasantDecay
+	 */
+	public Long getPeasantDecay() {
+		return peasantDecay;
+	}
+
+	/**
+	 * @param peasantDecay the peasantDecay to set
+	 */
+	public void setPeasantDecay(Long peasantDecay) {
+		this.peasantDecay = peasantDecay;
 	}
 
 	@Override
@@ -1081,8 +1083,8 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	 */
 	@Override
 	public String toString() {
-		return "APDevice [key=" + key + ", hostname=" + hostname + ", description=" + description + ", area=" + area
-				+ ", couples=" + couples + ", model=" + model + ", mode=" + mode + ", version=" + version
+		return "APDevice [key=" + key + ", hostname=" + hostname + ", description=" + description 
+				+ ", model=" + model + ", mode=" + mode + ", version=" + version
 				+ ", tunnelIp=" + tunnelIp + ", lanIp=" + lanIp + ", wanIp=" + wanIp + ", publicIp=" + publicIp
 				+ ", lastInfoUpdate=" + lastInfoUpdate + ", external=" + external + ", country=" + country
 				+ ", province=" + province + ", city=" + city + ", lat=" + lat + ", lon=" + lon

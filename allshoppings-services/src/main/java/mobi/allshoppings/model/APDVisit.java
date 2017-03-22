@@ -42,6 +42,9 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 	private Boolean hidePermanence;
 	private Boolean approved;
 	private String apheSource;
+	
+	private Integer totalSegments;
+	private Integer inRangeSegments;
 
 	public APDVisit() {
 		super();
@@ -288,6 +291,47 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 		this.approved = approved;
 	}
 
+	/**
+	 * @return the totalSegments
+	 */
+	public Integer getTotalSegments() {
+		return totalSegments;
+	}
+
+	/**
+	 * @param totalSegments the totalSegments to set
+	 */
+	public void setTotalSegments(Integer totalSegments) {
+		this.totalSegments = totalSegments;
+	}
+
+	/**
+	 * @return the inRangeSegments
+	 */
+	public Integer getInRangeSegments() {
+		return inRangeSegments;
+	}
+
+	/**
+	 * @param inRangeSegments the inRangeSegments to set
+	 */
+	public void setInRangeSegments(Integer inRangeSegments) {
+		this.inRangeSegments = inRangeSegments;
+	}
+
+	public void addInRangeSegment() {
+		if( null == inRangeSegments ) inRangeSegments = 0;
+		if( null == totalSegments ) totalSegments = 0;
+		inRangeSegments++;
+		totalSegments++;
+	}
+
+	public void addOffRangeSegment() {
+		if( null == inRangeSegments ) inRangeSegments = 0;
+		if( null == totalSegments ) totalSegments = 0;
+		totalSegments++;
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
