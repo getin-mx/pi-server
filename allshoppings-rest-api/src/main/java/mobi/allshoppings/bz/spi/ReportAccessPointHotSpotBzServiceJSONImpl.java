@@ -74,7 +74,7 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 					aphotspot.setCount(ele.getInt("count"));
 					aphotspot.setKey(dao.createKey());
 
-					if(!aphotspot.getMac().startsWith("broadcast")) {
+					if(!aphotspot.getMac().startsWith("broadcast") && !aphotspot.getMac().equals("00:00:00:00:00:00") && aphotspot.getSignalDB() < 0) {
 						dao.create(aphotspot);
 
 						// Updates APHEntries

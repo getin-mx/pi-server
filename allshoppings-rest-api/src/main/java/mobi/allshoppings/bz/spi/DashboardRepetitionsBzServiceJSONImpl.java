@@ -3,6 +3,7 @@ package mobi.allshoppings.bz.spi;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,8 @@ implements DashboardTimelineHourBzService {
 			Map<Integer, Integer> repetitions = null;
 			Map<Integer, Integer> repetitionsV = null;
 
+			toStringDate = sdf.format(new Date(sdf.parse(toStringDate).getTime() + 86400000));
+			
 			if( EntityKind.KIND_SHOPPING == entityKind ) {
 				repetitions = apdvDao.getRepetitions(Arrays.asList(entityId),
 						EntityKind.KIND_SHOPPING, APDVisit.CHECKIN_PEASANT, sdf.parse(fromStringDate), sdf.parse(toStringDate));

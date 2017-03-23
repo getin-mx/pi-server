@@ -56,6 +56,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	private static final SimpleDateFormat tf2 = new SimpleDateFormat("HHmm");
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private static final int VISIT_PERCENTAGE = 25;
+	private static final List<String> BANNED = Arrays.asList("00:00:00:00:00:00");
 
 	@Autowired
 	private APDVisitDAO apdvDao;
@@ -730,6 +731,18 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					}
 				}
 
+				// Controls banned mac addresses
+				if( BANNED.contains(curEntry.getMac().toLowerCase())) {
+					ret = CollectionFactory.createList();
+					return ret;
+				}
+				
+				// Controls invalid value
+				if( value > -1 ) {
+					ret = CollectionFactory.createList();
+					return ret;
+				}
+				
 				if( value != null ) {
 
 					Date curDate = aphHelper.slotToDate(curEntry.getDate(), slot);
