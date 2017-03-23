@@ -737,7 +737,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					dev.completeDefaults();
 					
 					// Closes open visits in case of slot continuity disruption
-					if( lastSlot != null && slot != (lastSlot + 1) && (slot - lastSlot) > (dev.getVisitGapThreshold() * 3)) {
+					if( lastSlot != null && slot != (lastSlot + 1) && (slot - lastSlot) > (dev.getVisitDecay() * 3)) {
 						if( currentVisit != null ) {
 							currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
 							addPermanenceCheck(currentVisit, currentPeasant, dev);
@@ -777,7 +777,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								if( value > (dev.getVisitPowerThreshold() - 30)) {
 									lastVisitSlot = slot;
 								} else {
-									if(( slot - lastVisitSlot ) > (dev.getVisitGapThreshold() * 3)) {
+									if(( slot - lastVisitSlot ) > (dev.getVisitDecay() * 3)) {
 										currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
 										addPermanenceCheck(currentVisit, currentPeasant, dev);
 										if(isVisitValid(currentVisit, dev))
@@ -793,7 +793,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							if( currentVisit != null )
 								currentVisit.addOffRangeSegment();
 							
-							if(( slot - lastPeasantSlot ) > (dev.getVisitGapThreshold() * 3)) {
+							if(( slot - lastPeasantSlot ) > (dev.getVisitDecay() * 3)) {
 
 								// Closes open visits
 								if( currentVisit != null ) {

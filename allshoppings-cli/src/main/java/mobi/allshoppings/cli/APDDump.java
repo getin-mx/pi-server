@@ -81,15 +81,39 @@ public class APDDump extends AbstractCLI {
 						device.setVisitStartSat("04:00");
 						device.setVisitStartSun("04:00");
 
-						device.setVisitEndMon("21:00");
-						device.setVisitEndTue("21:00");
-						device.setVisitEndWed("21:00");
-						device.setVisitEndThu("21:00");
-						device.setVisitEndFri("21:00");
-						device.setVisitEndSat("21:00");
-						device.setVisitEndSun("21:00");
+						device.setVisitEndMon("22:00");
+						device.setVisitEndTue("22:00");
+						device.setVisitEndWed("22:00");
+						device.setVisitEndThu("22:00");
+						device.setVisitEndFri("22:00");
+						device.setVisitEndSat("22:00");
+						device.setVisitEndSun("22:00");
 
+						device.setMonitorStart("04:00");
+						device.setMonitorEnd("22:00");
+						
 						device.setVisitMaxThreshold(90L);
+
+						log.log(Level.INFO, "Updating rules for ap device " + apda.getHostname() + "....");
+						apdDao.update(device);
+					}
+				}
+			}
+
+			// Casablanca
+			{
+				log.log(Level.INFO, "Dumping Casablanca Data....");
+				List<Store> list = storeDao.getUsingBrandAndStatus("clubcasablanca_mx", StatusHelper.statusActive(), null);
+				for( Store store : list ) {
+					log.log(Level.INFO, "Dumping Casablanca Data for store " + store.getName() + "....");
+					List<APDAssignation> apdaList = apdaDao.getUsingEntityIdAndEntityKind(store.getIdentifier(), EntityKind.KIND_STORE);
+					for( APDAssignation apda : apdaList ) {
+						log.log(Level.INFO, "Dumping Casablanca Data for ap device " + apda.getHostname() + "....");
+						APDevice device = apdDao.get(apda.getHostname(), true);
+						device.completeDefaults();
+						
+						device.setPeasantDecay(10L);
+						device.setVisitDecay(10L);
 
 						log.log(Level.INFO, "Updating rules for ap device " + apda.getHostname() + "....");
 						apdDao.update(device);
