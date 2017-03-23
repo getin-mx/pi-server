@@ -128,7 +128,7 @@ implements BDBDashboardBzService {
 					Date postDate = new Date(curDate.getTime() + ONE_DAY);
 
 					//FIXME: Change the APDVisit List for the raw APHEntries to avoid employees not seen by Store Calibration limits 
-					List<APDVisit> emps = apdvDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate, postDate, APDVisit.CHECKIN_EMPLOYEE, null, null, false);
+					List<APDVisit> emps = apdvDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate, postDate, APDVisit.CHECKIN_EMPLOYEE, null, null, null, false);
 					for( APDVisit apdv : emps ) {
 						APHEntry aphe = apheDao.get(apdv.getApheSource()); 
 

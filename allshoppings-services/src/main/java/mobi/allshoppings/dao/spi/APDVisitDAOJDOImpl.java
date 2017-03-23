@@ -48,7 +48,7 @@ public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVi
 
 	@Override
 	public List<APDVisit> getUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date fromDate,
-			Date toDate, Integer checkinType, Range range, Map<String, String> attributes, boolean detachable)
+			Date toDate, Integer checkinType, Range range, String order, Map<String, String> attributes, boolean detachable)
 			throws ASException {
 
 		List<APDVisit> ret = CollectionFactory.createList();
@@ -107,6 +107,9 @@ public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVi
 				attributes.put("recordCount", String.valueOf(count));
 				query.setResult(null);
 			}
+			
+			if( StringUtils.hasText(order))
+				query.setOrdering(order);
 			
 			if( range != null ) 
 				query.setRange(range.getFrom(), range.getTo());

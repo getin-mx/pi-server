@@ -85,7 +85,7 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 			Date fromDate = sdf.parse(date);
 			Date toDate = new Date(fromDate.getTime() + ONE_DAY);
 			
-			list = dao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, fromDate, toDate, checkinType, range,
+			list = dao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, fromDate, toDate, checkinType, range, "mac",
 					attributes, false);
 			
 			long diff = new Date().getTime() - millisPre;

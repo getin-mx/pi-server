@@ -82,7 +82,7 @@ public class CSVVisitDetailExport {
 			List<APDVisit> list = null;
 			if( StringUtils.hasText(shoppingId)) {
 				Map<String, String> attributes = CollectionFactory.createMap();
-				list = apdvDao.getUsingEntityIdAndEntityKindAndDate(shoppingId, EntityKind.KIND_SHOPPING, dateFrom, dateTo, APDVisit.CHECKIN_VISIT, null, attributes, false);
+				list = apdvDao.getUsingEntityIdAndEntityKindAndDate(shoppingId, EntityKind.KIND_SHOPPING, dateFrom, dateTo, APDVisit.CHECKIN_VISIT, null, null, attributes, false);
 			} else {
 				list = apdvDao.getUsingStoresAndDate(storeIds, dateFrom, dateTo, null, false); 
 			}

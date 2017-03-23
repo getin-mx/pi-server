@@ -16,7 +16,7 @@ public interface APDVisitDAO extends GenericDAO<APDVisit	> {
 	Key createKey(APDVisit obj) throws ASException;
 
 	List<APDVisit> getUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date fromDate, Date toDate,
-			Integer checkinType, Range range, Map<String, String> attributes, boolean detachable) throws ASException;
+			Integer checkinType, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException;
 
 	void deleteUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date fromDate, Date toDate, Integer checkinType)
 			throws ASException;

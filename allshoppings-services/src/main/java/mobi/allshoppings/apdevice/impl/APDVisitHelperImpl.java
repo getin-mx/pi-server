@@ -737,7 +737,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					dev.completeDefaults();
 					
 					// Closes open visits in case of slot continuity disruption
-					if( lastSlot != null && slot != (lastSlot + 1) && (slot - lastSlot) > (dev.getVisitDecay() * 3)) {
+					if( lastSlot != null && slot != (lastSlot + 1) && (slot - lastSlot) > (dev.getVisitGapThreshold() * 3)) {
 						if( currentVisit != null ) {
 							currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
 							addPermanenceCheck(currentVisit, currentPeasant, dev);
@@ -777,8 +777,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								if( value > (dev.getVisitPowerThreshold() - 30)) {
 									lastVisitSlot = slot;
 								} else {
-									if(( slot - lastVisitSlot ) > (dev.getVisitDecay() * 3)) {
-										currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+									if(( slot - lastVisitSlot ) > (dev.getVisitGapThreshold() * 3)) {
+										int finishSlot = slot;
+										if((lastVisitSlot + (dev.getVisitDecay() * 3)) < finishSlot)
+											finishSlot = (int)(lastVisitSlot + (dev.getVisitDecay() * 3));
+
+										currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), finishSlot));
 										addPermanenceCheck(currentVisit, currentPeasant, dev);
 										if(isVisitValid(currentVisit, dev))
 											ret.add(currentVisit);
@@ -793,11 +797,15 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							if( currentVisit != null )
 								currentVisit.addOffRangeSegment();
 							
-							if(( slot - lastPeasantSlot ) > (dev.getVisitDecay() * 3)) {
+							if(( slot - lastPeasantSlot ) > (dev.getVisitGapThreshold() * 3)) {
+
+								int finishSlot = slot;
+								if((lastPeasantSlot + (dev.getVisitDecay() * 3)) < finishSlot)
+									finishSlot = (int)(lastPeasantSlot + (dev.getVisitDecay() * 3));
 
 								// Closes open visits
 								if( currentVisit != null ) {
-									currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+									currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), finishSlot));
 									addPermanenceCheck(currentVisit, currentPeasant, dev);
 									if(isVisitValid(currentVisit, dev))
 										ret.add(currentVisit);
@@ -805,7 +813,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								}
 
 								if( currentPeasant != null ) {
-									currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+									currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), finishSlot));
 									if(isPeasantValid(currentPeasant, dev,isEmployee))
 										ret.add(currentPeasant);
 									currentPeasant = null;
@@ -827,7 +835,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		// Closes open visits in case of slot continuity disruption
 		try {
 			if( currentVisit != null ) {
-				currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+				int finishSlot = lastSlot;
+				APDevice dev1 = apd.get(curEntry.getHostname());
+				if((lastVisitSlot + (dev1.getVisitDecay() * 3)) < finishSlot)
+					finishSlot = (int)(lastVisitSlot + (dev1.getVisitDecay() * 3));
+				currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), finishSlot));
 				addPermanenceCheck(currentVisit, currentPeasant, apd.get(curEntry.getHostname()));
 				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname())))
 					ret.add(currentVisit);
@@ -1348,8 +1360,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	@Override
 	public void fakeVisitsWith(String storeId, String fakeWithStoreId, Date fromDate, Date toDate ) throws ASException {
 				
-		List<APDVisit> list1 = apdvDao.getUsingEntityIdAndEntityKindAndDate(storeId, EntityKind.KIND_STORE, fromDate, toDate, null, null, null, false);
-		List<APDVisit> list2 = apdvDao.getUsingEntityIdAndEntityKindAndDate(fakeWithStoreId, EntityKind.KIND_STORE, fromDate, toDate, null, null, null, false);
+		List<APDVisit> list1 = apdvDao.getUsingEntityIdAndEntityKindAndDate(storeId, EntityKind.KIND_STORE, fromDate, toDate, null, null, null, null, false);
+		List<APDVisit> list2 = apdvDao.getUsingEntityIdAndEntityKindAndDate(fakeWithStoreId, EntityKind.KIND_STORE, fromDate, toDate, null, null, null, null, false);
 		
 		List<APDVisit> lp = CollectionFactory.createList();
 		List<APDVisit> lv = CollectionFactory.createList();
