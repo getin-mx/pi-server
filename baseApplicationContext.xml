@@ -104,10 +104,10 @@
 				<value>ingrid@getin.mx</value>
 			</list>
 		</property>
-		<property name="apdeviceJumpHost" value="aragorn.getin.mx" />
-		<property name="apdeviceJumpHostUser" value="getin" />
-		<property name="apdeviceJumpHostPass" value="#zxcvasdf7890" />
-		<property name="apdeviceVPNHost" value="cportal1.allshoppings.mobi" />
+		<property name="apdeviceJumpHost" value="vpn.getin.mx" />
+		<property name="apdeviceJumpHostUser" value="root" />
+		<property name="apdeviceJumpHostPass" value="zxcvasdf7890" />
+		<property name="apdeviceVPNHost" value="vpn.getin.mx" />
 		<property name="apdeviceVPNHostUser" value="root" />
 		<property name="apdeviceVPNHostPass" value="zxcvasdf7890" />
 		<property name="apdeviceUser" value="root" />
