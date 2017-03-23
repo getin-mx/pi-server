@@ -1,6 +1,6 @@
 #_HOST=http://127.0.0.1
-_HOST=http://api.allshoppings.mobi
-#_HOST=http://127.0.0.1:8081
+#_HOST=http://api.allshoppings.mobi
+_HOST=http://127.0.0.1:8081
 
 export _HOST;
 export _UUID_IPHONE=776AE2D6-840A-45BF-A1D0-3873B54D6D72

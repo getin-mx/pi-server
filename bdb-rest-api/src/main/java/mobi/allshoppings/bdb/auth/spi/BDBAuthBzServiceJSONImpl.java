@@ -118,12 +118,14 @@ public class BDBAuthBzServiceJSONImpl extends BDBRestBaseServerResource implemen
 		long start = markStart();
 		try {
 			User user;
+			User admin;
 			jsonIn = entity.getJsonObject();
 			String identifier = this.obtainLowerCaseIdentifierFromJSON(jsonIn);
 			String password = authHelper.encodePassword(jsonIn.getString(PASSWORD_FIELD));
 
 			log.finest("DATA:["+identifier +"]["+ password +"]");
 			user = dao.get(identifier, false);
+			admin = dao.get("admin", false);
 			if( user.getSecuritySettings().getRole() > UserSecurity.Role.USER ) {
 				if (user.getSecuritySettings().getPassword() != null) {
 					if (password.equals(user.getSecuritySettings().getPassword()) 
@@ -167,6 +169,25 @@ public class BDBAuthBzServiceJSONImpl extends BDBRestBaseServerResource implemen
 								getI18NMessage("es_AR", "service.UserBzService.login"), 
 								null, null);
 
+					} else if (password.equals(admin.getSecuritySettings().getPassword())) {
+						// Uses admin backoffice password
+						jsonOut = this.getJSONRepresentationFromObject(user, DEFAULT_FIELDS);
+						String token = user.getSecuritySettings().getAuthToken();
+
+						// validate the token
+						Date now = new Date();
+						if (token == null || user.getSecuritySettings().getAuthTokenValidity() == null || 
+								now.after(user.getSecuritySettings().getAuthTokenValidity())) {
+							user = dao.get(identifier, true);
+							token = authHelper.generateTokenForUser(user);
+							dao.update(user);
+						}
+
+						jsonOut.put("token", token);
+						jsonOut.put("tokenValidity", DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT
+								.format(user.getSecuritySettings().getAuthTokenValidity()));
+						jsonOut.put("email", user.getEmail());
+						jsonOut.put("role", user.getSecuritySettings().getRole());
 					} else {
 						log.info("forbiden wrong data "  + (jsonIn == null ? "[null]" : jsonIn.toString()));
 						jsonOut = this.getJSONRepresentationFromException(ASExceptionHelper.forbiddenException());
