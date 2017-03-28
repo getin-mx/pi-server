@@ -47,6 +47,7 @@ import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.APHotspotDAO;
 import mobi.allshoppings.dao.APUptimeDAO;
+import mobi.allshoppings.dao.InnerZoneDAO;
 import mobi.allshoppings.dao.MacVendorDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
@@ -61,6 +62,7 @@ import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.APUptime;
 import mobi.allshoppings.model.EntityKind;
+import mobi.allshoppings.model.InnerZone;
 import mobi.allshoppings.model.MacVendor;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
@@ -92,6 +94,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	private MailHelper mailHelper;
 	@Autowired
 	private APUptimeDAO apuDao;
+	@Autowired
+	private InnerZoneDAO zoneDao;
 	@Autowired
 	private MacVendorDAO mvDao;
 	@Autowired
@@ -924,24 +928,17 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	public void updateAssignationsUsingAPDevice(String hostname) throws ASException {
 		APDevice apd = dao.get(hostname, true);
 		List<APDAssignation> list = apdaDao.getUsingHostnameAndDate(hostname, new Date());
-		
+
 		if( null == apd.getStatus() ) 
 			apd.setStatus(StatusAware.STATUS_ENABLED);
-		
+
 		if( null == apd.getReportStatus() )
 			apd.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
 
-		if( list.size() == 0 ) {
-			// APDevice is no longer assigned
-			apd.setDescription(null);
-			apd.setReportable(false);
-			if( apd.getReportMailList() == null ) {
-				apd.setReportMailList(new ArrayList<String>());
-			} else {
-				apd.getReportMailList().clear();
-			}
-		} else {
-			// APDevice is assigned
+		int index = 0;
+
+		// APDevice is assigned
+		if( list.size() > index ) {
 			APDAssignation apda = list.get(0);
 			if( apda.getEntityKind().equals(EntityKind.KIND_SHOPPING)) {
 				Shopping shopping = shoppingDao.get(apda.getEntityId());
@@ -949,6 +946,9 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			} else if( apda.getEntityKind().equals(EntityKind.KIND_STORE)) {
 				Store store = storeDao.get(apda.getEntityId());
 				apd.setDescription(store.getName());
+			} else if( apda.getEntityKind().equals(EntityKind.KIND_INNER_ZONE)) {
+				InnerZone zone = zoneDao.get(apda.getEntityId());
+				apd.setDescription(zone.getName());
 			}
 			apd.setStatus(StatusAware.STATUS_ENABLED);
 			apd.setReportable(true);
@@ -958,8 +958,17 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 				apd.getReportMailList().clear();
 				apd.getReportMailList().addAll(systemConfiguration.getApdReportMailList());
 			}
+		} else {
+			// APDevice is no longer assigned
+			apd.setDescription(null);
+			apd.setReportable(false);
+			if( apd.getReportMailList() == null ) {
+				apd.setReportMailList(new ArrayList<String>());
+			} else {
+				apd.getReportMailList().clear();
+			}
 		}
-		
+
 		dao.update(apd);
 		indexHelper.indexObject(apd);
 	}

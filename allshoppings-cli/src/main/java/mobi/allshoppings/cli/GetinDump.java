@@ -645,6 +645,18 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 			}
 
+			try {
+				brand = brandDao.get("universodefragancias_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Universo de Fragancias");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "universodefragancias_mx"));
+				brandDao.create(brand);
+			}
+
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -924,6 +936,8 @@ public class GetinDump extends AbstractCLI {
 
 			stores.add(new StoreAdapter("475", "Outlet Deportes Isabel la Catolica II", "outletdeportes_mx",null));
 			stores.add(new StoreAdapter("476", "Fullsand Américas Cancún", "fullsand_mx", null));			
+
+			stores.add(new StoreAdapter("477", "Universo de Fragancias Naucalpan", "universodefragancias_mx", null));			
 
 			Store store;
 			for(StoreAdapter obj : stores ) {
