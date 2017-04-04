@@ -323,6 +323,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	public void reportDownDevices() throws ASException {
 
 		Date limitDate = new Date(new Date().getTime() - THIRTY_MINUTES);
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 		
 		List<APDevice> list = dao.getAll(true);
 		for( APDevice device : list ) {
@@ -335,13 +336,14 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 					if( device.getStatus().equals(StatusAware.STATUS_ENABLED) && device.getReportStatus().equals(APDevice.REPORT_STATUS_NOT_REPORTED)) {
 
 						if( onReportTime(device)) {
-							String mailText = "The device " + device.getHostname()
-							+ " referent of " + device.getDescription()
-							+ " is not sending mac addresses since "
-							+ device.getLastRecordDate()
-							+ "<br/><br/>Detailed record is:<br/><br/>"
-							+ device.toString();
-							String mailTitle = "Device " + device.getDescription() + " is Down!!!";
+						
+							String mailText = "Hola!\n\n"
+									+ "La antena de " + device.getDescription() + " se apagó desde las " 
+									+ timeFormat.format(device.getLastRecordDate()) + " hrs. Les pedimos su apoyo para volver a conectarla.\n\n" 
+									+ "Muchas gracias.\n\n"
+									+ " Atte. \n" 
+									+ "El equipo de Getin";
+							String mailTitle = "La antena de " + device.getDescription() + " se encuentra apagada";
 
 							for( String mail : device.getReportMailList() ) {
 								User fake = new User();
@@ -370,8 +372,13 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 					if( device.getStatus().equals(StatusAware.STATUS_ENABLED) && device.getReportStatus().equals(APDevice.REPORT_STATUS_REPORTED)) {
 
 						if( onReportTime(device)) {
-							String mailText = "The device " + device.getHostname() + " referent of " + device.getDescription() + " is back alive!";
-							String mailTitle = "Device " + device.getDescription() + " is Back to Normal!!!";
+							String mailText = "Hola!\n\n"
+									+ "La antena de " + device.getDescription() + " volvió a conectarse a las " 
+									+ timeFormat.format(device.getLastRecordDate()) + " hrs. \n"
+									+ "Gracias por su apoyo en mantener la antena encendida.\n\n" 
+									+ " Atte. \n" 
+									+ "El equipo de Getin";
+							String mailTitle = "La antena de " + device.getDescription() + " volvió a conectarse!!!";
 
 							for( String mail : device.getReportMailList() ) {
 								User fake = new User();
