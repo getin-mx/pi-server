@@ -51,6 +51,7 @@ public class TouchAPDevices extends AbstractCLI {
 			
 			log.log(Level.INFO, "Scanning assignations....");
 
+			// Antenas de Astrid
 			List<Store> stores = CollectionFactory.createList();
 			List<String> brands  = Arrays.asList("grupochomarc_mx","chomarc_mx","sportium_mx","modatelas_mx","saavedra_mx","delicafe_mx","flormar_pa","roku_mx","blulagoon_mx");
 			for( String brand : brands ) {
@@ -70,6 +71,36 @@ public class TouchAPDevices extends AbstractCLI {
 			for(APDAssignation assig : assigs) {
 				astrid.add(assig.getHostname());
 			}
+			
+			// Antenas de outlet deportes
+			stores = storeDao.getUsingBrandAndStatus("outletdeportes_mx", StatusHelper.statusActive(), null);
+			assigs = CollectionFactory.createList();
+			for(Store store : stores ) {
+				List<APDAssignation> tmp = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, new Date());
+				for(APDAssignation assig : tmp ) {
+					assigs.add(assig);
+				}
+			}
+			List<String> outlet = CollectionFactory.createList();
+			for(APDAssignation assig : assigs) {
+				outlet.add(assig.getHostname());
+			}
+			
+			// Antenas de club casablanca
+			stores = storeDao.getUsingBrandAndStatus("clubcasablanca_mx", StatusHelper.statusActive(), null);
+			assigs = CollectionFactory.createList();
+			for(Store store : stores ) {
+				List<APDAssignation> tmp = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, new Date());
+				for(APDAssignation assig : tmp ) {
+					assigs.add(assig);
+				}
+			}
+			List<String> casablanca = CollectionFactory.createList();
+			for(APDAssignation assig : assigs) {
+				casablanca.add(assig.getHostname());
+			}
+			
+			
 
 			log.log(Level.INFO, "Touching apdevices....");
 			List<APDevice> list = apdeviceDao.getAll(true);
@@ -95,6 +126,23 @@ public class TouchAPDevices extends AbstractCLI {
 					} else {
 						mails.add("mariajose@getin.mx");
 					}
+					
+					// custom mails
+					if(obj.getHostname().equals("ashs-0091") || obj.getHostname().equals("ashs-0112"))
+						mails.add("emmabotanicus@hotmail.com");
+					
+					if(obj.getHostname().equals("ashs-0091") || obj.getHostname().equals("ashs-0112"))
+						mails.add("emmabotanicus@hotmail.com");
+
+					if(outlet.contains(obj.getHostname())) {
+						mails.add("cymerikayedra@gmail.com");
+						mails.add("cymauditoria@live.com.mx");
+					} 
+
+					if(casablanca.contains(obj.getHostname())) {
+						mails.add("ggonzalez@clubcasablanca.mx");
+					} 
+					
 					obj.setReportMailList(mails);
 				}
 				
