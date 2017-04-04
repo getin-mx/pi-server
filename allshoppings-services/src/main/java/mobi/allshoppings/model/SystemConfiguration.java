@@ -99,6 +99,7 @@ public class SystemConfiguration implements Serializable {
 	private List<String> apdReportMailList;
 	private String resourcesDir;
 	private String excelTemplate;
+	private List<String> forbiddenBrandsToReprocess;
 	
 	public String getDefaultLevel() {
 		return defaultLevel;
@@ -836,6 +837,14 @@ public class SystemConfiguration implements Serializable {
 
 	public void setExcelTemplate(String excelTemplate) {
 		this.excelTemplate = excelTemplate;
+	}
+
+	public List<String> getForbiddenBrandsToReprocess() {
+		return forbiddenBrandsToReprocess;
+	}
+
+	public void setForbiddenBrandsToReprocess(List<String> forbiddenBrandsToReprocess) {
+		this.forbiddenBrandsToReprocess = forbiddenBrandsToReprocess;
 	}
 
 }

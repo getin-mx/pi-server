@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bdb.bz.BDBPostBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
@@ -19,6 +20,7 @@ import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Process;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.interfaces.Indexable;
 import mobi.allshoppings.model.interfaces.StatusAware;
@@ -35,7 +37,8 @@ public class BDBRequestProcessBzServiceJSONImpl extends BDBRestBaseServerResourc
 	private ShoppingDAO shoppingDao;
 	@Autowired
 	private StoreDAO storeDao;
-	
+	@Autowired
+	private SystemConfiguration systemConfiguration;
 	@Autowired
 	private IndexHelper indexHelper;
 	@Autowired
@@ -54,6 +57,7 @@ public class BDBRequestProcessBzServiceJSONImpl extends BDBRestBaseServerResourc
 			final Integer entityKind = obj.getInt("entityKind");
 			final String fromDate = obj.getString("fromDate");
 			final String toDate = obj.getString("toDate");
+			String brandId = null;
 			
 			Process p = new Process();
 			
@@ -73,12 +77,17 @@ public class BDBRequestProcessBzServiceJSONImpl extends BDBRestBaseServerResourc
 			} else if( p.getEntityKind().equals(EntityKind.KIND_STORE)) {
 				try {
 					Store tmp = storeDao.get(entityId);
+					brandId = tmp.getBrandId();
 					name = tmp.getName();
 				} catch( Exception e ) {}
 			}
 			
 			p.setName("Reproceso de " + name + " de: " + fromDate +" hasta: " + toDate);
 			p.setKey(dao.createKey());		
+			
+			// Checks not to process a forbidden brand
+			if( StringUtils.hasText(brandId) && systemConfiguration.getForbiddenBrandsToReprocess().contains(brandId))
+				throw ASExceptionHelper.defaultException("Cannot process brand " + brandId, new Exception());
 			
 			dao.create(p);
 			

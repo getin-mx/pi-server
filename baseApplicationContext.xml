@@ -136,6 +136,11 @@
 			    <value>towncenterelrosario</value>
 			</list>
 		</property>
+		<property name="forbiddenBrandsToReprocess">
+			<list>
+			    <value>prada_mx</value>
+			</list>
+		</property>
 		<property name="defaultBehavioursApps">
 			<list>
 			    <value></value>
