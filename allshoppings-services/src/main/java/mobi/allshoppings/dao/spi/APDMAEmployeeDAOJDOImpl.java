@@ -46,17 +46,17 @@ public class APDMAEmployeeDAOJDOImpl extends GenericDAOJDO<APDMAEmployee> implem
 
 			Query query = pm.newQuery(clazz);
 
-			// Store id parameter
+			// Entity id parameter
 			if( StringUtils.hasText(entityId) ) {
 				declaredParams.add("String entityIdParam");
 				filters.add("entityId == entityIdParam");
 				parameters.put("entityIdParam", entityId);
 			}
 			
-			// Date parameter
+			// Entity Kind parameter
 			if( entityKind != null ) {
 				declaredParams.add("Integer entityKindParam");
-				filters.add("entityKind >= entityKindParam");
+				filters.add("entityKind == entityKindParam");
 				parameters.put("entityKindParam", entityKind);
 			}
 
@@ -104,4 +104,65 @@ public class APDMAEmployeeDAOJDOImpl extends GenericDAOJDO<APDMAEmployee> implem
 
 	}
 
+	@Override
+	public List<APDMAEmployee> getUsingEntityIdandMac(String entityId, Integer entityKind, String mac) throws ASException {
+		List<APDMAEmployee> returnedObjs = CollectionFactory.createList();
+
+		PersistenceManager pm;
+		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+
+		try{
+			Map<String, Object> parameters = CollectionFactory.createMap();
+			List<String> declaredParams = CollectionFactory.createList();
+			List<String> filters = CollectionFactory.createList();
+
+			Query query = pm.newQuery(clazz);
+
+			// Entity id parameter
+			if( StringUtils.hasText(entityId) ) {
+				declaredParams.add("String entityIdParam");
+				filters.add("entityId == entityIdParam");
+				parameters.put("entityIdParam", entityId);
+			}
+			
+			// Entity Kind parameter
+			if( entityKind != null ) {
+				declaredParams.add("Integer entityKindParam");
+				filters.add("entityKind == entityKindParam");
+				parameters.put("entityKindParam", entityKind);
+			}
+
+			// Mac parameter
+			if( StringUtils.hasText(mac)) {
+				declaredParams.add("String macParam");
+				filters.add("mac == macParam");
+				parameters.put("macParam", mac);
+			}
+
+			query.declareParameters(toParameterList(declaredParams));
+			query.setFilter(toWellParametrizedFilter(filters));
+
+			@SuppressWarnings("unchecked")
+			List<APDMAEmployee> objs = parameters.size() > 0 ? (List<APDMAEmployee>)query.executeWithMap(parameters) : (List<APDMAEmployee>)query.execute();
+			if (objs != null) {
+				// force to read
+				for (APDMAEmployee obj : objs) {
+					returnedObjs.add(pm.detachCopy(obj));
+				}
+			}
+
+		} catch(Exception e) {
+			if(!( e instanceof ASException )) {
+				throw ASExceptionHelper.defaultException(e.getMessage(), e);
+			} else {
+				throw e;
+			}
+		} finally  {
+			pm.close();
+		}
+
+		return returnedObjs;
+	}
+
+	
 }

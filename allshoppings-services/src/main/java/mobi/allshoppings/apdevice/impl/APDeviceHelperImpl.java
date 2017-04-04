@@ -80,7 +80,6 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	public static final long FIVE_MINUTES = 5 * 60 * 1000;
 	public static final long TEN_MINUTES = 10 * 60 * 1000;
 	public static final long THIRTY_MINUTES = 30 * 60 * 1000;
-	public static final long SIXTY_MINUTES = 60 * 60 * 1000;
 	public static final long ONE_DAY = 24 * 60 * 60 * 1000;
 	
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -323,7 +322,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	@Override
 	public void reportDownDevices() throws ASException {
 
-		Date limitDate = new Date(new Date().getTime() - SIXTY_MINUTES);
+		Date limitDate = new Date(new Date().getTime() - THIRTY_MINUTES);
 		
 		List<APDevice> list = dao.getAll(true);
 		for( APDevice device : list ) {
@@ -936,36 +935,52 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			apd.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
 
 		int index = 0;
+		boolean done = false;
+		
+		while(!done) {
 
-		// APDevice is assigned
-		if( list.size() > index ) {
-			APDAssignation apda = list.get(0);
-			if( apda.getEntityKind().equals(EntityKind.KIND_SHOPPING)) {
-				Shopping shopping = shoppingDao.get(apda.getEntityId());
-				apd.setDescription(shopping.getName());
-			} else if( apda.getEntityKind().equals(EntityKind.KIND_STORE)) {
-				Store store = storeDao.get(apda.getEntityId());
-				apd.setDescription(store.getName());
-			} else if( apda.getEntityKind().equals(EntityKind.KIND_INNER_ZONE)) {
-				InnerZone zone = zoneDao.get(apda.getEntityId());
-				apd.setDescription(zone.getName());
-			}
-			apd.setStatus(StatusAware.STATUS_ENABLED);
-			apd.setReportable(true);
-			if( apd.getReportMailList() == null )
-				apd.setReportMailList(new ArrayList<String>());
-			if( apd.getReportMailList().isEmpty()) {
-				apd.getReportMailList().clear();
-				apd.getReportMailList().addAll(systemConfiguration.getApdReportMailList());
-			}
-		} else {
-			// APDevice is no longer assigned
-			apd.setDescription(null);
-			apd.setReportable(false);
-			if( apd.getReportMailList() == null ) {
-				apd.setReportMailList(new ArrayList<String>());
+			if( list.size() > index ) {
+
+				// APDevice is assigned
+				APDAssignation apda = list.get(index);
+				try {
+					if( apda.getEntityKind().equals(EntityKind.KIND_SHOPPING)) {
+						Shopping shopping = shoppingDao.get(apda.getEntityId());
+						apd.setDescription(shopping.getName());
+					} else if( apda.getEntityKind().equals(EntityKind.KIND_STORE)) {
+						Store store = storeDao.get(apda.getEntityId());
+						apd.setDescription(store.getName());
+					} else if( apda.getEntityKind().equals(EntityKind.KIND_INNER_ZONE)) {
+						InnerZone zone = zoneDao.get(apda.getEntityId());
+						apd.setDescription(zone.getName());
+					}
+					apd.setStatus(StatusAware.STATUS_ENABLED);
+					apd.setReportable(true);
+					if( apd.getReportMailList() == null )
+						apd.setReportMailList(new ArrayList<String>());
+					if( apd.getReportMailList().isEmpty()) {
+						apd.getReportMailList().clear();
+						apd.getReportMailList().addAll(systemConfiguration.getApdReportMailList());
+					}
+					done = true;
+				} catch( ASException e ) {
+					if( e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE) {
+						apdaDao.delete(apda);
+					}
+					index++;
+					done = false;
+				}
 			} else {
-				apd.getReportMailList().clear();
+
+				// APDevice is no longer assigned
+				apd.setDescription(null);
+				apd.setReportable(false);
+				if( apd.getReportMailList() == null ) {
+					apd.setReportMailList(new ArrayList<String>());
+				} else {
+					apd.getReportMailList().clear();
+				}
+				done = true;
 			}
 		}
 

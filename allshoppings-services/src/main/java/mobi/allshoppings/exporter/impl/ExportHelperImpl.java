@@ -180,7 +180,7 @@ public class ExportHelperImpl implements ExportHelper {
 						        sb.append(String.format("%02X", b));
 						    }
 							mac = sb.toString().toLowerCase();
-							identifier = identifier.replace(realMac, mac);
+							identifier = mac + identifier.substring(17);
 						}
 						
 						String entityId = (String)dbo.get("entityId");

@@ -506,6 +506,31 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 
+			User universodefragancias = null;
+			try {
+				universodefragancias = userDao.get("universodefragancias_mx", true);
+			} catch( Exception e ) {
+				universodefragancias = new User();
+				universodefragancias.setFirstname("Universo de Fragancias");
+				universodefragancias.setLastname("Mexico");
+				universodefragancias.setEmail("universodefragancias@allshoppings.mobi");
+				universodefragancias.getSecuritySettings().setRole(Role.BRAND);
+				universodefragancias.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				universodefragancias.setKey((Key)keyHelper.obtainKey(User.class, "universodefragancias_mx"));
+				userDao.create(universodefragancias);
+			}
+
+			try {
+				um = userMenuDao.get("universodefragancias_mx", true);
+				userMenuDao.delete("universodefragancias_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("universodefragancias_mx"));
+				userMenuDao.create(um);
+			}
+
 			User delicafe = null;
 			try {
 				delicafe = userDao.get("delicafe_mx", true);
@@ -606,6 +631,8 @@ public class UserMenuTest extends TestCase {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.patternheatmap", "fa-building", "Patrones"));
+				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.setKey(userMenuDao.createKey("modatelas_mx"));
 				userMenuDao.create(um);
 			}
@@ -663,15 +690,17 @@ public class UserMenuTest extends TestCase {
 			User sbarro = null;
 			try {
 				sbarro = userDao.get("sbarro_mx", true);
+				userDao.delete("sbarro_mx");
+				throw new Exception();
 			} catch( Exception e ) {
-				sbarro = new User();
-				sbarro.setFirstname("Sbarro");
-				sbarro.setLastname("Mexico");
-				sbarro.setEmail("sbarro@allshoppings.mobi");
-				sbarro.getSecuritySettings().setRole(Role.BRAND);
-				sbarro.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				sbarro.setKey((Key)keyHelper.obtainKey(User.class, "sbarro_mx"));
-				userDao.create(sbarro);
+//				sbarro = new User();
+//				sbarro.setFirstname("Sbarro");
+//				sbarro.setLastname("Mexico");
+//				sbarro.setEmail("sbarro@allshoppings.mobi");
+//				sbarro.getSecuritySettings().setRole(Role.BRAND);
+//				sbarro.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+//				sbarro.setKey((Key)keyHelper.obtainKey(User.class, "sbarro_mx"));
+//				userDao.create(sbarro);
 			}
 
 			try {
@@ -679,10 +708,10 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.delete("sbarro_mx");
 				throw new Exception();
 			} catch( Exception e ) {
-				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.setKey(userMenuDao.createKey("sbarro_mx"));
-				userMenuDao.create(um);
+//				um = new UserMenu();
+//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+//				um.setKey(userMenuDao.createKey("sbarro_mx"));
+//				userMenuDao.create(um);
 			}
 			
 			User sunglasshut = null;
@@ -1065,14 +1094,14 @@ public class UserMenuTest extends TestCase {
 				userDao.delete(blulagoon);
 				throw new Exception();
 			} catch( Exception e ) {
-				blulagoon = new User();
-				blulagoon.setFirstname("Blu Lagoon");
-				blulagoon.setLastname("Mexico");
-				blulagoon.setEmail("blulagoon@allshoppings.mobi");
-				blulagoon.getSecuritySettings().setRole(Role.BRAND);
-				blulagoon.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				blulagoon.setKey((Key)keyHelper.obtainKey(User.class, "blulagoon_mx"));
-				userDao.create(blulagoon);
+//				blulagoon = new User();
+//				blulagoon.setFirstname("Blu Lagoon");
+//				blulagoon.setLastname("Mexico");
+//				blulagoon.setEmail("blulagoon@allshoppings.mobi");
+//				blulagoon.getSecuritySettings().setRole(Role.BRAND);
+//				blulagoon.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+//				blulagoon.setKey((Key)keyHelper.obtainKey(User.class, "blulagoon_mx"));
+//				userDao.create(blulagoon);
 			}
 
 			try {
@@ -1080,10 +1109,10 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.delete("blulagoon_mx");
 				throw new Exception();
 			} catch( Exception e ) {
-				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.setKey(userMenuDao.createKey("blulagoon_mx"));
-				userMenuDao.create(um);
+//				um = new UserMenu();
+//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+//				um.setKey(userMenuDao.createKey("blulagoon_mx"));
+//				userMenuDao.create(um);
 			}
 			
 			User sallybeauty = null;
@@ -1092,14 +1121,14 @@ public class UserMenuTest extends TestCase {
 				userDao.delete(sallybeauty);
 				throw new Exception();
 			} catch( Exception e ) {
-//				sallybeauty = new User();
-//				sallybeauty.setFirstname("Sally Beauty");
-//				sallybeauty.setLastname("Mexico");
-//				sallybeauty.setEmail("sallybeauty@allshoppings.mobi");
-//				sallybeauty.getSecuritySettings().setRole(Role.BRAND);
-//				sallybeauty.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-//				sallybeauty.setKey((Key)keyHelper.obtainKey(User.class, "sallybeauty_mx"));
-//				userDao.create(sallybeauty);
+				sallybeauty = new User();
+				sallybeauty.setFirstname("Sally Beauty");
+				sallybeauty.setLastname("Mexico");
+				sallybeauty.setEmail("sallybeauty@allshoppings.mobi");
+				sallybeauty.getSecuritySettings().setRole(Role.BRAND);
+				sallybeauty.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				sallybeauty.setKey((Key)keyHelper.obtainKey(User.class, "sallybeauty_mx"));
+				userDao.create(sallybeauty);
 			}
 
 			try {
@@ -1326,7 +1355,61 @@ public class UserMenuTest extends TestCase {
 				um.setKey(userMenuDao.createKey("annik_mx"));
 				userMenuDao.create(um);
 			}
-			
+
+			User aditivo = null;
+			try {
+				aditivo = userDao.get("aditivo_mx", true);
+				userDao.delete(aditivo);
+				throw new Exception();
+			} catch( Exception e ) {
+				aditivo = new User();
+				aditivo.setFirstname("Aditivo");
+				aditivo.setLastname("Mexico");
+				aditivo.setEmail("aditivo@allshoppings.mobi");
+				aditivo.getSecuritySettings().setRole(Role.BRAND);
+				aditivo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				aditivo.setKey((Key)keyHelper.obtainKey(User.class, "aditivo_mx"));
+				userDao.create(aditivo);
+			}
+
+			try {
+				um = userMenuDao.get("aditivo_mx", true);
+				userMenuDao.delete("aditivo_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("aditivo_mx"));
+				userMenuDao.create(um);
+			}
+
+			User d98coastav = null;
+			try {
+				d98coastav = userDao.get("98coastav_mx", true);
+				userDao.delete(d98coastav);
+				throw new Exception();
+			} catch( Exception e ) {
+				d98coastav = new User();
+				d98coastav.setFirstname("98 Coast Av.");
+				d98coastav.setLastname("Mexico");
+				d98coastav.setEmail("98coastav@allshoppings.mobi");
+				d98coastav.getSecuritySettings().setRole(Role.BRAND);
+				d98coastav.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				d98coastav.setKey((Key)keyHelper.obtainKey(User.class, "98coastav_mx"));
+				userDao.create(d98coastav);
+			}
+
+			try {
+				um = userMenuDao.get("98coastav_mx", true);
+				userMenuDao.delete("98coastav_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("98coastav_mx"));
+				userMenuDao.create(um);
+			}
+
 			User outletdeportes = null;
 			try {
 				outletdeportes = userDao.get("outletdeportes_mx", true);
@@ -1511,15 +1594,17 @@ public class UserMenuTest extends TestCase {
 			User pameladeharo = null;
 			try {
 				pameladeharo = userDao.get("pameladeharo_mx", true);
+				userDao.delete("pameladeharo_mx");
+				throw new Exception();
 			} catch( Exception e ) {
-				pameladeharo = new User();
-				pameladeharo.setFirstname("Pamela de Haro");
-				pameladeharo.setLastname("Mexico");
-				pameladeharo.setEmail("pameladeharo@allshoppings.mobi");
-				pameladeharo.getSecuritySettings().setRole(Role.BRAND);
-				pameladeharo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				pameladeharo.setKey((Key)keyHelper.obtainKey(User.class, "pameladeharo_mx"));
-				userDao.create(pameladeharo);
+//				pameladeharo = new User();
+//				pameladeharo.setFirstname("Pamela de Haro");
+//				pameladeharo.setLastname("Mexico");
+//				pameladeharo.setEmail("pameladeharo@allshoppings.mobi");
+//				pameladeharo.getSecuritySettings().setRole(Role.BRAND);
+//				pameladeharo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+//				pameladeharo.setKey((Key)keyHelper.obtainKey(User.class, "pameladeharo_mx"));
+//				userDao.create(pameladeharo);
 			}
 
 			try {
@@ -1527,10 +1612,10 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.delete("pameladeharo_mx");
 				throw new Exception();
 			} catch( Exception e ) {
-				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.setKey(userMenuDao.createKey("pameladeharo_mx"));
-				userMenuDao.create(um);
+//				um = new UserMenu();
+//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+//				um.setKey(userMenuDao.createKey("pameladeharo_mx"));
+//				userMenuDao.create(um);
 			}
 
 			User vickyform = null;
@@ -1871,6 +1956,8 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.setKey(userMenuDao.createKey("lomasverdes@sportium"));
 				userMenuDao.create(um);
 			}
@@ -1898,6 +1985,8 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.setKey(userMenuDao.createKey("satelite@sportium"));
 				userMenuDao.create(um);
 			}
@@ -1925,6 +2014,8 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.setKey(userMenuDao.createKey("cuautitlan@sportium"));
 				userMenuDao.create(um);
 			}
@@ -1952,6 +2043,8 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.setKey(userMenuDao.createKey("arboledas@sportium"));
 				userMenuDao.create(um);
 			}
@@ -1979,6 +2072,8 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.setKey(userMenuDao.createKey("coyoacan@sportium"));
 				userMenuDao.create(um);
 			}
@@ -2006,6 +2101,8 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.setKey(userMenuDao.createKey("delvalle@sportium"));
 				userMenuDao.create(um);
 			}
@@ -2033,6 +2130,8 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.setKey(userMenuDao.createKey("sanangel@sportium"));
 				userMenuDao.create(um);
 			}
@@ -2060,6 +2159,8 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.setKey(userMenuDao.createKey("desierto@sportium"));
 				userMenuDao.create(um);
 			}
@@ -2087,6 +2188,8 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.setKey(userMenuDao.createKey("santafe@sportium"));
 				userMenuDao.create(um);
 			}

@@ -118,6 +118,9 @@
 		<property name="processPass" value="#zxcvasdf7890" />
 		<property name="processRunTimeLimit" value="14400000" />
 
+		<property name="resourcesDir" value="/usr/local/allshoppings/resources" />
+		<property name="excelTemplate" value="template-2017-02.xlsm" />
+
 		<property name="cinepolisHotspots">
 			<list>
 			    <value>corporativocinepolis</value>
@@ -213,6 +216,7 @@
 	<bean id="apdvisit.helper" class="mobi.allshoppings.apdevice.impl.APDVisitHelperImpl" scope="singleton" />
 	<bean id="floormapjourney.helper" class="mobi.allshoppings.apdevice.impl.FloorMapJourneyHelperImpl" scope="singleton" />
 	<bean id="export.helper" class="mobi.allshoppings.exporter.impl.ExportHelperImpl" scope="singleton" />
+	<bean id="excel.export.helper" class="mobi.allshoppings.exporter.impl.ExcelExportHelperImpl" scope="singleton" />
 	<bean id="external.geo.importer" class="mobi.allshoppings.exporter.ExternalGeoImporter" scope="singleton" />
 	<bean id="dashboard.apdevice.mapper" class="mobi.allshoppings.dashboards.DashboardAPDeviceMapperService" scope="singleton" />
 	

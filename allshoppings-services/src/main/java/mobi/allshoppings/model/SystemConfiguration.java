@@ -97,6 +97,8 @@ public class SystemConfiguration implements Serializable {
 	private String externalActivityTriggerURL;
 	private long processRunTimeLimit;
 	private List<String> apdReportMailList;
+	private String resourcesDir;
+	private String excelTemplate;
 	
 	public String getDefaultLevel() {
 		return defaultLevel;
@@ -818,6 +820,22 @@ public class SystemConfiguration implements Serializable {
 
 	public void setExternalActivityTriggerURL(String externalActivityTriggerURL) {
 		this.externalActivityTriggerURL = externalActivityTriggerURL;
+	}
+
+	public String getResourcesDir() {
+		return resourcesDir;
+	}
+
+	public void setResourcesDir(String resourcesDir) {
+		this.resourcesDir = resourcesDir;
+	}
+
+	public String getExcelTemplate() {
+		return excelTemplate;
+	}
+
+	public void setExcelTemplate(String excelTemplate) {
+		this.excelTemplate = excelTemplate;
 	}
 
 }
