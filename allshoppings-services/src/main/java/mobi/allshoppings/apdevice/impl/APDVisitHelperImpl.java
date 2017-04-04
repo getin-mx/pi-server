@@ -616,7 +616,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		int COMMON = 0;
 		int CASABLANCA = 1;
 		
-		List<String> casablancaHosts = Arrays.asList("gihs-0328","gihs-0329","gihs-0331","gihs-0326","gihs-0327");
+		List<String> casablancaHosts = Arrays.asList("gihs-0328","gihs-0329","gihs-0331","gihs-0326","gihs-0327", "gihs-0334", "gihs-0352", "gihs-0338", "gihs-0207", "gihs-0333");
 		
 		int mode = 0;
 		for( APHEntry entry : entries ) {
