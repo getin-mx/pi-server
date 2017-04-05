@@ -48,8 +48,8 @@ public class TouchBestbuyMap extends AbstractCLI {
 			
 			log.log(Level.INFO, "Scanning assignations....");
 
-			String AICM = "a9f9d78e-d5f6-42b5-97be-2a84aca5165d";
-			String AICMFM = "volarisaicmnacional";
+			String AICM = "1491370940990";
+			String AICMFM = "bestbuysantafe";
 
 			// Finds the map
 			FloorMap fm = null;
@@ -63,8 +63,8 @@ public class TouchBestbuyMap extends AbstractCLI {
 				fmDao.update(fm);
 			} catch( Exception e ) {
 				fm = new FloorMap();
-				fm.setFloor("AICM Nacional");
-				fm.setImageId("volarisaicmnacional.png");
+				fm.setFloor("Best Buy Santa Fe");
+				fm.setImageId("a292a73c-cdea-4bff-96b5-ace256073d7a.png");
 				fm.setShoppingId(AICM);
 				fm.setKey((Key)keyHelper.obtainKey(FloorMap.class, AICMFM));
 				fm.setCorrected(false);

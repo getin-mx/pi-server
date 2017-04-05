@@ -48,7 +48,7 @@ public class TouchBestbuy extends AbstractCLI {
 			log.log(Level.INFO, "Scanning assignations....");
 
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date fromDate = sdf.parse("2017-02-01"); 
+			Date fromDate = sdf.parse("2017-02-20"); 
 			String STAFE = "1491370940990";
 			List<Store> stores = CollectionFactory.createList();
 			stores.addAll(storeDao.getUsingBrandAndStatus("bestbuy_mx", null, null));
@@ -63,6 +63,12 @@ public class TouchBestbuy extends AbstractCLI {
 					for( APDAssignation assig2 : assigs2 ) {
 						if( assig2.getEntityId().equals(STAFE))
 							done = true;
+					}
+					
+					APDevice dev = apdeviceDao.get(assig.getHostname(), true);
+					if( dev.getVisitPowerThreshold() != -65) {
+						dev.setVisitPowerThreshold(-65L);
+						apdeviceDao.update(dev);
 					}
 					
 					if(!done) {
