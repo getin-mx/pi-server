@@ -100,6 +100,7 @@ public class SystemConfiguration implements Serializable {
 	private String resourcesDir;
 	private String excelTemplate;
 	private List<String> forbiddenBrandsToReprocess;
+	private List<String> mark2APDevices;
 	
 	public String getDefaultLevel() {
 		return defaultLevel;
@@ -845,6 +846,14 @@ public class SystemConfiguration implements Serializable {
 
 	public void setForbiddenBrandsToReprocess(List<String> forbiddenBrandsToReprocess) {
 		this.forbiddenBrandsToReprocess = forbiddenBrandsToReprocess;
+	}
+
+	public List<String> getMark2APDevices() {
+		return mark2APDevices;
+	}
+
+	public void setMark2APDevices(List<String> mark2apDevices) {
+		mark2APDevices = mark2apDevices;
 	}
 
 }

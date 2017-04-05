@@ -623,7 +623,7 @@ public class GetinDump extends AbstractCLI {
 			
 			try {
 				brand = brandDao.get("pameladeharo_mx", true);
-				brand.setStatus(StatusAware.STATUS_DISABLED);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
 				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
@@ -965,6 +965,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("478", "Aditivo Vidal Alcocer", "aditivo_mx", null));			
 			stores.add(new StoreAdapter("479", "98 Coast Av. Oasis Coyoacán", "98coastav_mx", null));			
 			stores.add(new StoreAdapter("480", "98 Coast Av. Portal", "98coastav_mx", null));			
+			stores.add(new StoreAdapter("481", "BestBuy Santa Fe", "bestbuy_mx", "centrosantafe"));			
 
 			Store store;
 			for(StoreAdapter obj : stores ) {

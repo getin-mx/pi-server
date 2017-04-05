@@ -44,6 +44,7 @@ import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.InnerZone;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
@@ -93,6 +94,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 	@Autowired
 	private DashboardAPDeviceMapperService mapper;
+
+	@Autowired
+	private SystemConfiguration systemConfiguration;
 
 	/**
 	 * Writes a list of APDVisits in the database
@@ -616,11 +620,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		int COMMON = 0;
 		int CASABLANCA = 1;
 		
-		List<String> casablancaHosts = Arrays.asList("gihs-0328","gihs-0329","gihs-0331","gihs-0326","gihs-0327", "gihs-0334", "gihs-0352", "gihs-0338", "gihs-0207", "gihs-0333");
-		
 		int mode = 0;
 		for( APHEntry entry : entries ) {
-			if( casablancaHosts.contains(entry.getHostname()))
+			if( systemConfiguration.getMark2APDevices().contains(entry.getHostname()))
 				mode = CASABLANCA;
 		}
 		

@@ -612,15 +612,15 @@ public class UserMenuTest extends TestCase {
 				userDao.delete(modatelas);
 				throw new Exception();
 			} catch( Exception e ) {
-				modatelas = new User();
-				modatelas.setFirstname("Modatelas");
-				modatelas.setLastname("Mexico");
-				modatelas.setEmail("modatelas@allshoppings.mobi");
-				modatelas.getSecuritySettings().setRole(Role.BRAND);
-				modatelas.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				modatelas.setKey((Key)keyHelper.obtainKey(User.class, "modatelas_mx"));
-				modatelas.getSecuritySettings().setShoppings(Arrays.asList("740547b3-5c3a-492c-a2f8-bc88345fcc5d"));
-				userDao.create(modatelas);
+//				modatelas = new User();
+//				modatelas.setFirstname("Modatelas");
+//				modatelas.setLastname("Mexico");
+//				modatelas.setEmail("modatelas@allshoppings.mobi");
+//				modatelas.getSecuritySettings().setRole(Role.BRAND);
+//				modatelas.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+//				modatelas.setKey((Key)keyHelper.obtainKey(User.class, "modatelas_mx"));
+//				modatelas.getSecuritySettings().setShoppings(Arrays.asList("740547b3-5c3a-492c-a2f8-bc88345fcc5d"));
+//				userDao.create(modatelas);
 			}
 
 			try {
@@ -1597,14 +1597,14 @@ public class UserMenuTest extends TestCase {
 				userDao.delete("pameladeharo_mx");
 				throw new Exception();
 			} catch( Exception e ) {
-//				pameladeharo = new User();
-//				pameladeharo.setFirstname("Pamela de Haro");
-//				pameladeharo.setLastname("Mexico");
-//				pameladeharo.setEmail("pameladeharo@allshoppings.mobi");
-//				pameladeharo.getSecuritySettings().setRole(Role.BRAND);
-//				pameladeharo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-//				pameladeharo.setKey((Key)keyHelper.obtainKey(User.class, "pameladeharo_mx"));
-//				userDao.create(pameladeharo);
+				pameladeharo = new User();
+				pameladeharo.setFirstname("Pamela de Haro");
+				pameladeharo.setLastname("Mexico");
+				pameladeharo.setEmail("pameladeharo@allshoppings.mobi");
+				pameladeharo.getSecuritySettings().setRole(Role.BRAND);
+				pameladeharo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				pameladeharo.setKey((Key)keyHelper.obtainKey(User.class, "pameladeharo_mx"));
+				userDao.create(pameladeharo);
 			}
 
 			try {
@@ -1612,10 +1612,10 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.delete("pameladeharo_mx");
 				throw new Exception();
 			} catch( Exception e ) {
-//				um = new UserMenu();
-//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-//				um.setKey(userMenuDao.createKey("pameladeharo_mx"));
-//				userMenuDao.create(um);
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("pameladeharo_mx"));
+				userMenuDao.create(um);
 			}
 
 			User vickyform = null;
