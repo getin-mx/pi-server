@@ -139,6 +139,13 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			}
 
 			// How iterates the Dashboard Indicator Data List for Traffic by Hour graph
+//			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND,
+//					Arrays.asList("apd_visitor"),
+//					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets"), null,
+//					storeId, "D", sdf.format(initialDate), sdf.format(finalDate), null, null, null, null, null, null, null, null);
+//
+//			log.log(Level.INFO, "Using " + list.size() + " elements...");
+
 			i = list.iterator();
 			while(i.hasNext()) {
 				DashboardIndicatorData obj = i.next();
@@ -169,6 +176,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			i = list.iterator();
 			while(i.hasNext()) {
 				DashboardIndicatorData obj = i.next();
+				System.out.println(obj.getStringDate());
 				PermanenceEntry e = map3.get(PermanenceEntry.calculateHour(obj.getTimeZone()));
 				if( "permanence_hourly_peasents".equals(obj.getElementSubId())) {
 					e.setPeasants(e.getPeasants() + obj.getDoubleValue().longValue());
