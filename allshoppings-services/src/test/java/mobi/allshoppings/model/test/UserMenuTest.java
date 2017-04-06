@@ -400,7 +400,7 @@ public class UserMenuTest extends TestCase {
 				volaris.setLastname("Mexico");
 				volaris.setEmail("volaris@allshoppings.mobi");
 				volaris.getSecuritySettings().setRole(Role.BRAND);
-				volaris.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				volaris.getSecuritySettings().setPassword("xx 279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				volaris.getSecuritySettings().setShoppings(Arrays.asList("a9f9d78e-d5f6-42b5-97be-2a84aca5165d"));
 				volaris.setKey((Key)keyHelper.obtainKey(User.class, "volaris_mx"));
 				userDao.create(volaris);
@@ -428,6 +428,7 @@ public class UserMenuTest extends TestCase {
 				bestbuy.setEmail("bestbuy@allshoppings.mobi");
 				bestbuy.getSecuritySettings().setRole(Role.BRAND);
 				bestbuy.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				bestbuy.getSecuritySettings().setShoppings(Arrays.asList("1491370940990"));
 				bestbuy.setKey((Key)keyHelper.obtainKey(User.class, "bestbuy_mx"));
 				userDao.create(bestbuy);
 			}
@@ -438,6 +439,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.patternheatmap", "fa-building", "Patrones"));
 				um.setKey(userMenuDao.createKey("bestbuy_mx"));
 				userMenuDao.create(um);
 			}

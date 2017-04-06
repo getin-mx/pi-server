@@ -157,7 +157,7 @@ public class DashboardAPDeviceMapperService {
 					createFloorMapTrackingForDay(curDate, entityIds);
 
 				if( CollectionUtils.isEmpty(phases) || phases.contains(PHASE_APDVISIT))
-					createAPDVisitPerformanceDashboardForDay(curDate, entityIds, null);
+					createAPDVisitPerformanceDashboardForDay(curDate, entityIds, null, null);
 
 				curDate = new Date(curDate.getTime() + TWENTY_FOUR_HOURS);
 
@@ -660,7 +660,7 @@ public class DashboardAPDeviceMapperService {
 
 	// apd_visitor performance -------------------------------------------------------------------------------------------------------------------------
 
-	public void createAPDVisitPerformanceDashboardForDay(Date date, List<String> entityIds, Integer entityKind) throws ASException {
+	public void createAPDVisitPerformanceDashboardForDay(Date date, List<String> entityIds, Integer entityKind, List<APDVisit> data) throws ASException {
 
 		log.log(Level.INFO, "Starting to create apd_visitor Performance Dashboard for Day " + date + "...");
 		long startTime = new Date().getTime();
@@ -685,7 +685,8 @@ public class DashboardAPDeviceMapperService {
 			
 			// Looks for all visit records
 			Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
-			List<APDVisit> list = apdvDao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, dateFrom, dateTo, null, range, null, null, false);
+			List<APDVisit> list = (data == null || data.size() == 0) ? apdvDao.getUsingEntityIdAndEntityKindAndDate(
+					entityId, entityKind, dateFrom, dateTo, null, range, null, null, false) : data;
 			log.log(Level.INFO, list.size() + " records to process... ");
 			for(APDVisit v : list ) {
 

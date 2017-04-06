@@ -124,34 +124,60 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			stores = storeDao.getUsingIdList(storeIds);
 		} else if(!CollectionUtils.isEmpty(brandIds)) {
 			for(String brandId : brandIds ) {
-				stores.addAll(storeDao.getUsingBrandAndStatus(brandId, 
-						Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), null));
+				stores.addAll(storeDao.getUsingBrandAndStatus(brandId, StatusHelper.statusActive(), null));
 			}
 		} else {
-			stores.addAll(storeDao.getUsingBrandAndStatus(null, 
-					Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), null));
+			stores.addAll(storeDao.getUsingBrandAndStatus(null, StatusHelper.statusActive(), null));
 		}
+		
+		List<String> eids = CollectionFactory.createList();
+		for(Store store : stores) 
+			eids.add(store.getIdentifier());
+
+		
+		Map<String, Integer> entities = getEntities(null, null, eids);
 		
 		Date curDate = new Date(fromDate.getTime());
 		while( curDate.before(toDate) || (fromDate.equals(toDate) && curDate.equals(toDate))) {
 
 			try {
-				for( Store store : stores ) {
+				log.log(Level.INFO, "entityIds are: " + entities);
+				
+				for( String entityId : entities.keySet() ) {
+
+					Integer entityKind = entities.get(entityId);
+					String name = null;
+					Store store = null;
+					if( entityKind.equals(EntityKind.KIND_STORE)) {
+						store = storeDao.get(entityId);
+						name = store.getName();
+					} else if ( entityKind.equals(EntityKind.KIND_INNER_ZONE)) {
+						InnerZone iz = innerzoneDao.get(entityId);
+						name = iz.getName();
+					}
+					
+					log.log(Level.INFO, "Processing " + name + " for " + curDate + "...");
 
 					try {
+						List<APDVisit> objs = CollectionFactory.createList();
 						if(!onlyDashboards) {
 
-							List<String> blackListMacs =getBlackListByStore(store);
+							List<String> blackListMacs = getBlackListByStore(store);
 							List<String> employeeListMacs = getEmployeeListByStore(store);
 
 							// Try to delete previous records if needed
 							if(deletePreviousRecords) {
-								apdvDao.deleteUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE,
-										curDate, new Date(curDate.getTime() + 86400000), 
-										onlyEmployees ? APDVisit.CHECKIN_EMPLOYEE : null);
+								log.log(Level.INFO, "Deleting previous visits...");
+								try {
+									apdvDao.deleteUsingEntityIdAndEntityKindAndDate(entityId, entityKind,
+											curDate, new Date(curDate.getTime() + 86400000), 
+											onlyEmployees ? APDVisit.CHECKIN_EMPLOYEE : null);
+								} catch( Exception e ) {
+									log.log(Level.WARNING, e.getMessage(), e);
+								}
 							}
 
-							List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate);
+							List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, curDate);
 							if( !CollectionUtils.isEmpty(assigs)) {
 								if( assigs.size() == 1 ) {
 
@@ -160,6 +186,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									if(!apdCache.containsKey(assigs.get(0).getHostname()))
 										apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(), true));
 
+									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + curDate + "...");
 									log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
 									List<APHEntry> entries = apheDao.getUsingHostnameAndDates(
 											Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, range, false);
@@ -176,7 +203,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									}
 
 									log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
-									List<APDVisit> objs = CollectionFactory.createList();
 									for(APHEntry entry : entries ) {
 										aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
 										List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
@@ -203,6 +229,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 											apdCache.put(assig.getHostname(), apdDao.get(assig.getHostname(), true));
 									}
 
+									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + curDate + "...");
 									log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and " + curDate + "...");
 									List<APHEntry> entries = apheDao.getUsingHostnameAndDates(hostnames, curDate, curDate, range, false);
 									for( APHEntry entry : entries ) {
@@ -214,7 +241,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									}
 
 									log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
-									List<APDVisit> objs = CollectionFactory.createList();
 									Iterator<String> i = cache.keySet().iterator();
 									while(i.hasNext()) {
 										String key = i.next();
@@ -241,6 +267,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						if(updateDashboards && !onlyEmployees) {
 							if(!cacheBuilt) {
 								try {
+									log.log(Level.INFO, "Building caches for dashboard mapper...");
 									mapper.buildCaches(false);
 									cacheBuilt = true;
 								} catch( Exception e ) {
@@ -248,10 +275,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								}
 							}
 
-							didDao.deleteUsingSubentityIdAndElementIdAndDate(store.getIdentifier(),
+							didDao.deleteUsingSubentityIdAndElementIdAndDate(entityId,
 									Arrays.asList(new String[] { "apd_visitor", "apd_permanence" }), curDate, curDate);
 							mapper.createAPDVisitPerformanceDashboardForDay(curDate,
-									Arrays.asList(new String[] { store.getIdentifier() }), EntityKind.KIND_STORE);
+									Arrays.asList(new String[] { entityId }), entityKind, objs);
 						}
 					} catch( Exception e ) {
 						log.log(Level.SEVERE, e.getMessage(), e);
@@ -354,6 +381,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					
 					try {
 
+						List<APDVisit> objs = CollectionFactory.createList();
 						if(!onlyDashboards) {
 
 							List<String> blackListMacs = CollectionFactory.createList();
@@ -361,9 +389,14 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 							// Try to delete previous records if needed
 							if(deletePreviousRecords) {
-								apdvDao.deleteUsingEntityIdAndEntityKindAndDate(entityId, entityKind,
-										curDate, new Date(curDate.getTime() + 86400000),
-										onlyEmployees ? APDVisit.CHECKIN_EMPLOYEE : null);
+								log.log(Level.INFO, "Deleting previous visits...");
+								try {
+									apdvDao.deleteUsingEntityIdAndEntityKindAndDate(entityId, entityKind,
+											curDate, new Date(curDate.getTime() + 86400000),
+											onlyEmployees ? APDVisit.CHECKIN_EMPLOYEE : null);
+								} catch( Exception e ) {
+									log.log(Level.WARNING, e.getMessage(), e);
+								}
 							}
 
 							List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, curDate);
@@ -391,7 +424,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									}
 
 									log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
-									List<APDVisit> objs = CollectionFactory.createList();
 									for(APHEntry entry : entries ) {
 										aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
 										List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
@@ -431,7 +463,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									}
 
 									log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
-									List<APDVisit> objs = CollectionFactory.createList();
 									Iterator<String> i = cache.keySet().iterator();
 									while(i.hasNext()) {
 										String key = i.next();
@@ -468,7 +499,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							didDao.deleteUsingSubentityIdAndElementIdAndDate(entityId,
 									Arrays.asList(new String[] { "apd_visitor", "apd_permanence" }), curDate, curDate);
 							mapper.createAPDVisitPerformanceDashboardForDay(curDate,
-									Arrays.asList(new String[] { entityId }), entityKind);
+									Arrays.asList(new String[] { entityId }), entityKind, objs);
 						}
 
 					} catch( Exception e ) {
@@ -497,39 +528,41 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		List<String> macs = CollectionFactory.createList();
 		log.log(Level.INFO, "Initial macs:  " + macs.size() + " macs");
 
-		macs.clear();
-		//--- Start black list ------------
-		//Load blackListbyShopping for shopping
-		if( StringUtils.hasText(store.getShoppingId())) {
-			List<APDMABlackList> blackListbyShopping = apmaBlDao.getUsingEntityIdAndRange(store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, null, false);
-			for( APDMABlackList shop : blackListbyShopping ) {
-				if (!macs.contains(shop.getMac().toUpperCase().trim())){
-					macs.add(shop.getMac().toUpperCase().trim());	
+		if( null != store ) {
+
+			macs.clear();
+			//--- Start black list ------------
+			//Load blackListbyShopping for shopping
+			if( StringUtils.hasText(store.getShoppingId())) {
+				List<APDMABlackList> blackListbyShopping = apmaBlDao.getUsingEntityIdAndRange(store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, null, false);
+				for( APDMABlackList shop : blackListbyShopping ) {
+					if (!macs.contains(shop.getMac().toUpperCase().trim())){
+						macs.add(shop.getMac().toUpperCase().trim());	
+					}
+				}
+				log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load black list for Shopping: " + blackListbyShopping.size() + " macs");
+			}
+
+			//Load blackListbyShopping for brand
+			List<APDMABlackList> blackListbyBrand = apmaBlDao.getUsingEntityIdAndRange(store.getBrandId(), EntityKind.KIND_BRAND, null, null, null, false);
+			for( APDMABlackList brand : blackListbyBrand ) {
+				if (!macs.contains(brand.getMac().toUpperCase().trim())){
+					macs.add(brand.getMac().toUpperCase().trim());	
 				}
 			}
-			log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load black list for Shopping: " + blackListbyShopping.size() + " macs");
-		}
+			log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load black list for Brand: " + blackListbyBrand.size() + " macs");
 
-		//Load blackListbyShopping for brand
-		List<APDMABlackList> blackListbyBrand = apmaBlDao.getUsingEntityIdAndRange(store.getBrandId(), EntityKind.KIND_BRAND, null, null, null, false);
-		for( APDMABlackList brand : blackListbyBrand ) {
-			if (!macs.contains(brand.getMac().toUpperCase().trim())){
-				macs.add(brand.getMac().toUpperCase().trim());	
+
+			//Load blackListbyShopping for store
+			List<APDMABlackList> blackListbyStore = apmaBlDao.getUsingEntityIdAndRange(store.getIdentifier(), EntityKind.KIND_STORE, null, null, null, false);
+			for( APDMABlackList st : blackListbyStore ) {
+				if (!macs.contains(st.getMac().toUpperCase().trim())){
+					macs.add(st.getMac().toUpperCase().trim());	
+				}
 			}
+			//Load blackListbyShopping for store
+			log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load black list for Store: " + blackListbyStore.size() + " macs");
 		}
-		log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load black list for Brand: " + blackListbyBrand.size() + " macs");
-
-
-		//Load blackListbyShopping for store
-		List<APDMABlackList> blackListbyStore = apmaBlDao.getUsingEntityIdAndRange(store.getIdentifier(), EntityKind.KIND_STORE, null, null, null, false);
-		for( APDMABlackList st : blackListbyStore ) {
-			if (!macs.contains(st.getMac().toUpperCase().trim())){
-				macs.add(st.getMac().toUpperCase().trim());	
-			}
-		}
-		//Load blackListbyShopping for store
-		log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load black list for Store: " + blackListbyStore.size() + " macs");
-
 
 		log.log(Level.INFO, "TOTAL Blacklist Entries: " + macs.size() + " macs");
 
@@ -550,39 +583,40 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		List<String> macs = CollectionFactory.createList();
 		log.log(Level.INFO, "Initial macs:  " + macs.size() + " macs");
 
-		macs.clear();
-		//--- Start black list ------------
-		//Load blackListbyShopping for shopping
-		if( StringUtils.hasText(store.getShoppingId())) {
-			List<APDMAEmployee> employeesbyShopping = apmaEDao.getUsingEntityIdAndRange(store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, null, false);
-			for( APDMAEmployee emp_shop : employeesbyShopping ) {
-				if (!macs.contains(emp_shop.getMac().toUpperCase().trim())){
-					macs.add(emp_shop.getMac().toUpperCase().trim());	
+		if( null != store ) {
+			macs.clear();
+			//--- Start black list ------------
+			//Load blackListbyShopping for shopping
+			if( StringUtils.hasText(store.getShoppingId())) {
+				List<APDMAEmployee> employeesbyShopping = apmaEDao.getUsingEntityIdAndRange(store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, null, false);
+				for( APDMAEmployee emp_shop : employeesbyShopping ) {
+					if (!macs.contains(emp_shop.getMac().toUpperCase().trim())){
+						macs.add(emp_shop.getMac().toUpperCase().trim());	
+					}
+				}
+				log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load Employees in list for Shopping: " + employeesbyShopping.size() + " macs");
+			}
+
+			//Load blackListbyShopping for brand
+			List<APDMAEmployee> employeesbyBrand = apmaEDao.getUsingEntityIdAndRange(store.getBrandId(), EntityKind.KIND_BRAND, null, null, null, false);
+			for( APDMAEmployee emp_brand : employeesbyBrand ) {
+				if (!macs.contains(emp_brand.getMac().toUpperCase().trim())){
+					macs.add(emp_brand.getMac().toUpperCase().trim());	
 				}
 			}
-			log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load Employees in list for Shopping: " + employeesbyShopping.size() + " macs");
-		}
+			log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load Employees in list for Brand: " + employeesbyBrand.size() + " macs");
 
-		//Load blackListbyShopping for brand
-		List<APDMAEmployee> employeesbyBrand = apmaEDao.getUsingEntityIdAndRange(store.getBrandId(), EntityKind.KIND_BRAND, null, null, null, false);
-		for( APDMAEmployee emp_brand : employeesbyBrand ) {
-			if (!macs.contains(emp_brand.getMac().toUpperCase().trim())){
-				macs.add(emp_brand.getMac().toUpperCase().trim());	
+
+			//Load blackListbyShopping for store
+			List<APDMAEmployee> employeesbyStore = apmaEDao.getUsingEntityIdAndRange(store.getIdentifier(), EntityKind.KIND_STORE, null, null, null, false);
+			for( APDMAEmployee emp_sto : employeesbyStore ) {
+				if (!macs.contains(emp_sto.getMac().toUpperCase().trim())){
+					macs.add(emp_sto.getMac().toUpperCase().trim());	
+				}
 			}
+			//Load blackListbyShopping for store
+			log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load Employees list for Store: " + employeesbyStore.size() + " macs");
 		}
-		log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load Employees in list for Brand: " + employeesbyBrand.size() + " macs");
-
-
-		//Load blackListbyShopping for store
-		List<APDMAEmployee> employeesbyStore = apmaEDao.getUsingEntityIdAndRange(store.getIdentifier(), EntityKind.KIND_STORE, null, null, null, false);
-		for( APDMAEmployee emp_sto : employeesbyStore ) {
-			if (!macs.contains(emp_sto.getMac().toUpperCase().trim())){
-				macs.add(emp_sto.getMac().toUpperCase().trim());	
-			}
-		}
-		//Load blackListbyShopping for store
-		log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load Employees list for Store: " + employeesbyStore.size() + " macs");
-
 
 		log.log(Level.INFO, "TOTAL Employees: " + macs.size() + " macs");
 

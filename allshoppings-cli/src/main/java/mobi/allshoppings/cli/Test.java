@@ -33,7 +33,7 @@ public class Test extends AbstractCLI {
 			StoreDAO storeDao = (StoreDAO)getApplicationContext().getBean("store.dao.ref");
 			APDAssignationDAO apdaDao = (APDAssignationDAO)getApplicationContext().getBean("apdassignation.dao.ref");
 
-			List<Store> stores = storeDao.getUsingBrandAndStatus("modatelas_mx", StatusHelper.statusActive(), null);
+			List<Store> stores = storeDao.getUsingBrandAndStatus("bestbuy_mx", StatusHelper.statusActive(), null);
 			for(Store store : stores ) {
 				List<APDAssignation> apdas = apdaDao.getUsingEntityIdAndEntityKind(store.getIdentifier(), EntityKind.KIND_STORE);
 				for( APDAssignation apda : apdas ) {

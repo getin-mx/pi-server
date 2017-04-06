@@ -66,10 +66,32 @@ public class TouchBestbuy extends AbstractCLI {
 					}
 					
 					APDevice dev = apdeviceDao.get(assig.getHostname(), true);
-					if( dev.getVisitPowerThreshold() != -65) {
-						dev.setVisitPowerThreshold(-65L);
+						dev.setVisitPowerThreshold(-80L);
+						dev.setPeasantPowerThreshold(-90L);
+						dev.setVisitTimeThreshold(3L);
+						dev.setVisitMaxThreshold(180L);
+						dev.setVisitGapThreshold(30L);
+						dev.setVisitDecay(10L);
+						dev.setVisitStartMon("11:00");
+						dev.setVisitStartTue("11:00");
+						dev.setVisitStartWed("11:00");
+						dev.setVisitStartThu("11:00");
+						dev.setVisitStartFri("11:00");
+						dev.setVisitStartSat("11:00");
+						dev.setVisitStartSun("11:00");
+
+						dev.setVisitEndMon("21:00");
+						dev.setVisitEndTue("21:00");
+						dev.setVisitEndWed("21:00");
+						dev.setVisitEndThu("21:00");
+						dev.setVisitEndFri("21:00");
+						dev.setVisitEndSat("21:00");
+						dev.setVisitEndSun("21:00");
+						
+						dev.setMonitorStart("10:00");
+						dev.setMonitorEnd("22:00");
+
 						apdeviceDao.update(dev);
-					}
 					
 					if(!done) {
 						APDAssignation assig2 = new APDAssignation();
