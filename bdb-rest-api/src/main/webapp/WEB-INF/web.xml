@@ -74,6 +74,14 @@
 		<url-pattern>/dashboard/brandExport</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>ReportExport</servlet-name>
+		<servlet-class>mobi.allshoppings.bdb.dashboard.bz.spi.ReportExportServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ReportExport</servlet-name>
+		<url-pattern>/dashboard/reportExport</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>VisitDetailExport</servlet-name>
 		<servlet-class>mobi.allshoppings.bdb.dashboard.bz.spi.VisitDetailExportServlet</servlet-class>
 	</servlet>

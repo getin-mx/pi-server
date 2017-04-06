@@ -1,5 +1,6 @@
 package mobi.allshoppings.exporter.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.DecimalFormat;
@@ -60,7 +61,9 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void export(String storeId, String fromDate, String toDate, String outDir) throws ASException {
+	public byte[] export(String storeId, String fromDate, String toDate, String outDir) throws ASException {
+
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
 		try {
 			final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -469,7 +472,13 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			fos.flush();
 			fos.close();
 			tmp.delete();
+
+			workbook.write(bos);
+			bos.close();
+			
 			workbook.close();
+			
+			return bos.toByteArray();
 			
 		} catch( Exception ex ) {
 			log.log(Level.SEVERE, ex.getMessage(), ex);

@@ -13,6 +13,6 @@ public interface ExcelExportHelper {
 	 *            Final date to export
 	 * @throws ASException
 	 */
-	void export(String storeId, String fromDate, String toDate, String outDir) throws ASException;
+	byte[] export(String storeId, String fromDate, String toDate, String outDir) throws ASException;
 
 }
