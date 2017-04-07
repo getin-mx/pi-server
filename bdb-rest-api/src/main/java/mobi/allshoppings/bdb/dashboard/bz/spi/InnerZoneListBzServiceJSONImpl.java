@@ -12,11 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.InnerZoneDAO;
+import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.InnerZone;
+import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.adapter.NameAndIdAdapter;
+import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -31,6 +34,8 @@ implements BDBDashboardBzService {
 
 	@Autowired
 	private InnerZoneDAO innerZoneDao;
+	@Autowired
+	private StoreDAO storeDao;
 	
 	/**
 	 * Obtains a list of FloorMap points
@@ -52,6 +57,14 @@ implements BDBDashboardBzService {
 
 			String entityId = obtainStringValue("entityId", null);
 			Integer entityKind = obtainIntegerValue("entityKind", null);
+			
+			if( entityKind.equals(EntityKind.KIND_BRAND)) {
+				List<Store> stores = storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), "name");
+				if( stores.size() > 0 ) {
+					entityId = stores.get(0).getIdentifier();
+					entityKind = EntityKind.KIND_STORE;
+				}
+			}
 
 			List<InnerZone> l1 = innerZoneDao.getUsingEntityIdAndRange(entityId, entityKind, null, "name", null, true);
 			for( InnerZone z1 : l1 ) {
