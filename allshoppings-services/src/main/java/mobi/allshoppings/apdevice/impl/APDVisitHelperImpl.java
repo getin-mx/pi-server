@@ -686,6 +686,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		List<APDVisit> ret = CollectionFactory.createList();
 		Boolean isEmployee = false;		
 		
+		for(APHEntry entry : entries) {
+			aphHelper.artificiateRSSI(entry);
+			apheDao.update(entry);
+		}
+		
 		// Merges all the time slots
 		List<Integer> slots = CollectionFactory.createList();
 		if( entries.size() > 1 ) {
@@ -954,7 +959,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		// Work variables
 		List<APDVisit> ret = CollectionFactory.createList();
 		Boolean isEmployee = false;		
-		
+
+		for(APHEntry entry : entries) {
+			aphHelper.artificiateRSSI(entry);
+			apheDao.update(entry);
+		}
+
 		// Merges all the time slots
 		List<Integer> slots = CollectionFactory.createList();
 		if( entries.size() > 1 ) {

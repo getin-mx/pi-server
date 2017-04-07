@@ -324,9 +324,58 @@ public class GetinDump extends AbstractCLI {
 				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
-				brand.setName("Flormar");
+				brand.setName("Flormar Panama");
 				brand.setCountry("Panama");
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "flormar_pa"));
+				brandDao.create(brand);
+			}
+
+			try {
+				brand = brandDao.get("flormar_co", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Flormar Colombia");
+				brand.setCountry("Colombia");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "flormar_co"));
+				brandDao.create(brand);
+			}
+
+			try {
+				brand = brandDao.get("flormar_cr", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Flormar Costa Rica");
+				brand.setCountry("Costa Rica");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "flormar_cr"));
+				brandDao.create(brand);
+			}
+
+
+			try {
+				brand = brandDao.get("lamartina_pa", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("La Martina Panama");
+				brand.setCountry("Panama");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "lamartina_pa"));
+				brandDao.create(brand);
+			}
+
+			try {
+				brand = brandDao.get("grandstore_pa", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Grand Store Panama");
+				brand.setCountry("Panama");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "grandstore_pa"));
 				brandDao.create(brand);
 			}
 
@@ -431,6 +480,17 @@ public class GetinDump extends AbstractCLI {
 				brand.setName("Sunglass Hut");
 				brand.setCountry("Mexico");
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "sunglasshut_mx"));
+				brandDao.create(brand);
+			}
+			try {
+				brand = brandDao.get("sunglasshut_pa", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Sunglass Hut Panama");
+				brand.setCountry("Panama");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "sunglasshut_pa"));
 				brandDao.create(brand);
 			}
 			try {
@@ -966,7 +1026,21 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("479", "98 Coast Av. Oasis Coyoacán", "98coastav_mx", null));			
 			stores.add(new StoreAdapter("480", "98 Coast Av. Portal", "98coastav_mx", null));			
 			stores.add(new StoreAdapter("481", "BestBuy Santa Fe", "bestbuy_mx", "centrosantafe"));			
+			stores.add(new StoreAdapter("482", "98 Coast Av. Playa 1", "98coastav_mx", null));			
+			stores.add(new StoreAdapter("483", "98 Coast Av. Playa 2", "98coastav_mx", null));			
 
+			stores.add(new StoreAdapter("484", "Flormar Atlantis", "flormar_cr", null));
+			stores.add(new StoreAdapter("485", "Flormar Jardin Plaza", "flormar_co", null));
+			stores.add(new StoreAdapter("486", "Flormar WTC", "flormar_co", null));
+			stores.add(new StoreAdapter("487", "Flormar Cacique", "flormar_co", null));
+			stores.add(new StoreAdapter("488", "Flormar Lincon Plaza", "flormar_co", null));
+			stores.add(new StoreAdapter("489", "Sunglass Hut Altaplaza", "sunglasshut_pa", null));
+			stores.add(new StoreAdapter("490", "Sunglass Hut Multiplaza", "sunglasshut_pa", null));
+			stores.add(new StoreAdapter("491", "Sunglass Hut Metromall", "sunglasshut_pa", null));
+			stores.add(new StoreAdapter("492", "Grand Store Altaplaza", "grandstore_pa", null));
+			stores.add(new StoreAdapter("493", "La Martina Multiplaza", "lamartina_pa", null));
+			
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {

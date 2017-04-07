@@ -33,7 +33,7 @@ public class TestExcelReport extends AbstractCLI {
 			//final String STORE_ID = "1478641696271"; // Botanicus Angelopolis
 			//final String STORE_ID = "1473220851475"; // Adolfo Dominguez interlomas
 			//final String STORE_ID = "b52192c9-37aa-464d-9243-81eb7cf51124"; // Areas Mexico A70
-			final String STORE_ID = "d030cc71-91c1-46a1-9309-bbf4ddcfa393"; // Roku
+			final String STORE_ID = "0804ce51-a635-40be-8952-28cc25c946dd"; // Isabel la catolica II
 			final String FROM_DATE = "2017-01-02"; // Retail Calendar initial 2017 day
 			final String TO_DATE = "2017-03-26"; // Retail Calendar final march day
 			final String outDir = "/tmp";
