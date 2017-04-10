@@ -73,7 +73,7 @@ public class DashboardConfigurationDump extends AbstractCLI {
 				dc.setKey(dcDao.createKey(dc));
 				forUpdate = false;
 			}
-			dc.setStoreLabel("Sucursal");
+			dc.setStoreLabel("Club");
 			if( forUpdate ) 
 				dcDao.update(dc);
 			else

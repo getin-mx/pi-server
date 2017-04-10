@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,7 +39,9 @@ implements BDBDashboardBzService {
 
 	private static final Logger log = Logger.getLogger(APHEntryDataBzServiceJSONImpl.class.getName());
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	
+	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static final SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
 	@Autowired
 	private APHHelper aphHelper;
 
@@ -59,6 +62,9 @@ implements BDBDashboardBzService {
 	@Override
 	public String retrieve()
 	{
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		sdf2.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
 		long start = markStart();
 		try {
 			// obtain the id and validates the auth token
@@ -192,8 +198,8 @@ implements BDBDashboardBzService {
 			if(!original) {
 				for(APDVisit visit : visits ) {
 					
-					long vstart = visit.getCheckinStarted().getTime();
-					long vend = visit.getCheckinFinished().getTime();
+					long vstart = sdf2.parse(sdf3.format(visit.getCheckinStarted())).getTime();
+					long vend = sdf2.parse(sdf3.format(visit.getCheckinFinished())).getTime();
 
 					JSONObject serie = new JSONObject();
 					JSONArray data = new JSONArray();
