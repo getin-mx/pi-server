@@ -174,7 +174,7 @@ implements DashboardTimelineHourBzService {
 
 						// Position calc according to the timezone
 						int position = hourMap.get(obj.getTimeZone());
-						if( config.getTimezone().equals("-05:00")) {
+						if( config.getTimezone().equals("-04:00")) {
 							position = position + 1;
 							if( position >= 24 )
 								position = position - 24;

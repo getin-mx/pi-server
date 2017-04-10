@@ -44,12 +44,26 @@ public class DashboardConfigurationDump extends AbstractCLI {
 				dc.setKey(dcDao.createKey(dc));
 				forUpdate = false;
 			}
-			dc.setTimezone("-05:00");
+			dc.setTimezone("SERVER");
 			if( forUpdate ) 
 				dcDao.update(dc);
 			else
 				dcDao.create(dc);
-						
+
+			try {
+				dc = dcDao.getUsingEntityIdAndEntityKind("flormar_cr", EntityKind.KIND_BRAND, true);
+				forUpdate = true;
+			} catch( Exception e ) {
+				dc = new DashboardConfiguration("flormar_cr",EntityKind.KIND_BRAND);
+				dc.setKey(dcDao.createKey(dc));
+				forUpdate = false;
+			}
+			dc.setTimezone("-04:00");
+			if( forUpdate ) 
+				dcDao.update(dc);
+			else
+				dcDao.create(dc);
+
 			// Sportium
 			try {
 				dc = dcDao.getUsingEntityIdAndEntityKind("sportium_mx", EntityKind.KIND_BRAND, true);

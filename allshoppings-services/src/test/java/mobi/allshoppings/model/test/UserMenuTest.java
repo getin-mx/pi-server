@@ -1525,6 +1525,162 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 
+			User us1 = null;
+			try {
+				us1 = userDao.get("sunglasshut_pa", true);
+			} catch( Exception e ) {
+				us1 = new User();
+				us1.setFirstname("Sunglass Hut");
+				us1.setLastname("Panama");
+				us1.setEmail("sungallshutpa@allshoppings.mobi");
+				us1.getSecuritySettings().setRole(Role.BRAND);
+				us1.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				us1.setKey((Key)keyHelper.obtainKey(User.class, "sunglasshut_pa"));
+				userDao.create(us1);
+			}
+
+			try {
+				um = userMenuDao.get("sunglasshut_pa", true);
+				userMenuDao.delete("sunglasshut_pa");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("sunglasshut_pa"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				us1 = userDao.get("lamartina_pa", true);
+			} catch( Exception e ) {
+				us1 = new User();
+				us1.setFirstname("La Martina");
+				us1.setLastname("Panama");
+				us1.setEmail("lamartinapa@allshoppings.mobi");
+				us1.getSecuritySettings().setRole(Role.BRAND);
+				us1.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				us1.setKey((Key)keyHelper.obtainKey(User.class, "lamartina_pa"));
+				userDao.create(us1);
+			}
+
+			try {
+				um = userMenuDao.get("lamartina_pa", true);
+				userMenuDao.delete("lamartina_pa");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("lamartina_pa"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				us1 = userDao.get("grandstore_pa", true);
+			} catch( Exception e ) {
+				us1 = new User();
+				us1.setFirstname("Grand Store");
+				us1.setLastname("Panama");
+				us1.setEmail("grandstore_pa@allshoppings.mobi");
+				us1.getSecuritySettings().setRole(Role.BRAND);
+				us1.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				us1.setKey((Key)keyHelper.obtainKey(User.class, "grandstore_pa"));
+				userDao.create(us1);
+			}
+
+			try {
+				um = userMenuDao.get("grandstore_pa", true);
+				userMenuDao.delete("grandstore_pa");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("grandstore_pa"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				us1 = userDao.get("flormar_cr", true);
+			} catch( Exception e ) {
+				us1 = new User();
+				us1.setFirstname("Flormar");
+				us1.setLastname("Costa Rica");
+				us1.setEmail("flormar_cr@allshoppings.mobi");
+				us1.getSecuritySettings().setRole(Role.BRAND);
+				us1.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				us1.setKey((Key)keyHelper.obtainKey(User.class, "flormar_cr"));
+				userDao.create(us1);
+			}
+
+			try {
+				um = userMenuDao.get("flormar_cr", true);
+				userMenuDao.delete("flormar_cr");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("flormar_cr"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				us1 = userDao.get("nezrin.saker@demodazl.com", true);
+				userDao.delete(us1);
+				throw new Exception();
+			} catch( Exception e ) {
+				us1 = new User();
+				us1.setFirstname("Nezrin");
+				us1.setLastname("Saker");
+				us1.setEmail("nezrin.saker@demodazl.com");
+				us1.getSecuritySettings().setRole(Role.BRAND);
+				us1.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				us1.getSecuritySettings()
+				.setStores(Arrays.asList("a07e8329-9e82-421e-98e6-72b7fb6f04f3",
+						"22855128-ff48-4953-95d4-2b049f529d03", "39931956-66d1-46c3-8695-3c5b119258b2",
+						"18ec3350-8c25-4f12-9498-a4350915b5c5", "938637cb-4bb9-4452-8439-077d8ceb5c21",
+						"707c8c11-4aff-4ca3-bc0d-60bf2f8ef282", "ab42aa2b-c1f6-438f-875b-32794eecdf02",
+						"3612e18d-7ae2-4d59-9b0a-181149559941", "b36443b2-932c-4344-ada4-0fe254ce626b",
+						"8a4d093b-4ef5-42af-8e71-d4c9746ab751", "32350a8b-eea0-4881-965a-d142d27df4a1",
+						"50506876-8e69-4b91-9084-c3dd63c95b68", "3731dfc8-3308-4c0f-b462-5100a29e25cc",
+						"6c6a6156-38c3-4167-be09-42d9890510ed"));
+				us1.setKey((Key)keyHelper.obtainKey(User.class, "nezrin.saker@demodazl.com"));
+				userDao.create(us1);
+			}
+
+			try {
+				um = userMenuDao.get("nezrin.saker@demodazl.com", true);
+				userMenuDao.delete("nezrin.saker@demodazl.com");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("nezrin.saker@demodazl.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				us1 = userDao.get("flormar_co", true);
+			} catch( Exception e ) {
+				us1 = new User();
+				us1.setFirstname("Flormar");
+				us1.setLastname("Colombia");
+				us1.setEmail("flormar_co@allshoppings.mobi");
+				us1.getSecuritySettings().setRole(Role.BRAND);
+				us1.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				us1.setKey((Key)keyHelper.obtainKey(User.class, "flormar_co"));
+				userDao.create(us1);
+			}
+
+			try {
+				um = userMenuDao.get("flormar_co", true);
+				userMenuDao.delete("flormar_co");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("flormar_co"));
+				userMenuDao.create(um);
+			}
+
 			User adolfodominguez = null;
 			try {
 				adolfodominguez = userDao.get("adolfodominguez_mx", true);
@@ -1962,10 +2118,10 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.delete("dakab_mx");
 				throw new Exception();
 			} catch( Exception e ) {
-				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.setKey(userMenuDao.createKey("dakab_mx"));
-				userMenuDao.create(um);
+//				um = new UserMenu();
+//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+//				um.setKey(userMenuDao.createKey("dakab_mx"));
+//				userMenuDao.create(um);
 			}
 
 			try {
@@ -1973,14 +2129,14 @@ public class UserMenuTest extends TestCase {
 				userDao.delete(user);
 				throw new Exception();
 			} catch (Exception e) {
-				user = new User();
-				user.setFirstname("Dakab");
-				user.setLastname("");
-				user.setEmail("dakab_mx");
-				user.getSecuritySettings().setRole(Role.STORE);
-				user.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");	user.getSecuritySettings().setStores(Arrays.asList("1474331820269","1484249039313","71143dcf-9a92-49f9-901d-47cd23e4ce12","9e8793b4-750d-464a-b0cb-c4bfcd7f4e4b","d83ddb08-0f8a-4926-a09f-9b4ea1c86bc1"));
-				user.setKey((Key) keyHelper.obtainKey(User.class, "dakab_mx"));
-				userDao.create(user);
+//				user = new User();
+//				user.setFirstname("Dakab");
+//				user.setLastname("");
+//				user.setEmail("dakab_mx");
+//				user.getSecuritySettings().setRole(Role.STORE);
+//				user.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");	user.getSecuritySettings().setStores(Arrays.asList("1474331820269","1484249039313","71143dcf-9a92-49f9-901d-47cd23e4ce12","9e8793b4-750d-464a-b0cb-c4bfcd7f4e4b","d83ddb08-0f8a-4926-a09f-9b4ea1c86bc1"));
+//				user.setKey((Key) keyHelper.obtainKey(User.class, "dakab_mx"));
+//				userDao.create(user);
 			}
 			// Sportium --------------------------------------------------------------------
 			
