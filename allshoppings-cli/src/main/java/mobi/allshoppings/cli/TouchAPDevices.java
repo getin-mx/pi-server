@@ -100,6 +100,19 @@ public class TouchAPDevices extends AbstractCLI {
 				casablanca.add(assig.getHostname());
 			}
 			
+			// Antenas de club casablanca
+			stores = storeDao.getUsingBrandAndStatus("agasys_mx", StatusHelper.statusActive(), null);
+			assigs = CollectionFactory.createList();
+			for(Store store : stores ) {
+				List<APDAssignation> tmp = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, new Date());
+				for(APDAssignation assig : tmp ) {
+					assigs.add(assig);
+				}
+			}
+			List<String> agasys = CollectionFactory.createList();
+			for(APDAssignation assig : assigs) {
+				agasys.add(assig.getHostname());
+			}
 			
 
 			log.log(Level.INFO, "Touching apdevices....");
@@ -142,7 +155,11 @@ public class TouchAPDevices extends AbstractCLI {
 					if(casablanca.contains(obj.getHostname())) {
 						mails.add("ggonzalez@clubcasablanca.mx");
 					} 
-					
+
+					if(agasys.contains(obj.getHostname())) {
+						mails.clear();
+					} 
+
 					obj.setReportMailList(mails);
 				}
 				
