@@ -71,6 +71,7 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 			Integer entityKind = this.obtainIntegerValue(ENTITY_KIND, null);
 			String date = this.obtainStringValue(DATE, sdf.format(new Date()));
 			Integer checkinType = this.obtainIntegerValue(CHECKIN_TYPE, null);
+			String order = this.obtainStringValue(ORDER, null);
 
 			if( "".equals(entityId)) entityId = null;
 			if( "".equals(date)) date = sdf.format(new Date());
@@ -85,7 +86,7 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 			Date fromDate = sdf.parse(date);
 			Date toDate = new Date(fromDate.getTime() + ONE_DAY);
 			
-			list = dao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, fromDate, toDate, checkinType, range, "mac",
+			list = dao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, fromDate, toDate, checkinType, range, order,
 					attributes, false);
 			
 			long diff = new Date().getTime() - millisPre;
