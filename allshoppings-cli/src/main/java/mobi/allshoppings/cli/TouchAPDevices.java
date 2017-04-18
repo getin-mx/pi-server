@@ -133,7 +133,7 @@ public class TouchAPDevices extends AbstractCLI {
 				
 				if( obj.getReportMailList() != null && obj.getReportMailList().size() > 0  ) {
 					List<String> mails = CollectionFactory.createList();
-					mails.addAll(Arrays.asList("matias@getin.mx","anabell@getin.mx","francisco@getin.mx","daniel@getin.mx","ingrid@getin.mx"));
+					mails.addAll(Arrays.asList("matias@getin.mx","anabell@getin.mx","francisco@getin.mx","daniel@getin.mx","ingrid@getin.mx","eduardo@getin.mx"));
 					if(astrid.contains(obj.getHostname())) {
 						mails.add("astrid@getin.mx");
 					} else {

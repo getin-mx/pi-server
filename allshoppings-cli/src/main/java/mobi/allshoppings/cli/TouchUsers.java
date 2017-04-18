@@ -53,7 +53,11 @@ public class TouchUsers extends AbstractCLI {
 						downloader.downloadImage(obj.getAvatarId(), "http://allshoppings1.appspot.com/img/" + obj.getAvatarId(), null, 0,0,0,0);
 					}
 				}
-				userDao.update(obj);
+				try {
+					userDao.update(obj);
+				} catch( Exception e ) {
+					log.log(Level.WARN, e.getMessage(), e);
+				}
 			}
 			
 			list = userDao.getUsingLastUpdateStatusAndRangeAndRole(null, null, false, null, null, null, role, null, true);
