@@ -1040,6 +1040,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("492", "Grand Store Altaplaza", "grandstore_pa", null));
 			stores.add(new StoreAdapter("493", "La Martina Multiplaza", "lamartina_pa", null));
 			
+			stores.add(new StoreAdapter("494", "Prada Cancun", "prada_mx", null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
