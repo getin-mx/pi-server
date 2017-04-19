@@ -40,6 +40,7 @@ import mobi.allshoppings.dao.InnerZoneDAO;
 import mobi.allshoppings.dao.MacVendorDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
+import mobi.allshoppings.dao.StoreRevenueDAO;
 import mobi.allshoppings.dao.StoreTicketDAO;
 import mobi.allshoppings.dao.WifiSpotDAO;
 import mobi.allshoppings.dump.DumperHelper;
@@ -61,6 +62,7 @@ import mobi.allshoppings.model.InnerZone;
 import mobi.allshoppings.model.MacVendor;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.StoreRevenue;
 import mobi.allshoppings.model.StoreTicket;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.WifiSpot;
@@ -113,6 +115,8 @@ public class DashboardAPDeviceMapperService {
 	private APDVisitDAO apdvDao;
 	@Autowired
 	private StoreTicketDAO stDao;
+	@Autowired
+	private StoreRevenueDAO srDao;
 	@Autowired
 	private InnerZoneDAO innerzoneDao;
 	@Autowired
@@ -935,8 +939,10 @@ public class DashboardAPDeviceMapperService {
 
 			}
 			// Looks for ticket
-			if( entityKind.equals(EntityKind.KIND_BRAND))
+			if( entityKind.equals(EntityKind.KIND_BRAND)) {
 				createStoreTicketDataForDates(sdf.format(date), sdf.format(date), subentityId);
+				createStoreRevenueDataForDates(sdf.format(date), sdf.format(date), subentityId);
+			}
 			
 			log.log(Level.INFO, "Starting Write Procedure...");
 
@@ -1066,6 +1072,53 @@ public class DashboardAPDeviceMapperService {
 		log.log(Level.INFO, "Finished to create store tickets Dashboard for Day " + fromDate + " to: " + toDate + " total time: "+ (endTime - startTime) + "ms");
 	}
 	
+	public void createStoreRevenueDataForDates(String fromDate,String toDate, String storeId) throws ASException,ParseException{
+		
+		log.log(Level.INFO, "Starting to create store revenue Dashboard for Day " + fromDate + " to: " + toDate +"..." );
+		long startTime = new Date().getTime();
+		
+		try {
+			Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
+			List<StoreRevenue> revenues =  srDao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null, null, false);
+			
+			
+			Store store = storeDao.get(storeId);
+			if( store != null ) {
+				for( StoreRevenue revenue: revenues){		
+					
+					DashboardIndicatorData obj;
+	
+					// visitor_total_tickets --------------------------------------------------------------------------------
+					// ------------------------------------------------------------------------------------------------------
+					
+					obj = buildBasicDashboardIndicatorData(
+							"apd_visitor", "Visitantes", "visitor_total_revenue",
+							"Revenue", sdf.parse(revenue.getDate()),
+							DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
+							store, null, store.getBrandId(), EntityKind.KIND_BRAND);
+	
+					if(indicatorsSet.containsKey(obj.getKey().getName())) 
+						obj = indicatorsSet.get(obj.getKey().getName());
+					obj.setDoubleValue(obj.getDoubleValue() + revenue.getQty());
+					indicatorsSet.put(obj.getKey().getName(), obj);
+				}
+				log.log(Level.INFO, "Starting Write Procedure...");
+
+				// Finally, save all the information
+				saveIndicatorSet(indicatorsSet);
+
+			} else {
+				// Store not found
+				log.log(Level.INFO, "Store with id " + storeId + " not found!");
+			}
+			
+		} catch (ASException e) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+		}
+		
+		long endTime = new Date().getTime();
+		log.log(Level.INFO, "Finished to create store revenue Dashboard for Day " + fromDate + " to: " + toDate + " total time: "+ (endTime - startTime) + "ms");
+	}
 	
 	public DashboardIndicatorData buildBasicDashboardIndicatorData(
 			String elementId, String elementName, String elementSubId,

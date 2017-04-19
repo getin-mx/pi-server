@@ -327,6 +327,7 @@
 	<bean id="friend.dao.ref" class="mobi.allshoppings.dao.spi.FriendDAOJDOImpl" />
 
 	<bean id="storeticket.dao.ref" class="mobi.allshoppings.dao.spi.StoreTicketDAOJDOImpl" />
+	<bean id="storerevenue.dao.ref" class="mobi.allshoppings.dao.spi.StoreRevenueDAOJDOImpl" />
 	<bean id="userentitycache.dao.ref" class="mobi.allshoppings.dao.spi.UserEntityCacheDAOJDOImpl" />
 	<bean id="systemstatus.dao.ref" class="mobi.allshoppings.dao.spi.SystemStatusDAOJDOImpl" />
 	<bean id="offer.dao.ref" class="mobi.allshoppings.dao.spi.OfferDAOJDOImpl" />

@@ -438,11 +438,12 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		@Override
 		public T next() {
 			while(iterator.hasNext()) {
+				String el = iterator.next();
 				try {
-					T element = gson.fromJson(iterator.next(), clazz);
+					T element = gson.fromJson(el, clazz);
 					return element;
 				} catch( Exception e ) {
-					log.log(Level.SEVERE, e.getMessage(), e);
+					log.log(Level.INFO, el, e);
 				}
 			}
 			return null;

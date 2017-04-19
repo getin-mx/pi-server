@@ -62,6 +62,7 @@
   	<bean id="dashboard.aphentrydata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.APHEntryDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.externalgeodata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.ExternalGeoDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.storeticketdata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.StoreTicketDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.storerevenuedata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.StoreRevenueDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
 
 	<!-- Business Service validation beans -->
 	<bean id="user.bz.validator" class="mobi.allshoppings.bdb.bz.validation.BDBUserBzValidation" scope="singleton" />

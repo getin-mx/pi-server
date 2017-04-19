@@ -202,6 +202,10 @@
             <field name="key" column="_id" length="100"/>
         </class>
 
+        <class name="StoreRevenue" table="StoreRevenue">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
         <class name="SystemStatus" table="SystemStatus">
             <field name="key" column="_id" length="100"/>
         </class>

@@ -71,6 +71,7 @@
 				<entry key="/dashboard/aphentryData" 			value-ref="spring.dashboard.aphentrydata.rest.resource" />
 				<entry key="/dashboard/externalGeoData" 		value-ref="spring.dashboard.externalgeodata.rest.resource" />
 				<entry key="/dashboard/storeTicketData" 		value-ref="spring.dashboard.storeticketdata.rest.resource" />
+				<entry key="/dashboard/storeRevenueData" 		value-ref="spring.dashboard.storerevenuedata.rest.resource" />
 				<entry key="/dashboard/config" 					value-ref="spring.dashboard.dashboardconfigurationdata.rest.resource" />
 			</map>
 		</property>
@@ -196,6 +197,9 @@
  	</bean>
  	<bean id="spring.dashboard.storeticketdata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboard.storeticketdata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.storerevenuedata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.storerevenuedata.rest.resource" />
  	</bean>
  	<bean id="spring.dashboard.dashboardconfigurationdata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboard.dashboardconfigurationdata.rest.resource" />
