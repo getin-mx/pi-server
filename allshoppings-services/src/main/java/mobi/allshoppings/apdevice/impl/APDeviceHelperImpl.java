@@ -537,21 +537,22 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		Iterator<APHotspot> i = dumpHelper.iterator(fromDate, toDate);
 		while( i.hasNext() ) {
 			APHotspot aph = i.next();
-			if( totals % 1000 == 0 ) 
-				log.log(Level.INFO, "Processing for date " + aph.getCreationDateTime());
+			if( aph != null ) {
+				if( totals % 1000 == 0 ) 
+					log.log(Level.INFO, "Processing for date " + aph.getCreationDateTime());
 
-			if( apdevices.contains(aph.getHostname())) {
-				Key apuKey = apuDao.createKey(aph.getHostname(), aph.getCreationDateTime());
-				APUptime apu = cache.get(apuKey.getName());
-				String key = APUptime.getRecordKey(aph.getCreationDateTime());
-				if( apu != null && apu.getRecord() != null ) {
-					Integer val = apu.getRecord().get(key);
-					if( val.equals(0)) {
-						apu.getRecord().put(key, 1);
+				if( apdevices.contains(aph.getHostname())) {
+					Key apuKey = apuDao.createKey(aph.getHostname(), aph.getCreationDateTime());
+					APUptime apu = cache.get(apuKey.getName());
+					String key = APUptime.getRecordKey(aph.getCreationDateTime());
+					if( apu != null && apu.getRecord() != null ) {
+						Integer val = apu.getRecord().get(key);
+						if( val.equals(0)) {
+							apu.getRecord().put(key, 1);
+						}
 					}
 				}
 			}
-
 			totals++;
 		}
 
