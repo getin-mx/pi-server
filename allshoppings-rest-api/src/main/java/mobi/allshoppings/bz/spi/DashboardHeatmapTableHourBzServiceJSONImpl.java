@@ -130,13 +130,13 @@ implements DashboardHeatmapTableHourBzService {
 			
 			// x Categories
 			List<String> xCategories = CollectionFactory.createList();
-			xCategories.add("Domingo");
 			xCategories.add("Lunes");
 			xCategories.add("Martes");
 			xCategories.add("Miercoles");
 			xCategories.add("Jueves");
 			xCategories.add("Viernes");
 			xCategories.add("Sabado");
+			xCategories.add("Domingo");
 
 			// Sets data
 			for( DashboardIndicatorData obj : list ) {
