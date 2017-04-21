@@ -844,6 +844,28 @@ public class DashboardAPDeviceMapperService {
 								}
 							}
 
+							// occupation_total_peasents -------------------------------------------------------------------------------
+							// ------------------------------------------------------------------------------------------------------
+							Calendar init = Calendar.getInstance();
+							init.setTime(v.getCheckinStarted());
+							Calendar finish = Calendar.getInstance();
+							finish.setTime(v.getCheckinFinished());
+							while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) && init.get(Calendar.HOUR_OF_DAY) < 23) {
+								obj = buildBasicDashboardIndicatorData(
+										"apd_occupation", "Ocupacion", "occupation_hourly_peasants",
+										"Paseantes", init.getTime(),
+										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+										store, null, entityId, entityKind);
+
+								if(indicatorsSet.containsKey(obj.getKey().getName())) 
+									obj = indicatorsSet.get(obj.getKey().getName());
+								obj.setDoubleValue(obj.getDoubleValue() + 1);
+								indicatorsSet.put(obj.getKey().getName(), obj);
+								
+								init.set(Calendar.HOUR_OF_DAY, init.get(Calendar.HOUR_OF_DAY) + 1);
+								
+							}
+
 						} else if( v.getCheckinType().equals(APDVisit.CHECKIN_VISIT) ) {
 
 							// visitor_total_visits ---------------------------------------------------------------------------------
@@ -925,6 +947,28 @@ public class DashboardAPDeviceMapperService {
 									obj.setRecordCount(obj.getRecordCount() + 1);
 									indicatorsSet.put(obj.getKey().getName(), obj);
 								}
+							}
+							// occupation_total_visits ---------------------------------------------------------------------------------
+							// ------------------------------------------------------------------------------------------------------
+							
+							Calendar init = Calendar.getInstance();
+							init.setTime(v.getCheckinStarted());
+							Calendar finish = Calendar.getInstance();
+							finish.setTime(v.getCheckinFinished());
+							while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) && init.get(Calendar.HOUR_OF_DAY) < 23) {
+								obj = buildBasicDashboardIndicatorData(
+										"apd_occupation", "Ocupacion", "occupation_hourly_visits", 
+										"Visitas", init.getTime(),
+										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
+										store, null, entityId, entityKind);
+
+								if(indicatorsSet.containsKey(obj.getKey().getName())) 
+									obj = indicatorsSet.get(obj.getKey().getName());
+								obj.setDoubleValue(obj.getDoubleValue() + 1);
+								indicatorsSet.put(obj.getKey().getName(), obj);
+								
+								init.set(Calendar.HOUR_OF_DAY, init.get(Calendar.HOUR_OF_DAY) + 1);
+									
 							}
 						}
 					} else {
