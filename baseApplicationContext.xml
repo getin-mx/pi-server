@@ -351,7 +351,7 @@
 	<bean id="cinema.dao.ref" class="mobi.allshoppings.dao.spi.CinemaDAOJDOImpl" />
 	<bean id="movie.dao.ref" class="mobi.allshoppings.dao.spi.MovieDAOJDOImpl" />
 	<bean id="macvendor.dao.ref" class="mobi.allshoppings.dao.spi.MacVendorDAOJDOImpl" />
-	<bean id="aphentry.dao.ref" class="mobi.allshoppings.dao.spi.APHEntryDAOFSImpl" />
+\	<bean id="aphentry.dao.ref" class="mobi.allshoppings.dao.spi.APHEntryDAOJDOImpl" />
 	<bean id="apdassignation.dao.ref" class="mobi.allshoppings.dao.spi.APDAssignationDAOJDOImpl" />
 	<bean id="apdevice.dao.ref" class="mobi.allshoppings.dao.spi.APDeviceDAOJDOImpl" />
 	<bean id="apdevicesignal.dao.ref" class="mobi.allshoppings.dao.spi.APDeviceSignalDAOJDOImpl" />
