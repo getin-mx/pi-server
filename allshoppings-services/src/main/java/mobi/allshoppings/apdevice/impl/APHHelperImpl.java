@@ -220,7 +220,7 @@ public class APHHelperImpl implements APHHelper {
 						throw ASExceptionHelper.notFoundException();
 					}
 				} catch( ASException e1 ) {
-//					ret.setDevicePlatform(apdHelper.getDevicePlatform(obj.getMac(), null));
+					ret.setDevicePlatform(apdHelper.getDevicePlatform(obj.getMac(), null));
 				}
 			}
 		}
