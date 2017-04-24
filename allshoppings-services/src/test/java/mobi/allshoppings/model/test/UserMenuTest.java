@@ -1641,7 +1641,7 @@ public class UserMenuTest extends TestCase {
 				us1.setFirstname("Nezrin");
 				us1.setLastname("Saker");
 				us1.setEmail("nezrin.saker@demodazl.com");
-				us1.getSecuritySettings().setRole(Role.BRAND);
+				us1.getSecuritySettings().setRole(Role.STORE);
 				us1.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				us1.getSecuritySettings()
 				.setStores(Arrays.asList("a07e8329-9e82-421e-98e6-72b7fb6f04f3",

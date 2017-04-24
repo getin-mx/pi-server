@@ -63,12 +63,14 @@ public class APHHelperImpl implements APHHelper {
 	private boolean scanInDevices = true;
 	private boolean useCache = true;
 	private TimeZone tz;
-
+	private Map<String, APDevice> apdCache;
+	
 	/**
 	 * Standard Constructor
 	 */
 	public APHHelperImpl() {
 		cache = CollectionFactory.createMap();
+		apdCache = CollectionFactory.createMap();
 		tz = TimeZone.getDefault();
 	}
 	
@@ -218,7 +220,7 @@ public class APHHelperImpl implements APHHelper {
 						throw ASExceptionHelper.notFoundException();
 					}
 				} catch( ASException e1 ) {
-					ret.setDevicePlatform(apdHelper.getDevicePlatform(obj.getMac(), null));
+//					ret.setDevicePlatform(apdHelper.getDevicePlatform(obj.getMac(), null));
 				}
 			}
 		}
@@ -371,6 +373,11 @@ public class APHHelperImpl implements APHHelper {
 		for( APHEntry obj : list ) 
 			cache.put(getHash(obj), obj);
 		
+		apdCache.clear();
+		List<APDevice> list2 = dao.getUsingIdList(apdevices);
+		for( APDevice dev : list2 ) 
+			apdCache.put(dev.getHostname(), dev);
+		
 		cacheBuilt = true;
 	}
 	
@@ -451,7 +458,7 @@ public class APHHelperImpl implements APHHelper {
 		APDevice apd = null;
 
 		try {
-			apd = dao.get(obj.getHostname(), true);
+			apd = (useCache && cacheBuilt) ? apdCache.get(obj.getHostname()) : dao.get(obj.getHostname(), true);
 		} catch( Exception e ) {
 		}
 

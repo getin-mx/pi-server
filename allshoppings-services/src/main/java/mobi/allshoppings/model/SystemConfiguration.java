@@ -101,6 +101,7 @@ public class SystemConfiguration implements Serializable {
 	private String excelTemplate;
 	private List<String> forbiddenBrandsToReprocess;
 	private List<String> mark2APDevices;
+	private String defaultDumpDirectory;
 	
 	public String getDefaultLevel() {
 		return defaultLevel;
@@ -854,6 +855,14 @@ public class SystemConfiguration implements Serializable {
 
 	public void setMark2APDevices(List<String> mark2apDevices) {
 		mark2APDevices = mark2apDevices;
+	}
+
+	public String getDefaultDumpDirectory() {
+		return defaultDumpDirectory;
+	}
+
+	public void setDefaultDumpDirectory(String defaultDumpDirectory) {
+		this.defaultDumpDirectory = defaultDumpDirectory;
 	}
 
 }
