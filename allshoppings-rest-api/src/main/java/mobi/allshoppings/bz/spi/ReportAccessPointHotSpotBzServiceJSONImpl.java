@@ -38,8 +38,6 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 	private APDeviceDAO apdDao;
 	@Autowired
 	private APHotspotDAO dao;
-//	@Autowired
-//	private APDeviceHelper apdHelper;
 	@Autowired
 	private APDeviceTriggerEntryDAO triggerDao;
 	@Autowired
@@ -59,6 +57,26 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 
 			log.log(Level.INFO, "Reporting " + data.length() + " AP Members from " + hostname);
 			log.log(Level.FINEST, obj.toString());
+
+			// Sets the device last data
+			APDevice device = null;
+			try {
+				device = apdDao.get(hostname, true);
+				device.completeDefaults();
+				device.setLastRecordDate(new Date());
+				device.setLastRecordCount(data.length());
+				apdDao.update(device);
+			} catch( ASException e ) {
+				if( e.getErrorCode() != ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE )
+					throw e;
+				
+				device = new APDevice();
+				device.setHostname(hostname);
+				device.setKey(apdDao.createKey(hostname));
+				device.setLastRecordDate(new Date());
+				device.setLastRecordCount(data.length());
+				apdDao.create(device);
+			}
 
 			for( int i = 0; i < data.length(); i++ ) {
 
@@ -81,7 +99,7 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 						try {
 							aphHelper.setUseCache(false);
 							APHEntry aphe = aphHelper.setFramedRSSI(aphotspot);
-							aphHelper.artificiateRSSI(aphe);
+							aphHelper.artificiateRSSI(aphe, device);
 							if( StringUtils.hasText(aphe.getIdentifier())) {
 								apheDao.update(aphe);
 							} else {
@@ -132,26 +150,6 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 				} catch( Exception e ) {
 					log.log(Level.SEVERE, e.getMessage(), e);
 				}
-			}
-
-			// Sets the device last data
-			APDevice device = null;
-			try {
-				device = apdDao.get(hostname, true);
-				device.completeDefaults();
-				device.setLastRecordDate(new Date());
-				device.setLastRecordCount(data.length());
-				apdDao.update(device);
-			} catch( ASException e ) {
-				if( e.getErrorCode() != ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE )
-					throw e;
-				
-				device = new APDevice();
-				device.setHostname(hostname);
-				device.setKey(apdDao.createKey(hostname));
-				device.setLastRecordDate(new Date());
-				device.setLastRecordCount(data.length());
-				apdDao.create(device);
 			}
 			
 //			// Submits a check for the antennas

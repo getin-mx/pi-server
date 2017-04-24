@@ -20,7 +20,6 @@ import com.google.gson.Gson;
 
 import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.apdevice.APHHelper;
-import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.ExternalAPHotspotDAO;
@@ -34,7 +33,6 @@ import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.ExternalAPHotspot;
 import mobi.allshoppings.tools.CollectionFactory;
-import mobi.allshoppings.tools.CollectionUtils;
 
 public class APHHelperImpl implements APHHelper {
 
@@ -47,8 +45,6 @@ public class APHHelperImpl implements APHHelper {
 	
 	private Map<String, APHEntry> cache;
 
-	@Autowired
-	private APDeviceDAO dao;
 	@Autowired
 	private APHEntryDAO apheDao;
 	@Autowired
@@ -63,14 +59,12 @@ public class APHHelperImpl implements APHHelper {
 	private boolean scanInDevices = true;
 	private boolean useCache = true;
 	private TimeZone tz;
-	private Map<String, APDevice> apdCache;
 	
 	/**
 	 * Standard Constructor
 	 */
 	public APHHelperImpl() {
 		cache = CollectionFactory.createMap();
-		apdCache = CollectionFactory.createMap();
 		tz = TimeZone.getDefault();
 	}
 	
@@ -365,19 +359,15 @@ public class APHHelperImpl implements APHHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public void buildCache(Date fromDate, Date toDate, List<String> apdevices) throws ASException {
+	public void buildCache(Date fromDate, Date toDate, Map<String, APDevice> apdevices) throws ASException {
 		
 		cache.clear();
-		
-		List<APHEntry> list = apheDao.getUsingHostnameAndDates(apdevices, fromDate, toDate, null, true);
+		List<String> apdKeys = CollectionFactory.createList();
+		apdKeys.addAll(apdevices.keySet());
+		List<APHEntry> list = apheDao.getUsingHostnameAndDates(apdKeys, fromDate, toDate, null, true);
 		for( APHEntry obj : list ) 
 			cache.put(getHash(obj), obj);
-		
-		apdCache.clear();
-		List<APDevice> list2 = dao.getUsingIdList(apdevices);
-		for( APDevice dev : list2 ) 
-			apdCache.put(dev.getHostname(), dev);
-		
+				
 		cacheBuilt = true;
 	}
 	
@@ -414,26 +404,19 @@ public class APHHelperImpl implements APHHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public void artificiateRSSI(List<String> apdevices, Date fromDate, Date toDate) throws ASException {
+	public void artificiateRSSI(Map<String, APDevice> apdevices, Date fromDate, Date toDate) throws ASException {
 		
-		// Populates the apdevices list if empty
-		if(CollectionUtils.isEmpty(apdevices)) {
-			apdevices = CollectionFactory.createList();
-			List<APDevice> list = dao.getAll(true);
-			for( APDevice obj : list ) {
-				apdevices.add(obj.getHostname());
-			}
-		}
-
 		Date d1 = new Date(fromDate.getTime());
 		Date d2 = new Date(d1.getTime() + 86400000);
 		while( d1.before(toDate)) {
-			for( String hostname : apdevices ) {
+			Iterator<String> i = apdevices.keySet().iterator();
+			while(i.hasNext()) {
+				String hostname = i.next();
 				long counter = 0;
 				log.log(Level.INFO, "Processing " + hostname + " for date " + d1);
 				List<APHEntry> list = apheDao.getUsingHostnameAndDates(Arrays.asList( new String[] {hostname}), d1, d2, null, true);
 				for( APHEntry obj : list ) {
-					artificiateRSSI(obj);
+					artificiateRSSI(obj, apdevices.get(hostname));
 					apheDao.update(obj);
 					counter++;
 				}
@@ -444,27 +427,6 @@ public class APHHelperImpl implements APHHelper {
 		}
 	}
 
-	/**
-	 * Calculates an artificial RSSI in the spaces between gaps
-	 * 
-	 * @param obj
-	 *            The APHEntry object to analyze
-	 * @throws ASException
-	 */
-	@Override
-	public void artificiateRSSI(APHEntry obj) throws ASException {
-		
-		// Obtains the APDevice definition for reference
-		APDevice apd = null;
-
-		try {
-			apd = (useCache && cacheBuilt) ? apdCache.get(obj.getHostname()) : dao.get(obj.getHostname(), true);
-		} catch( Exception e ) {
-		}
-
-		artificiateRSSI(obj, apd);
-	}
-	
 	/**
 	 * Calculates an artificial RSSI in the spaces between gaps
 	 * 
@@ -582,16 +544,7 @@ public class APHHelperImpl implements APHHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public void generateAPHEntriesFromDump(String baseDir, Date fromDate, Date toDate, List<String> apdevices, boolean buildCache) throws ASException {
-
-		// Populates the apdevices list if empty
-		if(CollectionUtils.isEmpty(apdevices)) {
-			apdevices = CollectionFactory.createList();
-			List<APDevice> list = dao.getAll(true);
-			for( APDevice obj : list ) {
-				apdevices.add(obj.getHostname());
-			}
-		}
+	public void generateAPHEntriesFromDump(String baseDir, Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException {
 
 		// Pre build cache
 		if( buildCache ) {
@@ -608,10 +561,10 @@ public class APHHelperImpl implements APHHelper {
 			String s = i.next();
 			JSONObject json = new JSONObject(s);
 			if( totals % 1000 == 0 ) 
-				log.log(Level.INFO, "Processing for date " + json.getString("creationDateTime"));
+				log.log(Level.INFO, "Processing for date " + json.getString("creationDateTime") + " with " + cache.size() + " records so far...");
 
 			if(!json.getString("mac").startsWith("broad"))
-				if( apdevices.contains(json.getString("hostname"))) 
+				if( apdevices.containsKey(json.getString("hostname"))) 
 					setFramedRSSI((APHotspot)gson.fromJson(s, APHotspot.class));
 
 			totals++;
@@ -623,7 +576,7 @@ public class APHHelperImpl implements APHHelper {
 		while(x.hasNext()) {
 			String key = x.next();
 			APHEntry aphe = cache.get(key);
-			artificiateRSSI(aphe);
+			artificiateRSSI(aphe, apdevices.get(aphe.getHostname()));
 			if( aphe.getDataCount() > 0 ) {
 				aphe.setKey(apheDao.createKey(aphe));
 				try {
@@ -649,16 +602,7 @@ public class APHHelperImpl implements APHHelper {
 	 *            Devices to match
 	 */
 	@Override
-	public void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, List<String> apdevices, boolean buildCache) throws ASException {
-
-		// Populates the apdevices list if empty
-		if(CollectionUtils.isEmpty(apdevices)) {
-			apdevices = CollectionFactory.createList();
-			List<APDevice> list = dao.getAll(true);
-			for( APDevice obj : list ) {
-				apdevices.add(obj.getHostname());
-			}
-		}
+	public void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException {
 
 		// Pre build cache
 		if( buildCache ) {
@@ -687,7 +631,7 @@ public class APHHelperImpl implements APHHelper {
 		while(x.hasNext()) {
 			String key = x.next();
 			APHEntry aphe = cache.get(key);
-			artificiateRSSI(aphe);
+			artificiateRSSI(aphe, apdevices.get(aphe.getHostname()));
 			if( aphe.getDataCount() > 0 ) {
 				aphe.setKey(apheDao.createKey(aphe));
 				try {

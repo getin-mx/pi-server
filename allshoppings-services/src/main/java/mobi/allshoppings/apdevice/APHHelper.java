@@ -34,16 +34,15 @@ public interface APHHelper {
 	public void setUseCache(boolean useCache);
 
 	// Helper methods
-	void buildCache(Date fromDate, Date toDate, List<String> apdevices) throws ASException;
+	void buildCache(Date fromDate, Date toDate, Map<String, APDevice> apdevices) throws ASException;
 	APHEntry repeatFramedRSSI(APHEntry aphe, Date fromDate, Date toDate, Integer rssi);
 	APHEntry setFramedRSSI(APHEntry aphe, Date forDate, Integer rssi);
 	APHEntry setFramedRSSI(APHotspot aph);
 	APHEntry setFramedRSSI(ExternalAPHotspot aph);
 	List<Integer> timeslotToList(Map<String, ?> slots);
-	void artificiateRSSI(APHEntry obj) throws ASException;
 	void artificiateRSSI(APHEntry obj, APDevice apd) throws ASException;
-	void artificiateRSSI(List<String> apdevices, Date fromDate, Date toDate) throws ASException;
-	void generateAPHEntriesFromDump(String baseDir, Date fromDate, Date toDate, List<String> apdevices, boolean buildCache) throws ASException;
-	void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, List<String> apdevices, boolean buildCache) throws ASException;
+	void artificiateRSSI(Map<String, APDevice> apdevices, Date fromDate, Date toDate) throws ASException;
+	void generateAPHEntriesFromDump(String baseDir, Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException;
+	void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException;
 
 }

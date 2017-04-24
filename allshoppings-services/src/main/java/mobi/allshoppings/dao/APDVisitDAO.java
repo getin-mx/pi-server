@@ -11,7 +11,7 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.tools.Range;
 
-public interface APDVisitDAO extends GenericDAO<APDVisit	> {
+public interface APDVisitDAO extends GenericDAO<APDVisit> {
 
 	Key createKey(APDVisit obj) throws ASException;
 

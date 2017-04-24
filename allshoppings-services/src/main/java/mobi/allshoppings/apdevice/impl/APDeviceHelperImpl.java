@@ -98,8 +98,6 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	@Autowired
 	private MacVendorDAO mvDao;
 	@Autowired
-	private MacVendorDAO macVendorDao;
-	@Autowired
 	private SystemConfiguration systemConfiguration;
 	@Autowired
 	private APDAssignationDAO apdaDao;
@@ -146,26 +144,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		if (mac.length() < 8)
 			return "generic";
 
-		MacVendor mv = null;
-		if (null != cache) {
-			mv = cache.get(mac);
-			if (null == mv)
-				mv = cache.get(mac.substring(0, 8));
-		} else {
-			try {
-				mv = macVendorDao.get(mac, true);
-			} catch (Exception e) {
-				try {
-					mv = macVendorDao.get(mac.substring(0, 8), true);
-				} catch (Exception e1) {
-				}
-			}
-		}
-
-		if (mv == null)
-			return "generic";
-
-		if (mv.getCode().equals("Apple"))
+		if( systemConfiguration.getAppleMacs().contains(mac.substring(0, 8)))
 			return "iOS";
 
 		return "Android";
@@ -1018,6 +997,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		File inputDir = new File(dir);
 		File outputDir = new File(backupDir);
 		
+		Map<String, APDevice> apdevices = CollectionFactory.createMap();
+		
 		long firstUnixTime = 0;
 		long deviationOffset = 0;
 		
@@ -1088,7 +1069,14 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 								try {
 									aphHelper.setUseCache(false);
 									APHEntry aphe = aphHelper.setFramedRSSI(aphotspot);
-									aphHelper.artificiateRSSI(aphe);
+									
+									APDevice apd = apdevices.get(aphe.getHostname());
+									if( apd == null ) {
+										apd = dao.get(aphe.getHostname());
+										apdevices.put(aphe.getHostname(), apd);
+									}
+									
+									aphHelper.artificiateRSSI(aphe, apd);
 									if( StringUtils.hasText(aphe.getIdentifier())) {
 										apheDao.update(aphe);
 									} else {

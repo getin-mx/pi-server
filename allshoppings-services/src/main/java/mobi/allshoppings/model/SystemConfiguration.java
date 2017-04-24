@@ -102,6 +102,7 @@ public class SystemConfiguration implements Serializable {
 	private List<String> forbiddenBrandsToReprocess;
 	private List<String> mark2APDevices;
 	private String defaultDumpDirectory;
+	private List<String> appleMacs;
 	
 	public String getDefaultLevel() {
 		return defaultLevel;
@@ -863,6 +864,14 @@ public class SystemConfiguration implements Serializable {
 
 	public void setDefaultDumpDirectory(String defaultDumpDirectory) {
 		this.defaultDumpDirectory = defaultDumpDirectory;
+	}
+
+	public List<String> getAppleMacs() {
+		return appleMacs;
+	}
+
+	public void setAppleMacs(List<String> appleMacs) {
+		this.appleMacs = appleMacs;
 	}
 
 }
