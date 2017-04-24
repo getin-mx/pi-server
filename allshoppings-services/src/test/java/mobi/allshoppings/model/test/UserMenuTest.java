@@ -47,6 +47,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.applications", "fa-laptop", "Aplicaciones"));
@@ -111,6 +112,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("astrid@getin.mx"));
 				userMenuDao.create(um);
@@ -145,6 +147,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("daniel@getin.mx"));
 				userMenuDao.create(um);
@@ -179,6 +182,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("francisco@getin.mx"));
 				userMenuDao.create(um);
@@ -213,6 +217,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("anabell@getin.mx"));
 				userMenuDao.create(um);
@@ -247,6 +252,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("mariajose@getin.mx"));
 				userMenuDao.create(um);
@@ -295,6 +301,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("matias@getin.mx"));
 				userMenuDao.create(um);
@@ -329,6 +336,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("eduardo@getin.mx"));
 				userMenuDao.create(um);
@@ -363,6 +371,7 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("ingrid@getin.mx"));
 				userMenuDao.create(um);
@@ -1784,6 +1793,33 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 
+			try {
+				um = userMenuDao.get("tanyamoss_mx", true);
+				userMenuDao.delete("tanyamoss_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("tanyamoss_mx"));
+				userMenuDao.create(um);
+			}
+
+			User tanyamoss = null;
+			try {
+				tanyamoss = userDao.get("tanyamoss_mx", true);
+				userDao.delete("tanyamoss_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				tanyamoss = new User();
+				tanyamoss.setFirstname("Tanya Moss");
+				tanyamoss.setLastname("Mexico");
+				tanyamoss.setEmail("tanyamoss@allshoppings.mobi");
+				tanyamoss.getSecuritySettings().setRole(Role.BRAND);
+				tanyamoss.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				tanyamoss.setKey((Key)keyHelper.obtainKey(User.class, "tanyamoss_mx"));
+				userDao.create(tanyamoss);
+			}
+
 			User pameladeharo = null;
 			try {
 				pameladeharo = userDao.get("pameladeharo_mx", true);
@@ -3007,7 +3043,126 @@ public class UserMenuTest extends TestCase {
 			}
 
 			// End Custom Fullsand  --------------------------------------------------------------------
-			
+
+			// Custom 98 Coast av --------------------------------------------------------------------
+
+			try {
+				um = userMenuDao.get("oasis@98coastav_mx", true);
+				userMenuDao.delete("oasis@98coastav_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.setKey(userMenuDao.createKey("oasis@98coastav_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("oasis@98coastav_mx", true);
+				userDao.delete(user.getIdentifier());
+				throw new Exception();
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("98 Coast Av. oasis");
+				user.setLastname("");
+				user.setEmail("oasis@98coastav_mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings().setStores(Arrays.asList("f03d2386-3c1e-40c7-9005-d402f565f107"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "oasis@98coastav_mx"));
+				userDao.create(user);
+			}
+
+			try {
+				um = userMenuDao.get("portal@98coastav_mx", true);
+				userMenuDao.delete("portal@98coastav_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.setKey(userMenuDao.createKey("portal@98coastav_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("portal@98coastav_mx", true);
+				userDao.delete(user.getIdentifier());
+				throw new Exception();
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("98 Coast Av. Portal");
+				user.setLastname("");
+				user.setEmail("portal@98coastav_mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings().setStores(Arrays.asList("2edff7a5-6000-45b1-9425-a7712e133d80"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "portal@98coastav_mx"));
+				userDao.create(user);
+			}
+
+			try {
+				um = userMenuDao.get("playa1@98coastav_mx", true);
+				userMenuDao.delete("playa1@98coastav_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.setKey(userMenuDao.createKey("playa1@98coastav_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("playa1@98coastav_mx", true);
+				userDao.delete(user.getIdentifier());
+				throw new Exception();
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("98 Coast Av. Playa 1");
+				user.setLastname("");
+				user.setEmail("playa1@98coastav_mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings().setStores(Arrays.asList("510b13bc-c316-42e1-853a-38dcf8855746"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "playa1@98coastav_mx"));
+				userDao.create(user);
+			}
+
+			try {
+				um = userMenuDao.get("playa2@98coastav_mx", true);
+				userMenuDao.delete("playa2@98coastav_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.setKey(userMenuDao.createKey("playa2@98coastav_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("playa2@98coastav_mx", true);
+				userDao.delete(user.getIdentifier());
+				throw new Exception();
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("98 Coast Av. Playa 2");
+				user.setLastname("");
+				user.setEmail("playa2@98coastav_mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings().setStores(Arrays.asList("83d06e8f-4ca8-4a92-bf48-b796bc24ac50"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "playa2@98coastav_mx"));
+				userDao.create(user);
+			}
+
+			// End 98 Coast av  --------------------------------------------------------------------
 
 		} catch( Throwable e ) {
 			e.printStackTrace();
