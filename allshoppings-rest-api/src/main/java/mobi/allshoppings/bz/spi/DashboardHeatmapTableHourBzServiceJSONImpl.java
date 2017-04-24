@@ -130,13 +130,13 @@ implements DashboardHeatmapTableHourBzService {
 			
 			// x Categories
 			List<String> xCategories = CollectionFactory.createList();
-			xCategories.add("Domingo");
 			xCategories.add("Lunes");
 			xCategories.add("Martes");
 			xCategories.add("Miercoles");
 			xCategories.add("Jueves");
 			xCategories.add("Viernes");
 			xCategories.add("Sabado");
+			xCategories.add("Domingo");
 
 			// Sets data
 			for( DashboardIndicatorData obj : list ) {
@@ -152,20 +152,21 @@ implements DashboardHeatmapTableHourBzService {
 					Map<Integer, Long> xData = yData.get(obj.getElementSubId()).get(position);
 
 					// Sets the double value
-					Long val = xData.get(obj.getDayOfWeek()-1);
+					obj.setDayOfWeek(mapDayOfWeek(obj.getDayOfWeek()));
+					Long val = xData.get(obj.getDayOfWeek());
 					if( val == null ) val = 0L;
 					val += obj.getDoubleValue().intValue();
-					xData.put(obj.getDayOfWeek()-1, val);
+					xData.put(obj.getDayOfWeek(), val);
 
 					// Sets the record count
 					xData = yCounter.get(obj.getElementSubId()).get(position);
-					val = xData.get(obj.getDayOfWeek()-1);
+					val = xData.get(obj.getDayOfWeek());
 					if( val == null ) val = 0L;
 					if( obj.getRecordCount() != null )
 						val += obj.getRecordCount();
 					else 
 						log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
-					xData.put(obj.getDayOfWeek()-1, val);
+					xData.put(obj.getDayOfWeek(), val);
 				}
 			}
 			
@@ -340,6 +341,17 @@ implements DashboardHeatmapTableHourBzService {
 				return false;
 		} else 
 			return true;
+	}
+
+	private int mapDayOfWeek(Integer dayOfWeek){
+		int result = 0;
+		if(dayOfWeek != 1){ 
+			result = dayOfWeek - 2;
+		} else{ 
+			result = 6;
+		}
+		
+		return result;
 	}
 
 	@SuppressWarnings("rawtypes")
