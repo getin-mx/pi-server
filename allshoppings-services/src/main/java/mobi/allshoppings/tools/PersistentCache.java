@@ -63,6 +63,17 @@ public class PersistentCache <K extends Object, V extends Object> {
 		lastUsed = CollectionFactory.createMap();
 		keys = new HashSet<K>();
 	}
+
+	public void clear() {
+		map.clear();
+		lastUsed.clear();
+		keys.clear();
+		dispose();
+	}
+	
+	public int size() {
+		return keys.size();
+	}
 	
 	public void put(K key, V value) throws NoSuchAlgorithmException, IOException {
 		map.put(key, value);
@@ -136,7 +147,9 @@ public class PersistentCache <K extends Object, V extends Object> {
 
 					File f = new File(tempDir + md5Key);
 					if( f.exists() ) f.delete();
-
+					if(!f.getParentFile().exists())
+						f.getParentFile().mkdirs();
+					
 					FileOutputStream fos = new FileOutputStream(f);
 					fos.write(jsonValue.getBytes());
 					fos.flush();

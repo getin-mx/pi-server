@@ -1,5 +1,8 @@
 package mobi.allshoppings.apdevice;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +17,7 @@ import mobi.allshoppings.model.ExternalAPHotspot;
 public interface APHHelper {
 
 	// Utilities
+	boolean isValidMacAddress(String mac);
 	String getHash(String hostname, String mac, String date);
 	String getHash(String hostname, String mac, Date date);
 	String getHash(APHotspot obj);
@@ -22,7 +26,7 @@ public interface APHHelper {
 	APHEntry apHotpostToaphEntry(APHotspot obj);
 	APHEntry apHotpostToaphEntry(ExternalAPHotspot obj);
 	APHEntry getFromCache(APHotspot obj);
-	APHEntry getFromCache(String hostname, String mac, String date);
+	APHEntry getFromCache(String hostname, String mac, String date) throws NoSuchAlgorithmException, FileNotFoundException, IOException;
 	int stringToOffsetTime(String t) throws Exception;
 	String slotToTime(int t);
 	Date slotToDate(String date, int t) throws ParseException;

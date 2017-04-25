@@ -1,5 +1,8 @@
 package mobi.allshoppings.apdevice.impl;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,6 +15,8 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +38,7 @@ import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.ExternalAPHotspot;
 import mobi.allshoppings.tools.CollectionFactory;
+import mobi.allshoppings.tools.PersistentCache;
 
 public class APHHelperImpl implements APHHelper {
 
@@ -43,7 +49,7 @@ public class APHHelperImpl implements APHHelper {
 	private static final DecimalFormat df = new DecimalFormat("00");
 	private static final long ONE_HOUR = 3600000;
 	
-	private Map<String, APHEntry> cache;
+	private PersistentCache<String, APHEntry> cache;
 
 	@Autowired
 	private APHEntryDAO apheDao;
@@ -64,7 +70,7 @@ public class APHHelperImpl implements APHHelper {
 	 * Standard Constructor
 	 */
 	public APHHelperImpl() {
-		cache = CollectionFactory.createMap();
+		cache = new PersistentCache<>(APHEntry.class, 100000, 1000, "/usr/local/allshoppings/dump");
 		tz = TimeZone.getDefault();
 	}
 	
@@ -152,8 +158,11 @@ public class APHHelperImpl implements APHHelper {
 	 * Obtains an APHEntry representation from cache
 	 * @param obj
 	 * @return
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 * @throws NoSuchAlgorithmException 
 	 */
-	public APHEntry getFromCache(String hostname, String mac, String date) {
+	public APHEntry getFromCache(String hostname, String mac, String date) throws NoSuchAlgorithmException, FileNotFoundException, IOException {
 		String hash = getHash(hostname, mac, date);
 		APHEntry ret = useCache ? cache.get(hash) : null;
 		if( null == ret ) {
@@ -192,7 +201,9 @@ public class APHHelperImpl implements APHHelper {
 		String hash = getHash(obj);
 		APHEntry ret = null;
 		if( useCache ) {
-			ret = cache.get(hash);
+			try {
+				ret = cache.get(hash);
+			} catch( Exception e ) {}
 		}
 		if( null == ret ) {
 			try {
@@ -230,7 +241,11 @@ public class APHHelperImpl implements APHHelper {
 		String hash = getHash(obj);
 		APHEntry ret = null;
 		if( useCache ) {
-			ret = cache.get(hash);
+			try {
+				ret = cache.get(hash);
+			} catch( Exception e ) {
+				log.log(Level.WARNING, e.getMessage(), e);
+			}
 		}
 		if( null == ret ) {
 			try {
@@ -267,7 +282,11 @@ public class APHHelperImpl implements APHHelper {
 	public APHEntry putInCache(APHEntry obj) {
 		if( useCache ) {
 			String hash = getHash(obj);
-			cache.put( hash, obj );
+			try {
+				cache.put( hash, obj );
+			} catch( Exception e ) {
+				log.log(Level.WARNING, e.getMessage(), e);
+			}
 		}
 		return obj;
 	}
@@ -366,7 +385,11 @@ public class APHHelperImpl implements APHHelper {
 		apdKeys.addAll(apdevices.keySet());
 		List<APHEntry> list = apheDao.getUsingHostnameAndDates(apdKeys, fromDate, toDate, null, true);
 		for( APHEntry obj : list ) 
-			cache.put(getHash(obj), obj);
+			try {
+				cache.put(getHash(obj), obj);
+			} catch( Exception e ) {
+				log.log(Level.WARNING, e.getMessage(), e);
+			}
 				
 		cacheBuilt = true;
 	}
@@ -530,6 +553,13 @@ public class APHHelperImpl implements APHHelper {
 		return ret;
 	}
 	
+	@Override
+	public boolean isValidMacAddress(String mac) {
+		Pattern p = Pattern.compile("^([0-9A-Fa-f]{2}[\\.:-]){5}([0-9A-Fa-f]{2})$");
+		Matcher m = p.matcher(mac);
+		return m.find();
+	}
+
 	/**
 	 * Generates the APHEntries tables from dump
 	 * 
@@ -563,7 +593,7 @@ public class APHHelperImpl implements APHHelper {
 			if( totals % 1000 == 0 ) 
 				log.log(Level.INFO, "Processing for date " + json.getString("creationDateTime") + " with " + cache.size() + " records so far...");
 
-			if(!json.getString("mac").startsWith("broad"))
+			if(isValidMacAddress(json.getString("mac")))
 				if( apdevices.containsKey(json.getString("hostname"))) 
 					setFramedRSSI((APHotspot)gson.fromJson(s, APHotspot.class));
 
@@ -571,13 +601,12 @@ public class APHHelperImpl implements APHHelper {
 		}
 
 		// Write to the database
-		log.log(Level.INFO, "Writing Database");
-		Iterator<String> x = cache.keySet().iterator();
+		log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
+		Iterator<APHEntry> x = cache.iterator();
 		while(x.hasNext()) {
-			String key = x.next();
-			APHEntry aphe = cache.get(key);
+			APHEntry aphe = x.next();
 			artificiateRSSI(aphe, apdevices.get(aphe.getHostname()));
-			if( aphe.getDataCount() > 0 ) {
+			if( aphe.getDataCount() > 2 ) {
 				aphe.setKey(apheDao.createKey(aphe));
 				try {
 					apheDao.createOrUpdate(aphe);
@@ -586,6 +615,8 @@ public class APHHelperImpl implements APHHelper {
 				}
 			}
 		}
+		
+		cache.dispose();
 		
 		log.log(Level.INFO, "Process Ended");
 
@@ -626,11 +657,10 @@ public class APHHelperImpl implements APHHelper {
 		}
 		
 		// Write to the database
-		log.log(Level.INFO, "Writing Database with " + cache.keySet().size() + " objects");
-		Iterator<String> x = cache.keySet().iterator();
+		log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
+		Iterator<APHEntry> x = cache.iterator();
 		while(x.hasNext()) {
-			String key = x.next();
-			APHEntry aphe = cache.get(key);
+			APHEntry aphe = x.next();
 			artificiateRSSI(aphe, apdevices.get(aphe.getHostname()));
 			if( aphe.getDataCount() > 0 ) {
 				aphe.setKey(apheDao.createKey(aphe));
