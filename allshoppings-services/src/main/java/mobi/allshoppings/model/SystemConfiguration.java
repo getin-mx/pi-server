@@ -103,6 +103,9 @@ public class SystemConfiguration implements Serializable {
 	private List<String> mark2APDevices;
 	private String defaultDumpDirectory;
 	private List<String> appleMacs;
+	private int cacheMaxInMemElements;
+	private int cachePageSize;
+	private String cacheTempDir;
 	
 	public String getDefaultLevel() {
 		return defaultLevel;
@@ -872,6 +875,30 @@ public class SystemConfiguration implements Serializable {
 
 	public void setAppleMacs(List<String> appleMacs) {
 		this.appleMacs = appleMacs;
+	}
+
+	public int getCacheMaxInMemElements() {
+		return cacheMaxInMemElements;
+	}
+
+	public void setCacheMaxInMemElements(int cacheMaxInMemElements) {
+		this.cacheMaxInMemElements = cacheMaxInMemElements;
+	}
+
+	public int getCachePageSize() {
+		return cachePageSize;
+	}
+
+	public void setCachePageSize(int cachePageSize) {
+		this.cachePageSize = cachePageSize;
+	}
+
+	public String getCacheTempDir() {
+		return cacheTempDir;
+	}
+
+	public void setCacheTempDir(String cacheTempDir) {
+		this.cacheTempDir = cacheTempDir;
 	}
 
 }

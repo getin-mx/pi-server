@@ -6,7 +6,7 @@ import java.util.Iterator;
 import org.junit.Test;
 
 import junit.framework.TestCase;
-import mobi.allshoppings.tools.PersistentCache;
+import mobi.allshoppings.tools.PersistentCacheFSImpl;
 
 public class PersistentCacheTest extends TestCase {
 
@@ -14,7 +14,7 @@ public class PersistentCacheTest extends TestCase {
 	public void test0001() {
 		try {
 			DecimalFormat df = new DecimalFormat("000000000000000");
-			PersistentCache<String, String> cache = new PersistentCache<String,String>(String.class);
+			PersistentCacheFSImpl<String> cache = new PersistentCacheFSImpl<String>(String.class);
 			
 			for( int i = 0; i < 100000; i++ ) {
 				cache.put(df.format(i), "Value " + df.format(i));

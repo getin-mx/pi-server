@@ -123,6 +123,10 @@
 		<property name="resourcesDir" value="/usr/local/allshoppings/resources" />
 		<property name="excelTemplate" value="template-2017-02.xlsm" />
 
+		<property name="cacheMaxInMemElements" value="400000" />
+		<property name="cachePageSize" value="5000" />
+		<property name="cacheTempDir" value="/usr/local/allshoppings/dump" />
+
 		<property name="appleMacs">
 			<list>
 				<value>00:03:93</value>
@@ -714,6 +718,21 @@
 				<value>gihs-0212</value>
 				<value>gihs-0216</value>
 				<value>gihs-0219</value>
+				<value>ashs-0113</value>
+				<value>gihs-0337</value>
+				<value>gihs-0352</value>
+				<value>gihs-0334</value>
+				<value>gihs-0338</value>
+				<value>gihs-0353</value>
+				<value>gihs-0348</value>
+				<value>gihs-0354</value>
+				<value>gihs-0341</value>
+				<value>gihs-0339</value>
+				<value>gihs-0340</value>
+				<value>gihs-0347</value>
+				<value>gihs-0330</value>
+				<value>ashs-0034</value>
+				<value>gihs-0253</value>
 			</list>
 		</property>
 		<property name="defaultBehavioursApps">
@@ -840,7 +859,7 @@
 	<bean id="cinema.dao.ref" class="mobi.allshoppings.dao.spi.CinemaDAOJDOImpl" />
 	<bean id="movie.dao.ref" class="mobi.allshoppings.dao.spi.MovieDAOJDOImpl" />
 	<bean id="macvendor.dao.ref" class="mobi.allshoppings.dao.spi.MacVendorDAOJDOImpl" />
-	<bean id="aphentry.dao.ref" class="mobi.allshoppings.dao.spi.APHEntryDAOFSImpl" />
+	<bean id="aphentry.dao.ref" class="mobi.allshoppings.dao.spi.APHEntryDAOJDOImpl" />
 	<bean id="apdassignation.dao.ref" class="mobi.allshoppings.dao.spi.APDAssignationDAOJDOImpl" />
 	<bean id="apdevice.dao.ref" class="mobi.allshoppings.dao.spi.APDeviceDAOJDOImpl" />
 	<bean id="apdevicesignal.dao.ref" class="mobi.allshoppings.dao.spi.APDeviceSignalDAOJDOImpl" />

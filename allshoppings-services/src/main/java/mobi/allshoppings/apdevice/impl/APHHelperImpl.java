@@ -21,8 +21,6 @@ import java.util.regex.Pattern;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.google.gson.Gson;
-
 import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.dao.APHEntryDAO;
@@ -37,19 +35,19 @@ import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.ExternalAPHotspot;
+import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.tools.CollectionFactory;
-import mobi.allshoppings.tools.PersistentCache;
+import mobi.allshoppings.tools.PersistentCacheFSImpl;
 
 public class APHHelperImpl implements APHHelper {
 
 	private static final Logger log = Logger.getLogger(APHHelperImpl.class.getName());
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static final Gson gson = new Gson();
 	private static final DecimalFormat df = new DecimalFormat("00");
 	private static final long ONE_HOUR = 3600000;
 	
-	private PersistentCache<String, APHEntry> cache;
+	private PersistentCacheFSImpl<APHEntry> cache;
 
 	@Autowired
 	private APHEntryDAO apheDao;
@@ -59,6 +57,8 @@ public class APHHelperImpl implements APHHelper {
 	private DeviceInfoDAO diDao;
 	@Autowired
 	private ExternalAPHotspotDAO eaphDao;
+	@Autowired
+	private SystemConfiguration systemConfiguration;
 	
 	private DumperHelper<APHotspot> dumpHelper;
 	private boolean cacheBuilt = false;
@@ -70,7 +70,6 @@ public class APHHelperImpl implements APHHelper {
 	 * Standard Constructor
 	 */
 	public APHHelperImpl() {
-		cache = new PersistentCache<>(APHEntry.class, 100000, 1000, "/usr/local/allshoppings/dump");
 		tz = TimeZone.getDefault();
 	}
 	
@@ -348,12 +347,33 @@ public class APHHelperImpl implements APHHelper {
 	 *            The APHotspot from which the RSSI will be taken from
 	 * @return The modified APHEntry
 	 */
+	@SuppressWarnings("deprecation")
+	@Override
+	public APHEntry setFramedRSSI(JSONObject aph) {
+		try {
+			String date = sdf.format(new Date(aph.getString("creationDateTime")));
+			APHEntry aphe = getFromCache(aph.getString("hostname"), aph.getString("mac"), date);
+			return putInCache(setFramedRSSI(aphe, new Date(aph.getString("creationDateTime")), aph.getInt("signalDB")));
+		} catch( Exception e ) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+		}
+		return null;
+	}
+
+	/**
+	 * Sets the correct RSSI in a placed frame Frames are divided in the seconds
+	 * of the day / 20
+	 * 
+	 * @param aph
+	 *            The APHotspot from which the RSSI will be taken from
+	 * @return The modified APHEntry
+	 */
 	@Override
 	public APHEntry setFramedRSSI(APHotspot aph) {
 		APHEntry aphe = getFromCache(aph);
 		return putInCache(setFramedRSSI(aphe, aph.getCreationDateTime(), aph.getSignalDB()));
 	}
-	
+
 	/**
 	 * Sets the correct RSSI in a placed frame Frames are divided in the seconds
 	 * of the day / 20
@@ -576,6 +596,11 @@ public class APHHelperImpl implements APHHelper {
 	@Override
 	public void generateAPHEntriesFromDump(String baseDir, Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException {
 
+		if( cache == null )
+			cache = new PersistentCacheFSImpl<>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
+					systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
+		cache.clear();
+		
 		// Pre build cache
 		if( buildCache ) {
 			log.log(Level.INFO, "Building Cache");
@@ -591,11 +616,11 @@ public class APHHelperImpl implements APHHelper {
 			String s = i.next();
 			JSONObject json = new JSONObject(s);
 			if( totals % 1000 == 0 ) 
-				log.log(Level.INFO, "Processing for date " + json.getString("creationDateTime") + " with " + cache.size() + " records so far...");
+				log.log(Level.INFO, "Processing for date " + json.getString("creationDateTime") + " with " + cache.size() + " records so far (" + cache.getHits() + "/" + cache.getMisses() + "/" + cache.getStores() + "/" + cache.getLoads() + ")...");
 
 			if(isValidMacAddress(json.getString("mac")))
 				if( apdevices.containsKey(json.getString("hostname"))) 
-					setFramedRSSI((APHotspot)gson.fromJson(s, APHotspot.class));
+					setFramedRSSI(json);
 
 			totals++;
 		}
@@ -616,6 +641,7 @@ public class APHHelperImpl implements APHHelper {
 			}
 		}
 		
+		log.log(Level.INFO, "Disposing cache");
 		cache.dispose();
 		
 		log.log(Level.INFO, "Process Ended");

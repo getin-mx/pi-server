@@ -1045,7 +1045,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("485", "Flormar Jardin Plaza", "flormar_co", null));
 			stores.add(new StoreAdapter("486", "Flormar WTC", "flormar_co", null));
 			stores.add(new StoreAdapter("487", "Flormar Cacique", "flormar_co", null));
-			stores.add(new StoreAdapter("488", "Flormar Lincon Plaza", "flormar_cr", null));
+			stores.add(new StoreAdapter("488", "Flormar Lincoln Plaza", "flormar_cr", null));
 			stores.add(new StoreAdapter("489", "Sunglass Hut Altaplaza", "sunglasshut_pa", null));
 			stores.add(new StoreAdapter("490", "Sunglass Hut Multiplaza", "sunglasshut_pa", null));
 			stores.add(new StoreAdapter("491", "Sunglass Hut Metromall", "sunglasshut_pa", null));

@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHEntry;
@@ -41,6 +43,7 @@ public interface APHHelper {
 	void buildCache(Date fromDate, Date toDate, Map<String, APDevice> apdevices) throws ASException;
 	APHEntry repeatFramedRSSI(APHEntry aphe, Date fromDate, Date toDate, Integer rssi);
 	APHEntry setFramedRSSI(APHEntry aphe, Date forDate, Integer rssi);
+	APHEntry setFramedRSSI(JSONObject aph);
 	APHEntry setFramedRSSI(APHotspot aph);
 	APHEntry setFramedRSSI(ExternalAPHotspot aph);
 	List<Integer> timeslotToList(Map<String, ?> slots);
