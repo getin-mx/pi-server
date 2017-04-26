@@ -348,11 +348,13 @@ implements BDBCrudBzService {
 			long diff = new Date().getTime() - millisPre;
 			
 			for( User u : list ) {
-				List<AuditLog> l2 = alDao.getUsingUserAndTypeAndRange(u.getIdentifier(), AuditLog.EVENT_LOGIN, new Range(0,1), "eventDate DESC", null, true);
-				if( l2.size() > 0 ) {
-					u.setLastLogin(l2.get(0).getEventDate());
-				} else {
-					u.setLastLogin(null);
+				if( u != null && StringUtils.hasText(u.getIdentifier())) {
+					List<AuditLog> l2 = alDao.getUsingUserAndTypeAndRange(u.getIdentifier(), AuditLog.EVENT_LOGIN, new Range(0,1), "eventDate DESC", null, true);
+					if( l2.size() > 0 ) {
+						u.setLastLogin(l2.get(0).getEventDate());
+					} else {
+						u.setLastLogin(null);
+					}
 				}
 			}
 			

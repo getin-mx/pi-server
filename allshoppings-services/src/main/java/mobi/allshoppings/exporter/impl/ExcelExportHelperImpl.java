@@ -142,12 +142,12 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			}
 
 			// How iterates the Dashboard Indicator Data List for Traffic by Hour graph
-//			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND,
-//					Arrays.asList("apd_visitor"),
-//					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets"), null,
-//					storeId, "D", sdf.format(initialDate), sdf.format(finalDate), null, null, null, null, null, null, null, null);
-//
-//			log.log(Level.INFO, "Using " + list.size() + " elements...");
+			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND,
+					Arrays.asList("apd_visitor"),
+					Arrays.asList("visitor_total_peasents", "visitor_total_visits"), null,
+					storeId, "D", sdf.format(limitDate), sdf.format(finalDate), null, null, null, null, null, null, null, null);
+
+			log.log(Level.INFO, "Using " + list.size() + " elements...");
 
 			i = list.iterator();
 			while(i.hasNext()) {
@@ -184,11 +184,11 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				if( "permanence_hourly_peasents".equals(obj.getElementSubId())) {
 					e.setPeasants(e.getPeasants() + obj.getDoubleValue().longValue());
 					e.setPeasantsCount(e.getPeasantsCount() + obj.getRecordCount());
-					totalVisitsPermanence += obj.getDoubleValue().longValue();
-					totalVisitsCount += obj.getRecordCount();
 				} else if( "permanence_hourly_visits".equals(obj.getElementSubId())) {
 					e.setVisits(e.getVisits() + obj.getDoubleValue().longValue());
 					e.setVisitsCount(e.getVisitsCount() + obj.getRecordCount());
+					totalVisitsPermanence += obj.getDoubleValue().longValue();
+					totalVisitsCount += obj.getRecordCount();
 				}
 				map3.put(e.getHour(), e);
 			}
