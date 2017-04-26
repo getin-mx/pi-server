@@ -20,9 +20,11 @@ import com.inodes.util.CollectionFactory;
 import mobi.allshoppings.auth.AuthHelper;
 import mobi.allshoppings.bdb.bz.BDBCrudBzService;
 import mobi.allshoppings.bdb.bz.validation.BDBUserBzValidation;
+import mobi.allshoppings.dao.AuditLogDAO;
 import mobi.allshoppings.dao.UserDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.AuditLog;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.UserSecurity.Role;
@@ -43,6 +45,8 @@ implements BDBCrudBzService {
 
 	@Autowired
 	private UserDAO dao;
+	@Autowired
+	private AuditLogDAO alDao;
 	@Autowired
 	private AuthHelper authHelper;
 	@Autowired
@@ -342,6 +346,15 @@ implements BDBCrudBzService {
 			}
 			
 			long diff = new Date().getTime() - millisPre;
+			
+			for( User u : list ) {
+				List<AuditLog> l2 = alDao.getUsingUserAndTypeAndRange(u.getIdentifier(), AuditLog.EVENT_LOGIN, new Range(0,1), "eventDate DESC", null, true);
+				if( l2.size() > 0 ) {
+					u.setLastLogin(l2.get(0).getEventDate());
+				} else {
+					u.setLastLogin(null);
+				}
+			}
 			
 			// Logs the result
 			log.info("Number of elements found [" + list.size() + "] in " + diff + " millis");
