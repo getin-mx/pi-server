@@ -1059,11 +1059,11 @@ public class GetinDump extends AbstractCLI {
 
 			stores.add(new StoreAdapter("498", "Aditivo Venustiano Carranza", "aditivo_mx", null));			
 			stores.add(new StoreAdapter("499", "Aditivo Chalco 2", "aditivo_mx", null));			
-			stores.add(new StoreAdapter("499", "Aditivo Los Reyes", "aditivo_mx", null));			
-			stores.add(new StoreAdapter("499", "Aditivo El Rosario", "aditivo_mx", null));			
-			stores.add(new StoreAdapter("499", "Aditivo Plaza Aragon", "aditivo_mx", null));			
-			stores.add(new StoreAdapter("499", "Aditivo Arco Norte", "aditivo_mx", null));			
-			stores.add(new StoreAdapter("499", "Aditivo Neza 1", "aditivo_mx", null));			
+			stores.add(new StoreAdapter("500", "Aditivo Los Reyes", "aditivo_mx", null));			
+			stores.add(new StoreAdapter("501", "Aditivo El Rosario", "aditivo_mx", null));			
+			stores.add(new StoreAdapter("502", "Aditivo Plaza Aragon", "aditivo_mx", null));			
+			stores.add(new StoreAdapter("503", "Aditivo Arco Norte", "aditivo_mx", null));			
+			stores.add(new StoreAdapter("504", "Aditivo Neza 1", "aditivo_mx", null));			
 
 			Store store;
 			for(StoreAdapter obj : stores ) {
