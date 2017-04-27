@@ -213,12 +213,22 @@ implements DashboardTimelineDataBzService {
 				}
 			} else {
 				for( String orderKey : orderList ) {
-					String key = aliasMap.get(orderKey);
-					JSONObject jsonObj = new JSONObject();
-					jsonObj.put("name", key);
-					jsonObj.put("type", "spline");
-					jsonObj.put("data", resultMap.get(key) == null ? 0 : resultMap.get(key));
-					jsonArray.put(jsonObj);
+					if(!orderKey.equals("visitor_total_revenue")){
+						String key = aliasMap.get(orderKey);
+						JSONObject jsonObj = new JSONObject();
+						jsonObj.put("name", key);
+						jsonObj.put("type", "spline");
+						jsonObj.put("data", resultMap.get(key) == null ? 0 : resultMap.get(key));
+						jsonArray.put(jsonObj);
+					}else{
+						String key = aliasMap.get(orderKey);
+						JSONObject jsonObj = new JSONObject();
+						jsonObj.put("name", key);
+						jsonObj.put("type", "column");
+						jsonObj.put("data", resultMap.get(key) == null ? 0 : resultMap.get(key));
+						jsonArray.put(jsonObj);
+					}
+					
 				}
 			}
 
