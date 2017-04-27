@@ -1045,7 +1045,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("485", "Flormar Jardin Plaza", "flormar_co", null));
 			stores.add(new StoreAdapter("486", "Flormar WTC", "flormar_co", null));
 			stores.add(new StoreAdapter("487", "Flormar Cacique", "flormar_co", null));
-			stores.add(new StoreAdapter("488", "Flormar Lincon Plaza", "flormar_cr", null));
+			stores.add(new StoreAdapter("488", "Flormar Lincoln Plaza", "flormar_cr", null));
 			stores.add(new StoreAdapter("489", "Sunglass Hut Altaplaza", "sunglasshut_pa", null));
 			stores.add(new StoreAdapter("490", "Sunglass Hut Multiplaza", "sunglasshut_pa", null));
 			stores.add(new StoreAdapter("491", "Sunglass Hut Metromall", "sunglasshut_pa", null));
@@ -1056,7 +1056,15 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("495", "Tanya Moss Plaza Carso", "tanyamoss_mx", "plazacarso"));
 			stores.add(new StoreAdapter("496", "Tanya Moss Toreo Parque Central", "tanyamoss_mx", "toreoparquecentral"));
 			stores.add(new StoreAdapter("497", "Tanya Moss Parque Delta", "tanyamoss_mx", "parquedelta"));
-			
+
+			stores.add(new StoreAdapter("498", "Aditivo Venustiano Carranza", "aditivo_mx", null));			
+			stores.add(new StoreAdapter("499", "Aditivo Chalco 2", "aditivo_mx", null));			
+			stores.add(new StoreAdapter("499", "Aditivo Los Reyes", "aditivo_mx", null));			
+			stores.add(new StoreAdapter("499", "Aditivo El Rosario", "aditivo_mx", null));			
+			stores.add(new StoreAdapter("499", "Aditivo Plaza Aragon", "aditivo_mx", null));			
+			stores.add(new StoreAdapter("499", "Aditivo Arco Norte", "aditivo_mx", null));			
+			stores.add(new StoreAdapter("499", "Aditivo Neza 1", "aditivo_mx", null));			
+
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {

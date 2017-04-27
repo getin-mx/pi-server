@@ -58,7 +58,7 @@ public class DashboardConfigurationDump extends AbstractCLI {
 				dc.setKey(dcDao.createKey(dc));
 				forUpdate = false;
 			}
-			dc.setTimezone("-04:00");
+			dc.setTimezone("-06:00");
 			if( forUpdate ) 
 				dcDao.update(dc);
 			else

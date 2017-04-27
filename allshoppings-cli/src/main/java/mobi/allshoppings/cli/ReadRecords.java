@@ -102,11 +102,9 @@ public class ReadRecords extends AbstractCLI {
 
 			DumperHelper<APHotspot> dumpHelper;
 			
-			Date ffromDate = new Date(fromDate.getTime());
 			Date ftoDate = new Date(fromDate.getTime());
 			while( ftoDate.before(toDate)) {
 
-				ffromDate = new Date(ftoDate.getTime());
 				ftoDate = new Date(ftoDate.getTime() + TWENTY_FOUR_HOURS);
 				
 				long totals = 0;
@@ -121,10 +119,6 @@ public class ReadRecords extends AbstractCLI {
 
 					totals++;
 				}
-
-				
-				helper.generateAPHEntriesFromDump(sOutDir, ffromDate, ftoDate, apdevices, true);
-
 			}
 
 		} catch( Exception e ) {
