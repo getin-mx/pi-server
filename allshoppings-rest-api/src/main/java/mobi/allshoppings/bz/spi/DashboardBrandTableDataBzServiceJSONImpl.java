@@ -200,6 +200,20 @@ implements DashboardBrandTableDataBzService {
 				totalValue += value;
 				totalsData.put("tickets", totalValue);
 				
+				// revenue
+				list = dao.getUsingFilters(entityId,
+						entityKind, Arrays.asList(new String[] {"apd_visitor"}), "visitor_total_revenue", null,
+						storeId, null, fromStringDate, toStringDate,
+						null, null, null, null, null, country, province, city);
+				value = 0D;
+				for(DashboardIndicatorData obj : list)
+					value += obj.getDoubleValue();
+				storeData.put("revenue", value);
+				totalValue = totalsData.get("revenue");
+				if( totalValue == null ) totalValue = 0D;
+				totalValue += value;
+				totalsData.put("revenue", totalValue);
+				
 				// peasents_conversion
 				if( storeData.get("peasents") != 0)
 					storeData.put("peasents_conversion", (storeData.get("visits") * 100 ) / storeData.get("peasents") );
@@ -247,10 +261,12 @@ implements DashboardBrandTableDataBzService {
 			else
 				totalsData.put("peasents_conversion", 0D);
 
-			if( totalsData.get("visits") != null && totalsData.get("visits") != 0)
+			if( totalsData.get("visits") != null && totalsData.get("visits") != 0){
 				totalsData.put("tickets_conversion", (totalsData.get("tickets") * 100 ) / totalsData.get("visits"));
-			else
+			}
+			else{
 				totalsData.put("tickets_conversion", 0D);
+			}
 
 			// Creates the final JSON Array
 			JSONArray jsonArray = new JSONArray();
@@ -261,6 +277,7 @@ implements DashboardBrandTableDataBzService {
 			titles.put("Paseantes");
 			titles.put("Visitantes");
 			titles.put("Tickets");
+			titles.put("Ventas");
 			titles.put("Paseantes/Visitantes");
 			titles.put("Visitantes/Tickets");
 			titles.put("Día más Alto");
@@ -279,6 +296,7 @@ implements DashboardBrandTableDataBzService {
 					row.put(String.valueOf(Math.round(rowData.get("peasents"))));
 					row.put(String.valueOf(Math.round(rowData.get("visits"))));
 					row.put(String.valueOf(Math.round(rowData.get("tickets"))));
+					row.put(String.valueOf(Math.round(rowData.get("revenue"))));
 					row.put(df.format(rowData.get("peasents_conversion")) + "%");
 					row.put(df.format(rowData.get("tickets_conversion")) + "%");
 					row.put(rowData.get("higher") == null ? "-" : getDateName(new Date(rowData.get("higher").longValue())));
@@ -295,6 +313,7 @@ implements DashboardBrandTableDataBzService {
 			totals.put(totalsData.get("peasents") == null ? "-" : String.valueOf(Math.round(totalsData.get("peasents"))));
 			totals.put(totalsData.get("visits") == null ? "-" : String.valueOf(Math.round(totalsData.get("visits"))));
 			totals.put(totalsData.get("tickets") == null ? "-" : String.valueOf(Math.round(totalsData.get("tickets"))));
+			totals.put(totalsData.get("revenue") == null ? "-" : String.valueOf(Math.round(totalsData.get("revenue"))));
 			totals.put(totalsData.get("peasents_conversion") == null ? "-" : df.format(totalsData.get("peasents_conversion")) + "%");
 			totals.put(totalsData.get("tickets_conversion") == null ? "-" : df.format(totalsData.get("tickets_conversion")) + "%");
 			totals.put(totalsData.get("higher") == null ? "-" : getDateName(new Date(totalsData.get("higher").longValue())));
@@ -307,7 +326,7 @@ implements DashboardBrandTableDataBzService {
 			return jsonArray.toString();
 			
 		} catch (ASException e) {
-			if( e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENEXPIRED_CODE || 
+			if( e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENEXPIRED_CODE || 	
 					e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENMISSING_CODE) {
 				log.log(Level.INFO, e.getMessage());
 			} else {
