@@ -753,6 +753,18 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 			}
 
+			try {
+				brand = brandDao.get("pakmail_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Pakmail");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "pakmail_mx"));
+				brandDao.create(brand);
+			}
+
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -1064,6 +1076,20 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("502", "Aditivo Plaza Aragon", "aditivo_mx", null));			
 			stores.add(new StoreAdapter("503", "Aditivo Arco Norte", "aditivo_mx", null));			
 			stores.add(new StoreAdapter("504", "Aditivo Neza 1", "aditivo_mx", null));			
+
+			stores.add(new StoreAdapter("505", "Pakmail Parque Lincoln", "pakmail_mx", null));
+			stores.add(new StoreAdapter("506", "Pakmail Plaza Polanco", "pakmail_mx", null));
+			stores.add(new StoreAdapter("507", "Pakmail Atenas", "pakmail_mx", null));
+			stores.add(new StoreAdapter("508", "Pakmail Lomas Estrella", "pakmail_mx", null));
+			stores.add(new StoreAdapter("509", "Pakmail Mixcoac", "pakmail_mx", null));
+			stores.add(new StoreAdapter("510", "Pakmail Obrero Mundial", "pakmail_mx", null));
+			stores.add(new StoreAdapter("511", "Pakmail Roma", "pakmail_mx", null));
+			stores.add(new StoreAdapter("512", "Pakmail Bosque de la Herradura", "pakmail_mx", null));
+			stores.add(new StoreAdapter("513", "Pakmail Echegaray", "pakmail_mx", null));
+			stores.add(new StoreAdapter("514", "Pakmail Palo Solo", "pakmail_mx", null));
+			stores.add(new StoreAdapter("515", "Pakmail San Mateo Atenco", "pakmail_mx", null));
+			stores.add(new StoreAdapter("516", "Pakmail Metepec", "pakmail_mx", null));
+			stores.add(new StoreAdapter("517", "Pakmail Valle Dorado", "pakmail_mx", null));
 
 			Store store;
 			for(StoreAdapter obj : stores ) {
