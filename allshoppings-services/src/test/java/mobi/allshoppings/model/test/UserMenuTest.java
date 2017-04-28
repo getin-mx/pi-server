@@ -1820,6 +1820,33 @@ public class UserMenuTest extends TestCase {
 				userDao.create(tanyamoss);
 			}
 
+			try {
+				um = userMenuDao.get("pakmail_mx", true);
+				userMenuDao.delete("pakmail_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("pakmail_mx"));
+				userMenuDao.create(um);
+			}
+
+			User pakmail = null;
+			try {
+				pakmail = userDao.get("pakmail_mx", true);
+				userDao.delete("pakmail_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				pakmail = new User();
+				pakmail.setFirstname("Pakmail");
+				pakmail.setLastname("Mexico");
+				pakmail.setEmail("pakmail@allshoppings.mobi");
+				pakmail.getSecuritySettings().setRole(Role.BRAND);
+				pakmail.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				pakmail.setKey((Key)keyHelper.obtainKey(User.class, "pakmail_mx"));
+				userDao.create(pakmail);
+			}
+
 			User pameladeharo = null;
 			try {
 				pameladeharo = userDao.get("pameladeharo_mx", true);
