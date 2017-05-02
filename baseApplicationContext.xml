@@ -84,7 +84,7 @@
 		<property name="smtpServer" value="smtp.gmail.com" />
 		<property name="smtpPort" value="587" />
 		<property name="smtpUser" value="contacto@getin.mx" />
-		<property name="smtpPassword" value="Getin2017" />
+		<property name="smtpPassword" value="Getin1234" />
 		<property name="smtpEncription" value="tls" />
 		<property name="solrUrl" value="http://aragorn.getin.mx:8983/solr/allshoppings" />
 		<property name="getinSqlUrl" value="jdbc:mysql://getinold.allshoppings.mobi:3306/getin?user=api&amp;password=VZ52sBPTeg33rq7w" />
