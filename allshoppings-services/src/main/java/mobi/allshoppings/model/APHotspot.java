@@ -3,6 +3,7 @@ package mobi.allshoppings.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -21,6 +22,7 @@ public class APHotspot implements ModelKey, Serializable, Identificable, Replica
 
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
+	@Cacheable("false")
 	private Key key;
 
 	private String hostname;
