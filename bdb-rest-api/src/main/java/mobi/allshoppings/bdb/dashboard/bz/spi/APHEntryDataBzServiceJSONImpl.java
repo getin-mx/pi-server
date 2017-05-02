@@ -100,6 +100,11 @@ implements BDBDashboardBzService {
 				}
 			}
 
+			for(APHEntry entry : entries ) {
+				APDevice apd = apdDao.get(entry.getHostname());
+				aphHelper.artificiateRSSI(entry, apd);
+			}
+			
 			List<APDVisit> visits = CollectionFactory.createList();
 			Map<Long, Integer> values = CollectionFactory.createMap();
 			

@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -18,6 +19,7 @@ import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.CollectionFactory;
 
 @PersistenceCapable(detachable="true")
+@Cacheable("false")
 public class APUptime implements ModelKey, Serializable, Identificable {
 
 	private static final long serialVersionUID = 1L;

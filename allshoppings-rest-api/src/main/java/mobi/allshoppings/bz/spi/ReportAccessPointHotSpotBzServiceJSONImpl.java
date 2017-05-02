@@ -1,7 +1,6 @@
 package mobi.allshoppings.bz.spi;
 
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,17 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.apdevice.APHHelper;
-import mobi.allshoppings.apdevice.IAPDeviceTrigger;
 import mobi.allshoppings.bz.ReportAccessPointHotSpotBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.dao.APDeviceDAO;
-import mobi.allshoppings.dao.APDeviceTriggerEntryDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.APHotspotDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDevice;
-import mobi.allshoppings.model.APDeviceTriggerEntry;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
 
@@ -38,8 +34,8 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 	private APDeviceDAO apdDao;
 	@Autowired
 	private APHotspotDAO dao;
-	@Autowired
-	private APDeviceTriggerEntryDAO triggerDao;
+//	@Autowired
+//	private APDeviceTriggerEntryDAO triggerDao;
 	@Autowired
 	private APHHelper aphHelper;
 	@Autowired
@@ -92,14 +88,14 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 					aphotspot.setCount(ele.getInt("count"));
 					aphotspot.setKey(dao.createKey());
 
-					if(!aphotspot.getMac().startsWith("broadcast") && !aphotspot.getMac().equals("00:00:00:00:00:00") && !aphotspot.getMac().contains(" ") && aphotspot.getSignalDB() < 0) {
+					if(aphHelper.isValidMacAddress(aphotspot.getMac()) && aphotspot.getSignalDB() < 0) {
 						dao.create(aphotspot);
 
 						// Updates APHEntries
 						try {
 							aphHelper.setUseCache(false);
 							APHEntry aphe = aphHelper.setFramedRSSI(aphotspot);
-							aphHelper.artificiateRSSI(aphe, device);
+//							aphHelper.artificiateRSSI(aphe, device);
 							if( StringUtils.hasText(aphe.getIdentifier())) {
 								apheDao.update(aphe);
 							} else {
@@ -111,19 +107,19 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 						}
 
 						// Try to Execute Triggers
-						try {
-							List<APDeviceTriggerEntry> triggers = triggerDao.getUsingCoincidence(hostname, aphotspot.getMac());
-							for(APDeviceTriggerEntry entry : triggers ) {
-								try {
-									IAPDeviceTrigger trigger = (IAPDeviceTrigger)Class.forName(entry.getTriggerClassName()).newInstance();
-									trigger.execute(hostname, aphotspot.getMac(), aphotspot.getSignalDB(), entry.getTriggerMetadata());
-								} catch( Throwable e ) {
-									log.log(Level.SEVERE, "Error excecuting APDevice Triggers", e);
-								}
-							}
-						} catch( ASException e ) {
-							log.log(Level.SEVERE, "Error excecuting APDevice Triggers", e);
-						}
+//						try {
+//							List<APDeviceTriggerEntry> triggers = triggerDao.getUsingCoincidence(hostname, aphotspot.getMac());
+//							for(APDeviceTriggerEntry entry : triggers ) {
+//								try {
+//									IAPDeviceTrigger trigger = (IAPDeviceTrigger)Class.forName(entry.getTriggerClassName()).newInstance();
+//									trigger.execute(hostname, aphotspot.getMac(), aphotspot.getSignalDB(), entry.getTriggerMetadata());
+//								} catch( Throwable e ) {
+//									log.log(Level.SEVERE, "Error excecuting APDevice Triggers", e);
+//								}
+//							}
+//						} catch( ASException e ) {
+//							log.log(Level.SEVERE, "Error excecuting APDevice Triggers", e);
+//						}
 
 						// Creates locks if needed
 						// TODO: This should be moved to a trigger

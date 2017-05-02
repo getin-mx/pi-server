@@ -575,6 +575,15 @@ public class APHHelperImpl implements APHHelper {
 	
 	@Override
 	public boolean isValidMacAddress(String mac) {
+
+		// Basic validations
+		if(mac.equals("00:00:00:00:00:00") || mac.toLowerCase().equals("ff:ff:ff:ff:ff:ff"))
+			return false;
+		
+		if(mac.contains(" "))
+			return false;
+
+		// Regex validation
 		Pattern p = Pattern.compile("^([0-9A-Fa-f]{2}[\\.:-]){5}([0-9A-Fa-f]{2})$");
 		Matcher m = p.matcher(mac);
 		return m.find();

@@ -3,6 +3,7 @@ package mobi.allshoppings.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -14,6 +15,7 @@ import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.model.interfaces.ModelKey;
 
 @PersistenceCapable(detachable="true")
+@Cacheable("false")
 public class APDVisit implements ModelKey, Serializable, Identificable {
 
 	private static final long serialVersionUID = 1L;
