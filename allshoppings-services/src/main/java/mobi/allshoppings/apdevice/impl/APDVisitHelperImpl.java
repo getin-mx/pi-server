@@ -274,7 +274,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							}
 
 							didDao.deleteUsingSubentityIdAndElementIdAndDate(entityId,
-									Arrays.asList(new String[] { "apd_visitor", "apd_permanence" }), curDate, curDate);
+									Arrays.asList(new String[] { "apd_visitor", "apd_permanence", "apd_occupation" }), curDate, curDate);
 							mapper.createAPDVisitPerformanceDashboardForDay(curDate,
 									Arrays.asList(new String[] { entityId }), entityKind, objs);
 						}
@@ -646,21 +646,30 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	@SuppressWarnings("unused")
 	@Override
 	public List<APDVisit> aphEntryToVisits(List<APHEntry> entries, Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, List<String> employeeListMacs) throws ASException {
-		
+
 		int COMMON = 0;
-		int CASABLANCA = 1;
-		
-		int mode = 0;
-		for( APHEntry entry : entries ) {
-			if( systemConfiguration.getMark2APDevices().contains(entry.getHostname()))
-				mode = CASABLANCA;
-		}
-		
-		switch(mode) {
-		case 1:
-			return aphEntryToVisitsCasablanca(entries, apdCache, assignmentsCache, blackListMacs, employeeListMacs);
-		default:
-			return aphEntryToVisitsCommon(entries, apdCache, assignmentsCache, blackListMacs, employeeListMacs);
+		int MARKII = 1;
+
+		try {
+			Date markIIDate = sdf.parse("2017-04-01");
+
+			int mode = 0;
+			for( APHEntry entry : entries ) {
+				if( systemConfiguration.getMark2APDevices().contains(entry.getHostname()))
+					mode = MARKII;
+				APDAssignation assig = assignmentsCache.get(entry.getHostname());
+				if( null != assig && assig.getFromDate().after(markIIDate))
+					mode = MARKII;
+			}
+
+			switch(mode) {
+			case 1:
+				return aphEntryToVisitsMarkII(entries, apdCache, assignmentsCache, blackListMacs, employeeListMacs);
+			default:
+				return aphEntryToVisitsCommon(entries, apdCache, assignmentsCache, blackListMacs, employeeListMacs);
+			}
+		} catch( Exception e ) {
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
 	}
 
@@ -672,7 +681,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @return A list with created visits
 	 * @throws ASException
 	 */
-	private List<APDVisit> aphEntryToVisitsCasablanca(List<APHEntry> entries, Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, List<String> employeeListMacs) throws ASException {
+	private List<APDVisit> aphEntryToVisitsMarkII(List<APHEntry> entries, Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, List<String> employeeListMacs) throws ASException {
 
 		// Validates entries
 		if( CollectionUtils.isEmpty(entries))
@@ -791,7 +800,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						if( currentVisit != null ) {
 							currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
 							addPermanenceCheck(currentVisit, currentPeasant, dev);
-							if(isVisitValid(currentVisit, dev))
+							if(isVisitValid(currentVisit, dev, isEmployee))
 								ret.add(currentVisit);
 							currentVisit = null;
 						}
@@ -834,7 +843,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 										currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), finishSlot));
 										addPermanenceCheck(currentVisit, currentPeasant, dev);
-										if(isVisitValid(currentVisit, dev))
+										if(isVisitValid(currentVisit, dev, isEmployee))
 											ret.add(currentVisit);
 										currentVisit = null;
 									}
@@ -857,7 +866,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								if( currentVisit != null ) {
 									currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), finishSlot));
 									addPermanenceCheck(currentVisit, currentPeasant, dev);
-									if(isVisitValid(currentVisit, dev))
+									if(isVisitValid(currentVisit, dev, isEmployee))
 										ret.add(currentVisit);
 									currentVisit = null;
 								}
@@ -891,7 +900,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					finishSlot = (int)(lastVisitSlot + (dev1.getVisitDecay() * 3));
 				currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), finishSlot));
 				addPermanenceCheck(currentVisit, currentPeasant, apd.get(curEntry.getHostname()));
-				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname())))
+				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname()), isEmployee))
 					ret.add(currentVisit);
 				currentVisit = null;
 			}
@@ -958,7 +967,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 		for(APHEntry entry : entries) {
 			aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
-			apheDao.update(entry);
+//			apheDao.update(entry);
 		}
 
 		// Merges all the time slots
@@ -1053,7 +1062,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						if( currentVisit != null ) {
 							currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
 							addPermanenceCheck(currentVisit, currentPeasant, dev);
-							if(isVisitValid(currentVisit, dev))
+							if(isVisitValid(currentVisit, dev, isEmployee))
 								ret.add(currentVisit);
 							currentVisit = null;
 						}
@@ -1090,7 +1099,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									if((( slot - lastVisitSlot ) * 3) > dev.getVisitGapThreshold()) {
 										currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
 										addPermanenceCheck(currentVisit, currentPeasant, dev);
-										if(isVisitValid(currentVisit, dev))
+										if(isVisitValid(currentVisit, dev, isEmployee))
 											ret.add(currentVisit);
 										currentVisit = null;
 									}
@@ -1107,7 +1116,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								if( currentVisit != null ) {
 									currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
 									addPermanenceCheck(currentVisit, currentPeasant, dev);
-									if(isVisitValid(currentVisit, dev))
+									if(isVisitValid(currentVisit, dev, isEmployee))
 										ret.add(currentVisit);
 									currentVisit = null;
 								}
@@ -1137,7 +1146,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			if( currentVisit != null ) {
 				currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
 				addPermanenceCheck(currentVisit, currentPeasant, apd.get(curEntry.getHostname()));
-				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname())))
+				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname()), isEmployee))
 					ret.add(currentVisit);
 				currentVisit = null;
 			}
@@ -1167,7 +1176,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			visit.setHidePermanence(true);
 		
 		try {
-			if (isVisitValid(visit, device) && peasant != null && (peasant.getCheckinStarted().before(visit.getCheckinStarted())
+			if (isVisitValid(visit, device, false) && peasant != null && (peasant.getCheckinStarted().before(visit.getCheckinStarted())
 					|| peasant.getCheckinStarted().equals(visit.getCheckinStarted())))
 				peasant.setHidePermanence(true);
 		} catch(Exception e ) {}
@@ -1184,7 +1193,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @return true if valid, false if not
 	 * @throws ParseException
 	 */
-	private boolean isVisitValid(APDVisit visit, APDevice device) throws ParseException {
+	private boolean isVisitValid(APDVisit visit, APDevice device, boolean isEmployee) throws ParseException {
+		
+		// Employees doesn't generate visits
+		if( isEmployee )
+			return false;
 		
 		int time = (int)(visit.getCheckinFinished().getTime() - visit.getCheckinStarted().getTime()) / 60000;
 		
@@ -1302,9 +1315,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 */
 	private boolean isPeasantValid(APDVisit visit, APDevice device,Boolean isEmployee) throws ParseException {
 		
-		// Employees DOESN't generate Peasants!
 		if( isEmployee )
-			return false;
+			visit.setCheckinType(APDVisit.CHECKIN_EMPLOYEE);
 		
 		// Validate Hour of day
 		int t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
@@ -1363,10 +1375,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		APDVisit visit = new APDVisit();
 		visit.setApheSource(source.getIdentifier());
 		visit.setCheckinStarted(date);
-		if(isEmployee)
-			visit.setCheckinType(APDVisit.CHECKIN_EMPLOYEE);
-		else
-			visit.setCheckinType(APDVisit.CHECKIN_VISIT);
+		visit.setCheckinType(APDVisit.CHECKIN_VISIT);
 		visit.setEntityId(entityId);
 		visit.setEntityKind(entityKind);
 		visit.setMac(source.getMac());

@@ -547,19 +547,6 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 		try {
 			if( pp == null && !pm.currentTransaction().isActive()) pm.currentTransaction().begin();
 
-//			if(doesEntityExist(pm, clazz, obj.getKey())) {
-//				// This is a form to check if there is a cross context bug
-//				// In a cross context scenario, the state of the object is marked as transient
-//				// because a class loader problem. So if it is the case, the simpler solution
-//				// is to delete the previous object and create a new one with the same key
-//				ObjectState objs = JDOHelper.getObjectState(obj);
-//				if(objs.equals(ObjectState.TRANSIENT)) {
-//					try {
-//						delete(obj.getIdentifier());
-//					} catch( Exception e ) {}
-//				}
-//			}
-
 			if( performPreStore )
 				for(T o : obj )
 					o.preStore();
@@ -568,12 +555,9 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 				pm.deletePersistentAll(obj);
 			} catch( Exception e ) {}
 			pm.makePersistentAll(obj);
-//			enqueuePersistence(pm, obj);
 
 			if (pp == null)
 				pm.currentTransaction().commit();
-
-//			obj.getLastUpdate();
 
 			if( cacheHelper != null )
 				for(T o : obj )

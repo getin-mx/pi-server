@@ -704,6 +704,11 @@ public class DashboardAPDeviceMapperService {
 					
 					if( entityKind.equals(EntityKind.KIND_BRAND)) {
 						store = storeCache.get(String.valueOf(v.getEntityId()));
+						if( store == null ) {
+							store = storeDao.get(String.valueOf(v.getEntityId()), true);
+							if( store == null ) return;
+							storeCache.put(String.valueOf(v.getEntityId()), store);
+						}
 						entityId = store.getBrandId();
 						shoppingId = store.getShoppingId();
 						subentityId = store.getIdentifier();
@@ -1032,20 +1037,24 @@ public class DashboardAPDeviceMapperService {
 		List<DashboardIndicatorAlias> aliases = createAliasList(indicatorsSet);
 		saveIndicatorAliasSet(aliases);
 
-		Iterator<String> x = indicatorsSet.keySet().iterator();
-		while(x.hasNext()) {
-			String key = x.next();
-
-			try {
-				dao.delete(key);
-			} catch( Exception e ) {}
-
-			try {
-				dao.create(indicatorsSet.get(key));
-			} catch( Exception e ) {
-				dao.createOrUpdate(indicatorsSet.get(key));
-			}
-		}
+//		Iterator<String> x = indicatorsSet.keySet().iterator();
+//		while(x.hasNext()) {
+//			String key = x.next();
+//
+//			try {
+//				dao.delete(key);
+//			} catch( Exception e ) {}
+//
+//			try {
+//				dao.create(indicatorsSet.get(key));
+//			} catch( Exception e ) {
+//				dao.createOrUpdate(indicatorsSet.get(key));
+//			}
+//		}
+		
+		List<DashboardIndicatorData> values = CollectionFactory.createList();
+		values.addAll(indicatorsSet.values());
+		dao.createOrUpdate(null, values, true);
 	}
 
 	public List<DashboardIndicatorAlias> createAliasList(Map<String, DashboardIndicatorData> indicatorsSet) throws ASException {

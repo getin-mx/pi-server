@@ -1429,6 +1429,39 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 
+			try {
+				aditivo = userDao.get("sistemas@aditivo_mx", true);
+				userDao.delete(aditivo);
+				throw new Exception();
+			} catch( Exception e ) {
+				aditivo = new User();
+				aditivo.setFirstname("Aditivo");
+				aditivo.setLastname("Mexico");
+				aditivo.setEmail("sistemas@aditivo_mx");
+				aditivo.getSecuritySettings().setRole(Role.STORE);
+				aditivo.getSecuritySettings().setStores(Arrays.asList("61374a58-a679-4532-811a-aa3340bcc47e",
+								"ce91457a-f7dc-49d0-93ff-79259e553769", "78416e3d-2274-4a24-9186-3616588f6197",
+								"aff0af5d-45b8-46b6-81ee-12c79990653b", "98abde27-4dcc-4d5b-ac16-d43eac63b94b",
+								"9a14f70c-52eb-4756-8fb3-b48ee8b86094", "77bfffb3-48a9-43b6-b1ec-51d526e96da8",
+								"349b85b9-a083-4e65-9740-f3d59278f635"));
+				aditivo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				aditivo.setKey((Key)keyHelper.obtainKey(User.class, "sistemas@aditivo_mx"));
+				userDao.create(aditivo);
+			}
+
+			try {
+				um = userMenuDao.get("sistemas@aditivo_mx", true);
+				userMenuDao.delete("sistemas@aditivo_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.setKey(userMenuDao.createKey("sistemas@aditivo_mx"));
+				userMenuDao.create(um);
+			}
+
+
 			User d98coastav = null;
 			try {
 				d98coastav = userDao.get("98coastav_mx", true);

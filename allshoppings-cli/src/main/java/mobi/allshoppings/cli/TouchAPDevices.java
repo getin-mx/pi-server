@@ -99,6 +99,10 @@ public class TouchAPDevices extends AbstractCLI {
 			for(APDAssignation assig : assigs) {
 				casablanca.add(assig.getHostname());
 			}
+
+			// Antenas de flormar
+			List<String> flormar = Arrays.asList("ashs-0064","ashs-0095","ashs-0096","ashs-0097","gihs-0343","gihs-0344","gihs-0345","gihs-0346","gihs-0347");
+			List<String> retailUnited = Arrays.asList("gihs-0141","gihs-0144","gihs-0152","gihs-0182","gihs-0340","ashs-0115","gihs-0339","gihs-0341","gihs-0354");
 			
 			// Antenas de club casablanca
 			stores = storeDao.getUsingBrandAndStatus("agasys_mx", StatusHelper.statusActive(), null);
@@ -133,29 +137,37 @@ public class TouchAPDevices extends AbstractCLI {
 				
 				if( obj.getReportMailList() != null && obj.getReportMailList().size() > 0  ) {
 					List<String> mails = CollectionFactory.createList();
-					mails.addAll(Arrays.asList("matias@getin.mx","anabell@getin.mx","francisco@getin.mx","daniel@getin.mx","ingrid@getin.mx","eduardo@getin.mx"));
+					mails.addAll(Arrays.asList("matias@getin.mx","anabell@getin.mx","francisco@getin.mx","luis@getin.mx","ingrid@getin.mx","eduardo@getin.mx"));
 					if(astrid.contains(obj.getHostname())) {
 						mails.add("astrid@getin.mx");
-					} else {
-						mails.add("mariajose@getin.mx");
 					}
 					
 					// custom mails
 					if(obj.getHostname().equals("ashs-0091") || obj.getHostname().equals("ashs-0112"))
 						mails.add("emmabotanicus@hotmail.com");
 					
-					if(obj.getHostname().equals("ashs-0091") || obj.getHostname().equals("ashs-0112"))
-						mails.add("emmabotanicus@hotmail.com");
-
 					if(outlet.contains(obj.getHostname())) {
 						mails.add("cymerikayedra@gmail.com");
 						mails.add("cymauditoria@live.com.mx");
 					} 
 
 					if(casablanca.contains(obj.getHostname())) {
-						mails.add("ggonzalez@clubcasablanca.mx");
+						mails.add("gio_292@hotmail.com");
 					} 
 
+					if(flormar.contains(obj.getHostname())) {
+						mails.add("nezrin.saker@demodazl.com");
+						mails.add("sistemasru@retailunitedsa.com");
+						mails.add("valerie.paredes@demodazl.com");
+						mails.add("yamilly.bonilla@retailunitedsa.com");
+					}
+					
+					if(retailUnited.contains(obj.getHostname())) {
+						mails.add("nezrin.saker@demodazl.com");
+						mails.add("sistemasru@retailunitedsa.com");
+						mails.add("richard.pang@retailunitedsa.com");
+					}
+					
 					if(agasys.contains(obj.getHostname())) {
 						mails.clear();
 					} 

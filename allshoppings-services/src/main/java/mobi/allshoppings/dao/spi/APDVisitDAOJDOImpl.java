@@ -30,6 +30,7 @@ import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
+import mobi.allshoppings.tx.PersistenceProvider;
 
 public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVisitDAO {
 
@@ -330,52 +331,35 @@ public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVi
 		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		
 		try{
-			Map<String, Object> parameters = CollectionFactory.createMap();
-			List<String> declaredParams = CollectionFactory.createList();
-			List<String> filters = CollectionFactory.createList();
 
-			Query query = pm.newQuery(clazz);
+			// Obtains DB Connection
+			JDOConnection jdoConn = pm.getDataStoreConnection();
+			DB db = (DB)jdoConn.getNativeConnection();
 
-			// entityId Parameter
-			if(StringUtils.hasText(entityId)) {
-				declaredParams.add("String entityIdParam");
-				filters.add("entityId == entityIdParam");
-				parameters.put("entityIdParam", entityId);
-			}
+			// Set one, generate first filter
+			List<BasicDBObject> parts = CollectionFactory.createList();
+			if( StringUtils.hasText(entityId))
+				parts.add(new BasicDBObject("entityId", entityId));
+			if(null != entityKind)
+				parts.add(new BasicDBObject("entityKind", entityKind));
+			if(null != checkinType)
+				parts.add(new BasicDBObject("checkinType", checkinType));
+			if(null != fromDate && null == toDate )
+				parts.add(new BasicDBObject("checkinStarted", new BasicDBObject("$gt", fromDate)));
+			if(null == fromDate && null != toDate )
+				parts.add(new BasicDBObject("checkinStarted", new BasicDBObject("$lt", toDate)));
+			if(null != fromDate && null != toDate ) 
+				parts.add(new BasicDBObject("$and", Arrays.asList(
+							new BasicDBObject("checkinStarted", new BasicDBObject("$gt", fromDate)),
+							new BasicDBObject("checkinStarted", new BasicDBObject("$lt", toDate))
+							)));
+			BasicDBObject query = new BasicDBObject("$and", parts);
 
-			// entityKind Parameter
-			if(null != entityKind) {
-				declaredParams.add("Integer entityKindParam");
-				filters.add("entityKind == entityKindParam");
-				parameters.put("entityKindParam", entityKind);
-			}
-
-			// fromDate Parameter
-			if(null != fromDate) {
-				declaredParams.add("java.util.Date fromDateParam");
-				filters.add("checkinStarted >= fromDateParam");
-				parameters.put("fromDateParam", fromDate);
-			}
-
-			// toDate Parameter
-			if(null != toDate) {
-				declaredParams.add("java.util.Date toDateParam");
-				filters.add("checkinStarted <= toDateParam");
-				parameters.put("toDateParam", toDate);
-			}
-
-			// entityId Parameter
-			if(null != checkinType) {
-				declaredParams.add("Integer checkinTypeParam");
-				filters.add("checkinType == checkinTypeParam");
-				parameters.put("checkinTypeParam", checkinType);
-			}
-
-			query.declareParameters(toParameterList(declaredParams));
-			query.setFilter(toWellParametrizedFilter(filters));
-
-			query.deletePersistentAll(parameters);
+			db.getCollection("APDVisit").remove(query);
+			jdoConn.close();
 			
+			pm.evictAll(true, APDVisit.class);
+						
 			return;
 			
 		} catch(Exception e) {
@@ -473,5 +457,47 @@ public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVi
 		}
 
 	}
-		
+
+	@Override
+	public void createOrUpdate(PersistenceProvider pp, List<APDVisit> obj, boolean performPreStore) throws ASException {
+		if(obj == null){
+			throw ASExceptionHelper.notAcceptedException();
+		}
+		PersistenceManager pm;
+		if( pp == null ) {
+			pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+//			pm.setDetachAllOnCommit(true);
+//			pm.setIgnoreCache(true);
+//			Iterator<String> i = pm.getProperties().keySet().iterator();
+//			while(i.hasNext()) {
+//				String key = i.next();
+//				Object value = pm.getProperties().get(key);
+//				System.out.println(key + ": " + value);
+//			}
+		} else {
+			pm = pp.get();
+		}
+
+		try {
+			if( pp == null && !pm.currentTransaction().isActive()) pm.currentTransaction().begin();
+
+			if( performPreStore )
+				for(APDVisit o : obj )
+					o.preStore();
+
+			pm.makePersistentAll(obj);
+			
+			if (pp == null)
+				pm.currentTransaction().commit();
+
+		}catch(Exception e){
+			if(pp == null && pm.currentTransaction().isActive()){
+				pm.currentTransaction().rollback();
+			}
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		}finally{
+			if( pp == null ) pm.close();
+		}	
+	}
+
 }

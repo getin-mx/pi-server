@@ -9,10 +9,13 @@ import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.jdo.datastore.JDOConnection;
 
 import org.springframework.util.StringUtils;
 
 import com.inodes.datanucleus.model.Key;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
 
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.exception.ASException;
@@ -235,41 +238,40 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 		}
 		
 		try {
-			Query query = pm.newQuery(DashboardIndicatorData.class);
-
-			Map<String, Object> parameters = CollectionFactory.createMap();
-			List<String> declaredParams = CollectionFactory.createList();
-			List<String> filters = CollectionFactory.createList();
-
-			if(StringUtils.hasText(subentityId)) {
-				declaredParams.add("String subentityIdParm");
-				filters.add("subentityId == subentityIdParm");
-				parameters.put("subentityIdParm", subentityId);
-			}
 			
-			if(!CollectionUtils.isEmpty(elementId)) {
-				declaredParams.add("java.util.List elementIdParm");
-				filters.add("elementIdParm.contains(elementId)");
-				parameters.put("elementIdParm", elementId);
-			}
+			// Obtains DB Connection
+			JDOConnection jdoConn = pm.getDataStoreConnection();
+			DB db = (DB)jdoConn.getNativeConnection();
 
-			if(null != fromDate) {
-				declaredParams.add("String fromStringDateParm");
-				filters.add("stringDate >= fromStringDateParm");
-				parameters.put("fromStringDateParm", sdf.format(fromDate));
+			// Set one, generate first filter
+			List<BasicDBObject> parts = CollectionFactory.createList();
+			if( StringUtils.hasText(subentityId))
+				parts.add(new BasicDBObject("subentityId", subentityId));
+			if(null != elementId && elementId.size() > 0 )
+				parts.add(new BasicDBObject("elementId", new BasicDBObject("$in", elementId)));
+			if(null != fromDate && null == toDate ) {
+				String fromDateString = sdf.format(fromDate);
+				parts.add(new BasicDBObject("stringDate", new BasicDBObject("$gte", fromDateString)));
 			}
+			if(null == fromDate && null != toDate ) {
+				String toDateString = sdf.format(toDate);
+				parts.add(new BasicDBObject("stringDate", new BasicDBObject("$lte", toDateString)));
+			}
+			if(null != fromDate && null != toDate ) {
+				String fromDateString = sdf.format(fromDate);
+				String toDateString = sdf.format(toDate);
+				parts.add(new BasicDBObject("$and", Arrays.asList(
+						new BasicDBObject("stringDate", new BasicDBObject("$gte", fromDateString)),
+						new BasicDBObject("stringDate", new BasicDBObject("$lte", toDateString))
+						)));
+			}
+			BasicDBObject query = new BasicDBObject("$and", parts);
+
+			db.getCollection("DashboardIndicatorData").remove(query);
+			jdoConn.close();
 			
-			if(null != toDate) {
-				declaredParams.add("String toStringDateParm");
-				filters.add("stringDate <= toStringDateParm");
-				parameters.put("toStringDateParm", sdf.format(toDate));
-			}
-
-			query.declareParameters(toParameterList(declaredParams));
-			query.setFilter(toWellParametrizedFilter(filters));
-
-			query.deletePersistentAll(parameters);
-
+			pm.evictAll(true, DashboardIndicatorData.class);
+						
 			return;
 			
 		} catch (Exception e) {
