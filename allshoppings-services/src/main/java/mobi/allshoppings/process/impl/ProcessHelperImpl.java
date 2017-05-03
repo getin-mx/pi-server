@@ -43,7 +43,7 @@ public class ProcessHelperImpl implements ProcessHelper {
 		StringBuffer sb = new StringBuffer();
 		
 		if( process.getProcessType().equals(Process.PROCESS_TYPE_GENERATE_VISITS)) {
-			sb.append("aspi2 GenerateAPDVisits --storeIds ")
+			sb.append("aspi2 GenerateAPDVisits --datastore /usr/local/allshoppings/etc/datastore.nocache.properties --storeIds ")
 			.append(process.getEntityId())
 			.append(" --fromDate ")
 			.append(json.getString("fromDate"))
