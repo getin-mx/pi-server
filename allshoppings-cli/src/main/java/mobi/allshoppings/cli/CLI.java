@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.logging.log4j.LogManager;
@@ -57,6 +58,7 @@ public class CLI {
 		}
 
 		OptionParser parser = new OptionParser();
+		parser.accepts( "datastore", "Datastore configuration properties file. Defauts to $ALLSHOPPINGS/etc/datastore.properties" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "appcontext", "Application Context File. Defauts to $ALLSHOPPINGS/etc/baseApplicationContext.xml" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "nocontext", "Don't use an application context. This is used for StartServer" );
 		parser.accepts( "help", "Shows this help message" );
@@ -68,6 +70,11 @@ public class CLI {
 
 		OptionSet options = parser.parse(args);
 
+		if( options.has("datastore")) {
+			System.setProperty("datastore.configuration", options.valueOf("datastore").toString());
+			logger.log(Level.INFO, "Setting datastore configuration to " + System.getProperty("datastore.configuration"));
+		}
+		
 		String appcontext = null;
 		if( options.has("appcontext")) {
 			appcontext = options.valueOf("appcontext").toString();

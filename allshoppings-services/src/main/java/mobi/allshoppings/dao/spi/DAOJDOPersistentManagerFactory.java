@@ -9,18 +9,16 @@ import com.inodes.util.FileLoader;
 
 public class DAOJDOPersistentManagerFactory {
 	
-	private static final PersistenceManagerFactory sharedManagerFactory = JDOHelper.getPersistenceManagerFactory(FileLoader.getResource(
-			"datastore.properties", FileLoader.PRECEDENCE_SYSTEMPATH) != null 
+	private static final PersistenceManagerFactory sharedManagerFactory = JDOHelper.getPersistenceManagerFactory(
+			System.getProperty("datastore.configuration") == null
 			? new File(FileLoader.getResource("datastore.properties",	FileLoader.PRECEDENCE_SYSTEMPATH).getFile())
-			: new File("/home/mhapanowicz/workspace-aspi/pi-server/datastore.properties"));
-    private static final PersistenceManagerFactory sharedGXManagerFactory = JDOHelper.getPersistenceManagerFactory(FileLoader.getResource(
-			"datastore.properties", FileLoader.PRECEDENCE_SYSTEMPATH) != null 
+			: new File(System.getProperty("datastore.configuration")));
+    private static final PersistenceManagerFactory sharedGXManagerFactory = JDOHelper.getPersistenceManagerFactory(
+			System.getProperty("datastore.configuration") == null
 			? new File(FileLoader.getResource("datastore.properties",	FileLoader.PRECEDENCE_SYSTEMPATH).getFile())
-			: new File("/home/mhapanowicz/workspace-aspi/pi-server/datastore.properties"));
+			: new File(System.getProperty("datastore.configuration")));
 
     private DAOJDOPersistentManagerFactory() {
-//    	sharedGXManagerFactory.setDetachAllOnCommit(true);
-//    	sharedManagerFactory.setDetachAllOnCommit(true);
     }
 
     public static PersistenceManagerFactory get() {
@@ -28,7 +26,7 @@ public class DAOJDOPersistentManagerFactory {
     }
 
     public static PersistenceManagerFactory getOptional() {
-        return sharedManagerFactory;
+    	return sharedManagerFactory;
     }
 
     public static PersistenceManagerFactory getGX() {
