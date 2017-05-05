@@ -1037,20 +1037,14 @@ public class DashboardAPDeviceMapperService {
 		List<DashboardIndicatorAlias> aliases = createAliasList(indicatorsSet);
 		saveIndicatorAliasSet(aliases);
 
-//		Iterator<String> x = indicatorsSet.keySet().iterator();
-//		while(x.hasNext()) {
-//			String key = x.next();
-//
-//			try {
-//				dao.delete(key);
-//			} catch( Exception e ) {}
-//
-//			try {
-//				dao.create(indicatorsSet.get(key));
-//			} catch( Exception e ) {
-//				dao.createOrUpdate(indicatorsSet.get(key));
-//			}
-//		}
+		Iterator<String> x = indicatorsSet.keySet().iterator();
+		while(x.hasNext()) {
+			String key = x.next();
+
+			try {
+				dao.delete(key);
+			} catch( Exception e ) {}
+		}
 		
 		List<DashboardIndicatorData> values = CollectionFactory.createList();
 		values.addAll(indicatorsSet.values());
