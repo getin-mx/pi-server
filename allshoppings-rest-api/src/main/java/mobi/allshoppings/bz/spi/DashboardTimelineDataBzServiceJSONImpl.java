@@ -225,6 +225,7 @@ implements DashboardTimelineDataBzService {
 						JSONObject jsonObj = new JSONObject();
 						jsonObj.put("name", key);
 						jsonObj.put("type", "column");
+						jsonObj.put("yAxis", 1);
 						jsonObj.put("data", resultMap.get(key) == null ? 0 : resultMap.get(key));
 						jsonArray.put(jsonObj);
 					}
