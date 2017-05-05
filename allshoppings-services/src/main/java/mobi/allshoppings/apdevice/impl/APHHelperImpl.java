@@ -168,6 +168,7 @@ public class APHHelperImpl implements APHHelper {
 	 */
 	public APHEntry getFromCache(String hostname, String mac, String date) throws NoSuchAlgorithmException, FileNotFoundException, IOException {
 		String hash = getHash(hostname, mac, date);
+		if( cache == null ) useCache = false;
 		APHEntry ret = useCache ? cache.get(hash) : null;
 		if( null == ret ) {
 			try {
