@@ -177,6 +177,20 @@ public class ProcessHelperImpl implements ProcessHelper {
 		}
 	}
 
+	@Override
+	public void completePendingProcesses() throws ASException {
+		List<Process> list = dao.getUsingLastUpdateStatusAndRange(null, null, false,
+				Arrays.asList(new Integer[] { StatusAware.STATUS_RUNNING }), null, null, null, true);
+
+		for( Process p : list ) {
+			log.log(Level.INFO, "Completing process " + p.getIdentifier());
+			p.setStatus(StatusAware.STATUS_SUCCEEDED);
+			p.setEndDateTime(new Date());
+
+			dao.update(p);
+		}
+	}
+
 	/**
 	 * @return the dao
 	 */
