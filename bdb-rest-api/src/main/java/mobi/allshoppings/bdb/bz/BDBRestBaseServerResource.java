@@ -702,6 +702,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 					&& !(o instanceof Date)
 					&& !(o instanceof Collection) && !(o instanceof Text)
 					&& !(o instanceof Map )
+					&& !(o instanceof Boolean )
 					&& !(o instanceof Key) & !(o instanceof Class)) {
 				@SuppressWarnings("unchecked")
 				Map<String, Object> subFields = PropertyUtils.describe(o);
