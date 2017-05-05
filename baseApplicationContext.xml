@@ -126,6 +126,7 @@
 		<property name="cacheMaxInMemElements" value="400000" />
 		<property name="cachePageSize" value="5000" />
 		<property name="cacheTempDir" value="/usr/local/allshoppings/dump" />
+		<property name="forceAlgorithm" value="markI" />
 
 		<property name="appleMacs">
 			<list>

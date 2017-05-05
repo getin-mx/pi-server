@@ -101,6 +101,7 @@ public class SystemConfiguration implements Serializable {
 	private String excelTemplate;
 	private List<String> forbiddenBrandsToReprocess;
 	private List<String> mark2APDevices;
+	private String forceAlgorithm;
 	private String defaultDumpDirectory;
 	private List<String> appleMacs;
 	private int cacheMaxInMemElements;
@@ -899,6 +900,14 @@ public class SystemConfiguration implements Serializable {
 
 	public void setCacheTempDir(String cacheTempDir) {
 		this.cacheTempDir = cacheTempDir;
+	}
+
+	public String getForceAlgorithm() {
+		return forceAlgorithm;
+	}
+
+	public void setForceAlgorithm(String forceAlgorithm) {
+		this.forceAlgorithm = forceAlgorithm;
 	}
 
 }

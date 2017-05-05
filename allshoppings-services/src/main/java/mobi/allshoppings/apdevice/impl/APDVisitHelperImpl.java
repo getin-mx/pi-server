@@ -52,6 +52,8 @@ import mobi.allshoppings.tools.Range;
 
 public class APDVisitHelperImpl implements APDVisitHelper {
 
+	public static final String ALGORITHM_MARKII = "markII";
+	
 	private static final Logger log = Logger.getLogger(APDVisitHelperImpl.class.getName());
 	private static final SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
 	private static final SimpleDateFormat tf2 = new SimpleDateFormat("HHmm");
@@ -662,6 +664,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					mode = MARKII;
 			}
 
+			if(ALGORITHM_MARKII.equals(systemConfiguration.getForceAlgorithm()))
+				mode = MARKII;
+			
 			switch(mode) {
 			case 1:
 				return aphEntryToVisitsMarkII(entries, apdCache, assignmentsCache, blackListMacs, employeeListMacs);
