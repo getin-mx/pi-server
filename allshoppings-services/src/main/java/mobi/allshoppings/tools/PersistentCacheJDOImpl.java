@@ -1,12 +1,7 @@
 package mobi.allshoppings.tools;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.List;
@@ -14,60 +9,49 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.gson.Gson;
+import javax.jdo.PersistenceManager;
 
-public class PersistentCacheFSImpl <V extends Object> {
+import mobi.allshoppings.dao.spi.GenericDAOJDO;
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.model.interfaces.ModelKey;
+import mobi.allshoppings.tx.PersistenceProvider;
+import mobi.allshoppings.tx.TransactionType;
+import mobi.allshoppings.tx.spi.PersistenceProviderJDOImpl;
 
-	private static final Logger log = Logger.getLogger(PersistentCacheFSImpl.class.getName());
+public class PersistentCacheJDOImpl <V extends ModelKey> {
+
+	private static final Logger log = Logger.getLogger(PersistentCacheJDOImpl.class.getName());
 	
 	private static final int DEFAULT_LIMIT = 1000;
 	private static final int DEFAULT_PAGE_SIZE = 100;
 	
 	private Map<String,V> map;
 	private Map<String,Long> lastUsed;
-	private String tempDir;
 	private int inMemLimit;
 	private int pageSize;
-	private Gson gson;
-	private Class<?> valueClazz;
 	private Map<String, Integer> keys;
+	private GenericDAOJDO<V> dao;
 	private int lastPage;
 	private int hits;
 	private int misses;
 	private int stores;
 	private int loads;
-		
-	public PersistentCacheFSImpl(Class<?> valueClazz) {
+	
+	public PersistentCacheJDOImpl(Class<V> valueClazz) {
 		this(valueClazz, DEFAULT_LIMIT, DEFAULT_PAGE_SIZE, null);
 	}
 
-	public PersistentCacheFSImpl(Class<?> valueClazz, int inMemLimit, int pageSize, String tempDir) {
+	public PersistentCacheJDOImpl(Class<V> valueClazz, int inMemLimit, int pageSize, String tempDir) {
 		super();
 		
-		this.valueClazz = valueClazz;
 		this.inMemLimit = inMemLimit;
 		this.pageSize = pageSize;
 		this.hits = 0;
 		this.misses = 0;
 		this.stores = 0;
 		this.loads = 0;
-				
-		this.tempDir = tempDir;
-		if( this.tempDir == null ) 
-			this.tempDir = "/tmp/";
+		this.dao = new GenericDAOJDO<V>(valueClazz);
 
-		StringBuffer sb = new StringBuffer(this.tempDir);
-		if(!sb.toString().endsWith(File.separator))
-			sb.append(File.separator);
-		sb.append("PersistentCache").append(File.separator);
-		sb.append(getProcessId("jvm")).append(File.separator);
-		sb.append(Thread.currentThread().getId()).append(File.separator);
-		this.tempDir = sb.toString();
-		
-		File f = new File(this.tempDir);
-		if(!f.exists())
-			f.mkdirs();
-		
 		map = CollectionFactory.createMap();
 		lastUsed = CollectionFactory.createMap();
 		keys = CollectionFactory.createMap();
@@ -147,30 +131,28 @@ public class PersistentCacheFSImpl <V extends Object> {
 		long limit = uses.get(index);
 
 		List<String> toRemove = CollectionFactory.createList();
-		StringBuffer pageSB = new StringBuffer();
 		Iterator<String> inMemLimits = lastUsed.keySet().iterator();
+		PersistenceProvider pp = new PersistenceProviderJDOImpl(TransactionType.SIMPLE);
+		((PersistenceManager)pp.get()).currentTransaction().begin();
+
 		while(inMemLimits.hasNext()) {
 			String key = inMemLimits.next();
 			if( lastUsed.get(key) <= limit ) {
 				if( map.containsKey(key)) {
 					V value = map.get(key);
-					String jsonValue = serialize(value);
-					pageSB.append(key).append(";;").append(jsonValue).append("\n");
-					keys.put(key, lastPage);
-					toRemove.add(key);
+					try {
+						dao.createOrUpdate(pp, value, true);
+						keys.put(key, lastPage);
+						toRemove.add(key);
+					} catch( ASException e ) {
+						log.log(Level.WARNING, e.getMessage(), e);
+					}
 				}
 			}
 		}
 
-		File f = new File(tempDir + lastPage);
-		if( f.exists() ) f.delete();
-		if(!f.getParentFile().exists())
-			f.getParentFile().mkdirs();
-		
-		FileOutputStream fos = new FileOutputStream(f);
-		fos.write(pageSB.toString().getBytes());
-		fos.flush();
-		fos.close();
+		((PersistenceManager)pp.get()).currentTransaction().commit();
+		((PersistenceManager)pp.get()).close();
 
 		for(String key : toRemove ) {
 			map.remove(key);
@@ -188,33 +170,18 @@ public class PersistentCacheFSImpl <V extends Object> {
 		long start = System.currentTimeMillis();
 		if( inMemSize() + pageSize >= inMemLimit ) 
 			storePage();
-		
-		Map<String, String> page = CollectionFactory.createMap();
-		File f = new File(tempDir + pageNumber);
-		if( f.exists() && f.canRead()) {
-			try(BufferedReader br = new BufferedReader(new FileReader(f))) {
-			    for(String line; (line = br.readLine()) != null ;) {
-			    	String[] parts = line.split(";;");
-			    	if( parts.length > 1 ) {
-			    		page.put(parts[0], parts[1]);
-			    	}
-			    }
-			    br.close();
-				f.delete();
-			}
-		} else {
-			throw new FileNotFoundException(f.getAbsolutePath());
-		}
 
-		for(String key : keys.keySet() ) {
-			if( keys.get(key) == pageNumber ) {
-				String jsonObject = page.get(key);
-				if( jsonObject != null ) {
-					@SuppressWarnings("unchecked")
-					V element = (V) gson.fromJson(jsonObject, valueClazz);
-					map.put(key, element);
+		Iterator<String> i = keys.keySet().iterator();
+		while(i.hasNext()) {
+			String key = i.next();
+			int page = keys.get(key);
+			if( page == pageNumber ) {
+				try {
+					map.put(key, dao.get(key,true));
 					keys.put(key, 0);
-			    	lastUsed.put(key, System.currentTimeMillis());
+					lastUsed.put(key, System.currentTimeMillis());
+				} catch( ASException e ) {
+					log.log(Level.WARNING, e.getMessage(), e);
 				}
 			}
 		}
@@ -229,27 +196,15 @@ public class PersistentCacheFSImpl <V extends Object> {
 		long start = System.currentTimeMillis();
 		if( inMemSize() + pageSize >= inMemLimit ) 
 			storePage();
-		
-		File f = new File(tempDir + pageNumber);
-		if( f.exists() && f.canRead()) {
-			try(BufferedReader br = new BufferedReader(new FileReader(f))) {
-				for(String line; (line = br.readLine()) != null ;) {
-					if( line.startsWith(key + ";;")) {
-						String[] parts = line.split(";;");
-						@SuppressWarnings("unchecked")
-						V element = (V) gson.fromJson(parts[1], valueClazz);
-						map.put(key, element);
-						keys.put(key, 0);
-						lastUsed.put(key, System.currentTimeMillis());
-						break;
-					}
-				}
-				br.close();
-			}
-		} else {
-			throw new FileNotFoundException(f.getAbsolutePath());
+
+		try {
+			map.put(key, dao.get(key, true));
+			keys.put(key, 0);
+			lastUsed.put(key, System.currentTimeMillis());
+		} catch( ASException e ) {
+			throw new FileNotFoundException(key);
 		}
-		
+
 		long end = System.currentTimeMillis();
 		log.log(Level.FINE, "Page " + pageNumber + " loaded in " + (end-start) + "ms with " + map.size() + " records in mem");
 
@@ -257,52 +212,34 @@ public class PersistentCacheFSImpl <V extends Object> {
 	}
 
 	public void dispose() {
-		deleteFolder(new File(tempDir));
-		clear();
-	}
-
-	private void deleteFolder(File folder) {
-	    File[] files = folder.listFiles();
-	    if(files!=null) { //some JVMs return null for empty dirs
-	        for(File f: files) {
-	            if(f.isDirectory()) {
-	                deleteFolder(f);
-	            } else {
-	                f.delete();
-	            }
-	        }
-	    }
-	    folder.delete();
-	}
-
-	private String serialize(V obj) {
-		if(gson == null)
-			gson = new Gson();
+		PersistenceProvider pp = new PersistenceProviderJDOImpl(TransactionType.SIMPLE);
+		((PersistenceManager)pp.get()).currentTransaction().begin();
 		
-		return gson.toJson(obj);
+		int count = 0;
+		Iterator<String> i = map.keySet().iterator();
+		while(i.hasNext()) {
+			String key = i.next();
+			V obj = map.get(key);
+			try {
+				dao.createOrUpdate(pp, obj, true);
+				count++;
+				if( count % pageSize == 0 ) {
+					log.log(Level.WARNING, "Flushing " + count + " of " + map.size() + "...");
+					((PersistenceManager)pp.get()).flush();
+				}
+			} catch( ASException e ) {
+				log.log(Level.WARNING, e.getMessage(), e);
+			}
+		}
+		
+		((PersistenceManager)pp.get()).currentTransaction().commit();
+		((PersistenceManager)pp.get()).close();
+		
+		clear();
+		System.gc();
+		
 	}
-	
-	private String getProcessId(final String fallback) {
-	    // Note: may fail in some JVM implementations
-	    // therefore fallback has to be provided
 
-	    // something like '<pid>@<hostname>', at least in SUN / Oracle JVMs
-	    final String jvmName = ManagementFactory.getRuntimeMXBean().getName();
-	    final int index = jvmName.indexOf('@');
-
-	    if (index < 1) {
-	        // part before '@' empty (index = 0) / '@' not found (index = -1)
-	        return fallback;
-	    }
-
-	    try {
-	        return Long.toString(Long.parseLong(jvmName.substring(0, index)));
-	    } catch (NumberFormatException e) {
-	        // ignore
-	    }
-	    return fallback;
-	}
-	
 	/**
 	 * @return the hits
 	 */

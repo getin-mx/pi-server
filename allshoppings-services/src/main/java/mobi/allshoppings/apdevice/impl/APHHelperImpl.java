@@ -18,6 +18,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.jdo.PersistenceManager;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,7 +39,10 @@ import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.ExternalAPHotspot;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.tools.CollectionFactory;
-import mobi.allshoppings.tools.PersistentCacheFSImpl;
+import mobi.allshoppings.tools.PersistentCacheJDOImpl;
+import mobi.allshoppings.tx.PersistenceProvider;
+import mobi.allshoppings.tx.TransactionType;
+import mobi.allshoppings.tx.spi.PersistenceProviderJDOImpl;
 
 public class APHHelperImpl implements APHHelper {
 
@@ -47,7 +52,7 @@ public class APHHelperImpl implements APHHelper {
 	private static final DecimalFormat df = new DecimalFormat("00");
 	private static final long ONE_HOUR = 3600000;
 	
-	private PersistentCacheFSImpl<APHEntry> cache;
+	private PersistentCacheJDOImpl<APHEntry> cache;
 
 	@Autowired
 	private APHEntryDAO apheDao;
@@ -173,6 +178,7 @@ public class APHHelperImpl implements APHHelper {
 			} catch( ASException e ) {
 				ret = new APHEntry(hostname, mac, date);
 				try {
+					ret.setKey(apheDao.createKey(ret));
 					if( scanInDevices ) {
 						List<DeviceInfo> di = diDao.getUsingMAC(mac);
 						if( di.size() > 0 ) {
@@ -606,7 +612,7 @@ public class APHHelperImpl implements APHHelper {
 	public void generateAPHEntriesFromDump(String baseDir, Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException {
 
 		if( cache == null )
-			cache = new PersistentCacheFSImpl<>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
+			cache = new PersistentCacheJDOImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
 					systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
 		cache.clear();
 		
@@ -634,20 +640,26 @@ public class APHHelperImpl implements APHHelper {
 			totals++;
 		}
 
-		// Write to the database
-		log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
-		Iterator<APHEntry> x = cache.iterator();
-		while(x.hasNext()) {
-			APHEntry aphe = x.next();
-			artificiateRSSI(aphe, apdevices.get(aphe.getHostname()));
-			if( aphe.getDataCount() > 2 ) {
-				aphe.setKey(apheDao.createKey(aphe));
-				try {
-					apheDao.createOrUpdate(aphe);
-				} catch( Exception e ) {
-					log.log(Level.SEVERE, e.getMessage(), e);
+		// Write to the database, only if it was not written yet!
+		if(!( cache instanceof PersistentCacheJDOImpl )) {
+			log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
+			PersistenceProvider pp = new PersistenceProviderJDOImpl(TransactionType.SIMPLE);
+			int counter = 0;
+			Iterator<APHEntry> x = cache.iterator();
+			((PersistenceManager)pp.get()).currentTransaction().begin();
+			while(x.hasNext()) {
+				APHEntry aphe = x.next();
+//				artificiateRSSI(aphe, apdevices.get(aphe.getHostname()));
+				if( aphe.getDataCount() > 2 ) {
+					aphe.setKey(apheDao.createKey(aphe));
+					apheDao.createOrUpdate(pp, aphe, true);
+					counter++;
+					if( counter > 10000 )
+						((PersistenceManager)pp.get()).flush();
 				}
 			}
+			((PersistenceManager)pp.get()).currentTransaction().commit();
+			((PersistenceManager)pp.get()).close();
 		}
 		
 		log.log(Level.INFO, "Disposing cache");
