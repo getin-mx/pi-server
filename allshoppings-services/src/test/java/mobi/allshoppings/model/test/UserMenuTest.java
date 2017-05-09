@@ -1021,11 +1021,6 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 			
-			
-			
-			
-			
-			
 			User droc = null;
 			try {
 				droc = userDao.get("droc_mx", true);
@@ -1051,6 +1046,34 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.setKey(userMenuDao.createKey("droc_mx"));
+				userMenuDao.create(um);
+			}
+
+			User walmart = null;
+			try {
+				walmart = userDao.get("walmart_mx", true);
+			} catch( Exception e ) {
+				walmart = new User();
+				walmart.setFirstname("Walmart");
+				walmart.setLastname("Mexico");
+				walmart.setEmail("walmart@allshoppings.mobi");
+				walmart.getSecuritySettings().setRole(Role.BRAND);
+				walmart.getSecuritySettings().setShoppings(new ArrayList<String>());
+				walmart.getSecuritySettings().getShoppings().add("wallmartdemo");
+				walmart.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				walmart.setKey((Key)keyHelper.obtainKey(User.class, "walmart_mx"));
+				userDao.create(walmart);
+			}
+
+			try {
+				um = userMenuDao.get("walmart_mx", true);
+				userMenuDao.delete("walmart_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.setKey(userMenuDao.createKey("walmart_mx"));
 				userMenuDao.create(um);
 			}
 

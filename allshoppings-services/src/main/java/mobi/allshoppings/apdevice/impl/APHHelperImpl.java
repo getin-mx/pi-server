@@ -205,6 +205,7 @@ public class APHHelperImpl implements APHHelper {
 	 */
 	public APHEntry getFromCache(APHotspot obj) {
 		String hash = getHash(obj);
+		if( cache == null ) useCache = false;
 		APHEntry ret = null;
 		if( useCache ) {
 			try {
@@ -220,6 +221,7 @@ public class APHHelperImpl implements APHHelper {
 			} catch( ASException e ) {
 				ret = apHotpostToaphEntry(obj);
 				try {
+					ret.setKey(apheDao.createKey(ret));
 					if( scanInDevices ) {
 						List<DeviceInfo> di = diDao.getUsingMAC(obj.getMac());
 						if( di.size() > 0 ) {
@@ -245,6 +247,7 @@ public class APHHelperImpl implements APHHelper {
 	 */
 	public APHEntry getFromCache(ExternalAPHotspot obj) {
 		String hash = getHash(obj);
+		if( cache == null ) useCache = false;
 		APHEntry ret = null;
 		if( useCache ) {
 			try {
@@ -262,6 +265,7 @@ public class APHHelperImpl implements APHHelper {
 			} catch( ASException e ) {
 				ret = apHotpostToaphEntry(obj);
 				try {
+					ret.setKey(apheDao.createKey(ret));
 					if( scanInDevices ) {
 						List<DeviceInfo> di = diDao.getUsingMAC(obj.getMac());
 						if( di.size() > 0 ) {
@@ -683,6 +687,10 @@ public class APHHelperImpl implements APHHelper {
 	@Override
 	public void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException {
 
+		if( cache == null )
+			cache = new PersistentCacheJDOImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
+					systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
+
 		// Pre build cache
 		if( buildCache ) {
 			log.log(Level.INFO, "Building Cache");
@@ -701,25 +709,38 @@ public class APHHelperImpl implements APHHelper {
 			
 			if( obj.getLastSeen() == null )
 				obj.setLastSeen(new Date(obj.getFirstSeen().getTime() + ONE_HOUR));
-			setFramedRSSI(obj);
+			
+			if(isValidMacAddress(obj.getMac()))
+				if( apdevices.containsKey(obj.getHostname())) 
+					setFramedRSSI(obj);
 		}
 		
-		// Write to the database
-		log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
-		Iterator<APHEntry> x = cache.iterator();
-		while(x.hasNext()) {
-			APHEntry aphe = x.next();
-			artificiateRSSI(aphe, apdevices.get(aphe.getHostname()));
-			if( aphe.getDataCount() > 0 ) {
-				aphe.setKey(apheDao.createKey(aphe));
-				try {
-					apheDao.createOrUpdate(aphe);
-				} catch( Exception e ) {
-					log.log(Level.SEVERE, e.getMessage(), e);
+
+		// Write to the database, only if it was not written yet!
+		if(!( cache instanceof PersistentCacheJDOImpl )) {
+			log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
+			PersistenceProvider pp = new PersistenceProviderJDOImpl(TransactionType.SIMPLE);
+			int counter = 0;
+			Iterator<APHEntry> x = cache.iterator();
+			((PersistenceManager)pp.get()).currentTransaction().begin();
+			while(x.hasNext()) {
+				APHEntry aphe = x.next();
+//				artificiateRSSI(aphe, apdevices.get(aphe.getHostname()));
+				if( aphe.getDataCount() > 2 ) {
+					aphe.setKey(apheDao.createKey(aphe));
+					apheDao.createOrUpdate(pp, aphe, true);
+					counter++;
+					if( counter > 10000 )
+						((PersistenceManager)pp.get()).flush();
 				}
 			}
+			((PersistenceManager)pp.get()).currentTransaction().commit();
+			((PersistenceManager)pp.get()).close();
 		}
 		
+		log.log(Level.INFO, "Disposing cache");
+		cache.dispose();
+
 		log.log(Level.INFO, "Process Ended");
 
 	}

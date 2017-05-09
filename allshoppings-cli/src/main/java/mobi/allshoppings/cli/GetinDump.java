@@ -277,10 +277,27 @@ public class GetinDump extends AbstractCLI {
 				shoppingDao.create(shopping);
 			}
 			
+			try {
+				shopping = shoppingDao.get("wallmartdemo", true);
+				shopping.setName("Walmart Demo");
+				shoppingDao.update(shopping);
+			} catch( Exception e ) {
+				shopping = new Shopping();
+				shopping.setName("Walmart Demo");
+				shopping.setCheckinAreaSize(200);
+				shopping.setFenceSize(200);
+				shopping.getAddress().setCountry("Mexico");
+				shopping.setKey(shoppingDao.createKey("wallmartdemo"));
+				shoppingDao.create(shopping);
+			}
 			
 			
 
 			// Brands ----------------------------------------------------------------------------------------------------
+			try {
+				brandDao.delete("bestbuy_mx");
+			} catch( Exception e ) {
+			}
 			Brand brand;
 			try {
 				brand = brandDao.get("bestbuy_mx", true);
@@ -765,6 +782,18 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 			}
 
+			try {
+				brand = brandDao.get("walmart_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Walmart");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "walmart_mx"));
+				brandDao.create(brand);
+			}
+
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -1090,6 +1119,8 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("515", "Pakmail San Mateo Atenco", "pakmail_mx", null));
 			stores.add(new StoreAdapter("516", "Pakmail Metepec", "pakmail_mx", null));
 			stores.add(new StoreAdapter("517", "Pakmail Valle Dorado", "pakmail_mx", null));
+
+			stores.add(new StoreAdapter("518", "Walmart Demo", "walmart_mx", "wallmartdemo"));
 
 			Store store;
 			for(StoreAdapter obj : stores ) {
