@@ -279,8 +279,6 @@ public class GetinDump extends AbstractCLI {
 			
 			try {
 				shopping = shoppingDao.get("wallmartdemo", true);
-				shopping.setName("Walmart Demo");
-				shoppingDao.update(shopping);
 			} catch( Exception e ) {
 				shopping = new Shopping();
 				shopping.setName("Walmart Demo");

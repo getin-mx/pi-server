@@ -1071,8 +1071,10 @@ public class UserMenuTest extends TestCase {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en Tienda"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.setKey(userMenuDao.createKey("walmart_mx"));
 				userMenuDao.create(um);
 			}
