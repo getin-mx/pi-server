@@ -96,12 +96,7 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 							aphHelper.setUseCache(false);
 							APHEntry aphe = aphHelper.setFramedRSSI(aphotspot);
 //							aphHelper.artificiateRSSI(aphe, device);
-							if( StringUtils.hasText(aphe.getIdentifier())) {
-								apheDao.update(aphe);
-							} else {
-								aphe.setKey(apheDao.createKey(aphe));
-								apheDao.create(aphe);
-							}
+							apheDao.createOrUpdate(aphe);
 						} catch( Exception e ) {
 							log.log(Level.SEVERE, "Error updating APHEntries", e);
 						}
