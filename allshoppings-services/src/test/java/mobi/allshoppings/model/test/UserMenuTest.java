@@ -732,6 +732,7 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 			
+			@SuppressWarnings("unused")
 			User sbarro = null;
 			try {
 				sbarro = userDao.get("sbarro_mx", true);

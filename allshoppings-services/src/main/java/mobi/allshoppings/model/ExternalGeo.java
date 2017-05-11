@@ -35,13 +35,14 @@ public class ExternalGeo implements ModelKey, Serializable, Identificable, Repli
 	private String venue;
 	private String externalReference;
 	private Integer connections;
+	private Integer userCount;
 	private Float lat;
 	private Float lon;
 	private Integer type;
 	private String period;
 	private Date lastUpdate;
 	private Date creationDateTime;
-
+	
 	public ExternalGeo() {
 		super();
 		this.creationDateTime = new Date();
@@ -227,6 +228,20 @@ public class ExternalGeo implements ModelKey, Serializable, Identificable, Repli
 		this.entityKind = entityKind;
 	}
 
+	/**
+	 * @return the userCount
+	 */
+	public Integer getUserCount() {
+		return userCount;
+	}
+
+	/**
+	 * @param userCount the userCount to set
+	 */
+	public void setUserCount(Integer userCount) {
+		this.userCount = userCount;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -266,7 +281,7 @@ public class ExternalGeo implements ModelKey, Serializable, Identificable, Repli
 		return "ExternalGeo [key=" + key + ", entityId=" + entityId + ", entityKind=" + entityKind + ", venue=" + venue
 				+ ", externalReference=" + externalReference + ", connections=" + connections + ", lat=" + lat
 				+ ", lon=" + lon + ", type=" + type + ", period=" + period + ", lastUpdate=" + lastUpdate
-				+ ", creationDateTime=" + creationDateTime + "]";
+				+ ", creationDateTime=" + creationDateTime + ", userCount=" + userCount + "]";
 	}
 
 }

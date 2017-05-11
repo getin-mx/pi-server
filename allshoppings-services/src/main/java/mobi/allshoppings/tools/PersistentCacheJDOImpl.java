@@ -77,6 +77,22 @@ public class PersistentCacheJDOImpl <V extends ModelKey> {
 		return map.size();
 	}
 	
+	public boolean containsKey(String key) {
+		return keys.containsKey(key);
+	}
+
+	public void remove(String key) throws NoSuchAlgorithmException, IOException {
+		V obj = get(key);
+		try {
+			dao.delete(obj);
+			keys.remove(key);
+			lastUsed.remove(key);
+			map.remove(key);
+		} catch( ASException e ) {
+			throw new IOException(e);
+		}
+	}
+	
 	public void put(String key, V value) throws NoSuchAlgorithmException, IOException {
 		map.put(key, value);
 		lastUsed.put(key, System.currentTimeMillis());

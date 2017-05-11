@@ -93,6 +93,10 @@ public class PersistentCacheFSImpl <V extends Object> {
 		return map.size();
 	}
 	
+	public boolean containsKey(String key) {
+		return keys.containsKey(key);
+	}
+	
 	public void put(String key, V value) throws NoSuchAlgorithmException, IOException {
 		map.put(key, value);
 		lastUsed.put(key, System.currentTimeMillis());

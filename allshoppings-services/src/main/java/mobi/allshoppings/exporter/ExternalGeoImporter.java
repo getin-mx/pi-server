@@ -1,13 +1,7 @@
 package mobi.allshoppings.exporter;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -35,13 +29,16 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.geocoding.GeoCodingHelper;
 import mobi.allshoppings.geocoding.GeoPoint;
-import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.DeviceLocationHistory;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.ExternalGeo;
 import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
+import mobi.allshoppings.tools.PersistentCacheFSImpl;
+import mobi.allshoppings.tools.PersistentCacheJDOImpl;
+import mobi.allshoppings.tx.PersistenceProvider;
 
 public class ExternalGeoImporter {
 
@@ -56,6 +53,9 @@ public class ExternalGeoImporter {
 	@Autowired
 	private StoreDAO storeDao;
 	
+	@Autowired
+	private SystemConfiguration systemConfiguration;
+	
 	private DumperHelper<DeviceLocationHistory> dump;
 
 	public void importFromGpsRecords(List<String> entityId, Integer entityKind, String baseDir) throws ASException {
@@ -67,8 +67,15 @@ public class ExternalGeoImporter {
 		String period = sdfPeriod.format(new Date());
 		
 		// Connections cache
-		Map<String, Map<GeoPoint, ExternalGeo>> cache = CollectionFactory.createMap();
-		
+		PersistentCacheJDOImpl<ExternalGeo> cache = new PersistentCacheJDOImpl<ExternalGeo>(
+				ExternalGeo.class, systemConfiguration.getCacheMaxInMemElements(),
+				systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
+
+		// Devices cache
+		PersistentCacheFSImpl<HashSet<String>> cacheDevices = new PersistentCacheFSImpl<HashSet<String>>(
+				HashSet.class, systemConfiguration.getCacheMaxInMemElements(),
+				systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
+
 		try {
 			
 			Map<String, Map<Integer,HashSet<String>>> devices = CollectionFactory.createMap();
@@ -88,14 +95,8 @@ public class ExternalGeoImporter {
 			}
 
 			// First delete previous data
-//			log.log(Level.INFO, "Deleting previous data...");
-//			if( entityIds.isEmpty() ) {
-//				dao.deleteUsingEntityIdAndPeriod((PersistenceProvider)null, null, entityKind, null, period);
-//			} else {
-//				for( String eid : entityIds ) {
-//					dao.deleteUsingEntityIdAndPeriod((PersistenceProvider)null, eid, entityKind, null, period);
-//				}
-//			}
+			log.log(Level.INFO, "Deleting previous data...");
+			dao.deleteUsingEntityIdAndPeriod((PersistenceProvider)null, entityIds, entityKind, null, period);
 
 			// Obtains a list of all the matched mac addresses
 			log.log(Level.INFO, "Reading Matches...");
@@ -113,13 +114,16 @@ public class ExternalGeoImporter {
 
 			log.log(Level.INFO, "Processing " + c1.size() + " matches...");
 			long count = 0;
-			// Fetches the visit list
+			
+			// Fetches the device list according to APDeviceMacMatch
 			while(i.hasNext()) {
 				DBObject dbo = i.next();
 				if( dbo.containsField("deviceUUID")) {
 					String deviceUUID = (String)dbo.get("deviceUUID");
 					String mEntityId = (String)dbo.get("entityId");
 					Integer type = (Integer)dbo.get("type");
+					
+					// The true format is DeviceUUID, (Peasant/Visitor), Stores in which is (Peasant/visitor)
 					
 					if( entityIds == null || entityIds.contains(mEntityId)) {
 						Map<Integer, HashSet<String>> devices2 = devices.get(deviceUUID);
@@ -153,8 +157,8 @@ public class ExternalGeoImporter {
 			// Loops only with the selected date range
 			Date workDate = sdf.parse("2016-01-01");
 			Date workFrom = sdf.parse("2016-01-01");
-			Date workTo = sdf.parse("2017-01-01");
-			Date toDate = sdf.parse("2017-01-01");
+			Date workTo = sdf.parse("2017-02-01");
+			Date toDate = sdf.parse("2017-02-01");
 			while(workDate.before(toDate) || workDate.equals(toDate)) {
 				workFrom = new Date(workDate.getTime());
 				workTo = new Date(workFrom.getTime() + 86400000 /* 24 hours */);
@@ -181,41 +185,32 @@ public class ExternalGeoImporter {
 								HashSet<String> ids = devices2.get(type);
 								for( String id : ids ) {
 									try {
-										// round the position
-										GeoPoint gp = geocoder.decodeGeohash(geocoder.encodeGeohash(json.getDouble("lat"), json.getDouble("lon")).substring(0,7));
-										// And insert it on the cache
-										Map<GeoPoint, ExternalGeo> cache2 = cache.get(uuid);
-										if( cache2 == null ) cache2 = CollectionFactory.createMap();
+										Integer myType = dao.getType(type, hour);
+										String key = dao.getHash(new Float(json.getDouble("lat")), 
+												new Float(json.getDouble("lon")), period, id, entityKind, myType);
 
-										ExternalGeo val = cache2.get(gp);
+										ExternalGeo val = cache.get(key);
 										if( val == null ) {
+											GeoPoint gp = geocoder.decodeGeohash(geocoder.encodeGeohash(json.getDouble("lat"), json.getDouble("lon")).substring(0,7));
 											val = new ExternalGeo();
 											val.setConnections(0);
 											val.setExternalReference("GPS");
-											if( type == APDVisit.CHECKIN_PEASANT ) {
-												if( hour >= 2 && hour <= 5 ) {
-													val.setType(ExternalGeo.TYPE_GPS_HOME_PEASANT);
-												} else {
-													val.setType(ExternalGeo.TYPE_GPS_WORK_PEASANT);
-												}
-											} else {
-												if( hour >= 2 && hour <= 5 ) {
-													val.setType(ExternalGeo.TYPE_GPS_HOME);
-												} else {
-													val.setType(ExternalGeo.TYPE_GPS_WORK);
-												}
-											}
+											val.setType(myType);
 											val.setLat(Double.valueOf(gp.getLat()).floatValue());
 											val.setLon(Double.valueOf(gp.getLon()).floatValue());
 											val.setEntityId(id);
 											val.setEntityKind(entityKind);
 											val.setPeriod(period);
-											val.setKey(dao.createKey());
+											val.setKey(dao.createKey(val));
 										}
 										val.setConnections(val.getConnections() + 1);
-										cache2.put(gp, val);
+										cache.put(key, val);
 
-										cache.put(uuid, cache2);
+										HashSet<String> valDevices = cacheDevices.get(key);
+										if( valDevices == null ) valDevices = new HashSet<String>();
+										valDevices.add(uuid);
+										cacheDevices.put(key, valDevices);
+
 										processed++;
 									} catch( Exception e ) {
 										log.log(Level.SEVERE, e.getMessage(), e);
@@ -241,30 +236,22 @@ public class ExternalGeoImporter {
 						|| cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY));
 			}
 
-			// Writes down the objects, just in case there where events
-			log.log(Level.INFO, "Writing down " + cache.size() + " objects...");
-			Iterator<String> x = cache.keySet().iterator();
-			while( x.hasNext() ) {
-				String eid = x.next();
-				Map<GeoPoint, ExternalGeo> cache2 = cache.get(eid);
-				List<ExternalGeo> values = new ArrayList<ExternalGeo>(cache2.values());
-				Collections.sort(values, new Comparator<ExternalGeo>() {
-					@Override
-					public int compare(ExternalGeo o1, ExternalGeo o2) {
-						return o2.getConnections().compareTo(o1.getConnections());
-					}
-				});
-
-				int cnt = 0;
-				Iterator<ExternalGeo> y = values.iterator();
-				while(y.hasNext()) {
-					ExternalGeo obj = y.next();
-					dao.createOrUpdate(obj);
-					cnt++;
-					if(cnt > 500 ) break;
-				}
+			Iterator<ExternalGeo> it = cache.iterator();
+			while(it.hasNext()) {
+				ExternalGeo obj = it.next();
+				String key = obj.getIdentifier();
+				obj.setUserCount(cacheDevices.containsKey(key) ? cacheDevices.get(key).size() : 0);
+				cache.put(key, obj);
 			}
+			
+			log.log(Level.INFO, "Disposing cache with " + cache.size() + " elements...");
+			cache.dispose();
+			cache.clear();
 
+			log.log(Level.INFO, "Disposing Device cache with " + cacheDevices.size() + " elements...");
+			cacheDevices.dispose();
+			cacheDevices.clear();
+			
 			log.log(Level.INFO, count + " records processed with " + processed + " results...");
 			log.log(Level.INFO, "Process finished!");
 			
@@ -273,67 +260,6 @@ public class ExternalGeoImporter {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
 		
-	}
-	
-	public void importInfo(String venue, String period, String fileName ) throws ASException {
-
-		// First delete previous data
-		dao.deleteUsingVenueAndPeriod(null, venue, period);
-
-		try {
-			// Opens input file
-			File file = new File(fileName);
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			
-			// "probe","conexiones","lat","lon"
-			// "..izzi-WiFi.._1",156,19.38262558,-99.17722321
-			// ....
-
-			int rec = 0;
-			long start = new Date().getTime();
-			String line = br.readLine();
-			while(line != null) {
-
-				if( rec > 0 ) {
-					String[] parts = line.split(",");
-					if( parts.length == 4) {
-						try {
-							String externalReference = parts[0].replaceAll("\"", "");
-							int connections = Integer.parseInt(parts[1]);
-							float lat = Float.parseFloat(parts[2]);
-							float lon = Float.parseFloat(parts[3]);
-							
-							ExternalGeo obj = new ExternalGeo();
-							obj.setVenue(venue);
-							obj.setPeriod(period);
-							obj.setExternalReference(externalReference);
-							obj.setConnections(connections);
-							obj.setType(ExternalGeo.TYPE_WIFI);
-							obj.setLat(lat);
-							obj.setLon(lon);
-							
-							obj.setKey(dao.createKey());
-							dao.create(obj);
-							
-						} catch( Exception e ) {
-							log.log(Level.WARNING, "Invalid record: " + line);
-						}
-					}
-				}
-				rec++;
-				line = br.readLine();
-			}
-			
-			br.close();
-
-			long end = new Date().getTime();
-			
-			log.log(Level.INFO, rec + " records processed in " + (end - start) + "ms" );
-			
-		} catch( Exception e ) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-			throw ASExceptionHelper.defaultException(e.getMessage(), e);
-		}
 	}
 
 	/**

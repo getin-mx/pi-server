@@ -86,9 +86,9 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			Date limitDate = cal.getTime();
 
 			log.log(Level.INFO, "Processing store " + storeName + "...");
-			
+
 			// Creates the data map
-			while( curDate.before(finalDate) || curDate.equals(finalDate)) {
+			while( sdf.format(curDate).compareTo(sdf.format(finalDate)) < 1) {
 				TrafficEntry e = new TrafficEntry();
 				e.setUnformmatedDate(curDate);
 				map.put(sdf.format(curDate), e);
@@ -131,12 +131,16 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			while(i.hasNext()) {
 				DashboardIndicatorData obj = i.next();
 				TrafficEntry e = map.get(obj.getStringDate());
-				if( "visitor_total_peasents".equals(obj.getElementSubId())) {
-					e.setPeasants(e.getPeasants() + obj.getDoubleValue().longValue());
-				} else if( "visitor_total_visits".equals(obj.getElementSubId())) {
-					e.setVisits(e.getVisits() + obj.getDoubleValue().longValue());
-				} else if( "visitor_total_tickets".equals(obj.getElementSubId())) {
-					e.setTickets(e.getTickets() + obj.getDoubleValue().longValue());
+				try {
+					if( "visitor_total_peasents".equals(obj.getElementSubId())) {
+						e.setPeasants(e.getPeasants() + obj.getDoubleValue().longValue());
+					} else if( "visitor_total_visits".equals(obj.getElementSubId())) {
+						e.setVisits(e.getVisits() + obj.getDoubleValue().longValue());
+					} else if( "visitor_total_tickets".equals(obj.getElementSubId())) {
+						e.setTickets(e.getTickets() + obj.getDoubleValue().longValue());
+					}
+				} catch( Exception e1 ) {
+					e1.printStackTrace();
 				}
 				map.put(obj.getStringDate(), e);
 			}
@@ -238,7 +242,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			int rowIndex = 10;
 			curDate = new Date(initialDate.getTime());
 			int partialIndex = 0;
-			while( curDate.before(finalDate) || curDate.equals(finalDate)) {
+			while( sdf.format(curDate).compareTo(sdf.format(finalDate)) < 1) {
 				TrafficEntry e = map.get(sdf.format(curDate));
 
 				XSSFRow row = trafficByDay.getRow(rowIndex);
