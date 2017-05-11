@@ -1932,6 +1932,60 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 
+			User tonymoly = null;
+			try {
+				tonymoly = userDao.get("tonymoly_mx", true);
+				userDao.delete("tonymoly_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				tonymoly = new User();
+				tonymoly.setFirstname("Tony Moly");
+				tonymoly.setLastname("Mexico");
+				tonymoly.setEmail("tonymoly@allshoppings.mobi");
+				tonymoly.getSecuritySettings().setRole(Role.BRAND);
+				tonymoly.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				tonymoly.setKey((Key)keyHelper.obtainKey(User.class, "tonymoly_mx"));
+				userDao.create(tonymoly);
+			}
+
+			try {
+				um = userMenuDao.get("tonymoly_mx", true);
+				userMenuDao.delete("tonymoly_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("tonymoly_mx"));
+				userMenuDao.create(um);
+			}
+
+			User farmaciasyza = null;
+			try {
+				farmaciasyza = userDao.get("farmaciasyza_mx", true);
+				userDao.delete("farmaciasyza_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				farmaciasyza = new User();
+				farmaciasyza.setFirstname("Farmacias YZA");
+				farmaciasyza.setLastname("Mexico");
+				farmaciasyza.setEmail("farmaciasyza@allshoppings.mobi");
+				farmaciasyza.getSecuritySettings().setRole(Role.BRAND);
+				farmaciasyza.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				farmaciasyza.setKey((Key)keyHelper.obtainKey(User.class, "farmaciasyza_mx"));
+				userDao.create(farmaciasyza);
+			}
+
+			try {
+				um = userMenuDao.get("farmaciasyza_mx", true);
+				userMenuDao.delete("farmaciasyza_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("farmaciasyza_mx"));
+				userMenuDao.create(um);
+			}
+
 			User vickyform = null;
 			try {
 				vickyform = userDao.get("vickyform_mx", true);

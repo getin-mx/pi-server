@@ -792,6 +792,30 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 			}
 
+			try {
+				brand = brandDao.get("farmaciasyza_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Farmacias YZA");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "farmaciasyza_mx"));
+				brandDao.create(brand);
+			}
+
+			try {
+				brand = brandDao.get("tonymoly_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Tony Moly");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "tonymoly_mx"));
+				brandDao.create(brand);
+			}
+
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -1119,6 +1143,27 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("517", "Pakmail Valle Dorado", "pakmail_mx", null));
 
 			stores.add(new StoreAdapter("518", "Walmart Demo", "walmart_mx", "wallmartdemo"));
+
+			stores.add(new StoreAdapter("519","Sally Beauty Multiplaza Arboledas", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("520","Sally Beauty Parque Linda Vista", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("521","Sally Beauty La Cúspide Lomas Verdes", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("522","Sally Beauty Plaza Satélite", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("523","Sally Beauty City Shop", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("524","Sally Beauty Town Center El Rosario", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("525","Sally Beauty Forum Buena Vista", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("526","Sally Beauty Parque Toreo", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("527","Sally Beauty Pabellón Azcapotzalco", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("528","Sally Beauty Gran Sur", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("529","Sally Beauty Pabellón Polanco", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("530","Sally Beauty CM Coapa", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("531","Sally Beauty Paseo Acoxpa ", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("532","Sally Beauty Galerías Coapa", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("533","Sally Beauty Oasis Coyoacán", "sallybeauty_mx", null));
+			
+			stores.add(new StoreAdapter("534","Farmacias YZA Iztapalapa", "farmaciasyza_mx", null));
+
+			stores.add(new StoreAdapter("535","Tony Moly Oasis Coyoacan", "tonymoly_mx", null));
+			stores.add(new StoreAdapter("536","Tony Moly Acoxpa", "tonymoly_mx", null));
 
 			Store store;
 			for(StoreAdapter obj : stores ) {
