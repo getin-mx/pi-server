@@ -1165,6 +1165,9 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("535","Tony Moly Oasis Coyoacan", "tonymoly_mx", null));
 			stores.add(new StoreAdapter("536","Tony Moly Acoxpa", "tonymoly_mx", null));
 
+			stores.add(new StoreAdapter("537","Pakmail Coyuya", "pakmail_mx", null));
+			stores.add(new StoreAdapter("538","Pakmail Feliz Cuevas", "pakmail_mx", null));
+
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {

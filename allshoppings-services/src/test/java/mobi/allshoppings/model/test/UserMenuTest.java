@@ -657,15 +657,31 @@ public class UserMenuTest extends TestCase {
 				userDao.delete(modatelas);
 				throw new Exception();
 			} catch( Exception e ) {
-//				modatelas = new User();
-//				modatelas.setFirstname("Modatelas");
-//				modatelas.setLastname("Mexico");
-//				modatelas.setEmail("modatelas@allshoppings.mobi");
-//				modatelas.getSecuritySettings().setRole(Role.BRAND);
-//				modatelas.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-//				modatelas.setKey((Key)keyHelper.obtainKey(User.class, "modatelas_mx"));
-//				modatelas.getSecuritySettings().setShoppings(Arrays.asList("740547b3-5c3a-492c-a2f8-bc88345fcc5d"));
-//				userDao.create(modatelas);
+				modatelas = new User();
+				modatelas.setFirstname("Modatelas");
+				modatelas.setLastname("Mexico");
+				modatelas.setEmail("modatelas@allshoppings.mobi");
+				modatelas.getSecuritySettings().setRole(Role.STORE);
+				modatelas.getSecuritySettings()
+						.setStores(Arrays.asList("6d2955f9-f112-47b3-ae50-6528697c249c",
+								"94634900-964f-4092-a0dd-e1dc287144ee", "58131ca7-ae67-4022-bcfa-0af9301bdddc",
+								"70e3f099-03ef-4df2-9849-0f4f4a3dd411", "ceade140-174b-464c-9116-70ef2b93317a",
+								"7c10f699-b944-4627-9155-22af377da01f", "50b32c68-0998-4323-a404-eee8e316e3eb",
+								"08644a45-800d-43ac-b228-78c28d82bad1", "76eccdaf-348d-4540-af6d-145463e0844e",
+								"519d19e7-ddf4-47a2-abdc-09e89d1f5c64", "07b5d16f-6b65-4beb-b763-d47f8a089efd",
+								"d93f2cf8-de1f-4e5c-884b-adb87cbbcdf2", "3f7497de-95c8-4bb5-a9a5-6d097133bf7c",
+								"80175990-43cd-4c27-a5ca-d16179c7f55f", "4da00bc6-ae1a-418a-a784-1f764d281908",
+								"7e47d9df-f011-4203-9ac5-5aa7222cccb5", "fe9ad717-4f1e-4b28-b9ea-bfa94ace3141",
+								"7b7d1c1e-f6af-40b7-8a55-f3bdbf19cde1", "dbd5021e-4d65-47da-a64e-42006513d998",
+								"dd1edbcb-5eeb-467e-af3d-223611492520", "2bad1b20-31c4-44c4-9015-6e9dd5c30b00",
+								"3307ec01-1e57-40e2-97a3-d1e02227a4b0", "9202f7a2-4354-47bb-a6c3-dd775af93a17",
+								"9ccdd1eb-30fe-4304-9bd5-7a4b0614c842", "740547b3-5c3a-492c-a2f8-bc88345fcc5d",
+								"b7cb1719-2f50-45c2-a1fa-66c98cd1a7e4", "865adafe-7df9-46fc-8201-32f260e5ff06",
+								"f4a78ecf-07d9-4158-bcd4-159a68a247df", "0125a1b9-0d3a-4383-8377-04674b1fc08f"));
+				modatelas.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				modatelas.setKey((Key)keyHelper.obtainKey(User.class, "modatelas_mx"));
+				modatelas.getSecuritySettings().setShoppings(Arrays.asList("740547b3-5c3a-492c-a2f8-bc88345fcc5d"));
+				userDao.create(modatelas);
 			}
 
 			try {
@@ -818,7 +834,7 @@ public class UserMenuTest extends TestCase {
 				areasmexico.setFirstname("Areas Mexico");
 				areasmexico.setLastname("Mexico");
 				areasmexico.setEmail("areasmexico@allshoppings.mobi");
-				areasmexico.getSecuritySettings().setRole(Role.BRAND);
+				areasmexico.getSecuritySettings().setRole(Role.STORE);
 				areasmexico.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				areasmexico.setKey((Key)keyHelper.obtainKey(User.class, "areasmexico_mx"));
 				userDao.create(areasmexico);
@@ -831,6 +847,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.setKey(userMenuDao.createKey("areasmexico_mx"));
 				userMenuDao.create(um);
 			}
@@ -1710,7 +1727,8 @@ public class UserMenuTest extends TestCase {
 						"3612e18d-7ae2-4d59-9b0a-181149559941", "b36443b2-932c-4344-ada4-0fe254ce626b",
 						"8a4d093b-4ef5-42af-8e71-d4c9746ab751", "32350a8b-eea0-4881-965a-d142d27df4a1",
 						"50506876-8e69-4b91-9084-c3dd63c95b68", "3731dfc8-3308-4c0f-b462-5100a29e25cc",
-						"6c6a6156-38c3-4167-be09-42d9890510ed", "5d9789e3-f7e5-41e4-8fb3-9d028c485772"));
+						"6c6a6156-38c3-4167-be09-42d9890510ed", "5d9789e3-f7e5-41e4-8fb3-9d028c485772", 
+						"fbf07796-137b-426e-8454-236e18a168c0"));
 				us1.setKey((Key)keyHelper.obtainKey(User.class, "nezrin.saker@demodazl.com"));
 				userDao.create(us1);
 			}

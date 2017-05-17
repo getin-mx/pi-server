@@ -126,7 +126,7 @@ public class UploadImageServlet extends HttpServlet {
 							imageDao.create(image);
 
 							json.put("name", image.getIdentifier());
-							json.put("url", "/img" + image.getIdentifier());
+							json.put("url", "/img/" + image.getIdentifier());
 							json.put("delete_url", "/img/upload?file=" + image.getIdentifier());
 							json.put("delete_type", "DELETE");
 						} catch( Exception ex ) {
