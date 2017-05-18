@@ -816,6 +816,18 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 			}
 
+			try {
+				brand = brandDao.get("devlyn_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Opticas Devlyn");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "devlyn_mx"));
+				brandDao.create(brand);
+			}
+
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -1167,6 +1179,12 @@ public class GetinDump extends AbstractCLI {
 
 			stores.add(new StoreAdapter("537","Pakmail Coyuya", "pakmail_mx", null));
 			stores.add(new StoreAdapter("538","Pakmail Feliz Cuevas", "pakmail_mx", null));
+
+			stores.add(new StoreAdapter("539","Opticas Devlyn Perisur", "devlyn_mx", null));
+			stores.add(new StoreAdapter("540","Opticas Devlyn Parque Delta", "devlyn_mx", null));
+			stores.add(new StoreAdapter("541","Opticas Devlyn Plaza Satelite", "devlyn_mx", null));
+			stores.add(new StoreAdapter("542","Opticas Devlyn Salamanca", "devlyn_mx", null));
+			stores.add(new StoreAdapter("543","Opticas Devlyn Galerias Marina", "devlyn_mx", null));
 
 			Store store;
 			for(StoreAdapter obj : stores ) {

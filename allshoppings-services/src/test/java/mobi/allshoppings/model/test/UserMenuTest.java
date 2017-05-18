@@ -906,32 +906,6 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 
-			User devlyn = null;
-			try {
-				devlyn = userDao.get("devlyn_mx", true);
-			} catch( Exception e ) {
-				devlyn = new User();
-				devlyn.setFirstname("devlyn");
-				devlyn.setLastname("Mexico");
-				devlyn.setEmail("devlyn@allshoppings.mobi");
-				devlyn.getSecuritySettings().setRole(Role.BRAND);
-				devlyn.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				devlyn.setKey((Key)keyHelper.obtainKey(User.class, "devlyn_mx"));
-				userDao.create(devlyn);
-			}
-
-			try {
-				um = userMenuDao.get("devlyn_mx", true);
-				userMenuDao.delete("devlyn_mx");
-				throw new Exception();
-			} catch( Exception e ) {
-				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.demovisits", "fa-area-chart", "Tráfico"));
-				um.getEntries().add(new UserMenuEntry("index.demomap", "fa-map-marker", "Mapas"));
-				um.setKey(userMenuDao.createKey("devlyn_mx"));
-				userMenuDao.create(um);
-			}
-
 			User demo2 = null;
 			try {
 				demo2 = userDao.get("demo2_mx", true);
@@ -1529,6 +1503,33 @@ public class UserMenuTest extends TestCase {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("98coastav_mx"));
+				userMenuDao.create(um);
+			}
+
+			User devlyn = null;
+			try {
+				devlyn = userDao.get("devlyn_mx", true);
+				userDao.delete(devlyn);
+				throw new Exception();
+			} catch( Exception e ) {
+				devlyn = new User();
+				devlyn.setFirstname("Opticas Devlyn");
+				devlyn.setLastname("Mexico");
+				devlyn.setEmail("devlyn@allshoppings.mobi");
+				devlyn.getSecuritySettings().setRole(Role.BRAND);
+				devlyn.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				devlyn.setKey((Key)keyHelper.obtainKey(User.class, "devlyn_mx"));
+				userDao.create(devlyn);
+			}
+
+			try {
+				um = userMenuDao.get("devlyn_mx", true);
+				userMenuDao.delete("devlyn_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("devlyn_mx"));
 				userMenuDao.create(um);
 			}
 

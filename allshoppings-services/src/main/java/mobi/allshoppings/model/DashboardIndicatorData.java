@@ -3,6 +3,7 @@ package mobi.allshoppings.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -15,6 +16,7 @@ import mobi.allshoppings.model.interfaces.ModelKey;
 
 @SuppressWarnings("serial")
 @PersistenceCapable(detachable="true")
+@Cacheable("false")
 public class DashboardIndicatorData implements ModelKey, Serializable, Identificable {
 
 	public static final String PERIOD_TYPE_DAILY = "D";
