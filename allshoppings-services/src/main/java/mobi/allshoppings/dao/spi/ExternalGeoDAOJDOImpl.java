@@ -66,13 +66,13 @@ public class ExternalGeoDAOJDOImpl extends GenericDAOJDO<ExternalGeo> implements
 			if( hour >= 2 && hour <= 5 ) {
 				return ExternalGeo.TYPE_GPS_HOME_PEASANT;
 			} else {
-				return ExternalGeo.TYPE_GPS_HOME_PEASANT;
+				return ExternalGeo.TYPE_GPS_WORK_PEASANT;
 			}
 		} else {
 			if( hour >= 2 && hour <= 5 ) {
-				return ExternalGeo.TYPE_GPS_HOME_PEASANT;
+				return ExternalGeo.TYPE_GPS_HOME;
 			} else {
-				return ExternalGeo.TYPE_GPS_HOME_PEASANT;
+				return ExternalGeo.TYPE_GPS_WORK;
 			}
 		}
 	}
