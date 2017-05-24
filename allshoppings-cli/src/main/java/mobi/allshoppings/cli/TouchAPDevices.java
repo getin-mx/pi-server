@@ -103,6 +103,13 @@ public class TouchAPDevices extends AbstractCLI {
 			// Antenas de flormar
 			List<String> flormar = Arrays.asList("ashs-0064","ashs-0095","ashs-0096","ashs-0097","gihs-0343","gihs-0344","gihs-0345","gihs-0346","gihs-0347");
 			List<String> retailUnited = Arrays.asList("gihs-0141","gihs-0144","gihs-0152","gihs-0182","gihs-0340","ashs-0115","gihs-0339","gihs-0341","gihs-0354");
+
+			// Antenas de Squalo
+			List<String> squalo1 = Arrays.asList("ashs-0122");
+			List<String> squalo2 = Arrays.asList("ashs-0123");
+			List<String> squalo3 = Arrays.asList("ashs-0124");
+			List<String> squalo4 = Arrays.asList("ashs-0125");
+			List<String> squalo5 = Arrays.asList("ashs-0126");
 			
 			// Antenas de club casablanca
 			stores = storeDao.getUsingBrandAndStatus("agasys_mx", StatusHelper.statusActive(), null);
@@ -166,6 +173,26 @@ public class TouchAPDevices extends AbstractCLI {
 						mails.add("nezrin.saker@demodazl.com");
 						mails.add("sistemasru@retailunitedsa.com");
 						mails.add("richard.pang@retailunitedsa.com");
+					}
+					
+					if( squalo1.contains(obj.getHostname())) {
+						mails.add("guadalajara.patria@squalo.com");
+					}
+
+					if( squalo2.contains(obj.getHostname())) {
+						mails.add("vallarta.galerias@squalo.com");
+					}
+
+					if( squalo3.contains(obj.getHostname())) {
+						mails.add("guadalajara.sol@squalo.com");
+					}
+
+					if( squalo4.contains(obj.getHostname())) {
+						mails.add("playa.uno@squalo.com");
+					}
+
+					if( squalo5.contains(obj.getHostname())) {
+						mails.add("monterrey.valleoriente@squalo.com");
 					}
 					
 					if(agasys.contains(obj.getHostname())) {

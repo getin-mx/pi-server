@@ -617,43 +617,6 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		}
 	}
 
-	public class GetinMac {
-		String hostname;
-		String mac;
-		/**
-		 * @return the hostname
-		 */
-		public String getHostname() {
-			return hostname;
-		}
-		/**
-		 * @param hostname the hostname to set
-		 */
-		public void setHostname(String hostname) {
-			this.hostname = hostname;
-		}
-		/**
-		 * @return the mac
-		 */
-		public String getMac() {
-			return mac;
-		}
-		/**
-		 * @param mac the mac to set
-		 */
-		public void setMac(String mac) {
-			this.mac = mac;
-		}
-		/* (non-Javadoc)
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString() {
-			return "GetinMac [hostname=" + hostname + ", mac=" + mac + "]";
-		}
-
-	}
-
 	public void tryRestartAPDevices() throws ASException {
 		List<APDevice> list = dao.getAll(true);
 		Date tenMinutes = new Date(new Date().getTime() - TEN_MINUTES);

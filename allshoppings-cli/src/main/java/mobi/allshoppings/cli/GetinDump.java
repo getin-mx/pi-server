@@ -828,6 +828,30 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 			}
 
+			try {
+				brand = brandDao.get("clarins_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Clarins");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "clarins_mx"));
+				brandDao.create(brand);
+			}
+
+			try {
+				brand = brandDao.get("liverpoolboutiques_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Liverpool Boutiques");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "liverpoolboutiques_mx"));
+				brandDao.create(brand);
+			}
+
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -1172,19 +1196,37 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("532","Sally Beauty Galerías Coapa", "sallybeauty_mx", null));
 			stores.add(new StoreAdapter("533","Sally Beauty Oasis Coyoacán", "sallybeauty_mx", null));
 			
-			stores.add(new StoreAdapter("534","Farmacias YZA Iztapalapa", "farmaciasyza_mx", null));
+			stores.add(new StoreAdapter("534","Farmacias YZA Tolentino", "farmaciasyza_mx", null));
 
 			stores.add(new StoreAdapter("535","Tony Moly Oasis Coyoacan", "tonymoly_mx", null));
 			stores.add(new StoreAdapter("536","Tony Moly Acoxpa", "tonymoly_mx", null));
 
 			stores.add(new StoreAdapter("537","Pakmail Coyuya", "pakmail_mx", null));
-			stores.add(new StoreAdapter("538","Pakmail Feliz Cuevas", "pakmail_mx", null));
+			stores.add(new StoreAdapter("538","Pakmail Felix Cuevas", "pakmail_mx", null));
 
 			stores.add(new StoreAdapter("539","Opticas Devlyn Perisur", "devlyn_mx", null));
 			stores.add(new StoreAdapter("540","Opticas Devlyn Parque Delta", "devlyn_mx", null));
 			stores.add(new StoreAdapter("541","Opticas Devlyn Plaza Satelite", "devlyn_mx", null));
 			stores.add(new StoreAdapter("542","Opticas Devlyn Salamanca", "devlyn_mx", null));
 			stores.add(new StoreAdapter("543","Opticas Devlyn Galerias Marina", "devlyn_mx", null));
+
+			stores.add(new StoreAdapter("544","Sally Beauty Rio Churubusco", "sallybeauty_mx",null));
+
+			stores.add(new StoreAdapter("545","GAP Perisur", "liverpoolboutiques_mx",null));
+			stores.add(new StoreAdapter("546","Chico's Santa Fe", "liverpoolboutiques_mx",null));
+			stores.add(new StoreAdapter("547","Banana Republic Oasis Coyoacan", "liverpoolboutiques_mx",null));
+
+			stores.add(new StoreAdapter("548","Farmacias YZA Tekal", "farmaciasyza_mx",null));
+			stores.add(new StoreAdapter("549","Farmacias YZA Iman", "farmaciasyza_mx",null));
+			stores.add(new StoreAdapter("550","Farmacias YZA Horacio", "farmaciasyza_mx",null));
+			stores.add(new StoreAdapter("551","Farmacias YZA Reforma Marítima", "farmaciasyza_mx",null));
+			stores.add(new StoreAdapter("552","Farmacias YZA General Anaya", "farmaciasyza_mx",null));
+			stores.add(new StoreAdapter("553","Farmacias YZA Lazaro", "farmaciasyza_mx",null));
+			stores.add(new StoreAdapter("554","Farmacias YZA Cuitlahuac", "farmaciasyza_mx",null));
+			stores.add(new StoreAdapter("555","Farmacias YZA Minas", "farmaciasyza_mx",null));
+			stores.add(new StoreAdapter("556","Farmacias YZA Porfirio", "farmaciasyza_mx",null));
+
+			stores.add(new StoreAdapter("557","Clarins Perisur", "clarins_mx",null));
 
 			Store store;
 			for(StoreAdapter obj : stores ) {

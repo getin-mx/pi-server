@@ -2006,6 +2006,33 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 
+			User clarins = null;
+			try {
+				clarins = userDao.get("clarins_mx", true);
+				userDao.delete("clarins_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				clarins = new User();
+				clarins.setFirstname("Clarins");
+				clarins.setLastname("Mexico");
+				clarins.setEmail("clarins@allshoppings.mobi");
+				clarins.getSecuritySettings().setRole(Role.BRAND);
+				clarins.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				clarins.setKey((Key)keyHelper.obtainKey(User.class, "clarins_mx"));
+				userDao.create(clarins);
+			}
+
+			try {
+				um = userMenuDao.get("clarins_mx", true);
+				userMenuDao.delete("clarins_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("clarins_mx"));
+				userMenuDao.create(um);
+			}
+
 			User vickyform = null;
 			try {
 				vickyform = userDao.get("vickyform_mx", true);
@@ -2029,6 +2056,31 @@ public class UserMenuTest extends TestCase {
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
 				um.setKey(userMenuDao.createKey("vickyform_mx"));
+				userMenuDao.create(um);
+			}
+
+			User liverpoolboutiques = null;
+			try {
+				liverpoolboutiques = userDao.get("liverpoolboutiques_mx", true);
+			} catch( Exception e ) {
+				liverpoolboutiques = new User();
+				liverpoolboutiques.setFirstname("Liverpool Boutiques");
+				liverpoolboutiques.setLastname("Mexico");
+				liverpoolboutiques.setEmail("liverpoolboutiques@allshoppings.mobi");
+				liverpoolboutiques.getSecuritySettings().setRole(Role.BRAND);
+				liverpoolboutiques.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				liverpoolboutiques.setKey((Key)keyHelper.obtainKey(User.class, "liverpoolboutiques_mx"));
+				userDao.create(liverpoolboutiques);
+			}
+
+			try {
+				um = userMenuDao.get("liverpoolboutiques_mx", true);
+				userMenuDao.delete("liverpoolboutiques_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("liverpoolboutiques_mx"));
 				userMenuDao.create(um);
 			}
 
@@ -2127,9 +2179,37 @@ public class UserMenuTest extends TestCase {
 				userDao.create(calibrator);
 			}
 
-			// Chomarc --------------------------------------------------------------------
+			// Fullsand --------------------------------------------------------------------
 			User user = null;
-			
+
+			try {
+				um = userMenuDao.get("mayrafranco@fullsand_mx", true);
+				userMenuDao.delete("mayrafranco@fullsand_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("mayrafranco@fullsand_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("mayrafranco@fullsand_mx", true);
+			} catch( Exception e ) {
+				user = new User();
+				user.setFirstname("Ana");
+				user.setLastname("Llerena");
+				user.setEmail("mayrafranco@fullsand_mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("c0919283-ef3b-4a62-b5e6-22a3ce9d5271"));
+				user.setKey((Key)keyHelper.obtainKey(User.class, "mayrafranco@fullsand_mx"));
+				userDao.create(user);
+			}
+
+			// Chomarc --------------------------------------------------------------------
+
 			try {
 				um = userMenuDao.get("anallerena@chomarc_mx", true);
 				userMenuDao.delete("anallerena@chomarc_mx");
