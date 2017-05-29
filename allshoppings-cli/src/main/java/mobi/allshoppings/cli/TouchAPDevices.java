@@ -86,6 +86,20 @@ public class TouchAPDevices extends AbstractCLI {
 				outlet.add(assig.getHostname());
 			}
 			
+			// Antenas de sally beauty
+			stores = storeDao.getUsingBrandAndStatus("sallybeauty_mx", StatusHelper.statusActive(), null);
+			assigs = CollectionFactory.createList();
+			for(Store store : stores ) {
+				List<APDAssignation> tmp = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, new Date());
+				for(APDAssignation assig : tmp ) {
+					assigs.add(assig);
+				}
+			}
+			List<String> sally = CollectionFactory.createList();
+			for(APDAssignation assig : assigs) {
+				sally.add(assig.getHostname());
+			}
+			
 			// Antenas de club casablanca
 			stores = storeDao.getUsingBrandAndStatus("clubcasablanca_mx", StatusHelper.statusActive(), null);
 			assigs = CollectionFactory.createList();
@@ -156,6 +170,10 @@ public class TouchAPDevices extends AbstractCLI {
 					if(outlet.contains(obj.getHostname())) {
 						mails.add("cymerikayedra@gmail.com");
 						mails.add("cymauditoria@live.com.mx");
+					} 
+
+					if(sally.contains(obj.getHostname())) {
+						mails.add("PPerezCantu@sallybeauty.com");
 					} 
 
 					if(casablanca.contains(obj.getHostname())) {

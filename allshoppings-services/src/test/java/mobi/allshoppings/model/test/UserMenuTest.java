@@ -572,6 +572,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
 				um.setKey(userMenuDao.createKey("universodefragancias_mx"));
 				userMenuDao.create(um);
 			}
@@ -719,6 +720,7 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
 				um.setKey(userMenuDao.createKey("botanicus_mx"));
 				userMenuDao.create(um);
 			}
@@ -1442,6 +1444,8 @@ public class UserMenuTest extends TestCase {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.setKey(userMenuDao.createKey("aditivo_mx"));
 				userMenuDao.create(um);
 			}
@@ -2195,10 +2199,12 @@ public class UserMenuTest extends TestCase {
 
 			try {
 				user = userDao.get("mayrafranco@fullsand_mx", true);
+				userDao.delete("mayrafranco@fullsand_mx");
+				throw new Exception();
 			} catch( Exception e ) {
 				user = new User();
-				user.setFirstname("Ana");
-				user.setLastname("Llerena");
+				user.setFirstname("Mayra");
+				user.setLastname("Franco");
 				user.setEmail("mayrafranco@fullsand_mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
