@@ -21,6 +21,7 @@ import mobi.allshoppings.dao.GenericDAO;
 import mobi.allshoppings.dao.ProcessDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dao.spi.DAOJDOPersistentManagerFactory;
+import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDAssignation;
@@ -64,6 +65,7 @@ public class CheckDashboardInfo extends AbstractCLI {
 			ProcessDAO processDao = (ProcessDAO)getApplicationContext().getBean("process.dao.ref");
 			APDAssignationDAO apdaDao = (APDAssignationDAO)getApplicationContext().getBean("apdassignation.dao.ref");
 			ProcessHelper processHelper = (ProcessHelper)getApplicationContext().getBean("process.helper");
+			DashboardAPDeviceMapperService mapper = (DashboardAPDeviceMapperService)getApplicationContext().getBean("dashboard.apdevice.mapper");
 			
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
 			OptionSet options = parser.parse(args);
@@ -125,6 +127,7 @@ public class CheckDashboardInfo extends AbstractCLI {
 			pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 
 			Date curDate = new Date(fromDate.getTime());
+			mapper.buildCaches(true);
 			
 			while( curDate.before(toDate)) {
 				for( Store store : stores ) {
@@ -157,8 +160,7 @@ public class CheckDashboardInfo extends AbstractCLI {
 						log.log(Level.INFO, "Checking Tickets for " + store.getName() + " in " + sdf.format(curDate) + " (" + ticketsCount + " vs " + ticketsCountDI + ")");
 					} else {
 						log.log(Level.WARNING, "--------- Error in Tickets for " + store.getName() + " in " + sdf.format(curDate) + " (" + ticketsCount + " vs " + ticketsCountDI + ")...");
-						Process p = buildProcess(store, processDao, curDate);
-						processHelper.startProcess(p.getIdentifier(), true);
+						mapper.createStoreTicketDataForDates(sdf.format(curDate), sdf.format(new Date(curDate.getTime() + 86400000)), store.getIdentifier());
 					}
 					
 					
@@ -167,8 +169,6 @@ public class CheckDashboardInfo extends AbstractCLI {
 				curDate = new Date(curDate.getTime() + 86400000);
 			}
 			
-
-			pm.currentTransaction().commit();
 			pm.close();
 			
 		} catch( Exception e ) {
