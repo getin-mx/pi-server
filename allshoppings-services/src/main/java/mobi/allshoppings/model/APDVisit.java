@@ -341,12 +341,7 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((checkinStarted == null) ? 0 : checkinStarted.hashCode());
-		result = prime * result + ((checkinType == null) ? 0 : checkinType.hashCode());
-		result = prime * result + ((deviceUUID == null) ? 0 : deviceUUID.hashCode());
-		result = prime * result + ((entityId == null) ? 0 : entityId.hashCode());
-		result = prime * result + ((entityKind == null) ? 0 : entityKind.hashCode());
-		result = prime * result + ((mac == null) ? 0 : mac.hashCode());
+		result = prime * result + ((key == null) ? 0 : key.hashCode());
 		return result;
 	}
 
@@ -362,35 +357,10 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 		if (getClass() != obj.getClass())
 			return false;
 		APDVisit other = (APDVisit) obj;
-		if (checkinStarted == null) {
-			if (other.checkinStarted != null)
+		if (key == null) {
+			if (other.key != null)
 				return false;
-		} else if (!checkinStarted.equals(other.checkinStarted))
-			return false;
-		if (checkinType == null) {
-			if (other.checkinType != null)
-				return false;
-		} else if (!checkinType.equals(other.checkinType))
-			return false;
-		if (deviceUUID == null) {
-			if (other.deviceUUID != null)
-				return false;
-		} else if (!deviceUUID.equals(other.deviceUUID))
-			return false;
-		if (entityId == null) {
-			if (other.entityId != null)
-				return false;
-		} else if (!entityId.equals(other.entityId))
-			return false;
-		if (entityKind == null) {
-			if (other.entityKind != null)
-				return false;
-		} else if (!entityKind.equals(other.entityKind))
-			return false;
-		if (mac == null) {
-			if (other.mac != null)
-				return false;
-		} else if (!mac.equals(other.mac))
+		} else if (!key.equals(other.key))
 			return false;
 		return true;
 	}

@@ -163,7 +163,6 @@ public class CheckDashboardInfo extends AbstractCLI {
 						mapper.createStoreTicketDataForDates(sdf.format(curDate), sdf.format(new Date(curDate.getTime() + 86400000)), store.getIdentifier());
 					}
 					
-					
 				}
 				
 				curDate = new Date(curDate.getTime() + 86400000);
