@@ -99,7 +99,21 @@ public class TouchAPDevices extends AbstractCLI {
 			for(APDAssignation assig : assigs) {
 				sally.add(assig.getHostname());
 			}
-			
+
+			// Antenas de Modatelas
+			stores = storeDao.getUsingBrandAndStatus("modatelas_mx", StatusHelper.statusActive(), null);
+			assigs = CollectionFactory.createList();
+			for(Store store : stores ) {
+				List<APDAssignation> tmp = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, new Date());
+				for(APDAssignation assig : tmp ) {
+					assigs.add(assig);
+				}
+			}
+			List<String> modatelas = CollectionFactory.createList();
+			for(APDAssignation assig : assigs) {
+				modatelas.add(assig.getHostname());
+			}
+
 			// Antenas de club casablanca
 			stores = storeDao.getUsingBrandAndStatus("clubcasablanca_mx", StatusHelper.statusActive(), null);
 			assigs = CollectionFactory.createList();
@@ -125,7 +139,7 @@ public class TouchAPDevices extends AbstractCLI {
 			List<String> squalo4 = Arrays.asList("ashs-0125");
 			List<String> squalo5 = Arrays.asList("ashs-0126");
 			
-			// Antenas de club casablanca
+			// Antenas de Agasys
 			stores = storeDao.getUsingBrandAndStatus("agasys_mx", StatusHelper.statusActive(), null);
 			assigs = CollectionFactory.createList();
 			for(Store store : stores ) {
@@ -215,8 +229,40 @@ public class TouchAPDevices extends AbstractCLI {
 					
 					if(agasys.contains(obj.getHostname())) {
 						mails.clear();
-					} 
+					}
 
+					if( modatelas.contains(obj.getHostname())) {
+						mails.add("yaragon@modatelas.com.mx");
+					}
+					
+					if( obj.getHostname().equals("gihs-0156")) {
+						mails.add("atizapan62a@adolfodominguez.mx");
+					}
+
+					if( obj.getHostname().equals("gihs-0155")) {
+						mails.add("atizapan70a@adolfodominguez.mx");
+					}
+					 
+					if( obj.getHostname().equals("gihs-0176")) {
+						mails.add("cabos61a@adolfodominguez.mx");
+					}
+					
+					if( obj.getHostname().equals("gihs-0153")) {
+						mails.add("lomasverdes33b@adolfodominguez.mx");
+					}
+
+					if( obj.getHostname().equals("gihs-0145")) {
+						mails.add("anatole32b@adolfodominguez.mx");
+					}
+					 
+					if( obj.getHostname().equals("gihs-0146")) {
+						mails.add("duraznos83a@adolfodominguez.mx");
+					}
+
+					if( obj.getHostname().equals("gihs-0154")) {
+						mails.add("castelar84a@adolfodominguez.mx");
+					}
+					
 					obj.setReportMailList(mails);
 				}
 				

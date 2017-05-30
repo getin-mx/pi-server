@@ -4,15 +4,14 @@ import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 
+import com.ibm.icu.text.SimpleDateFormat;
+
 import joptsimple.OptionParser;
 import mobi.allshoppings.dao.APDAssignationDAO;
-import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.EntityKind;
-import mobi.allshoppings.model.Store;
-import mobi.allshoppings.model.tools.StatusHelper;
 
 
 public class Test extends AbstractCLI {
@@ -29,17 +28,12 @@ public class Test extends AbstractCLI {
 	
 	public static void main(String args[]) throws ASException {
 		try {
-			
-			StoreDAO storeDao = (StoreDAO)getApplicationContext().getBean("store.dao.ref");
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			APDAssignationDAO apdaDao = (APDAssignationDAO)getApplicationContext().getBean("apdassignation.dao.ref");
 
-			List<Store> stores = storeDao.getUsingBrandAndStatus("bestbuy_mx", StatusHelper.statusActive(), null);
-			for(Store store : stores ) {
-				List<APDAssignation> apdas = apdaDao.getUsingEntityIdAndEntityKind(store.getIdentifier(), EntityKind.KIND_STORE);
-				for( APDAssignation apda : apdas ) {
-					System.out.println(apda.getHostname());
-				}
-			}
+			List<APDAssignation> apdas = apdaDao.getUsingEntityIdAndEntityKindAndDate("1480009555292", EntityKind.KIND_STORE, sdf.parse("2017-01-01"));
+			System.out.println(apdas.size());
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

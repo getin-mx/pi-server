@@ -143,8 +143,9 @@ public class CheckDashboardInfo extends AbstractCLI {
 						processHelper.startProcess(p.getIdentifier(), true);
 					}
 					
-					if( visitCountAPDV.equals(0)) {
+					if( visitCountAPDV.equals(0L)) {
 						List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate);
+						log.log(Level.WARNING, "Checking Assignations for for " + store.getName() + " in " + sdf.format(curDate) + " and " + assigs.size() + " assignations...");
 						if(!assigs.isEmpty()) {
 							log.log(Level.WARNING, "--------- Rebuilding Visits count for " + store.getName() + " in " + sdf.format(curDate) + "...");
 							Process p = buildProcess(store, processDao, curDate);
@@ -189,7 +190,7 @@ public class CheckDashboardInfo extends AbstractCLI {
 		p.setEntityId(store.getIdentifier());
 		p.setEntityKind(EntityKind.KIND_STORE);
 		p.setData(obj.toString());
-		p.setUserId("adminb");
+		p.setUserId("admin");
 		p.setStatus(StatusAware.STATUS_PREPARED);
 		p.setProcessType(Process.PROCESS_TYPE_GENERATE_VISITS);
 		

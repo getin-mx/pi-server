@@ -153,6 +153,76 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 
+			User luis = null;
+			try {
+				luis = userDao.get("luis@getin.mx", true);
+			} catch( Exception e ) {
+				luis = new User();
+				luis.setFirstname("luis");
+				luis.setLastname("");
+				luis.setEmail("luis@getin.mx");
+				luis.getSecuritySettings().setRole(Role.ADMIN);
+				luis.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				luis.setKey((Key)keyHelper.obtainKey(User.class, "luis@getin.mx"));
+				userDao.create(luis);
+			}
+
+			try {
+				um = userMenuDao.get("luis@getin.mx", true);
+				userMenuDao.delete("luis@getin.mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
+				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
+				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
+				um.setKey(userMenuDao.createKey("luis@getin.mx"));
+				userMenuDao.create(um);
+			}
+
+			User luis2 = null;
+			try {
+				luis2 = userDao.get("luis.vazquez@getin.mx", true);
+			} catch( Exception e ) {
+				luis2 = new User();
+				luis2.setFirstname("Luis");
+				luis2.setLastname("Vazquez");
+				luis2.setEmail("luis.vazquez@getin.mx");
+				luis2.getSecuritySettings().setRole(Role.ADMIN);
+				luis2.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				luis2.setKey((Key)keyHelper.obtainKey(User.class, "luis.vazquez@getin.mx"));
+				userDao.create(luis2);
+			}
+
+			try {
+				um = userMenuDao.get("luis.vazquez@getin.mx", true);
+				userMenuDao.delete("luis.vazquez@getin.mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
+				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
+				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
+				um.setKey(userMenuDao.createKey("luis.vazquez@getin.mx"));
+				userMenuDao.create(um);
+			}
+
 			User francisco = null;
 			try {
 				francisco = userDao.get("francisco@getin.mx", true);
@@ -1482,7 +1552,6 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 
-
 			User d98coastav = null;
 			try {
 				d98coastav = userDao.get("98coastav_mx", true);
@@ -1903,6 +1972,34 @@ public class UserMenuTest extends TestCase {
 			}
 
 			try {
+				tanyamoss = userDao.get("brenda@tanyamoss.com", true);
+				userDao.delete(tanyamoss);
+				throw new Exception();
+			} catch( Exception e ) {
+				tanyamoss = new User();
+				tanyamoss.setFirstname("Brenda");
+				tanyamoss.setLastname("Mexico");
+				tanyamoss.setEmail("brenda@tanyamoss.com");
+				tanyamoss.getSecuritySettings().setRole(Role.STORE);
+				tanyamoss.getSecuritySettings().setStores(Arrays.asList("1493049397673","1493049398625","1493049398128"));
+				tanyamoss.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				tanyamoss.setKey((Key)keyHelper.obtainKey(User.class, "brenda@tanyamoss.com"));
+				userDao.create(tanyamoss);
+			}
+
+			try {
+				um = userMenuDao.get("brenda@tanyamoss.com", true);
+				userMenuDao.delete("brenda@tanyamoss.com");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.setKey(userMenuDao.createKey("brenda@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
 				um = userMenuDao.get("pakmail_mx", true);
 				userMenuDao.delete("pakmail_mx");
 				throw new Exception();
@@ -2215,6 +2312,35 @@ public class UserMenuTest extends TestCase {
 			}
 
 			// Chomarc --------------------------------------------------------------------
+
+			try {
+				um = userMenuDao.get("adassist@grupochomarc.com.mx", true);
+				userMenuDao.delete("adassist@grupochomarc.com.mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("adassist@grupochomarc.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("adassist@grupochomarc.com.mx", true);
+			} catch( Exception e ) {
+				user = new User();
+				user.setFirstname("Adassist");
+				user.setLastname("");
+				user.setEmail("adassist@grupochomarc.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("4df8d43b-b8d6-41a2-a342-082884a5e897",
+								"8b0d5f06-f5f6-4d70-aab5-b3ef1e807d97", "b9e3dee9-fcb8-4c36-9620-2c897b03566f",
+								"b327518a-28a8-4ca0-b82a-bd1e646307ce", "6e39b7d5-dcd5-458b-9088-a2c97be409e3",
+								"743003df-cb85-4f8f-98eb-d41ff31f3e36", "e0bb9d40-7639-47d0-ab38-135b280ac769"));
+				user.setKey((Key)keyHelper.obtainKey(User.class, "adassist@grupochomarc.com.mx"));
+				userDao.create(user);
+			}
 
 			try {
 				um = userMenuDao.get("anallerena@chomarc_mx", true);

@@ -162,6 +162,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 					try {
 						List<APDVisit> objs = CollectionFactory.createList();
+						List<String> keys = CollectionFactory.createList();
 						if(!onlyDashboards) {
 
 							List<String> blackListMacs = getBlackListByStore(store);
@@ -208,9 +209,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									for(APHEntry entry : entries ) {
 										List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
 										for(APDVisit visit : visitList )
-											if(!objs.contains(visit)) {
-												if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
+											if(!keys.contains(visit.getIdentifier())) {
+												if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE)) {
 													objs.add(visit);
+													keys.add(visit.getIdentifier());
+												}
 											}
 									}
 
