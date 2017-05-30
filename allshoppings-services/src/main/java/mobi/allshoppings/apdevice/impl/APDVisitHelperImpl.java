@@ -217,7 +217,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
 									try {
 										apdvDao.createOrUpdate(null, objs, true);
-									} catch( Exception e ) {}
+									} catch( Exception e ) {
+										log.log(Level.SEVERE, "Unexpected error... listing keys");
+										for( APDVisit obj : objs ) {
+											log.log(Level.INFO, obj.getIdentifier());
+										}
+									}
 
 								} else {
 									Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
