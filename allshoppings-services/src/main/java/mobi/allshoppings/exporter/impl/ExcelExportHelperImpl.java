@@ -61,7 +61,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public byte[] export(String storeId, String fromDate, String toDate, String outDir) throws ASException {
+	public byte[] export(String storeId, String fromDate, String toDate, int weeks, String outDir) throws ASException {
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -82,7 +82,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			String dateName = getStringDate(finalDate);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(finalDate);
-			cal.add(Calendar.DATE, -28);
+			cal.add(Calendar.DATE, -(weeks*7));
 			Date limitDate = cal.getTime();
 
 			log.log(Level.INFO, "Processing store " + storeName + "...");

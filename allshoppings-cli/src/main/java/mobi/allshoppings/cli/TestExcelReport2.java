@@ -49,7 +49,7 @@ public class TestExcelReport2 extends AbstractCLI {
 				for( Store store : stores ) {
 					System.out.println("Listing " + store.getName());
 					try {
-						helper.export(store.getIdentifier(), FROM_DATE, TO_DATE, outDir);
+						helper.export(store.getIdentifier(), FROM_DATE, TO_DATE, 4, outDir);
 					} catch( Exception e ) {
 						e.printStackTrace();
 					}

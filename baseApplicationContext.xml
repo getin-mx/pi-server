@@ -84,7 +84,7 @@
 		<property name="smtpServer" value="smtp.gmail.com" />
 		<property name="smtpPort" value="587" />
 		<property name="smtpUser" value="contacto@getin.mx" />
-		<property name="smtpPassword" value="Getin1234" />
+		<property name="smtpPassword" value="Getin123456789" />
 		<property name="smtpEncription" value="tls" />
 		<property name="solrUrl" value="http://aragorn.getin.mx:8983/solr/allshoppings" />
 		<property name="getinSqlUrl" value="jdbc:mysql://getinold.allshoppings.mobi:3306/getin?user=api&amp;password=VZ52sBPTeg33rq7w" />
@@ -100,7 +100,8 @@
 		<property name="apdReportMailList">
 			<list>
 				<value>matias@getin.mx</value>
-				<value>daniel@getin.mx</value>
+				<value>luis@getin.mx</value>
+				<value>luis.vazquez@getin.mx</value>
 				<value>anabell@getin.mx</value>
 				<value>francisco@getin.mx</value>
 				<value>ingrid@getin.mx</value>
@@ -771,6 +772,31 @@
 				<value>gihs-0297</value>
 				<value>gihs-0138</value>
 				<value>gihs-0298</value>
+				<value>gihs-0247</value>
+				<value>gihs-0250</value>
+				<value>gihs-0150</value>
+				<value>gihs-0353</value>
+				<value>gihs-0160</value>
+				<value>gihs-0220</value>
+				<value>gihs-0222</value>
+				<value>gihs-0223</value>
+				<value>gihs-0224</value>
+				<value>gihs-0225</value>
+				<value>gihs-0227</value>
+				<value>gihs-0228</value>
+				<value>gihs-0233</value>
+				<value>gihs-0181</value>
+				<value>gihs-0232</value>
+				<value>gihs-0198</value>
+				<value>gihs-0199</value>
+				<value>gihs-0229</value>
+				<value>gihs-0231</value>
+				<value>gihs-0157</value>
+				<value>gihs-0206</value>
+				<value>gihs-0221</value>
+				<value>gihs-0224</value>
+				<value>gihs-0230</value>
+				<value>gihs-0248</value>
 			</list>
 		</property>
 		<property name="defaultBehavioursApps">

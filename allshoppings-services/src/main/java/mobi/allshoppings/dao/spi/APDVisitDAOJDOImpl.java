@@ -1,6 +1,5 @@
 package mobi.allshoppings.dao.spi;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +34,6 @@ import mobi.allshoppings.tx.PersistenceProvider;
 public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVisitDAO {
 
 	private static final Logger log = Logger.getLogger(APDVisitDAOJDOImpl.class.getName());
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss");
 	
 	public APDVisitDAOJDOImpl() {
 		super(APDVisit.class);
@@ -43,8 +41,9 @@ public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVi
 
 	@Override
 	public Key createKey(APDVisit obj) throws ASException {
-		return keyHelper.createStringUniqueKey(APDVisit.class, obj.getMac() + ":" + obj.getEntityId() + ":"
-				+ obj.getEntityKind() + ":" + obj.getCheckinType() + ":" + sdf.format(obj.getCheckinStarted()));
+		return keyHelper.createStringUniqueKey(APDVisit.class);
+//		return keyHelper.createStringUniqueKey(APDVisit.class, UUID.fromString(obj.getMac() + ":" + obj.getEntityId() + ":"
+//				+ obj.getEntityKind() + ":" + obj.getCheckinType() + ":" + sdf.format(obj.getCheckinStarted())).toString());
 	}
 
 	@Override
