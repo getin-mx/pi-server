@@ -1,34 +1,48 @@
-package mobi.allshoppings.model.test;
+	package mobi.allshoppings.cli;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import com.inodes.datanucleus.model.Key;
 
-import junit.framework.TestCase;
+import joptsimple.OptionParser;
 import mobi.allshoppings.dao.UserDAO;
 import mobi.allshoppings.dao.UserMenuDAO;
-import mobi.allshoppings.dao.spi.UserDAOJDOImpl;
-import mobi.allshoppings.dao.spi.UserMenuDAOJDOImpl;
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.UserMenu;
 import mobi.allshoppings.model.UserMenuEntry;
 import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.model.tools.KeyHelper;
-import mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl;
 
-public class UserMenuTest extends TestCase {
 
-	UserMenuDAO userMenuDao = new UserMenuDAOJDOImpl();
-	UserDAO userDao = new UserDAOJDOImpl();
-	KeyHelper keyHelper = new KeyHelperGaeImpl();
+public class UserMenuDump extends AbstractCLI {
 
-	@Test
-	public void test0001() {
+	private static final Logger log = Logger.getLogger(UserMenuDump.class.getName());
 
+	public static void setApplicationContext(ApplicationContext ctx) {
+		context = ctx;
+	}
+
+	public static OptionParser buildOptionParser(OptionParser base) {
+		if( base == null ) parser = new OptionParser();
+		else parser = base;
+		return parser;
+	}
+
+	public static void main(String args[]) throws ASException {
 		try {
+			UserMenuDAO userMenuDao = (UserMenuDAO)getApplicationContext().getBean("usermenu.dao.ref");
+			UserDAO userDao = (UserDAO)getApplicationContext().getBean("user.dao.ref");
+			KeyHelper keyHelper = (KeyHelper)getApplicationContext().getBean("key.helper");
+
+			log.log(Level.INFO, "Dumping Getin Users....");
+
 			UserMenu um = null;
 			try {
 				um = userMenuDao.get("admin", true);
@@ -121,15 +135,16 @@ public class UserMenuTest extends TestCase {
 			User daniel = null;
 			try {
 				daniel = userDao.get("daniel@getin.mx", true);
+				userDao.delete("daniel@getin.mx");
 			} catch( Exception e ) {
-				daniel = new User();
-				daniel.setFirstname("Daniel");
-				daniel.setLastname("Palacios");
-				daniel.setEmail("daniel@getin.mx");
-				daniel.getSecuritySettings().setRole(Role.ADMIN);
-				daniel.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				daniel.setKey((Key)keyHelper.obtainKey(User.class, "daniel@getin.mx"));
-				userDao.create(daniel);
+//				daniel = new User();
+//				daniel.setFirstname("Daniel");
+//				daniel.setLastname("Palacios");
+//				daniel.setEmail("daniel@getin.mx");
+//				daniel.getSecuritySettings().setRole(Role.ADMIN);
+//				daniel.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+//				daniel.setKey((Key)keyHelper.obtainKey(User.class, "daniel@getin.mx"));
+//				userDao.create(daniel);
 			}
 
 			try {
@@ -137,20 +152,20 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.delete("daniel@getin.mx");
 				throw new Exception();
 			} catch( Exception e ) {
-				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
-				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
-				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
-				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
-				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
-				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
-				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
-				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
-				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
-				um.setKey(userMenuDao.createKey("daniel@getin.mx"));
-				userMenuDao.create(um);
+//				um = new UserMenu();
+//				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
+//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+//				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+//				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
+//				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+//				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
+//				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
+//				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
+//				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+//				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+//				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
+//				um.setKey(userMenuDao.createKey("daniel@getin.mx"));
+//				userMenuDao.create(um);
 			}
 
 			User luis = null;
@@ -296,15 +311,16 @@ public class UserMenuTest extends TestCase {
 			User mariajose = null;
 			try {
 				mariajose = userDao.get("mariajose@getin.mx", true);
+				userDao.delete("mariajose@getin.mx");
 			} catch( Exception e ) {
-				mariajose = new User();
-				mariajose.setFirstname("Maria Jose");
-				mariajose.setLastname("");
-				mariajose.setEmail("mariajose@getin.mx");
-				mariajose.getSecuritySettings().setRole(Role.ADMIN);
-				mariajose.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				mariajose.setKey((Key)keyHelper.obtainKey(User.class, "mariajose@getin.mx"));
-				userDao.create(mariajose);
+//				mariajose = new User();
+//				mariajose.setFirstname("Maria Jose");
+//				mariajose.setLastname("");
+//				mariajose.setEmail("mariajose@getin.mx");
+//				mariajose.getSecuritySettings().setRole(Role.ADMIN);
+//				mariajose.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+//				mariajose.setKey((Key)keyHelper.obtainKey(User.class, "mariajose@getin.mx"));
+//				userDao.create(mariajose);
 			}
 
 			try {
@@ -312,20 +328,20 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.delete("mariajose@getin.mx");
 				throw new Exception();
 			} catch( Exception e ) {
-				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
-				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
-				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
-				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
-				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
-				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
-				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
-				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
-				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
-				um.setKey(userMenuDao.createKey("mariajose@getin.mx"));
-				userMenuDao.create(um);
+//				um = new UserMenu();
+//				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
+//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+//				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+//				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
+//				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+//				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
+//				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
+//				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
+//				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+//				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+//				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
+//				um.setKey(userMenuDao.createKey("mariajose@getin.mx"));
+//				userMenuDao.create(um);
 			}
 
 			User adrian = null;
@@ -795,6 +811,56 @@ public class UserMenuTest extends TestCase {
 				userMenuDao.create(um);
 			}
 			
+			User gameplanet = null;
+			try {
+				gameplanet = userDao.get("gameplanet_mx", true);
+			} catch( Exception e ) {
+				gameplanet = new User();
+				gameplanet.setFirstname("Game Planet");
+				gameplanet.setLastname("Mexico");
+				gameplanet.setEmail("gameplanet@allshoppings.mobi");
+				gameplanet.getSecuritySettings().setRole(Role.BRAND);
+				gameplanet.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				gameplanet.setKey((Key)keyHelper.obtainKey(User.class, "gameplanet_mx"));
+				userDao.create(gameplanet);
+			}
+
+			try {
+				um = userMenuDao.get("gameplanet_mx", true);
+				userMenuDao.delete("gameplanet_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("gameplanet_mx"));
+				userMenuDao.create(um);
+			}
+			
+			User converse = null;
+			try {
+				converse = userDao.get("converse_mx", true);
+			} catch( Exception e ) {
+				converse = new User();
+				converse.setFirstname("Converse");
+				converse.setLastname("Mexico");
+				converse.setEmail("converse@allshoppings.mobi");
+				converse.getSecuritySettings().setRole(Role.BRAND);
+				converse.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				converse.setKey((Key)keyHelper.obtainKey(User.class, "converse_mx"));
+				userDao.create(converse);
+			}
+
+			try {
+				um = userMenuDao.get("converse_mx", true);
+				userMenuDao.delete("converse_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("converse_mx"));
+				userMenuDao.create(um);
+			}
+			
 			User prada = null;
 			try {
 				prada = userDao.get("prada_mx", true);
@@ -920,6 +986,7 @@ public class UserMenuTest extends TestCase {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.setKey(userMenuDao.createKey("areasmexico_mx"));
 				userMenuDao.create(um);
 			}
@@ -3534,10 +3601,11 @@ public class UserMenuTest extends TestCase {
 			}
 
 			// End 98 Coast av  --------------------------------------------------------------------
-
-		} catch( Throwable e ) {
-			e.printStackTrace();
-			fail(e.getMessage());
+			
+			
+		} catch( Exception e ) {
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
+		System.exit(0);
 	}
 }

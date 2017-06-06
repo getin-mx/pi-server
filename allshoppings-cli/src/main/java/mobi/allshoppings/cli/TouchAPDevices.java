@@ -139,6 +139,9 @@ public class TouchAPDevices extends AbstractCLI {
 			List<String> squalo4 = Arrays.asList("ashs-0125");
 			List<String> squalo5 = Arrays.asList("ashs-0126");
 			
+			// Antenas de Universo de Fragancias
+			List<String> universo = Arrays.asList("gihs-0333");
+			
 			// Antenas de Agasys
 			stores = storeDao.getUsingBrandAndStatus("agasys_mx", StatusHelper.statusActive(), null);
 			assigs = CollectionFactory.createList();
@@ -231,6 +234,10 @@ public class TouchAPDevices extends AbstractCLI {
 						mails.clear();
 					}
 
+					if( universo.contains(obj.getHostname())) {
+						mails.add("gloriagilhr@yahoo.com");
+					}
+					
 					if( modatelas.contains(obj.getHostname())) {
 						mails.add("yaragon@modatelas.com.mx");
 					}
@@ -262,6 +269,8 @@ public class TouchAPDevices extends AbstractCLI {
 					if( obj.getHostname().equals("gihs-0154")) {
 						mails.add("castelar84a@adolfodominguez.mx");
 					}
+					
+					
 					
 					obj.setReportMailList(mails);
 				}

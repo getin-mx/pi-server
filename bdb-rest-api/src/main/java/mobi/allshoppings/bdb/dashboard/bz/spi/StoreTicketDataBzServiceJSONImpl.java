@@ -348,6 +348,12 @@ implements BDBDashboardBzService, BDBPostBzService {
 				if (CellType.STRING.equals(hCell.getCellTypeEnum())) {
 					if(hCell.getStringCellValue().equalsIgnoreCase("TOTAL"))
 						break;
+					if(hCell.getStringCellValue().equalsIgnoreCase("TOTALES"))
+						break;
+					if(hCell.getStringCellValue().startsWith("T"))
+						break;
+					if(hCell.getStringCellValue().startsWith("t"))
+						break;
 
 					Integer num = Integer.parseInt(hCell.getStringCellValue());
 					cal.set(Calendar.DATE, num);
@@ -366,59 +372,63 @@ implements BDBDashboardBzService, BDBPostBzService {
 
 			Row row = sheet.getRow(rowIndex);
 			while( row != null ) {
+				try {
+					String storeName = row.getCell(1).getStringCellValue();
+					Map<String, String> additionalFields = CollectionFactory.createMap();
+					additionalFields.put("brandId", brand.getIdentifier());
+					String adaptedStoreName = new String(storeName);
+					adaptedStoreName = adaptedStoreName.replaceAll("a", "?");
+					adaptedStoreName = adaptedStoreName.replaceAll("e", "?");
+					adaptedStoreName = adaptedStoreName.replaceAll("i", "?");
+					adaptedStoreName = adaptedStoreName.replaceAll("o", "?");
+					adaptedStoreName = adaptedStoreName.replaceAll("u", "?");
+					List<Store> stores = storeDao.getUsingIndex(adaptedStoreName, null, StatusHelper.statusActive(), range, additionalFields, null, null);
 
-				String storeName = row.getCell(1).getStringCellValue();
-				Map<String, String> additionalFields = CollectionFactory.createMap();
-				additionalFields.put("brandId", brand.getIdentifier());
-				String adaptedStoreName = new String(storeName);
-				adaptedStoreName = adaptedStoreName.replaceAll("a", "?");
-				adaptedStoreName = adaptedStoreName.replaceAll("e", "?");
-				adaptedStoreName = adaptedStoreName.replaceAll("i", "?");
-				adaptedStoreName = adaptedStoreName.replaceAll("o", "?");
-				adaptedStoreName = adaptedStoreName.replaceAll("u", "?");
-				List<Store> stores = storeDao.getUsingIndex(adaptedStoreName, null, StatusHelper.statusActive(), range, additionalFields, null, null);
+					JSONObject jsonObject = new JSONObject();
+					JSONArray ticketsArray = new JSONArray();
 
-				JSONObject jsonObject = new JSONObject();
-				JSONArray ticketsArray = new JSONArray();
+					if(!stores.isEmpty()) {
+						Store store = stores.get(0);
 
-				if(!stores.isEmpty()) {
-					Store store = stores.get(0);
+						jsonObject.put("storeId", store.getIdentifier());
+						jsonObject.put("storeName", store.getName());
+						jsonObject.put("original", storeName);
+						jsonObject.put("error", "");
 
-					jsonObject.put("storeId", store.getIdentifier());
-					jsonObject.put("storeName", store.getName());
-					jsonObject.put("original", storeName);
-					jsonObject.put("error", "");
-					
-					for( colIndex = minColIndex; colIndex < maxColIndex; colIndex++ ) {
-						hCell = row.getCell(colIndex);
-						if( hCell != null ) {
+						for( colIndex = minColIndex; colIndex < maxColIndex; colIndex++ ) {
+							hCell = row.getCell(colIndex);
+							if( hCell != null ) {
 
-							if (CellType.STRING.equals(hCell.getCellTypeEnum())) {
-								Integer num = Integer.parseInt(hCell.getStringCellValue());
-								ticketsArray.put(num);
-							} else if (CellType.NUMERIC.equals(hCell.getCellTypeEnum())) {
-								Integer num = (int)hCell.getNumericCellValue();
-								ticketsArray.put(num);
+								if (CellType.STRING.equals(hCell.getCellTypeEnum())) {
+									Integer num = Integer.parseInt(hCell.getStringCellValue());
+									ticketsArray.put(num);
+								} else if (CellType.NUMERIC.equals(hCell.getCellTypeEnum())) {
+									Integer num = (int)hCell.getNumericCellValue();
+									ticketsArray.put(num);
+								}
 							}
+
+							jsonObject.put("tickets", ticketsArray);
 						}
 
+					} else {
+
+						jsonObject.put("storeId", "null");
+						jsonObject.put("storeName", "No encontrado!");
+						jsonObject.put("original", storeName);
+						jsonObject.put("error", ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE);
+
 						jsonObject.put("tickets", ticketsArray);
+
 					}
-					
-				} else {
-					
-					jsonObject.put("storeId", "null");
-					jsonObject.put("storeName", "No encontrado!");
-					jsonObject.put("original", storeName);
-					jsonObject.put("error", ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE);
+					storeList.put(jsonObject);
 
-					jsonObject.put("tickets", ticketsArray);
-
+					rowIndex++;
+					row = sheet.getRow(rowIndex);
+				} catch( Exception e ) {
+					log.log(Level.WARNING, e.getMessage(), e);
+					row = null;
 				}
-				storeList.put(jsonObject);
-
-				rowIndex++;
-				row = sheet.getRow(rowIndex);
 			}
 
 			json.put("dateList", dateList);

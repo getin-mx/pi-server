@@ -1,4 +1,4 @@
-	package mobi.allshoppings.cli;
+package mobi.allshoppings.cli;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -852,6 +852,30 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 			}
 
+			try {
+				brand = brandDao.get("gameplanet_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Game Planet");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "gameplanet_mx"));
+				brandDao.create(brand);
+			}
+
+			try {
+				brand = brandDao.get("converse_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Converse");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "converse_mx"));
+				brandDao.create(brand);
+			}
+
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -1183,7 +1207,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("519","Sally Beauty Multiplaza Arboledas", "sallybeauty_mx", null));
 			stores.add(new StoreAdapter("520","Sally Beauty Parque Linda Vista", "sallybeauty_mx", null));
 			stores.add(new StoreAdapter("521","Sally Beauty La Cúspide Lomas Verdes", "sallybeauty_mx", null));
-			stores.add(new StoreAdapter("522","Sally Beauty Plaza Satélite", "sallybeauty_mx", null));
+//			stores.add(new StoreAdapter("522","Sally Beauty Plaza Satélite", "sallybeauty_mx", null));
 			stores.add(new StoreAdapter("523","Sally Beauty City Shop", "sallybeauty_mx", null));
 			stores.add(new StoreAdapter("524","Sally Beauty Town Center El Rosario", "sallybeauty_mx", null));
 			stores.add(new StoreAdapter("525","Sally Beauty Forum Buena Vista", "sallybeauty_mx", null));
@@ -1199,7 +1223,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("534","Farmacias YZA Tolentino", "farmaciasyza_mx", null));
 
 			stores.add(new StoreAdapter("535","Tony Moly Oasis Coyoacan", "tonymoly_mx", null));
-			stores.add(new StoreAdapter("536","Tony Moly Acoxpa", "tonymoly_mx", null));
+			stores.add(new StoreAdapter("536","Tony Moly Paseo Acoxpa", "tonymoly_mx", null));
 
 			stores.add(new StoreAdapter("537","Pakmail Coyuya", "pakmail_mx", null));
 			stores.add(new StoreAdapter("538","Pakmail Felix Cuevas", "pakmail_mx", null));
@@ -1227,6 +1251,30 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("556","Farmacias YZA Porfirio", "farmaciasyza_mx",null));
 
 			stores.add(new StoreAdapter("557","Clarins Perisur", "clarins_mx",null));
+
+			stores.add(new StoreAdapter("558", "Botanicus Forum Cuernavaca", "botanicus_mx", null));
+			stores.add(new StoreAdapter("559", "Game Planet Santa Fe I", "gameplanet_mx", null));
+			stores.add(new StoreAdapter("560", "Game Planet Universidad", "gameplanet_mx", null));
+			stores.add(new StoreAdapter("561", "Game Planet Portal San Angel", "gameplanet_mx", null));
+
+			stores.add(new StoreAdapter("562", "Tanya Moss Parque Duraznos", "tanyamoss_mx", null));
+			stores.add(new StoreAdapter("563", "Tanya Moss Pabellón Polanco", "tanyamoss_mx", null));
+			stores.add(new StoreAdapter("564", "Tanya Moss Altavista", "tanyamoss_mx", null));
+			stores.add(new StoreAdapter("565", "Tanya Moss Santa Teresa", "tanyamoss_mx", null));
+			stores.add(new StoreAdapter("566", "Tanya Moss Interlomas", "tanyamoss_mx", null));
+			stores.add(new StoreAdapter("567", "Tanya Moss Santa Fe", "tanyamoss_mx", null));
+			stores.add(new StoreAdapter("568", "Tanya Moss Isla Coyoacan", "tanyamoss_mx", null));
+			stores.add(new StoreAdapter("569", "Tanya Moss Isla Perisur", "tanyamoss_mx", null));
+			stores.add(new StoreAdapter("570", "Tanya Moss Andares", "tanyamoss_mx", null));
+			stores.add(new StoreAdapter("571", "Tanya Moss Aeropuerto Guadalajara", "tanyamoss_mx", null));
+			stores.add(new StoreAdapter("572", "Tanya Moss Angelopolis", "tanyamoss_mx", null));
+			stores.add(new StoreAdapter("573", "Tanya Moss Oasis Coyoacan", "tanyamoss_mx", null));
+			stores.add(new StoreAdapter("574", "Tanya Moss Aeropuerto CDMX Terminal 2", "tanyamoss_mx", null));
+			stores.add(new StoreAdapter("575", "Tanya Moss Palacio de hierro Polanco", "tanyamoss_mx", null));
+
+			stores.add(new StoreAdapter("576", "Converse Centro Historico", "converse_mx", null));
+			stores.add(new StoreAdapter("577", "Merrell Satelite", "converse_mx", null));
+			stores.add(new StoreAdapter("578", "Cole Haan interlomas", "converse_mx", null));
 
 			Store store;
 			for(StoreAdapter obj : stores ) {
