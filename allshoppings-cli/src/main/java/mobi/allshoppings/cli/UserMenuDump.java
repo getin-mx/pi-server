@@ -1,4 +1,4 @@
-	package mobi.allshoppings.cli;
+package mobi.allshoppings.cli;
 
 import java.util.ArrayList;
 import java.util.Arrays;

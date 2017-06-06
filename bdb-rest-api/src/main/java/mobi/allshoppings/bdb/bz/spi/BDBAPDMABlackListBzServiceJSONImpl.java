@@ -30,8 +30,6 @@ public class BDBAPDMABlackListBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl
 	@Override
 	public String[] getMandatoryAddFields() {
 		return new String[] {
-				"entityId",
-				"entityKind",
 				"mac",
 				"description"
 		};
@@ -41,8 +39,6 @@ public class BDBAPDMABlackListBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl
 	public String[] getMandatoryUpdateFields() {
 		return new String[] {
 				"identifier",
-				"entityId",
-				"entityKind",
 				"mac",
 				"description"
 		};

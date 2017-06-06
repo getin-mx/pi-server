@@ -538,6 +538,16 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 			macs.clear();
 			//--- Start black list ------------
+
+			// Generic Black Lists
+			List<APDMABlackList> blackListGen = apmaBlDao.getUsingEntityIdAndRange(null, null, null, null, null, false);
+			for( APDMABlackList brand : blackListGen ) {
+				if (!macs.contains(brand.getMac().toUpperCase().trim())){
+					macs.add(brand.getMac().toUpperCase().trim());	
+				}
+			}
+			log.log(Level.INFO,"(Generic) -- Load Generic black list: " + blackListGen.size() + " macs");
+
 			//Load blackListbyShopping for shopping
 			if( StringUtils.hasText(store.getShoppingId())) {
 				List<APDMABlackList> blackListbyShopping = apmaBlDao.getUsingEntityIdAndRange(store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, null, false);

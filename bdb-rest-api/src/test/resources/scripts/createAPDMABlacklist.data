@@ -1,6 +1,4 @@
 {
-	"entityId" : "getin_mx",
-	"entityKind" : 1,
 	"mac" : "00:00:00:00:00:00",
 	"description" : "MAC Invalida"
 }

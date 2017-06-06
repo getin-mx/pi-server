@@ -51,12 +51,16 @@ public class APDMABlackListDAOJDOImpl extends GenericDAOJDO<APDMABlackList> impl
 				declaredParams.add("String entityIdParam");
 				filters.add("entityId == entityIdParam");
 				parameters.put("entityIdParam", entityId);
+			} else {
+				declaredParams.add("String entityIdParam");
+				filters.add("entityId == entityIdParam");
+				parameters.put("entityIdParam", null);
 			}
 			
 			// Date parameter
 			if( entityKind != null ) {
 				declaredParams.add("Integer entityKindParam");
-				filters.add("entityKind >= entityKindParam");
+				filters.add("entityKind == entityKindParam");
 				parameters.put("entityKindParam", entityKind);
 			}
 
