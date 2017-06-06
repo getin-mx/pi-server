@@ -40,7 +40,7 @@ public class TestExcelReport2 extends AbstractCLI {
 			OptionSet options = parser.parse(args);
 
 			final String FROM_DATE = "2017-01-02"; // Retail Calendar initial 2017 day
-			final String TO_DATE = "2017-04-30"; // Retail Calendar final march day
+			final String TO_DATE = "2017-05-28"; // Retail Calendar final march day
 			final String outDir = "/usr/local/allshoppings/dump";
 			
 			List<Brand> brands = brandDao.getUsingStatusAndRange(StatusHelper.statusActive(), null, "name");

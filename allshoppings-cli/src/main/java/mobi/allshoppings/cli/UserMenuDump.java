@@ -2170,6 +2170,7 @@ public class UserMenuDump extends AbstractCLI {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
 				um.setKey(userMenuDao.createKey("farmaciasyza_mx"));
 				userMenuDao.create(um);
 			}
@@ -3602,7 +3603,65 @@ public class UserMenuDump extends AbstractCLI {
 
 			// End 98 Coast av  --------------------------------------------------------------------
 			
-			
+			// Custom Grupo Pavel  --------------------------------------------------------------------
+			try {
+				um = userMenuDao.get("aaguilar@pavel.com.mx", true);
+				userMenuDao.delete("aaguilar@pavel.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("aaguilar@pavel.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("aaguilar@pavel.com.mx", true);
+				userDao.delete(user.getIdentifier());
+				throw new Exception();
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Grupo Pavel");
+				user.setLastname("");
+				user.setEmail("aaguilar@pavel.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings().setStores(Arrays.asList("0cd9f3e4-d932-44dd-a1ae-6b04540484be"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "aaguilar@pavel.com.mx"));
+				userDao.create(user);
+			}
+
+			try {
+				um = userMenuDao.get("imorales@pavel.com.mx", true);
+				userMenuDao.delete("imorales@pavel.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("imorales@pavel.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("imorales@pavel.com.mx", true);
+				userDao.delete(user.getIdentifier());
+				throw new Exception();
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Grupo Pavel");
+				user.setLastname("");
+				user.setEmail("imorales@pavel.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings().setStores(Arrays.asList("48d17b46-6d7f-483a-bf99-18216c958141"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "imorales@pavel.com.mx"));
+				userDao.create(user);
+			}
+
+			// End Custom Grupo Pavel  --------------------------------------------------------------------
+
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
