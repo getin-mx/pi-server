@@ -874,7 +874,7 @@
 	<bean id="userentitycache.service" class="mobi.allshoppings.uec.impl.UserEntityCacheBzServiceImpl" scope="singleton" />
 	<bean id="systemstatus.service" class="mobi.allshoppings.tools.SystemStatusService" scope="singleton" />
 	<bean id="apdevice.helper" class="mobi.allshoppings.apdevice.impl.APDeviceHelperImpl" scope="singleton" />
-	<bean id="process.helper" class="mobi.allshoppings.process.impl.ProcessHelperImpl" scope="singleton" />
+	<bean id="process.helper" class="mobi.allshoppings.process.impl.ProcessUtilsImpl" scope="singleton" />
 	<bean id="aphentry.helper" class="mobi.allshoppings.apdevice.impl.APHHelperImpl" scope="singleton" />
 	<bean id="apdvisit.helper" class="mobi.allshoppings.apdevice.impl.APDVisitHelperImpl" scope="singleton" />
 	<bean id="floormapjourney.helper" class="mobi.allshoppings.apdevice.impl.FloorMapJourneyHelperImpl" scope="singleton" />

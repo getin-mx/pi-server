@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContext;
 import joptsimple.OptionParser;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.process.ProcessHelper;
+import mobi.allshoppings.process.ProcessUtils;
 
 
 public class CompletePendingProcesses extends AbstractCLI {
@@ -27,7 +27,7 @@ public class CompletePendingProcesses extends AbstractCLI {
 	public static void main(String args[]) throws ASException {
 		try {
 			
-			ProcessHelper helper = (ProcessHelper)getApplicationContext().getBean("process.helper");
+			ProcessUtils helper = (ProcessUtils)getApplicationContext().getBean("process.helper");
 
 			log.log(Level.INFO, "Completing Pending Processes");
 			helper.completePendingProcesses();

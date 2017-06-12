@@ -16,11 +16,11 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.Process;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.interfaces.StatusAware;
-import mobi.allshoppings.process.ProcessHelper;
+import mobi.allshoppings.process.ProcessUtils;
 
-public class ProcessHelperImpl implements ProcessHelper {
+public class ProcessUtilsImpl implements ProcessUtils {
 
-	private static final Logger log = Logger.getLogger(ProcessHelperImpl.class.getName());
+	private static final Logger log = Logger.getLogger(ProcessUtilsImpl.class.getName());
 	
 	@Autowired
 	private ProcessDAO dao;

@@ -114,6 +114,20 @@ public class TouchAPDevices extends AbstractCLI {
 				modatelas.add(assig.getHostname());
 			}
 
+			// Antenas de Prada
+			stores = storeDao.getUsingBrandAndStatus("prada_mx", StatusHelper.statusActive(), null);
+			assigs = CollectionFactory.createList();
+			for(Store store : stores ) {
+				List<APDAssignation> tmp = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, new Date());
+				for(APDAssignation assig : tmp ) {
+					assigs.add(assig);
+				}
+			}
+			List<String> prada = CollectionFactory.createList();
+			for(APDAssignation assig : assigs) {
+				prada.add(assig.getHostname());
+			}
+
 			// Antenas de club casablanca
 			stores = storeDao.getUsingBrandAndStatus("clubcasablanca_mx", StatusHelper.statusActive(), null);
 			assigs = CollectionFactory.createList();
@@ -130,7 +144,7 @@ public class TouchAPDevices extends AbstractCLI {
 
 			// Antenas de flormar
 			List<String> flormar = Arrays.asList("ashs-0064","ashs-0095","ashs-0096","ashs-0097","gihs-0343","gihs-0344","gihs-0345","gihs-0346","gihs-0347");
-			List<String> retailUnited = Arrays.asList("gihs-0141","gihs-0144","gihs-0152","gihs-0182","gihs-0340","ashs-0115","gihs-0339","gihs-0341","gihs-0354");
+			List<String> retailUnited = Arrays.asList("gihs-0340","gihs-0339","gihs-0341","gihs-0354");
 
 			// Antenas de Squalo
 			List<String> squalo1 = Arrays.asList("ashs-0122");
@@ -184,6 +198,11 @@ public class TouchAPDevices extends AbstractCLI {
 					if(obj.getHostname().equals("ashs-0091") || obj.getHostname().equals("ashs-0112"))
 						mails.add("emmabotanicus@hotmail.com");
 					
+					if(prada.contains(obj.getHostname())) {
+						mails.add("maguirre@prada.mx");
+						mails.add("truiz@prada.mx");
+					} 
+
 					if(outlet.contains(obj.getHostname())) {
 						mails.add("cymerikayedra@gmail.com");
 						mails.add("cymauditoria@live.com.mx");

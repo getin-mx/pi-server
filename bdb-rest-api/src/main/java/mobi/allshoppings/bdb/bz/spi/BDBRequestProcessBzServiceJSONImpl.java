@@ -25,7 +25,7 @@ import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.interfaces.Indexable;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.model.tools.IndexHelper;
-import mobi.allshoppings.process.ProcessHelper;
+import mobi.allshoppings.process.ProcessUtils;
 
 public class BDBRequestProcessBzServiceJSONImpl extends BDBRestBaseServerResource implements BDBPostBzService {
 
@@ -42,7 +42,7 @@ public class BDBRequestProcessBzServiceJSONImpl extends BDBRestBaseServerResourc
 	@Autowired
 	private IndexHelper indexHelper;
 	@Autowired
-	private ProcessHelper processHelper;
+	private ProcessUtils processHelper;
 
 	
 	public String change(JsonRepresentation entity) {

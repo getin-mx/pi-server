@@ -8,7 +8,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.process.ProcessHelper;
+import mobi.allshoppings.process.ProcessUtils;
 
 
 public class StartProcess extends AbstractCLI {
@@ -28,7 +28,7 @@ public class StartProcess extends AbstractCLI {
 	
 	public static void main(String args[]) throws ASException {
 		try {
-			ProcessHelper helper = (ProcessHelper)getApplicationContext().getBean("process.helper");
+			ProcessUtils helper = (ProcessUtils)getApplicationContext().getBean("process.helper");
 
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
 			OptionSet options = parser.parse(args);

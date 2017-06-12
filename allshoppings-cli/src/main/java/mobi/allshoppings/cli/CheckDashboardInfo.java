@@ -34,7 +34,7 @@ import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.StoreTicket;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.model.tools.StatusHelper;
-import mobi.allshoppings.process.ProcessHelper;
+import mobi.allshoppings.process.ProcessUtils;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -64,7 +64,7 @@ public class CheckDashboardInfo extends AbstractCLI {
 			BrandDAO brandDao = (BrandDAO)getApplicationContext().getBean("brand.dao.ref");
 			ProcessDAO processDao = (ProcessDAO)getApplicationContext().getBean("process.dao.ref");
 			APDAssignationDAO apdaDao = (APDAssignationDAO)getApplicationContext().getBean("apdassignation.dao.ref");
-			ProcessHelper processHelper = (ProcessHelper)getApplicationContext().getBean("process.helper");
+			ProcessUtils processHelper = (ProcessUtils)getApplicationContext().getBean("process.helper");
 			DashboardAPDeviceMapperService mapper = (DashboardAPDeviceMapperService)getApplicationContext().getBean("dashboard.apdevice.mapper");
 			
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
