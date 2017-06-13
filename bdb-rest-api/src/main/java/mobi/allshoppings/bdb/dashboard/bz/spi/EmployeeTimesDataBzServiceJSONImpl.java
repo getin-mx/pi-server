@@ -144,13 +144,14 @@ implements BDBDashboardBzService {
 						}
 
 						List<Integer> times = aphHelper.timeslotToList(aphe.getArtificialRssi());
+						if( times.size() > 1 ) {
+							data4.set(0, aphHelper.slotToDate(aphe.getDate(), times.get(0)));
+							data4.set(1, aphHelper.slotToDate(aphe.getDate(), times.get(times.size()-1)));
 
-						data4.set(0, aphHelper.slotToDate(aphe.getDate(), times.get(0)));
-						data4.set(1, aphHelper.slotToDate(aphe.getDate(), times.get(times.size()-1)));
-
-						data3.put(curDate, data4);
-						data2.put(apdv.getMac(), data3);
-						data.put(store.getIdentifier(), data2);
+							data3.put(curDate, data4);
+							data2.put(apdv.getMac(), data3);
+							data.put(store.getIdentifier(), data2);
+						}
 
 					}
 
