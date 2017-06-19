@@ -159,6 +159,8 @@ public class ExportHelperImpl implements ExportHelper {
 				log.log(Level.INFO, "Processing " + total + " results...");
 				long cnt = 0;
 				
+				boolean transOpened = false;
+				
 				// Now iterates over all the found objects
 				while(i.hasNext()) {
 					DBObject dbo = i.next();
@@ -214,8 +216,18 @@ public class ExportHelperImpl implements ExportHelper {
 						sb.append("'").append(sdf.format(objLastUpdate)).append("')");
 
 						try {
-							stmt = conn.createStatement();
-							stmt.executeUpdate(sb.toString());
+							if( !transOpened ) {
+								conn.setAutoCommit(false);
+								stmt = conn.createStatement();
+								transOpened = true;
+							}
+							stmt.addBatch(sb.toString());
+							if( cnt % 100 == 0 ) {
+								stmt.executeBatch();
+								conn.commit();
+								stmt.close();
+								transOpened = false;
+							}
 						} catch( Exception e ) {
 							log.log(Level.SEVERE, e.getMessage(), e);
 							log.log(Level.INFO, sb.toString());

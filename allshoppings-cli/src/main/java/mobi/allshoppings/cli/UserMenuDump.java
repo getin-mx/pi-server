@@ -20,7 +20,6 @@ import mobi.allshoppings.model.UserMenuEntry;
 import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.model.tools.KeyHelper;
 
-
 public class UserMenuDump extends AbstractCLI {
 
 	private static final Logger log = Logger.getLogger(UserMenuDump.class.getName());
@@ -130,42 +129,6 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("astrid@getin.mx"));
 				userMenuDao.create(um);
-			}
-
-			User daniel = null;
-			try {
-				daniel = userDao.get("daniel@getin.mx", true);
-				userDao.delete("daniel@getin.mx");
-			} catch( Exception e ) {
-//				daniel = new User();
-//				daniel.setFirstname("Daniel");
-//				daniel.setLastname("Palacios");
-//				daniel.setEmail("daniel@getin.mx");
-//				daniel.getSecuritySettings().setRole(Role.ADMIN);
-//				daniel.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-//				daniel.setKey((Key)keyHelper.obtainKey(User.class, "daniel@getin.mx"));
-//				userDao.create(daniel);
-			}
-
-			try {
-				um = userMenuDao.get("daniel@getin.mx", true);
-				userMenuDao.delete("daniel@getin.mx");
-				throw new Exception();
-			} catch( Exception e ) {
-//				um = new UserMenu();
-//				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-//				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
-//				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
-//				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
-//				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
-//				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
-//				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
-//				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
-//				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
-//				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
-//				um.setKey(userMenuDao.createKey("daniel@getin.mx"));
-//				userMenuDao.create(um);
 			}
 
 			User luis = null;
@@ -308,56 +271,6 @@ public class UserMenuDump extends AbstractCLI {
 				userMenuDao.create(um);
 			}
 
-			User mariajose = null;
-			try {
-				mariajose = userDao.get("mariajose@getin.mx", true);
-				userDao.delete("mariajose@getin.mx");
-			} catch( Exception e ) {
-//				mariajose = new User();
-//				mariajose.setFirstname("Maria Jose");
-//				mariajose.setLastname("");
-//				mariajose.setEmail("mariajose@getin.mx");
-//				mariajose.getSecuritySettings().setRole(Role.ADMIN);
-//				mariajose.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-//				mariajose.setKey((Key)keyHelper.obtainKey(User.class, "mariajose@getin.mx"));
-//				userDao.create(mariajose);
-			}
-
-			try {
-				um = userMenuDao.get("mariajose@getin.mx", true);
-				userMenuDao.delete("mariajose@getin.mx");
-				throw new Exception();
-			} catch( Exception e ) {
-//				um = new UserMenu();
-//				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-//				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
-//				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
-//				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
-//				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
-//				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
-//				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
-//				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
-//				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
-//				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
-//				um.setKey(userMenuDao.createKey("mariajose@getin.mx"));
-//				userMenuDao.create(um);
-			}
-
-			User adrian = null;
-			try {
-				adrian = userDao.get("adrian@getin.mx", true);
-				userDao.delete(adrian);
-			} catch( Exception e ) {
-			}
-
-			try {
-				um = userMenuDao.get("adrian@getin.mx", true);
-				userMenuDao.delete("adrian@getin.mx");
-			} catch( Exception e ) {
-			}
-			
-			
 			User matias = null;
 			try {
 				matias = userDao.get("matias@getin.mx", true);
@@ -518,11 +431,10 @@ public class UserMenuDump extends AbstractCLI {
 				sportium.setKey((Key)keyHelper.obtainKey(User.class, "sportium_mx"));
 				userDao.create(sportium);
 			}
+
 			User volaris = null;
 			try {
 				volaris = userDao.get("volaris_mx", true);
-				userDao.delete(volaris);
-				throw new Exception();
 			} catch( Exception e ) {
 				volaris = new User();
 				volaris.setFirstname("Volaris");
@@ -548,8 +460,6 @@ public class UserMenuDump extends AbstractCLI {
 			User bestbuy = null;
 			try {
 				bestbuy = userDao.get("bestbuy_mx", true);
-				userDao.delete(bestbuy);
-				throw new Exception();
 			} catch( Exception e ) {
 				bestbuy = new User();
 				bestbuy.setFirstname("Best Buy");
@@ -576,8 +486,6 @@ public class UserMenuDump extends AbstractCLI {
 			User clubcasablanca = null;
 			try {
 				clubcasablanca = userDao.get("clubcasablanca_mx", true);
-				userDao.delete(clubcasablanca);
-				throw new Exception();
 			} catch( Exception e ) {
 				clubcasablanca = new User();
 				clubcasablanca.setFirstname("Club Casablanca");
@@ -609,6 +517,42 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
 				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.setKey(userMenuDao.createKey("sportium_mx"));
+				userMenuDao.create(um);
+			}
+
+			User test = null;
+			try {
+				test = userDao.get("test_mx", true);
+			} catch( Exception e ) {
+				test = new User();
+				test.setFirstname("Test");
+				test.setLastname("Mexico");
+				test.setEmail("test@allshoppings.mobi");
+				test.getSecuritySettings().setRole(Role.STORE);
+				test.getSecuritySettings()
+						.setStores(Arrays.asList("dcddac8b-fea4-4cfe-af7d-0aced11d0900",
+								"609437b2-d112-45ac-8dae-4deed022145a", "ac024504-06a0-4536-9b47-93ab5018fdb2",
+								"4aed23a4-b42d-426f-9d46-5dc0a98e09ea", "10422a41-4d4b-486d-bb48-ea6793d1fe25",
+								"9118af23-134a-42d2-b39a-cc606c35c788", "a188cdc1-d91c-4e0e-80c7-1d3d24053073",
+								"ea873e0a-2e4d-4d12-af0a-8929cd695caa", "89a5aa60-59f9-470a-9ca5-b327c9560d03",
+								"0e4f93b9-4d2f-4b79-84dc-dec26d5628b3", "7c75f5ce-7777-4e7c-b1f4-9f26ed638740",
+								"07f04746-ad54-4afd-8fa4-dd696730d3ff", "caf3b63d-87ba-46dd-b446-23e0027abd50",
+								"3967a9dd-1327-4751-bba1-b1b12a5cfbbc", "974bd1c0-dbee-4297-b739-09b7b5ce5bea",
+								"f3de08a9-cc03-435c-a821-38e44a9ab504", "dfb70228-4b3b-4a83-929e-5d95f9dabe23",
+								"4c645c62-c972-4b0d-aaff-bffc1639ee63", "cc6a44c7-bcfe-44e3-b6cf-e6f06bf48b47"));
+				test.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				test.setKey((Key)keyHelper.obtainKey(User.class, "test_mx"));
+				userDao.create(test);
+			}
+
+			try {
+				um = userMenuDao.get("test_mx", true);
+				userMenuDao.delete("test_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("test_mx"));
 				userMenuDao.create(um);
 			}
 
@@ -741,8 +685,6 @@ public class UserMenuDump extends AbstractCLI {
 			User modatelas = null;
 			try {
 				modatelas = userDao.get("modatelas_mx", true);
-				userDao.delete(modatelas);
-				throw new Exception();
 			} catch( Exception e ) {
 				modatelas = new User();
 				modatelas.setFirstname("Modatelas");
@@ -886,34 +828,6 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.setKey(userMenuDao.createKey("prada_mx"));
 				userMenuDao.create(um);
-			}
-			
-			@SuppressWarnings("unused")
-			User sbarro = null;
-			try {
-				sbarro = userDao.get("sbarro_mx", true);
-				userDao.delete("sbarro_mx");
-				throw new Exception();
-			} catch( Exception e ) {
-//				sbarro = new User();
-//				sbarro.setFirstname("Sbarro");
-//				sbarro.setLastname("Mexico");
-//				sbarro.setEmail("sbarro@allshoppings.mobi");
-//				sbarro.getSecuritySettings().setRole(Role.BRAND);
-//				sbarro.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-//				sbarro.setKey((Key)keyHelper.obtainKey(User.class, "sbarro_mx"));
-//				userDao.create(sbarro);
-			}
-
-			try {
-				um = userMenuDao.get("sbarro_mx", true);
-				userMenuDao.delete("sbarro_mx");
-				throw new Exception();
-			} catch( Exception e ) {
-//				um = new UserMenu();
-//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-//				um.setKey(userMenuDao.createKey("sbarro_mx"));
-//				userMenuDao.create(um);
 			}
 			
 			User sunglasshut = null;
@@ -1240,8 +1154,6 @@ public class UserMenuDump extends AbstractCLI {
 			User chilimbalam = null;
 			try {
 				chilimbalam = userDao.get("chilimbalam_mx", true);
-				userDao.delete(chilimbalam);
-				throw new Exception();
 			} catch( Exception e ) {
 				chilimbalam = new User();
 				chilimbalam.setFirstname("Chilim Balam");
@@ -1267,8 +1179,6 @@ public class UserMenuDump extends AbstractCLI {
 			User maskota = null;
 			try {
 				maskota = userDao.get("maskota_mx", true);
-				userDao.delete(maskota);
-				throw new Exception();
 			} catch( Exception e ) {
 				maskota = new User();
 				maskota.setFirstname("+Kota");
@@ -1291,38 +1201,9 @@ public class UserMenuDump extends AbstractCLI {
 				userMenuDao.create(um);
 			}
 
-			User blulagoon = null;
-			try {
-				blulagoon = userDao.get("blulagoon_mx", true);
-				userDao.delete(blulagoon);
-				throw new Exception();
-			} catch( Exception e ) {
-//				blulagoon = new User();
-//				blulagoon.setFirstname("Blu Lagoon");
-//				blulagoon.setLastname("Mexico");
-//				blulagoon.setEmail("blulagoon@allshoppings.mobi");
-//				blulagoon.getSecuritySettings().setRole(Role.BRAND);
-//				blulagoon.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-//				blulagoon.setKey((Key)keyHelper.obtainKey(User.class, "blulagoon_mx"));
-//				userDao.create(blulagoon);
-			}
-
-			try {
-				um = userMenuDao.get("blulagoon_mx", true);
-				userMenuDao.delete("blulagoon_mx");
-				throw new Exception();
-			} catch( Exception e ) {
-//				um = new UserMenu();
-//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-//				um.setKey(userMenuDao.createKey("blulagoon_mx"));
-//				userMenuDao.create(um);
-			}
-			
 			User sallybeauty = null;
 			try {
 				sallybeauty = userDao.get("sallybeauty_mx", true);
-				userDao.delete(sallybeauty);
-				throw new Exception();
 			} catch( Exception e ) {
 				sallybeauty = new User();
 				sallybeauty.setFirstname("Sally Beauty");
@@ -1349,8 +1230,6 @@ public class UserMenuDump extends AbstractCLI {
 			User roku = null;
 			try {
 				roku = userDao.get("roku_mx", true);
-				userDao.delete(roku);
-				throw new Exception();
 			} catch( Exception e ) {
 				roku = new User();
 				roku.setFirstname("Roku");
@@ -1376,8 +1255,6 @@ public class UserMenuDump extends AbstractCLI {
 			User grupopavel = null;
 			try {
 				grupopavel = userDao.get("grupopavel_mx", true);
-				userDao.delete(grupopavel);
-				throw new Exception();
 			} catch( Exception e ) {
 				grupopavel = new User();
 				grupopavel.setFirstname("Grupo Pavel");
@@ -1402,8 +1279,6 @@ public class UserMenuDump extends AbstractCLI {
 			User latabernadelleon = null;
 			try {
 				latabernadelleon = userDao.get("latabernadelleon_mx", true);
-				userDao.delete(latabernadelleon);
-				throw new Exception();
 			} catch( Exception e ) {
 				latabernadelleon = new User();
 				latabernadelleon.setFirstname("La Taberna del León");
@@ -1430,8 +1305,6 @@ public class UserMenuDump extends AbstractCLI {
 			User marketintelligence = null;
 			try {
 				marketintelligence = userDao.get("marketintelligence_mx", true);
-				userDao.delete(marketintelligence);
-				throw new Exception();
 			} catch( Exception e ) {
 				marketintelligence = new User();
 				marketintelligence.setFirstname("Market Intelligence");
@@ -1458,8 +1331,6 @@ public class UserMenuDump extends AbstractCLI {
 			User alansolorio = null;
 			try {
 				alansolorio = userDao.get("alansolorio_mx", true);
-				userDao.delete(alansolorio);
-				throw new Exception();
 			} catch( Exception e ) {
 				alansolorio = new User();
 				alansolorio.setFirstname("Alan Solorio");
@@ -1484,8 +1355,6 @@ public class UserMenuDump extends AbstractCLI {
 			User saboreateycafe = null;
 			try {
 				saboreateycafe = userDao.get("saboreateycafe_mx", true);
-				userDao.delete(saboreateycafe);
-				throw new Exception();
 			} catch( Exception e ) {
 				saboreateycafe = new User();
 				saboreateycafe.setFirstname("Saboreaté y Café");
@@ -1511,8 +1380,6 @@ public class UserMenuDump extends AbstractCLI {
 			User getin = null;
 			try {
 				getin = userDao.get("getin_mx", true);
-				userDao.delete(getin);
-				throw new Exception();
 			} catch( Exception e ) {
 				getin = new User();
 				getin.setFirstname("getin");
@@ -1538,8 +1405,6 @@ public class UserMenuDump extends AbstractCLI {
 			User annik = null;
 			try {
 				annik = userDao.get("annik_mx", true);
-				userDao.delete(annik);
-				throw new Exception();
 			} catch( Exception e ) {
 				annik = new User();
 				annik.setFirstname("Annik");
@@ -1565,8 +1430,6 @@ public class UserMenuDump extends AbstractCLI {
 			User aditivo = null;
 			try {
 				aditivo = userDao.get("aditivo_mx", true);
-				userDao.delete(aditivo);
-				throw new Exception();
 			} catch( Exception e ) {
 				aditivo = new User();
 				aditivo.setFirstname("Aditivo");
@@ -1593,8 +1456,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				aditivo = userDao.get("sistemas@aditivo_mx", true);
-				userDao.delete(aditivo);
-				throw new Exception();
 			} catch( Exception e ) {
 				aditivo = new User();
 				aditivo.setFirstname("Aditivo");
@@ -1626,8 +1487,6 @@ public class UserMenuDump extends AbstractCLI {
 			User d98coastav = null;
 			try {
 				d98coastav = userDao.get("98coastav_mx", true);
-				userDao.delete(d98coastav);
-				throw new Exception();
 			} catch( Exception e ) {
 				d98coastav = new User();
 				d98coastav.setFirstname("98 Coast Av.");
@@ -1653,8 +1512,6 @@ public class UserMenuDump extends AbstractCLI {
 			User devlyn = null;
 			try {
 				devlyn = userDao.get("devlyn_mx", true);
-				userDao.delete(devlyn);
-				throw new Exception();
 			} catch( Exception e ) {
 				devlyn = new User();
 				devlyn.setFirstname("Opticas Devlyn");
@@ -1680,8 +1537,6 @@ public class UserMenuDump extends AbstractCLI {
 			User outletdeportes = null;
 			try {
 				outletdeportes = userDao.get("outletdeportes_mx", true);
-				userDao.delete(outletdeportes);
-				throw new Exception();
 			} catch( Exception e ) {
 				outletdeportes = new User();
 				outletdeportes.setFirstname("Outlet Deportes");
@@ -1703,32 +1558,6 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
 				um.setKey(userMenuDao.createKey("outletdeportes_mx"));
 				userMenuDao.create(um);
-			}
-
-			try {
-				User colombia = null;
-				colombia = userDao.get("colombia_mx", true);
-				userDao.delete(colombia);
-			} catch( Exception e ) {
-			}
-
-			try {
-				um = userMenuDao.get("colombia_mx", true);
-				userMenuDao.delete("colombia_mx");
-			} catch( Exception e ) {
-			}
-
-			User colombia = null;
-			try {
-				colombia = userDao.get("colombia_co", true);
-				userDao.delete(colombia);
-			} catch( Exception e ) {
-			}
-
-			try {
-				um = userMenuDao.get("colombia_co", true);
-				userMenuDao.delete("colombia_co");
-			} catch( Exception e ) {
 			}
 
 			User flormar = null;
@@ -1855,8 +1684,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				us1 = userDao.get("nezrin.saker@demodazl.com", true);
-				userDao.delete(us1);
-				throw new Exception();
 			} catch( Exception e ) {
 				us1 = new User();
 				us1.setFirstname("Nezrin");
@@ -1991,8 +1818,6 @@ public class UserMenuDump extends AbstractCLI {
 			User fullsand = null;
 			try {
 				fullsand = userDao.get("fullsand_mx", true);
-				userDao.delete("fullsand_mx");
-				throw new Exception();
 			} catch( Exception e ) {
 				fullsand = new User();
 				fullsand.setFirstname("Fullsand");
@@ -2029,8 +1854,6 @@ public class UserMenuDump extends AbstractCLI {
 			User tanyamoss = null;
 			try {
 				tanyamoss = userDao.get("tanyamoss_mx", true);
-				userDao.delete("tanyamoss_mx");
-				throw new Exception();
 			} catch( Exception e ) {
 				tanyamoss = new User();
 				tanyamoss.setFirstname("Tanya Moss");
@@ -2044,15 +1867,13 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				tanyamoss = userDao.get("brenda@tanyamoss.com", true);
-				userDao.delete(tanyamoss);
-				throw new Exception();
 			} catch( Exception e ) {
 				tanyamoss = new User();
 				tanyamoss.setFirstname("Brenda");
 				tanyamoss.setLastname("Mexico");
 				tanyamoss.setEmail("brenda@tanyamoss.com");
 				tanyamoss.getSecuritySettings().setRole(Role.STORE);
-				tanyamoss.getSecuritySettings().setStores(Arrays.asList("1493049397673","1493049398625","1493049398128"));
+				tanyamoss.getSecuritySettings().setStores(Arrays.asList("1493049397673","324e7d47-d156-4f77-992a-adb26318b8a8","1493049398128","1493049398625","d7d10b1f-75e4-4b04-b035-24fede6f76eb","22a028be-3ac2-4cb9-bc09-7beeeca4f024","4e139439-c74f-47b8-a41a-030756322a84","0cbaca45-1045-43a4-b238-eb18651732ec","806bdc75-ea6a-4a5f-b4db-a7423e8528d6","590645c4-8ca5-450a-a95f-6fa7c560ee36","cc2e68ee-6d24-4132-8ae5-13d6836e4f69","d0b66984-5e85-4df3-bc88-aa5125354588","7cf9b273-40ed-448e-b948-91c802dc8a22","55d1549f-b746-4c8b-9a12-102a7092668c","fcfc53b9-1455-4895-b8a9-f7bba0adeb4d","be129cb5-6b12-4c83-89fd-2d008adf7947"));
 				tanyamoss.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				tanyamoss.setKey((Key)keyHelper.obtainKey(User.class, "brenda@tanyamoss.com"));
 				userDao.create(tanyamoss);
@@ -2071,6 +1892,58 @@ public class UserMenuDump extends AbstractCLI {
 			}
 
 			try {
+				tanyamoss = userDao.get("lupita@tanyamoss.com", true);
+			} catch( Exception e ) {
+				tanyamoss = new User();
+				tanyamoss.setFirstname("Lupita");
+				tanyamoss.setLastname("Mexico");
+				tanyamoss.setEmail("lupita@tanyamoss.com");
+				tanyamoss.getSecuritySettings().setRole(Role.STORE);
+				tanyamoss.getSecuritySettings().setStores(Arrays.asList("1493049397673","324e7d47-d156-4f77-992a-adb26318b8a8","1493049398128","1493049398625","d7d10b1f-75e4-4b04-b035-24fede6f76eb","22a028be-3ac2-4cb9-bc09-7beeeca4f024","4e139439-c74f-47b8-a41a-030756322a84","0cbaca45-1045-43a4-b238-eb18651732ec","806bdc75-ea6a-4a5f-b4db-a7423e8528d6","590645c4-8ca5-450a-a95f-6fa7c560ee36","cc2e68ee-6d24-4132-8ae5-13d6836e4f69","d0b66984-5e85-4df3-bc88-aa5125354588","7cf9b273-40ed-448e-b948-91c802dc8a22","55d1549f-b746-4c8b-9a12-102a7092668c","fcfc53b9-1455-4895-b8a9-f7bba0adeb4d","be129cb5-6b12-4c83-89fd-2d008adf7947"));
+				tanyamoss.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				tanyamoss.setKey((Key)keyHelper.obtainKey(User.class, "lupita@tanyamoss.com"));
+				userDao.create(tanyamoss);
+			}
+
+			try {
+				um = userMenuDao.get("lupita@tanyamoss.com", true);
+				userMenuDao.delete("lupita@tanyamoss.com");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("lupita@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			
+			try {
+				tanyamoss = userDao.get("trini@tanyamoss.com", true);
+			} catch( Exception e ) {
+				tanyamoss = new User();
+				tanyamoss.setFirstname("Trini");
+				tanyamoss.setLastname("Mexico");
+				tanyamoss.setEmail("trini@tanyamoss.com");
+				tanyamoss.getSecuritySettings().setRole(Role.STORE);
+				tanyamoss.getSecuritySettings().setStores(Arrays.asList("1493049397673","324e7d47-d156-4f77-992a-adb26318b8a8","1493049398128","1493049398625","d7d10b1f-75e4-4b04-b035-24fede6f76eb","22a028be-3ac2-4cb9-bc09-7beeeca4f024","4e139439-c74f-47b8-a41a-030756322a84","0cbaca45-1045-43a4-b238-eb18651732ec","806bdc75-ea6a-4a5f-b4db-a7423e8528d6","590645c4-8ca5-450a-a95f-6fa7c560ee36","cc2e68ee-6d24-4132-8ae5-13d6836e4f69","d0b66984-5e85-4df3-bc88-aa5125354588","7cf9b273-40ed-448e-b948-91c802dc8a22","55d1549f-b746-4c8b-9a12-102a7092668c","fcfc53b9-1455-4895-b8a9-f7bba0adeb4d","be129cb5-6b12-4c83-89fd-2d008adf7947"));
+				tanyamoss.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				tanyamoss.setKey((Key)keyHelper.obtainKey(User.class, "trini@tanyamoss.com"));
+				userDao.create(tanyamoss);
+			}
+
+			try {
+				um = userMenuDao.get("trini@tanyamoss.com", true);
+				userMenuDao.delete("trini@tanyamoss.com");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("trini@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			
+			try {
 				um = userMenuDao.get("pakmail_mx", true);
 				userMenuDao.delete("pakmail_mx");
 				throw new Exception();
@@ -2084,8 +1957,6 @@ public class UserMenuDump extends AbstractCLI {
 			User pakmail = null;
 			try {
 				pakmail = userDao.get("pakmail_mx", true);
-				userDao.delete("pakmail_mx");
-				throw new Exception();
 			} catch( Exception e ) {
 				pakmail = new User();
 				pakmail.setFirstname("Pakmail");
@@ -2100,8 +1971,6 @@ public class UserMenuDump extends AbstractCLI {
 			User pameladeharo = null;
 			try {
 				pameladeharo = userDao.get("pameladeharo_mx", true);
-				userDao.delete("pameladeharo_mx");
-				throw new Exception();
 			} catch( Exception e ) {
 				pameladeharo = new User();
 				pameladeharo.setFirstname("Pamela de Haro");
@@ -2127,8 +1996,6 @@ public class UserMenuDump extends AbstractCLI {
 			User tonymoly = null;
 			try {
 				tonymoly = userDao.get("tonymoly_mx", true);
-				userDao.delete("tonymoly_mx");
-				throw new Exception();
 			} catch( Exception e ) {
 				tonymoly = new User();
 				tonymoly.setFirstname("Tony Moly");
@@ -2147,15 +2014,41 @@ public class UserMenuDump extends AbstractCLI {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.setKey(userMenuDao.createKey("tonymoly_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				tonymoly = userDao.get("eflores@grupoeurokordemexico.com", true);
+			} catch( Exception e ) {
+				tonymoly = new User();
+				tonymoly.setFirstname("Tony Moly");
+				tonymoly.setLastname("Mexico");
+				tonymoly.setEmail("eflores@grupoeurokordemexico.com");
+				tonymoly.getSecuritySettings().setRole(Role.STORE);
+				tonymoly.getSecuritySettings().setStores(Arrays.asList("6ef41633-4284-43db-9eff-3bb1c05ab0be","7f053945-3118-4625-bdc1-7d47c8fccbcf"));
+				tonymoly.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				tonymoly.setKey((Key)keyHelper.obtainKey(User.class, "eflores@grupoeurokordemexico.com"));
+				userDao.create(tonymoly);
+			}
+
+			try {
+				um = userMenuDao.get("eflores@grupoeurokordemexico.com", true);
+				userMenuDao.delete("eflores@grupoeurokordemexico.com");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.setKey(userMenuDao.createKey("eflores@grupoeurokordemexico.com"));
 				userMenuDao.create(um);
 			}
 
 			User farmaciasyza = null;
 			try {
 				farmaciasyza = userDao.get("farmaciasyza_mx", true);
-				userDao.delete("farmaciasyza_mx");
-				throw new Exception();
 			} catch( Exception e ) {
 				farmaciasyza = new User();
 				farmaciasyza.setFirstname("Farmacias YZA");
@@ -2182,8 +2075,6 @@ public class UserMenuDump extends AbstractCLI {
 			User clarins = null;
 			try {
 				clarins = userDao.get("clarins_mx", true);
-				userDao.delete("clarins_mx");
-				throw new Exception();
 			} catch( Exception e ) {
 				clarins = new User();
 				clarins.setFirstname("Clarins");
@@ -2368,8 +2259,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("mayrafranco@fullsand_mx", true);
-				userDao.delete("mayrafranco@fullsand_mx");
-				throw new Exception();
 			} catch( Exception e ) {
 				user = new User();
 				user.setFirstname("Mayra");
@@ -2456,8 +2345,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("beatrizcors@chomarc_mx", true);
-				userDao.delete(user);
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Beatriz");
@@ -2517,8 +2404,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("rogersilva@chomarc_mx", true);
-				userDao.delete(user);
-				throw(new Exception());
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Roger");
@@ -2546,8 +2431,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("ginatena@chomarc_mx", true);
-				userDao.delete(user);
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Gina");
@@ -2592,32 +2475,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "leonardooneto@chomarc_mx"));
 				userDao.create(user);
 			}
-			// Dakab_mx -------------------------------------------------------------------
-			try {
-				um = userMenuDao.get("dakab_mx", true);
-				userMenuDao.delete("dakab_mx");
-				throw new Exception();
-			} catch( Exception e ) {
-//				um = new UserMenu();
-//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-//				um.setKey(userMenuDao.createKey("dakab_mx"));
-//				userMenuDao.create(um);
-			}
 
-			try {
-				user = userDao.get("dakab_mx", true);
-				userDao.delete(user);
-				throw new Exception();
-			} catch (Exception e) {
-//				user = new User();
-//				user.setFirstname("Dakab");
-//				user.setLastname("");
-//				user.setEmail("dakab_mx");
-//				user.getSecuritySettings().setRole(Role.STORE);
-//				user.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");	user.getSecuritySettings().setStores(Arrays.asList("1474331820269","1484249039313","71143dcf-9a92-49f9-901d-47cd23e4ce12","9e8793b4-750d-464a-b0cb-c4bfcd7f4e4b","d83ddb08-0f8a-4926-a09f-9b4ea1c86bc1"));
-//				user.setKey((Key) keyHelper.obtainKey(User.class, "dakab_mx"));
-//				userDao.create(user);
-			}
 			// Sportium --------------------------------------------------------------------
 			
 			//Lomas Verdes
@@ -2901,8 +2759,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("jcambray@sportium.com.mx", true);
-				userDao.delete(user.getIdentifier());;
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Sportium Coyoacan");
@@ -3173,8 +3029,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("gperez@sportium.com.mx", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Sportium");
@@ -3209,8 +3063,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("dgomez@sportium.com.mx", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Sportium");
@@ -3247,8 +3099,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("zona1@outletdeportes_mx", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Outlet Deportes");
@@ -3281,8 +3131,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("zona2@outletdeportes_mx", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Outlet Deportes");
@@ -3315,8 +3163,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("zona3@outletdeportes_mx", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Outlet Deportes");
@@ -3348,8 +3194,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("zonapuebla@outletdeportes_mx", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Outlet Deportes");
@@ -3381,8 +3225,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("rgalaz@fullsand.com", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Fullsand");
@@ -3411,8 +3253,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("cgomez@fullsand.com", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Fullsand");
@@ -3441,8 +3281,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("mabrajan@fullsand.com", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Fullsand");
@@ -3470,8 +3308,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("llopez@fullsand.com", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Fullsand");
@@ -3503,8 +3339,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("oasis@98coastav_mx", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("98 Coast Av. oasis");
@@ -3532,8 +3366,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("portal@98coastav_mx", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("98 Coast Av. Portal");
@@ -3561,8 +3393,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("playa1@98coastav_mx", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("98 Coast Av. Playa 1");
@@ -3590,8 +3420,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("playa2@98coastav_mx", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("98 Coast Av. Playa 2");
@@ -3621,8 +3449,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("aaguilar@pavel.com.mx", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Grupo Pavel");
@@ -3649,8 +3475,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("imorales@pavel.com.mx", true);
-				userDao.delete(user.getIdentifier());
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Grupo Pavel");

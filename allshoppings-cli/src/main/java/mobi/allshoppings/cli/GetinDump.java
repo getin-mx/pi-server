@@ -965,9 +965,6 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("276", "Squalo Monterrey", "squalo_mx", "galeriasvalleoriente"));
 			stores.add(new StoreAdapter("281", "Sunglass Hut Lerma Outlet", "sunglasshut_mx", null));
 			stores.add(new StoreAdapter("282", "Sbarro Oasis", "sbarro_mx", "forumbuenavista"));
-			stores.add(new StoreAdapter("283", "Prada Perisur", "prada_mx", "perisur"));
-			stores.add(new StoreAdapter("284", "Prada Satelite", "prada_mx", "plazasatelite"));
-			stores.add(new StoreAdapter("290", "Prada Santa Fe", "prada_mx", "centrosantafe"));
 			stores.add(new StoreAdapter("286", "Areas México A59", "areasmexico_mx",null));
 			stores.add(new StoreAdapter("287", "Areas México G55", "areasmexico_mx",null));
 			stores.add(new StoreAdapter("289", "Areas México A70", "areasmexico_mx",null));
@@ -1096,17 +1093,6 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("419", "Modatelas La Aurora", "modatelas_mx", null));
 			stores.add(new StoreAdapter("420", "Modatelas Las Maravillas", "modatelas_mx", null));
 			stores.add(new StoreAdapter("421", "Fullsand Acapulco Diamante", "fullsand_mx", null));			
-			stores.add(new StoreAdapter("422", "Prada Coyoacan", "prada_mx", null));
-			stores.add(new StoreAdapter("423", "Prada Xalapa", "prada_mx", null));
-			stores.add(new StoreAdapter("424", "Prada Galerias Atizapan", "prada_mx", null));
-			stores.add(new StoreAdapter("425", "Prada Galerias Tabasco", "prada_mx", null));
-			stores.add(new StoreAdapter("426", "Prada Altabrisa (Tabasco II)", "prada_mx", null));
-			stores.add(new StoreAdapter("427", "Prada Galerias Serdan", "prada_mx", null));
-			stores.add(new StoreAdapter("428", "Prada Parque Toreo", "prada_mx", null));
-			stores.add(new StoreAdapter("429", "Prada Plaza Mayor", "prada_mx", null));
-			stores.add(new StoreAdapter("430", "Prada Outlet Punta Norte", "prada_mx", null));  
-			stores.add(new StoreAdapter("431", "Prada Outlet Galerias", "prada_mx", null));
-			stores.add(new StoreAdapter("432", "Prada Outlet Mulza", "prada_mx", null));
 			stores.add(new StoreAdapter("433", "Monte de Piedad - 96", "montedepiedad_mx", null));
 			stores.add(new StoreAdapter("434", "Monte de Piedad - 61", "montedepiedad_mx", null));
 			stores.add(new StoreAdapter("435", "Monte de Piedad - 305", "montedepiedad_mx", null));
@@ -1175,7 +1161,6 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("492", "Grand Store Altaplaza", "grandstore_pa", null));
 			stores.add(new StoreAdapter("493", "La Martina Multiplaza", "lamartina_pa", null));
 			
-			stores.add(new StoreAdapter("494", "Prada Cancun", "prada_mx", null));
 			stores.add(new StoreAdapter("495", "Tanya Moss Plaza Carso", "tanyamoss_mx", "plazacarso"));
 			stores.add(new StoreAdapter("496", "Tanya Moss Toreo Parque Central", "tanyamoss_mx", "toreoparquecentral"));
 			stores.add(new StoreAdapter("497", "Tanya Moss Parque Delta", "tanyamoss_mx", "parquedelta"));
@@ -1279,6 +1264,40 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("579", "Pakmail Valladolid", "pakmail_mx", null));
 			stores.add(new StoreAdapter("580", "Pakmail San Jeronimo", "pakmail_mx", null));
 
+			
+			stores.add(new StoreAdapter("283", "Prada Perisur", "prada_mx", "perisur"));
+			stores.add(new StoreAdapter("284", "Prada Satelite", "prada_mx", "plazasatelite"));
+			stores.add(new StoreAdapter("290", "Prada Santa Fe", "prada_mx", "centrosantafe"));
+			stores.add(new StoreAdapter("422", "Prada Coyoacan", "prada_mx", null));
+			stores.add(new StoreAdapter("423", "Prada Xalapa", "prada_mx", null));
+			stores.add(new StoreAdapter("424", "Prada Galerias Atizapan", "prada_mx", null));
+			stores.add(new StoreAdapter("425", "Prada Galerias Tabasco", "prada_mx", null));
+			stores.add(new StoreAdapter("426", "Prada Altabrisa (Tabasco II)", "prada_mx", null));
+			stores.add(new StoreAdapter("427", "Prada Galerias Serdan", "prada_mx", null));
+			stores.add(new StoreAdapter("428", "Prada Parque Toreo", "prada_mx", null));
+			stores.add(new StoreAdapter("429", "Prada Plaza Mayor", "prada_mx", null));
+			stores.add(new StoreAdapter("430", "Prada Outlet Punta Norte", "prada_mx", null));  
+			stores.add(new StoreAdapter("431", "Prada Outlet Galerias", "prada_mx", null));
+			stores.add(new StoreAdapter("432", "Prada Outlet Mulza", "prada_mx", null));
+			stores.add(new StoreAdapter("494", "Prada Cancun", "prada_mx", null));
+
+			stores.add(new StoreAdapter("581", "Prada Pabellon Polanco", "prada_mx", null));
+			stores.add(new StoreAdapter("582", "Prada Galerias Insurgentes", "prada_mx", null));
+			stores.add(new StoreAdapter("583", "Prada MTY", "prada_mx", null));
+			stores.add(new StoreAdapter("584", "Prada GDL", "prada_mx", null));
+			stores.add(new StoreAdapter("585", "Prada Puebla", "prada_mx", null));
+			stores.add(new StoreAdapter("586", "Prada Miramontes/Outlet Zapamundi", "prada_mx", null));
+			stores.add(new StoreAdapter("587", "Prada Gran Plaza", "prada_mx", null));
+			stores.add(new StoreAdapter("588", "Prada Merida", "prada_mx", null));
+			stores.add(new StoreAdapter("589", "Prada Paseo Interlomas", "prada_mx", null));
+			stores.add(new StoreAdapter("590", "Prada Outlet Puebla", "prada_mx", null));
+			stores.add(new StoreAdapter("591", "Prada Galerias Coapa", "prada_mx", null));
+			stores.add(new StoreAdapter("592", "Prada Galerias Toluca", "prada_mx", null));
+			stores.add(new StoreAdapter("593", "Prada Parque Via Vallejo", "prada_mx", null));
+			stores.add(new StoreAdapter("594", "Prada Parque Delta", "prada_mx", null));
+			stores.add(new StoreAdapter("595", "Prada Fashion Drive", "prada_mx", null));
+			
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {

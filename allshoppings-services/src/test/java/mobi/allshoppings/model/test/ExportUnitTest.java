@@ -26,7 +26,7 @@ public class ExportUnitTest extends TestCase {
 		try {
 
 			List<ExportUnit> list = dao.getUsingStatusAndRange(StatusHelper.statusActive(), null, null);
-			if(!list.isEmpty()) {
+			if(list.size() > 1 ) {
 				
 				for( ExportUnit unit : list ) {
 					System.out.println(unit);
@@ -35,18 +35,18 @@ public class ExportUnitTest extends TestCase {
 			} else {
 
 				ExportUnit unit = new ExportUnit();
-				unit.setDescription("Exportacion de Prada a MySQL");
-				unit.setEntityIds(Arrays.asList("prada_mx"));
+				unit.setDescription("Exportacion de Test a MySQL");
+				unit.setEntityIds(Arrays.asList("agasys_mx"));
 				unit.setEntityKind(EntityKind.KIND_BRAND);
 				unit.setHideMac(true);
-				unit.setName("prada_mx");
+				unit.setName("test_mx");
 				unit.setSourceType(ExportUnit.SOURCE_VISITS);
 				unit.setStatus(StatusAware.STATUS_ENABLED);
 				unit.setTargetType(ExportUnit.TARGET_MYSQL);
-				unit.setTargetDBName("prada_mx");
-				unit.setTargetURL("jdbc:mysql://heimdall.getin.mx:3306/prada_mx");
-				unit.setTargetUser("prada_mx");
-				unit.setTargetPassword("pr4d401");
+				unit.setTargetDBName("test_mx");
+				unit.setTargetURL("jdbc:mysql://heimdall.getin.mx:3306/test_mx");
+				unit.setTargetUser("test_mx");
+				unit.setTargetPassword("test01");
 				unit.setKey(dao.createKey());
 				dao.create(unit);
 			}

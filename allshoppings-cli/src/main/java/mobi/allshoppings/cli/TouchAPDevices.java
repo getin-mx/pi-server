@@ -153,6 +153,9 @@ public class TouchAPDevices extends AbstractCLI {
 			List<String> squalo4 = Arrays.asList("ashs-0125");
 			List<String> squalo5 = Arrays.asList("ashs-0126");
 			
+			// Antenas de Tanya Moss
+			List<String> tanyamoss = Arrays.asList("ashs-0034","ashs-0113","gihs-0253","gihs-0409","gihs-0411","gihs-0412","gihs-0413","gihs-0415","gihs-0416","gihs-0419","gihs-0425","gihs-0439","gihs-0414");
+			
 			// Antenas de Universo de Fragancias
 			List<String> universo = Arrays.asList("gihs-0333");
 			
@@ -199,7 +202,7 @@ public class TouchAPDevices extends AbstractCLI {
 						mails.add("emmabotanicus@hotmail.com");
 					
 					if(prada.contains(obj.getHostname())) {
-						mails.add("maguirre@prada.mx");
+						mails.add("dperez@prada.mx");
 						mails.add("truiz@prada.mx");
 					} 
 
@@ -251,6 +254,10 @@ public class TouchAPDevices extends AbstractCLI {
 					
 					if(agasys.contains(obj.getHostname())) {
 						mails.clear();
+					}
+
+					if(tanyamoss.contains(obj.getHostname())) {
+						mails.add("lupita@tanyamoss.com");
 					}
 
 					if( universo.contains(obj.getHostname())) {
