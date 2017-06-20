@@ -2726,7 +2726,7 @@ public class UserMenuDump extends AbstractCLI {
 				user = userDao.get("mmonroy@sportium.com.mx", true);
 			} catch (Exception e) {
 				user = new User();
-				user.setFirstname("Sportium Desierto");
+				user.setFirstname("Sportium Cuautitlan");
 				user.setLastname("");
 				user.setEmail("mmonroy@sportium.com.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
@@ -2816,7 +2816,7 @@ public class UserMenuDump extends AbstractCLI {
 				user = userDao.get("icordova@sportium.com.mx", true);
 			} catch (Exception e) {
 				user = new User();
-				user.setFirstname("Sportium Lomas Verdes");
+				user.setFirstname("Sportium Desierto");
 				user.setLastname("");
 				user.setEmail("icordova@sportium.com.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
@@ -2846,7 +2846,7 @@ public class UserMenuDump extends AbstractCLI {
 				user = userDao.get("rcontreras@sportium.com.mx", true);
 			} catch (Exception e) {
 				user = new User();
-				user.setFirstname("Sportium Cuautitlan");
+				user.setFirstname("Sportium Lomas Verdes");
 				user.setLastname("");
 				user.setEmail("rcontreras@sportium.com.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
