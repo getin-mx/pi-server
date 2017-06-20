@@ -875,6 +875,18 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "converse_mx"));
 				brandDao.create(brand);
 			}
+			
+			try {
+				brand = brandDao.get("ecobutik_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Ecobutik");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "ecobutik_mx"));
+				brandDao.create(brand);
+			}
 
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
@@ -1296,6 +1308,15 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("593", "Prada Parque Via Vallejo", "prada_mx", null));
 			stores.add(new StoreAdapter("594", "Prada Parque Delta", "prada_mx", null));
 			stores.add(new StoreAdapter("595", "Prada Fashion Drive", "prada_mx", null));
+			
+			stores.add(new StoreAdapter("596","Pakmail Mariano Otero", "pakmail_mx", null));
+			
+			stores.add(new StoreAdapter("597","Sally Beauty World Trade Center", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("598","Sally Beauty Paseo Interlomas", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("599","Sally Beauty Aragón", "sallybeauty_mx", null));
+			
+			stores.add(new StoreAdapter("600","Ecobutik Centro Histórico", "ecobutik_mx", null));
+			stores.add(new StoreAdapter("601","Ecobutik San Angel", "ecobutik_mx", null));
 			
 			
 			Store store;

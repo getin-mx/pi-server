@@ -1071,29 +1071,14 @@ public class UserMenuDump extends AbstractCLI {
 			User droc = null;
 			try {
 				droc = userDao.get("droc_mx", true);
+				userDao.delete("droc_mx");
 			} catch( Exception e ) {
-				droc = new User();
-				droc.setFirstname("DRoc");
-				droc.setLastname("Mexico");
-				droc.setEmail("droc@allshoppings.mobi");
-				droc.getSecuritySettings().setRole(Role.BRAND);
-				droc.getSecuritySettings().setShoppings(new ArrayList<String>());
-				droc.getSecuritySettings().getShoppings().add("mundoe");
-				droc.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				droc.setKey((Key)keyHelper.obtainKey(User.class, "droc_mx"));
-				userDao.create(droc);
 			}
 
 			try {
 				um = userMenuDao.get("droc_mx", true);
 				userMenuDao.delete("droc_mx");
-				throw new Exception();
 			} catch( Exception e ) {
-				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
-				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
-				um.setKey(userMenuDao.createKey("droc_mx"));
-				userMenuDao.create(um);
 			}
 
 			User walmart = null;
