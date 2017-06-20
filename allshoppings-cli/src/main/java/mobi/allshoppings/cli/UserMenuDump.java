@@ -2285,6 +2285,18 @@ public class UserMenuDump extends AbstractCLI {
 			}
 
 			// Chomarc --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("chomarc_mx", true);
+				userMenuDao.delete("chomarc_mx");
+			} catch( Exception e ) {
+			}
+
+			try {
+				user = userDao.get("chomarc_mx", true);
+				userDao.delete("chomarc_mx");
+			} catch( Exception e ) {
+			}
 
 			try {
 				um = userMenuDao.get("adassist@grupochomarc.com.mx", true);
