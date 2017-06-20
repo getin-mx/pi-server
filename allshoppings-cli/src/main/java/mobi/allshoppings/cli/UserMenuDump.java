@@ -468,7 +468,6 @@ public class UserMenuDump extends AbstractCLI {
 				ecobutik.setEmail("ecobutik@allshoppings.mobi");
 				ecobutik.getSecuritySettings().setRole(Role.BRAND);
 				ecobutik.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				ecobutik.getSecuritySettings().setShoppings(Arrays.asList("a9f9d78e-d5f6-42b5-97be-2a84aca5165d"));
 				ecobutik.setKey((Key)keyHelper.obtainKey(User.class, "ecobutik_mx"));
 				userDao.create(ecobutik);
 			}
