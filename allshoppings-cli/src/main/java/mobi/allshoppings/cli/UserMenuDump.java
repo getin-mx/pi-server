@@ -2213,6 +2213,20 @@ public class UserMenuDump extends AbstractCLI {
 				skyalert.setKey((Key)keyHelper.obtainKey(User.class, "skyalert_mx"));
 				userDao.create(skyalert);
 			}
+			
+			User ecobutik = null;
+			try {
+				skyalert = userDao.get("ecobutik_mx", true);
+			} catch( Exception e ) {
+				skyalert = new User();
+				skyalert.setFirstname("Ecobutik");
+				skyalert.setLastname("Mexico");
+				skyalert.setEmail("ecobutik@allshoppings.mobi");
+				skyalert.getSecuritySettings().setRole(Role.APPLICATION);
+				skyalert.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				skyalert.setKey((Key)keyHelper.obtainKey(User.class, "ecobutik_mx"));
+				userDao.create(skyalert);
+			}
 
 			User calibrator = null;
 			try {
