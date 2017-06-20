@@ -460,17 +460,17 @@ public class UserMenuDump extends AbstractCLI {
 			
 			User ecobutik = null;
 			try {
-				volaris = userDao.get("ecobutik_mx", true);
+				ecobutik = userDao.get("ecobutik_mx", true);
 			} catch( Exception e ) {
-				volaris = new User();
-				volaris.setFirstname("Ecobutik");
-				volaris.setLastname("Mexico");
-				volaris.setEmail("ecobutik@allshoppings.mobi");
-				volaris.getSecuritySettings().setRole(Role.BRAND);
-				volaris.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				volaris.getSecuritySettings().setShoppings(Arrays.asList("a9f9d78e-d5f6-42b5-97be-2a84aca5165d"));
-				volaris.setKey((Key)keyHelper.obtainKey(User.class, "ecobutik_mx"));
-				userDao.create(volaris);
+				ecobutik = new User();
+				ecobutik.setFirstname("Ecobutik");
+				ecobutik.setLastname("Mexico");
+				ecobutik.setEmail("ecobutik@allshoppings.mobi");
+				ecobutik.getSecuritySettings().setRole(Role.BRAND);
+				ecobutik.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				ecobutik.getSecuritySettings().setShoppings(Arrays.asList("a9f9d78e-d5f6-42b5-97be-2a84aca5165d"));
+				ecobutik.setKey((Key)keyHelper.obtainKey(User.class, "ecobutik_mx"));
+				userDao.create(ecobutik);
 			}
 			try {
 				um = userMenuDao.get("ecobutik_mx", true);
