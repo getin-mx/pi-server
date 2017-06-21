@@ -198,7 +198,15 @@
             <field name="key" column="_id" length="100"/>
         </class>
 
+        <class name="StoreItem" table="StoreItem">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
         <class name="StoreTicket" table="StoreTicket">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="StoreTicketByHour" table="StoreTicketByHour">
             <field name="key" column="_id" length="100"/>
         </class>
 

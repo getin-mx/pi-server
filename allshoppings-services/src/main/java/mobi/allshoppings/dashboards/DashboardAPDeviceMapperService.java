@@ -40,7 +40,9 @@ import mobi.allshoppings.dao.InnerZoneDAO;
 import mobi.allshoppings.dao.MacVendorDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
+import mobi.allshoppings.dao.StoreItemDAO;
 import mobi.allshoppings.dao.StoreRevenueDAO;
+import mobi.allshoppings.dao.StoreTicketByHourDAO;
 import mobi.allshoppings.dao.StoreTicketDAO;
 import mobi.allshoppings.dao.WifiSpotDAO;
 import mobi.allshoppings.dump.DumperHelper;
@@ -62,8 +64,10 @@ import mobi.allshoppings.model.InnerZone;
 import mobi.allshoppings.model.MacVendor;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.StoreItem;
 import mobi.allshoppings.model.StoreRevenue;
 import mobi.allshoppings.model.StoreTicket;
+import mobi.allshoppings.model.StoreTicketByHour;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.WifiSpot;
 import mobi.allshoppings.model.interfaces.StatusAware;
@@ -81,7 +85,7 @@ public class DashboardAPDeviceMapperService {
 	public static final long TWENTY_FOUR_HOURS = 86400000;
 
 	private static final SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
-//	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	private static final Gson gson = new Gson();
 
 	/**
@@ -115,6 +119,10 @@ public class DashboardAPDeviceMapperService {
 	private APDVisitDAO apdvDao;
 	@Autowired
 	private StoreTicketDAO stDao;
+	@Autowired
+	private StoreTicketByHourDAO sthDao;
+	@Autowired
+	private StoreItemDAO siDao;
 	@Autowired
 	private StoreRevenueDAO srDao;
 	@Autowired
@@ -1000,10 +1008,12 @@ public class DashboardAPDeviceMapperService {
 			// Looks for ticket
 			if( entityKind.equals(EntityKind.KIND_BRAND)) {
 				createStoreTicketDataForDates(sdf.format(date), sdf.format(date), subentityId);
+				createStoreItemDataForDates(sdf.format(date), sdf.format(date), subentityId);
 				createStoreRevenueDataForDates(sdf.format(date), sdf.format(date), subentityId);
 			}
 			if( entityKind.equals(EntityKind.KIND_STORE)) {
 				createStoreTicketDataForDates(sdf.format(date), sdf.format(date), entityId);
+				createStoreItemDataForDates(sdf.format(date), sdf.format(date), entityId);
 				createStoreRevenueDataForDates(sdf.format(date), sdf.format(date), entityId);
 			}
 			
@@ -1094,10 +1104,9 @@ public class DashboardAPDeviceMapperService {
 			Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
 			List<StoreTicket> tickets =  stDao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null, null, false);
 			
-			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
-				for( StoreTicket ticket: tickets){		
+				for( StoreTicket ticket: tickets){
 					
 					DashboardIndicatorData obj;
 	
@@ -1114,6 +1123,23 @@ public class DashboardAPDeviceMapperService {
 						obj = indicatorsSet.get(obj.getKey().getName());
 					obj.setDoubleValue(obj.getDoubleValue() + ticket.getQty());
 					indicatorsSet.put(obj.getKey().getName(), obj);
+					
+					// visitor_hourly_tickets -------------------------------------------------------------------------------
+					// ------------------------------------------------------------------------------------------------------
+					List<StoreTicketByHour> hours = sthDao.getUsingStoreIdAndDateAndRange(store.getIdentifier(), ticket.getDate(), "00:00", "23:00", null, null, true);
+					for( StoreTicketByHour th : hours ) {
+						obj = buildBasicDashboardIndicatorData(
+								"apd_visitor", "Visitantes", "visitor_hourly_tickets",
+								"Tickets", sdf2.parse(th.getDate() + " " + th.getHour()),
+								DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
+								store, null, store.getBrandId(), EntityKind.KIND_BRAND);
+		
+						if(indicatorsSet.containsKey(obj.getKey().getName())) 
+							obj = indicatorsSet.get(obj.getKey().getName());
+						obj.setDoubleValue(obj.getDoubleValue() + th.getQty());
+						indicatorsSet.put(obj.getKey().getName(), obj);
+					}
+					
 				}
 				log.log(Level.INFO, "Starting Write Procedure...");
 
@@ -1133,6 +1159,55 @@ public class DashboardAPDeviceMapperService {
 		log.log(Level.INFO, "Finished to create store tickets Dashboard for Day " + fromDate + " to: " + toDate + " total time: "+ (endTime - startTime) + "ms");
 	}
 	
+	public void createStoreItemDataForDates(String fromDate,String toDate, String storeId) throws ASException,ParseException{
+		
+		log.log(Level.INFO, "Starting to create store items Dashboard for Day " + fromDate + " to: " + toDate +"..." );
+		long startTime = new Date().getTime();
+		
+		try {
+			Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
+			List<StoreItem> items =  siDao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null, null, false);
+			
+			
+			Store store = storeDao.get(storeId);
+			if( store != null ) {
+				for( StoreItem item: items){		
+					
+					DashboardIndicatorData obj;
+	
+					// visitor_total_itemss --------------------------------------------------------------------------------
+					// ------------------------------------------------------------------------------------------------------
+					
+					obj = buildBasicDashboardIndicatorData(
+							"apd_visitor", "Visitantes", "visitor_total_items",
+							"Items Vendidos", sdf.parse(item.getDate()),
+							DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(),
+							store, null, store.getBrandId(), EntityKind.KIND_BRAND);
+	
+					if(indicatorsSet.containsKey(obj.getKey().getName())) 
+						obj = indicatorsSet.get(obj.getKey().getName());
+					obj.setDoubleValue(obj.getDoubleValue() + item.getQty());
+					indicatorsSet.put(obj.getKey().getName(), obj);
+
+				}
+				log.log(Level.INFO, "Starting Write Procedure...");
+
+				// Finally, save all the information
+				saveIndicatorSet(indicatorsSet);
+
+			} else {
+				// Store not found
+				log.log(Level.INFO, "Store with id " + storeId + " not found!");
+			}
+			
+		} catch (ASException e) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+		}
+		
+		long endTime = new Date().getTime();
+		log.log(Level.INFO, "Finished to create store itemss Dashboard for Day " + fromDate + " to: " + toDate + " total time: "+ (endTime - startTime) + "ms");
+	}
+
 	public void createStoreRevenueDataForDates(String fromDate,String toDate, String storeId) throws ASException,ParseException{
 		
 		log.log(Level.INFO, "Starting to create store revenue Dashboard for Day " + fromDate + " to: " + toDate +"..." );
@@ -1149,7 +1224,7 @@ public class DashboardAPDeviceMapperService {
 					
 					DashboardIndicatorData obj;
 	
-					// visitor_total_tickets --------------------------------------------------------------------------------
+					// visitor_total_revenues --------------------------------------------------------------------------------
 					// ------------------------------------------------------------------------------------------------------
 					
 					obj = buildBasicDashboardIndicatorData(

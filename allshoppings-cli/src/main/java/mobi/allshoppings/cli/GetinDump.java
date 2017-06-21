@@ -1249,7 +1249,6 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("566", "Tanya Moss Interlomas", "tanyamoss_mx", null));
 			stores.add(new StoreAdapter("567", "Tanya Moss Santa Fe", "tanyamoss_mx", null));
 			stores.add(new StoreAdapter("568", "Tanya Moss Isla Coyoacan", "tanyamoss_mx", null));
-			stores.add(new StoreAdapter("569", "Tanya Moss Isla Perisur", "tanyamoss_mx", null));
 			stores.add(new StoreAdapter("570", "Tanya Moss Andares", "tanyamoss_mx", null));
 			stores.add(new StoreAdapter("571", "Tanya Moss Aeropuerto Guadalajara", "tanyamoss_mx", null));
 			stores.add(new StoreAdapter("572", "Tanya Moss Angelopolis", "tanyamoss_mx", null));
@@ -1341,24 +1340,6 @@ public class GetinDump extends AbstractCLI {
 		System.exit(0);
 	}
 
-	public static void setLatLon(GeoCodingHelper geocoder, StoreDAO dao, String externalId, double lat, double lon ) throws ASException {
-		Store store = dao.getUsingExternalId(externalId);
-		store.getAddress().setLatitude(lat);
-		store.getAddress().setLongitude(lon);
-
-		try {
-			AddressComponentsCache acc = geocoder.getAddressHLComponents(lat, lon);
-			store.getAddress().setCity(acc.getCity());
-			store.getAddress().setCountry(acc.getCountry());
-		} catch( ASException e ) {
-			if( e.getErrorCode() != ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE ) {
-				throw e;
-			}
-		}
-		
-		dao.update(store);
-	}
-	
 	static class StoreAdapter {
 		String externalKey;
 		String name;

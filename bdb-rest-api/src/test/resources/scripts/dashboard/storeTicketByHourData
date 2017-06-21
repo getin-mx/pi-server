@@ -1,0 +1,18 @@
+if [ $# -ne 4 ]; then 
+   echo -e "Usage:\n\t$0 storeId date fromHour toHour\n"
+   exit 1;
+fi
+
+# process common variables
+. ../common
+. ../token.dat
+
+_URL="${_HOST}/bdb/dashboard/storeTicketByHourData?authToken=$_TOKEN&storeId=${1}&date=${2}&fromHour=${3}&toHour=${4}"
+
+echo ""
+echo "Calling:" ${_URL} 
+echo ""
+
+_RES=`curl -k -X GET ${_URL}`
+echo ""
+echo "RESULT: $_RES"

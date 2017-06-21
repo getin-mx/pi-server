@@ -899,7 +899,9 @@
 	<bean id="financialentity.dao.ref" class="mobi.allshoppings.dao.spi.FinancialEntityDAOJDOImpl" />
 	<bean id="friend.dao.ref" class="mobi.allshoppings.dao.spi.FriendDAOJDOImpl" />
 
+	<bean id="storeitem.dao.ref" class="mobi.allshoppings.dao.spi.StoreItemDAOJDOImpl" />
 	<bean id="storeticket.dao.ref" class="mobi.allshoppings.dao.spi.StoreTicketDAOJDOImpl" />
+	<bean id="storeticketbyhour.dao.ref" class="mobi.allshoppings.dao.spi.StoreTicketByHourDAOJDOImpl" />
 	<bean id="storerevenue.dao.ref" class="mobi.allshoppings.dao.spi.StoreRevenueDAOJDOImpl" />
 	<bean id="userentitycache.dao.ref" class="mobi.allshoppings.dao.spi.UserEntityCacheDAOJDOImpl" />
 	<bean id="systemstatus.dao.ref" class="mobi.allshoppings.dao.spi.SystemStatusDAOJDOImpl" />

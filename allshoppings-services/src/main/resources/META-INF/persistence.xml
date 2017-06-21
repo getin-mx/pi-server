@@ -61,7 +61,9 @@
         <class>mobi.allshoppings.model.Shopping</class>
         <class>mobi.allshoppings.model.Showtime</class>
         <class>mobi.allshoppings.model.Store</class>
+        <class>mobi.allshoppings.model.StoreItem</class>
         <class>mobi.allshoppings.model.StoreTicket</class>
+        <class>mobi.allshoppings.model.StoreTicketByHour</class>
         <class>mobi.allshoppings.model.StoreRevenue</class>
         <class>mobi.allshoppings.model.StructureInfo</class>
         <class>mobi.allshoppings.model.TFToken</class>
