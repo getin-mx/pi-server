@@ -875,6 +875,30 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "converse_mx"));
 				brandDao.create(brand);
 			}
+			
+			try {
+				brand = brandDao.get("ecobutik_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Ecobutik");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "ecobutik_mx"));
+				brandDao.create(brand);
+			}
+			
+			try {
+				brand = brandDao.get("canalla_bistro_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Canalla Bistro");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "canalla_bistro_mx"));
+				brandDao.create(brand);
+			}
 
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
@@ -991,7 +1015,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("317","Sally Beauty Centro Coyoacan", "sallybeauty_mx","centrocoyoacan")); 
 			stores.add(new StoreAdapter("318","Sally Beauty Mega Coyoacan", "sallybeauty_mx",null)); 
 			stores.add(new StoreAdapter("319","Sally Beauty Delta", "sallybeauty_mx","parquedelta"));
-			stores.add(new StoreAdapter("320","Sally Beauty Metepec", "sallybeauty_mx",null));
+//			stores.add(new StoreAdapter("320","Sally Beauty Metepec", "sallybeauty_mx",null));
 			stores.add(new StoreAdapter("321","Roku Condesa", "roku_mx",null));
 			stores.add(new StoreAdapter("322", "Fullsand Galerías Guadalajara", "fullsand_mx", null));
 			stores.add(new StoreAdapter("323", "La Nueva Orizaba Central de Abastos", "saavedra_mx", null));
@@ -1202,8 +1226,8 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("529","Sally Beauty Pabellón Polanco", "sallybeauty_mx", null));
 			stores.add(new StoreAdapter("530","Sally Beauty CM Coapa", "sallybeauty_mx", null));
 			stores.add(new StoreAdapter("531","Sally Beauty Paseo Acoxpa ", "sallybeauty_mx", null));
-			stores.add(new StoreAdapter("532","Sally Beauty Galerías Coapa", "sallybeauty_mx", null));
-			stores.add(new StoreAdapter("533","Sally Beauty Oasis Coyoacán", "sallybeauty_mx", null));
+//			stores.add(new StoreAdapter("532","Sally Beauty Galerías Coapa", "sallybeauty_mx", null));
+//			stores.add(new StoreAdapter("533","Sally Beauty Oasis Coyoacán", "sallybeauty_mx", null));
 			
 			stores.add(new StoreAdapter("534","Farmacias YZA Tolentino", "farmaciasyza_mx", null));
 
@@ -1249,6 +1273,10 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("566", "Tanya Moss Interlomas", "tanyamoss_mx", null));
 			stores.add(new StoreAdapter("567", "Tanya Moss Santa Fe", "tanyamoss_mx", null));
 			stores.add(new StoreAdapter("568", "Tanya Moss Isla Coyoacan", "tanyamoss_mx", null));
+<<<<<<< HEAD
+=======
+//			stores.add(new StoreAdapter("569", "Tanya Moss Isla Perisur", "tanyamoss_mx", null));
+>>>>>>> 603898680f633cfef9d111866d1264edc590f162
 			stores.add(new StoreAdapter("570", "Tanya Moss Andares", "tanyamoss_mx", null));
 			stores.add(new StoreAdapter("571", "Tanya Moss Aeropuerto Guadalajara", "tanyamoss_mx", null));
 			stores.add(new StoreAdapter("572", "Tanya Moss Angelopolis", "tanyamoss_mx", null));
@@ -1296,6 +1324,16 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("594", "Prada Parque Delta", "prada_mx", null));
 			stores.add(new StoreAdapter("595", "Prada Fashion Drive", "prada_mx", null));
 			
+			stores.add(new StoreAdapter("596","Pakmail Mariano Otero", "pakmail_mx", null));
+			
+			stores.add(new StoreAdapter("597","Sally Beauty World Trade Center", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("598","Sally Beauty Paseo Interlomas", "sallybeauty_mx", null));
+			stores.add(new StoreAdapter("599","Sally Beauty Aragón", "sallybeauty_mx", null));
+			
+			stores.add(new StoreAdapter("600","Ecobutik Centro Histórico", "ecobutik_mx", null));
+			stores.add(new StoreAdapter("601","Ecobutik San Angel", "ecobutik_mx", null));
+			
+			stores.add(new StoreAdapter("602","Canalla Bistro", "canalla_bistro_mx", null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
