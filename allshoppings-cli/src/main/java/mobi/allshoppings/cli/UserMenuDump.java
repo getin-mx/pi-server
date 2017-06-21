@@ -483,6 +483,31 @@ public class UserMenuDump extends AbstractCLI {
 				userMenuDao.create(um);
 			}
 			
+			User canallaBistro = null;
+			try {
+				canallaBistro = userDao.get("canalla_bistro_mx", true);
+			} catch( Exception e ) {
+				canallaBistro = new User();
+				canallaBistro.setFirstname("Canalla Bistro");
+				canallaBistro.setLastname("Mexico");
+				canallaBistro.setEmail("canallabistro@allshoppings.mobi");
+				canallaBistro.getSecuritySettings().setRole(Role.BRAND);
+				canallaBistro.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				canallaBistro.setKey((Key)keyHelper.obtainKey(User.class, "canalla_bistro_mx"));
+				userDao.create(canallaBistro);
+			}
+			try {
+				um = userMenuDao.get("canalla_bistro_mx", true);
+				userMenuDao.delete("canalla_bistro_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.patternheatmap", "fa-building", "Patrones"));
+				um.setKey(userMenuDao.createKey("canalla_bistro_mx"));
+				userMenuDao.create(um);
+			}
+			
 			User bestbuy = null;
 			try {
 				bestbuy = userDao.get("bestbuy_mx", true);
