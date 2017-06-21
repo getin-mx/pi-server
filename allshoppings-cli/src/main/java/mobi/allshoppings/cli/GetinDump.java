@@ -1003,7 +1003,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("317","Sally Beauty Centro Coyoacan", "sallybeauty_mx","centrocoyoacan")); 
 			stores.add(new StoreAdapter("318","Sally Beauty Mega Coyoacan", "sallybeauty_mx",null)); 
 			stores.add(new StoreAdapter("319","Sally Beauty Delta", "sallybeauty_mx","parquedelta"));
-			stores.add(new StoreAdapter("320","Sally Beauty Metepec", "sallybeauty_mx",null));
+//			stores.add(new StoreAdapter("320","Sally Beauty Metepec", "sallybeauty_mx",null));
 			stores.add(new StoreAdapter("321","Roku Condesa", "roku_mx",null));
 			stores.add(new StoreAdapter("322", "Fullsand Galerías Guadalajara", "fullsand_mx", null));
 			stores.add(new StoreAdapter("323", "La Nueva Orizaba Central de Abastos", "saavedra_mx", null));
@@ -1214,8 +1214,8 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("529","Sally Beauty Pabellón Polanco", "sallybeauty_mx", null));
 			stores.add(new StoreAdapter("530","Sally Beauty CM Coapa", "sallybeauty_mx", null));
 			stores.add(new StoreAdapter("531","Sally Beauty Paseo Acoxpa ", "sallybeauty_mx", null));
-			stores.add(new StoreAdapter("532","Sally Beauty Galerías Coapa", "sallybeauty_mx", null));
-			stores.add(new StoreAdapter("533","Sally Beauty Oasis Coyoacán", "sallybeauty_mx", null));
+//			stores.add(new StoreAdapter("532","Sally Beauty Galerías Coapa", "sallybeauty_mx", null));
+//			stores.add(new StoreAdapter("533","Sally Beauty Oasis Coyoacán", "sallybeauty_mx", null));
 			
 			stores.add(new StoreAdapter("534","Farmacias YZA Tolentino", "farmaciasyza_mx", null));
 
@@ -1317,7 +1317,6 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("600","Ecobutik Centro Histórico", "ecobutik_mx", null));
 			stores.add(new StoreAdapter("601","Ecobutik San Angel", "ecobutik_mx", null));
-			
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
