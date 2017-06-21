@@ -61,6 +61,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.applications", "fa-laptop", "Aplicaciones"));
@@ -126,6 +127,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("astrid@getin.mx"));
 				userMenuDao.create(um);
@@ -160,6 +162,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
 				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("luis@getin.mx"));
@@ -195,6 +198,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
 				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("luis.vazquez@getin.mx"));
@@ -230,6 +234,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
 				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("francisco@getin.mx"));
@@ -265,6 +270,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
 				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("anabell@getin.mx"));
@@ -300,6 +306,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
 				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("matias@getin.mx"));
@@ -335,6 +342,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
 				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("eduardo@getin.mx"));
@@ -370,6 +378,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
 				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
 				um.setKey(userMenuDao.createKey("ingrid@getin.mx"));

@@ -1273,10 +1273,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("566", "Tanya Moss Interlomas", "tanyamoss_mx", null));
 			stores.add(new StoreAdapter("567", "Tanya Moss Santa Fe", "tanyamoss_mx", null));
 			stores.add(new StoreAdapter("568", "Tanya Moss Isla Coyoacan", "tanyamoss_mx", null));
-<<<<<<< HEAD
-=======
 //			stores.add(new StoreAdapter("569", "Tanya Moss Isla Perisur", "tanyamoss_mx", null));
->>>>>>> 603898680f633cfef9d111866d1264edc590f162
 			stores.add(new StoreAdapter("570", "Tanya Moss Andares", "tanyamoss_mx", null));
 			stores.add(new StoreAdapter("571", "Tanya Moss Aeropuerto Guadalajara", "tanyamoss_mx", null));
 			stores.add(new StoreAdapter("572", "Tanya Moss Angelopolis", "tanyamoss_mx", null));
