@@ -3419,6 +3419,62 @@ public class UserMenuDump extends AbstractCLI {
 			}
 
 			// End Custom Grupo Pavel  --------------------------------------------------------------------
+			
+			// Farmacias YZA  --------------------------------------------------------------------
+
+			User farmaciasyzaJuan = null;
+			try {
+				farmaciasyzaJuan = userDao.get("juan.almanza@yza.mx", true);
+			} catch( Exception e ) {
+				farmaciasyzaJuan = new User();
+				farmaciasyzaJuan.setFirstname("Juan Almanza");
+				farmaciasyzaJuan.setLastname("Mexico");
+				farmaciasyzaJuan.setEmail("juan.almanza@yza.mx");
+				farmaciasyzaJuan.getSecuritySettings().setRole(Role.BRAND);
+				farmaciasyzaJuan.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				farmaciasyzaJuan.setKey((Key)keyHelper.obtainKey(User.class, "farmaciasyza_mx"));
+				userDao.create(farmaciasyza);
+			}
+
+			try {
+				um = userMenuDao.get("juan.almanza@yza.mx", true);
+				userMenuDao.delete("juan.almanza@yza.mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.setKey(userMenuDao.createKey("juan.almanza@yza.mx"));
+				userMenuDao.create(um);
+			}
+			
+			User farmaciasyzaAlberto = null;
+			try {
+				farmaciasyzaAlberto = userDao.get("alberto.perez@yza.mx", true);
+			} catch( Exception e ) {
+				farmaciasyzaAlberto = new User();
+				farmaciasyzaAlberto.setFirstname("Alberto Perez");
+				farmaciasyzaAlberto.setLastname("Mexico");
+				farmaciasyzaAlberto.setEmail("alberto.perez@yza.mx");
+				farmaciasyzaAlberto.getSecuritySettings().setRole(Role.BRAND);
+				farmaciasyzaAlberto.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				farmaciasyzaAlberto.setKey((Key)keyHelper.obtainKey(User.class, "alberto.perez@yza.mx"));
+				userDao.create(farmaciasyzaAlberto);
+			}
+
+			try {
+				um = userMenuDao.get("alberto.perez@yza.mx", true);
+				userMenuDao.delete("alberto.perez@yza.mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.setKey(userMenuDao.createKey("alberto.perez@yza.mx"));
+				userMenuDao.create(um);
+			}
+
+			// End Farmacias YZA  --------------------------------------------------------------------
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
