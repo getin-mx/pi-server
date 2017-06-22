@@ -3438,6 +3438,8 @@ public class UserMenuDump extends AbstractCLI {
 			} catch (Exception e) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.setKey(userMenuDao.createKey("juan.almanza@yza.mx"));
 				userMenuDao.create(um);
 			}
@@ -3469,6 +3471,8 @@ public class UserMenuDump extends AbstractCLI {
 			} catch (Exception e) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
 				um.setKey(userMenuDao.createKey("alberto.perez@yza.mx"));
 				userMenuDao.create(um);
 			}
