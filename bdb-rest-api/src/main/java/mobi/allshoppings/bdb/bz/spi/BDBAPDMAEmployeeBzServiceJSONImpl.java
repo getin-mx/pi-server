@@ -80,7 +80,7 @@ public class BDBAPDMAEmployeeBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<
 	public void setKey(APDMAEmployee obj, JSONObject seed) throws ASException {
 		obj.setKey(dao.createKey());
 	}
-
+	
 	@Override
 	public void prePersist(APDMAEmployee obj, JSONObject seed) throws ASException {
 		obj.setMac(obj.getMac().toLowerCase());
