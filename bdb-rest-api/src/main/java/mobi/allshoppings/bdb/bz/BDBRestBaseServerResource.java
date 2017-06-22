@@ -3,6 +3,7 @@ package mobi.allshoppings.bdb.bz;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -800,8 +801,15 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 									PropertyUtils.setProperty(obj, key, mail);
 								} else if (PropertyUtils.getPropertyType(obj, key) == Date.class) {
 									String pattern = DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.getPattern();
-									Date date = DateUtils.parseDate((String)fieldValue, new String[] { pattern });
-									PropertyUtils.setProperty(obj, key, date);
+									try {
+										Date date = DateUtils.parseDate((String)fieldValue, new String[] { pattern });
+										PropertyUtils.setProperty(obj, key, date);
+									} catch( Exception e ) {
+										try {
+											Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String)fieldValue);
+											PropertyUtils.setProperty(obj, key, date);
+										} catch( Exception e1) {}
+									}
 								} else if (PropertyUtils.getPropertyType(obj, key) == Key.class) {
 									String[] parts = ((String)fieldValue).split("\"");
 									Class<?> c = Class.forName("mobi.allshoppings.model." + parts[0].split("\\(")[0]);
