@@ -101,6 +101,7 @@ implements BDBDashboardBzService {
 				storeNames.add(store.getName());
 				storeCacheByName.put(store.getName(), store);
 				storeCacheById.put(store.getIdentifier(), store);
+				employees.addAll(apdmaeDao.getUsingEntityIdAndRange(store.getBrandId(), EntityKind.KIND_BRAND, null, null, null, false));
 				employees.addAll(apdmaeDao.getUsingEntityIdAndRange(entityId, entityKind, null, null, null, false));
 			}
 
