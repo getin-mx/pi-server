@@ -1332,6 +1332,25 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("602","Canalla Bistro", "canalla_bistro_mx", null));
 			
+			stores.add(new StoreAdapter("603","Squalo Pabellon", "squalo_mx", null));
+			stores.add(new StoreAdapter("604","Squalo Laureles", "squalo_mx", null));
+			stores.add(new StoreAdapter("605","Squalo Oaxaca", "squalo_mx", null));
+			stores.add(new StoreAdapter("606","Squalo Mazatlan 2", "squalo_mx", null));
+			stores.add(new StoreAdapter("607","Squalo San Luis", "squalo_mx", null));
+			stores.add(new StoreAdapter("608","Squalo Tuxtla", "squalo_mx", null));
+			stores.add(new StoreAdapter("609","Squalo Morelos", "squalo_mx", null));
+			stores.add(new StoreAdapter("610","Squalo Merida", "squalo_mx", null));
+			stores.add(new StoreAdapter("611","Squalo Morelia", "squalo_mx", null));
+			stores.add(new StoreAdapter("612","Squalo Torreon", "squalo_mx", null));
+			stores.add(new StoreAdapter("613","Squalo Manzanillo", "squalo_mx", null));
+			stores.add(new StoreAdapter("614","Squalo Chihuahua", "squalo_mx", null));
+			stores.add(new StoreAdapter("615","Squalo Gran Plaza", "squalo_mx", null));
+			stores.add(new StoreAdapter("616","Squalo Galerias", "squalo_mx", null));
+			stores.add(new StoreAdapter("617","Squalo La Isla", "squalo_mx", null));
+			stores.add(new StoreAdapter("618","Squalo Tlajomulco", "squalo_mx", null));
+			stores.add(new StoreAdapter("619","Squalo Playa 6", "squalo_mx", null));
+			stores.add(new StoreAdapter("620","Squalo Mazatlan 1", "squalo_mx", null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
