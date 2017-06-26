@@ -2312,6 +2312,31 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("cafe_balcarce_ar"));
 				userMenuDao.create(um);
 			}
+			
+			User carolinaHerreraIl = null;
+			try {
+				carolinaHerreraIl = userDao.get("carolina_herrera_il", true);
+			} catch( Exception e ) {
+				carolinaHerreraIl = new User();
+				carolinaHerreraIl.setFirstname("Carolina Herrera");
+				carolinaHerreraIl.setLastname("Israel");
+				carolinaHerreraIl.setEmail("carolina_herrera_il@allshoppings.mobi");
+				carolinaHerreraIl.getSecuritySettings().setRole(Role.BRAND);
+				carolinaHerreraIl.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				carolinaHerreraIl.setKey((Key)keyHelper.obtainKey(User.class, "carolina_herrera_il"));
+				userDao.create(carolinaHerreraIl);
+			}
+
+			try {
+				um = userMenuDao.get("carolina_herrera_il", true);
+				userMenuDao.delete("carolina_herrera_il");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("carolina_herrera_il"));
+				userMenuDao.create(um);
+			}
 
 			// Fullsand --------------------------------------------------------------------
 			User user = null;
