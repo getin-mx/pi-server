@@ -1307,7 +1307,7 @@ public class GetinDump extends AbstractCLI {
 
 			stores.add(new StoreAdapter("576", "Converse Centro Historico", "converse_mx", null));
 			stores.add(new StoreAdapter("577", "Merrell Satelite", "converse_mx", null));
-			stores.add(new StoreAdapter("578", "Cole Haan interlomas", "converse_mx", null));
+			stores.add(new StoreAdapter("578", "Cole Haan Interlomas", "converse_mx", null));
 
 			stores.add(new StoreAdapter("579", "Pakmail Valladolid", "pakmail_mx", null));
 			stores.add(new StoreAdapter("580", "Pakmail San Jeronimo", "pakmail_mx", null));
