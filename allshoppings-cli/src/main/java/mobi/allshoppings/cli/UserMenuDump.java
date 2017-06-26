@@ -3996,7 +3996,285 @@ public class UserMenuDump extends AbstractCLI {
 				userDao.create(user);
 			}
 			
-				// Zona Norte -----------------------------------------------------------
+				// End Zona Norte -----------------------------------------------------------
+			
+				// Zona Sur -------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("fcanela@pradastores.mx", true);
+				userMenuDao.delete("fcanela@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("fcanela@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("fcanela@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Francisco Canela");
+				user.setLastname("");
+				user.setEmail("fcanela@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("1479926604326",
+								"74bd6202-8be7-4ec3-9ebd-5141f3ca49bd", "afb95e1f-1774-46fe-b777-16488c2bcd65",
+								"8b3c8cd2-0727-48f8-bc61-ab47d507969c", "f4fea5b7-475c-483f-896d-64422319382d",
+								"ce7bdec9-4de3-4d1c-8fe2-80b02f88f083", "5982c91b-1465-446b-afb2-53a5e7372b72",
+								"7cfdde1e-b869-4ee9-b787-3c5a3f297bb1", "2e029627-eb93-4646-999e-ff7894b45cd0"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "fcanela@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("perisur@pradastores.mx", true);
+				userMenuDao.delete("perisur@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("perisur@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("perisur@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Perisur");
+				user.setLastname("");
+				user.setEmail("perisur@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("1479926604326"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "perisur@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("insurgentes@pradastores.mx", true);
+				userMenuDao.delete("insurgentes@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("insurgentes@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("insurgentes@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Galerias Insurgentes");
+				user.setLastname("");
+				user.setEmail("insurgentes@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("74bd6202-8be7-4ec3-9ebd-5141f3ca49bd"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "insurgentes@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("coyoacan@pradastores.mx", true);
+				userMenuDao.delete("coyoacan@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("coyoacan@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("coyoacan@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Coyoacan");
+				user.setLastname("");
+				user.setEmail("coyoacan@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("afb95e1f-1774-46fe-b777-16488c2bcd65"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "coyoacan@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("galeriascoapa@pradastores.mx", true);
+				userMenuDao.delete("galeriascoapa@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("galeriascoapa@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("galeriascoapa@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Galerias Coapa");
+				user.setLastname("");
+				user.setEmail("galeriascoapa@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("8b3c8cd2-0727-48f8-bc61-ab47d507969c"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "galeriascoapa@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("pdelta@pradastores.mx", true);
+				userMenuDao.delete("pdelta@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("pdelta@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("pdelta@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Parque Delta");
+				user.setLastname("");
+				user.setEmail("pdelta@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("f4fea5b7-475c-483f-896d-64422319382d"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "pdelta@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("tabasco@pradastores.mx", true);
+				userMenuDao.delete("tabasco@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("tabasco@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("tabasco@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Galerias Tabasco");
+				user.setLastname("");
+				user.setEmail("tabasco@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("ce7bdec9-4de3-4d1c-8fe2-80b02f88f083"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "tabasco@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("altabrisa@pradastores.mx", true);
+				userMenuDao.delete("altabrisa@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("altabrisa@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("altabrisa@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Altabrisa (Tabasco II)");
+				user.setLastname("");
+				user.setEmail("altabrisa@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "altabrisa@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("merida@pradastores.mx", true);
+				userMenuDao.delete("merida@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("merida@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("merida@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Merida");
+				user.setLastname("");
+				user.setEmail("merida@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("7cfdde1e-b869-4ee9-b787-3c5a3f297bb1"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "merida@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("pcancun@pradastores.mx", true);
+				userMenuDao.delete("pcancun@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("pcancun@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("pcancun@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Cancun");
+				user.setLastname("");
+				user.setEmail("pcancun@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("2e029627-eb93-4646-999e-ff7894b45cd0"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "pcancun@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			// End Zona Sur -------------------------------------------------------------
 
 			// Prada  --------------------------------------------------------------------
 			
