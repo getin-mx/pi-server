@@ -1378,7 +1378,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("621","Prada Angelópolis", "prada_mx", null));
 			stores.add(new StoreAdapter("622","Prada Galerías Valle Oriente", "prada_mx", null));
 			
-			stores.add(new StoreAdapter("623","Cafe Balcarce Sucursal Castelar", "cafe_balcarce_ar", null));
+			stores.add(new StoreAdapter("623","Castelar", "cafe_balcarce_ar", null));
 			
 			stores.add(new StoreAdapter("624","Carolina Herrera", "carolina_herrera_il", null));
 		
