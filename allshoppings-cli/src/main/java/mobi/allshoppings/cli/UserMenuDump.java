@@ -3716,6 +3716,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("bprada@prada.mx", true);
+				userDao.delete("bprada@prada.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Begoña Prada");
@@ -3723,7 +3725,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("bprada@prada.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72",
 								"2e029627-eb93-4646-999e-ff7894b45cd0", "afb95e1f-1774-46fe-b777-16488c2bcd65",
@@ -3760,6 +3762,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("gcastellanos@pradastores.mx", true);
+				userDao.delete("gcastellanos@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Gabriel Castellanos");
@@ -3767,7 +3771,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("gcastellanos@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72",
 								"2e029627-eb93-4646-999e-ff7894b45cd0", "afb95e1f-1774-46fe-b777-16488c2bcd65",
@@ -3802,6 +3806,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("maguirre@prada.mx", true);
+				userDao.delete("maguirre@prada.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Luis Miguel Aguirre");
@@ -3809,7 +3815,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("maguirre@prada.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72",
 								"2e029627-eb93-4646-999e-ff7894b45cd0", "afb95e1f-1774-46fe-b777-16488c2bcd65",
@@ -3844,6 +3850,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("dperez@prada.mx", true);
+				userDao.delete("dperez@prada.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("David Pérez");
@@ -3851,7 +3859,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("dperez@prada.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72",
 								"2e029627-eb93-4646-999e-ff7894b45cd0", "afb95e1f-1774-46fe-b777-16488c2bcd65",
@@ -3886,6 +3894,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("truiz@prada.mx", true);
+				userDao.delete("truiz@prada.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Tania Ruiz");
@@ -3893,7 +3903,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("truiz@prada.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72",
 								"2e029627-eb93-4646-999e-ff7894b45cd0", "afb95e1f-1774-46fe-b777-16488c2bcd65",
@@ -3932,6 +3942,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("lamartinez@pradastores.mx", true);
+				userDao.delete("lamartinez@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Luis Arturo Martínez");
@@ -3939,7 +3951,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("lamartinez@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("1479933115741",
 								"2179a275-e43a-42ac-b6e7-6eedf3f4ee0a", "a062c268-877d-47e4-80aa-894da6ec93cc",
@@ -3963,6 +3975,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("santafe@pradastores.mx", true);
+				userDao.delete("santafe@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Santa Fe");
@@ -3970,7 +3984,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("santafe@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("1479933115741"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "santafe@pradastores.mx"));
@@ -3990,6 +4004,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("atizapan@pradastores.mx", true);
+				userDao.delete("atizapan@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerias Atizapan");
@@ -3997,7 +4013,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("atizapan@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("2179a275-e43a-42ac-b6e7-6eedf3f4ee0a"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "atizapan@pradastores.mx"));
@@ -4017,6 +4033,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("interlomas@pradastores.mx", true);
+				userDao.delete("interlomas@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Paseo Interlomas");
@@ -4024,7 +4042,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("interlomas@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("a062c268-877d-47e4-80aa-894da6ec93cc"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "interlomas@pradastores.mx"));
@@ -4044,6 +4062,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("pviavallejo@pradastores.mx", true);
+				userDao.delete("pviavallejo@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Parque Via Vallejo");
@@ -4051,7 +4071,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("pviavallejo@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("bd39ba69-eb84-4679-b3e2-0f9276eb76b7"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "pviavallejo@pradastores.mx"));
@@ -4071,6 +4091,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("gtoluca@pradastores.mx", true);
+				userDao.delete("gtoluca@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerias Toluca");
@@ -4078,7 +4100,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("gtoluca@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("82979029-3ca9-4bc3-aaaf-d9ccdfca562c"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "gtoluca@pradastores.mx"));
@@ -4098,6 +4120,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("guadalajara@pradastores.mx", true);
+				userDao.delete("guadalajara@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada GDL");
@@ -4105,7 +4129,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("guadalajara@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("6b51b0f6-4e52-41b0-b59d-cec9e89c042b"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "guadalajara@pradastores.mx"));
@@ -4125,6 +4149,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("granplaza@pradastores.mx", true);
+				userDao.delete("granplaza@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Gran Plaza");
@@ -4132,7 +4158,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("granplaza@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("3bc93117-4e24-4298-bcbe-7d5de3c38efb"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "granplaza@pradastores.mx"));
@@ -4152,6 +4178,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("pmayor@pradastores.mx", true);
+				userDao.delete("pmayor@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Plaza Mayor");
@@ -4159,7 +4187,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("pmayor@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("49272db7-dee7-4230-bbfb-d9bdcc296f59"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "pmayor@pradastores.mx"));
@@ -4183,6 +4211,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("fcanela@pradastores.mx", true);
+				userDao.delete("fcanela@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Francisco Canela");
@@ -4190,7 +4220,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("fcanela@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("1479926604326",
 								"74bd6202-8be7-4ec3-9ebd-5141f3ca49bd", "afb95e1f-1774-46fe-b777-16488c2bcd65",
@@ -4214,6 +4244,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("perisur@pradastores.mx", true);
+				userDao.delete("perisur@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Perisur");
@@ -4221,7 +4253,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("perisur@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("1479926604326"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "perisur@pradastores.mx"));
@@ -4241,6 +4273,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("insurgentes@pradastores.mx", true);
+				userDao.delete("insurgentes@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerias Insurgentes");
@@ -4248,7 +4282,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("insurgentes@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("74bd6202-8be7-4ec3-9ebd-5141f3ca49bd"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "insurgentes@pradastores.mx"));
@@ -4268,6 +4302,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("coyoacan@pradastores.mx", true);
+				userDao.delete("coyoacan@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Coyoacan");
@@ -4275,7 +4311,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("coyoacan@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("afb95e1f-1774-46fe-b777-16488c2bcd65"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "coyoacan@pradastores.mx"));
@@ -4295,6 +4331,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("galeriascoapa@pradastores.mx", true);
+				userDao.delete("galeriascoapa@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerias Coapa");
@@ -4302,7 +4340,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("galeriascoapa@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("8b3c8cd2-0727-48f8-bc61-ab47d507969c"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "galeriascoapa@pradastores.mx"));
@@ -4322,6 +4360,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("pdelta@pradastores.mx", true);
+				userDao.delete("pdelta@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Parque Delta");
@@ -4329,7 +4369,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("pdelta@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("f4fea5b7-475c-483f-896d-64422319382d"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "pdelta@pradastores.mx"));
@@ -4349,6 +4389,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("tabasco@pradastores.mx", true);
+				userDao.delete("tabasco@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerias Tabasco");
@@ -4356,7 +4398,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("tabasco@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("ce7bdec9-4de3-4d1c-8fe2-80b02f88f083"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "tabasco@pradastores.mx"));
@@ -4376,6 +4418,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("altabrisa@pradastores.mx", true);
+				userDao.delete("altabrisa@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Altabrisa (Tabasco II)");
@@ -4383,7 +4427,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("altabrisa@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "altabrisa@pradastores.mx"));
@@ -4403,6 +4447,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("merida@pradastores.mx", true);
+				userDao.delete("merida@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Merida");
@@ -4410,7 +4456,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("merida@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("7cfdde1e-b869-4ee9-b787-3c5a3f297bb1"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "merida@pradastores.mx"));
@@ -4430,6 +4476,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("pcancun@pradastores.mx", true);
+				userDao.delete("pcancun@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Cancun");
@@ -4437,7 +4485,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("pcancun@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("2e029627-eb93-4646-999e-ff7894b45cd0"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "pcancun@pradastores.mx"));
@@ -4461,6 +4509,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("crua@pradastores.mx", true);
+				userDao.delete("crua@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Claudia Rúa");
@@ -4468,7 +4518,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("crua@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("1479926604340",
 								"4f9302f7-c155-46c7-b780-17834270a7f7", "f94a2759-554c-49a4-a32d-84c81cfe98cc",
@@ -4492,6 +4542,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("satelite@pradastores.mx", true);
+				userDao.delete("satelite@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Satelite");
@@ -4499,7 +4551,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("satelite@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("1479926604340"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "satelite@pradastores.mx"));
@@ -4519,6 +4571,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("ptoreo@pradastores.mx", true);
+				userDao.delete("ptoreo@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Parque Toreo");
@@ -4526,7 +4580,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("ptoreo@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("4f9302f7-c155-46c7-b780-17834270a7f7"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "ptoreo@pradastores.mx"));
@@ -4546,6 +4600,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("gserdan@pradastores.mx", true);
+				userDao.delete("gserdan@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerias Serdan");
@@ -4553,7 +4609,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("gserdan@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("f94a2759-554c-49a4-a32d-84c81cfe98cc"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "gserdan@pradastores.mx"));
@@ -4573,6 +4629,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("fashiondrive@pradastores.mx", true);
+				userDao.delete("fashiondrive@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Fashion Drive");
@@ -4580,7 +4638,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("fashiondrive@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("61534aa2-ec08-471e-9378-eff26344edec"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "fashiondrive@pradastores.mx"));
@@ -4600,6 +4658,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("polanco@pradastores.mx", true);
+				userDao.delete("polanco@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Pabellon Polanco");
@@ -4607,7 +4667,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("polanco@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("3acd7c49-a32d-4b45-9064-d7360c11b6ed"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "polanco@pradastores.mx"));
@@ -4627,6 +4687,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("xalapa@pradastores.mx", true);
+				userDao.delete("xalapa@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Xalapa");
@@ -4634,7 +4696,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("xalapa@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "xalapa@pradastores.mx"));
@@ -4654,6 +4716,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("puebla@pradastores.mx", true);
+				userDao.delete("puebla@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Angelópolis");
@@ -4661,7 +4725,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("puebla@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("a604b9c3-949a-4581-9196-5b17e1de989a"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "puebla@pradastores.mx"));
@@ -4681,6 +4745,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("monterrey@pradastores.mx", true);
+				userDao.delete("monterrey@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerías Valle Oriente");
@@ -4688,7 +4754,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("monterrey@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("4523b563-2e0d-4fe2-8321-9e53740854b2"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "monterrey@pradastores.mx"));
@@ -4712,6 +4778,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("jcruz@pradastores.mx", true);
+				userDao.delete("jcruz@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("José Luis Cruz");
@@ -4719,7 +4787,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("jcruz@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("e53ead22-8663-4e09-b0e7-069e91c1fae9",
 								"e3d005b1-9162-49c1-855c-cc0eaf19b8b7", "f8610b0e-158d-4f38-9c8a-dd2bf7a3f3a1",
@@ -4741,6 +4809,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("puntanorte@pradastores.mx", true);
+				userDao.delete("puntanorte@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Outlet Punta Norte");
@@ -4748,7 +4818,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("puntanorte@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("e53ead22-8663-4e09-b0e7-069e91c1fae9"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "puntanorte@pradastores.mx"));
@@ -4768,6 +4838,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("galerias@pradastores.mx", true);
+				userDao.delete("galerias@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Outlet Galerias");
@@ -4775,7 +4847,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("galerias@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("e3d005b1-9162-49c1-855c-cc0eaf19b8b7"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "galerias@pradastores.mx"));
@@ -4795,6 +4867,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("miramontes@pradastores.mx", true);
+				userDao.delete("miramontes@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Miramontes/Outlet Zapamundi");
@@ -4802,7 +4876,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("miramontes@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("f8610b0e-158d-4f38-9c8a-dd2bf7a3f3a1"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "miramontes@pradastores.mx"));
@@ -4822,6 +4896,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("outletpuebla@pradastores.mx", true);
+				userDao.delete("outletpuebla@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Outlet Puebla");
@@ -4829,7 +4905,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("outletpuebla@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("d9ea5f0b-2ac8-48a0-87e1-0b2e02d74cef"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "outletpuebla@pradastores.mx"));
@@ -4849,6 +4925,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("omulza@pradastores.mx", true);
+				userDao.delete("omulza@pradastores.mx");
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Outlet Mulza");
@@ -4856,7 +4934,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("omulza@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("d662d502-4d45-40e1-a160-a8d1639d57c3"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "omulza@pradastores.mx"));
@@ -4865,7 +4943,7 @@ public class UserMenuDump extends AbstractCLI {
 			
 				// End Outlets -------------------------------------------------------------
 
-			// Prada  --------------------------------------------------------------------
+			// End Prada  --------------------------------------------------------------------
 			
 
 		} catch( Exception e ) {
