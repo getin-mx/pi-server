@@ -2344,7 +2344,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("adassist@grupochomarc.com.mx", true);
-				userDao.delete("adassist@grupochomarc.com.mx");
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Adassist");
@@ -2375,7 +2374,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("anallerena@chomarc_mx", true);
-				userDao.delete("anallerena@chomarc_mx");
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Ana");
@@ -2406,7 +2404,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("beatrizcors@chomarc_mx", true);
-				userDao.delete("beatrizcors@chomarc_mx");
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Beatriz");
@@ -2438,7 +2435,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("evyreiter@chomarc_mx", true);
-				userDao.delete("evyreiter@chomarc_mx");
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Evy");
@@ -2466,7 +2462,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("rogersilva@chomarc_mx", true);
-				userDao.delete("rogersilva@chomarc_mx");
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Roger");
@@ -2496,7 +2491,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("ginatena@chomarc_mx", true);
-				userDao.delete("ginatena@chomarc_mx");
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Gina");
@@ -2528,7 +2522,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("leonardooneto@chomarc_mx", true);
-				userDao.delete("leonardooneto@chomarc_mx");
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Leonardo");
