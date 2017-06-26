@@ -3525,6 +3525,230 @@ public class UserMenuDump extends AbstractCLI {
 			}
 
 			// End Farmacias YZA  --------------------------------------------------------------------
+			
+			
+			// Prada  --------------------------------------------------------------------
+			
+				// 	Complete access ---------------------------
+
+			try {
+				um = userMenuDao.get("bprada@prada.mx", true);
+				userMenuDao.delete("bprada@prada.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.setKey(userMenuDao.createKey("bprada@prada.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("bprada@prada.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Begoña Prada");
+				user.setLastname("");
+				user.setEmail("bprada@prada.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72",
+								"2e029627-eb93-4646-999e-ff7894b45cd0", "afb95e1f-1774-46fe-b777-16488c2bcd65",
+								"61534aa2-ec08-471e-9378-eff26344edec", "2179a275-e43a-42ac-b6e7-6eedf3f4ee0a",
+								"8b3c8cd2-0727-48f8-bc61-ab47d507969c", "74bd6202-8be7-4ec3-9ebd-5141f3ca49bd",
+								"f94a2759-554c-49a4-a32d-84c81cfe98cc", "ce7bdec9-4de3-4d1c-8fe2-80b02f88f083",
+								"82979029-3ca9-4bc3-aaaf-d9ccdfca562c", "6b51b0f6-4e52-41b0-b59d-cec9e89c042b",
+								"3bc93117-4e24-4298-bcbe-7d5de3c38efb", "7cfdde1e-b869-4ee9-b787-3c5a3f297bb1",
+								"f8610b0e-158d-4f38-9c8a-dd2bf7a3f3a1", "dcbce874-c1c8-4b33-ac18-ffa2532ca3f9",
+								"e3d005b1-9162-49c1-855c-cc0eaf19b8b7", "d662d502-4d45-40e1-a160-a8d1639d57c3",
+								"d9ea5f0b-2ac8-48a0-87e1-0b2e02d74cef", "e53ead22-8663-4e09-b0e7-069e91c1fae9",
+								"3acd7c49-a32d-4b45-9064-d7360c11b6ed", "f4fea5b7-475c-483f-896d-64422319382d",
+								"4f9302f7-c155-46c7-b780-17834270a7f7", "bd39ba69-eb84-4679-b3e2-0f9276eb76b7",
+								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
+								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
+								"1479933115741", "1479926604340", 
+								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "bprada@prada.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("gcastellanos@pradastores.mx", true);
+				userMenuDao.delete("gcastellanos@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.setKey(userMenuDao.createKey("gcastellanos@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("gcastellanos@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Gabriel Castellanos");
+				user.setLastname("");
+				user.setEmail("gcastellanos@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72",
+								"2e029627-eb93-4646-999e-ff7894b45cd0", "afb95e1f-1774-46fe-b777-16488c2bcd65",
+								"61534aa2-ec08-471e-9378-eff26344edec", "2179a275-e43a-42ac-b6e7-6eedf3f4ee0a",
+								"8b3c8cd2-0727-48f8-bc61-ab47d507969c", "74bd6202-8be7-4ec3-9ebd-5141f3ca49bd",
+								"f94a2759-554c-49a4-a32d-84c81cfe98cc", "ce7bdec9-4de3-4d1c-8fe2-80b02f88f083",
+								"82979029-3ca9-4bc3-aaaf-d9ccdfca562c", "6b51b0f6-4e52-41b0-b59d-cec9e89c042b",
+								"3bc93117-4e24-4298-bcbe-7d5de3c38efb", "7cfdde1e-b869-4ee9-b787-3c5a3f297bb1",
+								"f8610b0e-158d-4f38-9c8a-dd2bf7a3f3a1", "dcbce874-c1c8-4b33-ac18-ffa2532ca3f9",
+								"e3d005b1-9162-49c1-855c-cc0eaf19b8b7", "d662d502-4d45-40e1-a160-a8d1639d57c3",
+								"d9ea5f0b-2ac8-48a0-87e1-0b2e02d74cef", "e53ead22-8663-4e09-b0e7-069e91c1fae9",
+								"3acd7c49-a32d-4b45-9064-d7360c11b6ed", "f4fea5b7-475c-483f-896d-64422319382d",
+								"4f9302f7-c155-46c7-b780-17834270a7f7", "bd39ba69-eb84-4679-b3e2-0f9276eb76b7",
+								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
+								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
+								"1479933115741", "1479926604340", 
+								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "gcastellanos@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("maguirre@prada.mx", true);
+				userMenuDao.delete("maguirre@prada.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("maguirre@prada.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("maguirre@prada.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Luis Miguel Aguirre");
+				user.setLastname("");
+				user.setEmail("maguirre@prada.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72",
+								"2e029627-eb93-4646-999e-ff7894b45cd0", "afb95e1f-1774-46fe-b777-16488c2bcd65",
+								"61534aa2-ec08-471e-9378-eff26344edec", "2179a275-e43a-42ac-b6e7-6eedf3f4ee0a",
+								"8b3c8cd2-0727-48f8-bc61-ab47d507969c", "74bd6202-8be7-4ec3-9ebd-5141f3ca49bd",
+								"f94a2759-554c-49a4-a32d-84c81cfe98cc", "ce7bdec9-4de3-4d1c-8fe2-80b02f88f083",
+								"82979029-3ca9-4bc3-aaaf-d9ccdfca562c", "6b51b0f6-4e52-41b0-b59d-cec9e89c042b",
+								"3bc93117-4e24-4298-bcbe-7d5de3c38efb", "7cfdde1e-b869-4ee9-b787-3c5a3f297bb1",
+								"f8610b0e-158d-4f38-9c8a-dd2bf7a3f3a1", "dcbce874-c1c8-4b33-ac18-ffa2532ca3f9",
+								"e3d005b1-9162-49c1-855c-cc0eaf19b8b7", "d662d502-4d45-40e1-a160-a8d1639d57c3",
+								"d9ea5f0b-2ac8-48a0-87e1-0b2e02d74cef", "e53ead22-8663-4e09-b0e7-069e91c1fae9",
+								"3acd7c49-a32d-4b45-9064-d7360c11b6ed", "f4fea5b7-475c-483f-896d-64422319382d",
+								"4f9302f7-c155-46c7-b780-17834270a7f7", "bd39ba69-eb84-4679-b3e2-0f9276eb76b7",
+								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
+								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
+								"1479933115741", "1479926604340", 
+								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "maguirre@prada.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("dperez@prada.mx", true);
+				userMenuDao.delete("dperez@prada.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("dperez@prada.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("dperez@prada.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("David Pérez");
+				user.setLastname("");
+				user.setEmail("dperez@prada.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72",
+								"2e029627-eb93-4646-999e-ff7894b45cd0", "afb95e1f-1774-46fe-b777-16488c2bcd65",
+								"61534aa2-ec08-471e-9378-eff26344edec", "2179a275-e43a-42ac-b6e7-6eedf3f4ee0a",
+								"8b3c8cd2-0727-48f8-bc61-ab47d507969c", "74bd6202-8be7-4ec3-9ebd-5141f3ca49bd",
+								"f94a2759-554c-49a4-a32d-84c81cfe98cc", "ce7bdec9-4de3-4d1c-8fe2-80b02f88f083",
+								"82979029-3ca9-4bc3-aaaf-d9ccdfca562c", "6b51b0f6-4e52-41b0-b59d-cec9e89c042b",
+								"3bc93117-4e24-4298-bcbe-7d5de3c38efb", "7cfdde1e-b869-4ee9-b787-3c5a3f297bb1",
+								"f8610b0e-158d-4f38-9c8a-dd2bf7a3f3a1", "dcbce874-c1c8-4b33-ac18-ffa2532ca3f9",
+								"e3d005b1-9162-49c1-855c-cc0eaf19b8b7", "d662d502-4d45-40e1-a160-a8d1639d57c3",
+								"d9ea5f0b-2ac8-48a0-87e1-0b2e02d74cef", "e53ead22-8663-4e09-b0e7-069e91c1fae9",
+								"3acd7c49-a32d-4b45-9064-d7360c11b6ed", "f4fea5b7-475c-483f-896d-64422319382d",
+								"4f9302f7-c155-46c7-b780-17834270a7f7", "bd39ba69-eb84-4679-b3e2-0f9276eb76b7",
+								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
+								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
+								"1479933115741", "1479926604340", 
+								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "dperez@prada.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("truiz@prada.mx", true);
+				userMenuDao.delete("truiz@prada.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("truiz@prada.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("truiz@prada.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tania Ruiz");
+				user.setLastname("");
+				user.setEmail("truiz@prada.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72",
+								"2e029627-eb93-4646-999e-ff7894b45cd0", "afb95e1f-1774-46fe-b777-16488c2bcd65",
+								"61534aa2-ec08-471e-9378-eff26344edec", "2179a275-e43a-42ac-b6e7-6eedf3f4ee0a",
+								"8b3c8cd2-0727-48f8-bc61-ab47d507969c", "74bd6202-8be7-4ec3-9ebd-5141f3ca49bd",
+								"f94a2759-554c-49a4-a32d-84c81cfe98cc", "ce7bdec9-4de3-4d1c-8fe2-80b02f88f083",
+								"82979029-3ca9-4bc3-aaaf-d9ccdfca562c", "6b51b0f6-4e52-41b0-b59d-cec9e89c042b",
+								"3bc93117-4e24-4298-bcbe-7d5de3c38efb", "7cfdde1e-b869-4ee9-b787-3c5a3f297bb1",
+								"f8610b0e-158d-4f38-9c8a-dd2bf7a3f3a1", "dcbce874-c1c8-4b33-ac18-ffa2532ca3f9",
+								"e3d005b1-9162-49c1-855c-cc0eaf19b8b7", "d662d502-4d45-40e1-a160-a8d1639d57c3",
+								"d9ea5f0b-2ac8-48a0-87e1-0b2e02d74cef", "e53ead22-8663-4e09-b0e7-069e91c1fae9",
+								"3acd7c49-a32d-4b45-9064-d7360c11b6ed", "f4fea5b7-475c-483f-896d-64422319382d",
+								"4f9302f7-c155-46c7-b780-17834270a7f7", "bd39ba69-eb84-4679-b3e2-0f9276eb76b7",
+								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
+								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
+								"1479933115741", "1479926604340", 
+								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "truiz@prada.mx"));
+				userDao.create(user);
+			}
+
+			
+
+			// Prada  --------------------------------------------------------------------
+			
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
