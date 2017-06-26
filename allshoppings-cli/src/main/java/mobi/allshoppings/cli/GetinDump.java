@@ -1351,6 +1351,9 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("619","Squalo Playa 6", "squalo_mx", null));
 			stores.add(new StoreAdapter("620","Squalo Mazatlan 1", "squalo_mx", null));
 			
+			stores.add(new StoreAdapter("621","Prada Angelópolis", "prada_mx", null));
+			stores.add(new StoreAdapter("622","Prada Galerías Valle Oriente", "prada_mx", null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
