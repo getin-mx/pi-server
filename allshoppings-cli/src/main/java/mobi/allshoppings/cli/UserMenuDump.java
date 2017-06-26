@@ -4471,6 +4471,174 @@ public class UserMenuDump extends AbstractCLI {
 			}
 			
 				// End Zona Centro -------------------------------------------------------------
+			
+				// Outlets -------------------------------------------------------------
+				
+			try {
+				um = userMenuDao.get("jcruz@pradastores.mx", true);
+				userMenuDao.delete("jcruz@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("jcruz@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("jcruz@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("José Luis Cruz");
+				user.setLastname("");
+				user.setEmail("jcruz@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("e53ead22-8663-4e09-b0e7-069e91c1fae9",
+								"e3d005b1-9162-49c1-855c-cc0eaf19b8b7", "f8610b0e-158d-4f38-9c8a-dd2bf7a3f3a1",
+								"d9ea5f0b-2ac8-48a0-87e1-0b2e02d74cef", "d662d502-4d45-40e1-a160-a8d1639d57c3"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "jcruz@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("puntanorte@pradastores.mx", true);
+				userMenuDao.delete("puntanorte@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("puntanorte@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("puntanorte@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Outlet Punta Norte");
+				user.setLastname("");
+				user.setEmail("puntanorte@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("e53ead22-8663-4e09-b0e7-069e91c1fae9"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "puntanorte@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("galerias@pradastores.mx", true);
+				userMenuDao.delete("galerias@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("galerias@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("galerias@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Outlet Galerias");
+				user.setLastname("");
+				user.setEmail("galerias@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("e3d005b1-9162-49c1-855c-cc0eaf19b8b7"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "galerias@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("miramontes@pradastores.mx", true);
+				userMenuDao.delete("miramontes@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("miramontes@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("miramontes@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Miramontes/Outlet Zapamundi");
+				user.setLastname("");
+				user.setEmail("miramontes@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("f8610b0e-158d-4f38-9c8a-dd2bf7a3f3a1"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "miramontes@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("outletpuebla@pradastores.mx", true);
+				userMenuDao.delete("outletpuebla@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("outletpuebla@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("outletpuebla@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Outlet Puebla");
+				user.setLastname("");
+				user.setEmail("outletpuebla@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("d9ea5f0b-2ac8-48a0-87e1-0b2e02d74cef"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "outletpuebla@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("omulza@pradastores.mx", true);
+				userMenuDao.delete("omulza@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("omulza@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("omulza@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Outlet Mulza");
+				user.setLastname("");
+				user.setEmail("omulza@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("d662d502-4d45-40e1-a160-a8d1639d57c3"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "omulza@pradastores.mx"));
+				userDao.create(user);
+			}
+			
+				// End Outlets -------------------------------------------------------------
 
 			// Prada  --------------------------------------------------------------------
 			
