@@ -899,6 +899,18 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "canalla_bistro_mx"));
 				brandDao.create(brand);
 			}
+			
+			try {
+				brand = brandDao.get("cafe_balcarce_ar", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Cafe Balcarce");
+				brand.setCountry("Argentina");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "cafe_balcarce_ar"));
+				brandDao.create(brand);
+			}
 
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
@@ -1353,6 +1365,8 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("621","Prada Angelópolis", "prada_mx", null));
 			stores.add(new StoreAdapter("622","Prada Galerías Valle Oriente", "prada_mx", null));
+			
+			stores.add(new StoreAdapter("623","Cafe Balcarce Sucursal Castelar", "cafe_balcarce_ar", null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {

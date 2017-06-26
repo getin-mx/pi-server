@@ -2287,6 +2287,31 @@ public class UserMenuDump extends AbstractCLI {
 				calibrator.setKey((Key)keyHelper.obtainKey(User.class, "getin-apdevice-calibrator"));
 				userDao.create(calibrator);
 			}
+			
+			User cafeBalcarceAr = null;
+			try {
+				cafeBalcarceAr = userDao.get("cafe_balcarce_ar", true);
+			} catch( Exception e ) {
+				cafeBalcarceAr = new User();
+				cafeBalcarceAr.setFirstname("Cafe Balcarce");
+				cafeBalcarceAr.setLastname("Argentina");
+				cafeBalcarceAr.setEmail("cafe_balcarce_ar@allshoppings.mobi");
+				cafeBalcarceAr.getSecuritySettings().setRole(Role.BRAND);
+				cafeBalcarceAr.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				cafeBalcarceAr.setKey((Key)keyHelper.obtainKey(User.class, "cafe_balcarce_ar"));
+				userDao.create(cafeBalcarceAr);
+			}
+
+			try {
+				um = userMenuDao.get("cafe_balcarce_ar", true);
+				userMenuDao.delete("cafe_balcarce_ar");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("cafe_balcarce_ar"));
+				userMenuDao.create(um);
+			}
 
 			// Fullsand --------------------------------------------------------------------
 			User user = null;
