@@ -3371,6 +3371,35 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "playa2@98coastav_mx"));
 				userDao.create(user);
 			}
+			
+			try {
+				um = userMenuDao.get("enriqueg@98coastav.mx", true);
+				userMenuDao.delete("enriqueg@98coastav.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.setKey(userMenuDao.createKey("enriqueg@98coastav.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("enriqueg@98coastav.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("98 Coast Av.");
+				user.setLastname("");
+				user.setEmail("enriqueg@98coastav.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings().setStores(Arrays.asList("f03d2386-3c1e-40c7-9005-d402f565f107",
+						"510b13bc-c316-42e1-853a-38dcf8855746", "83d06e8f-4ca8-4a92-bf48-b796bc24ac50",
+						"2edff7a5-6000-45b1-9425-a7712e133d80"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "enriqueg@98coastav.mx"));
+				userDao.create(user);
+			}
 
 			// End 98 Coast av  --------------------------------------------------------------------
 			
