@@ -1221,19 +1221,19 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("503", "Aditivo Arco Norte", "aditivo_mx", null));			
 			stores.add(new StoreAdapter("504", "Aditivo Neza 1", "aditivo_mx", null));			
 
-			stores.add(new StoreAdapter("505", "Pakmail Parque Lincoln", "pakmail_mx", null));
-			stores.add(new StoreAdapter("506", "Pakmail Plaza Polanco", "pakmail_mx", null));
+//			stores.add(new StoreAdapter("505", "Pakmail Parque Lincoln", "pakmail_mx", null));
+//			stores.add(new StoreAdapter("506", "Pakmail Plaza Polanco", "pakmail_mx", null));
 			stores.add(new StoreAdapter("507", "Pakmail Atenas", "pakmail_mx", null));
 			stores.add(new StoreAdapter("508", "Pakmail Lomas Estrella", "pakmail_mx", null));
-			stores.add(new StoreAdapter("509", "Pakmail Mixcoac", "pakmail_mx", null));
-			stores.add(new StoreAdapter("510", "Pakmail Obrero Mundial", "pakmail_mx", null));
+//			stores.add(new StoreAdapter("509", "Pakmail Mixcoac", "pakmail_mx", null));
+//			stores.add(new StoreAdapter("510", "Pakmail Obrero Mundial", "pakmail_mx", null));
 			stores.add(new StoreAdapter("511", "Pakmail Roma", "pakmail_mx", null));
-			stores.add(new StoreAdapter("512", "Pakmail Bosque de la Herradura", "pakmail_mx", null));
+//			stores.add(new StoreAdapter("512", "Pakmail Bosque de la Herradura", "pakmail_mx", null));
 			stores.add(new StoreAdapter("513", "Pakmail Echegaray", "pakmail_mx", null));
 			stores.add(new StoreAdapter("514", "Pakmail Palo Solo", "pakmail_mx", null));
 			stores.add(new StoreAdapter("515", "Pakmail San Mateo Atenco", "pakmail_mx", null));
 			stores.add(new StoreAdapter("516", "Pakmail Metepec", "pakmail_mx", null));
-			stores.add(new StoreAdapter("517", "Pakmail Valle Dorado", "pakmail_mx", null));
+//			stores.add(new StoreAdapter("517", "Pakmail Valle Dorado", "pakmail_mx", null));
 
 			stores.add(new StoreAdapter("518", "Walmart Demo", "walmart_mx", "wallmartdemo"));
 
