@@ -259,58 +259,51 @@ implements DashboardHeatmapTableHourBzService {
 			JSONArray dataJson = new JSONArray();
 			JSONArray element = new JSONArray();
 			for( int y = 0; y < 24; y++ ) {
-				Map<Integer, Long> xData = yData.get(lElementSubId.get(0)).get(y);
-				if( xData != null ) {
-					for( int x = 0; x <= 7; x++ ) {
-						Long val = xData.get(x);
-						if( val == null && lElementSubId.size() > 1 && yData.get(lElementSubId.get(1)).containsKey(y)) {
-							if( yData.get(lElementSubId.get(1)).get(y).containsKey(x))
-								val = 0L;
-						}
-						if( val != null ) {
-							element = new JSONArray();
-							element.put(x);
-							element.put(yPositions.get(y));
-							element.put(val);
-							
-							for(int j = 1; j < lElementSubId.size(); j++ ) {
-								Map<Integer, Long> xTmpData = yData.get(lElementSubId.get(j)).get(y);
-								if( xTmpData != null ) {
-									Long tmpVal = xTmpData.get(x);
-									if( tmpVal != null ) {
-										element.put(tmpVal);
-									}
-								}								
-							}
-							
-							dataJson.put(element);
-						}
-					}
-				} else if( lElementSubId.size() > 1 ){
-					xData = yData.get(lElementSubId.get(1)).get(y);
-					if( xData != null ) {
+				
+				// Try to find any data for the time slot
+				boolean hasAnyY = false;
+				for( int j = 0; j < lElementSubId.size(); j++) {
+					if( yData.get(lElementSubId.get(j)).get(y) != null ) {
 						for( int x = 0; x <= 7; x++ ) {
-							Long val = xData.get(x);
-							if( val != null ) {
-								element = new JSONArray();
-								element.put(x);
-								element.put(yPositions.get(y));
-								element.put(0);
-								
-								for(int j = 1; j < lElementSubId.size(); j++ ) {
-									Map<Integer, Long> xTmpData = yData.get(lElementSubId.get(j)).get(y);
-									if( xTmpData != null ) {
-										Long tmpVal = xTmpData.get(x);
-										if( tmpVal != null ) {
-											element.put(tmpVal);
-										}
-									}								
+							Map<Integer, Long> xTmpData = yData.get(lElementSubId.get(j)).get(y);
+							if( xTmpData != null ) {
+								Long tmpVal = xTmpData.get(x);
+								if( tmpVal != null && tmpVal != 0 ) {
+									hasAnyY = true;
 								}
-								
-								dataJson.put(element);
+							}
+						}						
+					}
+				}
+				
+				// If has any element fills the space
+				if( hasAnyY ) {
+					for( int x = 0; x <= 7; x++ ) {
+						element = new JSONArray();
+						element.put(x);
+						element.put(yPositions.get(y));
+						
+						boolean hasAnyX = false;
+						for(int j = 0; j < lElementSubId.size(); j++ ) {
+							Map<Integer, Long> xTmpData = yData.get(lElementSubId.get(j)).get(y);
+							if( xTmpData != null ) {
+								Long tmpVal = xTmpData.get(x);
+								if( tmpVal != null ) {
+									element.put(tmpVal);
+									hasAnyX = true;
+								} else {
+									element.put(0);
+								}
+							} else {
+								element.put(0);
 							}
 						}
-					}					
+
+						// If has any element for the day, adds it
+						if( hasAnyX )
+							dataJson.put(element);
+
+					}
 				}
 			}
 			ret.put("data", dataJson);
