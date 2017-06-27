@@ -4981,6 +4981,334 @@ public class UserMenuDump extends AbstractCLI {
 
 			// End Prada  --------------------------------------------------------------------
 			
+			// Pakmail  --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("atenas@pakmail.com.mx", true);
+				userMenuDao.delete("atenas@pakmail.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("atenas@pakmail.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("atenas@pakmail.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Pakmail Atenas");
+				user.setLastname("");
+				user.setEmail("atenas@pakmail.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("EA6B2F91EFA04DA3B6A451BD69EC46F0CDDE28D9B978F5D1CC59448205E646E9");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("8bbd9f18-57b4-4e78-95e0-e2e3398c172d"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "atenas@pakmail.com.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("coyuya@pakmail.com.mx", true);
+				userMenuDao.delete("coyuya@pakmail.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("coyuya@pakmail.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("coyuya@pakmail.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Pakmail Coyuya");
+				user.setLastname("");
+				user.setEmail("coyuya@pakmail.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("EA6B2F91EFA04DA3B6A451BD69EC46F0CDDE28D9B978F5D1CC59448205E646E9");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("208e62ab-3b01-4c92-9799-81ffdb00534e"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "coyuya@pakmail.com.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("echegaray@pakmail.com.mx", true);
+				userMenuDao.delete("echegaray@pakmail.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("echegaray@pakmail.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("echegaray@pakmail.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Pakmail Echegaray");
+				user.setLastname("");
+				user.setEmail("echegaray@pakmail.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("EA6B2F91EFA04DA3B6A451BD69EC46F0CDDE28D9B978F5D1CC59448205E646E9");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("fcc3bf83-1b3c-4262-a983-afc958a1f144"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "echegaray@pakmail.com.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("felixcuevas@pakmail.com.mx", true);
+				userMenuDao.delete("felixcuevas@pakmail.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("felixcuevas@pakmail.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("felixcuevas@pakmail.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Pakmail Felix Cuevas");
+				user.setLastname("");
+				user.setEmail("felixcuevas@pakmail.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("EA6B2F91EFA04DA3B6A451BD69EC46F0CDDE28D9B978F5D1CC59448205E646E9");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("a30c36b6-5693-4cad-bc21-44e216b07f66"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "felixcuevas@pakmail.com.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("lomasestrella@pakmail.com.mx", true);
+				userMenuDao.delete("lomasestrella@pakmail.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("lomasestrella@pakmail.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("lomasestrella@pakmail.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Pakmail Lomas Estrella");
+				user.setLastname("");
+				user.setEmail("lomasestrella@pakmail.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("EA6B2F91EFA04DA3B6A451BD69EC46F0CDDE28D9B978F5D1CC59448205E646E9");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("10b4e6d4-4d68-4545-970f-e0fa6c74964f"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "lomasestrella@pakmail.com.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("marianootero@pakmail.com.mx", true);
+				userMenuDao.delete("marianootero@pakmail.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("marianootero@pakmail.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("marianootero@pakmail.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Pakmail Mariano Otero");
+				user.setLastname("");
+				user.setEmail("marianootero@pakmail.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("EA6B2F91EFA04DA3B6A451BD69EC46F0CDDE28D9B978F5D1CC59448205E646E9");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("77da3d47-1320-4a84-b6b1-5b84d605a657"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "marianootero@pakmail.com.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("metepec@pakmail.com.mx", true);
+				userMenuDao.delete("metepec@pakmail.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("metepec@pakmail.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("metepec@pakmail.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Pakmail Metepec");
+				user.setLastname("");
+				user.setEmail("metepec@pakmail.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("EA6B2F91EFA04DA3B6A451BD69EC46F0CDDE28D9B978F5D1CC59448205E646E9");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("fdb2636b-38f9-4f6f-a677-5977b29d4340"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "metepec@pakmail.com.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("palosolo@pakmail.com.mx", true);
+				userMenuDao.delete("palosolo@pakmail.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("palosolo@pakmail.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("palosolo@pakmail.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Pakmail Palo Solo");
+				user.setLastname("");
+				user.setEmail("palosolo@pakmail.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("EA6B2F91EFA04DA3B6A451BD69EC46F0CDDE28D9B978F5D1CC59448205E646E9");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("dc810723-71ec-4771-9dcc-cac8a2820f8c"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "palosolo@pakmail.com.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("roma@pakmail.com.mx", true);
+				userMenuDao.delete("roma@pakmail.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("roma@pakmail.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("roma@pakmail.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Pakmail Roma");
+				user.setLastname("");
+				user.setEmail("roma@pakmail.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("EA6B2F91EFA04DA3B6A451BD69EC46F0CDDE28D9B978F5D1CC59448205E646E9");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("4cb29596-70fe-4a59-a5b6-d04944d322ab"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "roma@pakmail.com.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("sanjeronimo@pakmail.com.mx", true);
+				userMenuDao.delete("sanjeronimo@pakmail.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("sanjeronimo@pakmail.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("sanjeronimo@pakmail.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Pakmail San Jeronimo");
+				user.setLastname("");
+				user.setEmail("sanjeronimo@pakmail.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("EA6B2F91EFA04DA3B6A451BD69EC46F0CDDE28D9B978F5D1CC59448205E646E9");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("51e0fc41-7007-45ce-aae4-f1239336243e"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "sanjeronimo@pakmail.com.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("sanmateoatenco@pakmail.com.mx", true);
+				userMenuDao.delete("sanmateoatenco@pakmail.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("sanmateoatenco@pakmail.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("sanmateoatenco@pakmail.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Pakmail San Mateo Atenco");
+				user.setLastname("");
+				user.setEmail("sanmateoatenco@pakmail.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("EA6B2F91EFA04DA3B6A451BD69EC46F0CDDE28D9B978F5D1CC59448205E646E9");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("de85ff39-d042-47e9-92cc-a6c5f8e68ed4"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "sanmateoatenco@pakmail.com.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("valladolid@pakmail.com.mx", true);
+				userMenuDao.delete("valladolid@pakmail.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("valladolid@pakmail.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("valladolid@pakmail.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Pakmail Valladolid");
+				user.setLastname("");
+				user.setEmail("valladolid@pakmail.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("EA6B2F91EFA04DA3B6A451BD69EC46F0CDDE28D9B978F5D1CC59448205E646E9");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("fd13fe01-9834-465a-8f03-83b36d317c0c"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "valladolid@pakmail.com.mx"));
+				userDao.create(user);
+			}
+			
+			// End Pakmail  --------------------------------------------------------------------
+			
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
