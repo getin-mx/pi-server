@@ -3752,8 +3752,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("bprada@prada.mx", true);
-				userDao.delete("bprada@prada.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Begoña Prada");
@@ -3798,8 +3796,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("gcastellanos@pradastores.mx", true);
-				userDao.delete("gcastellanos@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Gabriel Castellanos");
@@ -3842,8 +3838,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("maguirre@prada.mx", true);
-				userDao.delete("maguirre@prada.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Luis Miguel Aguirre");
@@ -3886,8 +3880,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("dperez@prada.mx", true);
-				userDao.delete("dperez@prada.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("David Pérez");
@@ -3930,8 +3922,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("truiz@prada.mx", true);
-				userDao.delete("truiz@prada.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Tania Ruiz");
@@ -3978,8 +3968,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("lamartinez@pradastores.mx", true);
-				userDao.delete("lamartinez@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Luis Arturo Martínez");
@@ -4011,8 +3999,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("santafe@pradastores.mx", true);
-				userDao.delete("santafe@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Santa Fe");
@@ -4039,9 +4025,7 @@ public class UserMenuDump extends AbstractCLI {
 			}
 
 			try {
-				user = userDao.get("atizapan@pradastores.mx", true);
-				userDao.delete("atizapan@pradastores.mx");
-				throw new Exception();
+				user = userDao.get("atizapan@pradastores.mx", true);				
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerias Atizapan");
@@ -4069,8 +4053,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("interlomas@pradastores.mx", true);
-				userDao.delete("interlomas@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Paseo Interlomas");
@@ -4098,8 +4080,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("pviavallejo@pradastores.mx", true);
-				userDao.delete("pviavallejo@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Parque Via Vallejo");
@@ -4127,8 +4107,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("gtoluca@pradastores.mx", true);
-				userDao.delete("gtoluca@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerias Toluca");
@@ -4156,8 +4134,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("guadalajara@pradastores.mx", true);
-				userDao.delete("guadalajara@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada GDL");
@@ -4185,8 +4161,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("granplaza@pradastores.mx", true);
-				userDao.delete("granplaza@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Gran Plaza");
@@ -4214,8 +4188,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("pmayor@pradastores.mx", true);
-				userDao.delete("pmayor@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Plaza Mayor");
@@ -4247,8 +4219,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("fcanela@pradastores.mx", true);
-				userDao.delete("fcanela@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Francisco Canela");
@@ -4280,8 +4250,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("perisur@pradastores.mx", true);
-				userDao.delete("perisur@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Perisur");
@@ -4309,8 +4277,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("insurgentes@pradastores.mx", true);
-				userDao.delete("insurgentes@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerias Insurgentes");
@@ -4338,8 +4304,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("coyoacan@pradastores.mx", true);
-				userDao.delete("coyoacan@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Coyoacan");
@@ -4367,8 +4331,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("galeriascoapa@pradastores.mx", true);
-				userDao.delete("galeriascoapa@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerias Coapa");
@@ -4396,8 +4358,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("pdelta@pradastores.mx", true);
-				userDao.delete("pdelta@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Parque Delta");
@@ -4425,8 +4385,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("tabasco@pradastores.mx", true);
-				userDao.delete("tabasco@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerias Tabasco");
@@ -4454,8 +4412,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("altabrisa@pradastores.mx", true);
-				userDao.delete("altabrisa@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Altabrisa (Tabasco II)");
@@ -4483,8 +4439,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("merida@pradastores.mx", true);
-				userDao.delete("merida@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Merida");
@@ -4512,8 +4466,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("pcancun@pradastores.mx", true);
-				userDao.delete("pcancun@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Cancun");
@@ -4545,8 +4497,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("crua@pradastores.mx", true);
-				userDao.delete("crua@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Claudia Rúa");
@@ -4578,8 +4528,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("satelite@pradastores.mx", true);
-				userDao.delete("satelite@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Satelite");
@@ -4607,8 +4555,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("ptoreo@pradastores.mx", true);
-				userDao.delete("ptoreo@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Parque Toreo");
@@ -4636,8 +4582,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("gserdan@pradastores.mx", true);
-				userDao.delete("gserdan@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerias Serdan");
@@ -4665,8 +4609,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("fashiondrive@pradastores.mx", true);
-				userDao.delete("fashiondrive@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Fashion Drive");
@@ -4694,8 +4636,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("polanco@pradastores.mx", true);
-				userDao.delete("polanco@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Pabellon Polanco");
@@ -4723,8 +4663,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("xalapa@pradastores.mx", true);
-				userDao.delete("xalapa@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Xalapa");
@@ -4752,8 +4690,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("puebla@pradastores.mx", true);
-				userDao.delete("puebla@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Angelópolis");
@@ -4781,8 +4717,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("monterrey@pradastores.mx", true);
-				userDao.delete("monterrey@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerías Valle Oriente");
@@ -4814,8 +4748,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("jcruz@pradastores.mx", true);
-				userDao.delete("jcruz@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("José Luis Cruz");
@@ -4845,8 +4777,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("puntanorte@pradastores.mx", true);
-				userDao.delete("puntanorte@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Outlet Punta Norte");
@@ -4874,8 +4804,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("galerias@pradastores.mx", true);
-				userDao.delete("galerias@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Outlet Galerias");
@@ -4903,8 +4831,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("miramontes@pradastores.mx", true);
-				userDao.delete("miramontes@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Miramontes/Outlet Zapamundi");
@@ -4932,8 +4858,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("outletpuebla@pradastores.mx", true);
-				userDao.delete("outletpuebla@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Outlet Puebla");
@@ -4961,8 +4885,6 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("omulza@pradastores.mx", true);
-				userDao.delete("omulza@pradastores.mx");
-				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Outlet Mulza");
