@@ -716,7 +716,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		for(APHEntry entry : entries) {
 			aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
-//			apheDao.update(entry);
 		}
 		
 		// Merges all the time slots

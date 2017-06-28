@@ -297,6 +297,31 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 
 	}
 
+	/**
+	 * Sanitizes the mail list according to the antenna mail list plus the
+	 * system configuration general mail list
+	 * 
+	 * @param device
+	 *            The device to sanitize the mail list for
+	 * @return A fully formal mail address list adapted to the device
+	 */
+	private List<String> sanitizeMailList(APDevice device) {
+
+		List<String> reportableUsers = CollectionFactory.createList();
+		for( String mail : device.getReportMailList()) {
+			String sMail = mail.trim().toLowerCase();
+			if(!reportableUsers.contains(sMail)) 
+				reportableUsers.add(sMail);
+		}
+		
+		for( String mail : systemConfiguration.getApdReportMailList()) {
+			String sMail = mail.trim().toLowerCase();
+			if(!reportableUsers.contains(sMail)) 
+				reportableUsers.add(sMail);
+		}
+
+		return reportableUsers;
+	}
 
 	@Override
 	public void reportDownDevices() throws ASException {
@@ -324,7 +349,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 									+ "El equipo de Getin";
 							String mailTitle = "La antena de " + device.getDescription() + " se encuentra apagada";
 
-							for( String mail : device.getReportMailList() ) {
+							List<String> reportableUsers = sanitizeMailList(device);
+							for( String mail : reportableUsers) {
 								User fake = new User();
 								fake.setEmail(mail);
 								try {
@@ -359,7 +385,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 									+ "El equipo de Getin";
 							String mailTitle = "La antena de " + device.getDescription() + " volvió a conectarse!!!";
 
-							for( String mail : device.getReportMailList() ) {
+							List<String> reportableUsers = sanitizeMailList(device);
+							for( String mail : reportableUsers) {
 								User fake = new User();
 								fake.setEmail(mail);
 								try {
