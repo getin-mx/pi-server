@@ -858,7 +858,7 @@ public class GetinDump extends AbstractCLI {
 				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
-				brand.setName("Game Planet");
+				brand.setName("Gameplanet");
 				brand.setCountry("Mexico");
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "gameplanet_mx"));
 				brandDao.create(brand);
@@ -1286,9 +1286,9 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("557","Clarins Perisur", "clarins_mx",null));
 
 			stores.add(new StoreAdapter("558", "Botanicus Forum Cuernavaca", "botanicus_mx", null));
-			stores.add(new StoreAdapter("559", "Game Planet Santa Fe I", "gameplanet_mx", null));
-			stores.add(new StoreAdapter("560", "Game Planet Universidad", "gameplanet_mx", null));
-			stores.add(new StoreAdapter("561", "Game Planet Portal San Angel", "gameplanet_mx", null));
+			stores.add(new StoreAdapter("559", "Gameplanet Santa Fe I", "gameplanet_mx", null));
+			stores.add(new StoreAdapter("560", "Gameplanet Universidad", "gameplanet_mx", null));
+			stores.add(new StoreAdapter("561", "Gameplanet Portal San Angel", "gameplanet_mx", null));
 
 			stores.add(new StoreAdapter("562", "Tanya Moss Parque Duraznos", "tanyamoss_mx", null));
 			stores.add(new StoreAdapter("563", "Tanya Moss Pabellón Polanco", "tanyamoss_mx", null));
