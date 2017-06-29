@@ -5231,6 +5231,97 @@ public class UserMenuDump extends AbstractCLI {
 			
 			// End Pakmail  --------------------------------------------------------------------
 			
+			// Opticas Devlyn  --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("ycastor@devlyn.com.mx", true);
+				userMenuDao.delete("ycastor@devlyn.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("ycastor@devlyn.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("ycastor@devlyn.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Opticas Devlyn");
+				user.setLastname("");
+				user.setEmail("ycastor@devlyn.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("DC8CCB2710BCF5A5404F10C72BF0B8E5A0F572C2382F3F6231D22C009DCA7ACB");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("4592b7bd-c2b5-40b8-b99f-ffed79a000cb",
+								"67dee1cc-ffbc-4c1d-b97a-78381df35d48", "bc5c771e-535c-4eb8-a85f-9ccf81e63435",
+								"af50c63a-144a-4fce-b816-478351fdd27e", "4234966c-8d24-4179-b255-1f095123034f"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "ycastor@devlyn.com.mx"));
+				userDao.create(user);
+			}	
+			
+			try {
+				um = userMenuDao.get("vmendivil@devlyn.com.mx", true);
+				userMenuDao.delete("vmendivil@devlyn.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("vmendivil@devlyn.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("vmendivil@devlyn.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Opticas Devlyn");
+				user.setLastname("");
+				user.setEmail("vmendivil@devlyn.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("DC8CCB2710BCF5A5404F10C72BF0B8E5A0F572C2382F3F6231D22C009DCA7ACB");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("4592b7bd-c2b5-40b8-b99f-ffed79a000cb",
+								"67dee1cc-ffbc-4c1d-b97a-78381df35d48", "bc5c771e-535c-4eb8-a85f-9ccf81e63435",
+								"af50c63a-144a-4fce-b816-478351fdd27e", "4234966c-8d24-4179-b255-1f095123034f"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "vmendivil@devlyn.com.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("devlyn.andrew@devlyn.com.mx", true);
+				userMenuDao.delete("devlyn.andrew@devlyn.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("devlyn.andrew@devlyn.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("devlyn.andrew@devlyn.com.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Opticas Devlyn");
+				user.setLastname("");
+				user.setEmail("devlyn.andrew@devlyn.com.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("DC8CCB2710BCF5A5404F10C72BF0B8E5A0F572C2382F3F6231D22C009DCA7ACB");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("4592b7bd-c2b5-40b8-b99f-ffed79a000cb",
+								"67dee1cc-ffbc-4c1d-b97a-78381df35d48", "bc5c771e-535c-4eb8-a85f-9ccf81e63435",
+								"af50c63a-144a-4fce-b816-478351fdd27e", "4234966c-8d24-4179-b255-1f095123034f"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "devlyn.andrew@devlyn.com.mx"));
+				userDao.create(user);
+			}
+			
+			// End Opticas Devlyn  --------------------------------------------------------------------
+			
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
