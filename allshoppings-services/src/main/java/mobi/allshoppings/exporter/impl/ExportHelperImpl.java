@@ -1,5 +1,7 @@
 package mobi.allshoppings.exporter.impl;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,6 +19,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.datastore.JDOConnection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import com.inodes.datanucleus.model.Key;
 import com.mongodb.BasicDBObject;
@@ -50,12 +53,12 @@ public class ExportHelperImpl implements ExportHelper {
 	 * @see mobi.allshoppings.exporter.impl.ExportHelper#export(java.util.Date, java.util.Date)
 	 */
 	@Override
-	public void export(Date fromDate, Date toDate) throws ASException {
+	public void export(Date fromDate, Date toDate, String outfile) throws ASException {
 		
 		List<ExportUnit> list = dao.getUsingStatusAndRange(StatusHelper.statusActive(), null, null);
 		for( ExportUnit unit : list ) {
 			try {
-				export(unit, fromDate, toDate);
+				export(unit, fromDate, toDate, outfile);
 			} catch( ASException e ) {
 				log.log(Level.SEVERE, e.getMessage(), e);
 			}
@@ -67,10 +70,10 @@ public class ExportHelperImpl implements ExportHelper {
 	 * @see mobi.allshoppings.exporter.impl.ExportHelper#export(mobi.allshoppings.model.ExportUnit, java.util.Date, java.util.Date)
 	 */
 	@Override
-	public void export(ExportUnit unit, Date fromDate, Date toDate) throws ASException {
+	public void export(ExportUnit unit, Date fromDate, Date toDate, String outfile) throws ASException {
 		switch (unit.getTargetType()) {
 		case ExportUnit.TARGET_MYSQL:
-			exportUsingMySQL(unit, fromDate, toDate);
+			exportUsingMySQL(unit, fromDate, toDate, outfile);
 			break;
 		default:
 			break;
@@ -84,10 +87,10 @@ public class ExportHelperImpl implements ExportHelper {
 	 *            The ExportUnit to use
 	 * @throws ASException
 	 */
-	private void exportUsingMySQL(ExportUnit unit, Date fromDate, Date toDate) throws ASException {
+	private void exportUsingMySQL(ExportUnit unit, Date fromDate, Date toDate, String outfile) throws ASException {
 		switch (unit.getSourceType()) {
 		case ExportUnit.SOURCE_VISITS:
-			exportVisitsUsingMySQL(unit, fromDate, toDate);
+			exportVisitsUsingMySQL(unit, fromDate, toDate, outfile);
 			break;
 		default:
 			break;
@@ -101,7 +104,7 @@ public class ExportHelperImpl implements ExportHelper {
 	 *            The ExportUnit to use
 	 * @throws ASException
 	 */
-	private void exportVisitsUsingMySQL(ExportUnit unit, Date fromDate, Date toDate) throws ASException {
+	private void exportVisitsUsingMySQL(ExportUnit unit, Date fromDate, Date toDate, String outfile) throws ASException {
 		
 		List<String> entityIds = resolveEntityIds(unit.getEntityIds(), unit.getEntityKind());
 		Connection conn = getMySQLConnection(unit);
@@ -109,6 +112,13 @@ public class ExportHelperImpl implements ExportHelper {
 		ResultSet rs = null;
 
 		try {
+			File f = null;
+			FileOutputStream fos = null;
+			if( StringUtils.hasText(outfile)) {
+				f = new File(outfile);
+				fos = new FileOutputStream(f);
+			}
+			
 			MessageDigest md = MessageDigest.getInstance("MD5");
 
 			// Gets the last update made to the unit
@@ -215,27 +225,36 @@ public class ExportHelperImpl implements ExportHelper {
 						sb.append("'").append(sdf.format(creationDateTime)).append("', ");
 						sb.append("'").append(sdf.format(objLastUpdate)).append("')");
 
-						try {
-							if( !transOpened ) {
-								conn.setAutoCommit(false);
-								stmt = conn.createStatement();
-								transOpened = true;
+						if( fos != null ) {
+							sb.append(";\n");
+							fos.write(sb.toString().getBytes());
+						} else {
+							try {
+								if( !transOpened ) {
+									conn.setAutoCommit(false);
+									stmt = conn.createStatement();
+									transOpened = true;
+								}
+								stmt.addBatch(sb.toString());
+								if( cnt % 100 == 0 ) {
+									stmt.executeBatch();
+									conn.commit();
+									stmt.close();
+									transOpened = false;
+								}
+							} catch( Exception e ) {
+								log.log(Level.SEVERE, e.getMessage(), e);
+								log.log(Level.INFO, sb.toString());
 							}
-							stmt.addBatch(sb.toString());
-							if( cnt % 100 == 0 ) {
-								stmt.executeBatch();
-								conn.commit();
-								stmt.close();
-								transOpened = false;
-							}
-						} catch( Exception e ) {
-							log.log(Level.SEVERE, e.getMessage(), e);
-							log.log(Level.INFO, sb.toString());
 						}
 
 					}
 				}
 
+				if( fos != null ) {
+					fos.close();
+				}
+				
 			} catch( Exception e ) {
 				throw ASExceptionHelper.defaultException(e.getMessage(), e);
 

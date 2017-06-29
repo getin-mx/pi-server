@@ -29,6 +29,7 @@ public class RunExportUnits extends AbstractCLI {
 		parser.accepts( "fromDate", "Export from date (yyyy-MM-dd)").withRequiredArg().ofType( String.class );
 		parser.accepts( "toDate", "Export to date (yyyy-MM-dd)").withRequiredArg().ofType( String.class );
 		parser.accepts( "exportUnit", "Export unit").withRequiredArg().ofType( String.class );
+		parser.accepts( "outfile", "Optional Out file (if this parameter is passed, then no SQL records will be added)").withRequiredArg().ofType( String.class );
 		return parser;
 	}
 
@@ -50,6 +51,7 @@ public class RunExportUnits extends AbstractCLI {
 			Date fromDate = null;
 			Date toDate = null;
 			String exportUnit = null;
+			String outfile = null;
 			
 			try {
 				if( options.has("fromDate")) {
@@ -66,6 +68,10 @@ public class RunExportUnits extends AbstractCLI {
 					exportUnit = (String)options.valueOf("exportUnit");
 				}
 				
+				if( options.has("outfile")) {
+					outfile = (String)options.valueOf("outfile");
+				}
+				
 			} catch( Exception e ) {
 				e.printStackTrace();
 				usage(parser);
@@ -74,9 +80,9 @@ public class RunExportUnits extends AbstractCLI {
 			log.log(Level.INFO, "Executing export units...");
 			if( StringUtils.hasText(exportUnit)) {
 				ExportUnit unit = dao.get(exportUnit);
-				helper.export(unit, fromDate, toDate);
+				helper.export(unit, fromDate, toDate, outfile);
 			} else {
-				helper.export(fromDate, toDate);
+				helper.export(fromDate, toDate, outfile);
 			}
 			
 			

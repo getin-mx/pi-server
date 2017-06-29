@@ -16,7 +16,7 @@ public interface ExportHelper {
 	 *            Final date to export
 	 * @throws ASException
 	 */
-	void export(Date fromDate, Date toDate) throws ASException;
+	void export(Date fromDate, Date toDate, String outfile) throws ASException;
 
 	/**
 	 * Exports an ExportUnit
@@ -25,6 +25,6 @@ public interface ExportHelper {
 	 *            The ExportUnit to use
 	 * @throws ASException
 	 */
-	void export(ExportUnit unit, Date fromDate, Date toDate) throws ASException;
+	void export(ExportUnit unit, Date fromDate, Date toDate, String outfile) throws ASException;
 
 }
