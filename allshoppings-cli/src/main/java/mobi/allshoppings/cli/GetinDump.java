@@ -1439,6 +1439,8 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("678","Aditivo Alcaraz Circuito", "aditivo_mx", null));
 			stores.add(new StoreAdapter("679","Aditivo Insurgentes", "aditivo_mx", null));
 			
+			stores.add(new StoreAdapter("680","Saboreaté Y Café Merida", "saboreateycafe_mx", null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
