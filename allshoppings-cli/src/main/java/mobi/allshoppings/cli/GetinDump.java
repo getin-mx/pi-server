@@ -1383,7 +1383,62 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("624","Carolina Herrera", "carolina_herrera_il", null));
 			
 			stores.add(new StoreAdapter("625","Botanicus El Rosario", "botanicus_mx", null));
-		
+			
+			stores.add(new StoreAdapter("626","Aditivo Vallejo", "aditivo_mx", null));
+			stores.add(new StoreAdapter("627","Aditivo Ecatepec", "aditivo_mx", null));
+			stores.add(new StoreAdapter("628","Aditivo Iztapalapa", "aditivo_mx", null));
+			stores.add(new StoreAdapter("629","Aditivo Guadalajara", "aditivo_mx", null));
+			stores.add(new StoreAdapter("630","Aditivo Puebla", "aditivo_mx", null));
+			stores.add(new StoreAdapter("631","Aditivo Naucalpan", "aditivo_mx", null));
+			stores.add(new StoreAdapter("632","Aditivo León", "aditivo_mx", null));
+			stores.add(new StoreAdapter("633","Aditivo Centro", "aditivo_mx", null));
+			stores.add(new StoreAdapter("634","Aditivo Chalco", "aditivo_mx", null));
+			stores.add(new StoreAdapter("635","Aditivo Tlanenpantla", "aditivo_mx", null));
+			stores.add(new StoreAdapter("636","Aditivo Lechería", "aditivo_mx", null));
+			stores.add(new StoreAdapter("637","Aditivo Cuautitlán", "aditivo_mx", null));
+			stores.add(new StoreAdapter("638","Aditivo Azteca", "aditivo_mx", null));
+			stores.add(new StoreAdapter("639","Aditivo Cuautla", "aditivo_mx", null));
+			stores.add(new StoreAdapter("640","Aditivo Texcoco", "aditivo_mx", null));
+			stores.add(new StoreAdapter("641","Aditivo Veracruz", "aditivo_mx", null));
+			stores.add(new StoreAdapter("642","Aditivo Ixtapaluca", "aditivo_mx", null));
+			stores.add(new StoreAdapter("643","Aditivo Olivar del conde", "aditivo_mx", null));
+			stores.add(new StoreAdapter("644","Aditivo Pino Suarez", "aditivo_mx", null));
+			stores.add(new StoreAdapter("645","Aditivo Puebla 3", "aditivo_mx", null));
+			stores.add(new StoreAdapter("646","Aditivo Toluca", "aditivo_mx", null));
+			stores.add(new StoreAdapter("647","Aditivo Tecamac", "aditivo_mx", null));
+			stores.add(new StoreAdapter("648","Aditivo Lazaro Cardenas", "aditivo_mx", null));
+			stores.add(new StoreAdapter("649","Aditivo Pachuca", "aditivo_mx", null));
+			stores.add(new StoreAdapter("650","Aditivo Canal del Norte", "aditivo_mx", null));
+			stores.add(new StoreAdapter("651","Aditivo Pachuca 2", "aditivo_mx", null));
+			stores.add(new StoreAdapter("652","Aditivo Ecatepec 2", "aditivo_mx", null));
+			stores.add(new StoreAdapter("653","Aditivo Queretaro", "aditivo_mx", null));
+			stores.add(new StoreAdapter("654","Aditivo San Luis", "aditivo_mx", null));
+			stores.add(new StoreAdapter("655","Aditivo San Luis Centro", "aditivo_mx", null));
+			stores.add(new StoreAdapter("656","Aditivo Tula", "aditivo_mx", null));
+			stores.add(new StoreAdapter("657","Aditivo Neza 2", "aditivo_mx", null));
+			stores.add(new StoreAdapter("658","Aditivo Nicolas Romero", "aditivo_mx", null));
+			stores.add(new StoreAdapter("659","Aditivo Metro Pino Suarez", "aditivo_mx", null));
+			stores.add(new StoreAdapter("660","Aditivo Zumpango", "aditivo_mx", null));
+			stores.add(new StoreAdapter("661","Aditivo Queretaro Centro", "aditivo_mx", null));
+			stores.add(new StoreAdapter("662","Aditivo Tizayuca", "aditivo_mx", null));
+			stores.add(new StoreAdapter("663","Aditivo Tuyehualco", "aditivo_mx", null));
+			stores.add(new StoreAdapter("664","Aditivo 4 Caminos", "aditivo_mx", null));
+			stores.add(new StoreAdapter("665","Aditivo Veracruz Centro", "aditivo_mx", null));
+			stores.add(new StoreAdapter("666","Aditivo Huehuetoca", "aditivo_mx", null));
+			stores.add(new StoreAdapter("667","Aditivo San Juan del Río", "aditivo_mx", null));
+			stores.add(new StoreAdapter("668","Aditivo Guadalajara Centro", "aditivo_mx", null));
+			stores.add(new StoreAdapter("669","Aditivo Atlixco", "aditivo_mx", null));
+			stores.add(new StoreAdapter("670","Aditivo Apizaco", "aditivo_mx", null));
+			stores.add(new StoreAdapter("671","Aditivo Los Reyes", "aditivo_mx", null));
+			stores.add(new StoreAdapter("672","Aditivo Cuajimalpa", "aditivo_mx", null));
+			stores.add(new StoreAdapter("673","Aditivo Toluca Centro", "aditivo_mx", null));
+			stores.add(new StoreAdapter("674","Aditivo Plaza Tulyehualco", "aditivo_mx", null));
+			stores.add(new StoreAdapter("675","Aditivo Tlanenpantla Centro", "aditivo_mx", null));
+			stores.add(new StoreAdapter("676","Aditivo Chimalhuacan", "aditivo_mx", null));
+			stores.add(new StoreAdapter("677","Aditivo Salamanca", "aditivo_mx", null));
+			stores.add(new StoreAdapter("678","Aditivo Alcaraz Circuito", "aditivo_mx", null));
+			stores.add(new StoreAdapter("679","Aditivo Insurgentes", "aditivo_mx", null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
