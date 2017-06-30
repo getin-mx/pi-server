@@ -2371,6 +2371,31 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("carolina_herrera_il"));
 				userMenuDao.create(um);
 			}
+			
+			User dentalia = null;
+			try {
+				dentalia = userDao.get("dentalia_mx", true);
+			} catch( Exception e ) {
+				dentalia = new User();
+				dentalia.setFirstname("Dentalia");
+				dentalia.setLastname("Mexico");
+				dentalia.setEmail("dentalia_mx@allshoppings.mobi");
+				dentalia.getSecuritySettings().setRole(Role.BRAND);
+				dentalia.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				dentalia.setKey((Key)keyHelper.obtainKey(User.class, "dentalia_mx"));
+				userDao.create(dentalia);
+			}
+
+			try {
+				um = userMenuDao.get("dentalia_mx", true);
+				userMenuDao.delete("dentalia_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("dentalia_mx"));
+				userMenuDao.create(um);
+			}
 
 			// Fullsand --------------------------------------------------------------------
 			User user = null;
