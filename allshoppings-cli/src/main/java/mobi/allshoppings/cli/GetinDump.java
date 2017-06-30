@@ -946,12 +946,12 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("173", "Fullsand Perisur", "fullsand_mx", "perisur"));
 //			stores.add(new StoreAdapter("174", "Fullsand Aragon", "fullsand_mx", "multiplazaaragon"));
 			stores.add(new StoreAdapter("185", "Invicta Aeropuerto", "invicta_mx", "aeropuertobenitojuarez"));
-			stores.add(new StoreAdapter("192", "Mobo Antara", "mobo_mx", "antara"));
-			stores.add(new StoreAdapter("193", "Mobo Galerias Coapa", "mobo_mx", "galeriascoapa"));
-			stores.add(new StoreAdapter("194", "Mobo Paseo Acoxpa", "mobo_mx", "paseoacoxpa"));
-			stores.add(new StoreAdapter("195", "Mobo La Cuspide", "mobo_mx", "lacuspideskymall"));
-			stores.add(new StoreAdapter("196", "Mobo Interlomas", "mobo_mx", "interlomas"));
-			stores.add(new StoreAdapter("200", "Mobo El Salvador", "mobo_mx", null));
+			stores.add(new StoreAdapter("192", "Mobo Antara Old", "mobo_mx", "antara"));
+			stores.add(new StoreAdapter("193", "Mobo Galerias Coapa Old", "mobo_mx", "galeriascoapa"));
+			stores.add(new StoreAdapter("194", "Mobo Paseo Acoxpa Old", "mobo_mx", "paseoacoxpa"));
+			stores.add(new StoreAdapter("195", "Mobo La Cuspide Old", "mobo_mx", "lacuspideskymall"));
+			stores.add(new StoreAdapter("196", "Mobo Interlomas Old", "mobo_mx", "interlomas"));
+			stores.add(new StoreAdapter("200", "Mobo El Salvador Old", "mobo_mx", null));
 			stores.add(new StoreAdapter("198", "Ferragamo Masaryk", "salvatoreferragamo_mx", null));
 			stores.add(new StoreAdapter("206", "Watch My Watch Plaza La Isla", "watchmywatch_mx", null));
 			stores.add(new StoreAdapter("207", "Watch My Watch Playa del Carmen", "watchmywatch_mx", null));
