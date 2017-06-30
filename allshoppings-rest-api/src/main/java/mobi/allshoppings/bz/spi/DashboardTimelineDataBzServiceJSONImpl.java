@@ -65,7 +65,7 @@ implements DashboardTimelineDataBzService {
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
 			String subentityId = obtainStringValue("subentityId", null);
-			String periodType = obtainStringValue("periodId", null);
+			String periodType = obtainStringValue("periodType", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
 			String movieId = obtainStringValue("movieId", null);
@@ -80,7 +80,7 @@ implements DashboardTimelineDataBzService {
 
 			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
 					entityKind, elementId, elementSubId, shoppingId,
-					subentityId, periodType, fromStringDate, toStringDate,
+					subentityId, null /*periodType*/, fromStringDate, toStringDate,
 					movieId, voucherType, dayOfWeek, timezone, null, country, province, city);
 			
 			log.log(Level.INFO, list.size() + " dashboard elements found");
@@ -112,9 +112,11 @@ implements DashboardTimelineDataBzService {
 			Map<Date, Integer> dateMap = CollectionFactory.createMap();
 			int dateMapPosition = 0;
 			while( thisDate.before(toDate) || thisDate.equals(toDate)) {
-				dateMap.put(thisDate, dateMapPosition);
-				categories.add(getDateName(thisDate));
-				dateMapPosition++;
+				if( !dateMap.containsKey(calculateDateFrame(thisDate, periodType))) {
+					dateMap.put(calculateDateFrame(thisDate, periodType), dateMapPosition);
+					categories.add(getDateName(thisDate, periodType));
+					dateMapPosition++;
+				}
 				thisDate = DateUtils.addDays(thisDate, 1);
 			}
 			
@@ -136,7 +138,7 @@ implements DashboardTimelineDataBzService {
 
 			for(DashboardIndicatorData obj : list) {
 				if( isValidForUser(user, obj)) {
-					Date objDate = DateUtils.truncate(obj.getDate(), Calendar.DATE);
+					Date objDate = calculateDateFrame(DateUtils.truncate(obj.getDate(), Calendar.DATE), periodType);
 					String key = obj.getElementSubName();
 					String orderKey = obj.getElementSubId();
 					if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
@@ -265,40 +267,118 @@ implements DashboardTimelineDataBzService {
 			return true;
 	}
 
-	public String getDateName(Date date) {
+	public String getDateName(Date date, String periodType) {
 		StringBuffer sb = new StringBuffer();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
-		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		int dof = cal.get(Calendar.DAY_OF_WEEK);
-		
-		switch(dof) {
-		case Calendar.SUNDAY:
-			sb.append("Dom ");
-			break;
-		case Calendar.MONDAY:
-			sb.append("Lun ");
-			break;
-		case Calendar.TUESDAY:
-			sb.append("Mar ");
-			break;
-		case Calendar.WEDNESDAY:
-			sb.append("Mie ");
-			break;
-		case Calendar.THURSDAY:
-			sb.append("Jue ");
-			break;
-		case Calendar.FRIDAY:
-			sb.append("Vie ");
-			break;
-		case Calendar.SATURDAY:
-			sb.append("Sab ");
-			break;
-		}
+		if( periodType == null ) periodType = "";
 
-		sb.append(sdf.format(date));
+		if( periodType.equals("W")) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+			int curDay = cal.get(Calendar.DAY_OF_YEAR);
+			cal.set(Calendar.DAY_OF_YEAR, 1);
+			while( cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+				cal.add(Calendar.DATE, 1);
+			}
+			int firstDay = cal.get(Calendar.DAY_OF_YEAR);
+			int offset = curDay - firstDay;
+			int week = (offset / 7) + 1;
+			
+			sb.append("Sem ").append(week).append(" ").append(sdf.format(date));
+			
+		} else if( periodType.equals("M")) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+			int month = cal.get(Calendar.MONTH);
+			switch(month) {
+			case Calendar.JANUARY:
+				sb.append("Enero ");
+				break;
+			case Calendar.FEBRUARY:
+				sb.append("Febrero ");
+				break;
+			case Calendar.MARCH:
+				sb.append("Marzo ");
+				break;
+			case Calendar.APRIL:
+				sb.append("Abril ");
+				break;
+			case Calendar.MAY:
+				sb.append("Mayo ");
+				break;
+			case Calendar.JUNE:
+				sb.append("Junio ");
+				break;
+			case Calendar.JULY:
+				sb.append("Julio ");
+				break;
+			case Calendar.AUGUST:
+				sb.append("Agosto ");
+				break;
+			case Calendar.SEPTEMBER:
+				sb.append("Septiembre ");
+				break;
+			case Calendar.OCTOBER:
+				sb.append("Octubre ");
+				break;
+			case Calendar.NOVEMBER:
+				sb.append("Noviembre ");
+				break;
+			case Calendar.DECEMBER:
+				sb.append("Diciembre ");
+				break;
+			}
+				
+			sb.append(sdf.format(date));
+			
+		} else {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
+			int dof = cal.get(Calendar.DAY_OF_WEEK);
+
+			switch(dof) {
+			case Calendar.SUNDAY:
+				sb.append("Dom ");
+				break;
+			case Calendar.MONDAY:
+				sb.append("Lun ");
+				break;
+			case Calendar.TUESDAY:
+				sb.append("Mar ");
+				break;
+			case Calendar.WEDNESDAY:
+				sb.append("Mie ");
+				break;
+			case Calendar.THURSDAY:
+				sb.append("Jue ");
+				break;
+			case Calendar.FRIDAY:
+				sb.append("Vie ");
+				break;
+			case Calendar.SATURDAY:
+				sb.append("Sab ");
+				break;
+			}
+
+			sb.append(sdf.format(date));
+		}
 		
 		return sb.toString();
+	}
+	
+	public Date calculateDateFrame(Date forDate, String periodType) {
+		Calendar cal = Calendar.getInstance();
+		if( periodType == null ) periodType = "";
+		if( periodType.equals("W")) {
+			cal.setTime(forDate);
+			while( cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+				cal.add(Calendar.DATE, -1);
+			}
+			return cal.getTime();
+		} else if( periodType.equals("M")) {
+			cal.setTime(forDate);
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+			return cal.getTime();
+		} else {
+			return forDate;
+		}
 	}
 }
