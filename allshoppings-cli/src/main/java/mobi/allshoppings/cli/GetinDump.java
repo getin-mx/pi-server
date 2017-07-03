@@ -935,6 +935,18 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "dentalia_mx"));
 				brandDao.create(brand);
 			}
+			
+			try {
+				brand = brandDao.get("farmacias_similares_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Farmacias Similares");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "farmacias_similares_mx"));
+				brandDao.create(brand);
+			}
 
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
@@ -1466,6 +1478,17 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("690","Dentalia Samara", "dentalia_mx", null));
 			
 			stores.add(new StoreAdapter("691","Mobo Town Center Nicolás Romero", "mobo_mx", null));
+			
+			stores.add(new StoreAdapter("692","Farmacias Similares Ermita 3", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("693","Farmacias Similares Zaragoza 1", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("694","Farmacias Similares Eje Central 2", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("695","Farmacias Similares Centro 6", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("696","Farmacias Similares Centro 10", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("697","Farmacias Similares Nezahualcóyotl 20", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("698","Farmacias Similares El Olivo", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("699","Farmacias Similares Polanco 1", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("700","Farmacias Similares Apatlaco 1", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("701","Farmacias Similares Aragón 2", "farmacias_similares_mx", null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {

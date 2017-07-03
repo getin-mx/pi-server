@@ -2396,6 +2396,31 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("dentalia_mx"));
 				userMenuDao.create(um);
 			}
+			
+			User farmaciassimilares = null;
+			try {
+				farmaciassimilares = userDao.get("farmacias_similares_mx", true);
+			} catch( Exception e ) {
+				farmaciassimilares = new User();
+				farmaciassimilares.setFirstname("Farmacias Similares");
+				farmaciassimilares.setLastname("Mexico");
+				farmaciassimilares.setEmail("farmacias_similares_mx@allshoppings.mobi");
+				farmaciassimilares.getSecuritySettings().setRole(Role.BRAND);
+				farmaciassimilares.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				farmaciassimilares.setKey((Key)keyHelper.obtainKey(User.class, "farmacias_similares_mx"));
+				userDao.create(farmaciassimilares);
+			}
+
+			try {
+				um = userMenuDao.get("farmacias_similares_mx", true);
+				userMenuDao.delete("farmacias_similares_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("farmacias_similares_mx"));
+				userMenuDao.create(um);
+			}
 
 			// Fullsand --------------------------------------------------------------------
 			User user = null;
