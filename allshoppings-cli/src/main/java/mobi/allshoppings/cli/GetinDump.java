@@ -1490,6 +1490,8 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("700","Farmacias Similares Apatlaco 1", "farmacias_similares_mx", null));
 			stores.add(new StoreAdapter("701","Farmacias Similares Aragón 2", "farmacias_similares_mx", null));
 			
+			stores.add(new StoreAdapter("702", "Homero", "getin_mx",null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
