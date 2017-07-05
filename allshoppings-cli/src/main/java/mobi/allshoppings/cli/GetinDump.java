@@ -923,6 +923,30 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "carolina_herrera_il"));
 				brandDao.create(brand);
 			}
+			
+			try {
+				brand = brandDao.get("dentalia_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Dentalia");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "dentalia_mx"));
+				brandDao.create(brand);
+			}
+			
+			try {
+				brand = brandDao.get("farmacias_similares_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Farmacias Similares");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "farmacias_similares_mx"));
+				brandDao.create(brand);
+			}
 
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
@@ -946,12 +970,12 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("173", "Fullsand Perisur", "fullsand_mx", "perisur"));
 //			stores.add(new StoreAdapter("174", "Fullsand Aragon", "fullsand_mx", "multiplazaaragon"));
 			stores.add(new StoreAdapter("185", "Invicta Aeropuerto", "invicta_mx", "aeropuertobenitojuarez"));
-			stores.add(new StoreAdapter("192", "Mobo Antara", "mobo_mx", "antara"));
-			stores.add(new StoreAdapter("193", "Mobo Galerias Coapa", "mobo_mx", "galeriascoapa"));
-			stores.add(new StoreAdapter("194", "Mobo Paseo Acoxpa", "mobo_mx", "paseoacoxpa"));
-			stores.add(new StoreAdapter("195", "Mobo La Cuspide", "mobo_mx", "lacuspideskymall"));
-			stores.add(new StoreAdapter("196", "Mobo Interlomas", "mobo_mx", "interlomas"));
-			stores.add(new StoreAdapter("200", "Mobo El Salvador", "mobo_mx", null));
+			stores.add(new StoreAdapter("192", "Mobo Antara Old", "mobo_mx", "antara"));
+			stores.add(new StoreAdapter("193", "Mobo Galerias Coapa Old", "mobo_mx", "galeriascoapa"));
+			stores.add(new StoreAdapter("194", "Mobo Paseo Acoxpa Old", "mobo_mx", "paseoacoxpa"));
+			stores.add(new StoreAdapter("195", "Mobo La Cuspide Old", "mobo_mx", "lacuspideskymall"));
+			stores.add(new StoreAdapter("196", "Mobo Interlomas Old", "mobo_mx", "interlomas"));
+			stores.add(new StoreAdapter("200", "Mobo El Salvador Old", "mobo_mx", null));
 			stores.add(new StoreAdapter("198", "Ferragamo Masaryk", "salvatoreferragamo_mx", null));
 			stores.add(new StoreAdapter("206", "Watch My Watch Plaza La Isla", "watchmywatch_mx", null));
 			stores.add(new StoreAdapter("207", "Watch My Watch Playa del Carmen", "watchmywatch_mx", null));
@@ -1440,6 +1464,33 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("679","Aditivo Insurgentes", "aditivo_mx", null));
 			
 			stores.add(new StoreAdapter("680","Saboreaté Y Café Merida", "saboreateycafe_mx", null));
+			
+			stores.add(new StoreAdapter("681","Mobo República del Salvador", "mobo_mx", null));
+			stores.add(new StoreAdapter("682","Mobo Paseo Interlomas", "mobo_mx", null));
+			stores.add(new StoreAdapter("683","Mobo Palmas 330", "mobo_mx", null));
+			stores.add(new StoreAdapter("684","Mobo Forum Buenavista", "mobo_mx", "forumbuenavista"));
+			stores.add(new StoreAdapter("685","Mobo Aragon 2", "mobo_mx", null));
+			stores.add(new StoreAdapter("686","Mobo Meave piso 1", "mobo_mx", null));
+			stores.add(new StoreAdapter("687","Mobo Meave piso 2", "mobo_mx", null));
+			
+			stores.add(new StoreAdapter("688","Dentalia Garden", "dentalia_mx", null));
+			stores.add(new StoreAdapter("689","Dentalia Pabellón Bosques", "dentalia_mx", null));
+			stores.add(new StoreAdapter("690","Dentalia Samara", "dentalia_mx", null));
+			
+			stores.add(new StoreAdapter("691","Mobo Town Center Nicolás Romero", "mobo_mx", null));
+			
+			stores.add(new StoreAdapter("692","Farmacias Similares Ermita 3", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("693","Farmacias Similares Zaragoza 1", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("694","Farmacias Similares Eje Central 2", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("695","Farmacias Similares Centro 6", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("696","Farmacias Similares Centro 10", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("697","Farmacias Similares Nezahualcóyotl 20", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("698","Farmacias Similares El Olivo", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("699","Farmacias Similares Polanco 1", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("700","Farmacias Similares Apatlaco 1", "farmacias_similares_mx", null));
+			stores.add(new StoreAdapter("701","Farmacias Similares Aragón 2", "farmacias_similares_mx", null));
+			
+			stores.add(new StoreAdapter("702", "Homero", "getin_mx",null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
