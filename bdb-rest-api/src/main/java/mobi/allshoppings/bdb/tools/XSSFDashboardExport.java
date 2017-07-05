@@ -58,7 +58,7 @@ public class XSSFDashboardExport {
 		String dailyUrl = baseUrl + "dashoard/timelineData?authToken=" + authToken + "&entityId=" + brandId + "&entityKind=1"
 				+ (StringUtils.hasText(storeId) ? "&subentityId=" + storeId : "")
 				+ "&elementId=apd_visitor&subIdOrder=visitor_total_peasents,visitor_total_visits,visitor_total_peasents_ios,"
-				+ "visitor_total_peasents_android,visitor_total_visits_ios,visitor_total_visits_android,visitor_total_tickets"
+				+ "visitor_total_peasents_android,visitor_total_visits_ios,visitor_total_visits_android,visitor_total_tickets,visitor_total_revenue"
 				+ "&fromStringDate=" + sdf.format(dateFrom) + "&toStringDate=" + sdf.format(dateTo)
 				+ "&eraseBlanks=false";
 		String dailyString = get(dailyUrl);

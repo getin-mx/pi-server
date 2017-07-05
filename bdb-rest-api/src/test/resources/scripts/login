@@ -10,7 +10,7 @@ _URL="${_HOST}/bdb/auth"
 _DATA="{"identifier":"$1","password":"$2"}"
 
 echo ""
-echo "Calling:" ${_URL} 
+echo "Calling: curl -k -X POST -H "Content-Type:application/json" -d "${_DATA}" ${_URL}" 
 echo ""
 
 _RES=`curl -k -X POST -H "Content-Type:application/json" -d "${_DATA}" ${_URL}`
