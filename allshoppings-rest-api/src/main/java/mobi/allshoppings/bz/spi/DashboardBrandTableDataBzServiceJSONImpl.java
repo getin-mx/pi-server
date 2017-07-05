@@ -47,6 +47,7 @@ implements DashboardBrandTableDataBzService {
 
 	private DecimalFormat df = new DecimalFormat("##.00");
 	private SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+	private DecimalFormat df2 = new DecimalFormat("###,###,###");
 	
 	/**
 	 * Obtains information about a user
@@ -293,10 +294,10 @@ implements DashboardBrandTableDataBzService {
 
 				if( rowData != null ) {
 					row.put(name);
-					row.put(String.valueOf(Math.round(rowData.get("peasents"))));
-					row.put(String.valueOf(Math.round(rowData.get("visits"))));
-					row.put(String.valueOf(Math.round(rowData.get("tickets"))));
-					row.put(String.valueOf(Math.round(rowData.get("revenue"))));
+					row.put(df2.format(Math.round(rowData.get("peasents"))));
+					row.put(df2.format(Math.round(rowData.get("visits"))));
+					row.put(df2.format(Math.round(rowData.get("tickets"))));
+					row.put("$ " + df2.format(Math.round(rowData.get("revenue"))));
 					row.put(df.format(rowData.get("peasents_conversion")) + "%");
 					row.put(df.format(rowData.get("tickets_conversion")) + "%");
 					row.put(rowData.get("higher") == null ? "-" : getDateName(new Date(rowData.get("higher").longValue())));
@@ -310,10 +311,10 @@ implements DashboardBrandTableDataBzService {
 			// Totals row
 			JSONArray totals = new JSONArray();
 			totals.put("Totales");
-			totals.put(totalsData.get("peasents") == null ? "-" : String.valueOf(Math.round(totalsData.get("peasents"))));
-			totals.put(totalsData.get("visits") == null ? "-" : String.valueOf(Math.round(totalsData.get("visits"))));
-			totals.put(totalsData.get("tickets") == null ? "-" : String.valueOf(Math.round(totalsData.get("tickets"))));
-			totals.put(totalsData.get("revenue") == null ? "-" : String.valueOf(Math.round(totalsData.get("revenue"))));
+			totals.put(totalsData.get("peasents") == null ? "-" : df2.format(Math.round(totalsData.get("peasents"))));
+			totals.put(totalsData.get("visits") == null ? "-" : df2.format(Math.round(totalsData.get("visits"))));
+			totals.put(totalsData.get("tickets") == null ? "-" : df2.format(Math.round(totalsData.get("tickets"))));
+			totals.put(totalsData.get("revenue") == null ? "-" : "$ " + df2.format(Math.round(totalsData.get("revenue"))));
 			totals.put(totalsData.get("peasents_conversion") == null ? "-" : df.format(totalsData.get("peasents_conversion")) + "%");
 			totals.put(totalsData.get("tickets_conversion") == null ? "-" : df.format(totalsData.get("tickets_conversion")) + "%");
 			totals.put(totalsData.get("higher") == null ? "-" : getDateName(new Date(totalsData.get("higher").longValue())));
