@@ -5427,6 +5427,441 @@ public class UserMenuDump extends AbstractCLI {
 			
 			// End Opticas Devlyn  --------------------------------------------------------------------
 			
+			// Tanya Moss  --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("aeropuerto_terminal_2@tanyamoss.com", true);
+				userMenuDao.delete("aeropuerto_terminal_2@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("aeropuerto_terminal_2@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("aeropuerto_terminal_2@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Aeropuerto CDMX Terminal 2");
+				user.setLastname("");
+				user.setEmail("aeropuerto_terminal_2@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("be129cb5-6b12-4c83-89fd-2d008adf7947"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "aeropuerto_terminal_2@tanyamoss.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("aeropuerto_guadalajara@tanyamoss.com", true);
+				userMenuDao.delete("aeropuerto_guadalajara@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("aeropuerto_guadalajara@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("aeropuerto_guadalajara@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Aeropuerto Guadalajara");
+				user.setLastname("");
+				user.setEmail("aeropuerto_guadalajara@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("7cf9b273-40ed-448e-b948-91c802dc8a22"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "aeropuerto_guadalajara@tanyamoss.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("altavista@tanyamoss.com", true);
+				userMenuDao.delete("altavista@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("altavista@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("altavista@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Altavista");
+				user.setLastname("");
+				user.setEmail("altavista@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("4e139439-c74f-47b8-a41a-030756322a84"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "altavista@tanyamoss.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("andares@tanyamoss.com", true);
+				userMenuDao.delete("andares@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("andares@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("andares@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Andares");
+				user.setLastname("");
+				user.setEmail("andares@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("d0b66984-5e85-4df3-bc88-aa5125354588"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "andares@tanyamoss.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("angelopolis@tanyamoss.com", true);
+				userMenuDao.delete("angelopolis@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("angelopolis@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("angelopolis@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Angelopolis");
+				user.setLastname("");
+				user.setEmail("angelopolis@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("55d1549f-b746-4c8b-9a12-102a7092668c"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "angelopolis@tanyamoss.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("interlomas@tanyamoss.com", true);
+				userMenuDao.delete("interlomas@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("interlomas@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("interlomas@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Interlomas");
+				user.setLastname("");
+				user.setEmail("interlomas@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("806bdc75-ea6a-4a5f-b4db-a7423e8528d6"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "interlomas@tanyamoss.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("isla_coyoacan@tanyamoss.com", true);
+				userMenuDao.delete("isla_coyoacan@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("isla_coyoacan@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("isla_coyoacan@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Isla Coyoacan");
+				user.setLastname("");
+				user.setEmail("isla_coyoacan@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("cc2e68ee-6d24-4132-8ae5-13d6836e4f69"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "isla_coyoacan@tanyamoss.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("oasis_coyoacan@tanyamoss.com", true);
+				userMenuDao.delete("oasis_coyoacan@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("oasis_coyoacan@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("oasis_coyoacan@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Oasis Coyoacan");
+				user.setLastname("");
+				user.setEmail("oasis_coyoacan@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("fcfc53b9-1455-4895-b8a9-f7bba0adeb4d"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "oasis_coyoacan@tanyamoss.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("pabellon_polanco@tanyamoss.com", true);
+				userMenuDao.delete("pabellon_polanco@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("pabellon_polanco@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("pabellon_polanco@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Pabellón Polanco");
+				user.setLastname("");
+				user.setEmail("pabellon_polanco@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("22a028be-3ac2-4cb9-bc09-7beeeca4f024"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "pabellon_polanco@tanyamoss.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("palacio_polanco@tanyamoss.com", true);
+				userMenuDao.delete("palacio_polanco@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("palacio_polanco@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("palacio_polanco@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Palacio de Hierro Polanco");
+				user.setLastname("");
+				user.setEmail("palacio_polanco@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("324e7d47-d156-4f77-992a-adb26318b8a8"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "palacio_polanco@tanyamoss.com"));
+				userDao.create(user);
+			}	
+			
+			try {
+				um = userMenuDao.get("parque_delta@tanyamoss.com", true);
+				userMenuDao.delete("parque_delta@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("parque_delta@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("parque_delta@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Parque Delta");
+				user.setLastname("");
+				user.setEmail("parque_delta@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("1493049398625"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "parque_delta@tanyamoss.com"));
+				userDao.create(user);
+			}	
+			
+			try {
+				um = userMenuDao.get("parque_duraznos@tanyamoss.com", true);
+				userMenuDao.delete("parque_duraznos@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("parque_duraznos@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("parque_duraznos@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Parque Duraznos");
+				user.setLastname("");
+				user.setEmail("parque_duraznos@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("d7d10b1f-75e4-4b04-b035-24fede6f76eb"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "parque_duraznos@tanyamoss.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("plaza_carso@tanyamoss.com", true);
+				userMenuDao.delete("plaza_carso@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("plaza_carso@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("plaza_carso@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Plaza Carso");
+				user.setLastname("");
+				user.setEmail("plaza_carso@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("1493049397673"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "plaza_carso@tanyamoss.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("santa_fe@tanyamoss.com", true);
+				userMenuDao.delete("santa_fe@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("santa_fe@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("santa_fe@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Santa Fe");
+				user.setLastname("");
+				user.setEmail("santa_fe@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("590645c4-8ca5-450a-a95f-6fa7c560ee36"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "santa_fe@tanyamoss.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("santa_teresa@tanyamoss.com", true);
+				userMenuDao.delete("santa_teresa@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("santa_teresa@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("santa_teresa@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Santa Teresa");
+				user.setLastname("");
+				user.setEmail("santa_teresa@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("0cbaca45-1045-43a4-b238-eb18651732ec"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "santa_teresa@tanyamoss.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("toreo_parque_central@tanyamoss.com", true);
+				userMenuDao.delete("toreo_parque_central@tanyamoss.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("toreo_parque_central@tanyamoss.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("toreo_parque_central@tanyamoss.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Tanya Moss Toreo Parque Central");
+				user.setLastname("");
+				user.setEmail("toreo_parque_central@tanyamoss.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E3C9360C00CE49925A4EC8C4841587EF0932E97CF2CE9C5E7967B02309296B70");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("1493049398128"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "toreo_parque_central@tanyamoss.com"));
+				userDao.create(user);
+			}
+			
+			// Tanya Moss  --------------------------------------------------------------------
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
