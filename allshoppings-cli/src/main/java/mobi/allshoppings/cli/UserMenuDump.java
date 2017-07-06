@@ -2453,18 +2453,31 @@ public class UserMenuDump extends AbstractCLI {
 
 			// Chomarc --------------------------------------------------------------------
 			
+			User chomarc = null;
+			try {
+				chomarc = userDao.get("chomarc_mx", true);
+			} catch( Exception e ) {
+				chomarc = new User();
+				chomarc.setFirstname("Chomarc");
+				chomarc.setLastname("Mexico");
+				chomarc.setEmail("chomarc_mx@allshoppings.mobi");
+				chomarc.getSecuritySettings().setRole(Role.BRAND);
+				chomarc.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				chomarc.setKey((Key)keyHelper.obtainKey(User.class, "chomarc_mx"));
+				userDao.create(chomarc);
+			}
+
 			try {
 				um = userMenuDao.get("chomarc_mx", true);
 				userMenuDao.delete("chomarc_mx");
+				throw new Exception();
 			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("chomarc_mx"));
+				userMenuDao.create(um);
 			}
-
-			try {
-				user = userDao.get("chomarc_mx", true);
-				userDao.delete("chomarc_mx");
-			} catch( Exception e ) {
-			}
-
+			
 			try {
 				um = userMenuDao.get("adassist@grupochomarc.com.mx", true);
 				userMenuDao.delete("adassist@grupochomarc.com.mx");
