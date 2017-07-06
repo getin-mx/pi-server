@@ -310,24 +310,14 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		List<String> reportableUsers = CollectionFactory.createList();
 		for( String mail : device.getReportMailList()) {
 			String sMail = mail.trim().toLowerCase();
-			if(!reportableUsers.contains(sMail)){
-				if(!sMail.equalsIgnoreCase("anabell@getin.mx"))
-					reportableUsers.add(sMail);
-			}else{
-				if(sMail.equalsIgnoreCase("anabell@getin.mx"))
-					reportableUsers.remove(sMail);
-			}
+			if(!reportableUsers.contains(sMail)) 
+				reportableUsers.add(sMail);
 		}
 		
 		for( String mail : systemConfiguration.getApdReportMailList()) {
 			String sMail = mail.trim().toLowerCase();
-			if(!reportableUsers.contains(sMail)) {
-				if(!sMail.equalsIgnoreCase("anabell@getin.mx"))
-					reportableUsers.add(sMail);	
-			}else{
-				if(sMail.equalsIgnoreCase("anabell@getin.mx"))
-					reportableUsers.remove(sMail);
-			}
+			if(!reportableUsers.contains(sMail)) 
+				reportableUsers.add(sMail);
 		}
 
 		return reportableUsers;
