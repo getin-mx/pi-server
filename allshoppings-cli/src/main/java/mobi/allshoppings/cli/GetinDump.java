@@ -1495,6 +1495,9 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("703", "Mobo Aeropuerto Terminal 1", "mobo_mx",null));
 			stores.add(new StoreAdapter("704", "Mobo Aeropuerto T2 Llegadas", "mobo_mx",null));
 			
+			stores.add(new StoreAdapter("705","Aditivo Puebla Centro", "aditivo_mx", null));
+			stores.add(new StoreAdapter("706","Aditivo Tlalnepantla", "aditivo_mx", null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
