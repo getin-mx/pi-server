@@ -19,9 +19,7 @@ import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.geocoding.GeoCodingHelper;
 import mobi.allshoppings.model.APDAssignation;
-import mobi.allshoppings.model.AddressComponentsCache;
 import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Shopping;
@@ -1494,6 +1492,9 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("703", "Mobo Aeropuerto Terminal 1", "mobo_mx",null));
 			stores.add(new StoreAdapter("704", "Mobo Aeropuerto T2 Llegadas", "mobo_mx",null));
+			
+			stores.add(new StoreAdapter("705","Aditivo Puebla Centro", "aditivo_mx", null));
+			stores.add(new StoreAdapter("706","Aditivo Tlalnepantla", "aditivo_mx", null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
