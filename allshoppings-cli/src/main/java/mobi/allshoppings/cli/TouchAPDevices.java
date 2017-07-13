@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.impl.common.SystemCache;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
 
@@ -15,6 +16,7 @@ import mobi.allshoppings.dao.ExternalAPHotspotDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDevice;
+import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
@@ -39,11 +41,13 @@ public class TouchAPDevices extends AbstractCLI {
 			APDeviceDAO apdeviceDao = (APDeviceDAO)getApplicationContext().getBean("apdevice.dao.ref");
 			ExternalAPHotspotDAO eaphDao = (ExternalAPHotspotDAO)getApplicationContext().getBean("externalaphotspot.dao.ref");
 			APDeviceHelper apdeviceHelper = (APDeviceHelper)getApplicationContext().getBean("apdevice.helper");
+			SystemConfiguration systemConfiguration = (SystemConfiguration)getApplicationContext().getBean("system.configuration");
 
 			log.log(Level.INFO, "Touching apdevices....");
 			List<APDevice> list = apdeviceDao.getAll(true);
 			for( APDevice obj : list ) {
 				log.log(Level.INFO, "Touching " + obj.getIdentifier() + "...");
+				obj = apdeviceDao.get(obj.getIdentifier(), true);
 				obj.completeDefaults();
 				if(StringUtils.hasText(obj.getDescription()))
 					obj.setDescription(obj.getDescription().replaceAll("_", " "));
@@ -56,10 +60,14 @@ public class TouchAPDevices extends AbstractCLI {
 				if( null == obj.getReportStatus() )
 					obj.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
 				
-				if( obj.getReportMailList() == null || obj.getReportMailList().size() == 0  ) {
+				if( obj.getReportMailList() == null ) {
 					List<String> mails = CollectionFactory.createList();
-					mails.addAll(Arrays.asList("matias@getin.mx","anabell@getin.mx","francisco@getin.mx","luis@getin.mx","ingrid@getin.mx","eduardo@getin.mx"));
 					obj.setReportMailList(mails);
+				} else {
+					List<String> mails = obj.getReportMailList(); 
+					mails.removeAll(systemConfiguration.getApdReportMailList());
+					obj.setReportMailList(mails);
+					
 				}
 				
 				apdeviceDao.update(obj);

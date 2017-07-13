@@ -310,7 +310,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		List<String> reportableUsers = CollectionFactory.createList();
 		for( String mail : device.getReportMailList()) {
 			String sMail = mail.trim().toLowerCase();
-			if(!reportableUsers.contains(sMail)) 
+			if(!reportableUsers.contains(sMail))
 				reportableUsers.add(sMail);
 		}
 		
@@ -935,10 +935,6 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 					apd.setReportable(true);
 					if( apd.getReportMailList() == null )
 						apd.setReportMailList(new ArrayList<String>());
-					if( apd.getReportMailList().isEmpty()) {
-						apd.getReportMailList().clear();
-						apd.getReportMailList().addAll(systemConfiguration.getApdReportMailList());
-					}
 					done = true;
 				} catch( ASException e ) {
 					if( e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE) {
