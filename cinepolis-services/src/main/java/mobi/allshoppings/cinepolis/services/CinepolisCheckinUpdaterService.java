@@ -14,6 +14,7 @@ import mobi.allshoppings.dao.CinemaDAO;
 import mobi.allshoppings.dao.spi.CheckinDAOJDOImpl;
 import mobi.allshoppings.dao.spi.CinemaDAOJDOImpl;
 import mobi.allshoppings.dump.DumperHelper;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.dump.impl.DumperHelperImpl;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -22,6 +23,7 @@ import mobi.allshoppings.geocoding.impl.GeoCodingHelperGMapsImpl;
 import mobi.allshoppings.location.CheckinUpdaterService;
 import mobi.allshoppings.model.Checkin;
 import mobi.allshoppings.model.DeviceLocationHistory;
+import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.CollectionFactory;
 
 public class CinepolisCheckinUpdaterService extends CheckinUpdaterService {
@@ -37,7 +39,7 @@ public class CinepolisCheckinUpdaterService extends CheckinUpdaterService {
 
 	@Override
 	public void updateCheckins(String baseDir, Date fromDate, Date toDate) throws ASException, IOException {
-		DumperHelper<DeviceLocationHistory> dumper = new DumperHelperImpl<DeviceLocationHistory>(baseDir, DeviceLocationHistory.class);
+		DumperHelper<DeviceLocationHistory> dumper = new DumpFactory<DeviceLocationHistory>().build(baseDir, DeviceLocationHistory.class);
 		Map<String, List<InterestingPoint>> interestingPointsMap = getInterestingPointMap(cinemaDao, geocoder, null); 
 
 		long totals = 0;

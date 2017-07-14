@@ -19,7 +19,7 @@ import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.spi.CheckinDAOJDOImpl;
 import mobi.allshoppings.dao.spi.ShoppingDAOJDOImpl;
 import mobi.allshoppings.dump.DumperHelper;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.geocoding.GeoCodingHelper;
@@ -47,7 +47,7 @@ public class CheckinUpdaterService {
 	
 	public void updateCheckins(String baseDir, Date fromDate, Date toDate) throws ASException, IOException {
 
-		DumperHelper<DeviceLocationHistory> dumper = new DumperHelperImpl<DeviceLocationHistory>(baseDir, DeviceLocationHistory.class);
+		DumperHelper<DeviceLocationHistory> dumper = new DumpFactory<DeviceLocationHistory>().build(baseDir, DeviceLocationHistory.class);
 		Map<String, List<InterestingPoint>> interestingPointsMap = getInterestingPointMap(shoppingDao, geocoder, null); 
 
 		long totals = 0;

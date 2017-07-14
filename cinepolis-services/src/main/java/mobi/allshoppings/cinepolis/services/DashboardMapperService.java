@@ -47,7 +47,7 @@ import mobi.allshoppings.dao.spi.ShowtimeDAOJDOImpl;
 import mobi.allshoppings.dao.spi.VoucherDAOJDOImpl;
 import mobi.allshoppings.dao.spi.WifiSpotDAOJDOImpl;
 import mobi.allshoppings.dump.DumperHelper;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.CampaignActivity;
 import mobi.allshoppings.model.CampaignSpecial;
@@ -1291,7 +1291,7 @@ public class DashboardMapperService {
 		log.log(Level.INFO, "LimitDate " + limitDate);
 
 		// All Wifi Data
-		DumperHelper<DeviceWifiLocationHistory> dumper = new DumperHelperImpl<DeviceWifiLocationHistory>(baseDir, DeviceWifiLocationHistory.class);
+		DumperHelper<DeviceWifiLocationHistory> dumper = new DumpFactory<DeviceWifiLocationHistory>().build(baseDir, DeviceWifiLocationHistory.class);
 		Iterator<DeviceWifiLocationHistory> i = dumper.iterator(processDate, limitDate);
 		List<Cinema> cinemas = cinemaDao.getAll();
 		List<Shopping> shoppings = shoppingDao.getAll();

@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
 import com.google.gson.Gson;
 
 import mobi.allshoppings.dump.DumperHelper;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.geocoding.GeoCodingHelper;
 import mobi.allshoppings.geocoding.GeoPoint;
@@ -45,7 +45,8 @@ public class UserResidenceUpdaterService {
 	public Set<String> updateResidencePhase1(String baseDir, Date fromDate, Date toDate) throws ASException, IOException {
 
 		Set<String> ret = CollectionFactory.createSet();
-		DumperHelper<DeviceLocationHistory> dumper = new DumperHelperImpl<DeviceLocationHistory>(baseDir, DeviceLocationHistory.class);
+		
+		DumperHelper<DeviceLocationHistory> dumper = new DumpFactory<DeviceLocationHistory>().build(baseDir, DeviceLocationHistory.class);
 
 		long totals = 0;
 		long count = 0;

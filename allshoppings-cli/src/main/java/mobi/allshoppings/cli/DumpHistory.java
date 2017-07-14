@@ -10,8 +10,7 @@ import org.springframework.util.StringUtils;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.dump.DumperHelper;
-import mobi.allshoppings.dump.impl.DeviceWifiLocationHistoryDumperPlugin;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.interfaces.ModelKey;
@@ -30,7 +29,6 @@ public class DumpHistory extends AbstractCLI {
 		parser.accepts( "collection", "DB Collection to dump (for example, DeviceLocationHistory)").withRequiredArg().ofType( String.class );
 		parser.accepts( "outDir", "Output Directory (for example, /tmp/dump)").withRequiredArg().ofType( String.class );
 		parser.accepts( "deleteAfterDump", "Do I have to delete the entity from the DB after dump?").withRequiredArg().ofType( Boolean.class );
-		parser.accepts( "usePlugins", "Do I have to add the pre defined plugins?").withRequiredArg().ofType( Boolean.class );
 		parser.accepts( "renameCollection", "Do I have to rename the collection before run?").withRequiredArg().ofType( Boolean.class );
 		return parser;
 	}
@@ -53,7 +51,6 @@ public class DumpHistory extends AbstractCLI {
 			String sOutDir = null;
 			Boolean deleteAfterDump = true;
 			Boolean renameCollection = false;
-			Boolean usePlugins = true;
 			
 			Class<ModelKey> entity = null;
 			
@@ -93,12 +90,7 @@ public class DumpHistory extends AbstractCLI {
 			}
 
 			log.log(Level.INFO, "Starting dump for entity " + entity.getName() + " from " + fromDate + " to " + toDate);
-			DumperHelper<ModelKey> dumper = new DumperHelperImpl<ModelKey>(sOutDir, entity);
-			
-			// Add plugins
-			if( usePlugins) {
-				dumper.registerPlugin(new DeviceWifiLocationHistoryDumperPlugin());
-			}
+			DumperHelper<ModelKey> dumper = new DumpFactory<ModelKey>().build(sOutDir, entity);
 			
 			dumper.dumpModelKey(sCollection, fromDate, toDate, deleteAfterDump, renameCollection);
 			

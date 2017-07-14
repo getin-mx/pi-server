@@ -35,6 +35,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 import mobi.allshoppings.dao.spi.DAOJDOPersistentManagerFactory;
+import mobi.allshoppings.dump.DumperFileNameResolver;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.DumperPlugin;
 import mobi.allshoppings.exception.ASException;
@@ -58,6 +59,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	private Class<T> clazz;
 	private String baseDir;
 	private List<DumperPlugin<ModelKey>> registeredPlugins;
+	private DumperFileNameResolver<ModelKey> fileNameResolver;
 	
 	public DumperHelperImpl(String baseDir, Class<T> clazz) {
 		this.baseDir = baseDir;
@@ -73,13 +75,23 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		if(!registeredPlugins.contains(plugin))
 			registeredPlugins.add(plugin);
 	}
-	
+
 	/**
 	 * @see mobi.allshoppings.dump.DumperHelper#unregisterPlugin(DumperPlugin)
 	 */
 	@Override
 	public void unregisterPlugin(DumperPlugin<ModelKey> plugin) {
 		registeredPlugins.remove(plugin);
+	}
+
+	@Override
+	public void registerFileNameResolver(DumperFileNameResolver<ModelKey> fileNameResolver) {
+		this.fileNameResolver = fileNameResolver;
+	}
+	
+	@Override
+	public void unregisterFileNameResolver() {
+		fileNameResolver = null;
 	}
 	
 	/**
@@ -187,11 +199,11 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	 */
 	@Override
 	public void dump(T obj) throws IOException {
-		DumperHelperImpl.dump(gson.toJson(obj), baseDir, clazz.getSimpleName(), obj.getCreationDateTime());
+		this.dump(gson.toJson(obj), baseDir, clazz.getSimpleName(), obj.getCreationDateTime(), obj);
 	}
 
-	public static void dump(String jsonRep, String baseDir, String baseName, Date forDate) throws IOException {
-		String fileName = resolveDumpFileName(baseDir, baseName, forDate);
+	public void dump(String jsonRep, String baseDir, String baseName, Date forDate, T element) throws IOException {
+		String fileName = resolveDumpFileName(baseDir, baseName, forDate, element);
 		File file = new File(fileName);
 		dump( jsonRep, file);
 	}
@@ -200,26 +212,37 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	 * @see mobi.allshoppings.dump.DumperHelper#resolveDumpFileName(Date)
 	 */
 	@Override
-	public String resolveDumpFileName( Date forDate ) {
-		return resolveDumpFileName(baseDir, clazz.getSimpleName(), forDate);
+	public String resolveDumpFileName( Date forDate, T element ) {
+		return resolveDumpFileName(baseDir, clazz.getSimpleName(), forDate, element);
 	}
 	
-	public static String resolveDumpFileName(String baseDir, String baseName, Date forDate) {
-		String myYear = year.format(forDate);
-		String myMonth = month.format(forDate);
-		String myDay = day.format(forDate);
-		String myHour = hour.format(forDate);
+	public String resolveDumpFileName(String baseDir, String baseName, Date forDate, T element) {
 
-		StringBuffer sb = new StringBuffer();
-		sb.append(baseDir);
-		if(!baseDir.endsWith(File.separator)) sb.append(File.separator);
-		sb.append(myYear).append(File.separator);
-		sb.append(myMonth).append(File.separator);
-		sb.append(myDay).append(File.separator);
-		sb.append(myHour).append(File.separator);
-		sb.append(baseName).append(".json");
+		String fileName = null;
+		if( fileNameResolver != null && element != null ) {
+			fileName = fileNameResolver.resolveDumpFileName(baseDir, baseName, forDate, element);
+		}
 
-		return sb.toString();
+		if( fileName == null ) {
+
+			String myYear = year.format(forDate);
+			String myMonth = month.format(forDate);
+			String myDay = day.format(forDate);
+			String myHour = hour.format(forDate);
+
+			StringBuffer sb = new StringBuffer();
+			sb.append(baseDir);
+			if(!baseDir.endsWith(File.separator)) sb.append(File.separator);
+			sb.append(myYear).append(File.separator);
+			sb.append(myMonth).append(File.separator);
+			sb.append(myDay).append(File.separator);
+			sb.append(myHour).append(File.separator);
+			sb.append(baseName).append(".json");
+
+			return sb.toString();
+		} else {
+			return fileName;
+		}
 	}
 
 	public static void dump(String jsonRep, File file) throws IOException {
@@ -284,7 +307,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		Date curDate = new Date(fromDate.getTime());
 		while(curDate.before(toDate) || curDate.equals(toDate)) {
 			
-			File f = new File(resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate));
+			File f = new File(resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate, null));
 			if( f.exists() && f.canRead()) {
 				try(BufferedReader br = new BufferedReader(new FileReader(f))) {
 				    for(String line; (line = br.readLine()) != null; ) {
@@ -550,7 +573,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 					break;
 				
 				i = 0;
-				File f = new File(resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate));
+				File f = new File(resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate, null));
 				if( f.exists() && f.canRead()) {
 					try {
 						br = new BufferedReader(new FileReader(f));

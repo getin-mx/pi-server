@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.dump.DumperHelper;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.dump.impl.DumperHelperImpl;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -78,7 +79,7 @@ public class FakeDumpHistoryData extends AbstractCLI {
 			}
 
 			log.log(Level.INFO, "Faking dump for entity " + entity.getName() + " from " + fromDate + " to " + toDate);
-			DumperHelper<ModelKey> dumper = new DumperHelperImpl<ModelKey>(sOutDir, entity);
+			DumperHelper<ModelKey> dumper = new DumpFactory<ModelKey>().build(sOutDir, entity);
 			
 			dumper.fakeModelKey(fromDate, toDate);
 			

@@ -29,7 +29,7 @@ import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.ExternalAPHotspotDAO;
 import mobi.allshoppings.dump.DumperHelper;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDevice;
@@ -630,7 +630,7 @@ public class APHHelperImpl implements APHHelper {
 		// Gets the input data
 		long totals = 0;
 		log.log(Level.INFO, "Processing Dump Records");
-		dumpHelper = new DumperHelperImpl<APHotspot>(baseDir, APHotspot.class);
+		dumpHelper = new DumpFactory<APHotspot>().build(baseDir, APHotspot.class);
 		Iterator<String> i = dumpHelper.stringIterator(fromDate, toDate);
 		while( i.hasNext() ) {
 			String s = i.next();

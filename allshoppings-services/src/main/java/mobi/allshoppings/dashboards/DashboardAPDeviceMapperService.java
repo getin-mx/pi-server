@@ -46,7 +46,7 @@ import mobi.allshoppings.dao.StoreTicketByHourDAO;
 import mobi.allshoppings.dao.StoreTicketDAO;
 import mobi.allshoppings.dao.WifiSpotDAO;
 import mobi.allshoppings.dump.DumperHelper;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDVisit;
@@ -199,7 +199,7 @@ public class DashboardAPDeviceMapperService {
 		log.log(Level.INFO, "LimitDate " + limitDate);
 
 		// All Wifi Data
-		DumperHelper<DeviceWifiLocationHistory> dumper = new DumperHelperImpl<DeviceWifiLocationHistory>(baseDir, DeviceWifiLocationHistory.class);
+		DumperHelper<DeviceWifiLocationHistory> dumper = new DumpFactory<DeviceWifiLocationHistory>().build(baseDir, DeviceWifiLocationHistory.class);
 		Iterator<DeviceWifiLocationHistory> i = dumper.iterator(processDate, limitDate);
 
 		Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
@@ -301,7 +301,7 @@ public class DashboardAPDeviceMapperService {
 				}
 
 				// All Wifi Data
-				DumperHelper<APHotspot> dumper = new DumperHelperImpl<APHotspot>(baseDir, APHotspot.class);
+				DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(baseDir, APHotspot.class);
 				Iterator<JSONObject> i = dumper.jsonIterator(processDate, limitDate);
 
 				while(i.hasNext()) {

@@ -27,7 +27,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            The plugin to unregister
 	 */
 	void unregisterPlugin(DumperPlugin<ModelKey> plugin);
-	
+
 	/**
 	 * Applies all the plugins registered for an object before dumping the
 	 * object
@@ -37,7 +37,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 * @throws ASException
 	 */
 	void applyPreDumpPlugins(T obj) throws ASException;
-	
+
 	/**
 	 * Applies all the plugins registered for an object after dumping the
 	 * object
@@ -47,7 +47,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 * @throws ASException
 	 */
 	void applyPostDumpPlugins(T obj) throws ASException;
-	
+
 	/**
 	 * Dumps a ModelKey database to a set of files
 	 * 
@@ -89,9 +89,11 @@ public interface DumperHelper<T extends ModelKey> {
 	 * 
 	 * @param forDate
 	 *            The date and time to calculate the name from
+	 * @param element
+	 *            The element to resolve from
 	 * @return A fully formed file name for the dump file
 	 */
-	public String resolveDumpFileName(Date forDate);
+	public String resolveDumpFileName(Date forDate, T element);
 
 	/**
 	 * Gets an iterator with all the saved entities in a date range
@@ -139,5 +141,18 @@ public interface DumperHelper<T extends ModelKey> {
 	 * @throws IOException
 	 */
 	public List<T> retrieveModelKeyList(Date fromDate, Date toDate) throws IOException;
+
+	/**
+	 * Adds a new name discriminator to the name helper
+	 * 
+	 * @param discriminator
+	 *            The field that will be used as discriminator
+	 */
+	public void registerFileNameResolver(DumperFileNameResolver<ModelKey> discriminator);
+
+	/**
+	 * Removes a name discriminator from the name helper
+	 */
+	public void unregisterFileNameResolver();
 
 }

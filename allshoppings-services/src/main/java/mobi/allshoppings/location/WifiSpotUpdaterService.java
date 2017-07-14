@@ -12,7 +12,7 @@ import org.springframework.util.StringUtils;
 import com.google.common.io.Files;
 
 import mobi.allshoppings.dump.DumperHelper;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.geocoding.WifiSpotService;
 import mobi.allshoppings.geocoding.impl.WifiSpotServiceImpl;
@@ -29,8 +29,8 @@ public class WifiSpotUpdaterService {
 		File tmpDir = File.createTempFile("dump", "WifiSpotService");
 		tmpDir.delete();
 		tmpDir.mkdirs();
-		DumperHelper<DeviceWifiLocationHistory> dumper = new DumperHelperImpl<DeviceWifiLocationHistory>(baseDir, DeviceWifiLocationHistory.class);
-		DumperHelper<DeviceWifiLocationHistory> tmpDumper = new DumperHelperImpl<DeviceWifiLocationHistory>(tmpDir.getAbsolutePath(), DeviceWifiLocationHistory.class);
+		DumperHelper<DeviceWifiLocationHistory> dumper = new DumpFactory<DeviceWifiLocationHistory>().build(baseDir, DeviceWifiLocationHistory.class);
+		DumperHelper<DeviceWifiLocationHistory> tmpDumper = new DumpFactory<DeviceWifiLocationHistory>().build(tmpDir.getAbsolutePath(), DeviceWifiLocationHistory.class);
 		Date curDate = new Date(fromDate.getTime());
 
 		long totals = 0;
@@ -43,7 +43,7 @@ public class WifiSpotUpdaterService {
 			long endListTime = new Date().getTime();
 			
 			if( list.size() > 0 ) {
-				File f = new File(dumper.resolveDumpFileName(curDate));
+				File f = new File(dumper.resolveDumpFileName(curDate, null));
 				log.log(Level.INFO, "Resolving Wifi Locations for Date " + curDate + " in File " + f + " with " + list.size() + " records in " + (endListTime - initListTime) + "ms");
 			}
 
@@ -76,8 +76,8 @@ public class WifiSpotUpdaterService {
 			
 			if( count > 0 ) {
 				log.log(Level.INFO, count + " elements calculated for this file");
-				File f1 = new File(dumper.resolveDumpFileName(curDate));
-				File f2 = new File(tmpDumper.resolveDumpFileName(curDate));
+				File f1 = new File(dumper.resolveDumpFileName(curDate, null));
+				File f2 = new File(tmpDumper.resolveDumpFileName(curDate, null));
 				Files.copy(f2, f1);
 				f2.delete();
 			}

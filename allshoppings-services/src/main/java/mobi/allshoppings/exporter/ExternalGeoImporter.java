@@ -24,7 +24,7 @@ import mobi.allshoppings.dao.ExternalGeoDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dao.spi.DAOJDOPersistentManagerFactory;
 import mobi.allshoppings.dump.DumperHelper;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.geocoding.GeoCodingHelper;
@@ -149,7 +149,7 @@ public class ExternalGeoImporter {
 			pm.close();
 
 			// Now obtains the physical data information for the dump
-			dump = new DumperHelperImpl<DeviceLocationHistory>(baseDir, DeviceLocationHistory.class);
+			dump = new DumpFactory<DeviceLocationHistory>().build(baseDir, DeviceLocationHistory.class);
 
 			count = 0;
 			long processed = 0;

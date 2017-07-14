@@ -52,7 +52,7 @@ import mobi.allshoppings.dao.MacVendorDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dump.DumperHelper;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.mail.MailHelper;
@@ -539,7 +539,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 
 		// Gets the input data
 		long totals = 0;
-		dumpHelper = new DumperHelperImpl<APHotspot>(baseDir, APHotspot.class);
+		dumpHelper = new DumpFactory<APHotspot>().build(baseDir, APHotspot.class);
 		Iterator<APHotspot> i = dumpHelper.iterator(fromDate, toDate);
 		while( i.hasNext() ) {
 			APHotspot aph = i.next();

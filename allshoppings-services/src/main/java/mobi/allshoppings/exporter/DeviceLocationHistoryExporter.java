@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.spi.DeviceInfoDAOJDOImpl;
 import mobi.allshoppings.dump.DumperHelper;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.dump.impl.DumperHelperImpl;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.geocoding.GeoCodingHelper;
@@ -69,7 +70,7 @@ public class DeviceLocationHistoryExporter {
 	public void exportInfo() {
 
 		log.log(Level.INFO, "Starting export process");
-		DumperHelper<DeviceLocationHistory> dlhDumper = new DumperHelperImpl<DeviceLocationHistory>(BASE_DIR_FILES_TO_PROCESS, DeviceLocationHistory.class);			
+		DumperHelper<DeviceLocationHistory> dlhDumper = new DumpFactory<DeviceLocationHistory>().build(BASE_DIR_FILES_TO_PROCESS, DeviceLocationHistory.class);
 
 		Date fromDate = new Date(0);
 		Date toDate = new Date(0);;
@@ -155,7 +156,7 @@ public class DeviceLocationHistoryExporter {
 			log.log(Level.INFO, "END: Getting deviceLocationHistory");
 			
 			//Now we have to process all the indoor info
-			DumperHelper<DeviceWifiLocationHistory> dwlhDumper = new DumperHelperImpl<DeviceWifiLocationHistory>(BASE_DIR_FILES_TO_PROCESS, DeviceWifiLocationHistory.class);
+			DumperHelper<DeviceWifiLocationHistory> dwlhDumper = new DumpFactory<DeviceWifiLocationHistory>().build(BASE_DIR_FILES_TO_PROCESS, DeviceWifiLocationHistory.class);
 			Iterator<DeviceWifiLocationHistory> iteDWLH = dwlhDumper.iterator(startDate.getTime(), endDate.getTime());
 			//Finally I have to get all the information about indoor location and writes into a file.
 			File dwlhOutputF = new File(BASE_EXPORT_PATH + prefixFromToDate + DWLH_OUTPUT_FILE_NAME);			
