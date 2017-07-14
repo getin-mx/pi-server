@@ -42,7 +42,7 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
 		else parser = base;
-		parser.accepts( "entityId", "Entity ID to Process").withRequiredArg().ofType( String.class );
+		parser.accepts( "entityIds", "Entity ID to Process, comma separated").withRequiredArg().ofType( String.class );
 		parser.accepts( "entityKind", "Entity Kind to Process").withRequiredArg().ofType( Integer.class );
 		return parser;
 	}
@@ -64,19 +64,26 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 			Integer entityKind = EntityKind.KIND_STORE;
 			
 			try {
-				if( options.has("entityId")) {
-					entityId = (String)options.valueOf("entityId");
-					entityIds.add(entityId);
+				if( options.has("entityIds")) {
+					entityId = (String)options.valueOf("entityIds");
+					String[] l = entityId.split(",");
+					for(String x : l ) {
+						entityIds.add(x.trim());
+					}
 				}
 
 				if( options.has("entityKind")) 
 					entityKind = (Integer)options.valueOf("entityKind");
 
 				if(StringUtils.hasText(entityId) && entityKind.equals(EntityKind.KIND_BRAND)) {
+					List<String> orig = CollectionFactory.createList();
+					orig.addAll(entityIds);
 					entityIds.clear();
-					List<Store> stores = storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), null);
-					for(Store store : stores) {
-						entityIds.add(store.getIdentifier());
+					for( String eid : orig ) {
+						List<Store> stores = storeDao.getUsingBrandAndStatus(eid, StatusHelper.statusActive(), null);
+						for(Store store : stores) {
+							entityIds.add(store.getIdentifier());
+						}
 					}
 					entityKind = EntityKind.KIND_STORE;
 				}
