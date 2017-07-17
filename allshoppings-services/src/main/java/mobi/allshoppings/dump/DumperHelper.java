@@ -3,7 +3,6 @@ package mobi.allshoppings.dump;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
 import org.json.JSONObject;
 
@@ -28,6 +27,26 @@ public interface DumperHelper<T extends ModelKey> {
 	 */
 	void unregisterPlugin(DumperPlugin<ModelKey> plugin);
 
+	/**
+	 * Registers a new Cloud File Manager
+	 * 
+	 * @param cloudFileManager
+	 *            The Cloud File Manager to register
+	 */
+	void registerCloudFileManager(CloudFileManager cloudFileManager);
+
+	/**
+	 * Unregisters the previous cloud file manager
+	 */
+	void unregisterCloudFileManager();
+	
+	/**
+	 * Triggers a flush to the registered Cloud File Manager
+	 * 
+	 * @throws ASException
+	 */
+	void flush() throws ASException;
+	
 	/**
 	 * Applies all the plugins registered for an object before dumping the
 	 * object
@@ -144,18 +163,6 @@ public interface DumperHelper<T extends ModelKey> {
 	 * @return An iterator with all the selected records
 	 */
 	public Iterator<JSONObject> jsonIterator(Date fromDate, Date toDate);
-
-	/**
-	 * Gets a list with all the saved entities in a date rante
-	 * 
-	 * @param fromDate
-	 *            Date and time from which to retrieve entities
-	 * @param toDate
-	 *            Date and time to which to retrieve entities
-	 * @return A list with all the selected records
-	 * @throws IOException
-	 */
-	public List<T> retrieveModelKeyList(Date fromDate, Date toDate) throws IOException;
 
 	/**
 	 * Adds a new name discriminator to the name helper

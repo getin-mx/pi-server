@@ -37,6 +37,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 import mobi.allshoppings.dao.spi.DAOJDOPersistentManagerFactory;
+import mobi.allshoppings.dump.CloudFileManager;
 import mobi.allshoppings.dump.DumperFileNameResolver;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.DumperPlugin;
@@ -66,6 +67,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	private DumperFileNameResolver<ModelKey> fileNameResolver;
 	private List<String> currentCachedFileNames;
 	private String filter;
+	private CloudFileManager cfm;
 	
 	public DumperHelperImpl(String baseDir, Class<T> clazz) {
 		this.baseDir = baseDir;
@@ -194,6 +196,12 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 
 			long finalTime = new Date().getTime();
 			log.log(Level.INFO, "Finally Processed " + count + " of " + totalRecords + " with " + processed + " results in " + (finalTime - initTime) + "ms");
+
+			if( cfm != null ) {
+				cfm.flush();
+				cfm.forceCleanup();
+			}
+			
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
@@ -246,6 +254,8 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 			File file = new File(fileName);
 			String jsonRep = applyJsonPlugins(obj);
 			dump( jsonRep, file);
+			if( cfm != null ) 
+				cfm.registerFileForUpdate(fileName);
 		} catch( ASException e ) {
 			throw e;
 		} catch( Exception e ) {
@@ -340,57 +350,6 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		return new DumpJSONIterator(fromDate, toDate);
 	}
 
-	/**
-	 * @see mobi.allshoppings.dump.DumperHelper#retrieveModelKeyList(Date, Date)
-	 */
-	@Override
-	public List<T> retrieveModelKeyList(Date fromDate, Date toDate) throws IOException {
-		List<T> ret = CollectionFactory.createList();
-		
-		Date curDate = new Date(fromDate.getTime());
-		while(curDate.before(toDate) || curDate.equals(toDate)) {
-			
-			if( fileNameResolver != null && fileNameResolver.mayHaveMultiple() && !StringUtils.hasText(filter)) {
-				List<String> files = fileNameResolver.getMultipleFileOptions(baseDir, clazz.getSimpleName(), curDate);
-				for( String file : files ) {
-					File f = new File(file);
-					if( f.exists() && f.canRead()) {
-						try(BufferedReader br = new BufferedReader(new FileReader(f))) {
-							for(String line; (line = br.readLine()) != null; ) {
-								try {
-									T element = gson.fromJson(line, clazz);
-									ret.add(element);
-								} catch( Exception e ) {
-									log.log(Level.SEVERE, e.getMessage(), e);
-								}
-							}
-							br.close();
-						}
-					}
-				}
-			} else {
-				File f = new File(resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate, null, filter));
-				if( f.exists() && f.canRead()) {
-					try(BufferedReader br = new BufferedReader(new FileReader(f))) {
-						for(String line; (line = br.readLine()) != null; ) {
-							try {
-								T element = gson.fromJson(line, clazz);
-								ret.add(element);
-							} catch( Exception e ) {
-								log.log(Level.SEVERE, e.getMessage(), e);
-							}
-						}
-						br.close();
-					}
-				}
-			}
-			
-			curDate = new Date(curDate.getTime() + 3600000);
-		}
-		
-		return ret;
-	}
-	
 	@Override
 	public void fakeModelKey(Date fromDate, Date toDate) throws ASException {
 		Calendar cal1 = Calendar.getInstance();
@@ -698,6 +657,22 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 			// Not Implemented
 		}
 		
+	}
+
+	@Override
+	public void registerCloudFileManager(CloudFileManager cloudFileManager) {
+		this.cfm = cloudFileManager;
+	}
+
+	@Override
+	public void unregisterCloudFileManager() {
+		this.cfm = null;
+	}
+
+	@Override
+	public void flush() throws ASException {
+		if( cfm != null )
+			cfm.flush();
 	}
 
 }

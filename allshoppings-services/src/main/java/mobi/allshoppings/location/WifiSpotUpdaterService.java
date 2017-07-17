@@ -3,7 +3,7 @@ package mobi.allshoppings.location;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,17 +39,18 @@ public class WifiSpotUpdaterService {
 		while(curDate.before(toDate)) {
 			
 			long initListTime = new Date().getTime();
-			List<DeviceWifiLocationHistory> list = dumper.retrieveModelKeyList(curDate, curDate);
+			Iterator<DeviceWifiLocationHistory> it = dumper.iterator(curDate, curDate);
 			long endListTime = new Date().getTime();
 			
-			if( list.size() > 0 ) {
+			if( it.hasNext() ) {
 				File f = new File(dumper.resolveDumpFileName(curDate, null));
-				log.log(Level.INFO, "Resolving Wifi Locations for Date " + curDate + " in File " + f + " with " + list.size() + " records in " + (endListTime - initListTime) + "ms");
+				log.log(Level.INFO, "Resolving Wifi Locations for Date " + curDate + " in File " + f + " in " + (endListTime - initListTime) + "ms");
 			}
 
 			int count = 0;
 			// dry run
-			for( DeviceWifiLocationHistory element : list ) {
+			while(it.hasNext()) {
+				DeviceWifiLocationHistory element = it.next();
 				if(!StringUtils.hasText(element.getWifiSpotId())) {
 					service.calculateWifiSpot(element);
 					if(StringUtils.hasText(element.getWifiSpotId())) {
@@ -62,7 +63,9 @@ public class WifiSpotUpdaterService {
 			// real run
 			if( count > 0 ) {
 				count = 0;
-				for( DeviceWifiLocationHistory element : list ) {
+				it = dumper.iterator(curDate, curDate);
+				while(it.hasNext()) {
+					DeviceWifiLocationHistory element = it.next();
 					if(!StringUtils.hasText(element.getWifiSpotId())) {
 						service.calculateWifiSpot(element);
 						if(StringUtils.hasText(element.getWifiSpotId())) {
