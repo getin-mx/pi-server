@@ -35,4 +35,10 @@ public class DeviceWifiLocationHistoryDumperPlugin implements DumperPlugin<Model
 		// Nothing to do here
 	}
 
+	@Override
+	public String toJson(ModelKey element, String jsonRep) throws ASException {
+		// Nothing to do here
+		return jsonRep;
+	}
+
 }

@@ -15,7 +15,6 @@ import mobi.allshoppings.dao.spi.CheckinDAOJDOImpl;
 import mobi.allshoppings.dao.spi.CinemaDAOJDOImpl;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.impl.DumpFactory;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.geocoding.GeoCodingHelper;
@@ -23,7 +22,6 @@ import mobi.allshoppings.geocoding.impl.GeoCodingHelperGMapsImpl;
 import mobi.allshoppings.location.CheckinUpdaterService;
 import mobi.allshoppings.model.Checkin;
 import mobi.allshoppings.model.DeviceLocationHistory;
-import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.CollectionFactory;
 
 public class CinepolisCheckinUpdaterService extends CheckinUpdaterService {

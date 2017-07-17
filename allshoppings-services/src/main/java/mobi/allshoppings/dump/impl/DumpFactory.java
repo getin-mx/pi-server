@@ -30,6 +30,7 @@ public class DumpFactory<T extends ModelKey> {
 		// For APHotspot
 		if(entity.equals(APHotspot.class)) {
 			dumper.registerFileNameResolver(new APHotspotFileNameResolver());
+			dumper.registerPlugin(new APHotspotDumperPlugin());
 		}
 		
 		// Now returns the builded result

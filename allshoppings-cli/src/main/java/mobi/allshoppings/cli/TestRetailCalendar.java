@@ -16,6 +16,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.tools.GsonFactory;
 
 
 public class TestRetailCalendar extends AbstractCLI {
@@ -70,7 +71,8 @@ public class TestRetailCalendar extends AbstractCLI {
 				cal.add(Calendar.DATE, 1);
 			}
 
-			Gson gson = new Gson();
+			Gson gson = GsonFactory.getInstance();
+			
 			JSONArray array = new JSONArray();
 			for( RetailCalendarEntry entry : list ) {
 				JSONObject obj = new JSONObject(gson.toJson(entry));

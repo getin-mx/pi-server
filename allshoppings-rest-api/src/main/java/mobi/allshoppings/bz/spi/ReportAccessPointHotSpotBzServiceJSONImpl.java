@@ -9,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.bz.ReportAccessPointHotSpotBzService;

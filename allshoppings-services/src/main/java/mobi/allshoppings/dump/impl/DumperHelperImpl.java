@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,6 +25,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.datanucleus.util.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.util.StringUtils;
 
 import com.google.gson.Gson;
 import com.inodes.datanucleus.model.Blob;
@@ -45,6 +47,7 @@ import mobi.allshoppings.model.DeviceWifiLocationHistory;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl;
 import mobi.allshoppings.tools.CollectionFactory;
+import mobi.allshoppings.tools.GsonFactory;
 
 public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 
@@ -53,18 +56,42 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	private static final SimpleDateFormat day = new SimpleDateFormat("dd");
 	private static final SimpleDateFormat hour = new SimpleDateFormat("HH");
 	private static final Logger log = Logger.getLogger(DumperHelperImpl.class.getName());
-	private static final Gson gson = new Gson();
 	private static final int BUFFER = 100;
+
+	private static Gson gson = GsonFactory.getInstance();
 
 	private Class<T> clazz;
 	private String baseDir;
 	private List<DumperPlugin<ModelKey>> registeredPlugins;
 	private DumperFileNameResolver<ModelKey> fileNameResolver;
+	private List<String> currentCachedFileNames;
+	private String filter;
 	
 	public DumperHelperImpl(String baseDir, Class<T> clazz) {
 		this.baseDir = baseDir;
 		this.clazz = clazz;
 		registeredPlugins = CollectionFactory.createList();
+		
+		TimeZone tz = TimeZone.getTimeZone("GMT");
+		year.setTimeZone(tz);
+		month.setTimeZone(tz);
+		day.setTimeZone(tz);
+		hour.setTimeZone(tz);
+
+	}
+
+	/**
+	 * @return the filter
+	 */
+	public String getFilter() {
+		return filter;
+	}
+
+	/**
+	 * @param filter the filter to set
+	 */
+	public void setFilter(String filter) {
+		this.filter = filter;
 	}
 
 	/**
@@ -184,7 +211,18 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 			if(plugin.isAvailableFor(obj)) plugin.preDump(obj);
 		}
 	}
-	
+
+	/**
+	 * @see mobi.allshoppings.dump.DumperHelper#applyJsonPlugins(ModelKey)
+	 */
+	public String applyJsonPlugins(T obj) throws ASException {
+		String json = gson.toJson(obj);
+		for(DumperPlugin<ModelKey> plugin : registeredPlugins) {
+			if(plugin.isAvailableFor(obj)) json = plugin.toJson(obj, json);
+		}
+		return json;
+	}
+
 	/**
 	 * @see mobi.allshoppings.dump.DumperHelper#applyPostDumpPlugins(ModelKey)
 	 */
@@ -198,14 +236,21 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	 * @see mobi.allshoppings.dump.DumperHelper#dump(ModelKey)
 	 */
 	@Override
-	public void dump(T obj) throws IOException {
-		this.dump(gson.toJson(obj), baseDir, clazz.getSimpleName(), obj.getCreationDateTime(), obj);
+	public void dump(T obj) throws ASException {
+		this.dump(obj, baseDir, clazz.getSimpleName(), obj.getCreationDateTime(), obj);
 	}
 
-	public void dump(String jsonRep, String baseDir, String baseName, Date forDate, T element) throws IOException {
-		String fileName = resolveDumpFileName(baseDir, baseName, forDate, element);
-		File file = new File(fileName);
-		dump( jsonRep, file);
+	public void dump(T obj, String baseDir, String baseName, Date forDate, T element) throws ASException {
+		try {
+			String fileName = resolveDumpFileName(baseDir, baseName, forDate, element, null);
+			File file = new File(fileName);
+			String jsonRep = applyJsonPlugins(obj);
+			dump( jsonRep, file);
+		} catch( ASException e ) {
+			throw e;
+		} catch( Exception e ) {
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		}
 	}
 
 	/**
@@ -213,14 +258,14 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	 */
 	@Override
 	public String resolveDumpFileName( Date forDate, T element ) {
-		return resolveDumpFileName(baseDir, clazz.getSimpleName(), forDate, element);
+		return resolveDumpFileName(baseDir, clazz.getSimpleName(), forDate, element, null);
 	}
 	
-	public String resolveDumpFileName(String baseDir, String baseName, Date forDate, T element) {
+	public String resolveDumpFileName(String baseDir, String baseName, Date forDate, T element, String filter) {
 
 		String fileName = null;
-		if( fileNameResolver != null && element != null ) {
-			fileName = fileNameResolver.resolveDumpFileName(baseDir, baseName, forDate, element);
+		if( fileNameResolver != null && element != null || fileNameResolver != null && StringUtils.hasText(filter) ) {
+			fileName = fileNameResolver.resolveDumpFileName(baseDir, baseName, forDate, element, filter);
 		}
 
 		if( fileName == null ) {
@@ -261,8 +306,6 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 			try {
 				fos.write(jsonRep.getBytes());
 				fos.write("\n".getBytes());
-				fos.flush();
-				fos.close();
 			} catch( Throwable t ) {
 				throw t;
 			} finally {
@@ -307,18 +350,38 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		Date curDate = new Date(fromDate.getTime());
 		while(curDate.before(toDate) || curDate.equals(toDate)) {
 			
-			File f = new File(resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate, null));
-			if( f.exists() && f.canRead()) {
-				try(BufferedReader br = new BufferedReader(new FileReader(f))) {
-				    for(String line; (line = br.readLine()) != null; ) {
-				        try {
-				        	T element = gson.fromJson(line, clazz);
-				        	ret.add(element);
-				        } catch( Exception e ) {
-				        	log.log(Level.SEVERE, e.getMessage(), e);
-				        }
-				    }
-					br.close();
+			if( fileNameResolver != null && fileNameResolver.mayHaveMultiple() && !StringUtils.hasText(filter)) {
+				List<String> files = fileNameResolver.getMultipleFileOptions(baseDir, clazz.getSimpleName(), curDate);
+				for( String file : files ) {
+					File f = new File(file);
+					if( f.exists() && f.canRead()) {
+						try(BufferedReader br = new BufferedReader(new FileReader(f))) {
+							for(String line; (line = br.readLine()) != null; ) {
+								try {
+									T element = gson.fromJson(line, clazz);
+									ret.add(element);
+								} catch( Exception e ) {
+									log.log(Level.SEVERE, e.getMessage(), e);
+								}
+							}
+							br.close();
+						}
+					}
+				}
+			} else {
+				File f = new File(resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate, null, filter));
+				if( f.exists() && f.canRead()) {
+					try(BufferedReader br = new BufferedReader(new FileReader(f))) {
+						for(String line; (line = br.readLine()) != null; ) {
+							try {
+								T element = gson.fromJson(line, clazz);
+								ret.add(element);
+							} catch( Exception e ) {
+								log.log(Level.SEVERE, e.getMessage(), e);
+							}
+						}
+						br.close();
+					}
 				}
 			}
 			
@@ -566,30 +629,50 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 				// Establishes the process Date
 				if( curDate == null )
 					curDate = new Date(fromDate.getTime());
-				else
-					curDate = new Date(curDate.getTime() + 3600000);
 
 				if(curDate.equals(toDate) || curDate.after(toDate))
 					break;
 				
 				i = 0;
-				File f = new File(resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate, null));
-				if( f.exists() && f.canRead()) {
-					try {
-						br = new BufferedReader(new FileReader(f));
-						for(String line; i < BUFFER && (line = br.readLine()) != null; ) {
-							try {
-								elements.add(line);
-								i++;
-							} catch( Exception e ) {
-								log.log(Level.SEVERE, e.getMessage(), e);
+
+				boolean ableToGo = true;
+				String currentFileName = null;
+				if( fileNameResolver != null && fileNameResolver.mayHaveMultiple() && !StringUtils.hasText(filter)) {
+					if( currentCachedFileNames == null || currentCachedFileNames.size() == 0 ) {
+						curDate = new Date(curDate.getTime() + 3600000);
+						currentCachedFileNames = fileNameResolver.getMultipleFileOptions(baseDir, clazz.getSimpleName(), curDate);
+					}
+
+					if( currentCachedFileNames.size() > 0 ) {
+						currentFileName = currentCachedFileNames.get(0);
+						currentCachedFileNames.remove(0);
+					} else {
+						ableToGo = false;
+					}
+				} else {
+					curDate = new Date(curDate.getTime() + 3600000);
+					currentFileName = resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate, null, filter);
+				}
+				
+				if( ableToGo ) {
+					File f = new File(currentFileName);
+					if( f.exists() && f.canRead()) {
+						try {
+							br = new BufferedReader(new FileReader(f));
+							for(String line; i < BUFFER && (line = br.readLine()) != null; ) {
+								try {
+									elements.add(line);
+									i++;
+								} catch( Exception e ) {
+									log.log(Level.SEVERE, e.getMessage(), e);
+								}
 							}
+
+							if( elements.size() > 0 ) break;
+
+						} catch( Exception e ) {
+							log.log(Level.SEVERE, e.getMessage(), e);
 						}
-						
-						if( elements.size() > 0 ) break;
-						
-					} catch( Exception e ) {
-						log.log(Level.SEVERE, e.getMessage(), e);
 					}
 				}
 
@@ -616,4 +699,5 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		}
 		
 	}
+
 }

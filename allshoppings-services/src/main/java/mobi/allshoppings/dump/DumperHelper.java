@@ -49,6 +49,21 @@ public interface DumperHelper<T extends ModelKey> {
 	void applyPostDumpPlugins(T obj) throws ASException;
 
 	/**
+	 * Specifies a file name filter
+	 * 
+	 * @param filter
+	 *            The specified file name filter
+	 */
+	void setFilter(String filter);
+
+	/**
+	 * Obtains the current file name filter
+	 * 
+	 * @return The current file name filter
+	 */
+	String getFilter();
+
+	/**
 	 * Dumps a ModelKey database to a set of files
 	 * 
 	 * @param fromDate
@@ -82,7 +97,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            DeviceLocationHistory Object to dump
 	 * @throws IOException
 	 */
-	public void dump(T obj) throws IOException;
+	public void dump(T obj) throws ASException;
 
 	/**
 	 * Resolves the file name for a dump file based in its date and time

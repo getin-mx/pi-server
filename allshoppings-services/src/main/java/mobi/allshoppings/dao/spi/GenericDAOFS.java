@@ -24,6 +24,7 @@ import mobi.allshoppings.model.tools.KeyHelper;
 import mobi.allshoppings.model.tools.ViewLocation;
 import mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl;
 import mobi.allshoppings.tools.CustomDatatableFilter;
+import mobi.allshoppings.tools.GsonFactory;
 import mobi.allshoppings.tools.Range;
 import mobi.allshoppings.tx.PersistenceProvider;
 
@@ -35,7 +36,7 @@ public abstract class GenericDAOFS<T extends ModelKey> implements GenericDAO<T> 
 	@Autowired
 	protected CacheHelper cacheHelper;
 	
-	protected Gson gson;
+	protected Gson gson = GsonFactory.getInstance();
 
 	Class<T> clazz;
 	Logger log;

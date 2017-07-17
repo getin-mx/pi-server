@@ -32,4 +32,15 @@ public interface DumperPlugin<T extends ModelKey> {
 	 */
 	void postDump(T element) throws ASException;
 
+	/**
+	 * Conversion process
+	 * 
+	 * @param element
+	 *            The element to process
+	 * @param jsonRep
+	 *            The previous JSON Representation
+	 * @return A formatted JSON Representation of the object
+	 * @throws ASException
+	 */
+	String toJson(T element, String jsonRep) throws ASException;
 }

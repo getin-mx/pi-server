@@ -281,7 +281,7 @@ public class PersistentCacheFSImpl <V extends Object> {
 
 	private String serialize(V obj) {
 		if(gson == null)
-			gson = new Gson();
+			gson = GsonFactory.getInstance();
 		
 		return gson.toJson(obj);
 	}

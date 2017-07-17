@@ -31,6 +31,7 @@ import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.CollectionFactory;
+import mobi.allshoppings.tools.GsonFactory;
 
 
 public class CheckinUpdaterService {
@@ -43,7 +44,7 @@ public class CheckinUpdaterService {
 	private ShoppingDAO shoppingDao = new ShoppingDAOJDOImpl();
 	private GeoCodingHelper geocoder = new GeoCodingHelperGMapsImpl();
 	private CheckinDAO checkinDao = new CheckinDAOJDOImpl();
-	protected Gson gson = new Gson();
+	protected Gson gson = GsonFactory.getInstance();
 	
 	public void updateCheckins(String baseDir, Date fromDate, Date toDate) throws ASException, IOException {
 

@@ -73,6 +73,7 @@ import mobi.allshoppings.model.WifiSpot;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CollectionUtils;
+import mobi.allshoppings.tools.GsonFactory;
 import mobi.allshoppings.tools.Range;
 
 public class DashboardAPDeviceMapperService {
@@ -86,7 +87,7 @@ public class DashboardAPDeviceMapperService {
 
 	private static final SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	private static final Gson gson = new Gson();
+	private static final Gson gson = GsonFactory.getInstance();
 
 	/**
 	 * DAOs 

@@ -34,6 +34,7 @@ public class DRocDump extends AbstractCLI {
 		return parser;
 	}
 
+	@SuppressWarnings("unused")
 	public static void main(String args[]) throws ASException {
 		try {
 			
