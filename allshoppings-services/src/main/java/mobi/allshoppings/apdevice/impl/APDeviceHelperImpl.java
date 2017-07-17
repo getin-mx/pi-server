@@ -562,6 +562,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			totals++;
 		}
 
+		dumpHelper.dispose();
+		
 		// Write to the database
 		Iterator<String> x = cache.keySet().iterator();
 		while(x.hasNext()) {

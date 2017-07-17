@@ -82,6 +82,8 @@ public class FakeDumpHistoryData extends AbstractCLI {
 			
 			dumper.fakeModelKey(fromDate, toDate);
 			
+			dumper.dispose();
+			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}

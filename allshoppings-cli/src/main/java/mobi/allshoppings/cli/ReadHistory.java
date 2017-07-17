@@ -92,6 +92,8 @@ public class ReadHistory extends AbstractCLI {
 				System.out.println(obj);
 			}
 			
+			dumper.dispose();
+			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}

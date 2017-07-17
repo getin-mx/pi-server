@@ -669,6 +669,7 @@ public class APHHelperImpl implements APHHelper {
 		
 		log.log(Level.INFO, "Disposing cache");
 		cache.dispose();
+		dumpHelper.dispose();
 		
 		log.log(Level.INFO, "Process Ended");
 

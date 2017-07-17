@@ -251,6 +251,7 @@ public class ExternalGeoImporter {
 			log.log(Level.INFO, "Disposing Device cache with " + cacheDevices.size() + " elements...");
 			cacheDevices.dispose();
 			cacheDevices.clear();
+			dump.dispose();
 			
 			log.log(Level.INFO, count + " records processed with " + processed + " results...");
 			log.log(Level.INFO, "Process finished!");

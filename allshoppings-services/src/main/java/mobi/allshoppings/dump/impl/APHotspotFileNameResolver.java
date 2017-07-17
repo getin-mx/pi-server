@@ -7,7 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import mobi.allshoppings.dump.CloudFileManager;
 import mobi.allshoppings.dump.DumperFileNameResolver;
+import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.CollectionFactory;
@@ -63,7 +65,7 @@ public class APHotspotFileNameResolver implements DumperFileNameResolver<ModelKe
 	}
 
 	@Override
-	public List<String> getMultipleFileOptions(String baseDir, String baseName, Date forDate ) {
+	public List<String> getMultipleFileOptions(String baseDir, String baseName, Date forDate, CloudFileManager cfm ) throws ASException {
 
 		List<String> ret = CollectionFactory.createList();
 		
@@ -81,22 +83,28 @@ public class APHotspotFileNameResolver implements DumperFileNameResolver<ModelKe
 		sb.append(myHour).append(File.separator);
 		sb.append(baseName).append(File.separator);
 
-		File dir = new File(sb.toString());
-		if( dir.exists() && dir.isDirectory() ) {
-			String [] names = dir.list(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					if( name.endsWith(".json"))
-						return true;
-					return false;
-				}
-			});
-			
-			for(String name : names ) {
-				ret.add(sb.toString() + name);
-			}
-		}
+		if( cfm == null ) {
 
+			File dir = new File(sb.toString());
+			if( dir.exists() && dir.isDirectory() ) {
+				String [] names = dir.list(new FilenameFilter() {
+					@Override
+					public boolean accept(File dir, String name) {
+						if( name.endsWith(".json"))
+							return true;
+						return false;
+					}
+				});
+
+				for(String name : names ) {
+					ret.add(sb.toString() + name);
+				}
+			}
+
+		} else {
+			return cfm.getDirectoryListing(sb.toString());
+		}
+		
 		return ret;
 	}
 	

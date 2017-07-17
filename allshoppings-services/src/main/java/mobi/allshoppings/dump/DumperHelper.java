@@ -93,7 +93,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            Do I have to delete the object after successful dump?
 	 * @throws ASException
 	 */
-	public void dumpModelKey(String collection, Date fromDate, Date toDate, boolean deleteAfterDump, boolean moveCollectionBeforeDump) throws ASException;
+	void dumpModelKey(String collection, Date fromDate, Date toDate, boolean deleteAfterDump, boolean moveCollectionBeforeDump) throws ASException;
 
 	/**
 	 * Fakes a Dump batch.
@@ -104,8 +104,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            To which date
 	 * @throws ASException
 	 */
-	public void fakeModelKey(Date fromDate, Date toDate) throws ASException;
-
+	void fakeModelKey(Date fromDate, Date toDate) throws ASException;
 
 	/**
 	 * Dumps a single ModelKey object
@@ -116,7 +115,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            DeviceLocationHistory Object to dump
 	 * @throws IOException
 	 */
-	public void dump(T obj) throws ASException;
+	void dump(T obj) throws ASException;
 
 	/**
 	 * Resolves the file name for a dump file based in its date and time
@@ -127,7 +126,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            The element to resolve from
 	 * @return A fully formed file name for the dump file
 	 */
-	public String resolveDumpFileName(Date forDate, T element);
+	String resolveDumpFileName(Date forDate, T element);
 
 	/**
 	 * Gets an iterator with all the saved entities in a date range
@@ -138,7 +137,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            Date and time to which to retrieve entities
 	 * @return An iterator with all the selected records
 	 */
-	public Iterator<T> iterator(Date fromDate, Date toDate);
+	Iterator<T> iterator(Date fromDate, Date toDate);
 
 	/**
 	 * Gets an iterator with all the saved entities in a date range, in its
@@ -150,7 +149,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            Date and time to which to retrieve entities
 	 * @return An iterator with all the selected records
 	 */
-	public Iterator<String> stringIterator(Date fromDate, Date toDate);
+	Iterator<String> stringIterator(Date fromDate, Date toDate);
 
 	/**
 	 * Gets an iterator with all the saved entities in a date range, in its
@@ -162,7 +161,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            Date and time to which to retrieve entities
 	 * @return An iterator with all the selected records
 	 */
-	public Iterator<JSONObject> jsonIterator(Date fromDate, Date toDate);
+	Iterator<JSONObject> jsonIterator(Date fromDate, Date toDate);
 
 	/**
 	 * Adds a new name discriminator to the name helper
@@ -170,11 +169,17 @@ public interface DumperHelper<T extends ModelKey> {
 	 * @param discriminator
 	 *            The field that will be used as discriminator
 	 */
-	public void registerFileNameResolver(DumperFileNameResolver<ModelKey> discriminator);
+	void registerFileNameResolver(DumperFileNameResolver<ModelKey> discriminator);
 
 	/**
 	 * Removes a name discriminator from the name helper
 	 */
-	public void unregisterFileNameResolver();
+	void unregisterFileNameResolver();
+	
+	/**
+	 * Finalizes the object
+	 */
+	void dispose();
+	
 
 }

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import mobi.allshoppings.dump.CloudFileManager;
 import mobi.allshoppings.dump.DumperFileNameResolver;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.CollectionFactory;
@@ -56,7 +57,7 @@ public class LegacyFileNameResolver implements DumperFileNameResolver<ModelKey> 
 	}
 
 	@Override
-	public List<String> getMultipleFileOptions(String baseDir, String baseName, Date forDate ) {
+	public List<String> getMultipleFileOptions(String baseDir, String baseName, Date forDate, CloudFileManager cfm ) {
 		List<String> ret = CollectionFactory.createList();
 		return ret;
 	}

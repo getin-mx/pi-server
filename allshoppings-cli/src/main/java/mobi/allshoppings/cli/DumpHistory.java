@@ -94,6 +94,8 @@ public class DumpHistory extends AbstractCLI {
 			
 			dumper.dumpModelKey(sCollection, fromDate, toDate, deleteAfterDump, renameCollection);
 			
+			dumper.dispose();
+			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}

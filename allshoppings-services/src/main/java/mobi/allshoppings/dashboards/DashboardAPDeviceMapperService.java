@@ -268,6 +268,8 @@ public class DashboardAPDeviceMapperService {
 		// Finally, save all the information
 		saveIndicatorSet(indicatorsSet);
 
+		dumper.dispose();
+		
 		long endTime = new Date().getTime();
 		log.log(Level.INFO, "Finished to create Heatmap Dashboard for Day " + date + " in " + (endTime - startTime) + "ms");
 
@@ -358,6 +360,9 @@ public class DashboardAPDeviceMapperService {
 						}
 					}
 				}
+
+				dumper.dispose();
+
 			} catch( Exception e ) {
 				// Assuming not found... do nothing
 			}
@@ -367,6 +372,7 @@ public class DashboardAPDeviceMapperService {
 
 		// Finally, save all the information
 		saveIndicatorSet(indicatorsSet);
+
 
 		long endTime = new Date().getTime();
 		log.log(Level.INFO, "Finished to create APDevice Heatmap Dashboard for Day " + date + " in " + (endTime - startTime) + "ms");

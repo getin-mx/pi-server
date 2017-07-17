@@ -87,6 +87,9 @@ public class WifiSpotUpdaterService {
 			curDate = new Date(curDate.getTime() + 3600000);
 		}
 		
+		dumper.dispose();
+		tmpDumper.dispose();
+		
 		long endTime = new Date().getTime();
 		log.log(Level.INFO, totals + " elements calculated in " + (endTime - initTime) + "ms for this process");
 		

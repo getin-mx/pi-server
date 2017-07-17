@@ -68,6 +68,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	private List<String> currentCachedFileNames;
 	private String filter;
 	private CloudFileManager cfm;
+	private String lastFileUsed;
 	
 	public DumperHelperImpl(String baseDir, Class<T> clazz) {
 		this.baseDir = baseDir;
@@ -541,6 +542,41 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 			counter = 0;
 			this.fromDate = fromDate;
 			this.toDate = toDate;
+
+			this.registerPrefetchFiles();
+			if( cfm != null ) {
+				try {
+					cfm.startPrefetch();
+				} catch( ASException e ) {
+					log.log(Level.SEVERE, e.getMessage(), e);
+				}
+			}
+		}
+		
+		private void registerPrefetchFiles() {
+			if( cfm != null ) {
+				Date myDate = new Date(fromDate.getTime());
+				while( myDate.before(toDate) || myDate.equals(toDate)) {
+					try {
+						if( fileNameResolver != null && fileNameResolver.mayHaveMultiple() && !StringUtils.hasText(filter)) {
+							List<String> l = fileNameResolver.getMultipleFileOptions(baseDir,
+									clazz.getSimpleName(), curDate, cfm);
+							for( String e : l ) {
+								cfm.registerFileForPrefetch(e);
+							}
+						} else {
+							try {
+								cfm.registerFileForPrefetch(resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate, null, filter));
+							} catch (ASException e) {
+								e.printStackTrace();
+							}
+						}
+					} catch (ASException e) {
+						log.log(Level.SEVERE, e.getMessage(), e);
+					}
+					myDate = new Date(myDate.getTime() + 3600000);
+				}
+			}
 		}
 		
 		@Override
@@ -599,7 +635,13 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 				if( fileNameResolver != null && fileNameResolver.mayHaveMultiple() && !StringUtils.hasText(filter)) {
 					if( currentCachedFileNames == null || currentCachedFileNames.size() == 0 ) {
 						curDate = new Date(curDate.getTime() + 3600000);
-						currentCachedFileNames = fileNameResolver.getMultipleFileOptions(baseDir, clazz.getSimpleName(), curDate);
+						try {
+							currentCachedFileNames = fileNameResolver.getMultipleFileOptions(baseDir,
+									clazz.getSimpleName(), curDate, null);
+						} catch( ASException e ) {
+							log.log(Level.SEVERE, e.getMessage(), e);
+							ableToGo = false;
+						}
 					}
 
 					if( currentCachedFileNames.size() > 0 ) {
@@ -613,26 +655,38 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 					currentFileName = resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate, null, filter);
 				}
 				
-				if( ableToGo ) {
-					File f = new File(currentFileName);
-					if( f.exists() && f.canRead()) {
-						try {
-							br = new BufferedReader(new FileReader(f));
-							for(String line; i < BUFFER && (line = br.readLine()) != null; ) {
+				try {
+					if( ableToGo ) {
+						if( !currentFileName.equals(lastFileUsed)) {
+							if( StringUtils.hasText(lastFileUsed) && cfm != null )
+								cfm.registerFileAsDisposable(lastFileUsed);
+							lastFileUsed = currentFileName;
+						}
+
+						if( cfm != null && cfm.checkLocalCopyIntegrity(currentFileName, true)) {
+							File f = new File(currentFileName);
+							if( f.exists() && f.canRead()) {
 								try {
-									elements.add(line);
-									i++;
+									br = new BufferedReader(new FileReader(f));
+									for(String line; i < BUFFER && (line = br.readLine()) != null; ) {
+										try {
+											elements.add(line);
+											i++;
+										} catch( Exception e ) {
+											log.log(Level.SEVERE, e.getMessage(), e);
+										}
+									}
+
+									if( elements.size() > 0 ) break;
+
 								} catch( Exception e ) {
 									log.log(Level.SEVERE, e.getMessage(), e);
 								}
 							}
-
-							if( elements.size() > 0 ) break;
-
-						} catch( Exception e ) {
-							log.log(Level.SEVERE, e.getMessage(), e);
 						}
 					}
+				} catch( ASException e ) {
+					log.log(Level.SEVERE, e.getMessage(), e);
 				}
 
 			}
@@ -673,6 +727,12 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	public void flush() throws ASException {
 		if( cfm != null )
 			cfm.flush();
+	}
+
+	@Override
+	public void dispose() {
+		if( cfm != null )
+			cfm.dispose();
 	}
 
 }

@@ -1399,6 +1399,8 @@ public class DashboardMapperService {
 		// Finally, save all the information
 		saveIndicatorSet(indicatorsSet);
 
+		dumper.dispose();
+		
 		long endTime = new Date().getTime();
 		log.log(Level.INFO, "Finished to create Cinepolis Heatmap Dashboard for Day " + date + " in " + (endTime - startTime) + "ms");
 

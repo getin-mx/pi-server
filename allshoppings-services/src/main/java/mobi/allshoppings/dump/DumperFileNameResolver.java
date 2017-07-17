@@ -3,6 +3,7 @@ package mobi.allshoppings.dump;
 import java.util.Date;
 import java.util.List;
 
+import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.interfaces.ModelKey;
 
 public interface DumperFileNameResolver<T extends ModelKey> {
@@ -33,9 +34,11 @@ public interface DumperFileNameResolver<T extends ModelKey> {
 	 *            Base name for the class
 	 * @param forDate
 	 *            Date to scan
+	 * @param cfm
+	 *            A cloud File Manager to search online files
 	 * @return A formed list of filename options
 	 */
-	List<String> getMultipleFileOptions(String baseDir, String baseName, Date forDate );
+	List<String> getMultipleFileOptions(String baseDir, String baseName, Date forDate, CloudFileManager cfm ) throws ASException;
 	
 	/**
 	 * Resolves a file name

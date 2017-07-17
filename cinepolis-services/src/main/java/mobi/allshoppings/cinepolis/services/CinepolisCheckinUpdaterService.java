@@ -141,6 +141,8 @@ public class CinepolisCheckinUpdaterService extends CheckinUpdaterService {
 			}
 		}
 
+		dumper.dispose();
+		
 		long endTime = new Date().getTime();
 		log.log(Level.INFO, totals + " elements calculated in " + (endTime - initTime) + "ms for this process");
 
