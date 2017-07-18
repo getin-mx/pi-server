@@ -945,6 +945,18 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "farmacias_similares_mx"));
 				brandDao.create(brand);
 			}
+			
+			try {
+				brand = brandDao.get("moda_holding_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Moda Holding");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "moda_holding_mx"));
+				brandDao.create(brand);
+			}
 
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
@@ -1495,6 +1507,14 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("705","Aditivo Puebla Centro", "aditivo_mx", null));
 			stores.add(new StoreAdapter("706","Aditivo Tlalnepantla", "aditivo_mx", null));
+			
+			stores.add(new StoreAdapter("707","Moda Holding Dorothy Gaynor Santa Fe II", "moda_holding_mx", null));
+			stores.add(new StoreAdapter("708","Moda Holding Dorothy Gaynor Santa Fe I", "moda_holding_mx", null));
+			stores.add(new StoreAdapter("709","Moda Holding Dorothy Gaynor Madero", "moda_holding_mx", null));
+			stores.add(new StoreAdapter("710","Moda Holding Dorothy Gaynor 16 de Septiembre", "moda_holding_mx", null));
+			stores.add(new StoreAdapter("711","Moda Holding Dorothy Gaynor Santa Fe I", "moda_holding_mx", null));
+			stores.add(new StoreAdapter("712","Moda Holding Zingara Santa Fe I", "moda_holding_mx", null));
+			stores.add(new StoreAdapter("713","Moda Holding Zingara  Santa Fe II", "moda_holding_mx", null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
