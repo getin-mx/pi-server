@@ -275,7 +275,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	public String resolveDumpFileName(String baseDir, String baseName, Date forDate, T element, String filter) {
 
 		String fileName = null;
-		if( fileNameResolver != null && element != null || fileNameResolver != null && StringUtils.hasText(filter) ) {
+		if( fileNameResolver != null && element != null || fileNameResolver != null ) {
 			fileName = fileNameResolver.resolveDumpFileName(baseDir, baseName, forDate, element, filter);
 		}
 
@@ -560,13 +560,13 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 					try {
 						if( fileNameResolver != null && fileNameResolver.mayHaveMultiple() && !StringUtils.hasText(filter)) {
 							List<String> l = fileNameResolver.getMultipleFileOptions(baseDir,
-									clazz.getSimpleName(), curDate, cfm);
+									clazz.getSimpleName(), myDate, cfm);
 							for( String e : l ) {
 								cfm.registerFileForPrefetch(e);
 							}
 						} else {
 							try {
-								cfm.registerFileForPrefetch(resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate, null, filter));
+								cfm.registerFileForPrefetch(resolveDumpFileName(baseDir, clazz.getSimpleName(), myDate, null, filter));
 							} catch (ASException e) {
 								e.printStackTrace();
 							}
@@ -623,7 +623,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 
 				// Establishes the process Date
 				if( curDate == null )
-					curDate = new Date(fromDate.getTime());
+					curDate = new Date(fromDate.getTime() - 3600000);
 
 				if(curDate.equals(toDate) || curDate.after(toDate))
 					break;
@@ -637,7 +637,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 						curDate = new Date(curDate.getTime() + 3600000);
 						try {
 							currentCachedFileNames = fileNameResolver.getMultipleFileOptions(baseDir,
-									clazz.getSimpleName(), curDate, null);
+									clazz.getSimpleName(), curDate, cfm);
 						} catch( ASException e ) {
 							log.log(Level.SEVERE, e.getMessage(), e);
 							ableToGo = false;
@@ -663,7 +663,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 							lastFileUsed = currentFileName;
 						}
 
-						if( cfm != null && cfm.checkLocalCopyIntegrity(currentFileName, true)) {
+						if( cfm == null || cfm.checkLocalCopyIntegrity(currentFileName, true)) {
 							File f = new File(currentFileName);
 							if( f.exists() && f.canRead()) {
 								try {

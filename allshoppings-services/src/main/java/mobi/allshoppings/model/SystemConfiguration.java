@@ -107,6 +107,10 @@ public class SystemConfiguration implements Serializable {
 	private int cacheMaxInMemElements;
 	private int cachePageSize;
 	private String cacheTempDir;
+	private int CFMInstances;
+	private String awsAccessKey;
+	private String awsSecretKey;
+	private String s3Endpoint;
 	
 	public String getDefaultLevel() {
 		return defaultLevel;
@@ -908,6 +912,38 @@ public class SystemConfiguration implements Serializable {
 
 	public void setForceAlgorithm(String forceAlgorithm) {
 		this.forceAlgorithm = forceAlgorithm;
+	}
+
+	public int getCFMInstances() {
+		return CFMInstances;
+	}
+
+	public void setCFMInstances(int cFMInstances) {
+		CFMInstances = cFMInstances;
+	}
+
+	public String getAwsAccessKey() {
+		return awsAccessKey;
+	}
+
+	public void setAwsAccessKey(String awsAccessKey) {
+		this.awsAccessKey = awsAccessKey;
+	}
+
+	public String getAwsSecretKey() {
+		return awsSecretKey;
+	}
+
+	public void setAwsSecretKey(String awsSecretKey) {
+		this.awsSecretKey = awsSecretKey;
+	}
+
+	public String getS3Endpoint() {
+		return s3Endpoint;
+	}
+
+	public void setS3Endpoint(String s3Endpoint) {
+		this.s3Endpoint = s3Endpoint;
 	}
 
 }

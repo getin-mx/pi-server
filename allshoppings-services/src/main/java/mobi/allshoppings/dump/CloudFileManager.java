@@ -84,6 +84,21 @@ public interface CloudFileManager {
 	List<String> getDirectoryListing(String directory) throws ASException;
 
 	/**
+	 * Sets the remote bucket name
+	 * 
+	 * @param bucket
+	 *            The selected bucket name
+	 */
+	void setBucket(String bucket);
+
+	/**
+	 * Retrieves the remote bucket name
+	 * 
+	 * @return The used bucket name
+	 */
+	String getBucket();
+
+	/**
 	 * Finalizes the object
 	 */
 	void dispose();

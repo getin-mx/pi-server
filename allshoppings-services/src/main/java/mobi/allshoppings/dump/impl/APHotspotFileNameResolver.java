@@ -102,7 +102,13 @@ public class APHotspotFileNameResolver implements DumperFileNameResolver<ModelKe
 			}
 
 		} else {
-			return cfm.getDirectoryListing(sb.toString());
+			List<String> tmp = cfm.getDirectoryListing(sb.toString());
+			ret.clear();
+			if( !baseDir.endsWith(File.separator)) 
+				baseDir = baseDir + File.separator;
+			for( String t : tmp ) {
+				ret.add(baseDir + t);
+			}
 		}
 		
 		return ret;

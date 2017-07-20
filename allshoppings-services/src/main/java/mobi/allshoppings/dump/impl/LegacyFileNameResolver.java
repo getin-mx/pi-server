@@ -20,7 +20,7 @@ public class LegacyFileNameResolver implements DumperFileNameResolver<ModelKey> 
 
 	public LegacyFileNameResolver() {
 		super();
-		TimeZone tz = TimeZone.getTimeZone("CDT");
+		TimeZone tz = TimeZone.getTimeZone("CST");
 		year.setTimeZone(tz);
 		month.setTimeZone(tz);
 		day.setTimeZone(tz);

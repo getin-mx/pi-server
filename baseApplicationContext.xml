@@ -131,6 +131,11 @@
 		<property name="cacheTempDir" value="/usr/local/allshoppings/dump" />
 		<property name="forceAlgorithm" value="markI" />
 
+		<property name="CFMInstances" value="10" />
+		<property name="awsAccessKey" value="AKIAAUUHP33G7PYRV2TB" />
+		<property name="awsSecretKey" value="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" />
+		<property name="s3Endpoint" value="http://shire.getin.mx:8773/services/Walrus/" />
+
 		<property name="appleMacs">
 			<list>
 				<value>00:03:93</value>
