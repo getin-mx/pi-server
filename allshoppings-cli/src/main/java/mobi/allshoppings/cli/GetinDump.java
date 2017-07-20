@@ -1516,6 +1516,8 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("712","Moda Holding Zingara Santa Fe I", "moda_holding_mx", null));
 			stores.add(new StoreAdapter("713","Moda Holding Zingara  Santa Fe II", "moda_holding_mx", null));
 			
+			stores.add(new StoreAdapter("714", "Outlet Deportes 16 de Septiembre", "outletdeportes_mx",null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
