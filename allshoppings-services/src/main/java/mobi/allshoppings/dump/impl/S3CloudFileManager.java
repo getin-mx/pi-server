@@ -331,12 +331,25 @@ public class S3CloudFileManager implements CloudFileManager {
 		if( !isConnected() )
 			connect();
 		
-		File file = new File(tmpPath + fileName);
-		log.log(Level.FINE, "Uploading object " + objectKey + " from " + file.getAbsolutePath());
-		long start = new Date().getTime();
-		s3.putObject(new PutObjectRequest(bucket, objectKey, file));
-        long end = new Date().getTime();
-        log.log(Level.FINE, "Object " + objectKey + " uploaded in " + (end - start) + "ms" );
+		boolean done = false;
+		int retriesLeft = 3;
+		
+		while( !done ) {
+			try {
+				File file = new File(tmpPath + fileName);
+				log.log(Level.FINE, "Uploading object " + objectKey + " from " + file.getAbsolutePath());
+				long start = new Date().getTime();
+				s3.putObject(new PutObjectRequest(bucket, objectKey, file));
+				long end = new Date().getTime();
+				log.log(Level.FINE, "Object " + objectKey + " uploaded in " + (end - start) + "ms" );
+				done = true;
+			} catch( Exception e ) {
+				if( retriesLeft <= 0 )
+					throw e;
+				retriesLeft--;
+				Thread.sleep(3000);
+			}
+		}
 	}
 	
 	public void download(String objectKey, String fileName) throws Exception {
@@ -346,14 +359,29 @@ public class S3CloudFileManager implements CloudFileManager {
 		File file = new File(tmpPath + fileName);
 		log.log(Level.FINE, "Downloading object " + objectKey + " into " + file.getAbsolutePath());
 		long start = new Date().getTime();
-		S3Object object = s3.getObject(new GetObjectRequest(bucket, objectKey));
 
-		try {
-			File dir = file.getParentFile();
-			if( !dir.exists() ) dir.mkdirs();
-			copy(object.getObjectContent(), new FileOutputStream(file));
-		} finally {
-	        object.close();
+		boolean done = false;
+		int retriesLeft = 3;
+		
+		while(!done) {
+			try {
+				S3Object object = s3.getObject(new GetObjectRequest(bucket, objectKey));
+
+				try {
+					File dir = file.getParentFile();
+					if( !dir.exists() ) dir.mkdirs();
+					copy(object.getObjectContent(), new FileOutputStream(file));
+				} finally {
+					object.close();
+				}
+
+				done = true;
+			} catch( Exception e ) {
+				if( retriesLeft <= 0 )
+					throw e;
+				retriesLeft--;
+				Thread.sleep(3000);
+			}
 		}
         long end = new Date().getTime();
         log.log(Level.FINE, "Object " + objectKey + " downloaded in " + (end - start) + "ms" );
