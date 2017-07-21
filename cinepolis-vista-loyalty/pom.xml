@@ -14,11 +14,6 @@
   <name>Cinepolis Vista Loyalty Service</name>
 	<url>http://www.allshoppings.mobi</url>
 
-	<scm>
-		<url>http://development.inodes-it.com/svn/repos/mobi.allshoppings/vista-loyalty/trunk</url>
-		<connection>scm:svn:http://development.inodes-it.com/svn/repos/mobi.allshoppings/vista-loyalty/trunk</connection>
-	</scm>
-
 	<licenses>
 		<license>
 			<name>Apache 2</name>

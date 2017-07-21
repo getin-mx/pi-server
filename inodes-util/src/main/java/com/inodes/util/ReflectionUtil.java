@@ -17,7 +17,6 @@ import com.inodes.exception.ReflectiveOperationException;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 
-@SuppressWarnings("restriction")
 public class ReflectionUtil {
 
 	/**

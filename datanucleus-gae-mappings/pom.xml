@@ -16,11 +16,6 @@
 	<name>Datanucleus GAE Mappings</name>
 	<url>http://www.inodes-it.com</url>
 
-	<scm>
-		<url>http://development.inodes-it.com/svn/repos/mobi.allshoppings/com.inodes.datanucleus-gae-mappingsy/trunk</url>
-		<connection>scm:svn:http://development.inodes-it.com/svn/repos/mobi.allshoppings/com.inodes.datanucleus-gae-mappings/trunk</connection>
-	</scm>
-
 	<licenses>
 		<license>
 			<name>Apache 2</name>

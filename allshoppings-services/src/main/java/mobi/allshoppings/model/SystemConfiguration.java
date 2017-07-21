@@ -111,6 +111,7 @@ public class SystemConfiguration implements Serializable {
 	private String awsAccessKey;
 	private String awsSecretKey;
 	private String s3Endpoint;
+	private Map<String, String> s3Buckets;
 	
 	public String getDefaultLevel() {
 		return defaultLevel;
@@ -944,6 +945,14 @@ public class SystemConfiguration implements Serializable {
 
 	public void setS3Endpoint(String s3Endpoint) {
 		this.s3Endpoint = s3Endpoint;
+	}
+
+	public Map<String, String> getS3Buckets() {
+		return s3Buckets;
+	}
+
+	public void setS3Buckets(Map<String, String> s3Buckets) {
+		this.s3Buckets = s3Buckets;
 	}
 
 }

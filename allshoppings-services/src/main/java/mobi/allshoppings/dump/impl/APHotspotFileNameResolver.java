@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.springframework.util.StringUtils;
+
 import mobi.allshoppings.dump.CloudFileManager;
 import mobi.allshoppings.dump.DumperFileNameResolver;
 import mobi.allshoppings.exception.ASException;
@@ -44,18 +46,29 @@ public class APHotspotFileNameResolver implements DumperFileNameResolver<ModelKe
 		String myHour = hour.format(forDate);
 
 		StringBuffer sb = new StringBuffer();
-		sb.append(baseDir);
-		if(!baseDir.endsWith(File.separator)) sb.append(File.separator);
-		sb.append(myYear).append(File.separator);
-		sb.append(myMonth).append(File.separator);
-		sb.append(myDay).append(File.separator);
-		sb.append(myHour).append(File.separator);
-		sb.append(baseName).append(File.separator);
-		if( element != null )
-			sb.append(((APHotspot)element).getHostname()).append(".json");
-		else 
-			sb.append(filter).append(".json");
-			
+
+		if( element == null && !StringUtils.hasText(filter) ) {
+			sb.append(baseDir);
+			if(!baseDir.endsWith(File.separator)) sb.append(File.separator);
+			sb.append(myYear).append(File.separator);
+			sb.append(myMonth).append(File.separator);
+			sb.append(myDay).append(File.separator);
+			sb.append(myHour).append(File.separator);
+			sb.append(baseName).append(".json");
+		} else {
+			sb.append(baseDir);
+			if(!baseDir.endsWith(File.separator)) sb.append(File.separator);
+			sb.append(myYear).append(File.separator);
+			sb.append(myMonth).append(File.separator);
+			sb.append(myDay).append(File.separator);
+			sb.append(myHour).append(File.separator);
+			sb.append(baseName).append(File.separator);
+			if( element != null )
+				sb.append(((APHotspot)element).getHostname()).append(".json");
+			else 
+				sb.append(filter).append(".json");
+		}
+		
 		return sb.toString();
 	}
 

@@ -1,8 +1,6 @@
 package mobi.allshoppings.bz.spi;
 
-import java.text.ParseException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -20,8 +18,6 @@ import org.springframework.web.client.RestTemplate;
 
 import mobi.allshoppings.bz.RequestCouponBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
-import mobi.allshoppings.cinepolis.services.SendMovieTicketsService;
-import mobi.allshoppings.cinepolis.services.SendPromoTicketsService;
 import mobi.allshoppings.dao.CampaignSpecialDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -45,6 +41,7 @@ implements RequestCouponBzService {
 	@Autowired
 	private CampaignSpecialDAO csDao;
 	
+	@SuppressWarnings("unused")
 	@Override
 	public String post(final JsonRepresentation entity) {
 		long start = markStart();
@@ -63,37 +60,37 @@ implements RequestCouponBzService {
 
 			if(!StringUtils.hasText(campaignSpecialId) || campaignSpecialId.equals("1430288511084")) {	// cine
 
-				SendMovieTicketsService service = new SendMovieTicketsService();
-				service.doProcess(
-						new Date(),
-						86400000, /* 24 hours */
-						systemConfiguration.getExternalActivityTriggerURL() + "?authToken="
-						+ this.getParameters().get("authToken"),
-						600000 /* 10 minutes */, devices, devices, false,
-						Arrays.asList(new String[] { "cinepolis_mx_339" }), true,
-						test, null, true, false);
+//				SendMovieTicketsService service = new SendMovieTicketsService();
+//				service.doProcess(
+//						new Date(),
+//						86400000, /* 24 hours */
+//						systemConfiguration.getExternalActivityTriggerURL() + "?authToken="
+//						+ this.getParameters().get("authToken"),
+//						600000 /* 10 minutes */, devices, devices, false,
+//						Arrays.asList(new String[] { "cinepolis_mx_339" }), true,
+//						test, null, true, false);
 
 			} else if( campaignSpecialId.equalsIgnoreCase("1432724594627")) {	// crepa
 
-				SendPromoTicketsService service = new SendPromoTicketsService();
-				service.doProcess(
-						new Date(),
-						systemConfiguration.getExternalActivityTriggerURL() + "?authToken="
-								+ this.getParameters().get("authToken"),
-								3600000 /* 1 hour */,
-								devices, devices, Arrays.asList(new String[] { "cinepolis_mx_339" }), 
-								test, true, "1432724594627", true, false);
+//				SendPromoTicketsService service = new SendPromoTicketsService();
+//				service.doProcess(
+//						new Date(),
+//						systemConfiguration.getExternalActivityTriggerURL() + "?authToken="
+//								+ this.getParameters().get("authToken"),
+//								3600000 /* 1 hour */,
+//								devices, devices, Arrays.asList(new String[] { "cinepolis_mx_339" }), 
+//								test, true, "1432724594627", true, false);
 
 			} else if( campaignSpecialId.equalsIgnoreCase("1432724531038")) {	// bagui
 
-				SendPromoTicketsService service = new SendPromoTicketsService();
-				service.doProcess(
-						new Date(),
-						systemConfiguration.getExternalActivityTriggerURL() + "?authToken=" 
-								+ this.getParameters().get("authToken"),
-								3600000 /* 1 hour */,
-								devices, devices, Arrays.asList(new String[] { "cinepolis_mx_339" }), 
-								test, true, "1432724531038", true, false);
+//				SendPromoTicketsService service = new SendPromoTicketsService();
+//				service.doProcess(
+//						new Date(),
+//						systemConfiguration.getExternalActivityTriggerURL() + "?authToken=" 
+//								+ this.getParameters().get("authToken"),
+//								3600000 /* 1 hour */,
+//								devices, devices, Arrays.asList(new String[] { "cinepolis_mx_339" }), 
+//								test, true, "1432724531038", true, false);
 
 			} else { // Generic coupon implementation 
 
@@ -151,7 +148,7 @@ implements RequestCouponBzService {
 		} catch (ASException e) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 			return getJSONRepresentationFromException(e).toString();
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 			return getJSONRepresentationFromException(e).toString();
 		} finally {

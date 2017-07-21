@@ -21,6 +21,7 @@ public class S3CloudFileManagerWorker extends Thread implements Runnable {
 	
 	private Map<String, Date> forPrefecth;
 	private Map<String, S3ObjectSummary> downloaded;
+	private List<String> notFound;
 	private String tmpPath;
 	private String bucket;
 	private AmazonS3 s3;
@@ -29,12 +30,13 @@ public class S3CloudFileManagerWorker extends Thread implements Runnable {
 	private boolean doneSignal;
 	private S3CloudFileManager manager;
 
-	public S3CloudFileManagerWorker(Map<String, Date> forPrefecth, Map<String, S3ObjectSummary> downloaded,
+	public S3CloudFileManagerWorker(Map<String, Date> forPrefecth, Map<String, S3ObjectSummary> downloaded, List<String> notFound,
 			String tmpPath, String bucket, AmazonS3 s3, ConcurrentLinkedQueue<String> controlQueue, Semaphore sem,
 			S3CloudFileManager manager) {
 		super();
 		this.forPrefecth = forPrefecth;
 		this.downloaded = downloaded;
+		this.notFound = notFound;
 		this.tmpPath = tmpPath;
 		this.bucket = bucket;
 		this.s3 = s3;
@@ -171,6 +173,11 @@ public class S3CloudFileManagerWorker extends Thread implements Runnable {
 							forPrefecth.remove(sum.getKey());
 							sem.release();
 
+						} else {
+							sem.acquire();
+							if(!notFound.contains(file))
+								notFound.add(file);
+							sem.release();
 						}
 					} catch( Exception e ) {
 						log.log(Level.SEVERE, e.getMessage(), e);

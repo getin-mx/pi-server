@@ -16,11 +16,6 @@
 	<name>AllShoppings REST API V2</name>
 	<url>http://maven.apache.org</url>
 
-	<scm>
-		<url>http://development.inodes-it.com/svn/repos/mobi.allshoppings/allshoppings-rest-api/trunk</url>
-		<connection>scm:svn:http://development.inodes-it.com/svn/repos/mobi.allshoppings/allshoppings-rest-api/trunk</connection>
-	</scm>
-
 	<licenses>
 		<license>
 			<name>Apache 2</name>

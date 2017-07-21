@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.Thread.State;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -44,6 +45,7 @@ public class S3CloudFileManager implements CloudFileManager {
 	private Map<String, Date> forPrefecth;
 	private Map<String, S3ObjectSummary> downloaded;
 	private Map<String, Date> forDisposal;
+	private List<String> notFound;
 	private String bucket;
 	private String tmpPath;
 	private int instances;
@@ -63,6 +65,7 @@ public class S3CloudFileManager implements CloudFileManager {
 		forPrefecth = CollectionFactory.createMap();
 		forDisposal = CollectionFactory.createMap();
 		downloaded = CollectionFactory.createMap();
+		notFound = CollectionFactory.createList();
 		sem = new Semaphore(1);
 		
 		if( !StringUtils.hasText(localPath)) {
@@ -149,7 +152,8 @@ public class S3CloudFileManager implements CloudFileManager {
 		
 		// Start the actual workers
 		for( int i = 0; i < instances; i++ ) {
-			S3CloudFileManagerWorker w = new S3CloudFileManagerWorker(forPrefecth, downloaded, tmpPath, bucket, s3, controlQueue, sem, this);
+			S3CloudFileManagerWorker w = new S3CloudFileManagerWorker(forPrefecth, downloaded, notFound, tmpPath,
+					bucket, s3, controlQueue, sem, this);
 			w.setName("S3 Worker " + i);
 			w.start();
 			workers.add(w);
@@ -173,6 +177,7 @@ public class S3CloudFileManager implements CloudFileManager {
 				downloaded.remove(key);
 				sem.release();
 			}
+			forceCleanup();
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
@@ -209,13 +214,18 @@ public class S3CloudFileManager implements CloudFileManager {
 				boolean hasFile = false;
 				do {
 					sem.acquire();
-					if( downloaded.containsKey(sanitizeFileName(fileName))) {
+					if( notFound.contains(sanitizeFileName(fileName))) {
 						sem.release();
-						return true;
+						return false;
 					} else {
-						log.log(Level.INFO, "Waiting for file " + fileName);
-						sem.release();
-						Thread.sleep(1000);
+						if( downloaded.containsKey(sanitizeFileName(fileName))) {
+							sem.release();
+							return true;
+						} else {
+							log.log(Level.INFO, "Waiting for file " + fileName);
+							sem.release();
+							Thread.sleep(1000);
+						}
 					}
 					
 				} while( wait );
@@ -260,12 +270,29 @@ public class S3CloudFileManager implements CloudFileManager {
 
 	@Override
 	public void dispose() {
+		
+		if( workers != null ) {
+			for( S3CloudFileManagerWorker worker : workers ) {
+				worker.dispose();
+			}
+		}
+		
 		try {
 			flush();
 			forceCleanup();
+
+			if( workers != null ) {
+				for( S3CloudFileManagerWorker worker : workers ) {
+					while( worker.getState() != State.TERMINATED ) {
+						Thread.sleep(100);
+					}
+				}
+			}
+			
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 		}
+		
 	}
 
 	@Override

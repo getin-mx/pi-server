@@ -16,11 +16,6 @@
 	<name>BigDataBrain REST API</name>
 	<url>http://maven.apache.org</url>
 
-	<scm>
-		<url>http://development.inodes-it.com/svn/repos/mobi.allshoppings/bdb-rest-api/trunk</url>
-		<connection>scm:svn:http://development.inodes-it.com/svn/repos/mobi.allshoppings/bdb-rest-api/trunk</connection>
-	</scm>
-
 	<licenses>
 		<license>
 			<name>Apache 2</name>
@@ -81,7 +76,7 @@
 		<!-- AllShoppings dependencies -->
 		<dependency>
 			<groupId>mobi.allshoppings</groupId>
-			<artifactId>cinepolis-services</artifactId>
+			<artifactId>allshoppings-services</artifactId>
 			<version>0.1</version>
 			<scope>provided</scope>
 		</dependency>

@@ -15,11 +15,6 @@
 	<name>AllShoppings GCM Server</name>
 	<url>http://www.allshoppings.mobi</url>
 
-	<scm>
-		<url>http://development.inodes-it.com/svn/repos/mobi.allshoppings/gcm-server/trunk</url>
-		<connection>scm:svn:http://development.inodes-it.com/svn/repos/mobi.allshoppings/gcm-server/trunk</connection>
-	</scm>
-
 	<licenses>
 		<license>
 			<name>Apache 2</name>

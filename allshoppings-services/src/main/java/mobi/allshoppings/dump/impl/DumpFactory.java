@@ -3,6 +3,8 @@ package mobi.allshoppings.dump.impl;
 import java.io.File;
 import java.util.UUID;
 
+import org.springframework.util.StringUtils;
+
 import mobi.allshoppings.dump.CloudFileManager;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.model.APHotspot;
@@ -56,7 +58,10 @@ public class DumpFactory<T extends ModelKey> {
 
 		// Registers the Cloud File Manager for Walrus
 		CloudFileManager s3cfm = new S3CloudFileManager(baseDir, systemConfiguration);
-		s3cfm.setBucket("dump");
+		String bucket = systemConfiguration.getS3Buckets().get(entity.getSimpleName());
+		if(!StringUtils.hasText(bucket)) bucket = systemConfiguration.getS3Buckets().get("default");
+		
+		s3cfm.setBucket(bucket);
 		dumper.registerCloudFileManager(s3cfm);
 		
 		// Now returns the builded result

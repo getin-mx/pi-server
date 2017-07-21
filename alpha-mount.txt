@@ -1,0 +1,7 @@
+sudo mount -t nfs -o proto=tcp,port=2049 gandalf.getin.mx:/data/sde/allshoppings/dump/2014 /usr/local/allshoppings/dump/2014
+sudo mount -t nfs -o proto=tcp,port=2049 gandalf.getin.mx:/data/sde/allshoppings/dump/2015 /usr/local/allshoppings/dump/2015
+sudo mount -t nfs -o proto=tcp,port=2049 gandalf.getin.mx:/data/sde/allshoppings/dump/2016 /usr/local/allshoppings/dump/2016
+sudo mount -t nfs -o proto=tcp,port=2049 gandalf.getin.mx:/data/sdc/allshoppings/dump/2017 /usr/local/allshoppings/dump/2017
+
+
+# nohup aspi2 ConvertDump --entity DeviceWifiLocationHistory  --outDir /usr/local/allshoppings/dump --fromDate 2014-01-01 --toDate 2017-07-20 &
