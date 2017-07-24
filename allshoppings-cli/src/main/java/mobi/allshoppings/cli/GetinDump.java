@@ -1365,9 +1365,9 @@ public class GetinDump extends AbstractCLI {
 
 			stores.add(new StoreAdapter("581", "Prada Pabellon Polanco", "prada_mx", null));
 			stores.add(new StoreAdapter("582", "Prada Galerias Insurgentes", "prada_mx", null));
-			stores.add(new StoreAdapter("583", "Prada MTY", "prada_mx", null));
-			stores.add(new StoreAdapter("584", "Prada GDL", "prada_mx", null));
-			stores.add(new StoreAdapter("585", "Prada Puebla", "prada_mx", null));
+//			stores.add(new StoreAdapter("583", "Prada MTY", "prada_mx", null));
+			stores.add(new StoreAdapter("584", "Prada Galerias Guadalajara", "prada_mx", null));
+			stores.add(new StoreAdapter("585", "Prada Angelópolis", "prada_mx", null));
 			stores.add(new StoreAdapter("586", "Prada Miramontes/Outlet Zapamundi", "prada_mx", null));
 			stores.add(new StoreAdapter("587", "Prada Gran Plaza", "prada_mx", null));
 			stores.add(new StoreAdapter("588", "Prada Merida", "prada_mx", null));
@@ -1409,7 +1409,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("619","Squalo Playa 6", "squalo_mx", null));
 			stores.add(new StoreAdapter("620","Squalo Mazatlan 1", "squalo_mx", null));
 			
-			stores.add(new StoreAdapter("621","Prada Angelópolis", "prada_mx", null));
+//			stores.add(new StoreAdapter("621","Prada Angelópolis", "prada_mx", null));
 			stores.add(new StoreAdapter("622","Prada Galerías Valle Oriente", "prada_mx", null));
 			
 			stores.add(new StoreAdapter("623","Castelar", "cafe_balcarce_ar", null));
