@@ -1518,6 +1518,8 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("714", "Outlet Deportes 16 de Septiembre", "outletdeportes_mx",null));
 			
+			stores.add(new StoreAdapter("715", "Aditivo Cortázar", "aditivo_mx",null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
