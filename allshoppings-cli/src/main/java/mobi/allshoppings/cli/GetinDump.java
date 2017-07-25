@@ -508,7 +508,7 @@ public class GetinDump extends AbstractCLI {
 			}
 			try {
 				brand = brandDao.get("sbarro_mx", true);
-				brand.setStatus(StatusAware.STATUS_DISABLED);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
 				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
@@ -1523,7 +1523,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("716", "Sbarro Perisur", "sbarro_mx",null));
 			stores.add(new StoreAdapter("717", "Sbarro Galerias Coapa", "sbarro_mx",null));
 			stores.add(new StoreAdapter("718", "Sbarro Acoxpa", "sbarro_mx",null));
-			stores.add(new StoreAdapter("719", "Sbarro Oasis", "sbarro_mx",null));
+//			stores.add(new StoreAdapter("719", "Sbarro Oasis", "sbarro_mx",null));
 			stores.add(new StoreAdapter("720", "Sbarro Coyoacán", "sbarro_mx",null));
 			stores.add(new StoreAdapter("721", "Sbarro Universidad", "sbarro_mx",null));
 			
