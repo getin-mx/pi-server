@@ -6174,6 +6174,94 @@ public class UserMenuDump extends AbstractCLI {
 			
 			// End Mobo  --------------------------------------------------------------------
 			
+			// GamePlanet  --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("rodolfo.urbina@gameplanet.com", true);
+				userMenuDao.delete("rodolfo.urbina@gameplanet.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("rodolfo.urbina@gameplanet.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("rodolfo.urbina@gameplanet.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("GamePlanet");
+				user.setLastname("");
+				user.setEmail("rodolfo.urbina@gameplanet.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("e995f55c-fe80-4c2e-afb7-e5300836effc",
+								"ed8d13c7-2ab9-4c88-b0df-d03e2c102247", "42497afe-5bd9-4aa7-8d66-c2161b8feee8"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "rodolfo.urbina@gameplanet.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("marcopolo@gameplanet.com", true);
+				userMenuDao.delete("marcopolo@gameplanet.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("marcopolo@gameplanet.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("marcopolo@gameplanet.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("GamePlanet");
+				user.setLastname("");
+				user.setEmail("marcopolo@gameplanet.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("e995f55c-fe80-4c2e-afb7-e5300836effc",
+								"ed8d13c7-2ab9-4c88-b0df-d03e2c102247", "42497afe-5bd9-4aa7-8d66-c2161b8feee8"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "marcopolo@gameplanet.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("alberto.vacas@gameplanet.com", true);
+				userMenuDao.delete("alberto.vacas@gameplanet.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("alberto.vacas@gameplanet.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("alberto.vacas@gameplanet.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("GamePlanet");
+				user.setLastname("");
+				user.setEmail("alberto.vacas@gameplanet.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("e995f55c-fe80-4c2e-afb7-e5300836effc",
+								"ed8d13c7-2ab9-4c88-b0df-d03e2c102247", "42497afe-5bd9-4aa7-8d66-c2161b8feee8"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "alberto.vacas@gameplanet.com"));
+				userDao.create(user);
+			}
+			
+			// End GamePlanet  --------------------------------------------------------------------
+			
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
