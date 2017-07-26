@@ -1477,7 +1477,7 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("681","Mobo República del Salvador", "mobo_mx", null));
 			stores.add(new StoreAdapter("682","Mobo Paseo Interlomas", "mobo_mx", null));
-			stores.add(new StoreAdapter("683","Mobo Palmas 330", "mobo_mx", null));
+			stores.add(new StoreAdapter("683","Mobo Palmas 330 Old", "mobo_mx", null));
 			stores.add(new StoreAdapter("684","Mobo Forum Buenavista", "mobo_mx", "forumbuenavista"));
 			stores.add(new StoreAdapter("685","Mobo Aragon 2", "mobo_mx", null));
 			stores.add(new StoreAdapter("686","Mobo Meave piso 1", "mobo_mx", null));
