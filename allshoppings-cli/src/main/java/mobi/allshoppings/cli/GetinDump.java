@@ -1527,7 +1527,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("720", "Sbarro Coyoacán", "sbarro_mx",null));
 			stores.add(new StoreAdapter("721", "Sbarro Universidad", "sbarro_mx",null));
 			
-			stores.add(new StoreAdapter("722", "Mobo Palo Puente", "mobo_mx",null));
+			stores.add(new StoreAdapter("722", "Mobo Palmas Puente", "mobo_mx",null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
