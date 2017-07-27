@@ -3454,6 +3454,46 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "zonapuebla@outletdeportes_mx"));
 				userDao.create(user);
 			}
+			
+			try {
+				um = userMenuDao.get("cymfelipesuper@gmail.com", true);
+				userMenuDao.delete("cymfelipesuper@gmail.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.setKey(userMenuDao.createKey("cymfelipesuper@gmail.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("cymfelipesuper@gmail.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Outlet Deportes");
+				user.setLastname("");
+				user.setEmail("cymfelipesuper@gmail.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings().setStores(Arrays.asList("d37e8f77-b863-4f71-9117-45c0eaa121e2",
+						"f718f26a-c6de-4149-9605-d737450b7bd9", "5cad0cb3-196a-4f3f-b4f4-224f610f6467",
+						"c0d2ccb9-0ed4-45f8-8f4c-770ddb4495b4", "3a361ad5-9748-4bfa-9a69-460fd8214e6e",
+						"fb111c5b-db32-4129-a09a-f15269f57285", "b6b1a93f-0116-4d9a-ad40-9c6842eaa8c0",
+						"115e5c3c-7850-4e3e-82d1-16b15b5256a5", "23b16093-fbbf-4d9a-811b-6c82bd0eb940",
+						"0804ce51-a635-40be-8952-28cc25c946dd", "41e68dc9-254d-4803-82b7-c083eeaf28df",
+						"9263926c-88e3-435b-ad7e-1920abfb73a6", "649c6de9-05aa-40de-bd39-7b1d37921658",
+						"958d7395-fb37-4b8b-a716-b2c1a9ffdb9f", "9bbf47a2-5a32-4ae3-b217-858c7c1e2703",
+						"01bf63e5-6b31-4bf9-beb6-2a9dcbb8a304", "791d303b-3f45-4037-a6f4-2ba9c1e15c75",
+						"e43a9f92-7db7-46d1-8a74-3f629eea2b47", "dcb748f6-a060-43da-9a13-aea9ca02245a",
+						"247b4ead-822f-4713-9465-177666b2e31c", "40b7b23d-f2b4-4f70-be05-a0ad51ce44ba",
+						"440dfccd-73b3-48a5-98c8-d893a01a085f"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "cymfelipesuper@gmail.com"));
+				userDao.create(user);
+			}
+			
+			
 
 			// End Custom Outlet --------------------------------------------------------------------
 			
