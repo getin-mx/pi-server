@@ -957,6 +957,18 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "moda_holding_mx"));
 				brandDao.create(brand);
 			}
+			
+			try {
+				brand = brandDao.get("capadeozono_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Capa de Ozono");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "capadeozono_mx"));
+				brandDao.create(brand);
+			}
 
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
@@ -1528,6 +1540,9 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("721", "Sbarro Universidad", "sbarro_mx",null));
 			
 			stores.add(new StoreAdapter("722", "Mobo Palmas Puente", "mobo_mx",null));
+			
+			stores.add(new StoreAdapter("723", "Capa de Ozono Santa Fe 1", "capadeozono_mx",null));
+			stores.add(new StoreAdapter("724", "Capa de Ozono Santa Fe 2", "capadeozono_mx",null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
