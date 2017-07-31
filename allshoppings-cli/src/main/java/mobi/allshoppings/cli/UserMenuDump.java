@@ -1373,27 +1373,28 @@ public class UserMenuDump extends AbstractCLI {
 			User latabernadelleon = null;
 			try {
 				latabernadelleon = userDao.get("latabernadelleon_mx", true);
+				userDao.delete("latabernadelleon_mx");
 			} catch( Exception e ) {
-				latabernadelleon = new User();
+				/*latabernadelleon = new User();
 				latabernadelleon.setFirstname("La Taberna del León");
 				latabernadelleon.setLastname("Mexico");
 				latabernadelleon.setEmail("latabernadelleon@allshoppings.mobi");
 				latabernadelleon.getSecuritySettings().setRole(Role.BRAND);
 				latabernadelleon.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				latabernadelleon.setKey((Key)keyHelper.obtainKey(User.class, "latabernadelleon_mx"));
-				userDao.create(latabernadelleon);
+				userDao.create(latabernadelleon);*/
 			}
 
 			try {
 				um = userMenuDao.get("latabernadelleon_mx", true);
 				userMenuDao.delete("latabernadelleon_mx");
-				throw new Exception();
+				//throw new Exception();
 			} catch( Exception e ) {
-				um = new UserMenu();
+				/*um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
 				um.setKey(userMenuDao.createKey("latabernadelleon_mx"));
-				userMenuDao.create(um);
+				userMenuDao.create(um);*/
 			}
 			
 			User marketintelligence = null;
