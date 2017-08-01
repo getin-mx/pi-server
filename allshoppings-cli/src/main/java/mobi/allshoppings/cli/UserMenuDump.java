@@ -1269,6 +1269,31 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("chilimbalam_mx"));
 				userMenuDao.create(um);
 			}
+			
+			User capadeozono = null;
+			try {
+				capadeozono = userDao.get("capadeozono_mx", true);
+			} catch( Exception e ) {
+				capadeozono = new User();
+				capadeozono.setFirstname("Capa de Ozono");
+				capadeozono.setLastname("Mexico");
+				capadeozono.setEmail("capadeozono_mx@allshoppings.mobi");
+				capadeozono.getSecuritySettings().setRole(Role.BRAND);
+				capadeozono.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				capadeozono.setKey((Key)keyHelper.obtainKey(User.class, "capadeozono_mx"));
+				userDao.create(capadeozono);
+			}
+
+			try {
+				um = userMenuDao.get("capadeozono_mx", true);
+				userMenuDao.delete("capadeozono_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("capadeozono_mx"));
+				userMenuDao.create(um);
+			}
 
 			User maskota = null;
 			try {
