@@ -969,6 +969,18 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "capadeozono_mx"));
 				brandDao.create(brand);
 			}
+			
+			try {
+				brand = brandDao.get("aditivo_franquicias_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Aditivo Franquicias");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "aditivo_franquicias_mx"));
+				brandDao.create(brand);
+			}
 
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
@@ -1543,6 +1555,11 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("723", "Capa de Ozono Santa Fe 1", "capadeozono_mx",null));
 			stores.add(new StoreAdapter("724", "Capa de Ozono Santa Fe 2", "capadeozono_mx",null));
+			
+			stores.add(new StoreAdapter("725", "Aditivo Franquicia Xochimilco", "aditivo_franquicias_mx",null));
+			stores.add(new StoreAdapter("726", "Aditivo Franquicia Tlahuac", "aditivo_franquicias_mx",null));
+			stores.add(new StoreAdapter("727", "Aditivo Franquicia Plaza Central", "aditivo_franquicias_mx",null));
+			stores.add(new StoreAdapter("728", "Aditivo Franquicia Cuernavaca", "aditivo_franquicias_mx",null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
