@@ -55,6 +55,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 
 	public static final long TIMEFRAME_ONE_HOUR = 3600000;
 	public static final long TIMEFRAME_ONE_DAY = 86400000;
+	public static final long TWENTY_THREE_HOURS = 82800000;
 	
 	private static final SimpleDateFormat year = new SimpleDateFormat("yyyy");
 	private static final SimpleDateFormat month = new SimpleDateFormat("MM");
@@ -426,6 +427,76 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		return new DumpStringIterator(fromDate, toDate);
 	}
 
+	/**
+	 * @see mobi.allshoppings.dump.DumperHelper#getMultipleNameOptions(Date)
+	 */
+	@Override
+	public List<String> getMultipleNameOptions(Date date) {
+		List<String> ret = CollectionFactory.createList();
+		
+		Date toDate = new Date(date.getTime() + TWENTY_THREE_HOURS);
+		Date myDate = new Date(date.getTime());
+		while( myDate.before(toDate) || myDate.equals(toDate)) {
+			try {
+				if( fileNameResolver != null && fileNameResolver.mayHaveMultiple() && !StringUtils.hasText(filter)) {
+					List<String> l = fileNameResolver.getMultipleFileOptions(baseDir,
+							clazz.getSimpleName(), myDate, cfm);
+					for( String e : l ) {
+						File f = new File(e);
+						String[] parts = f.getName().split("\\.");
+						StringBuffer sn = new StringBuffer();
+						String n = null;
+						for( int i = 0; i < parts.length -1; i++) {
+							if( i != 0 ) sn.append(".");
+							sn.append(parts[i]);
+						}
+						n = sn.toString();
+						if( !ret.contains(n))
+							ret.add(n);
+					}
+				}
+			} catch (ASException e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
+			myDate = new Date(myDate.getTime() + timeFrame);
+		}
+
+		return ret;
+	}
+	
+	/**
+	 * @see mobi.allshoppings.dump.DumperHelper#getMultipleFileOptions(Date)
+	 */
+	@Override
+	public List<String> getMultipleFileOptions(Date date) {
+
+		List<String> ret = CollectionFactory.createList();
+		
+		Date toDate = new Date(date.getTime() + TWENTY_THREE_HOURS);
+		Date myDate = new Date(date.getTime());
+		while( myDate.before(toDate) || myDate.equals(toDate)) {
+			try {
+				if( fileNameResolver != null && fileNameResolver.mayHaveMultiple() && !StringUtils.hasText(filter)) {
+					List<String> l = fileNameResolver.getMultipleFileOptions(baseDir,
+							clazz.getSimpleName(), myDate, cfm);
+					for( String e : l ) {
+						File f = new File(e);
+						String n = f.getName();
+						if( !ret.contains(n))
+							ret.add(n);
+					}
+				}
+			} catch (ASException e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
+			myDate = new Date(myDate.getTime() + timeFrame);
+		}
+
+		return ret;
+	
+	}
+	
+	
 	/**
 	 * @see mobi.allshoppings.dump.DumperHelper#iterator(Date, Date)
 	 */

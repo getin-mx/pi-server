@@ -37,7 +37,7 @@ public class APHotspotFileNameResolver implements DumperFileNameResolver<ModelKe
 		if( element instanceof APHotspot ) return true;
 		return false;
 	}
-	
+
 	@Override
 	public String resolveDumpFileName(String baseDir, String baseName, Date forDate, ModelKey element, String filter) {
 		String myYear = year.format(forDate);

@@ -235,7 +235,7 @@ public class XS3Object implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return ((getParent() != null && !getParent().trim().equals("")) ? (getPath() + File.separator + getName())
+		return ((getPath() != null && !getPath().trim().equals("")) ? (getPath() + File.separator + getName())
 				: getName());
 	}
 

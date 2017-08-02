@@ -3,7 +3,6 @@ package mobi.allshoppings.cli;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.log4j.Level;
@@ -14,10 +13,8 @@ import org.springframework.util.StringUtils;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.apdevice.APHHelper;
-import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -45,7 +42,6 @@ public class GenerateAPHE extends AbstractCLI {
 			TimeZone tz = TimeZone.getTimeZone("GMT");
 			sdf.setTimeZone(tz);
 			
-			APDeviceDAO apdDao = (APDeviceDAO)getApplicationContext().getBean("apdevice.dao.ref");
 			APHHelper helper = (APHHelper)getApplicationContext().getBean("aphentry.helper");
 
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
@@ -83,13 +79,9 @@ public class GenerateAPHE extends AbstractCLI {
 			}
 
 			log.log(Level.INFO, "Generating APHEntries");
-			Map<String,APDevice> apdevices = CollectionFactory.createMap();
+			List<String> hostnames = CollectionFactory.createList();
 			if(StringUtils.hasText(hostname)) {
-				apdevices.put(hostname, apdDao.get(hostname, true));
-			} else {
-				List<APDevice> l = apdDao.getAll();
-				for( APDevice dev : l )
-					apdevices.put(dev.getHostname(), dev);
+				hostnames.add(hostname);
 			}
 			
 			helper.setScanInDevices(false);
@@ -101,7 +93,7 @@ public class GenerateAPHE extends AbstractCLI {
 				ffromDate = new Date(ftoDate.getTime());
 				ftoDate = new Date(ftoDate.getTime() + TWENTY_FOUR_HOURS);
 				
-				helper.generateAPHEntriesFromDump(ffromDate, ftoDate, apdevices, true);
+				helper.generateAPHEntriesFromDump(ffromDate, ftoDate, hostnames, false);
 
 			}
 

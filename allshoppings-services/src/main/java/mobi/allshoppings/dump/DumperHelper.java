@@ -3,6 +3,7 @@ package mobi.allshoppings.dump;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.json.JSONObject;
 
@@ -132,6 +133,24 @@ public interface DumperHelper<T extends ModelKey> {
 	 * @throws IOException
 	 */
 	void dump(T obj) throws ASException;
+
+	/**
+	 * Obtains a list of potential names for a date
+	 * 
+	 * @param fromDate
+	 *            The specified date
+	 * @return A fully formed list of names
+	 */
+	List<String> getMultipleFileOptions(Date date);
+
+	/**
+	 * Obtains a list of potential names for a date
+	 * 
+	 * @param fromDate
+	 *            The specified date
+	 * @return A fully formed list of names
+	 */
+	List<String> getMultipleNameOptions(Date date);
 
 	/**
 	 * Resolves the file name for a dump file based in its date and time

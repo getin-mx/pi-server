@@ -406,13 +406,11 @@ public class APHHelperImpl implements APHHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public void buildCache(Date fromDate, Date toDate, Map<String, APDevice> apdevices) throws ASException {
+	public void buildCache(Date fromDate, Date toDate, List<String> hostnames) throws ASException {
 		cache.clear();
-		List<String> apdKeys = CollectionFactory.createList();
-		apdKeys.addAll(apdevices.keySet());
 
-		if( apdKeys.size() == 1 ) {
-			for( String key : apdKeys ) { 
+		if( hostnames.size() == 1 ) {
+			for( String key : hostnames ) { 
 				DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
 				apheDumper.setFilter(key);
 				Iterator<APHEntry> i = apheDumper.iterator(fromDate, toDate);
@@ -632,59 +630,77 @@ public class APHHelperImpl implements APHHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public void generateAPHEntriesFromDump(Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException {
+	public void generateAPHEntriesFromDump(Date fromDate, Date toDate, List<String> hostnames, boolean buildCache) throws ASException {
 
 		if( cache == null )
 			cache = new PersistentCacheFSImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
 					systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
 		cache.clear();
-		
+
 		// Pre build cache
 		if( buildCache ) {
 			log.log(Level.INFO, "Building Cache");
-			buildCache(fromDate, new Date(toDate.getTime() - 86400000), apdevices);
+			buildCache(fromDate, new Date(toDate.getTime() - 86400000), null);
 		}
-		
+
 		// Gets the input data
 		long totals = 0;
 		log.log(Level.INFO, "Processing Dump Records");
 		dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
-		if( apdevices.size() == 1 ) dumpHelper.setFilter((String) apdevices.keySet().toArray()[0]);
-		Date xdate = new Date(toDate.getTime() - 3600000);
-		Iterator<String> i = dumpHelper.stringIterator(fromDate, xdate);
-		while( i.hasNext() ) {
-			String s = i.next();
-			JSONObject json = new JSONObject(s);
-			if( totals % 1000 == 0 ) 
-				log.log(Level.INFO, "Processing for date " + new Date(json.getLong("creationDateTime")) + " with " + cache.size() + " records so far (" + cache.getHits() + "/" + cache.getMisses() + "/" + cache.getStores() + "/" + cache.getLoads() + ")...");
 
-			if(isValidMacAddress(json.getString("mac")))
-				if( apdevices.containsKey(json.getString("hostname"))) 
+		List<String> options;
+		if( hostnames == null || hostnames.size() == 0 ) {
+			options = dumpHelper.getMultipleNameOptions(fromDate);
+		} else if( hostnames.size() == 1 ) {
+			options = CollectionFactory.createList();
+			options.add(hostnames.get(0));
+		} else {
+			options = CollectionFactory.createList();
+			options.addAll(hostnames);
+		}
+
+		DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class); 
+
+		for( String hostname : options ) {
+
+			dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
+			dumpHelper.setFilter(hostname);
+			Date xdate = new Date(toDate.getTime() - 3600000);
+			Iterator<String> i = dumpHelper.stringIterator(fromDate, xdate);
+			while( i.hasNext() ) {
+				String s = i.next();
+				JSONObject json = new JSONObject(s);
+				if( totals % 1000 == 0 ) 
+					log.log(Level.INFO, "Processing for date " + new Date(json.getLong("creationDateTime")) + " with " + cache.size() + " records so far (" + cache.getHits() + "/" + cache.getMisses() + "/" + cache.getStores() + "/" + cache.getLoads() + ")...");
+
+				if(isValidMacAddress(json.getString("mac")))
 					setFramedRSSI(json);
 
-			totals++;
-		}
-
-		log.log(Level.INFO, "Disposing APHotspot dumper");
-		dumpHelper.dispose();
-
-		// Write to the database, only if it was not written yet!
-		log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
-		Iterator<APHEntry> x = cache.iterator();
-		DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class); 
-		while(x.hasNext()) {
-			APHEntry aphe = x.next();
-			if( aphe.getDataCount() > 2 ) {
-				aphe.setKey(apheDao.createKey(aphe));
-				apheDumper.dump(aphe);
+				totals++;
 			}
+
+			log.log(Level.INFO, "Disposing APHotspot dumper");
+			dumpHelper.dispose();
+
+			// Write to the database, only if it was not written yet!
+			log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
+			Iterator<APHEntry> x = cache.iterator();
+			while(x.hasNext()) {
+				APHEntry aphe = x.next();
+				if( aphe.getDataCount() > 2 ) {
+					aphe.setKey(apheDao.createKey(aphe));
+					apheDumper.dump(aphe);
+				}
+			}
+			log.log(Level.INFO, "Disposing cache");
+			cache.dispose();
+
+			apheDumper.flush();
 		}
+		
 		log.log(Level.INFO, "Disposing APHE dumper");
 		apheDumper.dispose();
 
-		log.log(Level.INFO, "Disposing cache");
-		cache.dispose();
-		
 		log.log(Level.INFO, "Process Ended");
 
 	}
@@ -709,7 +725,9 @@ public class APHHelperImpl implements APHHelper {
 		// Pre build cache
 		if( buildCache ) {
 			log.log(Level.INFO, "Building Cache");
-			buildCache(fromDate, new Date(toDate.getTime() - 86400000), apdevices);
+			List<String> hostnames = CollectionFactory.createList();
+			hostnames.addAll(apdevices.keySet());
+			buildCache(fromDate, new Date(toDate.getTime() - 86400000), hostnames);
 		}
 		
 		// Gets the input data
