@@ -6395,6 +6395,48 @@ public class UserMenuDump extends AbstractCLI {
 			
 			// End GamePlanet  --------------------------------------------------------------------
 			
+			// Squalo  --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("jogomez@squalo.com", true);
+				userMenuDao.delete("jogomez@squalo.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("jogomez@squalo.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("jogomez@squalo.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Squalo");
+				user.setLastname("");
+				user.setEmail("jogomez@squalo.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("1e98484d-2d9a-40f7-bdb5-9269387390f5",
+								"472407b7-2add-4552-aa8c-1d3580ff2994", "edca05c6-9f65-4cde-a841-84e62b9108d3",
+								"61c72775-af59-4c4a-b10e-ede1add1d969", "071b259f-eb59-44a6-b471-141a2b5bcfd4",
+								"42e25fcc-c115-4e98-aabf-e9e83109f2bf", "e781cf2e-960a-4517-800c-305dcfab0af7",
+								"c6da6b64-a3e4-4b56-aad8-214e9cdc0dbb", "3b809e40-dae1-43a0-af94-73c4ccd8c943",
+								"1479331295161", "e1a08bb8-b4ea-488c-8dcf-e3c8ade1f7ed",
+								"cb7a83fb-4946-407f-ae7a-c7110f975997", "600633c7-ad23-4358-a215-89355cd80871",
+								"57a5eaa6-a675-472a-ab71-48975d0e204f", "1479331293219",
+								"d0e0a2d7-95b2-4d6f-8b5c-f36e2a697e6c", "fb994fb0-099c-4ae3-902f-f45df7c77cbe",
+								"1479331294155", "b0abfa8a-8c56-4a00-9ab8-a5ccf72cfa2f",
+								"b6aa02b2-8e4d-4e94-93f6-6cae7215cff1", "9ee4d4be-0d6f-4516-804c-8ecacbb5dd30",
+								"fb9ba533-212b-4b26-b9a8-73026e5059f0", "1479331293676"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "jogomez@squalo.com"));
+				userDao.create(user);
+			}
+			
+			// End Squalo  --------------------------------------------------------------------
+			
 			
 			try {
 				um = userMenuDao.get("modaholding_mx", true);

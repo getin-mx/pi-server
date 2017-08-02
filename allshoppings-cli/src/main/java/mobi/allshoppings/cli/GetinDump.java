@@ -1533,9 +1533,9 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("706","Aditivo Tlalnepantla", "aditivo_mx", null));
 			
 			stores.add(new StoreAdapter("707","Moda Holding Dorothy Gaynor Santa Fe II", "moda_holding_mx", null));
-			stores.add(new StoreAdapter("708","Moda Holding Dorothy Gaynor Santa Fe I", "moda_holding_mx", null));
+			stores.add(new StoreAdapter("708","*Moda Holding Dorothy Gaynor Santa Fe I", "moda_holding_mx", null));
 			stores.add(new StoreAdapter("709","Moda Holding Dorothy Gaynor Madero", "moda_holding_mx", null));
-			stores.add(new StoreAdapter("710","Moda Holding Dorothy Gaynor 16 de Septiembre", "moda_holding_mx", null));
+			stores.add(new StoreAdapter("710","*Moda Holding Dorothy Gaynor 16 de Septiembre", "moda_holding_mx", null));
 //			stores.add(new StoreAdapter("711","Moda Holding Dorothy Gaynor Santa Fe I", "moda_holding_mx", null));
 			stores.add(new StoreAdapter("712","Moda Holding Zingara Santa Fe I", "moda_holding_mx", null));
 			stores.add(new StoreAdapter("713","Moda Holding Zingara  Santa Fe II", "moda_holding_mx", null));
