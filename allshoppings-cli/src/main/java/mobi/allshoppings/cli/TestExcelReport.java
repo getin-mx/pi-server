@@ -44,7 +44,7 @@ public class TestExcelReport extends AbstractCLI {
 //			final List<String> storeIds = Arrays.asList("0804ce51-a635-40be-8952-28cc25c946dd","b6b1a93f-0116-4d9a-ad40-9c6842eaa8c0","c0d2ccb9-0ed4-45f8-8f4c-770ddb4495b4","5cad0cb3-196a-4f3f-b4f4-224f610f6467","f718f26a-c6de-4149-9605-d737450b7bd9","e43a9f92-7db7-46d1-8a74-3f629eea2b47","40b7b23d-f2b4-4f70-be05-a0ad51ce44ba","fb111c5b-db32-4129-a09a-f15269f57285","dcb748f6-a060-43da-9a13-aea9ca02245a","791d303b-3f45-4037-a6f4-2ba9c1e15c75","958d7395-fb37-4b8b-a716-b2c1a9ffdb9f","440dfccd-73b3-48a5-98c8-d893a01a085f","247b4ead-822f-4713-9465-177666b2e31c","3a361ad5-9748-4bfa-9a69-460fd8214e6e","23b16093-fbbf-4d9a-811b-6c82bd0eb940","01bf63e5-6b31-4bf9-beb6-2a9dcbb8a304","9bbf47a2-5a32-4ae3-b217-858c7c1e2703","115e5c3c-7850-4e3e-82d1-16b15b5256a5","41e68dc9-254d-4803-82b7-c083eeaf28df","9263926c-88e3-435b-ad7e-1920abfb73a6","649c6de9-05aa-40de-bd39-7b1d37921658");
 			final List<String> storeIds = Arrays.asList("8180ea3e-571e-43e0-988f-2cf93b0c8f3e","1487950784692","f3bf4065-bf89-43ea-a2cf-2640bf77cdb5"); // Saboreate y café, y Annik
 			final String FROM_DATE = "2017-01-02"; // Retail Calendar initial 2017 day
-			final String TO_DATE = "2017-05-28"; // Retail Calendar final march day
+			final String TO_DATE = "2017-07-30"; // Retail Calendar final march day
 			final String outDir = "/tmp";
 			
 			for( String store : storeIds ) {

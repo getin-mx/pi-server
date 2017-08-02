@@ -2,11 +2,14 @@ package mobi.allshoppings.dump.impl;
 
 import java.io.File;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.dump.CloudFileManager;
 import mobi.allshoppings.dump.DumperHelper;
+import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.DeviceWifiLocationHistory;
 import mobi.allshoppings.model.SystemConfiguration;
@@ -14,6 +17,8 @@ import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.ApplicationContextProvider;
 
 public class DumpFactory<T extends ModelKey> {
+	
+	private static final Logger log = Logger.getLogger(DumpFactory.class.getName());
 	
 	/**
 	 * Factory for the DumperHelper
@@ -63,6 +68,11 @@ public class DumpFactory<T extends ModelKey> {
 		
 		s3cfm.setBucket(bucket);
 		dumper.registerCloudFileManager(s3cfm);
+		try {
+			s3cfm.startPrefetch();
+		} catch (ASException e) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+		}
 		
 		// Now returns the builded result
 		return dumper;

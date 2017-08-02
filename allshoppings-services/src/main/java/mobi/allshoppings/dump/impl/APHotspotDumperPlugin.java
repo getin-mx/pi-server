@@ -1,5 +1,7 @@
 package mobi.allshoppings.dump.impl;
 
+import java.util.Date;
+
 import org.json.JSONObject;
 
 import mobi.allshoppings.dump.DumperPlugin;
@@ -30,12 +32,32 @@ public class APHotspotDumperPlugin implements DumperPlugin<ModelKey> {
 
 	@Override
 	public String toJson(ModelKey element, String jsonRep) throws ASException {
-		JSONObject json = new JSONObject(jsonRep);
+		return toJson(new JSONObject(jsonRep), jsonRep);
+	}
+
+	private boolean isNumber(String str) {
+	    for (char c : str.toCharArray()) {
+	        if (!Character.isDigit(c))
+	            return false;
+	    }
+	    return true;
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	public String toJson(JSONObject json, String jsonRep) throws ASException {
 		json.remove("firstSeen");
 		json.remove("lastSeen");
 		json.remove("count");
 		
+		if(!isNumber(json.getString("creationDateTime"))) {
+			json.put("creationDateTime", new Date(json.getString("creationDateTime")).getTime());
+		}
+		
+		if(!isNumber(json.getString("lastUpdate"))) {
+			json.put("lastUpdate", new Date(json.getString("lastUpdate")).getTime());
+		}
+
 		return json.toString();
 	}
-
 }

@@ -69,6 +69,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	private String filter;
 	private CloudFileManager cfm;
 	private String lastFileUsed;
+	private T instance;
 	
 	public DumperHelperImpl(String baseDir, Class<T> clazz) {
 		this.baseDir = baseDir;
@@ -81,6 +82,11 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		day.setTimeZone(tz);
 		hour.setTimeZone(tz);
 
+		try {
+			instance = clazz.newInstance();
+		} catch( Exception e ) {
+			instance = null;
+		}
 	}
 
 	/**
@@ -88,6 +94,20 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	 */
 	public String getFilter() {
 		return filter;
+	}
+
+	/**
+	 * @return the baseDir
+	 */
+	public String getBaseDir() {
+		return baseDir;
+	}
+
+	/**
+	 * @param baseDir the baseDir to set
+	 */
+	public void setBaseDir(String baseDir) {
+		this.baseDir = baseDir;
 	}
 
 	/**
@@ -233,6 +253,17 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	}
 
 	/**
+	 * @see mobi.allshoppings.dump.DumperHelper#applyJsonPlugins(ModelKey)
+	 */
+	public String applyJsonPlugins(JSONObject obj) throws ASException {
+		String json = obj.toString();
+		for(DumperPlugin<ModelKey> plugin : registeredPlugins) {
+			if(plugin.isAvailableFor(instance)) json = plugin.toJson(obj, json);
+		}
+		return json;
+	}
+
+	/**
 	 * @see mobi.allshoppings.dump.DumperHelper#applyPostDumpPlugins(ModelKey)
 	 */
 	public void applyPostDumpPlugins(T obj) throws ASException {
@@ -264,6 +295,21 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		}
 	}
 
+	public void dump(JSONObject obj, String baseDir, String baseName, Date forDate, String filter) throws ASException {
+		try {
+			String fileName = resolveDumpFileName(baseDir, baseName, forDate, null, filter);
+			File file = new File(fileName);
+			String jsonRep = applyJsonPlugins(obj);
+			dump( jsonRep, file);
+			if( cfm != null ) 
+				cfm.registerFileForUpdate(fileName);
+		} catch( ASException e ) {
+			throw e;
+		} catch( Exception e ) {
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		}
+	}
+
 	/**
 	 * @see mobi.allshoppings.dump.DumperHelper#resolveDumpFileName(Date)
 	 */
@@ -275,7 +321,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	public String resolveDumpFileName(String baseDir, String baseName, Date forDate, T element, String filter) {
 
 		String fileName = null;
-		if( fileNameResolver != null && element != null || fileNameResolver != null ) {
+		if( fileNameResolver != null ) {
 			fileName = fileNameResolver.resolveDumpFileName(baseDir, baseName, forDate, element, filter);
 		}
 
@@ -350,7 +396,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	public Iterator<JSONObject> jsonIterator(Date fromDate, Date toDate) {
 		return new DumpJSONIterator(fromDate, toDate);
 	}
-
+	
 	@Override
 	public void fakeModelKey(Date fromDate, Date toDate) throws ASException {
 		Calendar cal1 = Calendar.getInstance();
@@ -517,8 +563,12 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 
 		@Override
 		public JSONObject next() {
-			JSONObject element = new JSONObject(iterator.next());
-			return element;
+			try {
+				JSONObject element = new JSONObject(iterator.next());
+				return element;
+			} catch( Exception e ) {
+				return new JSONObject();
+			}
 		}
 
 		@Override

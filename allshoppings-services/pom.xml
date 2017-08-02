@@ -308,6 +308,13 @@
 			<version>1.2</version>
 		</dependency>
 
+		<!-- XS3 -->
+		<dependency>
+			<groupId>mobi.allshoppings</groupId>
+			<artifactId>xs3-client-api</artifactId>
+			<version>0.1</version>
+		</dependency>
+
 		<!-- Google GCM -->
 		<dependency>
 			<groupId>mobi.allshoppings</groupId>

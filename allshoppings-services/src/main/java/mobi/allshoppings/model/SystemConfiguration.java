@@ -111,6 +111,7 @@ public class SystemConfiguration implements Serializable {
 	private String awsAccessKey;
 	private String awsSecretKey;
 	private String s3Endpoint;
+	private int maxUploadQueue;
 	private Map<String, String> s3Buckets;
 	
 	public String getDefaultLevel() {
@@ -953,6 +954,14 @@ public class SystemConfiguration implements Serializable {
 
 	public void setS3Buckets(Map<String, String> s3Buckets) {
 		this.s3Buckets = s3Buckets;
+	}
+
+	public int getMaxUploadQueue() {
+		return maxUploadQueue;
+	}
+
+	public void setMaxUploadQueue(int maxUploadQueue) {
+		this.maxUploadQueue = maxUploadQueue;
 	}
 
 }

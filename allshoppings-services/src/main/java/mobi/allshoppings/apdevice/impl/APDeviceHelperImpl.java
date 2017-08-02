@@ -41,10 +41,8 @@ import com.jcraft.jsch.JSchException;
 import com.mongodb.DBObject;
 
 import mobi.allshoppings.apdevice.APDeviceHelper;
-import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
-import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.APHotspotDAO;
 import mobi.allshoppings.dao.APUptimeDAO;
 import mobi.allshoppings.dao.InnerZoneDAO;
@@ -58,7 +56,6 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.mail.MailHelper;
 import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.APDevice;
-import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.APUptime;
 import mobi.allshoppings.model.EntityKind;
@@ -109,10 +106,6 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	private IndexHelper indexHelper;
 	@Autowired
 	private APHotspotDAO aphDao;
-	@Autowired
-	private APHHelper aphHelper;
-	@Autowired
-	private APHEntryDAO apheDao;
 	
 	private DumperHelper<APHotspot> dumpHelper;
 
@@ -985,8 +978,6 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		File inputDir = new File(dir);
 		File outputDir = new File(backupDir);
 		
-		Map<String, APDevice> apdevices = CollectionFactory.createMap();
-		
 		long firstUnixTime = 0;
 		long deviationOffset = 0;
 		
@@ -1052,28 +1043,6 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 
 							if(!aphotspot.getMac().startsWith("broadcast")) {
 								aphDao.create(aphotspot);
-
-								// Updates APHEntries
-								try {
-									aphHelper.setUseCache(false);
-									APHEntry aphe = aphHelper.setFramedRSSI(aphotspot);
-									
-									APDevice apd = apdevices.get(aphe.getHostname());
-									if( apd == null ) {
-										apd = dao.get(aphe.getHostname());
-										apdevices.put(aphe.getHostname(), apd);
-									}
-									
-									aphHelper.artificiateRSSI(aphe, apd);
-									if( StringUtils.hasText(aphe.getIdentifier())) {
-										apheDao.update(aphe);
-									} else {
-										aphe.setKey(apheDao.createKey(aphe));
-										apheDao.create(aphe);
-									}
-								} catch( Exception e ) {
-									log.log(Level.SEVERE, "Error updating APHEntries", e);
-								}
 							}
 							
 						} catch( Exception e ) {

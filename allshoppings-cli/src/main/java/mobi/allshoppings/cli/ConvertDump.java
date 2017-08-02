@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.util.StringUtils;
 
 import joptsimple.OptionParser;
@@ -37,6 +38,7 @@ public class ConvertDump extends AbstractCLI {
 	public static void main(String args[]) throws ASException {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH");
 			
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
 			OptionSet options = parser.parse(args);
@@ -83,28 +85,40 @@ public class ConvertDump extends AbstractCLI {
 			log.log(Level.INFO, "Starting dump for entity " + entity.getName() + " from " + fromDate + " to " + toDate);
 			DumperHelper<ModelKey> oldDumper = new DumperHelperImpl<>(sOutDir, entity);
 			oldDumper.registerFileNameResolver(new LegacyFileNameResolver());
-			DumperHelper<ModelKey> newDumper = new DumpFactory<ModelKey>().build(null, entity);
-
+			DumperHelperImpl<ModelKey> newDumper = (DumperHelperImpl<ModelKey>)new DumpFactory<ModelKey>().build(null, entity);
+			
+			String baseName = entity.getSimpleName();
+			String baseDir = newDumper.getBaseDir();
 			Date referenceDate = null;
+			String filter = null;
 			long count = 0;
-			Iterator<ModelKey> it = oldDumper.iterator(fromDate, toDate);
+			Iterator<JSONObject> it = oldDumper.jsonIterator(fromDate, toDate);
 			while( it.hasNext()) {
 				
-				ModelKey obj = it.next();
-				
-				Date creationDateTime = obj.getCreationDateTime();
-				if( referenceDate == null )
-					referenceDate = new Date(creationDateTime.getTime());
-				if(!sdf.format(referenceDate).equals(sdf.format(creationDateTime))) {
-					newDumper.flush();
-					referenceDate = new Date(creationDateTime.getTime());
-				}					
-				
-				newDumper.dump(obj);
-				
-				count++;
-				if( (count % 1000) == 0 ) {
-					log.log(Level.INFO, "Processing record for date " + creationDateTime);
+				JSONObject obj = it.next();
+				if( obj != null && obj.has("creationDateTime")) {
+
+					@SuppressWarnings("deprecation")
+					Date creationDateTime = new Date(obj.getString("creationDateTime"));
+					if( referenceDate == null )
+						referenceDate = new Date(creationDateTime.getTime());
+					if(!sdf2.format(referenceDate).equals(sdf2.format(creationDateTime))) {
+						newDumper.flush();
+						referenceDate = new Date(creationDateTime.getTime());
+					}					
+
+					if( baseName.equals("APHotspot")) {
+						filter = obj.getString("hostname");
+					} else {
+						filter = null;
+					}
+
+					newDumper.dump(obj, baseDir, baseName, creationDateTime, filter);
+
+					count++;
+					if( (count % 1000) == 0 ) {
+						log.log(Level.INFO, "Processing record for date " + creationDateTime);
+					}
 				}
 				
 			}

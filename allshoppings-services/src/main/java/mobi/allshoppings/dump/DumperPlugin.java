@@ -1,5 +1,7 @@
 package mobi.allshoppings.dump;
 
+import org.json.JSONObject;
+
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.interfaces.ModelKey;
 
@@ -43,4 +45,16 @@ public interface DumperPlugin<T extends ModelKey> {
 	 * @throws ASException
 	 */
 	String toJson(T element, String jsonRep) throws ASException;
+
+	/**
+	 * Conversion process
+	 * 
+	 * @param element
+	 *            The element to process
+	 * @param jsonRep
+	 *            The previous JSON Representation
+	 * @return A formatted JSON Representation of the object
+	 * @throws ASException
+	 */
+	String toJson(JSONObject element, String jsonRep) throws ASException;
 }

@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import org.springframework.util.StringUtils;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -42,6 +43,7 @@ public class S3CloudFileManager implements CloudFileManager {
 	private static final Logger log = Logger.getLogger(S3CloudFileManager.class.getName());
 
 	private Map<String, Date> forUpdate;
+	private Map<String, Date> forUpload;
 	private Map<String, Date> forPrefecth;
 	private Map<String, S3ObjectSummary> downloaded;
 	private Map<String, Date> forDisposal;
@@ -62,6 +64,7 @@ public class S3CloudFileManager implements CloudFileManager {
 		instances = systemConfiguration.getCFMInstances();
 		
 		forUpdate = CollectionFactory.createMap();
+		forUpload = CollectionFactory.createMap();
 		forPrefecth = CollectionFactory.createMap();
 		forDisposal = CollectionFactory.createMap();
 		downloaded = CollectionFactory.createMap();
@@ -102,7 +105,7 @@ public class S3CloudFileManager implements CloudFileManager {
 		try {
 			if( controlQueue != null ) {
 				sem.acquire();
-				controlQueue.offer(file);
+				controlQueue.offer("download::" + file);
 				sem.release();
 			}
 		} catch( Exception e ) {
@@ -116,11 +119,6 @@ public class S3CloudFileManager implements CloudFileManager {
 		forDisposal.put(file, new Date());
 		try {
 			deleteLocal(file);
-			sem.acquire();
-			forPrefecth.remove(file);
-			downloaded.remove(file);
-			sem.release();
-			forDisposal.remove(file);
 		} catch( Exception e ) {}
 	}
 
@@ -152,8 +150,8 @@ public class S3CloudFileManager implements CloudFileManager {
 		
 		// Start the actual workers
 		for( int i = 0; i < instances; i++ ) {
-			S3CloudFileManagerWorker w = new S3CloudFileManagerWorker(forPrefecth, downloaded, notFound, tmpPath,
-					bucket, s3, controlQueue, sem, this);
+			S3CloudFileManagerWorker w = new S3CloudFileManagerWorker(forPrefecth, forUpload, downloaded, notFound,
+					tmpPath, bucket, s3, controlQueue, sem, this);
 			w.setName("S3 Worker " + i);
 			w.start();
 			workers.add(w);
@@ -170,13 +168,31 @@ public class S3CloudFileManager implements CloudFileManager {
 			Iterator<String> i = tmpList.iterator();
 			while(i.hasNext()) {
 				String key = i.next();
-				upload(key, key);
-				sem.acquire();
-				forDisposal.put(key, new Date());
-				forUpdate.remove(key);
-				downloaded.remove(key);
-				sem.release();
+				// Check if it was already started
+				if( workers != null && workers.size() > 0 ) {
+					sem.acquire();
+					forUpload.put(key, new Date());
+					controlQueue.offer("upload::" + key);
+					forUpdate.remove(key);
+					sem.release();
+				} else {
+					upload(key, key);
+					sem.acquire();
+					forDisposal.put(key, new Date());
+					forUpdate.remove(key);
+					downloaded.remove(key);
+					sem.release();
+				}
 			}
+
+			// Waits for flushing files
+			if( workers != null && workers.size() > 0 ) {
+				while(controlQueue.size() > systemConfiguration.getMaxUploadQueue()) {
+					log.log(Level.INFO, "waiting for files to flush... " + controlQueue.size() + " pending...");
+					Thread.sleep(5000);
+				}
+			}
+			
 			forceCleanup();
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
@@ -193,7 +209,6 @@ public class S3CloudFileManager implements CloudFileManager {
 			while(i.hasNext()) {
 				String key = i.next();
 				deleteLocal(key);
-				forDisposal.remove(key);
 			}
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
@@ -271,15 +286,20 @@ public class S3CloudFileManager implements CloudFileManager {
 	@Override
 	public void dispose() {
 		
-		if( workers != null ) {
-			for( S3CloudFileManagerWorker worker : workers ) {
-				worker.dispose();
-			}
-		}
-		
 		try {
 			flush();
-			forceCleanup();
+			
+			if( workers != null ) {
+
+				while( controlQueue.size() > 0 ) {
+					log.log(Level.INFO, "waiting for all files to flush... " + controlQueue.size() + " pending...");
+					Thread.sleep(5000);
+				}
+				
+				for( S3CloudFileManagerWorker worker : workers ) {
+					worker.dispose();
+				}
+			}
 
 			if( workers != null ) {
 				for( S3CloudFileManagerWorker worker : workers ) {
@@ -288,7 +308,9 @@ public class S3CloudFileManager implements CloudFileManager {
 					}
 				}
 			}
-			
+
+			forceCleanup();
+
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -307,11 +329,15 @@ public class S3CloudFileManager implements CloudFileManager {
 
 	private void connect() {
 		if( s3 == null ) {
+			
+			ClientConfiguration cc = new ClientConfiguration(); 
+			cc.setSocketTimeout(600000);
+			
 			s3 = new AmazonS3Client( new BasicAWSCredentials(
 					// provide access key and secret key
 					systemConfiguration.getAwsAccessKey(),
 					systemConfiguration.getAwsSecretKey()
-					));
+					), cc);
 
 			// change to the IP and port of your Eucalyptus CLC
 			s3.setEndpoint( systemConfiguration.getS3Endpoint() );
@@ -332,7 +358,7 @@ public class S3CloudFileManager implements CloudFileManager {
 			connect();
 		
 		boolean done = false;
-		int retriesLeft = 3;
+		int retriesLeft = 15;
 		
 		while( !done ) {
 			try {
@@ -343,11 +369,14 @@ public class S3CloudFileManager implements CloudFileManager {
 				long end = new Date().getTime();
 				log.log(Level.FINE, "Object " + objectKey + " uploaded in " + (end - start) + "ms" );
 				done = true;
-			} catch( Exception e ) {
-				if( retriesLeft <= 0 )
+			} catch( Throwable e ) {
+				if( retriesLeft <= 0 ) {
+					log.log(Level.WARNING, "Error uploading " + fileName + "...");
 					throw e;
+				}
 				retriesLeft--;
 				Thread.sleep(3000);
+				log.log(Level.WARNING, "Retrying upload for " + fileName + "...");
 			}
 		}
 	}
@@ -361,7 +390,7 @@ public class S3CloudFileManager implements CloudFileManager {
 		long start = new Date().getTime();
 
 		boolean done = false;
-		int retriesLeft = 3;
+		int retriesLeft = 15;
 		
 		while(!done) {
 			try {
@@ -377,10 +406,13 @@ public class S3CloudFileManager implements CloudFileManager {
 
 				done = true;
 			} catch( Exception e ) {
-				if( retriesLeft <= 0 )
+				if( retriesLeft <= 0 ) {
+					log.log(Level.WARNING, "Failed download for " + fileName + "...");
 					throw e;
+				}
 				retriesLeft--;
 				Thread.sleep(3000);
+				log.log(Level.WARNING, "Retrying download for " + fileName + "...");
 			}
 		}
         long end = new Date().getTime();
@@ -393,6 +425,14 @@ public class S3CloudFileManager implements CloudFileManager {
 		long start = new Date().getTime();
 		if( file.exists())
 			file.delete();
+		
+		sem.acquire();
+		forPrefecth.remove(file);
+		forDisposal.remove(fileName);
+		forUpdate.remove(fileName);
+		downloaded.remove(fileName);
+		sem.release();
+		
         long end = new Date().getTime();
         log.log(Level.FINE, "Local coopy " + file.getAbsolutePath() + " deleted in " + (end - start) + "ms" );
 	}

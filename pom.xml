@@ -12,6 +12,7 @@
 	<modules>
 		<module>inodes-util</module>
 		<module>datanucleus-gae-mappings</module>
+		<module>xs3-client-api</module>
 		<module>allshoppings-cli</module>
 		<module>allshoppings-rest-api</module>
 		<module>allshoppings-services</module>
