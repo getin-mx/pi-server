@@ -131,19 +131,21 @@
 		<property name="cacheTempDir" value="/usr/local/allshoppings/dump" />
 		<property name="forceAlgorithm" value="markI" />
 
-		<property name="CFMInstances" value="10" />
+		<property name="CFMInstances" value="15" />
 		<property name="awsAccessKey" value="AKIAAUUHP33G7PYRV2TB" />
 		<property name="awsSecretKey" value="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" />
 		<property name="s3Endpoint" value="http://shire.getin.mx:8773/services/Walrus/" />
+		<property name="xs3User" value="admin" />
+		<property name="xs3Password" value="admin01" />
+		<property name="xs3Endpoint" value="http://mordor.getin.mx:8085/xs3" />
 		<property name="maxUploadQueue" value="500" />
 		<property name="s3Buckets">
 			<map>
 				<entry><key><value>default</value></key><value>dump</value></entry>
-<!--
+				<entry><key><value>APHEntry</value></key><value>aphentry</value></entry>
 				<entry><key><value>APHotspot</value></key><value>aphotspot</value></entry>
 				<entry><key><value>DeviceLocationHistory</value></key><value>device-location-history</value></entry>
 				<entry><key><value>DeviceWifiLocationHistory</value></key><value>device-wifi-location-history</value></entry>
--->
 			</map>
 		</property>
 

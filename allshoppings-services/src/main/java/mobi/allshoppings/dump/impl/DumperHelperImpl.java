@@ -21,6 +21,7 @@ import javax.jdo.datastore.JDOConnection;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.datanucleus.util.Base64;
 import org.json.JSONArray;
@@ -52,17 +53,21 @@ import mobi.allshoppings.tools.GsonFactory;
 
 public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 
+	public static final long TIMEFRAME_ONE_HOUR = 3600000;
+	public static final long TIMEFRAME_ONE_DAY = 86400000;
+	
 	private static final SimpleDateFormat year = new SimpleDateFormat("yyyy");
 	private static final SimpleDateFormat month = new SimpleDateFormat("MM");
 	private static final SimpleDateFormat day = new SimpleDateFormat("dd");
 	private static final SimpleDateFormat hour = new SimpleDateFormat("HH");
 	private static final Logger log = Logger.getLogger(DumperHelperImpl.class.getName());
 	private static final int BUFFER = 100;
-
+	
 	private static Gson gson = GsonFactory.getInstance();
 
 	private Class<T> clazz;
 	private String baseDir;
+	private boolean tmpDir = false;
 	private List<DumperPlugin<ModelKey>> registeredPlugins;
 	private DumperFileNameResolver<ModelKey> fileNameResolver;
 	private List<String> currentCachedFileNames;
@@ -70,6 +75,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	private CloudFileManager cfm;
 	private String lastFileUsed;
 	private T instance;
+	private long timeFrame;
 	
 	public DumperHelperImpl(String baseDir, Class<T> clazz) {
 		this.baseDir = baseDir;
@@ -82,6 +88,8 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		day.setTimeZone(tz);
 		hour.setTimeZone(tz);
 
+		this.timeFrame = TIMEFRAME_ONE_HOUR;
+		
 		try {
 			instance = clazz.newInstance();
 		} catch( Exception e ) {
@@ -90,10 +98,39 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	}
 
 	/**
+	 * @return the tmpDir
+	 */
+	public boolean isTmpDir() {
+		return tmpDir;
+	}
+
+	/**
+	 * @param tmpDir the tmpDir to set
+	 */
+	public void setTmpDir(boolean tmpDir) {
+		this.tmpDir = tmpDir;
+	}
+
+	/**
 	 * @return the filter
 	 */
 	public String getFilter() {
 		return filter;
+	}
+
+	/**
+	 * @return the timeFrame
+	 */
+	public long getTimeFrame() {
+		return timeFrame;
+	}
+
+	/**
+	 * @param timeFrame the timeFrame to set
+	 */
+	@Override
+	public void setTimeFrame(long timeFrame) {
+		this.timeFrame = timeFrame;
 	}
 
 	/**
@@ -624,7 +661,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 					} catch (ASException e) {
 						log.log(Level.SEVERE, e.getMessage(), e);
 					}
-					myDate = new Date(myDate.getTime() + 3600000);
+					myDate = new Date(myDate.getTime() + timeFrame);
 				}
 			}
 		}
@@ -673,7 +710,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 
 				// Establishes the process Date
 				if( curDate == null )
-					curDate = new Date(fromDate.getTime() - 3600000);
+					curDate = new Date(fromDate.getTime() - timeFrame);
 
 				if(curDate.equals(toDate) || curDate.after(toDate))
 					break;
@@ -684,7 +721,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 				String currentFileName = null;
 				if( fileNameResolver != null && fileNameResolver.mayHaveMultiple() && !StringUtils.hasText(filter)) {
 					if( currentCachedFileNames == null || currentCachedFileNames.size() == 0 ) {
-						curDate = new Date(curDate.getTime() + 3600000);
+						curDate = new Date(curDate.getTime() + timeFrame);
 						try {
 							currentCachedFileNames = fileNameResolver.getMultipleFileOptions(baseDir,
 									clazz.getSimpleName(), curDate, cfm);
@@ -701,7 +738,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 						ableToGo = false;
 					}
 				} else {
-					curDate = new Date(curDate.getTime() + 3600000);
+					curDate = new Date(curDate.getTime() + timeFrame);
 					currentFileName = resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate, null, filter);
 				}
 				
@@ -783,6 +820,15 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	public void dispose() {
 		if( cfm != null )
 			cfm.dispose();
+
+		if(tmpDir) {
+			try {
+				FileUtils.deleteDirectory(new File(baseDir));
+			} catch( Exception e ) {
+				log.log(Level.WARNING, e.getMessage(), e);
+			}
+		}
+		
 	}
 
 }

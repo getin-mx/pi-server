@@ -18,8 +18,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.jdo.PersistenceManager;
-
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -39,10 +37,7 @@ import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.ExternalAPHotspot;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.tools.CollectionFactory;
-import mobi.allshoppings.tools.PersistentCacheJDOImpl;
-import mobi.allshoppings.tx.PersistenceProvider;
-import mobi.allshoppings.tx.TransactionType;
-import mobi.allshoppings.tx.spi.PersistenceProviderJDOImpl;
+import mobi.allshoppings.tools.PersistentCacheFSImpl;
 
 public class APHHelperImpl implements APHHelper {
 
@@ -52,7 +47,7 @@ public class APHHelperImpl implements APHHelper {
 	private static final DecimalFormat df = new DecimalFormat("00");
 	private static final long ONE_HOUR = 3600000;
 	
-	private PersistentCacheJDOImpl<APHEntry> cache;
+	private PersistentCacheFSImpl<APHEntry> cache;
 
 	@Autowired
 	private APHEntryDAO apheDao;
@@ -69,13 +64,17 @@ public class APHHelperImpl implements APHHelper {
 	private boolean cacheBuilt = false;
 	private boolean scanInDevices = true;
 	private boolean useCache = true;
+	@SuppressWarnings("unused")
 	private TimeZone tz;
-	
+	private TimeZone gmt;
 	/**
 	 * Standard Constructor
 	 */
 	public APHHelperImpl() {
 		tz = TimeZone.getDefault();
+		gmt = TimeZone.getTimeZone("GMT");
+		sdf.setTimeZone(gmt);
+		sdf2.setTimeZone(gmt);
 	}
 	
 	/**
@@ -316,8 +315,7 @@ public class APHHelperImpl implements APHHelper {
 	@Override
 	public APHEntry setFramedRSSI(APHEntry aphe, Date forDate, Integer rssi) {
 		if( rssi == null || rssi.equals(0)) return aphe;
-		long offset = tz.getOffset(forDate.getTime());
-		long secondsOfDay = (long)(((forDate.getTime() + offset ) % 86400000) / 1000);
+		long secondsOfDay = (long)(((forDate.getTime()) % 86400000) / 1000);
 		int frame = (int)Math.round((secondsOfDay / 20));
 		aphe.getRssi().put(String.valueOf(frame), rssi);
 		aphe.setDataCount(aphe.getRssi().size());
@@ -358,13 +356,12 @@ public class APHHelperImpl implements APHHelper {
 	 *            The APHotspot from which the RSSI will be taken from
 	 * @return The modified APHEntry
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public APHEntry setFramedRSSI(JSONObject aph) {
 		try {
-			String date = sdf.format(new Date(aph.getString("creationDateTime")));
+			String date = sdf.format(new Date(aph.getLong("creationDateTime")));
 			APHEntry aphe = getFromCache(aph.getString("hostname"), aph.getString("mac"), date);
-			return putInCache(setFramedRSSI(aphe, new Date(aph.getString("creationDateTime")), aph.getInt("signalDB")));
+			return putInCache(setFramedRSSI(aphe, new Date(aph.getLong("creationDateTime")), aph.getInt("signalDB")));
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -410,18 +407,39 @@ public class APHHelperImpl implements APHHelper {
 	 */
 	@Override
 	public void buildCache(Date fromDate, Date toDate, Map<String, APDevice> apdevices) throws ASException {
-		
 		cache.clear();
 		List<String> apdKeys = CollectionFactory.createList();
 		apdKeys.addAll(apdevices.keySet());
-		List<APHEntry> list = apheDao.getUsingHostnameAndDates(apdKeys, fromDate, toDate, null, true);
-		for( APHEntry obj : list ) 
-			try {
-				cache.put(getHash(obj), obj);
-			} catch( Exception e ) {
-				log.log(Level.WARNING, e.getMessage(), e);
+
+		if( apdKeys.size() == 1 ) {
+			for( String key : apdKeys ) { 
+				DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
+				apheDumper.setFilter(key);
+				Iterator<APHEntry> i = apheDumper.iterator(fromDate, toDate);
+				while(i.hasNext()) {
+					APHEntry obj = i.next();
+					try {
+						cache.put(getHash(obj), obj);
+					} catch( Exception e ) {
+						log.log(Level.WARNING, e.getMessage(), e);
+					}
+				}
+				apheDumper.dispose();
 			}
-				
+		} else {
+			DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
+			Iterator<APHEntry> i = apheDumper.iterator(fromDate, toDate);
+			while(i.hasNext()) {
+				APHEntry obj = i.next();
+				try {
+					cache.put(getHash(obj), obj);
+				} catch( Exception e ) {
+					log.log(Level.WARNING, e.getMessage(), e);
+				}
+			}
+			apheDumper.dispose();
+		}
+
 		cacheBuilt = true;
 	}
 	
@@ -614,10 +632,10 @@ public class APHHelperImpl implements APHHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public void generateAPHEntriesFromDump(String baseDir, Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException {
+	public void generateAPHEntriesFromDump(Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException {
 
 		if( cache == null )
-			cache = new PersistentCacheJDOImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
+			cache = new PersistentCacheFSImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
 					systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
 		cache.clear();
 		
@@ -630,13 +648,15 @@ public class APHHelperImpl implements APHHelper {
 		// Gets the input data
 		long totals = 0;
 		log.log(Level.INFO, "Processing Dump Records");
-		dumpHelper = new DumpFactory<APHotspot>().build(baseDir, APHotspot.class);
-		Iterator<String> i = dumpHelper.stringIterator(fromDate, toDate);
+		dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
+		if( apdevices.size() == 1 ) dumpHelper.setFilter((String) apdevices.keySet().toArray()[0]);
+		Date xdate = new Date(toDate.getTime() - 3600000);
+		Iterator<String> i = dumpHelper.stringIterator(fromDate, xdate);
 		while( i.hasNext() ) {
 			String s = i.next();
 			JSONObject json = new JSONObject(s);
 			if( totals % 1000 == 0 ) 
-				log.log(Level.INFO, "Processing for date " + json.getString("creationDateTime") + " with " + cache.size() + " records so far (" + cache.getHits() + "/" + cache.getMisses() + "/" + cache.getStores() + "/" + cache.getLoads() + ")...");
+				log.log(Level.INFO, "Processing for date " + new Date(json.getLong("creationDateTime")) + " with " + cache.size() + " records so far (" + cache.getHits() + "/" + cache.getMisses() + "/" + cache.getStores() + "/" + cache.getLoads() + ")...");
 
 			if(isValidMacAddress(json.getString("mac")))
 				if( apdevices.containsKey(json.getString("hostname"))) 
@@ -645,31 +665,25 @@ public class APHHelperImpl implements APHHelper {
 			totals++;
 		}
 
+		log.log(Level.INFO, "Disposing APHotspot dumper");
+		dumpHelper.dispose();
+
 		// Write to the database, only if it was not written yet!
-		if(!( cache instanceof PersistentCacheJDOImpl )) {
-			log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
-			PersistenceProvider pp = new PersistenceProviderJDOImpl(TransactionType.SIMPLE);
-			int counter = 0;
-			Iterator<APHEntry> x = cache.iterator();
-			((PersistenceManager)pp.get()).currentTransaction().begin();
-			while(x.hasNext()) {
-				APHEntry aphe = x.next();
-//				artificiateRSSI(aphe, apdevices.get(aphe.getHostname()));
-				if( aphe.getDataCount() > 2 ) {
-					aphe.setKey(apheDao.createKey(aphe));
-					apheDao.createOrUpdate(pp, aphe, true);
-					counter++;
-					if( counter > 10000 )
-						((PersistenceManager)pp.get()).flush();
-				}
+		log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
+		Iterator<APHEntry> x = cache.iterator();
+		DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class); 
+		while(x.hasNext()) {
+			APHEntry aphe = x.next();
+			if( aphe.getDataCount() > 2 ) {
+				aphe.setKey(apheDao.createKey(aphe));
+				apheDumper.dump(aphe);
 			}
-			((PersistenceManager)pp.get()).currentTransaction().commit();
-			((PersistenceManager)pp.get()).close();
 		}
-		
+		log.log(Level.INFO, "Disposing APHE dumper");
+		apheDumper.dispose();
+
 		log.log(Level.INFO, "Disposing cache");
 		cache.dispose();
-		dumpHelper.dispose();
 		
 		log.log(Level.INFO, "Process Ended");
 
@@ -689,7 +703,7 @@ public class APHHelperImpl implements APHHelper {
 	public void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException {
 
 		if( cache == null )
-			cache = new PersistentCacheJDOImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
+			cache = new PersistentCacheFSImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
 					systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
 
 		// Pre build cache
@@ -717,31 +731,26 @@ public class APHHelperImpl implements APHHelper {
 		}
 		
 
+		log.log(Level.INFO, "Disposing APHotspot dumper");
+		dumpHelper.dispose();
+
 		// Write to the database, only if it was not written yet!
-		if(!( cache instanceof PersistentCacheJDOImpl )) {
-			log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
-			PersistenceProvider pp = new PersistenceProviderJDOImpl(TransactionType.SIMPLE);
-			int counter = 0;
-			Iterator<APHEntry> x = cache.iterator();
-			((PersistenceManager)pp.get()).currentTransaction().begin();
-			while(x.hasNext()) {
-				APHEntry aphe = x.next();
-//				artificiateRSSI(aphe, apdevices.get(aphe.getHostname()));
-				if( aphe.getDataCount() > 2 ) {
-					aphe.setKey(apheDao.createKey(aphe));
-					apheDao.createOrUpdate(pp, aphe, true);
-					counter++;
-					if( counter > 10000 )
-						((PersistenceManager)pp.get()).flush();
-				}
+		log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
+		Iterator<APHEntry> x = cache.iterator();
+		DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class); 
+		while(x.hasNext()) {
+			APHEntry aphe = x.next();
+			if( aphe.getDataCount() > 2 ) {
+				aphe.setKey(apheDao.createKey(aphe));
+				apheDumper.dump(aphe);
 			}
-			((PersistenceManager)pp.get()).currentTransaction().commit();
-			((PersistenceManager)pp.get()).close();
 		}
-		
+		log.log(Level.INFO, "Disposing APHE dumper");
+		apheDumper.dispose();
+
 		log.log(Level.INFO, "Disposing cache");
 		cache.dispose();
-
+		
 		log.log(Level.INFO, "Process Ended");
 
 	}

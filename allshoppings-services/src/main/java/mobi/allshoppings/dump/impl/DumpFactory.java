@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import mobi.allshoppings.dump.CloudFileManager;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.DeviceWifiLocationHistory;
 import mobi.allshoppings.model.SystemConfiguration;
@@ -31,6 +32,8 @@ public class DumpFactory<T extends ModelKey> {
 	 */
 	public DumperHelper<T> build(String baseDir, Class<T> entity) {
 		
+		boolean tmpdir = false;
+		
 		// Gets the TMP Directory
 		if( baseDir == null ) {
 			UUID uuid = UUID.randomUUID();
@@ -41,6 +44,7 @@ public class DumpFactory<T extends ModelKey> {
 				tmpDir = new File("/tmp");
 			}
 			baseDir = tmpDir.getAbsolutePath();
+			tmpdir = true;
 		}
 
 		SystemConfiguration systemConfiguration = (SystemConfiguration) ApplicationContextProvider
@@ -48,6 +52,7 @@ public class DumpFactory<T extends ModelKey> {
 		
 		// Constructs the basic dumper
 		DumperHelper<T> dumper = new DumperHelperImpl<T>(baseDir, entity);
+		dumper.setTmpDir(tmpdir);
 		
 		// Configures the dumper according to the entity class
 		// For DeviceWifiLocationHistory
@@ -61,8 +66,15 @@ public class DumpFactory<T extends ModelKey> {
 			dumper.registerPlugin(new APHotspotDumperPlugin());
 		}
 
+		// For APHEntry
+		if(entity.equals(APHEntry.class)) {
+			dumper.registerFileNameResolver(new APHEntryFileNameResolver());
+			dumper.setTimeFrame(DumperHelperImpl.TIMEFRAME_ONE_DAY);
+		}
+
 		// Registers the Cloud File Manager for Walrus
-		CloudFileManager s3cfm = new S3CloudFileManager(baseDir, systemConfiguration);
+//		CloudFileManager s3cfm = new S3CloudFileManager(baseDir, systemConfiguration);
+		CloudFileManager s3cfm = new XS3CloudFileManager(baseDir, systemConfiguration);
 		String bucket = systemConfiguration.getS3Buckets().get(entity.getSimpleName());
 		if(!StringUtils.hasText(bucket)) bucket = systemConfiguration.getS3Buckets().get("default");
 		

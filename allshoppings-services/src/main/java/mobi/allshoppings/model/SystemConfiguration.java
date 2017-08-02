@@ -113,6 +113,10 @@ public class SystemConfiguration implements Serializable {
 	private String s3Endpoint;
 	private int maxUploadQueue;
 	private Map<String, String> s3Buckets;
+	private String xs3User;
+	private String xs3Password;
+	private String xs3Endpoint;
+	
 	
 	public String getDefaultLevel() {
 		return defaultLevel;
@@ -962,6 +966,30 @@ public class SystemConfiguration implements Serializable {
 
 	public void setMaxUploadQueue(int maxUploadQueue) {
 		this.maxUploadQueue = maxUploadQueue;
+	}
+
+	public String getXs3User() {
+		return xs3User;
+	}
+
+	public void setXs3User(String xs3User) {
+		this.xs3User = xs3User;
+	}
+
+	public String getXs3Password() {
+		return xs3Password;
+	}
+
+	public void setXs3Password(String xs3Password) {
+		this.xs3Password = xs3Password;
+	}
+
+	public String getXs3Endpoint() {
+		return xs3Endpoint;
+	}
+
+	public void setXs3Endpoint(String xs3Endpoint) {
+		this.xs3Endpoint = xs3Endpoint;
 	}
 
 }

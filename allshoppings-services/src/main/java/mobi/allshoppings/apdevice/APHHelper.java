@@ -49,7 +49,7 @@ public interface APHHelper {
 	List<Integer> timeslotToList(Map<String, ?> slots);
 	void artificiateRSSI(APHEntry obj, APDevice apd) throws ASException;
 	void artificiateRSSI(Map<String, APDevice> apdevices, Date fromDate, Date toDate) throws ASException;
-	void generateAPHEntriesFromDump(String baseDir, Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException;
+	void generateAPHEntriesFromDump(Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException;
 	void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException;
 
 }

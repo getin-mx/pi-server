@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -28,7 +29,6 @@ public class GenerateAPHE extends AbstractCLI {
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
 		else parser = base;
-		parser.accepts( "outDir", "Output Directory (for example, /tmp/dump)").withRequiredArg().ofType( String.class );
 		parser.accepts( "fromDate", "Date From" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "toDate", "Date To" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "hostname", "APHostname").withRequiredArg().ofType( String.class );
@@ -42,6 +42,9 @@ public class GenerateAPHE extends AbstractCLI {
 	public static void main(String args[]) throws ASException {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			TimeZone tz = TimeZone.getTimeZone("GMT");
+			sdf.setTimeZone(tz);
+			
 			APDeviceDAO apdDao = (APDeviceDAO)getApplicationContext().getBean("apdevice.dao.ref");
 			APHHelper helper = (APHHelper)getApplicationContext().getBean("aphentry.helper");
 
@@ -53,7 +56,6 @@ public class GenerateAPHE extends AbstractCLI {
 			Date fromDate = null;
 			Date toDate = null;
 			String hostname = null;
-			String sOutDir = null;
 			
 			try {
 				if( options.has("fromDate")) sFromDate = (String)options.valueOf("fromDate");
@@ -74,9 +76,6 @@ public class GenerateAPHE extends AbstractCLI {
 				if( options.has("hostname")) {
 					hostname = (String)options.valueOf("hostname");
 				}
-				
-				if( options.has("outDir")) sOutDir = (String)options.valueOf("outDir");
-				else usage(parser);
 				
 			} catch( Exception e ) {
 				e.printStackTrace();
@@ -102,7 +101,7 @@ public class GenerateAPHE extends AbstractCLI {
 				ffromDate = new Date(ftoDate.getTime());
 				ftoDate = new Date(ftoDate.getTime() + TWENTY_FOUR_HOURS);
 				
-				helper.generateAPHEntriesFromDump(sOutDir, ffromDate, ftoDate, apdevices, true);
+				helper.generateAPHEntriesFromDump(ffromDate, ftoDate, apdevices, true);
 
 			}
 

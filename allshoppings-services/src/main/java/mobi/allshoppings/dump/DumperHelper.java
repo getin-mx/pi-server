@@ -76,6 +76,22 @@ public interface DumperHelper<T extends ModelKey> {
 	void setFilter(String filter);
 
 	/**
+	 * Specifies a time frame for rolling files
+	 * 
+	 * @param timeFrame
+	 *            The time frame to specify
+	 */
+	void setTimeFrame(long timeFrame);
+	
+	/**
+	 * Specifies if the working directory is temporary
+	 * 
+	 * @param tmpDir
+	 *            true if the directory is temporary
+	 */
+	public void setTmpDir(boolean tmpDir);
+	
+	/**
 	 * Obtains the current file name filter
 	 * 
 	 * @return The current file name filter
