@@ -6,23 +6,23 @@ import org.json.JSONObject;
 
 import mobi.allshoppings.dump.DumperPlugin;
 import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.model.APHotspot;
+import mobi.allshoppings.model.ExternalAPHotspot;
 import mobi.allshoppings.model.interfaces.ModelKey;
 
-public class APHotspotDumperPlugin implements DumperPlugin<ModelKey> {
+public class ExternalAPHotspotDumperPlugin implements DumperPlugin<ModelKey> {
 	
-	public APHotspotDumperPlugin() {
+	public ExternalAPHotspotDumperPlugin() {
 	}
 
 	@Override
 	public boolean isAvailableFor(ModelKey element) {
-		if( element instanceof APHotspot ) return true;
+		if( element instanceof ExternalAPHotspot ) return true;
 		return false;
 	}
 
 	@Override
 	public void preDump(ModelKey element) throws ASException {
-		// Nothing to do here
+		((ExternalAPHotspot)element).setCreationDateTime(((ExternalAPHotspot)element).getFirstSeen());
 	}
 
 	@Override
@@ -46,8 +46,6 @@ public class APHotspotDumperPlugin implements DumperPlugin<ModelKey> {
 	@SuppressWarnings("deprecation")
 	@Override
 	public String toJson(JSONObject json, String jsonRep) throws ASException {
-		json.remove("firstSeen");
-		json.remove("lastSeen");
 		json.remove("count");
 		
 		try {

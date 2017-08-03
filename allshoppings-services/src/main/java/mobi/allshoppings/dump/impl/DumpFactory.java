@@ -13,6 +13,7 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.DeviceWifiLocationHistory;
+import mobi.allshoppings.model.ExternalAPHotspot;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.ApplicationContextProvider;
@@ -64,6 +65,12 @@ public class DumpFactory<T extends ModelKey> {
 		if(entity.equals(APHotspot.class)) {
 			dumper.registerFileNameResolver(new APHotspotFileNameResolver());
 			dumper.registerPlugin(new APHotspotDumperPlugin());
+		}
+
+		// For ExternalAPHotspot
+		if(entity.equals(ExternalAPHotspot.class)) {
+			dumper.registerFileNameResolver(new APHotspotFileNameResolver());
+			dumper.registerPlugin(new ExternalAPHotspotDumperPlugin());
 		}
 
 		// For APHEntry

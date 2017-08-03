@@ -27,7 +27,6 @@ public class DumpHistory extends AbstractCLI {
 		parser.accepts( "toDate", "Date To" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "entity", "Entity to dump (for example, DeviceLocationHistory)").withRequiredArg().ofType( String.class );
 		parser.accepts( "collection", "DB Collection to dump (for example, DeviceLocationHistory)").withRequiredArg().ofType( String.class );
-		parser.accepts( "outDir", "Output Directory (for example, /tmp/dump)").withRequiredArg().ofType( String.class );
 		parser.accepts( "deleteAfterDump", "Do I have to delete the entity from the DB after dump?").withRequiredArg().ofType( Boolean.class );
 		parser.accepts( "renameCollection", "Do I have to rename the collection before run?").withRequiredArg().ofType( Boolean.class );
 		return parser;
@@ -48,7 +47,6 @@ public class DumpHistory extends AbstractCLI {
 
 			String sEntity = null;
 			String sCollection = null;
-			String sOutDir = null;
 			Boolean deleteAfterDump = true;
 			Boolean renameCollection = false;
 			
@@ -69,9 +67,6 @@ public class DumpHistory extends AbstractCLI {
 				if( options.has("collection")) sCollection = (String)options.valueOf("collection");
 				else sCollection = new String(sEntity);
 
-				if( options.has("outDir")) sOutDir = (String)options.valueOf("outDir");
-				else usage(parser);
-				
 				if( StringUtils.hasText(sFromDate)) {
 					fromDate = sdf.parse(sFromDate);
 				} else {
@@ -90,7 +85,7 @@ public class DumpHistory extends AbstractCLI {
 			}
 
 			log.log(Level.INFO, "Starting dump for entity " + entity.getName() + " from " + fromDate + " to " + toDate);
-			DumperHelper<ModelKey> dumper = new DumpFactory<ModelKey>().build(sOutDir, entity);
+			DumperHelper<ModelKey> dumper = new DumpFactory<ModelKey>().build(null, entity);
 			
 			dumper.dumpModelKey(sCollection, fromDate, toDate, deleteAfterDump, renameCollection);
 			

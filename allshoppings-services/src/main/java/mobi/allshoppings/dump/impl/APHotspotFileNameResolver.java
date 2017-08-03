@@ -13,6 +13,7 @@ import mobi.allshoppings.dump.CloudFileManager;
 import mobi.allshoppings.dump.DumperFileNameResolver;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.APHotspot;
+import mobi.allshoppings.model.ExternalAPHotspot;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.CollectionFactory;
 
@@ -35,6 +36,7 @@ public class APHotspotFileNameResolver implements DumperFileNameResolver<ModelKe
 	@Override
 	public boolean isAvailableFor(ModelKey element) {
 		if( element instanceof APHotspot ) return true;
+		if( element instanceof ExternalAPHotspot ) return true;
 		return false;
 	}
 
@@ -63,8 +65,10 @@ public class APHotspotFileNameResolver implements DumperFileNameResolver<ModelKe
 			sb.append(myDay).append(File.separator);
 			sb.append(myHour).append(File.separator);
 			sb.append(baseName).append(File.separator);
-			if( element != null )
+			if( element != null && element instanceof APHotspot )
 				sb.append(((APHotspot)element).getHostname()).append(".json");
+			else if( element != null && element instanceof ExternalAPHotspot )
+				sb.append(((ExternalAPHotspot)element).getHostname()).append(".json");
 			else 
 				sb.append(filter).append(".json");
 		}
