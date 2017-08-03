@@ -6466,6 +6466,41 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "modaholding_mx"));
 				userDao.create(user);
 			}
+			
+			// Aditivo Franquicias  --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("franquiciasmichan_mx", true);
+				userMenuDao.delete("franquiciasmichan_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.setKey(userMenuDao.createKey("franquiciasmichan_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("franquiciasmichan_mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Aditivo Franquicias Michan");
+				user.setLastname("");
+				user.setEmail("franquiciasmichan_mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("a45fc81f-900e-457e-854e-df4a312bb0e1",
+								"d2eab997-2497-49b3-b1bd-15cf80f05fc7", "8d2335b7-4cc3-4f76-b274-86137b34b4e5",
+								"3c9e6b60-bdcd-4268-99eb-a9c9f719f625", "aff0af5d-45b8-46b6-81ee-12c79990653b"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "franquiciasmichan_mx"));
+				userDao.create(user);
+			}
+			
+			// End Aditivo Franquicias  --------------------------------------------------------------------
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
