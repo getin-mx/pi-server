@@ -219,6 +219,7 @@ public class XS3CloudFileManager implements CloudFileManager {
 			if( workers != null && workers.size() > 0 ) {
 
 				boolean hasFile = false;
+				int waited = 0;
 				do {
 					sem.acquire();
 					if( notFound.contains(sanitizeFileName(fileName))) {
@@ -229,9 +230,27 @@ public class XS3CloudFileManager implements CloudFileManager {
 							sem.release();
 							return true;
 						} else {
-							log.log(Level.INFO, "Waiting for file " + fileName);
-							sem.release();
-							Thread.sleep(1000);
+							if( waited >= 15 ) {
+								try {
+									List<XS3Object> l = client.getObjectListing(bucket, sanitizeFileName(fileName));
+									if( l.size() > 0 ) {
+										download(sanitizeFileName(fileName), sanitizeFileName(fileName));
+										downloaded.put(sanitizeFileName(fileName), l.get(0));
+									} else {
+										sem.release();
+										return false;
+									}
+								} catch( Exception e ) {
+									return false;
+								} finally {
+									sem.release();
+								}
+							} else {
+								log.log(Level.INFO, "Waiting for file " + fileName);
+								sem.release();
+								Thread.sleep(1000);
+								waited++;
+							}
 						}
 					}
 					
@@ -299,9 +318,17 @@ public class XS3CloudFileManager implements CloudFileManager {
 			}
 
 			if( workers != null ) {
-				for( XS3CloudFileManagerWorker worker : workers ) {
-					while( worker.getState() != State.TERMINATED ) {
-						Thread.sleep(100);
+				boolean done = false;
+				while(!done) {
+					done = true;
+					for( XS3CloudFileManagerWorker worker : workers ) {
+						if( worker.getState() != State.TERMINATED ) {
+							done = false;
+							worker.dispose();
+						}
+					}
+					if(!done) {
+						Thread.sleep(1000);
 					}
 				}
 			}

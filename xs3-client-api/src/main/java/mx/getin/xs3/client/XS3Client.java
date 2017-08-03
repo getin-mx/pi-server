@@ -176,7 +176,7 @@ public class XS3Client {
 			};
 
 			// Execute the service
-			log.log(Level.INFO, "Executing request " + request.getRequestLine());
+			log.log(Level.FINE, "Executing request " + request.getRequestLine());
 			String responseBody = httpclient.execute(request, responseHandler);
 			int status = respCode.get("status");
 
@@ -255,7 +255,7 @@ public class XS3Client {
 			};
 
 			// Execute the service
-			log.log(Level.INFO, "Executing request " + request.getRequestLine());
+			log.log(Level.FINE, "Executing request " + request.getRequestLine());
 			String responseBody = httpclient.execute(request, responseHandler);
 			int status = respCode.get("status");
 
@@ -365,7 +365,7 @@ public class XS3Client {
 			};
 
 			// Execute the service
-			log.log(Level.INFO, "Executing request " + request.getRequestLine());
+			log.log(Level.FINE, "Executing request " + request.getRequestLine());
 			httpclient.execute(request, responseHandler);
 			int status = respCode.get("status");
 

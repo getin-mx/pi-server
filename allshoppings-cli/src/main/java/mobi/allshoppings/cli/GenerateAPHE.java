@@ -85,6 +85,7 @@ public class GenerateAPHE extends AbstractCLI {
 			}
 			
 			helper.setScanInDevices(false);
+			helper.setUseCache(true);
 
 			Date ffromDate = new Date(fromDate.getTime());
 			Date ftoDate = new Date(fromDate.getTime());

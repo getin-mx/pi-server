@@ -641,6 +641,8 @@ public class APHHelperImpl implements APHHelper {
 		if( buildCache ) {
 			log.log(Level.INFO, "Building Cache");
 			buildCache(fromDate, new Date(toDate.getTime() - 86400000), null);
+		} else {
+			setCacheBuilt(true);
 		}
 
 		// Gets the input data
@@ -662,6 +664,8 @@ public class APHHelperImpl implements APHHelper {
 		DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class); 
 
 		for( String hostname : options ) {
+
+			log.log(Level.INFO, "Processing " + hostname + " for date " + fromDate + "...");
 
 			dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
 			dumpHelper.setFilter(hostname);
