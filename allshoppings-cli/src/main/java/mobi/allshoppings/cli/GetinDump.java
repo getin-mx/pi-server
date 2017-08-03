@@ -981,6 +981,18 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "aditivo_franquicias_mx"));
 				brandDao.create(brand);
 			}
+			// error to aditivo franquicias. franquicias_edmond_bcprint_mx == aditivo_franquicias_mx
+			try {
+				brand = brandDao.get("franquicias_edmond_bcprint_mx", true);
+				brand.setStatus(StatusAware.STATUS_DISABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Franquicias Edmond BCPrint");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "franquicias_edmond_bcprint_mx"));
+				brandDao.create(brand);
+			}
 
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
@@ -1556,10 +1568,15 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("723", "Capa de Ozono Santa Fe 1", "capadeozono_mx",null));
 			stores.add(new StoreAdapter("724", "Capa de Ozono Santa Fe 2", "capadeozono_mx",null));
 			
-			stores.add(new StoreAdapter("725", "Aditivo Franquicia Xochimilco", "aditivo_franquicias_mx",null));
-			stores.add(new StoreAdapter("726", "Aditivo Franquicia Tlahuac", "aditivo_franquicias_mx",null));
-			stores.add(new StoreAdapter("727", "Aditivo Franquicia Plaza Central", "aditivo_franquicias_mx",null));
-			stores.add(new StoreAdapter("728", "Aditivo Franquicia Cuernavaca", "aditivo_franquicias_mx",null));
+//			stores.add(new StoreAdapter("725", "Aditivo Franquicia Xochimilco", "franquicias_edmond_bcprint_mx",null));
+//			stores.add(new StoreAdapter("726", "Aditivo Franquicia Tlahuac", "franquicias_edmond_bcprint_mx",null));
+//			stores.add(new StoreAdapter("727", "Aditivo Franquicia Plaza Central", "franquicias_edmond_bcprint_mx",null));
+//			stores.add(new StoreAdapter("728", "Aditivo Franquicia Cuernavaca", "franquicias_edmond_bcprint_mx",null));
+			
+			stores.add(new StoreAdapter("729", "Aditivo Franquicia Tlahuac", "aditivo_franquicias_mx",null));
+			stores.add(new StoreAdapter("730", "Aditivo Franquicia Xochimilco", "aditivo_franquicias_mx",null));
+			stores.add(new StoreAdapter("731", "Aditivo Franquicia Plaza Central", "aditivo_franquicias_mx",null));
+			stores.add(new StoreAdapter("732", "Aditivo Franquicia Cuernavaca", "aditivo_franquicias_mx",null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
