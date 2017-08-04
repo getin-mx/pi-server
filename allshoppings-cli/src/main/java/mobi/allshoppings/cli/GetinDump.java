@@ -1590,7 +1590,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("731", "Aditivo Franquicia Plaza Central", "aditivo_franquicias_mx",null));
 			stores.add(new StoreAdapter("732", "Aditivo Franquicia Cuernavaca", "aditivo_franquicias_mx",null));
 			
-			stores.add(new StoreAdapter("733", "Sally Plaza Insurgentes", "sallybeauty_mx",null));
+			stores.add(new StoreAdapter("733", "Sally Beauty Plaza Insurgentes", "sallybeauty_mx",null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
