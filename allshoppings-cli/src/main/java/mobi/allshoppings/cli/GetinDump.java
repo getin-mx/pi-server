@@ -981,7 +981,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "aditivo_franquicias_mx"));
 				brandDao.create(brand);
 			}
-			// error to aditivo franquicias. franquicias_edmond_bcprint_mx == aditivo_franquicias_mx
+			// error to aditivo franquicias. franquicias_edmond_bcprint_mx == aditivo_franquicias_mx	
 			try {
 				brand = brandDao.get("franquicias_edmond_bcprint_mx", true);
 				brand.setStatus(StatusAware.STATUS_DISABLED);
@@ -991,6 +991,18 @@ public class GetinDump extends AbstractCLI {
 				brand.setName("Franquicias Edmond BCPrint");
 				brand.setCountry("Mexico");
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "franquicias_edmond_bcprint_mx"));
+				brandDao.create(brand);
+			}
+			
+			try {
+				brand = brandDao.get("aditivo_franquicias_michan_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Aditivo Franquicias Michan");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "aditivo_franquicias_michan_mx"));
 				brandDao.create(brand);
 			}
 
@@ -1285,7 +1297,7 @@ public class GetinDump extends AbstractCLI {
 
 			stores.add(new StoreAdapter("498", "Aditivo Venustiano Carranza", "aditivo_mx", null));			
 			stores.add(new StoreAdapter("499", "Aditivo Chalco 2", "aditivo_mx", null));			
-			stores.add(new StoreAdapter("500", "Aditivo Los Reyes", "aditivo_mx", null));			
+			stores.add(new StoreAdapter("500", "Aditivo Los Reyes", "aditivo_franquicias_michan_mx", null));			
 			stores.add(new StoreAdapter("501", "Aditivo El Rosario", "aditivo_mx", null));			
 			stores.add(new StoreAdapter("502", "Aditivo Plaza Aragon", "aditivo_mx", null));			
 			stores.add(new StoreAdapter("503", "Aditivo Arco Norte", "aditivo_mx", null));			
@@ -1583,8 +1595,10 @@ public class GetinDump extends AbstractCLI {
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
+					brand = brandDao.get(obj.getBrandId(), true);
 					store = storeDao.getUsingExternalId(obj.getExternalKey());
 					store.setName(obj.getName());
+					store.setBrand(brand);
 					storeDao.update(store);
 				} catch( Exception e ) {
 					shopping = obj.getShoppingId() == null ? null : shoppingDao.get(obj.getShoppingId(), true);
