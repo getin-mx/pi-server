@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,8 @@ import org.springframework.context.ApplicationContext;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.dao.ExternalAPHotspotDAO;
+import mobi.allshoppings.dump.DumperHelper;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.ExternalAPHotspot;
@@ -82,8 +85,12 @@ public class ImportDRoc extends AbstractCLI {
 			int EVENT_LEAVE = 1;
 			int EVENT_INVALID = 2;
 			
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			cal.add(Calendar.DATE, -15);
+			
 			String connectionString = "jdbc:mysql://173.224.112.51:3306/Syslog?user=getin&password=getindroc";
-			String query1 = "select distinct SysLogTag from SystemEvents where SysLogTag like '(\"U7LT,%' or SysLogTag like '(\"U2HSR,%'";
+			String query1 = "select distinct SysLogTag from SystemEvents where (SysLogTag like '(\"U7LT,%' or SysLogTag like '(\"U2HSR,%' ) and (ReceivedAt > timestamp('" + sdf.format(cal.getTime()) + "'))";
 			String queryca = "select Count(*) from SystemEvents where ";
 			String queryca1 = " SysLogTag in (";
 			String querycb = ") and( Message like '%EVENT_STA_LEAVE%' or Message like '%EVENT_STA_JOIN%')";
@@ -93,8 +100,9 @@ public class ImportDRoc extends AbstractCLI {
 			String query2b = ") and( Message like '%EVENT_STA_LEAVE%' or Message like '%EVENT_STA_JOIN%') limit 0,2000000";
 			String query2 = "";
 			List<String> hostnames = CollectionFactory.createList();
+			Map<String, Date> lastUpdates = CollectionFactory.createMap();
 			Map<String,ExternalAPHotspot> connections = CollectionFactory.createMap();
-			List<ExternalAPHotspot> list = CollectionFactory.createList(); 
+			List<ExternalAPHotspot> list = CollectionFactory.createList();
 			
 			try {
 				// Prepares SQL Connection
@@ -126,6 +134,18 @@ public class ImportDRoc extends AbstractCLI {
 					}
 				}
 
+				// TEMPO ------------------------------------------------------------------------
+//				Map<String, Date> updates = CollectionFactory.createMap();
+//				SimpleDateFormat sdfx = new SimpleDateFormat("yyyy-MM-dd");
+//				for(String hostname : hostnames ) {
+//					String hostParts[] = hostname.split(",");
+//					hostname = "droc-" + hostParts[1];
+//					updates.put(hostname, sdfx.parse("2017-08-02"));
+//				}
+//				eaphDao.updateLastEntryDate(updates);
+				
+				// TEMPO ------------------------------------------------------------------------
+				
 				if( fromLast ) {
 					List<String> data = CollectionFactory.createList();
 					for(String hostname : hostnames ) {
@@ -268,6 +288,14 @@ public class ImportDRoc extends AbstractCLI {
 									obj.setKey(eaphDao.createKey());
 									
 									list.add(obj);
+									
+									// controls last update
+									Date last = lastUpdates.get(hostname);
+									if( last == null || last.before(receivedAt)) {
+										last = receivedAt;
+									}
+									lastUpdates.put(hostname, last);
+									
 									connections.put(key, obj);
 
 								} else {
@@ -313,10 +341,16 @@ public class ImportDRoc extends AbstractCLI {
 					}
 				}
 				
+				eaphDao.updateLastEntryDate(lastUpdates);
 				
 				log.log(Level.INFO, list.size() + " elements to write");
+				DumperHelper<ExternalAPHotspot> dumper = new DumpFactory<ExternalAPHotspot>().build(null, ExternalAPHotspot.class);
 				start = System.currentTimeMillis();
-				eaphDao.createOrUpdate(null, list, true);
+				for( ExternalAPHotspot ele : list ) {
+					dumper.dump(ele);
+				}
+				dumper.dispose();
+
 				end = System.currentTimeMillis();
 				log.log(Level.INFO, list.size() + " elements written in " + (end - start) + "ms");
 				

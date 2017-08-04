@@ -3,6 +3,7 @@ package mobi.allshoppings.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.inodes.datanucleus.model.Key;
 
@@ -19,4 +20,5 @@ public interface ExternalAPHotspotDAO extends GenericDAO<ExternalAPHotspot> {
 	List<ExternalAPHotspot> getUsingHostnameAndDates(List<String> hostname, Date fromDate, Date toDate) throws ASException;
 	List<String> getExternalHostnames() throws ASException;
 	Date getLastEntryDate(List<String> hostname) throws ASException;
+	void updateLastEntryDate(Map<String, Date> map) throws ASException;
 }

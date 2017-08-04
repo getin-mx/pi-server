@@ -13,7 +13,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.inodes.datanucleus.model.Key;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
+import com.mongodb.DBObject;
 
 import mobi.allshoppings.dao.ExternalAPHotspotDAO;
 import mobi.allshoppings.exception.ASException;
@@ -346,34 +348,65 @@ public class ExternalAPHotspotDAOJDOImpl extends GenericDAOJDO<ExternalAPHotspot
 		Date last = null;
 		
 		try{
+			pm.currentTransaction().begin();
+
+			JDOConnection jdoConn = pm.getDataStoreConnection();
+			DB db = (DB)jdoConn.getNativeConnection();
+
 			for(String h : hostname ) {
 
-				Map<String, Object> parameters = CollectionFactory.createMap();
-				List<String> declaredParams = CollectionFactory.createList();
-				List<String> filters = CollectionFactory.createList();
-
-				Query query = pm.newQuery(clazz);
-
-				// Hostname Parameter
-				declaredParams.add("String hostnameParam");
-				filters.add("hostname == hostnameParam");
-				parameters.put("hostnameParam", h);
-
-				query.declareParameters(toParameterList(declaredParams));
-				query.setFilter(toWellParametrizedFilter(filters));
-				query.setOrdering("firstSeen DESC");
-				query.setRange(0,1);
-
-				@SuppressWarnings("unchecked")
-				List<ExternalAPHotspot> list = (List<ExternalAPHotspot>)query.executeWithMap(parameters);
-				if( list.size() > 0 ) {
-					if( last == null || last.before(list.get(0).getFirstSeen()))
-						last = list.get(0).getFirstSeen();
+				final BasicDBObject query = new BasicDBObject("_id", "eaph-last-" + h);
+				final DBObject res = db.getCollection("counters").findOne(query);
+				Date d = (Date)res.get("data");
+				if( last == null || last.before(d)) {
+					last = d;
 				}
 
 			}
 			
+			jdoConn.close();
+			pm.currentTransaction().commit();
+
 			return last;
+
+		} catch(Exception e) {
+			if(!( e instanceof ASException )) {
+				throw ASExceptionHelper.defaultException(e.getMessage(), e);
+			} else {
+				throw e;
+			}
+		} finally  {
+			pm.close();
+		}
+	}
+
+	@Override
+	public void updateLastEntryDate(Map<String, Date> map) throws ASException {
+		PersistenceManager pm;
+		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+
+		List<String> hostname = CollectionFactory.createList();
+		hostname.addAll(map.keySet());
+		
+		try{
+			pm.currentTransaction().begin();
+
+			JDOConnection jdoConn = pm.getDataStoreConnection();
+			DB db = (DB)jdoConn.getNativeConnection();
+
+			for(String h : hostname ) {
+
+				final BasicDBObject query = new BasicDBObject("_id", "eaph-last-" + h);
+				Map<String, Object> contents = CollectionFactory.createMap();
+				contents.put("_id", "eaph-last-" + h);
+				contents.put("data", map.get(h));
+				final BasicDBObject data = new BasicDBObject(contents);
+				db.getCollection("counters").update(query, data, true, false);
+
+			}
+			
+			jdoConn.close();
+			pm.currentTransaction().commit();
 
 		} catch(Exception e) {
 			if(!( e instanceof ASException )) {
