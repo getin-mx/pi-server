@@ -1555,7 +1555,37 @@ public class UserMenuDump extends AbstractCLI {
 				aditivo.setFirstname("Aditivo");
 				aditivo.setLastname("Mexico");
 				aditivo.setEmail("aditivo@allshoppings.mobi");
-				aditivo.getSecuritySettings().setRole(Role.BRAND);
+				aditivo.getSecuritySettings().setRole(Role.STORE);
+				aditivo.getSecuritySettings().setStores(Arrays.asList("32543b75-32b2-4b41-9e03-f876a9e88d18",
+						"92ec9131-dbf2-4a42-a3ef-1d68170de391", "77bfffb3-48a9-43b6-b1ec-51d526e96da8",
+						"13b66935-ec48-4fea-acc9-9e99f025a63b", "b6d96f4a-d9f7-4537-87ae-c6b3f4b3c5e5",
+						"129f18c1-c531-4488-9125-6d4e4ccf6d4d", "5da4f3c0-fe1f-47cb-9b7b-5fc4242240ce",
+						"3338e021-59c4-4482-9603-fac42d656c7b", "78416e3d-2274-4a24-9186-3616588f6197",
+						"2810ac0e-480b-4374-8130-134862088a86", "2a90e8ab-fe34-4a3f-8bd4-0480ce4f40f8",
+						"1b509e3a-068e-4062-9781-d04c175db304", "95744605-8649-4091-bdfe-5426ad0b6b3e",
+						"63644d2e-f052-45cb-94f2-911331f298f2", "4d768d73-b9a9-44a0-bbbe-dc00a04f52ec",
+						"98abde27-4dcc-4d5b-ac16-d43eac63b94b", "11a2f4a2-75e3-4ee2-be94-391e02739d28",
+						"2fc001ca-b8c4-4a5c-b7e2-c732c9f98ce0", "e41ddf46-b7fe-4d56-b52d-05a6cee7adf0",
+						"f1c0b0d9-b2b4-4d63-a553-cec5653a79c3", "4fe543ea-610e-444b-bde3-e0cf12092ae6",
+						"1fac0105-51f2-4a5f-ac3f-eaf4b6d311ed", "71352b76-f76e-421b-b114-72f071633b61",
+						"d2112ef6-7cfa-49a4-94de-a127e45ff1c1", "da761750-c568-4e8b-9965-ee588c3d1d9a",
+						"aff0af5d-45b8-46b6-81ee-12c79990653b", "49264559-dddb-42c5-b1bf-1a52a0eb659f",
+						"9beaf247-e674-47a2-9d4c-c550bb1aa7cc", "349b85b9-a083-4e65-9740-f3d59278f635",
+						"4dbf03a7-f321-4109-abd0-58780310f09c", "6ad6e636-f5ec-4d8f-a499-c85055e03f4e",
+						"f33140b3-3ecd-4d70-bfcc-159f47ac9058", "8cac6f24-fc71-4e4a-b556-5bfe06191f3f",
+						"23178716-9ef5-4b57-b88e-ea85d080c0f7", "7adbc141-fbea-4203-8f3e-db3108638c30",
+						"9a14f70c-52eb-4756-8fb3-b48ee8b86094", "f9c4de20-c3c1-464c-9d8e-d5158312a9db",
+						"fcc7aa01-7b2d-4773-ba65-acc2dd7e592c", "674626e2-4537-44ba-a6a9-58632ec9f5ce",
+						"2b06d29f-204e-4a38-ac87-b77cb7d39578", "5d8fa91b-b783-46ef-b615-c6aba8dec1fd",
+						"0221582e-c2fd-49d0-98ed-4635cd5e22db", "625f5d03-6726-4bb2-894e-60749397dba6",
+						"4d217df4-d2ad-44e6-81eb-ac10a9c040ec", "f04111dd-c59d-419c-bf6f-36ebecbcbd0d",
+						"bde9a482-df2e-410e-9a51-06a90d2294d0", "06b26796-bbda-49ad-b0b8-e24bc8cbeef6",
+						"b087d73e-ccb5-4457-8b09-e85ba72de7e7", "4d1d6d54-0cc1-4ba5-a40f-ed61284149c9",
+						"07c6552d-c3fe-445b-aac4-e1d2c234d2ca", "fbbc3da9-1403-4206-8b22-e1aed2b0ec40",
+						"3bd9d22b-65d9-44af-805f-87a77af5f691", "54d1aba3-3e2c-4de4-8065-c55a50109dbc",
+						"ffc0b360-00d5-4e8f-8bef-f0472df6cb5f", "ce91457a-f7dc-49d0-93ff-79259e553769",
+						"f7b002fd-5c0c-4e2f-9879-0e98bda6cd5d", "b251d67f-b441-42d2-b69d-6a84c036e123",
+						"61374a58-a679-4532-811a-aa3340bcc47e", "3928b1d6-2fb7-4a62-a081-9e5a23e78e91"));
 				aditivo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				aditivo.setKey((Key)keyHelper.obtainKey(User.class, "aditivo_mx"));
 				userDao.create(aditivo);
