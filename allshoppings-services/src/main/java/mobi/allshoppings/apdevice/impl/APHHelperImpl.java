@@ -25,7 +25,6 @@ import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.DeviceInfoDAO;
-import mobi.allshoppings.dao.ExternalAPHotspotDAO;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
@@ -56,11 +55,8 @@ public class APHHelperImpl implements APHHelper {
 	@Autowired
 	private DeviceInfoDAO diDao;
 	@Autowired
-	private ExternalAPHotspotDAO eaphDao;
-	@Autowired
 	private SystemConfiguration systemConfiguration;
 	
-	private DumperHelper<APHotspot> dumpHelper;
 	private boolean cacheBuilt = false;
 	private boolean scanInDevices = true;
 	private boolean useCache = true;
@@ -632,6 +628,8 @@ public class APHHelperImpl implements APHHelper {
 	@Override
 	public void generateAPHEntriesFromDump(Date fromDate, Date toDate, List<String> hostnames, boolean buildCache) throws ASException {
 
+		DumperHelper<APHotspot> dumpHelper;
+
 		if( cache == null )
 			cache = new PersistentCacheFSImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
 					systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
@@ -720,7 +718,9 @@ public class APHHelperImpl implements APHHelper {
 	 *            Devices to match
 	 */
 	@Override
-	public void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException {
+	public void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, List<String> hostnames, boolean buildCache) throws ASException {
+
+		DumperHelper<ExternalAPHotspot> dumpHelper;
 
 		if( cache == null )
 			cache = new PersistentCacheFSImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
@@ -729,50 +729,73 @@ public class APHHelperImpl implements APHHelper {
 		// Pre build cache
 		if( buildCache ) {
 			log.log(Level.INFO, "Building Cache");
-			List<String> hostnames = CollectionFactory.createList();
-			hostnames.addAll(apdevices.keySet());
-			buildCache(fromDate, new Date(toDate.getTime() - 86400000), hostnames);
+			buildCache(fromDate, new Date(toDate.getTime() - 86400000), null);
+		} else {
+			setCacheBuilt(true);
 		}
 		
 		// Gets the input data
 		long totals = 0;
-		log.log(Level.INFO, "Processing External AP Records from " + fromDate + " to " + toDate);
-		List<ExternalAPHotspot> list = eaphDao.getUsingHostnameAndDates((String)null, fromDate, toDate);
-		for( ExternalAPHotspot obj : list ) {
-			if( totals % 1000 == 0 ) 
-				log.log(Level.INFO, "Processing records " + totals + " of " + list.size());
-			
-			totals++;
-			
-			if( obj.getLastSeen() == null )
-				obj.setLastSeen(new Date(obj.getFirstSeen().getTime() + ONE_HOUR));
-			
-			if(isValidMacAddress(obj.getMac()))
-				if( apdevices.containsKey(obj.getHostname())) 
+		log.log(Level.INFO, "Processing Dump Records");
+		dumpHelper = new DumpFactory<ExternalAPHotspot>().build(null, ExternalAPHotspot.class);
+
+		List<String> options;
+		if( hostnames == null || hostnames.size() == 0 ) {
+			options = dumpHelper.getMultipleNameOptions(fromDate);
+		} else if( hostnames.size() == 1 ) {
+			options = CollectionFactory.createList();
+			options.add(hostnames.get(0));
+		} else {
+			options = CollectionFactory.createList();
+			options.addAll(hostnames);
+		}
+
+		DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class); 
+
+		for( String hostname : options ) {
+
+			log.log(Level.INFO, "Processing " + hostname + " for date " + fromDate + "...");
+
+			dumpHelper = new DumpFactory<ExternalAPHotspot>().build(null, ExternalAPHotspot.class);
+			dumpHelper.setFilter(hostname);
+			Date xdate = new Date(toDate.getTime() - 3600000);
+			Iterator<ExternalAPHotspot> i = dumpHelper.iterator(fromDate, xdate);
+			while( i.hasNext() ) {
+				ExternalAPHotspot obj = i.next();
+				if( totals % 1000 == 0 ) 
+					log.log(Level.INFO, "Processing for date " + obj.getCreationDateTime() + " with " + cache.size() + " records so far (" + cache.getHits() + "/" + cache.getMisses() + "/" + cache.getStores() + "/" + cache.getLoads() + ")...");
+
+				if( obj.getLastSeen() == null )
+					obj.setLastSeen(new Date(obj.getFirstSeen().getTime() + ONE_HOUR));
+
+				if(isValidMacAddress(obj.getMac()))
 					setFramedRSSI(obj);
+
+				totals++;
+			}
+
+			log.log(Level.INFO, "Disposing ExternalAPHotspot dumper");
+			dumpHelper.dispose();
+
+			// Write to the database, only if it was not written yet!
+			log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
+			Iterator<APHEntry> x = cache.iterator();
+			while(x.hasNext()) {
+				APHEntry aphe = x.next();
+				if( aphe.getDataCount() > 2 ) {
+					aphe.setKey(apheDao.createKey(aphe));
+					apheDumper.dump(aphe);
+				}
+			}
+			log.log(Level.INFO, "Disposing cache");
+			cache.dispose();
+
+			apheDumper.flush();
 		}
 		
-
-		log.log(Level.INFO, "Disposing APHotspot dumper");
-		dumpHelper.dispose();
-
-		// Write to the database, only if it was not written yet!
-		log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
-		Iterator<APHEntry> x = cache.iterator();
-		DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class); 
-		while(x.hasNext()) {
-			APHEntry aphe = x.next();
-			if( aphe.getDataCount() > 2 ) {
-				aphe.setKey(apheDao.createKey(aphe));
-				apheDumper.dump(aphe);
-			}
-		}
 		log.log(Level.INFO, "Disposing APHE dumper");
 		apheDumper.dispose();
 
-		log.log(Level.INFO, "Disposing cache");
-		cache.dispose();
-		
 		log.log(Level.INFO, "Process Ended");
 
 	}
