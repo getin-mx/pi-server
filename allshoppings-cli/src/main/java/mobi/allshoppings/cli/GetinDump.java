@@ -1595,10 +1595,8 @@ public class GetinDump extends AbstractCLI {
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
-					brand = brandDao.get(obj.getBrandId(), true);
 					store = storeDao.getUsingExternalId(obj.getExternalKey());
 					store.setName(obj.getName());
-					store.setBrand(brand);
 					storeDao.update(store);
 				} catch( Exception e ) {
 					shopping = obj.getShoppingId() == null ? null : shoppingDao.get(obj.getShoppingId(), true);
