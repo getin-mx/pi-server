@@ -47,7 +47,14 @@ public interface DumperHelper<T extends ModelKey> {
 	 * @throws ASException
 	 */
 	void flush() throws ASException;
-	
+
+	/**
+	 * Triggers a start prefetch
+	 * 
+	 * @throws ASException
+	 */
+	void startPrefetch() throws ASException;
+
 	/**
 	 * Applies all the plugins registered for an object before dumping the
 	 * object

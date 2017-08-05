@@ -41,6 +41,7 @@ import com.jcraft.jsch.JSchException;
 import com.mongodb.DBObject;
 
 import mobi.allshoppings.apdevice.APDeviceHelper;
+import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APHotspotDAO;
@@ -56,6 +57,7 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.mail.MailHelper;
 import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.APDevice;
+import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.APUptime;
 import mobi.allshoppings.model.EntityKind;
@@ -106,9 +108,10 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	private IndexHelper indexHelper;
 	@Autowired
 	private APHotspotDAO aphDao;
+	@Autowired
+	private APHHelper aphHelper;
 	
-	private DumperHelper<APHotspot> dumpHelper;
-
+	
 	@Override
 	public void updateMacVendors(String filename) throws ASException {
 
@@ -497,12 +500,16 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		return doReport;
 	}
 	
-	public void calculateUptimeFromDump(String baseDir, Date fromDate, Date toDate, List<String> apdevices) throws ASException {
+	@Override
+	public void calculateUptime(Date fromDate, Date toDate, List<String> apdevices) throws ASException {
 
 		Map<String, APUptime> cache = CollectionFactory.createMap();
-
+		DumperHelper<APHEntry> dumpHelper;
+		boolean predefinedAPDevicesList = true;
+		
 		// Populates the apdevices list if empty
 		if(CollectionUtils.isEmpty(apdevices)) {
+			predefinedAPDevicesList = false;
 			apdevices = CollectionFactory.createList();
 			List<APDevice> list = dao.getAll(true);
 			for( APDevice obj : list ) {
@@ -511,19 +518,15 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		}
 
 		// Prepares the basic records
+		log.log(Level.INFO, "Preparing APUptime cache");
 		Date date = new Date(fromDate.getTime());
+		Date xtoDate = new Date(fromDate.getTime());
 		while( date.before(toDate)) {
 			for( String hostname : apdevices ) {
 				APUptime apu = null;
-				try {
-					apu = apuDao.getUsingHostnameAndDate(hostname, date);
-				} catch( ASException e ) {
-					if( ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE == e.getErrorCode()) {
-						apu = new APUptime(hostname, date);
-						apu.setKey(apuDao.createKey(hostname, date));
-						apuDao.create(apu);
-					}
-				}
+				apu = new APUptime(hostname, date);
+				apu.setKey(apuDao.createKey(hostname, date));
+				apuDao.createOrUpdate(apu);
 
 				cache.put(apu.getKey().getName(), apu);
 			}
@@ -531,32 +534,57 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		}
 
 		// Gets the input data
-		long totals = 0;
-		dumpHelper = new DumpFactory<APHotspot>().build(baseDir, APHotspot.class);
-		Iterator<APHotspot> i = dumpHelper.iterator(fromDate, toDate);
-		while( i.hasNext() ) {
-			APHotspot aph = i.next();
-			if( aph != null ) {
-				if( totals % 1000 == 0 ) 
-					log.log(Level.INFO, "Processing for date " + aph.getCreationDateTime());
-
-				if( apdevices.contains(aph.getHostname())) {
-					Key apuKey = apuDao.createKey(aph.getHostname(), aph.getCreationDateTime());
-					APUptime apu = cache.get(apuKey.getName());
-					String key = APUptime.getRecordKey(aph.getCreationDateTime());
-					if( apu != null && apu.getRecord() != null ) {
-						Integer val = apu.getRecord().get(key);
-						if( val.equals(0)) {
-							apu.getRecord().put(key, 1);
+		date = new Date(fromDate.getTime());
+		while( date.before(toDate)) {
+			xtoDate = new Date(date.getTime() + 86400000);
+			dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
+			List<String> hostnames;
+			if(!predefinedAPDevicesList) {
+				hostnames = dumpHelper.getMultipleNameOptions(date);
+				dumpHelper.startPrefetch();
+				dumpHelper.iterator(date, xtoDate);
+			} else {
+				hostnames = apdevices;
+			}
+			
+			for( String hostname : hostnames ) {
+				log.log(Level.INFO, "Processing for hostname " + hostname + " for date " + date);
+				dumpHelper.setFilter(hostname);
+				Iterator<APHEntry> i = dumpHelper.iterator(date, xtoDate);
+				while( i.hasNext() ) {
+					APHEntry aphe = i.next();
+					if( aphe != null ) {
+						if( apdevices.contains(aphe.getHostname())) {
+							Key apuKey = apuDao.createKey(aphe.getHostname(), date);
+							APUptime apu = cache.get(apuKey.getName());
+							Iterator<String> slots = aphe.getRssi().keySet().iterator();
+							while(slots.hasNext()) {
+								try {
+									String slot = slots.next();
+									Date vDate = aphHelper.slotToDate(aphe.getDate(), Integer.valueOf(slot));
+									if(( vDate.after(date) || vDate.equals(date)) && ( vDate.before(xtoDate) || vDate.equals(xtoDate))) {
+										String key = APUptime.getRecordKey(vDate);
+										if( apu != null && apu.getRecord() != null ) {
+											Integer val = apu.getRecord().get(key);
+											if( val.equals(0)) {
+												apu.getRecord().put(key, 1);
+											}
+										}
+									}
+								} catch( Exception e ) {}
+							}
 						}
 					}
 				}
+
 			}
-			totals++;
+			
+			date = new Date(date.getTime() + 86400000);
+			
+			log.log(Level.INFO, "Disposing APHEntry Cache...");
+			dumpHelper.dispose();
 		}
 
-		dumpHelper.dispose();
-		
 		// Write to the database
 		Iterator<String> x = cache.keySet().iterator();
 		while(x.hasNext()) {

@@ -12,7 +12,7 @@ public interface APDeviceHelper {
 
 	void updateDeviceData(String identifier, String description, boolean enableAlerts, List<String> alertMails) throws ASException;
 	void reportDownDevices() throws ASException;
-	void calculateUptimeFromDump(String baseDir, Date fromDate, Date toDate, List<String> apdevices) throws ASException;
+	void calculateUptime(Date fromDate, Date toDate, List<String> apdevices) throws ASException;
 
 	// Utilities
 	void updateAPDeviceInfo(String identifier) throws ASException;

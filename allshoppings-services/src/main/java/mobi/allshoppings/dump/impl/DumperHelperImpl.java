@@ -902,4 +902,10 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		
 	}
 
+	@Override
+	public void startPrefetch() throws ASException {
+		if( cfm != null )
+			cfm.startPrefetch();
+	}
+
 }
