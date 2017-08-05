@@ -46,9 +46,9 @@ public class CheckinUpdaterService {
 	private CheckinDAO checkinDao = new CheckinDAOJDOImpl();
 	protected Gson gson = GsonFactory.getInstance();
 	
-	public void updateCheckins(String baseDir, Date fromDate, Date toDate) throws ASException, IOException {
+	public void updateCheckins(Date fromDate, Date toDate) throws ASException, IOException {
 
-		DumperHelper<DeviceLocationHistory> dumper = new DumpFactory<DeviceLocationHistory>().build(baseDir, DeviceLocationHistory.class);
+		DumperHelper<DeviceLocationHistory> dumper = new DumpFactory<DeviceLocationHistory>().build(null, DeviceLocationHistory.class);
 		Map<String, List<InterestingPoint>> interestingPointsMap = getInterestingPointMap(shoppingDao, geocoder, null); 
 
 		long totals = 0;

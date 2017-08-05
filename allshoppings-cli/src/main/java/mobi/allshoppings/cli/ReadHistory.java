@@ -27,7 +27,6 @@ public class ReadHistory extends AbstractCLI {
 		parser.accepts( "fromDate", "Date From" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "toDate", "Date To" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "entity", "Entity to dump (for example, DeviceLocationHistory)").withRequiredArg().ofType( String.class );
-		parser.accepts( "outDir", "Output Directory (for example, /tmp/dump)").withRequiredArg().ofType( String.class );
 		parser.accepts( "filter", "A file name filter").withRequiredArg().ofType( String.class );
 		return parser;
 	}
@@ -47,7 +46,6 @@ public class ReadHistory extends AbstractCLI {
 			Date toDate = null;
 
 			String sEntity = null;
-			String sOutDir = null;
 			
 			Class<ModelKey> entity = null;
 			
@@ -60,9 +58,6 @@ public class ReadHistory extends AbstractCLI {
 				else usage(parser);
 				entity = (Class<ModelKey>)Class.forName("mobi.allshoppings.model." + sEntity);
 				
-				if( options.has("outDir")) sOutDir = (String)options.valueOf("outDir");
-				else usage(parser);
-
 				if( options.has("filter")) filter = (String)options.valueOf("filter");
 
 				if( StringUtils.hasText(sFromDate)) {
@@ -83,7 +78,7 @@ public class ReadHistory extends AbstractCLI {
 			}
 
 			log.log(Level.INFO, "Starting read for entity " + entity.getName() + " from " + fromDate + " to " + toDate);
-			DumperHelper<ModelKey> dumper = new DumpFactory<ModelKey>().build(sOutDir, entity);
+			DumperHelper<ModelKey> dumper = new DumpFactory<ModelKey>().build(null, entity);
 			if( StringUtils.hasText(filter)) dumper.setFilter(filter);
 			
 			Iterator<ModelKey> it = dumper.iterator(fromDate, toDate);

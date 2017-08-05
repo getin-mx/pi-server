@@ -120,17 +120,6 @@ public interface DumperHelper<T extends ModelKey> {
 	void dumpModelKey(String collection, Date fromDate, Date toDate, boolean deleteAfterDump, boolean moveCollectionBeforeDump) throws ASException;
 
 	/**
-	 * Fakes a Dump batch.
-	 * 
-	 * @param fromDate
-	 *            From which date
-	 * @param toDate
-	 *            To which date
-	 * @throws ASException
-	 */
-	void fakeModelKey(Date fromDate, Date toDate) throws ASException;
-
-	/**
 	 * Dumps a single ModelKey object
 	 * 
 	 * @param baseDir

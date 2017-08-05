@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -22,7 +21,6 @@ import javax.jdo.datastore.JDOConnection;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.datanucleus.util.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,8 +42,6 @@ import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.DumperPlugin;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.DeviceLocationHistory;
-import mobi.allshoppings.model.DeviceWifiLocationHistory;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl;
 import mobi.allshoppings.tools.CollectionFactory;
@@ -505,50 +501,6 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		return new DumpJSONIterator(fromDate, toDate);
 	}
 	
-	@Override
-	public void fakeModelKey(Date fromDate, Date toDate) throws ASException {
-		Calendar cal1 = Calendar.getInstance();
-		cal1.setTime(toDate);
-		
-		Calendar cal2 = Calendar.getInstance();
-		
-		Date fromWorkDate = DateUtils.truncate(fromDate, Calendar.DATE);
-		Date toWorkDate = DateUtils.addMinutes(DateUtils.addDays(fromWorkDate, 1), -1); 
-		
-		Iterator<T> i = iterator(fromWorkDate, toWorkDate);
-		while(i.hasNext()) {
-			T obj = i.next();
-			if(obj instanceof DeviceLocationHistory) {
-				DeviceLocationHistory ele = (DeviceLocationHistory)obj;
-				if( ele != null && ele.getLastUpdate() != null ) {
-					cal2.setTime(ele.getCreationDateTime());
-					cal2.set(cal1.get(Calendar.YEAR), cal1.get(Calendar.MONTH), cal1.get(Calendar.DATE));
-					ele.setCreationDateTime(cal2.getTime());
-				}
-			}
-			if(obj instanceof DeviceWifiLocationHistory) {
-				DeviceWifiLocationHistory ele = (DeviceWifiLocationHistory)obj;
-				if( ele != null && ele.getLastUpdate() != null ) {
-					cal2.setTime(ele.getCreationDateTime());
-					cal2.set(cal1.get(Calendar.YEAR), cal1.get(Calendar.MONTH), cal1.get(Calendar.DATE));
-					ele.setCreationDateTime(cal2.getTime());
-				}
-			}
-
-			if( obj != null && obj.getLastUpdate() != null ) {
-				cal2.setTime(obj.getLastUpdate());
-				cal2.set(cal1.get(Calendar.YEAR), cal1.get(Calendar.MONTH), cal1.get(Calendar.DATE));
-				obj.setLastUpdate(cal2.getTime());
-			}
-
-			try {
-				dump(obj);
-			} catch( Exception e ) {
-				throw ASExceptionHelper.defaultException(e.getMessage(), e);
-			}
-		}
-	}
-
 	/**
 	 * Sets properties of an entity object based in the attributes received in
 	 * JSON representation

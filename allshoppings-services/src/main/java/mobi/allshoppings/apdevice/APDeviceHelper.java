@@ -27,7 +27,6 @@ public interface APDeviceHelper {
 	APDevice geoIp(APDevice apd) throws ASException;
 	void updateAssignationsUsingAPDevice(String hostname) throws ASException;
 	void unassignUsingAPDevice(String hostname) throws ASException;
-	void importRecordsFromFileSystem(String dir, String backupDir, Date fakeDeviationStartDate) throws ASException;
 	
 	// Mac Addresses Utilites
 	String getDevicePlatform(String mac, Map<String, MacVendor> cache);

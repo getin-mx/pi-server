@@ -23,7 +23,6 @@ public class UpdateCheckins extends AbstractCLI {
 		else parser = base;
 		parser.accepts( "fromDate", "Date From" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "toDate", "Date To" ).withRequiredArg().ofType( String.class );
-		parser.accepts( "outDir", "Output Directory (for example, /tmp/dump)").withRequiredArg().ofType( String.class );
 		return parser;
 	}
 
@@ -38,7 +37,6 @@ public class UpdateCheckins extends AbstractCLI {
 			String sToDate = null;
 			Date fromDate = null;
 			Date toDate = null;
-			String sOutDir = null;
 			
 			try {
 				if( options.has("fromDate")) sFromDate = (String)options.valueOf("fromDate");
@@ -56,9 +54,6 @@ public class UpdateCheckins extends AbstractCLI {
 					toDate = new Date();
 				}
 				
-				if( options.has("outDir")) sOutDir = (String)options.valueOf("outDir");
-				else usage(parser);
-
 			} catch( Exception e ) {
 				e.printStackTrace();
 				usage(parser);
@@ -66,7 +61,7 @@ public class UpdateCheckins extends AbstractCLI {
 
 			log.log(Level.INFO, "Updating Checkin from " + fromDate + " to " + toDate);
 			CheckinUpdaterService service = new CheckinUpdaterService();
-			service.updateCheckins(sOutDir, fromDate, toDate);
+			service.updateCheckins(fromDate, toDate);
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
