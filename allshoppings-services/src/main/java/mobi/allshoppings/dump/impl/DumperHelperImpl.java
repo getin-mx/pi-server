@@ -308,8 +308,8 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 			// Prepares the cursor
 			DBCursor c;
 			if( fromDate != null && toDate != null ) {
-	            BasicDBObject query = new BasicDBObject("checkinStarted", new BasicDBObject("$gte", fromDate)).
-	                    append("checkinStarted", new BasicDBObject("$lt", toDate));
+				BasicDBObject query = new BasicDBObject("checkinStarted", 
+	                      new BasicDBObject("$gte", fromDate).append("$lt", toDate));
 				c = db.getCollection(collection).find(query);
 			} else {
 				c = db.getCollection(collection).find();
