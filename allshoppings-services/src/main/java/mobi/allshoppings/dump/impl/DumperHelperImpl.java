@@ -327,24 +327,22 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 
 				T obj = clazz.newInstance();
 				setPropertiesFromDBObject(dbo, obj);
-				if ((fromDate == null || fromDate.before(((APDVisit)obj).getCheckinStarted()))
-						&& (toDate == null || toDate.after(((APDVisit)obj).getCheckinStarted()))) {
 
-					// Apply pre dump plugins
-					applyPreDumpPlugins(obj);
-					
-					// Dumps the object
-					dump(obj);
-					
-					// Apply post dump plugins
-					applyPostDumpPlugins(obj);
-					
-					processed ++;
+				// Apply pre dump plugins
+				applyPreDumpPlugins(obj);
 
-					if( deleteAfterDump ) {
-						db.getCollection(collection).remove(dbo);
-					}
+				// Dumps the object
+				dump(obj);
+
+				// Apply post dump plugins
+				applyPostDumpPlugins(obj);
+
+				processed ++;
+
+				if( deleteAfterDump ) {
+					db.getCollection(collection).remove(dbo);
 				}
+				
 				obj = null;
 				count++;
 
