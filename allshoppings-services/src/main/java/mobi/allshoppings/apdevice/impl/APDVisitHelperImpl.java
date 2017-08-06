@@ -31,6 +31,8 @@ import mobi.allshoppings.dao.InnerZoneDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
+import mobi.allshoppings.dump.DumperHelper;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDAssignation;
@@ -119,6 +121,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		List<Store> stores = CollectionFactory.createList();
 		Map<String, APDevice> apdCache = CollectionFactory.createMap();
 		Map<String, APDAssignation> assignmentsCache = CollectionFactory.createMap();
+		DumperHelper<APHEntry> dumpHelper;
 		boolean cacheBuilt = false;
 		Range range = null;
 		
@@ -140,6 +143,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Map<String, Integer> entities = getEntities(null, null, eids);
 		
 		Date curDate = new Date(fromDate.getTime());
+		Date limitDate = new Date(fromDate.getTime() + 86400000);
 		while( curDate.before(toDate) || (fromDate.equals(toDate) && curDate.equals(toDate))) {
 
 			try {
@@ -191,31 +195,26 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + curDate + "...");
 									log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
-									List<APHEntry> entries = apheDao.getUsingHostnameAndDates(
-											Arrays.asList(new String[] { assigs.get(0).getHostname() }), curDate, curDate, range, false);
+									dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
+									dumpHelper.setFilter(assigs.get(0).getHostname());
+									Iterator<APHEntry> i = dumpHelper.iterator(curDate, limitDate);
 
-									// Employee check
-									if( onlyEmployees ) {
-										List<APHEntry> tmp = CollectionFactory.createList();
-										tmp.addAll(entries);
-										entries.clear();
-										for( APHEntry entry : tmp ) {
-											if(employeeListMacs.contains(entry.getMac().toUpperCase()))
-												entries.add(entry);
+									while( i.hasNext() ) {
+										APHEntry entry = i.next();
+										// Employee check
+										if(!onlyEmployees || employeeListMacs.contains(entry.getMac().toUpperCase())) {
+											List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
+											for(APDVisit visit : visitList )
+												if(!keys.contains(visit.getIdentifier())) {
+													if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE)) {
+														objs.add(visit);
+														keys.add(visit.getIdentifier());
+													}
+												}
 										}
 									}
 
-									log.log(Level.INFO, "Processing " + entries.size() + " APHEntries...");
-									for(APHEntry entry : entries ) {
-										List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
-										for(APDVisit visit : visitList )
-											if(!keys.contains(visit.getIdentifier())) {
-												if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE)) {
-													objs.add(visit);
-													keys.add(visit.getIdentifier());
-												}
-											}
-									}
+									dumpHelper.dispose();
 
 									log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
 									try {
@@ -226,7 +225,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 											log.log(Level.INFO, obj.getIdentifier());
 										}
 									}
-
+									
 								} else {
 									Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
 									List<String> hostnames = CollectionFactory.createList();
@@ -298,6 +297,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			}
 			
 			curDate = new Date(curDate.getTime() + 86400000);
+			limitDate = new Date(curDate.getTime() + 86400000);
 		}
 	}
 

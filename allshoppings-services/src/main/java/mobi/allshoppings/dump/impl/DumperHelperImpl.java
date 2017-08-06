@@ -31,6 +31,7 @@ import com.inodes.datanucleus.model.Blob;
 import com.inodes.datanucleus.model.Email;
 import com.inodes.datanucleus.model.Key;
 import com.inodes.datanucleus.model.Text;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -42,6 +43,7 @@ import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.DumperPlugin;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl;
 import mobi.allshoppings.tools.CollectionFactory;
@@ -184,6 +186,12 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	@Override
 	public void dumpModelKey(String collection, Date fromDate, Date toDate, boolean deleteAfterDump, boolean moveCollectionBeforeDump) throws ASException {
 
+		// Special dumper for model key
+		if(clazz.equals(APDVisit.class)) {
+			dumpAPDVisit(collection, fromDate, toDate, deleteAfterDump, moveCollectionBeforeDump);
+			return;
+		}
+		
 		// Prepares local variables
 		long count = 0;
 		long processed = 0;
@@ -226,6 +234,101 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 				setPropertiesFromDBObject(dbo, obj);
 				if ((fromDate == null || fromDate.before(obj.getCreationDateTime()))
 						&& (toDate == null || toDate.after(obj.getCreationDateTime()))) {
+
+					// Apply pre dump plugins
+					applyPreDumpPlugins(obj);
+					
+					// Dumps the object
+					dump(obj);
+					
+					// Apply post dump plugins
+					applyPostDumpPlugins(obj);
+					
+					processed ++;
+
+					if( deleteAfterDump ) {
+						db.getCollection(collection).remove(dbo);
+					}
+				}
+				obj = null;
+				count++;
+
+				if( count % batchSize == 0 )
+					log.log(Level.INFO, "Processed " + count + " of " + totalRecords + " with " + processed + " results...");
+			}
+
+			long finalTime = new Date().getTime();
+			log.log(Level.INFO, "Finally Processed " + count + " of " + totalRecords + " with " + processed + " results in " + (finalTime - initTime) + "ms");
+
+			if( cfm != null ) {
+				cfm.flush();
+				cfm.forceCleanup();
+			}
+			
+		} catch( Exception e ) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		} finally {
+			jdoConn.close();
+			pm.currentTransaction().commit();
+		}
+	}
+
+	/**
+	 * @see mobi.allshoppings.dump.DumperHelper#dumpModelKey(String, Date, Date, boolean)
+	 */
+	@Override
+	public void dumpAPDVisit(String collection, Date fromDate, Date toDate, boolean deleteAfterDump, boolean moveCollectionBeforeDump) throws ASException {
+
+		// Prepares local variables
+		long count = 0;
+		long processed = 0;
+		long batchSize = 100;
+
+		long initTime = new Date().getTime();
+
+		// Creates JDO Connection
+		PersistenceManager pm;
+		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+		pm.currentTransaction().begin();
+
+		// Gets Native connection from JDO
+		JDOConnection jdoConn = pm.getDataStoreConnection();
+		DB db = (DB)jdoConn.getNativeConnection();
+
+		// Moves the collection if requested
+		if( moveCollectionBeforeDump) {
+			SimpleDateFormat backupSDF = new SimpleDateFormat("yyyyMMddHHmm");
+			String newCollection = "BK" + collection + backupSDF.format(new Date());
+			db.getCollection(collection).rename(newCollection);
+			collection = newCollection;
+		}
+				
+		try {
+			// Prepares the cursor
+			DBCursor c;
+			if( fromDate != null && toDate != null ) {
+	            BasicDBObject query = new BasicDBObject("checkinStarted", new BasicDBObject("$gte", fromDate)).
+	                    append("checkinStarted", new BasicDBObject("$lt", toDate));
+				c = db.getCollection(collection).find(query);
+			} else {
+				c = db.getCollection(collection).find();
+			}
+			c.addOption(com.mongodb.Bytes.QUERYOPTION_NOTIMEOUT);
+			Iterator<DBObject> i = c.iterator();
+
+			// Counts the total records to export
+			long totalRecords = c.count();
+			log.log(Level.INFO, totalRecords + " records found");
+
+			while(i.hasNext()) {
+				// Gets the DB Object
+				DBObject dbo = i.next();
+
+				T obj = clazz.newInstance();
+				setPropertiesFromDBObject(dbo, obj);
+				if ((fromDate == null || fromDate.before(((APDVisit)obj).getCheckinStarted()))
+						&& (toDate == null || toDate.after(((APDVisit)obj).getCheckinStarted()))) {
 
 					// Apply pre dump plugins
 					applyPreDumpPlugins(obj);

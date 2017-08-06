@@ -120,6 +120,19 @@ public interface DumperHelper<T extends ModelKey> {
 	void dumpModelKey(String collection, Date fromDate, Date toDate, boolean deleteAfterDump, boolean moveCollectionBeforeDump) throws ASException;
 
 	/**
+	 * Special dump from APDVisit
+	 * 
+	 * @param fromDate
+	 *            From which date
+	 * @param toDate
+	 *            To which date
+	 * @param deleteAfterDump
+	 *            Do I have to delete the object after successful dump?
+	 * @throws ASException
+	 */
+	void dumpAPDVisit(String collection, Date fromDate, Date toDate, boolean deleteAfterDump, boolean moveCollectionBeforeDump) throws ASException;
+	
+	/**
 	 * Dumps a single ModelKey object
 	 * 
 	 * @param baseDir

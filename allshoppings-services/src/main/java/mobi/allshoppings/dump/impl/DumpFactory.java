@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import mobi.allshoppings.dump.CloudFileManager;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.DeviceWifiLocationHistory;
@@ -76,6 +77,12 @@ public class DumpFactory<T extends ModelKey> {
 		// For APHEntry
 		if(entity.equals(APHEntry.class)) {
 			dumper.registerFileNameResolver(new APHEntryFileNameResolver());
+			dumper.setTimeFrame(DumperHelperImpl.TIMEFRAME_ONE_DAY);
+		}
+
+		// For APDVisit
+		if(entity.equals(APDVisit.class)) {
+			dumper.registerFileNameResolver(new APDVisitFileNameResolver());
 			dumper.setTimeFrame(DumperHelperImpl.TIMEFRAME_ONE_DAY);
 		}
 

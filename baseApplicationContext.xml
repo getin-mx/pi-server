@@ -143,6 +143,7 @@
 			<map>
 				<entry><key><value>default</value></key><value>dump</value></entry>
 				<entry><key><value>APHEntry</value></key><value>aphentry</value></entry>
+				<entry><key><value>APDVisit</value></key><value>apdvisit</value></entry>
 				<entry><key><value>ExternalAPHotspot</value></key><value>external-aphotspot</value></entry>
 				<entry><key><value>APHotspot</value></key><value>aphotspot</value></entry>
 				<entry><key><value>DeviceLocationHistory</value></key><value>device-location-history</value></entry>
