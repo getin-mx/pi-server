@@ -1005,6 +1005,18 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "aditivo_franquicias_michan_mx"));
 				brandDao.create(brand);
 			}
+			
+			try {
+				brand = brandDao.get("mt_sport_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("MT Sport");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "mt_sport_mx"));
+				brandDao.create(brand);
+			}
 
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
@@ -1598,6 +1610,9 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("736", "Outlet Deportes Motolinea", "outletdeportes_mx",null));
 			
 			stores.add(new StoreAdapter("737", "Adolfo Dominguez Cancun", "chomarc_mx",null));
+			
+			stores.add(new StoreAdapter("738", "MT Sport S5 Centro Sur Puebla", "mt_sport_mx",null));
+			stores.add(new StoreAdapter("739", "MT Sport S1 Atlixco", "mt_sport_mx",null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
