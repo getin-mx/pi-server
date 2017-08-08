@@ -1605,7 +1605,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("733", "Sally Beauty Plaza Insurgentes", "sallybeauty_mx",null));
 			
 			stores.add(new StoreAdapter("734", "Sportium Santa Fe II", "getin_mx",null));
-			stores.add(new StoreAdapter("735", "Sportium Patio Santa Fe", "sportium_mx",null));
+//			stores.add(new StoreAdapter("735", "Sportium Patio Santa Fe", "sportium_mx",null));
 			
 			stores.add(new StoreAdapter("736", "Outlet Deportes Motolinea", "outletdeportes_mx",null));
 			
