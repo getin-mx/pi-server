@@ -240,6 +240,42 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("anilu@getin.mx"));
 				userMenuDao.create(um);
 			}
+			
+			User azucena = null;
+			try {
+				azucena = userDao.get("azucena@getin.mx", true);
+			} catch( Exception e ) {
+				azucena = new User();
+				azucena.setFirstname("Azucena");
+				azucena.setLastname("Orozco");
+				azucena.setEmail("azucena@getin.mx");
+				azucena.getSecuritySettings().setRole(Role.ADMIN);
+				azucena.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				azucena.setKey((Key)keyHelper.obtainKey(User.class, "azucena@getin.mx"));
+				userDao.create(azucena);
+			}
+
+			try {
+				um = userMenuDao.get("azucena@getin.mx", true);
+				userMenuDao.delete("azucena@getin.mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
+				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
+				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
+				um.setKey(userMenuDao.createKey("azucena@getin.mx"));
+				userMenuDao.create(um);
+			}
 
 			User francisco = null;
 			try {
