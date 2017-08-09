@@ -1458,7 +1458,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("608","Squalo Tuxtla", "squalo_mx", null));
 			stores.add(new StoreAdapter("609","Squalo Morelos", "squalo_mx", null));
 			stores.add(new StoreAdapter("610","Squalo Merida", "squalo_mx", null));
-			stores.add(new StoreAdapter("611","Squalo Morelia", "squalo_mx", null));
+			stores.add(new StoreAdapter("611","Squalo Morelia.", "squalo_mx", null));
 			stores.add(new StoreAdapter("612","Squalo Torreon", "squalo_mx", null));
 			stores.add(new StoreAdapter("613","Squalo Manzanillo", "squalo_mx", null));
 			stores.add(new StoreAdapter("614","Squalo Chihuahua", "squalo_mx", null));
