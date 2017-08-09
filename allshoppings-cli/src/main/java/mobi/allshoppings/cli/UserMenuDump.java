@@ -1255,6 +1255,36 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("walmart_mx"));
 				userMenuDao.create(um);
 			}
+			
+			User lacomer = null;
+			try {
+				lacomer = userDao.get("lacomer_mx", true);
+			} catch( Exception e ) {
+				lacomer = new User();
+				lacomer.setFirstname("La Comer");
+				lacomer.setLastname("Mexico");
+				lacomer.setEmail("lacomer@allshoppings.mobi");
+				lacomer.getSecuritySettings().setRole(Role.BRAND);
+				lacomer.getSecuritySettings().setShoppings(new ArrayList<String>());
+				lacomer.getSecuritySettings().getShoppings().add("lacomerdemo");
+				lacomer.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				lacomer.setKey((Key)keyHelper.obtainKey(User.class, "lacomer_mx"));
+				userDao.create(lacomer);
+			}
+
+			try {
+				um = userMenuDao.get("lacomer_mx", true);
+				userMenuDao.delete("lacomer_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en Tienda"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
+				um.setKey(userMenuDao.createKey("lacomer_mx"));
+				userMenuDao.create(um);
+			}
 
 			User invicta = null;
 			try {
