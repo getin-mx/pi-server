@@ -2,6 +2,8 @@ package mobi.allshoppings.cli;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.context.ApplicationContext;
 
@@ -29,6 +31,7 @@ public class TestExcelReport extends AbstractCLI {
 		try {
 			
 			final ExcelExportHelper helper = (ExcelExportHelper)getApplicationContext().getBean("excel.export.helper");
+			final Logger log = Logger.getLogger(TestExcelReport.class.getName());
 			
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
 			@SuppressWarnings("unused")
@@ -69,6 +72,8 @@ public class TestExcelReport extends AbstractCLI {
 			for( Thread t : tList ) {
 				t.join();
 			}
+			
+			log.log(Level.INFO, "Process Finished!");
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
