@@ -74,7 +74,7 @@
 		<!-- AllShoppings dependencies -->
 		<dependency>
 			<groupId>mobi.allshoppings</groupId>
-			<artifactId>cinepolis-services</artifactId>
+			<artifactId>allshoppings-services</artifactId>
 			<version>0.1</version>
 		</dependency>
 
