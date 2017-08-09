@@ -10,6 +10,7 @@ import joptsimple.OptionSet;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.exporter.ExcelExportHelper;
+import mobi.allshoppings.tools.CollectionFactory;
 
 
 public class TestExcelReport extends AbstractCLI {
@@ -27,7 +28,7 @@ public class TestExcelReport extends AbstractCLI {
 	public static void main(String args[]) throws ASException {
 		try {
 			
-			ExcelExportHelper helper = (ExcelExportHelper)getApplicationContext().getBean("excel.export.helper");
+			final ExcelExportHelper helper = (ExcelExportHelper)getApplicationContext().getBean("excel.export.helper");
 			
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
 			@SuppressWarnings("unused")
@@ -46,9 +47,27 @@ public class TestExcelReport extends AbstractCLI {
 			final String FROM_DATE = "2017-01-02"; // Retail Calendar initial 2017 day
 			final String TO_DATE = "2017-07-30"; // Retail Calendar final march day
 			final String outDir = "/usr/local/allshoppings/dump/";
+
+			final List<Thread> tList = CollectionFactory.createList();
 			
-			for( String store : storeIds ) {
-				helper.export(store, FROM_DATE, TO_DATE, 5, outDir);
+			for( final String store : storeIds ) {
+				Thread t = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							helper.export(store, FROM_DATE, TO_DATE, 5, outDir);
+						} catch (ASException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+				t.setName("Thread-" + store);
+				tList.add(t);
+				t.start();
+			}
+			
+			for( Thread t : tList ) {
+				t.join();
 			}
 			
 		} catch( Exception e ) {
