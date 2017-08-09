@@ -1,8 +1,6 @@
 package mobi.allshoppings.bz.spi;
 
-import java.text.ParseException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -15,13 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import mobi.allshoppings.bz.RequestCouponBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
-import mobi.allshoppings.cinepolis.services.SendMovieTicketsService;
-import mobi.allshoppings.cinepolis.services.SendPromoTicketsService;
 import mobi.allshoppings.dao.CampaignSpecialDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -61,41 +56,7 @@ implements RequestCouponBzService {
 			String campaignSpecialId = obj.has("campaignOfferId") ? obj.getString("campaignOfferId") : null;
 			boolean test = obj.has("test") ? obj.getBoolean("test") : false;
 
-			if(!StringUtils.hasText(campaignSpecialId) || campaignSpecialId.equals("1430288511084")) {	// cine
-
-				SendMovieTicketsService service = new SendMovieTicketsService();
-				service.doProcess(
-						new Date(),
-						86400000, /* 24 hours */
-						systemConfiguration.getExternalActivityTriggerURL() + "?authToken="
-						+ this.getParameters().get("authToken"),
-						600000 /* 10 minutes */, devices, devices, false,
-						Arrays.asList(new String[] { "cinepolis_mx_339" }), true,
-						test, null, true, false);
-
-			} else if( campaignSpecialId.equalsIgnoreCase("1432724594627")) {	// crepa
-
-				SendPromoTicketsService service = new SendPromoTicketsService();
-				service.doProcess(
-						new Date(),
-						systemConfiguration.getExternalActivityTriggerURL() + "?authToken="
-								+ this.getParameters().get("authToken"),
-								3600000 /* 1 hour */,
-								devices, devices, Arrays.asList(new String[] { "cinepolis_mx_339" }), 
-								test, true, "1432724594627", true, false);
-
-			} else if( campaignSpecialId.equalsIgnoreCase("1432724531038")) {	// bagui
-
-				SendPromoTicketsService service = new SendPromoTicketsService();
-				service.doProcess(
-						new Date(),
-						systemConfiguration.getExternalActivityTriggerURL() + "?authToken=" 
-								+ this.getParameters().get("authToken"),
-								3600000 /* 1 hour */,
-								devices, devices, Arrays.asList(new String[] { "cinepolis_mx_339" }), 
-								test, true, "1432724531038", true, false);
-
-			} else { // Generic coupon implementation 
+			{ // Generic coupon implementation 
 
 				RestTemplate restTemplate = new RestTemplate();
 				HttpMessageConverter<?> formHttpMessageConverter = new MappingJackson2HttpMessageConverter();
@@ -149,9 +110,6 @@ implements RequestCouponBzService {
 			log.log(Level.SEVERE, e.getMessage(), e);
 			return getJSONRepresentationFromException(ASExceptionHelper.defaultException(e.getMessage(), e)).toString();
 		} catch (ASException e) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-			return getJSONRepresentationFromException(e).toString();
-		} catch (ParseException e) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 			return getJSONRepresentationFromException(e).toString();
 		} finally {
