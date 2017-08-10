@@ -102,11 +102,12 @@
 				<value>matias@getin.mx</value>
 				<value>luis@getin.mx</value>
 				<value>luis.vazquez@getin.mx</value>
-				<!--<value>anabell@getin.mx</value>-->
+				<value>anabell@getin.mx</value>
 				<value>francisco@getin.mx</value>
 				<value>ingrid@getin.mx</value>
 				<value>anilu@getin.mx</value>
 				<value>eduardo@getin.mx</value>
+				<value>azucena@getin.mx</value>
 			</list>
 		</property>
 		<property name="apdeviceJumpHost" value="vpn.getin.mx" />

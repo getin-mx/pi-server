@@ -377,12 +377,16 @@ implements BDBDashboardBzService, BDBPostBzService {
 					Map<String, String> additionalFields = CollectionFactory.createMap();
 					additionalFields.put("brandId", brand.getIdentifier());
 					String adaptedStoreName = new String(storeName);
-					adaptedStoreName = adaptedStoreName.replaceAll("a", "?");
-					adaptedStoreName = adaptedStoreName.replaceAll("e", "?");
-					adaptedStoreName = adaptedStoreName.replaceAll("i", "?");
-					adaptedStoreName = adaptedStoreName.replaceAll("o", "?");
-					adaptedStoreName = adaptedStoreName.replaceAll("u", "?");
 					List<Store> stores = storeDao.getUsingIndex(adaptedStoreName, null, StatusHelper.statusActive(), range, additionalFields, null, null);
+					if	( stores.isEmpty() ){
+						adaptedStoreName = adaptedStoreName.replaceAll("a", "?");
+						adaptedStoreName = adaptedStoreName.replaceAll("e", "?");
+						adaptedStoreName = adaptedStoreName.replaceAll("i", "?");
+						adaptedStoreName = adaptedStoreName.replaceAll("o", "?");
+						adaptedStoreName = adaptedStoreName.replaceAll("u", "?");
+						
+						stores = storeDao.getUsingIndex(adaptedStoreName, null, StatusHelper.statusActive(), range, additionalFields, null, null);
+					}
 
 					JSONObject jsonObject = new JSONObject();
 					JSONArray ticketsArray = new JSONArray();
