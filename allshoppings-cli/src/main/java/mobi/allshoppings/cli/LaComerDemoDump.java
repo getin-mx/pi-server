@@ -107,31 +107,30 @@ public class LaComerDemoDump extends AbstractCLI {
 				if(!devices.contains(device))
 					devices.add(device);
 			}
-			
+
+			Map<String, String> correl = CollectionFactory.createMap();
 			for(FloorMap floormap : floormaps ) {
+				List<WifiSpot> origList = wifispotDao.getUsingFloorMapId("walmartdemo_pb");
 				List<WifiSpot> wifiSpots = wifispotDao.getUsingFloorMapId(floormap.getIdentifier());
-				Map<String, WifiSpot> wsCache = CollectionFactory.createMap();
-				
 				for( WifiSpot ws : wifiSpots ) {
-					wsCache.put(ws.getApDevice(), ws);
+					wifispotDao.delete(ws);
 				}
-				
-				int x = 10;
-				int y = 10;
-				
-				for(APDevice device : devices) {
-					if(!wsCache.containsKey(device.getIdentifier())) {
-						WifiSpot obj = new WifiSpot();
-						obj.setApDevice(device.getHostname());
-						obj.setFloorMapId(floormap.getIdentifier());
-						obj.setShoppingId(shopping.getIdentifier());
-						obj.setX(x);
-						obj.setY(y);
-						y+= 10;
-						obj.setKey(wifispotDao.createKey(obj));
-						wifispotDao.create(obj);
-						wsCache.put(obj.getApDevice(), obj);
-					}
+				for(WifiSpot ws : origList) {
+					WifiSpot obj = new WifiSpot();
+					obj.setApDevice(ws.getApDevice());
+					obj.setCalculusStrategy(obj.getCalculusStrategy());
+					obj.setData(obj.getData());
+					obj.setFloorMapId(floormap.getIdentifier());
+					obj.setMeasures(ws.getMeasures());
+					obj.setRecordStrategy(ws.getRecordStrategy());
+					obj.setShoppingId(MAIN_ENTITY);
+					obj.setX(ws.getX());
+					obj.setY(ws.getY());
+					obj.setZoneName(ws.getZoneName());
+					obj.setKey(wifispotDao.createKey(obj));
+					wifispotDao.create(obj);
+					
+					correl.put(ws.getIdentifier(), obj.getIdentifier());
 				}
 			}
 			
