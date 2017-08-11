@@ -288,14 +288,14 @@ public class GetinDump extends AbstractCLI {
 			}
 			
 			try {
-				shopping = shoppingDao.get("lacomerdemo", true);
+				shopping = shoppingDao.get("superdemo", true);
 			} catch( Exception e ) {
 				shopping = new Shopping();
-				shopping.setName("La Comer Demo");
+				shopping.setName("Supermarket Demo");
 				shopping.setCheckinAreaSize(200);
 				shopping.setFenceSize(200);
 				shopping.getAddress().setCountry("Mexico");
-				shopping.setKey(shoppingDao.createKey("lacomerdemo"));
+				shopping.setKey(shoppingDao.createKey("superdemo"));
 				shoppingDao.create(shopping);
 			}
 			
@@ -1031,14 +1031,14 @@ public class GetinDump extends AbstractCLI {
 			}
 			
 			try {
-				brand = brandDao.get("lacomer_mx", true);
+				brand = brandDao.get("superdemo_mx", true);
 				brand.setStatus(StatusAware.STATUS_ENABLED);
 				brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
-				brand.setName("La Comer");
+				brand.setName("Supermarket demo");
 				brand.setCountry("Mexico");
-				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "lacomer_mx"));
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "superdemo_mx"));
 				brandDao.create(brand);
 			}
 
@@ -1353,7 +1353,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("516", "Pakmail Metepec", "pakmail_mx", null));
 //			stores.add(new StoreAdapter("517", "Pakmail Valle Dorado", "pakmail_mx", null));
 
-			stores.add(new StoreAdapter("518", "Walmart Demo", "walmart_mx", "wallmartdemo"));
+			stores.add(new StoreAdapter("518", "Demo", "walmart_mx", "wallmartdemo"));
 
 			stores.add(new StoreAdapter("519","Sally Beauty Multiplaza Arboledas", "sallybeauty_mx", null));
 			stores.add(new StoreAdapter("520","Sally Beauty Parque Linda Vista", "sallybeauty_mx", null));
@@ -1550,7 +1550,7 @@ public class GetinDump extends AbstractCLI {
 //			stores.add(new StoreAdapter("671","Aditivo Los Reyes", "aditivo_mx", null));
 //			stores.add(new StoreAdapter("672","Aditivo Cuajimalpa", "aditivo_mx", null));
 //			stores.add(new StoreAdapter("673","Aditivo Toluca Centro", "aditivo_mx", null));
-			stores.add(new StoreAdapter("674","Aditivo Plaza Tulyehualco", "aditivo_mx", null));
+//			stores.add(new StoreAdapter("674","Aditivo Plaza Tulyehualco", "aditivo_mx", null));
 //			stores.add(new StoreAdapter("675","Aditivo Tlalnepantla Centro", "aditivo_mx", null));
 			stores.add(new StoreAdapter("676","Aditivo Chimalhuacan", "aditivo_mx", null));
 			stores.add(new StoreAdapter("677","Aditivo Salamanca", "aditivo_mx", null));
@@ -1638,7 +1638,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("738", "MT Sport S5 Centro Sur Puebla", "mt_sport_mx",null));
 			stores.add(new StoreAdapter("739", "MT Sport S1 Atlixco", "mt_sport_mx",null));
 			
-			stores.add(new StoreAdapter("740", "La Comer Demo", "lacomer_mx", "lacomerdemo"));
+			stores.add(new StoreAdapter("740", "Demo", "superdemo_mx", "superdemo"));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {

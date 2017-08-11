@@ -33,7 +33,7 @@ import mobi.allshoppings.tools.CollectionFactory;
 public class LaComerDemoDump extends AbstractCLI {
 	
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	public static final String MAIN_ENTITY = "lacomerdemo";
+	public static final String MAIN_ENTITY = "superdemo";
 	
 	public static void setApplicationContext(ApplicationContext ctx) {
 		context = ctx;
@@ -95,7 +95,7 @@ public class LaComerDemoDump extends AbstractCLI {
 				floormap.setStatus(StatusAware.STATUS_ENABLED);
 				floormap.setMapHeight(740);
 				floormap.setMapWidth(995);
-				floormap.setKey((Key)keyHelper.createStringUniqueKey(FloorMap.class, "lacomerdemo_pb"));
+				floormap.setKey((Key)keyHelper.createStringUniqueKey(FloorMap.class, "superdemo_pb"));
 				floormapDao.create(floormap);
 				floormaps = floormapDao.getUsingStatusAndShoppingId(StatusAware.STATUS_ENABLED, shopping.getIdentifier());
 			}

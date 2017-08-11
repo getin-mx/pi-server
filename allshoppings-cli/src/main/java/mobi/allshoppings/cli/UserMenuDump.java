@@ -1288,6 +1288,36 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("lacomer_mx"));
 				userMenuDao.create(um);
 			}
+			
+			User superdemo = null;
+			try {
+				superdemo = userDao.get("superdemo_mx", true);
+			} catch( Exception e ) {
+				superdemo = new User();
+				superdemo.setFirstname("Supermarket");
+				superdemo.setLastname("Mexico");
+				superdemo.setEmail("superdemo_mx@allshoppings.mobi");
+				superdemo.getSecuritySettings().setRole(Role.BRAND);
+				superdemo.getSecuritySettings().setShoppings(new ArrayList<String>());
+				superdemo.getSecuritySettings().getShoppings().add("superdemo");
+				superdemo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				superdemo.setKey((Key)keyHelper.obtainKey(User.class, "superdemo_mx"));
+				userDao.create(superdemo);
+			}
+
+			try {
+				um = userMenuDao.get("superdemo_mx", true);
+				userMenuDao.delete("superdemo_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en Tienda"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
+				um.setKey(userMenuDao.createKey("superdemo_mx"));
+				userMenuDao.create(um);
+			}
 
 			User invicta = null;
 			try {
