@@ -287,18 +287,6 @@ public class GetinDump extends AbstractCLI {
 				shoppingDao.create(shopping);
 			}
 			
-			try {
-				shopping = shoppingDao.get("superdemo", true);
-			} catch( Exception e ) {
-				shopping = new Shopping();
-				shopping.setName("Supermarket Demo");
-				shopping.setCheckinAreaSize(200);
-				shopping.setFenceSize(200);
-				shopping.getAddress().setCountry("Mexico");
-				shopping.setKey(shoppingDao.createKey("superdemo"));
-				shoppingDao.create(shopping);
-			}
-			
 			
 
 			// Brands ----------------------------------------------------------------------------------------------------
@@ -1030,18 +1018,6 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 			}
 			
-			try {
-				brand = brandDao.get("superdemo_mx", true);
-				brand.setStatus(StatusAware.STATUS_ENABLED);
-				brandDao.update(brand);
-			} catch( Exception e ) {
-				brand = new Brand();
-				brand.setName("Supermarket demo");
-				brand.setCountry("Mexico");
-				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "superdemo_mx"));
-				brandDao.create(brand);
-			}
-
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -1637,8 +1613,6 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("738", "MT Sport S5 Centro Sur Puebla", "mt_sport_mx",null));
 			stores.add(new StoreAdapter("739", "MT Sport S1 Atlixco", "mt_sport_mx",null));
-			
-			stores.add(new StoreAdapter("740", "Demo", "superdemo_mx", "superdemo"));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {

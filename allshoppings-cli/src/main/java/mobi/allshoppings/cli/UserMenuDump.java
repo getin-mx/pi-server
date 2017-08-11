@@ -1292,14 +1292,17 @@ public class UserMenuDump extends AbstractCLI {
 			User superdemo = null;
 			try {
 				superdemo = userDao.get("superdemo_mx", true);
+				userDao.delete(superdemo);
+				throw new Exception();
 			} catch( Exception e ) {
 				superdemo = new User();
-				superdemo.setFirstname("Supermarket");
+				superdemo.setFirstname("Supermarker Demo");
 				superdemo.setLastname("Mexico");
-				superdemo.setEmail("superdemo_mx@allshoppings.mobi");
-				superdemo.getSecuritySettings().setRole(Role.BRAND);
+				superdemo.setEmail("superdemo@allshoppings.mobi");
+				superdemo.getSecuritySettings().setRole(Role.STORE);
 				superdemo.getSecuritySettings().setShoppings(new ArrayList<String>());
-				superdemo.getSecuritySettings().getShoppings().add("superdemo");
+				superdemo.getSecuritySettings().getShoppings().add("walmartdemo");
+				superdemo.getSecuritySettings().setStores(Arrays.asList("1494352877262"));
 				superdemo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				superdemo.setKey((Key)keyHelper.obtainKey(User.class, "superdemo_mx"));
 				userDao.create(superdemo);
