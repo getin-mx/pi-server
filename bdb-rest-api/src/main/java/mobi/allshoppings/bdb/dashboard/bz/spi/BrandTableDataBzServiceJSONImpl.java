@@ -516,13 +516,13 @@ implements BDBDashboardBzService {
 
 			// peasents_conversion
 			if( peasants != 0)
-				row.put("visitsConversion", visitors * 100 / peasants);
+				row.put("visitsConversion", (float)((float)(visitors * 100) / peasants));
 			else
 				row.put("visitsConversion", 0);
 
 			// tickets_conversion
 			if( visitors != 0)
-				row.put("ticketsConversion", tickets * 100 / visitors);
+				row.put("ticketsConversion", (float)((float)(tickets * 100) / visitors));
 			else
 				row.put("ticketsConversion", 0);
 
