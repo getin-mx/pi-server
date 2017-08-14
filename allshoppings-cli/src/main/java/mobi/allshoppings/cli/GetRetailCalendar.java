@@ -19,7 +19,7 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.tools.GsonFactory;
 
 
-public class TestRetailCalendar extends AbstractCLI {
+public class GetRetailCalendar extends AbstractCLI {
 
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
@@ -41,7 +41,7 @@ public class TestRetailCalendar extends AbstractCLI {
 			OptionSet options = parser.parse(args);
 
 			List<RetailCalendarEntry> list = CollectionFactory.createList();
-			TestRetailCalendar instance = new TestRetailCalendar();
+			GetRetailCalendar instance = new GetRetailCalendar();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date initial = sdf.parse("2016-01-01");
 			Calendar cal = Calendar.getInstance();
