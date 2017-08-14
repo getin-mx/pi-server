@@ -34,8 +34,6 @@ public class GetRetailCalendar extends AbstractCLI {
 	public static void main(String args[]) throws ASException {
 		try {
 			
-//			APDVisitDAO dao = (APDVisitDAO)getApplicationContext().getBean("apdvisit.dao.ref");
-			
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
 			@SuppressWarnings("unused")
 			OptionSet options = parser.parse(args);
