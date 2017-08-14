@@ -1018,6 +1018,17 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 			}
 			
+			try {
+				brand = brandDao.get("elgalpontacuara_ar", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("El galpón de Tacuara");
+				brand.setCountry("Argentina");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "elgalpontacuara_ar"));
+				brandDao.create(brand);
+			}
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -1613,6 +1624,8 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("738", "MT Sport S5 Centro Sur Puebla", "mt_sport_mx",null));
 			stores.add(new StoreAdapter("739", "MT Sport S1 Atlixco", "mt_sport_mx",null));
+			
+			stores.add(new StoreAdapter("740", "El galpón de Tacuara", "elgalpontacuara_ar",null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {

@@ -1296,7 +1296,7 @@ public class UserMenuDump extends AbstractCLI {
 				throw new Exception();
 			} catch( Exception e ) {
 				superdemo = new User();
-				superdemo.setFirstname("Supermarker Demo");
+				superdemo.setFirstname("Supermarket Demo");
 				superdemo.setLastname("Mexico");
 				superdemo.setEmail("superdemo@allshoppings.mobi");
 				superdemo.getSecuritySettings().setRole(Role.STORE);
