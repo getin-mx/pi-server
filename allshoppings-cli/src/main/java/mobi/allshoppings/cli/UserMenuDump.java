@@ -240,6 +240,42 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("anilu@getin.mx"));
 				userMenuDao.create(um);
 			}
+			
+			User azucena = null;
+			try {
+				azucena = userDao.get("azucena@getin.mx", true);
+			} catch( Exception e ) {
+				azucena = new User();
+				azucena.setFirstname("Azucena");
+				azucena.setLastname("Orozco");
+				azucena.setEmail("azucena@getin.mx");
+				azucena.getSecuritySettings().setRole(Role.ADMIN);
+				azucena.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				azucena.setKey((Key)keyHelper.obtainKey(User.class, "azucena@getin.mx"));
+				userDao.create(azucena);
+			}
+
+			try {
+				um = userMenuDao.get("azucena@getin.mx", true);
+				userMenuDao.delete("azucena@getin.mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
+				um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
+				um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
+				um.setKey(userMenuDao.createKey("azucena@getin.mx"));
+				userMenuDao.create(um);
+			}
 
 			User francisco = null;
 			try {
@@ -1219,6 +1255,72 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("walmart_mx"));
 				userMenuDao.create(um);
 			}
+			
+			User lacomer = null;
+			try {
+				lacomer = userDao.get("lacomer_mx", true);
+				userDao.delete(lacomer);
+				throw new Exception();
+			} catch( Exception e ) {
+				lacomer = new User();
+				lacomer.setFirstname("La Comer");
+				lacomer.setLastname("Mexico");
+				lacomer.setEmail("lacomer@allshoppings.mobi");
+				lacomer.getSecuritySettings().setRole(Role.STORE);
+				lacomer.getSecuritySettings().setShoppings(new ArrayList<String>());
+				lacomer.getSecuritySettings().getShoppings().add("walmartdemo");
+				lacomer.getSecuritySettings().setStores(Arrays.asList("1494352877262"));
+				lacomer.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				lacomer.setKey((Key)keyHelper.obtainKey(User.class, "lacomer_mx"));
+				userDao.create(lacomer);
+			}
+
+			try {
+				um = userMenuDao.get("lacomer_mx", true);
+				userMenuDao.delete("lacomer_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en Tienda"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
+				um.setKey(userMenuDao.createKey("lacomer_mx"));
+				userMenuDao.create(um);
+			}
+			
+			User superdemo = null;
+			try {
+				superdemo = userDao.get("superdemo_mx", true);
+				userDao.delete(superdemo);
+				throw new Exception();
+			} catch( Exception e ) {
+				superdemo = new User();
+				superdemo.setFirstname("Supermarker Demo");
+				superdemo.setLastname("Mexico");
+				superdemo.setEmail("superdemo@allshoppings.mobi");
+				superdemo.getSecuritySettings().setRole(Role.STORE);
+				superdemo.getSecuritySettings().setShoppings(new ArrayList<String>());
+				superdemo.getSecuritySettings().getShoppings().add("walmartdemo");
+				superdemo.getSecuritySettings().setStores(Arrays.asList("1494352877262"));
+				superdemo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				superdemo.setKey((Key)keyHelper.obtainKey(User.class, "superdemo_mx"));
+				userDao.create(superdemo);
+			}
+
+			try {
+				um = userMenuDao.get("superdemo_mx", true);
+				userMenuDao.delete("superdemo_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en Tienda"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.trafficmap", "fa-car", "Tráfico Vehicular"));
+				um.setKey(userMenuDao.createKey("superdemo_mx"));
+				userMenuDao.create(um);
+			}
 
 			User invicta = null;
 			try {
@@ -1267,6 +1369,31 @@ public class UserMenuDump extends AbstractCLI {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("chilimbalam_mx"));
+				userMenuDao.create(um);
+			}
+			
+			User capadeozono = null;
+			try {
+				capadeozono = userDao.get("capadeozono_mx", true);
+			} catch( Exception e ) {
+				capadeozono = new User();
+				capadeozono.setFirstname("Capa de Ozono");
+				capadeozono.setLastname("Mexico");
+				capadeozono.setEmail("capadeozono_mx@allshoppings.mobi");
+				capadeozono.getSecuritySettings().setRole(Role.BRAND);
+				capadeozono.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				capadeozono.setKey((Key)keyHelper.obtainKey(User.class, "capadeozono_mx"));
+				userDao.create(capadeozono);
+			}
+
+			try {
+				um = userMenuDao.get("capadeozono_mx", true);
+				userMenuDao.delete("capadeozono_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("capadeozono_mx"));
 				userMenuDao.create(um);
 			}
 
@@ -1373,27 +1500,28 @@ public class UserMenuDump extends AbstractCLI {
 			User latabernadelleon = null;
 			try {
 				latabernadelleon = userDao.get("latabernadelleon_mx", true);
+				userDao.delete("latabernadelleon_mx");
 			} catch( Exception e ) {
-				latabernadelleon = new User();
+				/*latabernadelleon = new User();
 				latabernadelleon.setFirstname("La Taberna del León");
 				latabernadelleon.setLastname("Mexico");
 				latabernadelleon.setEmail("latabernadelleon@allshoppings.mobi");
 				latabernadelleon.getSecuritySettings().setRole(Role.BRAND);
 				latabernadelleon.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				latabernadelleon.setKey((Key)keyHelper.obtainKey(User.class, "latabernadelleon_mx"));
-				userDao.create(latabernadelleon);
+				userDao.create(latabernadelleon);*/
 			}
 
 			try {
 				um = userMenuDao.get("latabernadelleon_mx", true);
 				userMenuDao.delete("latabernadelleon_mx");
-				throw new Exception();
+				//throw new Exception();
 			} catch( Exception e ) {
-				um = new UserMenu();
+				/*um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
 				um.setKey(userMenuDao.createKey("latabernadelleon_mx"));
-				userMenuDao.create(um);
+				userMenuDao.create(um);*/
 			}
 			
 			User marketintelligence = null;
@@ -1529,7 +1657,37 @@ public class UserMenuDump extends AbstractCLI {
 				aditivo.setFirstname("Aditivo");
 				aditivo.setLastname("Mexico");
 				aditivo.setEmail("aditivo@allshoppings.mobi");
-				aditivo.getSecuritySettings().setRole(Role.BRAND);
+				aditivo.getSecuritySettings().setRole(Role.STORE);
+				aditivo.getSecuritySettings().setStores(Arrays.asList("32543b75-32b2-4b41-9e03-f876a9e88d18",
+						"92ec9131-dbf2-4a42-a3ef-1d68170de391", "77bfffb3-48a9-43b6-b1ec-51d526e96da8",
+						"13b66935-ec48-4fea-acc9-9e99f025a63b", "b6d96f4a-d9f7-4537-87ae-c6b3f4b3c5e5",
+						"129f18c1-c531-4488-9125-6d4e4ccf6d4d", "5da4f3c0-fe1f-47cb-9b7b-5fc4242240ce",
+						"3338e021-59c4-4482-9603-fac42d656c7b", "78416e3d-2274-4a24-9186-3616588f6197",
+						"2810ac0e-480b-4374-8130-134862088a86", "2a90e8ab-fe34-4a3f-8bd4-0480ce4f40f8",
+						"1b509e3a-068e-4062-9781-d04c175db304", "95744605-8649-4091-bdfe-5426ad0b6b3e",
+						"63644d2e-f052-45cb-94f2-911331f298f2", "4d768d73-b9a9-44a0-bbbe-dc00a04f52ec",
+						"98abde27-4dcc-4d5b-ac16-d43eac63b94b", "11a2f4a2-75e3-4ee2-be94-391e02739d28",
+						"2fc001ca-b8c4-4a5c-b7e2-c732c9f98ce0", "e41ddf46-b7fe-4d56-b52d-05a6cee7adf0",
+						"f1c0b0d9-b2b4-4d63-a553-cec5653a79c3", "4fe543ea-610e-444b-bde3-e0cf12092ae6",
+						"1fac0105-51f2-4a5f-ac3f-eaf4b6d311ed", "71352b76-f76e-421b-b114-72f071633b61",
+						"d2112ef6-7cfa-49a4-94de-a127e45ff1c1", "da761750-c568-4e8b-9965-ee588c3d1d9a",
+						"aff0af5d-45b8-46b6-81ee-12c79990653b", "49264559-dddb-42c5-b1bf-1a52a0eb659f",
+						"9beaf247-e674-47a2-9d4c-c550bb1aa7cc", "349b85b9-a083-4e65-9740-f3d59278f635",
+						"4dbf03a7-f321-4109-abd0-58780310f09c", "6ad6e636-f5ec-4d8f-a499-c85055e03f4e",
+						"f33140b3-3ecd-4d70-bfcc-159f47ac9058", "8cac6f24-fc71-4e4a-b556-5bfe06191f3f",
+						"23178716-9ef5-4b57-b88e-ea85d080c0f7", "7adbc141-fbea-4203-8f3e-db3108638c30",
+						"9a14f70c-52eb-4756-8fb3-b48ee8b86094", "f9c4de20-c3c1-464c-9d8e-d5158312a9db",
+						"fcc7aa01-7b2d-4773-ba65-acc2dd7e592c", "674626e2-4537-44ba-a6a9-58632ec9f5ce",
+						"2b06d29f-204e-4a38-ac87-b77cb7d39578", "5d8fa91b-b783-46ef-b615-c6aba8dec1fd",
+						"0221582e-c2fd-49d0-98ed-4635cd5e22db", "625f5d03-6726-4bb2-894e-60749397dba6",
+						"4d217df4-d2ad-44e6-81eb-ac10a9c040ec", "f04111dd-c59d-419c-bf6f-36ebecbcbd0d",
+						"bde9a482-df2e-410e-9a51-06a90d2294d0", "06b26796-bbda-49ad-b0b8-e24bc8cbeef6",
+						"b087d73e-ccb5-4457-8b09-e85ba72de7e7", "4d1d6d54-0cc1-4ba5-a40f-ed61284149c9",
+						"07c6552d-c3fe-445b-aac4-e1d2c234d2ca", "fbbc3da9-1403-4206-8b22-e1aed2b0ec40",
+						"3bd9d22b-65d9-44af-805f-87a77af5f691", "54d1aba3-3e2c-4de4-8065-c55a50109dbc",
+						"ffc0b360-00d5-4e8f-8bef-f0472df6cb5f", "ce91457a-f7dc-49d0-93ff-79259e553769",
+						"f7b002fd-5c0c-4e2f-9879-0e98bda6cd5d", "b251d67f-b441-42d2-b69d-6a84c036e123",
+						"61374a58-a679-4532-811a-aa3340bcc47e", "3928b1d6-2fb7-4a62-a081-9e5a23e78e91"));
 				aditivo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				aditivo.setKey((Key)keyHelper.obtainKey(User.class, "aditivo_mx"));
 				userDao.create(aditivo);
@@ -1556,11 +1714,36 @@ public class UserMenuDump extends AbstractCLI {
 				aditivo.setLastname("Mexico");
 				aditivo.setEmail("sistemas@aditivo_mx");
 				aditivo.getSecuritySettings().setRole(Role.STORE);
-				aditivo.getSecuritySettings().setStores(Arrays.asList("61374a58-a679-4532-811a-aa3340bcc47e",
-								"ce91457a-f7dc-49d0-93ff-79259e553769", "78416e3d-2274-4a24-9186-3616588f6197",
-								"aff0af5d-45b8-46b6-81ee-12c79990653b", "98abde27-4dcc-4d5b-ac16-d43eac63b94b",
-								"9a14f70c-52eb-4756-8fb3-b48ee8b86094", "77bfffb3-48a9-43b6-b1ec-51d526e96da8",
-								"349b85b9-a083-4e65-9740-f3d59278f635"));
+				aditivo.getSecuritySettings().setStores(Arrays.asList("32543b75-32b2-4b41-9e03-f876a9e88d18",
+						"92ec9131-dbf2-4a42-a3ef-1d68170de391", "77bfffb3-48a9-43b6-b1ec-51d526e96da8",
+						"13b66935-ec48-4fea-acc9-9e99f025a63b", "b6d96f4a-d9f7-4537-87ae-c6b3f4b3c5e5",
+						"129f18c1-c531-4488-9125-6d4e4ccf6d4d", "5da4f3c0-fe1f-47cb-9b7b-5fc4242240ce",
+						"3338e021-59c4-4482-9603-fac42d656c7b", "78416e3d-2274-4a24-9186-3616588f6197",
+						"2810ac0e-480b-4374-8130-134862088a86", "2a90e8ab-fe34-4a3f-8bd4-0480ce4f40f8",
+						"1b509e3a-068e-4062-9781-d04c175db304", "95744605-8649-4091-bdfe-5426ad0b6b3e",
+						"63644d2e-f052-45cb-94f2-911331f298f2", "4d768d73-b9a9-44a0-bbbe-dc00a04f52ec",
+						"98abde27-4dcc-4d5b-ac16-d43eac63b94b", "11a2f4a2-75e3-4ee2-be94-391e02739d28",
+						"2fc001ca-b8c4-4a5c-b7e2-c732c9f98ce0", "e41ddf46-b7fe-4d56-b52d-05a6cee7adf0",
+						"f1c0b0d9-b2b4-4d63-a553-cec5653a79c3", "4fe543ea-610e-444b-bde3-e0cf12092ae6",
+						"1fac0105-51f2-4a5f-ac3f-eaf4b6d311ed", "71352b76-f76e-421b-b114-72f071633b61",
+						"d2112ef6-7cfa-49a4-94de-a127e45ff1c1", "da761750-c568-4e8b-9965-ee588c3d1d9a",
+						"aff0af5d-45b8-46b6-81ee-12c79990653b", "49264559-dddb-42c5-b1bf-1a52a0eb659f",
+						"9beaf247-e674-47a2-9d4c-c550bb1aa7cc", "349b85b9-a083-4e65-9740-f3d59278f635",
+						"4dbf03a7-f321-4109-abd0-58780310f09c", "6ad6e636-f5ec-4d8f-a499-c85055e03f4e",
+						"f33140b3-3ecd-4d70-bfcc-159f47ac9058", "8cac6f24-fc71-4e4a-b556-5bfe06191f3f",
+						"23178716-9ef5-4b57-b88e-ea85d080c0f7", "7adbc141-fbea-4203-8f3e-db3108638c30",
+						"9a14f70c-52eb-4756-8fb3-b48ee8b86094", "f9c4de20-c3c1-464c-9d8e-d5158312a9db",
+						"fcc7aa01-7b2d-4773-ba65-acc2dd7e592c", "674626e2-4537-44ba-a6a9-58632ec9f5ce",
+						"2b06d29f-204e-4a38-ac87-b77cb7d39578", "5d8fa91b-b783-46ef-b615-c6aba8dec1fd",
+						"0221582e-c2fd-49d0-98ed-4635cd5e22db", "625f5d03-6726-4bb2-894e-60749397dba6",
+						"4d217df4-d2ad-44e6-81eb-ac10a9c040ec", "f04111dd-c59d-419c-bf6f-36ebecbcbd0d",
+						"bde9a482-df2e-410e-9a51-06a90d2294d0", "06b26796-bbda-49ad-b0b8-e24bc8cbeef6",
+						"b087d73e-ccb5-4457-8b09-e85ba72de7e7", "4d1d6d54-0cc1-4ba5-a40f-ed61284149c9",
+						"07c6552d-c3fe-445b-aac4-e1d2c234d2ca", "fbbc3da9-1403-4206-8b22-e1aed2b0ec40",
+						"3bd9d22b-65d9-44af-805f-87a77af5f691", "54d1aba3-3e2c-4de4-8065-c55a50109dbc",
+						"ffc0b360-00d5-4e8f-8bef-f0472df6cb5f", "ce91457a-f7dc-49d0-93ff-79259e553769",
+						"f7b002fd-5c0c-4e2f-9879-0e98bda6cd5d", "b251d67f-b441-42d2-b69d-6a84c036e123",
+						"61374a58-a679-4532-811a-aa3340bcc47e", "3928b1d6-2fb7-4a62-a081-9e5a23e78e91"));
 				aditivo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				aditivo.setKey((Key)keyHelper.obtainKey(User.class, "sistemas@aditivo_mx"));
 				userDao.create(aditivo);
@@ -2435,6 +2618,31 @@ public class UserMenuDump extends AbstractCLI {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("farmacias_similares_mx"));
+				userMenuDao.create(um);
+			}
+			
+			User modaHolding = null;
+			try {
+				modaHolding = userDao.get("moda_holding_mx", true);
+			} catch( Exception e ) {
+				modaHolding = new User();
+				modaHolding.setFirstname("Moda Holding");
+				modaHolding.setLastname("Mexico");
+				modaHolding.setEmail("moda_holding_mx@allshoppings.mobi");
+				modaHolding.getSecuritySettings().setRole(Role.BRAND);
+				modaHolding.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				modaHolding.setKey((Key)keyHelper.obtainKey(User.class, "moda_holding_mx"));
+				userDao.create(modaHolding);
+			}
+
+			try {
+				um = userMenuDao.get("moda_holding_mx", true);
+				userMenuDao.delete("moda_holding_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("moda_holding_mx"));
 				userMenuDao.create(um);
 			}
 
@@ -3429,6 +3637,46 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "zonapuebla@outletdeportes_mx"));
 				userDao.create(user);
 			}
+			
+			try {
+				um = userMenuDao.get("cymfelipesuper@gmail.com", true);
+				userMenuDao.delete("cymfelipesuper@gmail.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.setKey(userMenuDao.createKey("cymfelipesuper@gmail.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("cymfelipesuper@gmail.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Outlet Deportes");
+				user.setLastname("");
+				user.setEmail("cymfelipesuper@gmail.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings().setStores(Arrays.asList("d37e8f77-b863-4f71-9117-45c0eaa121e2",
+						"f718f26a-c6de-4149-9605-d737450b7bd9", "5cad0cb3-196a-4f3f-b4f4-224f610f6467",
+						"c0d2ccb9-0ed4-45f8-8f4c-770ddb4495b4", "3a361ad5-9748-4bfa-9a69-460fd8214e6e",
+						"fb111c5b-db32-4129-a09a-f15269f57285", "b6b1a93f-0116-4d9a-ad40-9c6842eaa8c0",
+						"115e5c3c-7850-4e3e-82d1-16b15b5256a5", "23b16093-fbbf-4d9a-811b-6c82bd0eb940",
+						"0804ce51-a635-40be-8952-28cc25c946dd", "41e68dc9-254d-4803-82b7-c083eeaf28df",
+						"9263926c-88e3-435b-ad7e-1920abfb73a6", "649c6de9-05aa-40de-bd39-7b1d37921658",
+						"958d7395-fb37-4b8b-a716-b2c1a9ffdb9f", "9bbf47a2-5a32-4ae3-b217-858c7c1e2703",
+						"01bf63e5-6b31-4bf9-beb6-2a9dcbb8a304", "791d303b-3f45-4037-a6f4-2ba9c1e15c75",
+						"e43a9f92-7db7-46d1-8a74-3f629eea2b47", "dcb748f6-a060-43da-9a13-aea9ca02245a",
+						"247b4ead-822f-4713-9465-177666b2e31c", "40b7b23d-f2b4-4f70-be05-a0ad51ce44ba",
+						"440dfccd-73b3-48a5-98c8-d893a01a085f"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "cymfelipesuper@gmail.com"));
+				userDao.create(user);
+			}
+			
+			
 
 			// End Custom Outlet --------------------------------------------------------------------
 			
@@ -4068,6 +4316,48 @@ public class UserMenuDump extends AbstractCLI {
 								"1479933115741", "1479926604340", 
 								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "cbarajas@prada.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("agutierrez@prada.mx", true);
+				userMenuDao.delete("agutierrez@prada.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("agutierrez@prada.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("agutierrez@prada.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada");
+				user.setLastname("");
+				user.setEmail("agutierrez@prada.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72",
+								"2e029627-eb93-4646-999e-ff7894b45cd0", "afb95e1f-1774-46fe-b777-16488c2bcd65",
+								"61534aa2-ec08-471e-9378-eff26344edec", "2179a275-e43a-42ac-b6e7-6eedf3f4ee0a",
+								"8b3c8cd2-0727-48f8-bc61-ab47d507969c", "74bd6202-8be7-4ec3-9ebd-5141f3ca49bd",
+								"f94a2759-554c-49a4-a32d-84c81cfe98cc", "ce7bdec9-4de3-4d1c-8fe2-80b02f88f083",
+								"82979029-3ca9-4bc3-aaaf-d9ccdfca562c", "6b51b0f6-4e52-41b0-b59d-cec9e89c042b",
+								"3bc93117-4e24-4298-bcbe-7d5de3c38efb", "7cfdde1e-b869-4ee9-b787-3c5a3f297bb1",
+								"f8610b0e-158d-4f38-9c8a-dd2bf7a3f3a1", "dcbce874-c1c8-4b33-ac18-ffa2532ca3f9",
+								"e3d005b1-9162-49c1-855c-cc0eaf19b8b7", "d662d502-4d45-40e1-a160-a8d1639d57c3",
+								"d9ea5f0b-2ac8-48a0-87e1-0b2e02d74cef", "e53ead22-8663-4e09-b0e7-069e91c1fae9",
+								"3acd7c49-a32d-4b45-9064-d7360c11b6ed", "f4fea5b7-475c-483f-896d-64422319382d",
+								"4f9302f7-c155-46c7-b780-17834270a7f7", "bd39ba69-eb84-4679-b3e2-0f9276eb76b7",
+								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
+								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
+								"1479933115741", "1479926604340", 
+								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "agutierrez@prada.mx"));
 				userDao.create(user);
 			}
 			
@@ -5964,6 +6254,383 @@ public class UserMenuDump extends AbstractCLI {
 			
 			// End Aditivo  --------------------------------------------------------------------
 			
+			// Modatelas  --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("locales_modatelas_mx", true);
+				userMenuDao.delete("locales_modatelas_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.patternheatmap", "fa-building", "Patrones"));
+				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
+				um.setKey(userMenuDao.createKey("locales_modatelas_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("locales_modatelas_mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Modatelas Tiendas Locales");
+				user.setLastname("");
+				user.setEmail("locales_modatelas_mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("740547b3-5c3a-492c-a2f8-bc88345fcc5d",
+								"519d19e7-ddf4-47a2-abdc-09e89d1f5c64", "0125a1b9-0d3a-4383-8377-04674b1fc08f",
+								"7e47d9df-f011-4203-9ac5-5aa7222cccb5", "b7cb1719-2f50-45c2-a1fa-66c98cd1a7e4",
+								"865adafe-7df9-46fc-8201-32f260e5ff06", "58131ca7-ae67-4022-bcfa-0af9301bdddc",
+								"08644a45-800d-43ac-b228-78c28d82bad1", "2bad1b20-31c4-44c4-9015-6e9dd5c30b00",
+								"76eccdaf-348d-4540-af6d-145463e0844e", "7c10f699-b944-4627-9155-22af377da01f",
+								"50b32c68-0998-4323-a404-eee8e316e3eb", "9ccdd1eb-30fe-4304-9bd5-7a4b0614c842",
+								"4da00bc6-ae1a-418a-a784-1f764d281908", "07b5d16f-6b65-4beb-b763-d47f8a089efd",
+								"7b7d1c1e-f6af-40b7-8a55-f3bdbf19cde1", "6d2955f9-f112-47b3-ae50-6528697c249c",
+								"ceade140-174b-464c-9116-70ef2b93317a", "70e3f099-03ef-4df2-9849-0f4f4a3dd411",
+								"9202f7a2-4354-47bb-a6c3-dd775af93a17", "f4a78ecf-07d9-4158-bcd4-159a68a247df",
+								"3307ec01-1e57-40e2-97a3-d1e02227a4b0", "3f7497de-95c8-4bb5-a9a5-6d097133bf7c",
+								"80175990-43cd-4c27-a5ca-d16179c7f55f", "dd1edbcb-5eeb-467e-af3d-223611492520",
+								"d93f2cf8-de1f-4e5c-884b-adb87cbbcdf2", "fe9ad717-4f1e-4b28-b9ea-bfa94ace3141",
+								"dbd5021e-4d65-47da-a64e-42006513d998", "94634900-964f-4092-a0dd-e1dc287144ee"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "locales_modatelas_mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("foraneas_modatelas_mx", true);
+				userMenuDao.delete("foraneas_modatelas_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.patternheatmap", "fa-building", "Patrones"));
+				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
+				um.setKey(userMenuDao.createKey("foraneas_modatelas_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("foraneas_modatelas_mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Modatelas Tiendas Foraneas");
+				user.setLastname("");
+				user.setEmail("foraneas_modatelas_mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("9658cd89-f277-4946-bfcb-9330b2c886c2", 
+								"a118c701-143d-4ebc-a40f-ea3277949e10", "44e14c13-54cb-4592-a84c-538399074698",
+								"9e08742a-b37a-4d7d-9427-c0c585e89fce", "7dadd279-08cc-4a51-86cd-d85df6abf6c3",
+								"2b2b88d1-afbc-4da0-be04-1ba057c07e95", "4bb5fd5f-e161-4461-8c9c-84e8172f5466",
+								"8e84228e-cc5e-42b5-a665-179ebcd81511", "06c5b1f3-0f78-4100-9038-2ba9603087c9",
+								"3c506e3a-c23a-4454-b2e2-578f6f4e081c", "7daf5ac9-bd14-47c2-9909-d849fdc09be2",
+								"24bb9d59-a029-4cdc-9341-e2c6b1061126", "9ab15245-554a-4612-8f33-b57d03f58c17",
+								"4e8dd00e-a179-40d1-8b72-9389e6e52fb0", "b26c6912-d357-4554-9df9-c054351fa7f6",
+								"536a6470-a8e1-46f4-bc2d-be7b0ace6ea7", "92fbf40a-20af-479a-88fd-7a2b8c8f4401",
+								"a23edfab-aed9-4562-8100-65544550adf4", "7e129304-5169-4f2d-a51a-9afc61cc3ad7",
+								"a7d255b5-3d20-46aa-8c9e-e0696f52b908", "2d59df41-fae4-4570-8afc-16f0c50ff917",
+								"a3bbd458-fe46-4799-8f78-11d642196a2c", "3d64ba77-e24c-4c06-83f0-63444ab8eaed",
+								"76749515-b97a-4bfa-9cfa-e1521eccb33c", "ac082169-dcd8-4e01-adf0-df3054a5b7af",
+								"a6f96106-1f29-4b47-8a2f-b3b28d7e1a8c"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "foraneas_modatelas_mx"));
+				userDao.create(user);
+			}
+			
+			// End Modatelas  --------------------------------------------------------------------
+			
+			// Mobo  --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("mobo_mx", true);
+				userMenuDao.delete("mobo_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("mobo_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("mobo_mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Mobo");
+				user.setLastname("");
+				user.setEmail("mobo_mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("51a62c6b-9596-4e63-8241-21563bf5925e",
+								"5eea383c-c550-44d3-bc5d-a3bbf8cff283", "4459e3ee-0085-4382-95f4-042af4b89195",
+								"1498839031159", "f7e7ac30-e0f3-4c8b-be85-9a4ae88c0400",
+								"749fe355-833e-4d93-a0db-e613135aa2d0",
+								"7fe9aeb4-a017-45b5-a388-90f88a3b2455", "fe83b69e-7a67-45c8-a08c-8c78c8867d3a",
+								"320f0fb2-713b-46ba-8930-36fe497f0c47"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "mobo_mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("mtorre@mobo.mx", true);
+				userMenuDao.delete("mtorre@mobo.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("mtorre@mobo.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("mtorre@mobo.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Mobo");
+				user.setLastname("");
+				user.setEmail("mtorre@mobo.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("f7e7ac30-e0f3-4c8b-be85-9a4ae88c0400", 
+								"749fe355-833e-4d93-a0db-e613135aa2d0", "fe83b69e-7a67-45c8-a08c-8c78c8867d3a"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "mtorre@mobo.mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("ugodinez@mobo.mx", true);
+				userMenuDao.delete("ugodinez@mobo.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("ugodinez@mobo.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("ugodinez@mobo.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Mobo");
+				user.setLastname("");
+				user.setEmail("ugodinez@mobo.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("51a62c6b-9596-4e63-8241-21563bf5925e",
+								"5eea383c-c550-44d3-bc5d-a3bbf8cff283", "4459e3ee-0085-4382-95f4-042af4b89195",
+								"1498839031159",
+								"7fe9aeb4-a017-45b5-a388-90f88a3b2455", "320f0fb2-713b-46ba-8930-36fe497f0c47"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "ugodinez@mobo.mx"));
+				userDao.create(user);
+			}
+			
+			// End Mobo  --------------------------------------------------------------------
+			
+			// GamePlanet  --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("rodolfo.urbina@gameplanet.com", true);
+				userMenuDao.delete("rodolfo.urbina@gameplanet.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("rodolfo.urbina@gameplanet.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("rodolfo.urbina@gameplanet.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("GamePlanet");
+				user.setLastname("");
+				user.setEmail("rodolfo.urbina@gameplanet.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("e995f55c-fe80-4c2e-afb7-e5300836effc",
+								"ed8d13c7-2ab9-4c88-b0df-d03e2c102247", "42497afe-5bd9-4aa7-8d66-c2161b8feee8"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "rodolfo.urbina@gameplanet.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("marcopolo@gameplanet.com", true);
+				userMenuDao.delete("marcopolo@gameplanet.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("marcopolo@gameplanet.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("marcopolo@gameplanet.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("GamePlanet");
+				user.setLastname("");
+				user.setEmail("marcopolo@gameplanet.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("e995f55c-fe80-4c2e-afb7-e5300836effc",
+								"ed8d13c7-2ab9-4c88-b0df-d03e2c102247", "42497afe-5bd9-4aa7-8d66-c2161b8feee8"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "marcopolo@gameplanet.com"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("alberto.vacas@gameplanet.com", true);
+				userMenuDao.delete("alberto.vacas@gameplanet.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("alberto.vacas@gameplanet.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("alberto.vacas@gameplanet.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("GamePlanet");
+				user.setLastname("");
+				user.setEmail("alberto.vacas@gameplanet.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("e995f55c-fe80-4c2e-afb7-e5300836effc",
+								"ed8d13c7-2ab9-4c88-b0df-d03e2c102247", "42497afe-5bd9-4aa7-8d66-c2161b8feee8"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "alberto.vacas@gameplanet.com"));
+				userDao.create(user);
+			}
+			
+			// End GamePlanet  --------------------------------------------------------------------
+			
+			// Squalo  --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("jogomez@squalo.com", true);
+				userMenuDao.delete("jogomez@squalo.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.setKey(userMenuDao.createKey("jogomez@squalo.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("jogomez@squalo.com", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Squalo");
+				user.setLastname("");
+				user.setEmail("jogomez@squalo.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("1e98484d-2d9a-40f7-bdb5-9269387390f5",
+								"472407b7-2add-4552-aa8c-1d3580ff2994", "edca05c6-9f65-4cde-a841-84e62b9108d3",
+								"61c72775-af59-4c4a-b10e-ede1add1d969", "071b259f-eb59-44a6-b471-141a2b5bcfd4",
+								"42e25fcc-c115-4e98-aabf-e9e83109f2bf", "e781cf2e-960a-4517-800c-305dcfab0af7",
+								"c6da6b64-a3e4-4b56-aad8-214e9cdc0dbb", "3b809e40-dae1-43a0-af94-73c4ccd8c943",
+								"1479331295161", "e1a08bb8-b4ea-488c-8dcf-e3c8ade1f7ed",
+								"cb7a83fb-4946-407f-ae7a-c7110f975997", "600633c7-ad23-4358-a215-89355cd80871",
+								"57a5eaa6-a675-472a-ab71-48975d0e204f", "1479331293219",
+								"d0e0a2d7-95b2-4d6f-8b5c-f36e2a697e6c", "fb994fb0-099c-4ae3-902f-f45df7c77cbe",
+								"1479331294155", "b0abfa8a-8c56-4a00-9ab8-a5ccf72cfa2f",
+								"b6aa02b2-8e4d-4e94-93f6-6cae7215cff1", "9ee4d4be-0d6f-4516-804c-8ecacbb5dd30",
+								"fb9ba533-212b-4b26-b9a8-73026e5059f0", "1479331293676"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "jogomez@squalo.com"));
+				userDao.create(user);
+			}
+			
+			// End Squalo  --------------------------------------------------------------------
+			
+			
+			try {
+				um = userMenuDao.get("modaholding_mx", true);
+				userMenuDao.delete("modaholding_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("modaholding_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("modaholding_mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Moda holding");
+				user.setLastname("");
+				user.setEmail("modaholding_mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("f0b0e659-9355-4abd-956f-65ab53f38e99",
+								"7834f952-f64a-4227-9eac-8d9a073311a3", "2d3f152a-85cf-4f07-8c73-b99b2928b011",
+								"2342e42f-d937-417f-bb13-0083588b7812"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "modaholding_mx"));
+				userDao.create(user);
+			}
+			
+			// Aditivo Franquicias  --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("franquiciasmichan_mx", true);
+				userMenuDao.delete("franquiciasmichan_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.setKey(userMenuDao.createKey("franquiciasmichan_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("franquiciasmichan_mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Aditivo Franquicias Michan");
+				user.setLastname("");
+				user.setEmail("franquiciasmichan_mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("aff0af5d-45b8-46b6-81ee-12c79990653b"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "franquiciasmichan_mx"));
+				userDao.create(user);
+			}
+			
+			// End Aditivo Franquicias  --------------------------------------------------------------------
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

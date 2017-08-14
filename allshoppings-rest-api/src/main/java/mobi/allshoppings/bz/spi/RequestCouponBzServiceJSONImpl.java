@@ -148,9 +148,6 @@ implements RequestCouponBzService {
 		} catch (ASException e) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 			return getJSONRepresentationFromException(e).toString();
-		} catch (Exception e) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-			return getJSONRepresentationFromException(e).toString();
 		} finally {
 			markEnd(start);
 		}

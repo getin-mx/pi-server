@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +33,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.io.Files;
-import com.ibm.icu.util.Calendar;
 
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.StoreDAO;
@@ -83,6 +83,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(finalDate);
 			cal.add(Calendar.DATE, -(weeks*7));
+			cal.add(Calendar.DATE, +1);
 			Date limitDate = cal.getTime();
 
 			log.log(Level.INFO, "Processing store " + storeName + "...");
