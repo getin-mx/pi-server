@@ -6410,7 +6410,7 @@ public class UserMenuDump extends AbstractCLI {
 								"1498839031159", "f7e7ac30-e0f3-4c8b-be85-9a4ae88c0400",
 								"749fe355-833e-4d93-a0db-e613135aa2d0",
 								"7fe9aeb4-a017-45b5-a388-90f88a3b2455", "fe83b69e-7a67-45c8-a08c-8c78c8867d3a",
-								"320f0fb2-713b-46ba-8930-36fe497f0c47"));
+								"320f0fb2-713b-46ba-8930-36fe497f0c47", "ad8dcc62-6560-4666-97d7-d6ae361c2868"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "mobo_mx"));
 				userDao.create(user);
 			}
@@ -6468,7 +6468,8 @@ public class UserMenuDump extends AbstractCLI {
 						.setStores(Arrays.asList("51a62c6b-9596-4e63-8241-21563bf5925e",
 								"5eea383c-c550-44d3-bc5d-a3bbf8cff283", "4459e3ee-0085-4382-95f4-042af4b89195",
 								"1498839031159",
-								"7fe9aeb4-a017-45b5-a388-90f88a3b2455", "320f0fb2-713b-46ba-8930-36fe497f0c47"));
+								"7fe9aeb4-a017-45b5-a388-90f88a3b2455", "320f0fb2-713b-46ba-8930-36fe497f0c47",
+								"ad8dcc62-6560-4666-97d7-d6ae361c2868"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "ugodinez@mobo.mx"));
 				userDao.create(user);
 			}
