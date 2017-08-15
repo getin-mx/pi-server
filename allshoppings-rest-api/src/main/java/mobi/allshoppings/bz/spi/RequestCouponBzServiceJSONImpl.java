@@ -54,6 +54,7 @@ implements RequestCouponBzService {
 			List<String> devices = Arrays.asList(new String[] {deviceUUID});
 			
 			String campaignSpecialId = obj.has("campaignOfferId") ? obj.getString("campaignOfferId") : null;
+			@SuppressWarnings("unused")
 			boolean test = obj.has("test") ? obj.getBoolean("test") : false;
 
 			{ // Generic coupon implementation 

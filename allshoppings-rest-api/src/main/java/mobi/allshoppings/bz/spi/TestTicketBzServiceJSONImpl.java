@@ -8,13 +8,11 @@ import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.bz.TestTicketBzService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.SystemConfiguration;
 
 
 /**
@@ -26,9 +24,6 @@ implements TestTicketBzService {
 
 	private static final Logger log = Logger.getLogger(TestTicketBzServiceJSONImpl.class.getName());
 
-	@Autowired
-	private SystemConfiguration systemConfiguration;
-	
 	@Override
 	public String post(final JsonRepresentation entity) {
 		long start = markStart();
@@ -40,8 +35,10 @@ implements TestTicketBzService {
 
 			// get level, if not defined use default value
 			String deviceUUID = obj.getString("deviceUUID");
+			@SuppressWarnings("unused")
 			List<String> devices = Arrays.asList(new String[] {deviceUUID});
 			
+			@SuppressWarnings("unused")
 			String campaignSpecialId = obj.has("campaignOfferId") ? obj.getString("campaignOfferId") : null;
 
 			

@@ -26,7 +26,6 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
-import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
 
@@ -342,16 +341,6 @@ implements DashboardBrandTableDataBzService {
 		}
 	}
 	
-	public boolean isValidForUser(User user, Store store) {
-		if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
-			if( user.getSecuritySettings().getStores().contains(store.getIdentifier()))
-				return true;
-			else
-				return false;
-		} else 
-			return true;
-	}
-
 	public String getDateName(Date date) {
 		StringBuffer sb = new StringBuffer();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");

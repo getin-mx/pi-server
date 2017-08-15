@@ -1269,6 +1269,7 @@ public class UserMenuDump extends AbstractCLI {
 				lacomer.getSecuritySettings().setRole(Role.STORE);
 				lacomer.getSecuritySettings().setShoppings(new ArrayList<String>());
 				lacomer.getSecuritySettings().getShoppings().add("walmartdemo");
+				lacomer.getSecuritySettings().getShoppings().add("wallmartdemo");
 				lacomer.getSecuritySettings().setStores(Arrays.asList("1494352877262"));
 				lacomer.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				lacomer.setKey((Key)keyHelper.obtainKey(User.class, "lacomer_mx"));
@@ -1302,6 +1303,7 @@ public class UserMenuDump extends AbstractCLI {
 				superdemo.getSecuritySettings().setRole(Role.STORE);
 				superdemo.getSecuritySettings().setShoppings(new ArrayList<String>());
 				superdemo.getSecuritySettings().getShoppings().add("walmartdemo");
+				superdemo.getSecuritySettings().getShoppings().add("wallmartdemo");
 				superdemo.getSecuritySettings().setStores(Arrays.asList("1494352877262"));
 				superdemo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				superdemo.setKey((Key)keyHelper.obtainKey(User.class, "superdemo_mx"));
@@ -1497,32 +1499,32 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("grupopavel_mx"));
 				userMenuDao.create(um);
 			}
-			User latabernadelleon = null;
-			try {
-				latabernadelleon = userDao.get("latabernadelleon_mx", true);
-				userDao.delete("latabernadelleon_mx");
-			} catch( Exception e ) {
-				/*latabernadelleon = new User();
-				latabernadelleon.setFirstname("La Taberna del León");
-				latabernadelleon.setLastname("Mexico");
-				latabernadelleon.setEmail("latabernadelleon@allshoppings.mobi");
-				latabernadelleon.getSecuritySettings().setRole(Role.BRAND);
-				latabernadelleon.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				latabernadelleon.setKey((Key)keyHelper.obtainKey(User.class, "latabernadelleon_mx"));
-				userDao.create(latabernadelleon);*/
-			}
-
-			try {
-				um = userMenuDao.get("latabernadelleon_mx", true);
-				userMenuDao.delete("latabernadelleon_mx");
-				//throw new Exception();
-			} catch( Exception e ) {
-				/*um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
-				um.setKey(userMenuDao.createKey("latabernadelleon_mx"));
-				userMenuDao.create(um);*/
-			}
+//			User latabernadelleon = null;
+//			try {
+//				latabernadelleon = userDao.get("latabernadelleon_mx", true);
+//				userDao.delete("latabernadelleon_mx");
+//			} catch( Exception e ) {
+//				/*latabernadelleon = new User();
+//				latabernadelleon.setFirstname("La Taberna del León");
+//				latabernadelleon.setLastname("Mexico");
+//				latabernadelleon.setEmail("latabernadelleon@allshoppings.mobi");
+//				latabernadelleon.getSecuritySettings().setRole(Role.BRAND);
+//				latabernadelleon.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+//				latabernadelleon.setKey((Key)keyHelper.obtainKey(User.class, "latabernadelleon_mx"));
+//				userDao.create(latabernadelleon);*/
+//			}
+//
+//			try {
+//				um = userMenuDao.get("latabernadelleon_mx", true);
+//				userMenuDao.delete("latabernadelleon_mx");
+//				//throw new Exception();
+//			} catch( Exception e ) {
+//				/*um = new UserMenu();
+//				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+//				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+//				um.setKey(userMenuDao.createKey("latabernadelleon_mx"));
+//				userMenuDao.create(um);*/
+//			}
 			
 			User marketintelligence = null;
 			try {
