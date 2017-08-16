@@ -15,9 +15,9 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.exporter.ExternalGeoImporter;
 
 
-public class UpdateExternalGeoGPS extends AbstractCLI {
+public class GenerateExternalGeo extends AbstractCLI {
 
-	private static final Logger log = Logger.getLogger(UpdateExternalGeoGPS.class.getName());
+	private static final Logger log = Logger.getLogger(GenerateExternalGeo.class.getName());
 	
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();

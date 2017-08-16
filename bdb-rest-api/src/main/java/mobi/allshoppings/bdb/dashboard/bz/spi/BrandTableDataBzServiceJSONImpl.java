@@ -77,7 +77,13 @@ implements BDBDashboardBzService {
 			
 			// Initializes the table using the received information
 			DashboardTableRep table = new DashboardTableRep();
-			table.setStores(storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), "name"));
+			List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), "name");
+			List<Store> tmpStores2 = CollectionFactory.createList();
+			for( Store store : tmpStores ) {
+				if( isValidForUser(user, store) )
+					tmpStores2.add(store);
+			}
+			table.setStores(tmpStores2);
 			Collections.sort(table.getStores(), new Comparator<Store>() {
 				@Override
 				public int compare(Store o1, Store o2) {
