@@ -1629,6 +1629,8 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("741", "Outlet Deportes Venustiano Carranza", "outletdeportes_mx",null));
 			
+			stores.add(new StoreAdapter("742","Mobo Meave", "mobo_mx", null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {

@@ -820,23 +820,7 @@ public class UserMenuDump extends AbstractCLI {
 				modatelas.setFirstname("Modatelas");
 				modatelas.setLastname("Mexico");
 				modatelas.setEmail("modatelas@allshoppings.mobi");
-				modatelas.getSecuritySettings().setRole(Role.STORE);
-				modatelas.getSecuritySettings()
-						.setStores(Arrays.asList("6d2955f9-f112-47b3-ae50-6528697c249c",
-								"94634900-964f-4092-a0dd-e1dc287144ee", "58131ca7-ae67-4022-bcfa-0af9301bdddc",
-								"70e3f099-03ef-4df2-9849-0f4f4a3dd411", "ceade140-174b-464c-9116-70ef2b93317a",
-								"7c10f699-b944-4627-9155-22af377da01f", "50b32c68-0998-4323-a404-eee8e316e3eb",
-								"08644a45-800d-43ac-b228-78c28d82bad1", "76eccdaf-348d-4540-af6d-145463e0844e",
-								"519d19e7-ddf4-47a2-abdc-09e89d1f5c64", "07b5d16f-6b65-4beb-b763-d47f8a089efd",
-								"d93f2cf8-de1f-4e5c-884b-adb87cbbcdf2", "3f7497de-95c8-4bb5-a9a5-6d097133bf7c",
-								"80175990-43cd-4c27-a5ca-d16179c7f55f", "4da00bc6-ae1a-418a-a784-1f764d281908",
-								"7e47d9df-f011-4203-9ac5-5aa7222cccb5", "fe9ad717-4f1e-4b28-b9ea-bfa94ace3141",
-								"7b7d1c1e-f6af-40b7-8a55-f3bdbf19cde1", "dbd5021e-4d65-47da-a64e-42006513d998",
-								"dd1edbcb-5eeb-467e-af3d-223611492520", "2bad1b20-31c4-44c4-9015-6e9dd5c30b00",
-								"3307ec01-1e57-40e2-97a3-d1e02227a4b0", "9202f7a2-4354-47bb-a6c3-dd775af93a17",
-								"9ccdd1eb-30fe-4304-9bd5-7a4b0614c842", "740547b3-5c3a-492c-a2f8-bc88345fcc5d",
-								"b7cb1719-2f50-45c2-a1fa-66c98cd1a7e4", "865adafe-7df9-46fc-8201-32f260e5ff06",
-								"f4a78ecf-07d9-4158-bcd4-159a68a247df", "0125a1b9-0d3a-4383-8377-04674b1fc08f"));
+				modatelas.getSecuritySettings().setRole(Role.BRAND);
 				modatelas.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				modatelas.setKey((Key)keyHelper.obtainKey(User.class, "modatelas_mx"));
 				modatelas.getSecuritySettings().setShoppings(Arrays.asList("740547b3-5c3a-492c-a2f8-bc88345fcc5d"));
@@ -2790,7 +2774,7 @@ public class UserMenuDump extends AbstractCLI {
 								"d22be9e5-74a7-4671-aa7e-1a464bb748b7", "2ed6fea4-efb3-4aef-bc5c-af1e3d712b4b",
 								"cc13c199-5969-4010-aedb-bf01a4428786", "ba26aea6-dda1-4bfe-a270-23350be7105e",
 								"95d98d90-ba0b-42e1-843b-4a0e5c09db4b", "62c734bd-15fa-4bc5-a542-d38dd30e4546",
-								"94b9e9fc-3f73-4926-9890-fe0d924952fc"));
+								"94b9e9fc-3f73-4926-9890-fe0d924952fc", "ec77ff67-9221-4c41-afba-0c47f73e0ba3"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "beatrizcors@chomarc_mx"));
 				userDao.create(user);
 			}
