@@ -38,7 +38,7 @@ public interface DashboardIndicatorDataDAO extends GenericDAO<DashboardIndicator
 
 	List<DashboardIndicatorData> getUsingFilters(List<String> entityId,
 			Integer entityKind, List<String> elementId, List<String> elementSubId,
-			String shoppingId, String subentityId, String periodType,
+			String shoppingId, List<String> subentityId, String periodType,
 			String fromStringDate, String toStringDate, String movieId,
 			String voucherType, Integer dayOfWeek, Integer timeZone, String order, 
 			String country, String province, String city)

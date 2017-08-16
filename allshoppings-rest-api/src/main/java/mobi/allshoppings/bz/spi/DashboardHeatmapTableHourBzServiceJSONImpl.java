@@ -27,7 +27,6 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DashboardConfiguration;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.User;
-import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -324,16 +323,6 @@ implements DashboardHeatmapTableHourBzService {
 		} finally {
 			markEnd(start);
 		}
-	}
-
-	public boolean isValidForUser(User user, DashboardIndicatorData data) {
-		if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
-			if( user.getSecuritySettings().getStores().contains(data.getSubentityId()))
-				return true;
-			else
-				return false;
-		} else 
-			return true;
 	}
 
 	private int mapDayOfWeek(Integer dayOfWeek){

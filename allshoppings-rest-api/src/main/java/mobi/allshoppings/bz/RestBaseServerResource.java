@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.json.JSONArray;
@@ -43,9 +44,12 @@ import mobi.allshoppings.dao.FavoriteDAO;
 import mobi.allshoppings.dao.UserDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.Favorite;
+import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.model.adapter.IGenericAdapter;
 import mobi.allshoppings.model.tools.CacheHelper;
 import mobi.allshoppings.model.tools.MultiLang;
@@ -1091,4 +1095,29 @@ public abstract class RestBaseServerResource extends ServerResource {
 		String parts[] = lang2.split("_");
 		return new Locale(parts[0], parts[1]);
 	}
+
+	public boolean isValidForUser(User user, DashboardIndicatorData data) {
+		if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
+			if( user.getSecuritySettings().getStores().contains(data.getSubentityId()))
+				return true;
+			else
+				if (!CollectionUtils.isEmpty(user.getSecuritySettings().getShoppings())
+						&& user.getSecuritySettings().getShoppings().contains(data.getSubentityId()))
+					return true;
+				else
+					return false;
+		} else 
+			return true;
+	}
+
+	public boolean isValidForUser(User user, Store store) {
+		if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
+			if( user.getSecuritySettings().getStores().contains(store.getIdentifier()))
+				return true;
+			else
+				return false;
+		} else 
+			return true;
+	}
+
 }

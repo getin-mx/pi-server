@@ -28,7 +28,6 @@ import mobi.allshoppings.model.DashboardConfiguration;
 import mobi.allshoppings.model.DashboardIndicatorAlias;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.User;
-import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -310,16 +309,6 @@ implements DashboardTimelineHourBzService {
 		}
 	}
 
-	public boolean isValidForUser(User user, DashboardIndicatorData data) {
-		if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
-			if( user.getSecuritySettings().getStores().contains(data.getSubentityId()))
-				return true;
-			else
-				return false;
-		} else 
-			return true;
-	}
-	
 	public String getHourName(int hour) {
 		return new String(hour + ":00Hs");
 	}

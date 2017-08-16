@@ -49,7 +49,7 @@ public class SendTestMessage extends AbstractCLI {
 			
 			log.log(Level.INFO, "Sending test message to " + deviceUUID);
 			DeviceInfo device = deviceInfoDao.get(deviceUUID);
-			pushHelper.sendMessage("Hola Mundo", "Este es un mensaje", "http://www.google.com", device);
+			pushHelper.sendMessage("Hola Amazing!", "Anita no seas tan desesperada!!!!", "http://www.google.com", device);
 
 			
 		} catch( Exception e ) {
