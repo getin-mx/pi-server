@@ -1,6 +1,6 @@
 #_HOST=http://127.0.0.1
-#_HOST=http://api.getin.mx
-_HOST=http://staging.getin.mx
+_HOST=http://api.getin.mx
+#_HOST=http://staging.getin.mx
 #_HOST=http://127.0.0.1:8081
 
 export _HOST;
