@@ -189,7 +189,10 @@ public class ExternalGeoImporter {
 										String key = dao.getHash(new Float(json.getDouble("lat")), 
 												new Float(json.getDouble("lon")), period, id, entityKind, myType);
 
-										ExternalGeo val = cache.get(key);
+										ExternalGeo val = null;
+										try {
+											cache.get(key);
+										} catch( Exception e ){}
 										if( val == null ) {
 											GeoPoint gp = geocoder.decodeGeohash(geocoder.encodeGeohash(json.getDouble("lat"), json.getDouble("lon")).substring(0,7));
 											val = new ExternalGeo();
