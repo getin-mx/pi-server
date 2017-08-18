@@ -17,7 +17,7 @@ import mobi.allshoppings.campaign.CampaignHelper;
 import mobi.allshoppings.coupon.CouponHelper;
 import mobi.allshoppings.dao.BrandDAO;
 import mobi.allshoppings.dao.CampaignActivityDAO;
-import mobi.allshoppings.dao.CampaignSpecialDAO;
+import mobi.allshoppings.dao.CampaignActionDAO;
 import mobi.allshoppings.dao.CheckinDAO;
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.NotificationLogDAO;
@@ -29,7 +29,7 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.CampaignActivity;
-import mobi.allshoppings.model.CampaignSpecial;
+import mobi.allshoppings.model.CampaignAction;
 import mobi.allshoppings.model.Checkin;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.EntityKind;
@@ -51,7 +51,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 	@Autowired
 	private CheckinDAO checkinDao;
 	@Autowired
-	private CampaignSpecialDAO campaignSpecialDao;
+	private CampaignActionDAO campaignSpecialDao;
 	@Autowired
 	private CampaignActivityDAO campaignActivityDao;
 	@Autowired
@@ -75,7 +75,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 
 	@Override
 	public Offer campaignActivityToOffer(CampaignActivity activity) throws ASException {
-		CampaignSpecial special = campaignSpecialDao.get(activity.getCampaignSpecialId(), true);
+		CampaignAction special = campaignSpecialDao.get(activity.getCampaignSpecialId(), true);
 		Offer offer = new Offer();
 		
 		offer.addShopping(activity.getShoppingId());
@@ -97,7 +97,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 	}
 	
 	@Override
-	public CampaignSpecial getCampaignSpecialForCheckin(User user, Checkin checkin, Date date ) throws ASException {
+	public CampaignAction getCampaignSpecialForCheckin(User user, Checkin checkin, Date date ) throws ASException {
 
 		// The checkin kind is for a Shopping
 		if( checkin.getEntityKind() == EntityKind.KIND_SHOPPING) {
@@ -105,13 +105,13 @@ public class CampaignHelperImpl implements CampaignHelper {
 			// Now I get the Shopping from the Checkin, and the list of active
 			// campaign specials that the shopping has
 			Shopping shopping = shoppingDao.get(checkin.getEntityId());
-			List<CampaignSpecial> specialsList = campaignSpecialDao
+			List<CampaignAction> specialsList = campaignSpecialDao
 					.getUsingShoppingAndStatus(
 							shopping.getIdentifier(),
 							null, null);
 
 			// For each Special, Check requirements
-			for( CampaignSpecial s : specialsList ) {
+			for( CampaignAction s : specialsList ) {
 				log.log(Level.INFO, "Special found in getCampaignSpecialForCheckin: " + s);
 				// Check Availability
 				if( hasAvailabilityForDate(s, date)) {
@@ -134,13 +134,13 @@ public class CampaignHelperImpl implements CampaignHelper {
 			// campaign specials that the shopping has
 			Store store = storeDao.get(checkin.getEntityId());
 			Brand brand = brandDao.get(store.getBrandId());
-			List<CampaignSpecial> specialsList = campaignSpecialDao
+			List<CampaignAction> specialsList = campaignSpecialDao
 					.getUsingBrandAndStatus(
 							brand.getIdentifier(),
 							null, null);
 
 			// For each Special, Check requirements
-			for( CampaignSpecial s : specialsList ) {
+			for( CampaignAction s : specialsList ) {
 				log.log(Level.INFO, "Special found in getCampaignSpecialForCheckin: " + s);
 				if( s.getShoppings().size() == 0 ) {
 					// Check Availability
@@ -170,7 +170,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 
 		CampaignActivity activity = null;
 		
-		CampaignSpecial special = getCampaignSpecialForCheckin(user, checkin, date);
+		CampaignAction special = getCampaignSpecialForCheckin(user, checkin, date);
 		log.log(Level.INFO, "Special found: " + special);
 		if( special != null ) {
 			activity = new CampaignActivity();
@@ -233,7 +233,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 	 * @return The custom URL, or null / blanks if there is none
 	 */
 	@Override
-	public String assingCustomUrl(CampaignSpecial special, CampaignActivity activity) {
+	public String assingCustomUrl(CampaignAction special, CampaignActivity activity) {
 		String customUrl = special.getCustomUrl();
 		if( StringUtils.hasText(customUrl)) {
 			customUrl = customUrl.replace("{identifier}", activity.getKey().getName());
@@ -248,7 +248,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public CampaignActivity createActivity(User user, DeviceInfo device, CampaignSpecial special ) throws ASException {
+	public CampaignActivity createActivity(User user, DeviceInfo device, CampaignAction special ) throws ASException {
 		CampaignActivity activity = null;
 		
 		if( special != null ) {
@@ -300,7 +300,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 		try { checkin = checkinDao.get(activity.getCheckinId()); } catch( Exception e ) {}
 		
 		User user = userDao.get(activity.getUserId(), true);
-		CampaignSpecial special = campaignSpecialDao.get(activity.getCampaignSpecialId(), true);
+		CampaignAction special = campaignSpecialDao.get(activity.getCampaignSpecialId(), true);
 		if( checkin != null) {
 			device = deviceInfoDao.get(checkin.getDeviceUUID(), true);
 		}
@@ -310,12 +310,12 @@ public class CampaignHelperImpl implements CampaignHelper {
 	@Override
 	public void sendCampaignActivity(User user, DeviceInfo device, Checkin checkin, CampaignActivity activity, 
 			boolean sendMail, boolean sendPush) throws ASException {
-		CampaignSpecial special = campaignSpecialDao.get(activity.getCampaignSpecialId(), true);
+		CampaignAction special = campaignSpecialDao.get(activity.getCampaignSpecialId(), true);
 		sendCampaignActivity(user, device, checkin, special, activity, true, true);
 	}
 	
 	@Override
-	public void sendCampaignActivity(User user, DeviceInfo device, Checkin checkin, CampaignSpecial special,
+	public void sendCampaignActivity(User user, DeviceInfo device, Checkin checkin, CampaignAction special,
 			CampaignActivity activity, boolean sendMail, boolean sendPush) throws ASException {
 	
 		if( sendPush ) {
@@ -367,14 +367,14 @@ public class CampaignHelperImpl implements CampaignHelper {
 		}
 	}
 	
-	private String buildDescription(CampaignSpecial special, CampaignActivity activity, boolean includeInstructions) {
+	private String buildDescription(CampaignAction special, CampaignActivity activity, boolean includeInstructions) {
 		String desc = special.getDescription();
 		if( includeInstructions ) desc = desc + "<br/><br/><b>" + buildInstructions(special, activity) + "</b>";
 		return desc;
 	}
 	
 	@Override
-	public String buildInstructions(CampaignSpecial special, CampaignActivity activity ) {
+	public String buildInstructions(CampaignAction special, CampaignActivity activity ) {
 		String desc = special.getInstructions();
 		desc = StringUtils.replace(desc, "${code}", activity.getCouponCode());
 		desc = StringUtils.replace(
@@ -387,7 +387,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 	}
 	
 	@Override
-	public boolean hasAvailabilityForDate(CampaignSpecial campaignSpecial, Date date ) throws ASException {
+	public boolean hasAvailabilityForDate(CampaignAction campaignSpecial, Date date ) throws ASException {
 		if(campaignActivityDao.hasAvailabilityForDate(campaignSpecial, date)) {
 			long timeDiff = (long)(campaignSpecial.getTimezone() * 3600000);
 			Date today = DateUtils.truncate(new Date(date.getTime() + timeDiff), Calendar.DATE);
@@ -473,7 +473,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 	}
 	
 	@Override
-	public boolean hasSpecialBeenUsedForUserAndDate(CampaignSpecial campaignSpecial, User user, Date date) throws ASException {
+	public boolean hasSpecialBeenUsedForUserAndDate(CampaignAction campaignSpecial, User user, Date date) throws ASException {
 		return campaignActivityDao.hasSpecialBeenUsedForUserAndDate(campaignSpecial, user, date);
 	}
 

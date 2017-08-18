@@ -19,14 +19,14 @@ import com.inodes.datanucleus.model.Text;
 import mobi.allshoppings.campaign.CampaignHelper;
 import mobi.allshoppings.coupon.CouponHelper;
 import mobi.allshoppings.dao.CampaignActivityDAO;
-import mobi.allshoppings.dao.CampaignSpecialDAO;
+import mobi.allshoppings.dao.CampaignActionDAO;
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.DeviceMessageLockDAO;
 import mobi.allshoppings.dao.UserDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.CampaignActivity;
-import mobi.allshoppings.model.CampaignSpecial;
+import mobi.allshoppings.model.CampaignAction;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.DeviceMessageLock;
 import mobi.allshoppings.model.EntityKind;
@@ -46,7 +46,7 @@ public class CouponHelperImpl implements CouponHelper {
 	@Autowired
 	private CampaignActivityDAO caDao;
 	@Autowired
-	private CampaignSpecialDAO csDao;
+	private CampaignActionDAO csDao;
 	@Autowired
 	private UserDAO userDao;
 
@@ -432,7 +432,7 @@ public class CouponHelperImpl implements CouponHelper {
 			if(lock.getScope() != 2 ) return false;
 			if(StringUtils.hasText(lock.getCampaignActivityId())) {
 				CampaignActivity ca = caDao.get(lock.getCampaignActivityId(), true);
-				CampaignSpecial cs = csDao.get(ca.getCampaignSpecialId(), true);
+				CampaignAction cs = csDao.get(ca.getCampaignSpecialId(), true);
 				if( cs.getIdentifier().equals(campaignSpecialId)) return false;
 			}
 		}

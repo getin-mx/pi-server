@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+*<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:context="http://www.springframework.org/schema/context"
@@ -915,7 +915,8 @@
 	<bean id="user.dao.ref" class="mobi.allshoppings.dao.spi.UserDAOJDOImpl" />
 	<bean id="tftoken.dao.ref" class="mobi.allshoppings.dao.spi.TFTokenDAOJDOImpl" />
 	<bean id="favorite.dao.ref" class="mobi.allshoppings.dao.spi.FavoriteDAOJDOImpl" />
-	<bean id="campaignspecial.dao.ref" class="mobi.allshoppings.dao.spi.CampaignSpecialDAOJDOImpl" />
+	<bean id="campaign.dao.ref" class="mobi.allshoppings.dao.spi.CampaignDAOJDOImpl" />
+	<bean id="campaignaction.dao.ref" class="mobi.allshoppings.dao.spi.CampaignActionDAOJDOImpl" />
 	<bean id="campaignactivity.dao.ref" class="mobi.allshoppings.dao.spi.CampaignActivityDAOJDOImpl" />
 	<bean id="checkin.dao.ref" class="mobi.allshoppings.dao.spi.CheckinDAOJDOImpl" />
 	<bean id="aphotspot.dao.ref" class="mobi.allshoppings.dao.spi.APHotspotDAOJDOImpl" />
