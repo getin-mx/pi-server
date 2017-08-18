@@ -89,6 +89,8 @@
 		<property name="solrUrl" value="http://aragorn.getin.mx:8983/solr/allshoppings" />
 		<property name="getinSqlUrl" value="jdbc:mysql://getinold.allshoppings.mobi:3306/getin?user=api&amp;password=VZ52sBPTeg33rq7w" />
 		<property name="defaultDumpDirectory" value="/usr/local/allshoppings/dump/" />
+		<property name="externalGeoFromDate" value="2017-01-01" />
+		<property name="externalGeoToDate" value="2017-01-02" />
 		<property name="floorMapTracking">
 			<list>
 				<value>modatelas_tacubaya_pb</value>
@@ -127,8 +129,8 @@
 		<property name="resourcesDir" value="/usr/local/allshoppings/resources" />
 		<property name="excelTemplate" value="template-2017-02.xlsm" />
 
-		<property name="cacheMaxInMemElements" value="400000" />
-		<property name="cachePageSize" value="5000" />
+		<property name="cacheMaxInMemElements" value="4000" />
+		<property name="cachePageSize" value="500" />
 		<property name="cacheTempDir" value="/usr/local/allshoppings/dump" />
 		<property name="forceAlgorithm" value="markI" />
 

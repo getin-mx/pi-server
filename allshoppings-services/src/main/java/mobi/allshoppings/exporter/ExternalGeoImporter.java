@@ -58,7 +58,7 @@ public class ExternalGeoImporter {
 	
 	private DumperHelper<DeviceLocationHistory> dump;
 
-	public void importFromGpsRecords(List<String> entityId, Integer entityKind, String baseDir) throws ASException {
+	public void importFromGpsRecords(List<String> entityId, Integer entityKind) throws ASException {
 
 		SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -149,16 +149,16 @@ public class ExternalGeoImporter {
 			pm.close();
 
 			// Now obtains the physical data information for the dump
-			dump = new DumpFactory<DeviceLocationHistory>().build(baseDir, DeviceLocationHistory.class);
+			dump = new DumpFactory<DeviceLocationHistory>().build(null, DeviceLocationHistory.class);
 
 			count = 0;
 			long processed = 0;
 
 			// Loops only with the selected date range
-			Date workDate = sdf.parse("2016-01-01");
-			Date workFrom = sdf.parse("2016-01-01");
-			Date workTo = sdf.parse("2017-02-01");
-			Date toDate = sdf.parse("2017-02-01");
+			Date workDate = sdf.parse(systemConfiguration.getExternalGeoFromDate());
+			Date workFrom = sdf.parse(systemConfiguration.getExternalGeoFromDate());
+			Date workTo = sdf.parse(systemConfiguration.getExternalGeoToDate());
+			Date toDate = sdf.parse(systemConfiguration.getExternalGeoToDate());
 			while(workDate.before(toDate) || workDate.equals(toDate)) {
 				workFrom = new Date(workDate.getTime());
 				workTo = new Date(workFrom.getTime() + 86400000 /* 24 hours */);

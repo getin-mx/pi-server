@@ -24,7 +24,6 @@ public class GenerateExternalGeo extends AbstractCLI {
 		else parser = base;
 		parser.accepts( "entityIds", "Comma separated list of Entity Id" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "entityKind", "Entity Kind" ).withRequiredArg().ofType( Integer.class );
-		parser.accepts( "outDir", "Output Directory (for example, /tmp/dump)").withRequiredArg().ofType( String.class );
 		return parser;
 	}
 
@@ -41,7 +40,6 @@ public class GenerateExternalGeo extends AbstractCLI {
 
 			String sEntityIds = null;
 			Integer entityKind = null;
-			String outDir = null;
 			List<String> entityIds = CollectionFactory.createList();
 			
 			try {
@@ -55,7 +53,6 @@ public class GenerateExternalGeo extends AbstractCLI {
 					}
 				}
 				entityKind = (Integer)options.valueOf("entityKind");
-				outDir = (String)options.valueOf("outDir");
 				
 			} catch( Exception e ) {
 				usage(parser);
@@ -63,7 +60,7 @@ public class GenerateExternalGeo extends AbstractCLI {
 			}
 			
 			log.log(Level.INFO, "Updating External Geo with GPS References...");
-			importer.importFromGpsRecords(entityIds, entityKind, outDir);
+			importer.importFromGpsRecords(entityIds, entityKind);
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

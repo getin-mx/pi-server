@@ -116,7 +116,8 @@ public class SystemConfiguration implements Serializable {
 	private String xs3User;
 	private String xs3Password;
 	private String xs3Endpoint;
-	
+	private String externalGeoFromDate;
+	private String externalGeoToDate;
 	
 	public String getDefaultLevel() {
 		return defaultLevel;
@@ -990,6 +991,22 @@ public class SystemConfiguration implements Serializable {
 
 	public void setXs3Endpoint(String xs3Endpoint) {
 		this.xs3Endpoint = xs3Endpoint;
+	}
+
+	public String getExternalGeoFromDate() {
+		return externalGeoFromDate;
+	}
+
+	public void setExternalGeoFromDate(String externalGeoFromDate) {
+		this.externalGeoFromDate = externalGeoFromDate;
+	}
+
+	public String getExternalGeoToDate() {
+		return externalGeoToDate;
+	}
+
+	public void setExternalGeoToDate(String externalGeoToDate) {
+		this.externalGeoToDate = externalGeoToDate;
 	}
 
 }
