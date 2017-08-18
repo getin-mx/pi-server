@@ -242,9 +242,11 @@ public class ExternalGeoImporter {
 			Iterator<ExternalGeo> it = cache.iterator();
 			while(it.hasNext()) {
 				ExternalGeo obj = it.next();
-				String key = obj.getIdentifier();
-				obj.setUserCount(cacheDevices.containsKey(key) ? cacheDevices.get(key).size() : 0);
-				cache.put(key, obj);
+				if( obj != null ) {
+					String key = obj.getIdentifier();
+					obj.setUserCount(cacheDevices.containsKey(key) ? cacheDevices.get(key).size() : 0);
+					cache.put(key, obj);
+				}
 			}
 			
 			log.log(Level.INFO, "Disposing cache with " + cache.size() + " elements...");
