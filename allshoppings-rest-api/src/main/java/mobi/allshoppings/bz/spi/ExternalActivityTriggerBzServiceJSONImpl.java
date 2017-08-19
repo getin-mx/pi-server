@@ -21,7 +21,7 @@ import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.campaign.CampaignHelper;
 import mobi.allshoppings.coupon.CouponHelper;
 import mobi.allshoppings.dao.CampaignActivityDAO;
-import mobi.allshoppings.dao.CampaignSpecialDAO;
+import mobi.allshoppings.dao.CampaignActionDAO;
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.ExternalActivityLogDAO;
 import mobi.allshoppings.dao.UserDAO;
@@ -29,7 +29,7 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.image.ImageDownloader;
 import mobi.allshoppings.model.CampaignActivity;
-import mobi.allshoppings.model.CampaignSpecial;
+import mobi.allshoppings.model.CampaignAction;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.ExternalActivityLog;
@@ -55,7 +55,7 @@ implements ExternalActivityTriggerBzService {
 	@Autowired
 	private UserDAO userDao;
 	@Autowired
-	private CampaignSpecialDAO csDao;
+	private CampaignActionDAO csDao;
 	@Autowired
 	private CampaignActivityDAO caDao;
 	@Autowired
@@ -92,7 +92,7 @@ implements ExternalActivityTriggerBzService {
 			ExternalActivityAdapter adapter = new ExternalActivityAdapter();
 			setPropertiesFromJSONObject(obj, adapter, new HashSet<String>());
 
-			CampaignSpecial cs = csDao.get(adapter.getCampaignSpecialId());
+			CampaignAction cs = csDao.get(adapter.getCampaignSpecialId());
 
 			ExternalActivityLog eaLog = new ExternalActivityLog();
 			eaLog.setKey(eaDao.createKey());

@@ -11,10 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import mobi.allshoppings.bz.PromoListBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
-import mobi.allshoppings.dao.CampaignSpecialDAO;
+import mobi.allshoppings.dao.CampaignActionDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.CampaignSpecial;
+import mobi.allshoppings.model.CampaignAction;
 
 /**
  *
@@ -33,7 +33,7 @@ implements PromoListBzService {
 		"1432724594627" /* Crepa */ };
 	
 	@Autowired
-	private CampaignSpecialDAO dao;
+	private CampaignActionDAO dao;
 
 	/**
 	 * Obtains information about a user
@@ -48,11 +48,11 @@ implements PromoListBzService {
 			// obtain the id and validates the auth token
 			// obtainUserIdentifier();
 
-			List<CampaignSpecial> list = dao.getUsingIdList(Arrays.asList(CAMPAIGN_SPECIAL_IDS));
+			List<CampaignAction> list = dao.getUsingIdList(Arrays.asList(CAMPAIGN_SPECIAL_IDS));
 
 			// Creates the final JSON Array
 			JSONArray jsonArray = new JSONArray();
-			for( CampaignSpecial obj : list ) {
+			for( CampaignAction obj : list ) {
 				JSONObject json = new JSONObject();
 				json.put("identifier", obj.getIdentifier());
 				json.put("name", obj.getName());

@@ -35,7 +35,7 @@ import mobi.allshoppings.tools.CollectionFactory;
 
 @SuppressWarnings("serial")
 @PersistenceCapable(detachable="true")
-public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Identificable, Indexable, ViewLocationAware, ACLAware {
+public class CampaignAction implements ModelKey, IAdaptable, Serializable, Identificable, Indexable, ViewLocationAware, ACLAware {
 
 	public static final String FILTER_ACTIVE_ONLY = "offersOnlyActive";
 	public static final String DEFAULT_PROMOTION_TYPE = "Checkin";
@@ -113,7 +113,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 	@NotPersistent
 	private final static SimpleDateFormat dateOnlySDF = new SimpleDateFormat("yyyyMMdd"); 
 
-    public CampaignSpecial() {
+    public CampaignAction() {
     	this.creationDateTime = new Date();
 		this.areaId = new ArrayList<String>();
 		this.photoId = new ArrayList<String>();
@@ -1096,7 +1096,7 @@ public class CampaignSpecial implements ModelKey, IAdaptable, Serializable, Iden
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CampaignSpecial other = (CampaignSpecial) obj;
+		CampaignAction other = (CampaignAction) obj;
 		if (key == null) {
 			if (other.key != null)
 				return false;

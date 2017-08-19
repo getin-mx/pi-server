@@ -119,7 +119,7 @@ public class EntityKind {
 		case KIND_OFFER_PROPOSAL:
 			return null;
 		case KIND_CAMPAIGN_SPECIAL:
-			return CampaignSpecial.class;
+			return CampaignAction.class;
 		case KIND_CHALLENGE:
 			return null;
 		case KIND_FLOOR_MAP:

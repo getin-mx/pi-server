@@ -11,12 +11,12 @@ import org.springframework.context.ApplicationContext;
 
 import joptsimple.OptionParser;
 import mobi.allshoppings.dao.BrandDAO;
-import mobi.allshoppings.dao.CampaignSpecialDAO;
+import mobi.allshoppings.dao.CampaignActionDAO;
 import mobi.allshoppings.dao.OfferTypeDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.Brand;
-import mobi.allshoppings.model.CampaignSpecial;
+import mobi.allshoppings.model.CampaignAction;
 import mobi.allshoppings.model.OfferType;
 import mobi.allshoppings.model.tools.IndexHelper;
 
@@ -38,7 +38,7 @@ public class CouponsDump extends AbstractCLI {
 	public static void main(String args[]) throws ASException {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			CampaignSpecialDAO csDao = (CampaignSpecialDAO)getApplicationContext().getBean("campaignspecial.dao.ref");
+			CampaignActionDAO csDao = (CampaignActionDAO)getApplicationContext().getBean("campaignspecial.dao.ref");
 			BrandDAO brandDao = (BrandDAO)getApplicationContext().getBean("brand.dao.ref");
 			OfferTypeDAO otDao = (OfferTypeDAO)getApplicationContext().getBean("offertype.dao.ref");
 			IndexHelper indexHelper = (IndexHelper)getApplicationContext().getBean("index.helper");
@@ -47,11 +47,11 @@ public class CouponsDump extends AbstractCLI {
 			
 			Brand b = brandDao.get("chilimbalam_mx");
 			OfferType ot = otDao.get("1384133723158");
-			List<CampaignSpecial> list = csDao.getUsingAppAndBrandAndStatusAndRange("amazing_mx", "chilimbalam_mx", null, null, null, true);
-			CampaignSpecial cs = null;
+			List<CampaignAction> list = csDao.getUsingAppAndBrandAndStatusAndRange("amazing_mx", "chilimbalam_mx", null, null, null, true);
+			CampaignAction cs = null;
 			boolean forUpdate = false;
 			if( CollectionUtils.isEmpty(list)) {
-				cs = new CampaignSpecial();
+				cs = new CampaignAction();
 				cs.setKey(csDao.createKey());
 			} else {
 				cs = list.get(0);
