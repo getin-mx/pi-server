@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,8 +21,12 @@ import mobi.allshoppings.dao.StoreTicketDAO;
 import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.mail.MailHelper;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.StoreTicket;
+import mobi.allshoppings.model.SystemConfiguration;
+import mobi.allshoppings.model.User;
+import mobi.allshoppings.tools.CollectionFactory;
 
 
 public class ImportPradaTickets extends AbstractCLI {
@@ -44,10 +49,11 @@ public class ImportPradaTickets extends AbstractCLI {
 		try {
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			StoreDAO storeDao = (StoreDAO)getApplicationContext().getBean("store.dao.ref");
 			StoreTicketDAO storeTicketDao = (StoreTicketDAO)getApplicationContext().getBean("storeticket.dao.ref");
 			DashboardAPDeviceMapperService mapper = (DashboardAPDeviceMapperService)getApplicationContext().getBean("dashboard.apdevice.mapper");
+			MailHelper mailHelper = (MailHelper)getApplicationContext().getBean("mail.helper");
+			SystemConfiguration systemConfiguration = (SystemConfiguration)getApplicationContext().getBean("system.configuration");
 			
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
 			OptionSet options = parser.parse(args);
@@ -102,6 +108,29 @@ public class ImportPradaTickets extends AbstractCLI {
 					log.log(Level.SEVERE, "SQLState: " + ex.getSQLState());
 					log.log(Level.SEVERE, "VendorError: " + ex.getErrorCode());
 					log.log(Level.SEVERE, "", ex);
+					
+					String mailText = "Hola!\n\n"
+							+ "El proceso de importación de Tickets de Prada no ha podido ejecutarse. Revisa por favor que la VPN con Prada esté activa " 
+							+ "Muchas gracias.\n\n"
+							+ " Atte. \n" 
+							+ "El equipo de Getin";
+					String mailTitle = "Proceso de Importación de Tickets de Prada";
+
+					List<String> reportableUsers = CollectionFactory.createList();
+					reportableUsers.addAll(systemConfiguration.getApdReportMailList());
+
+					for( String mail : reportableUsers) {
+						User fake = new User();
+						fake.setEmail(mail);
+						try {
+							mailHelper.sendMessage(fake, mailTitle, mailText);
+						} catch( Exception e ) {
+							// If mail server rejected the message, keep going
+							log.log(Level.SEVERE, e.getMessage(), e);
+						}
+					}
+
+					
 					throw ex;
 				}
 
