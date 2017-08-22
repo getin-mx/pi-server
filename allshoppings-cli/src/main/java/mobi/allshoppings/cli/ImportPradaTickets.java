@@ -1,0 +1,175 @@
+package mobi.allshoppings.cli;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.springframework.context.ApplicationContext;
+
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import mobi.allshoppings.dao.StoreDAO;
+import mobi.allshoppings.dao.StoreTicketDAO;
+import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.StoreTicket;
+
+
+public class ImportPradaTickets extends AbstractCLI {
+
+	private static final Logger log = Logger.getLogger(ImportPradaTickets.class.getName());
+	
+	public static OptionParser buildOptionParser(OptionParser base) {
+		if( base == null ) parser = new OptionParser();
+		else parser = base;
+		parser.accepts( "fromDate", "Date from" ).withRequiredArg().ofType( String.class );
+		parser.accepts( "toDate", "Date to" ).withRequiredArg().ofType( String.class );
+		return parser;
+	}
+
+	public static void setApplicationContext(ApplicationContext ctx) {
+		context = ctx;
+	}
+	
+	public static void main(String args[]) throws ASException {
+		try {
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			StoreDAO storeDao = (StoreDAO)getApplicationContext().getBean("store.dao.ref");
+			StoreTicketDAO storeTicketDao = (StoreTicketDAO)getApplicationContext().getBean("storeticket.dao.ref");
+			DashboardAPDeviceMapperService mapper = (DashboardAPDeviceMapperService)getApplicationContext().getBean("dashboard.apdevice.mapper");
+			
+			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
+			OptionSet options = parser.parse(args);
+
+			String fromDate = null;
+			String toDate = null;
+			
+			try {
+
+				if(options.has("toDate")) {
+					toDate = (String)options.valueOf("toDate");
+				} else {
+					toDate = sdf.format(new Date());
+				}
+				
+				if(options.has("fromDate")) {
+					fromDate = (String)options.valueOf("fromDate");
+				} else {
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(sdf.parse(toDate));
+					cal.add(Calendar.DATE, -3);
+					fromDate = sdf.format(cal.getTime());
+				}
+				
+				if( options.has("help")) usage(parser);				
+			} catch( Exception e ) {
+				e.printStackTrace();
+				usage(parser);
+			}
+
+			log.log(Level.INFO, "Starting to import Prada Tickets");
+
+			Connection conn = null;
+			Statement stmt = null;
+			ResultSet rs = null;
+						
+			String connectionString = "jdbc:sqlserver://192.168.1.200:1433;databaseName=GETIN";
+			String user = "getin";
+			String pass = "Getin*2017";
+			
+			String query1 = "SELECT * FROM dbo.Datos_Venta";
+			
+			try {
+				// Prepares SQL Connection
+				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
+				try {
+					conn = DriverManager.getConnection(connectionString, user, pass);
+					log.log(Level.INFO, "SQL Connection obtained");
+				} catch (SQLException ex) {
+					// handle any errors
+					log.log(Level.SEVERE, "SQLException: " + ex.getMessage());
+					log.log(Level.SEVERE, "SQLState: " + ex.getSQLState());
+					log.log(Level.SEVERE, "VendorError: " + ex.getErrorCode());
+					log.log(Level.SEVERE, "", ex);
+					throw ex;
+				}
+
+				long start = System.currentTimeMillis();
+				log.log(Level.INFO, "Executing query: " + query1);
+				stmt = conn.createStatement();
+				rs = stmt.executeQuery(query1);
+				long end = System.currentTimeMillis();
+				log.log(Level.INFO, "Query executed in " + (end - start) + "ms");
+				
+				Date d1 = sdf.parse(fromDate);
+				Date d2 = sdf.parse(toDate);
+
+				int count = 0;
+				while(rs.next()) {
+					Date forDate = rs.getDate(1);
+					if(( forDate.after(d1) || forDate.equals(d1)) && ( forDate.before(d2) || forDate.equals(d2))) { 
+						String identifier = rs.getString(2);
+						Integer tickets = rs.getInt(4);
+
+						log.log(Level.INFO, forDate + "\t" + identifier + "\t" + tickets);
+						try {
+							Store s = storeDao.get(identifier, true);
+							String d = sdf.format(forDate);
+							StoreTicket st = null;
+							try {
+								st = storeTicketDao.getUsingStoreIdAndDate(identifier, d, true);
+								st.setQty(tickets);
+								storeTicketDao.update(st);
+							} catch( Exception e ) {
+								st = new StoreTicket();
+								st.setBrandId(s.getBrandId());
+								st.setDate(d);
+								st.setStoreId(identifier);
+								st.setKey(storeTicketDao.createKey());
+								st.setQty(tickets);
+								storeTicketDao.create(st);
+							}
+
+							mapper.createStoreTicketDataForDates(d, d, identifier);
+							count++;
+
+						} catch( ASException e ) {
+							if( e.getErrorCode() != ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE) {
+								log.log(Level.WARNING, e.getMessage(), e);
+							}
+						}
+					}
+				}
+
+				end = System.currentTimeMillis();
+				log.log(Level.INFO, "Process ended in " + (end-start) + "ms for " + count + " records!");
+				
+			} catch( Exception e ) {
+				throw ASExceptionHelper.defaultException(e.getMessage(), e);
+			} finally {
+				if( conn != null ) {
+					try {
+						conn.close();
+					} catch( Exception e1 ) {}
+				}
+			}
+			
+			
+		} catch( Exception e ) {
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		}
+		System.exit(0);
+	}
+	
+}
