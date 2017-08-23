@@ -25,7 +25,7 @@
         <class>mobi.allshoppings.model.Brand</class>
         <class>mobi.allshoppings.model.BeaconHotspot</class>
         <class>mobi.allshoppings.model.CampaignActivity</class>
-        <class>mobi.allshoppings.model.CampaignSpecial</class>
+        <class>mobi.allshoppings.model.CampaignAction</class>
         <class>mobi.allshoppings.model.Checkin</class>
         <class>mobi.allshoppings.model.Cinema</class>
         <class>mobi.allshoppings.model.ContactInfo</class>

@@ -841,6 +841,31 @@ public class UserMenuDump extends AbstractCLI {
 				userMenuDao.create(um);
 			}
 
+			User friedman = null;
+			try {
+				friedman = userDao.get("friedman_mx", true);
+			} catch( Exception e ) {
+				friedman = new User();
+				friedman.setFirstname("Friedman");
+				friedman.setLastname("Mexico");
+				friedman.setEmail("friedman@allshoppings.mobi");
+				friedman.getSecuritySettings().setRole(Role.STORE);
+				friedman.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				friedman.setKey((Key)keyHelper.obtainKey(User.class, "friedman_mx"));
+				userDao.create(friedman);
+			}
+
+			try {
+				um = userMenuDao.get("friedman_mx", true);
+				userMenuDao.delete("friedman_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("friedman_mx"));
+				userMenuDao.create(um);
+			}
+			
 			User botanicus = null;
 			try {
 				botanicus = userDao.get("botanicus_mx", true);

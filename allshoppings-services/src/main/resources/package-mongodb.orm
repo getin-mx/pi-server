@@ -70,7 +70,7 @@
             <field name="key" column="_id" length="100"/>
         </class>
 
-        <class name="CampaignSpecial" table="CampaignSpecial">
+        <class name="CampaignSpecial" table="CampaignAction">
             <field name="key" column="_id" length="100"/>
         </class>
 
