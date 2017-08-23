@@ -1635,6 +1635,9 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("744", "Homero 2", "getin_mx",null));
 			
+			stores.add(new StoreAdapter("745", "El Galpón de Tacuara Espacio abierto", "elgalpontacuara_ar",null));
+			stores.add(new StoreAdapter("746", "El Galpón de Tacuara Cafetería", "elgalpontacuara_ar",null)); 
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
