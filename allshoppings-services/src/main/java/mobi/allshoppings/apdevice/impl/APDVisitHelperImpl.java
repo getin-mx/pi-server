@@ -192,7 +192,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
 									dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
 									dumpHelper.setFilter(assigs.get(0).getHostname());
-									Iterator<APHEntry> i = dumpHelper.iterator(curDate, limitDate);
+									
+									Iterator<APHEntry> i = integrateAPHE(dumpHelper, curDate, curDate, limitDate).iterator();
 
 									while( i.hasNext() ) {
 										APHEntry entry = i.next();
@@ -300,6 +301,90 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 	}
 
+	public List<APHEntry> integrateAPHE(DumperHelper<APHEntry> dumpHelper, Date forDate, Date fromDate, Date toDate) {
+		
+		Map<String, APHEntry> map = CollectionFactory.createMap();
+		List<APHEntry> res = CollectionFactory.createList();
+		
+		Iterator<APHEntry> i = dumpHelper.iterator(fromDate, toDate);
+		while(i.hasNext()) {
+			APHEntry aphe = i.next();
+			APHEntry mapped = map.get(aphe.getMac());
+			if( mapped == null ) {
+				mapped = new APHEntry();
+				mapped.setCreationDateTime(aphe.getCreationDateTime());
+				mapped.setDate(sdf.format(forDate));
+				mapped.setDevicePlatform(aphe.getDevicePlatform());
+				mapped.setHostname(aphe.getHostname());
+				mapped.setMac(aphe.getMac());
+				mapped.setKey(aphe.getKey());
+			}
+			
+			if( aphe.getDate().equals(sdf.format(forDate))) {
+				Map<String, Integer> rssi = aphe.getRssi();
+				Map<String, Integer> newRssi = mapped.getRssi();
+				Iterator<String> it = rssi.keySet().iterator();
+				while(it.hasNext()) {
+					String key = it.next();
+					Integer val = rssi.get(key);
+					newRssi.put(key, val);
+				}
+				mapped.setKey(aphe.getKey());
+			} else {
+				Date d1;
+				try {
+					d1 = sdf.parse(aphe.getDate());
+					if( d1.getTime() < forDate.getTime()) {
+						// Lower Date
+						Map<String, Integer> rssi = aphe.getRssi();
+						Map<String, Integer> newRssi = mapped.getRssi();
+						Iterator<String> it = rssi.keySet().iterator();
+						while(it.hasNext()) {
+							String key = it.next();
+							Integer val = rssi.get(key);
+							String newKey = String.valueOf(Integer.parseInt(key)-4320);
+							newRssi.put(newKey, val);
+						}
+					} else {
+						// Higher Date
+						Map<String, Integer> rssi = aphe.getRssi();
+						Map<String, Integer> newRssi = mapped.getRssi();
+						Iterator<String> it = rssi.keySet().iterator();
+						while(it.hasNext()) {
+							String key = it.next();
+							Integer val = rssi.get(key);
+							String newKey = String.valueOf(Integer.parseInt(key)+4320);
+							newRssi.put(newKey, val);
+						}
+					}
+				} catch (ParseException e) {
+					log.log(Level.WARNING, e.getMessage(), e);;
+				}
+			}
+			
+			map.put(mapped.getMac(), mapped);
+		}
+
+		Iterator<APHEntry> ix = map.values().iterator();
+		while(ix.hasNext()) {
+			APHEntry aphe = ix.next();
+			aphe.setDataCount(aphe.getRssi().size());
+			aphe.setMaxRssi(-9999);
+			aphe.setMinRssi(0);
+			Iterator<Integer> ix2 = aphe.getRssi().values().iterator();
+			while(ix2.hasNext()) {
+				Integer val = ix2.next();
+				if( val < aphe.getMinRssi())
+					aphe.setMinRssi(val);
+				if( val > aphe.getMaxRssi())
+					aphe.setMaxRssi(val);
+			}
+			res.add(aphe);
+		}
+		
+		return res;
+	}
+	
 	public Map<String, Integer> getEntities(List<String> shoppingIds, List<String> brandIds, List<String> storeIds) throws ASException {
 		Map<String, Integer> ret = CollectionFactory.createMap();
 

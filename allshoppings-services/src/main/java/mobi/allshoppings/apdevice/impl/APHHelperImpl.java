@@ -3,10 +3,10 @@ package mobi.allshoppings.apdevice.impl;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -43,7 +43,6 @@ public class APHHelperImpl implements APHHelper {
 	private static final Logger log = Logger.getLogger(APHHelperImpl.class.getName());
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static final DecimalFormat df = new DecimalFormat("00");
 	private static final long ONE_HOUR = 3600000;
 	
 	private PersistentCacheFSImpl<APHEntry> cache;
@@ -864,28 +863,15 @@ public class APHHelperImpl implements APHHelper {
 	}
 	
 	/**
-	 * Converts a timeslot offset to a String time
+	 * Converts a timeslot offset to seconds offset
 	 * 
 	 * @param t
 	 *            The timeslot offset
-	 * @return a Fully formed String representing the time
+	 * @return The seconds offset
 	 */
 	@Override
-	public String slotToTime(int t) {
-		long val = t * 20;
-		int hour = (int) (val / 3600);
-		val = val % 3600;
-		int min = (int) (val / 60);
-		int sec = (int)(val % 60);
-		
-		StringBuffer sb = new StringBuffer();
-		sb.append(df.format(hour))
-			.append(":")
-			.append(df.format(min))
-			.append(":")
-			.append(df.format(sec));
-		
-		return sb.toString();
+	public int slotToSeconds(int t) {
+		return (t * 20);
 	}
 		
 	/**
@@ -900,7 +886,9 @@ public class APHHelperImpl implements APHHelper {
 	 */
 	@Override
 	public Date slotToDate(String date, int t) throws ParseException {
-		String f = date + " " + slotToTime(t);
-		return sdf2.parse(f);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(sdf.parse(date));
+		cal.add(Calendar.SECOND, slotToSeconds(t));
+		return cal.getTime();
 	}
 }

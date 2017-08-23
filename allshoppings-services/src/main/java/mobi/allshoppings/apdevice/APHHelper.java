@@ -30,7 +30,7 @@ public interface APHHelper {
 	APHEntry getFromCache(APHotspot obj);
 	APHEntry getFromCache(String hostname, String mac, String date) throws NoSuchAlgorithmException, FileNotFoundException, IOException;
 	int stringToOffsetTime(String t) throws Exception;
-	String slotToTime(int t);
+	int slotToSeconds(int t);
 	Date slotToDate(String date, int t) throws ParseException;
 	
 	// Getters and setter
