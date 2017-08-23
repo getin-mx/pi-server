@@ -63,7 +63,6 @@ implements BDBDashboardBzService {
 		long start = markStart();
 		try {
 			// obtain the id and validates the auth token
-			@SuppressWarnings("unused")
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
