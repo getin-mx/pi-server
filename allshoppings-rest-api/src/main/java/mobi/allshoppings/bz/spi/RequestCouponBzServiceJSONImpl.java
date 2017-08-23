@@ -18,10 +18,10 @@ import org.springframework.web.client.RestTemplate;
 
 import mobi.allshoppings.bz.RequestCouponBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
-import mobi.allshoppings.dao.CampaignSpecialDAO;
+import mobi.allshoppings.dao.CampaignActionDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.CampaignSpecial;
+import mobi.allshoppings.model.CampaignAction;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.tools.CollectionFactory;
 
@@ -39,7 +39,7 @@ implements RequestCouponBzService {
 	private SystemConfiguration systemConfiguration;
 
 	@Autowired
-	private CampaignSpecialDAO csDao;
+	private CampaignActionDAO csDao;
 	
 	@SuppressWarnings("unused")
 	@Override
@@ -100,7 +100,7 @@ implements RequestCouponBzService {
 				HttpMessageConverter<?> stringHttpMessageConverternew = new StringHttpMessageConverter();
 				restTemplate.setMessageConverters(Arrays.asList(new HttpMessageConverter<?>[]{formHttpMessageConverter, stringHttpMessageConverternew}));
 				
-				CampaignSpecial cs = csDao.get(campaignSpecialId, true);
+				CampaignAction cs = csDao.get(campaignSpecialId, true);
 
 				List<Map<String, Object>> longDevices = CollectionFactory.createList();
 				for( String device : devices ) {

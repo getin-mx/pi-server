@@ -16,7 +16,7 @@ import mobi.allshoppings.bz.CouponListBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.bz.spi.fields.BzFields;
 import mobi.allshoppings.dao.CampaignActivityDAO;
-import mobi.allshoppings.dao.CampaignSpecialDAO;
+import mobi.allshoppings.dao.CampaignActionDAO;
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dao.UserDAO;
 import mobi.allshoppings.exception.ASException;
@@ -39,7 +39,7 @@ public class CouponListBzServiceJSONImpl extends RestBaseServerResource implemen
     @Autowired
     private CampaignActivityDAO caDao;
     @Autowired
-    private CampaignSpecialDAO csDao;
+    private CampaignActionDAO csDao;
     @Autowired
     private DeviceInfoDAO diDao;
     @Autowired

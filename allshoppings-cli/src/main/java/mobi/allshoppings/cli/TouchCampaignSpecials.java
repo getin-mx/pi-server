@@ -7,10 +7,10 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 
 import joptsimple.OptionParser;
-import mobi.allshoppings.dao.CampaignSpecialDAO;
+import mobi.allshoppings.dao.CampaignActionDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.CampaignSpecial;
+import mobi.allshoppings.model.CampaignAction;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.CollectionFactory;
 
@@ -31,11 +31,11 @@ public class TouchCampaignSpecials extends AbstractCLI {
 
 	public static void main(String args[]) throws ASException {
 		try {
-			CampaignSpecialDAO dao = (CampaignSpecialDAO)getApplicationContext().getBean("campaignspecial.dao.ref");
+			CampaignActionDAO dao = (CampaignActionDAO)getApplicationContext().getBean("campaignspecial.dao.ref");
 
 			log.log(Level.INFO, "Touching Campaign Specials....");
-			List<CampaignSpecial> list = dao.getAll(true);
-			for( CampaignSpecial obj : list ) {
+			List<CampaignAction> list = dao.getAll(true);
+			for( CampaignAction obj : list ) {
 				log.log(Level.INFO, "Touching " + obj.getIdentifier() + "...");
 				if( obj.getBrands() == null || obj.getBrands().size() == 0 )
 					obj.addBrand("cinepolis_mx");
@@ -55,7 +55,7 @@ public class TouchCampaignSpecials extends AbstractCLI {
 			
 			list = dao.getAll();
 			List<ModelKey> index = CollectionFactory.createList();
-			for( CampaignSpecial obj : list ) {
+			for( CampaignAction obj : list ) {
 				index.add(obj);
 			}
 			dao.getIndexHelper().indexObject(index);

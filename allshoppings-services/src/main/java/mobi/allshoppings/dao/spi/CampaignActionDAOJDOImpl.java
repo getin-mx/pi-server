@@ -11,25 +11,25 @@ import org.springframework.util.StringUtils;
 
 import com.inodes.datanucleus.model.Key;
 
-import mobi.allshoppings.dao.CampaignSpecialDAO;
+import mobi.allshoppings.dao.CampaignActionDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.CampaignSpecial;
+import mobi.allshoppings.model.CampaignAction;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
 
-public class CampaignSpecialDAOJDOImpl extends GenericDAOJDO<CampaignSpecial> implements CampaignSpecialDAO {
+public class CampaignActionDAOJDOImpl extends GenericDAOJDO<CampaignAction> implements CampaignActionDAO {
 
 	@SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(CampaignSpecialDAOJDOImpl.class.getName());
+	private static final Logger log = Logger.getLogger(CampaignActionDAOJDOImpl.class.getName());
 
-	public CampaignSpecialDAOJDOImpl() {
-		super(CampaignSpecial.class);
+	public CampaignActionDAOJDOImpl() {
+		super(CampaignAction.class);
 	}
 
 	@Override
 	public Key createKey() throws ASException {
-		return keyHelper.createNumericUniqueKey(CampaignSpecial.class);
+		return keyHelper.createStringUniqueKey(CampaignAction.class);
 	}
 	
 	/**
@@ -44,16 +44,16 @@ public class CampaignSpecialDAOJDOImpl extends GenericDAOJDO<CampaignSpecial> im
 	 *            The property that will be used to order the obtained dataset
 	 */
 	@Override
-	public List<CampaignSpecial> getUsingShoppingAndStatus(String shoppingId, List<Integer> status, String order) throws ASException {
+	public List<CampaignAction> getUsingShoppingAndStatus(String shoppingId, List<Integer> status, String order) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
-		List<CampaignSpecial> ret = CollectionFactory.createList();
+		List<CampaignAction> ret = CollectionFactory.createList();
 
 		try {
 			Map<String, Object> parameters = CollectionFactory.createMap();
 			List<String> declaredParams = CollectionFactory.createList();
 			List<String> filters = CollectionFactory.createList();
 			
-			Query query = pm.newQuery(CampaignSpecial.class);
+			Query query = pm.newQuery(CampaignAction.class);
 
 			// Shopping parameters
 			if( StringUtils.hasText(shoppingId)) {
@@ -74,10 +74,10 @@ public class CampaignSpecialDAOJDOImpl extends GenericDAOJDO<CampaignSpecial> im
 			
 			// Executes the query
 			@SuppressWarnings("unchecked")
-			List<CampaignSpecial> objs = (List<CampaignSpecial>)query.executeWithMap(parameters);
+			List<CampaignAction> objs = (List<CampaignAction>)query.executeWithMap(parameters);
 			if (objs != null) {
 				// force to read
-				for (CampaignSpecial obj : objs) {
+				for (CampaignAction obj : objs) {
 					ret.add(obj);
 				}
 			}
@@ -103,16 +103,16 @@ public class CampaignSpecialDAOJDOImpl extends GenericDAOJDO<CampaignSpecial> im
 	 *            The property that will be used to order the obtained dataset
 	 */
 	@Override
-	public List<CampaignSpecial> getUsingBrandAndStatus(String brandId, List<Integer> status, String order) throws ASException {
+	public List<CampaignAction> getUsingBrandAndStatus(String brandId, List<Integer> status, String order) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
-		List<CampaignSpecial> ret = CollectionFactory.createList();
+		List<CampaignAction> ret = CollectionFactory.createList();
 
 		try {
 			Map<String, Object> parameters = CollectionFactory.createMap();
 			List<String> declaredParams = CollectionFactory.createList();
 			List<String> filters = CollectionFactory.createList();
 			
-			Query query = pm.newQuery(CampaignSpecial.class);
+			Query query = pm.newQuery(CampaignAction.class);
 
 			// Shopping parameters
 			if( StringUtils.hasText(brandId)) {
@@ -133,10 +133,10 @@ public class CampaignSpecialDAOJDOImpl extends GenericDAOJDO<CampaignSpecial> im
 			
 			// Executes the query
 			@SuppressWarnings("unchecked")
-			List<CampaignSpecial> objs = (List<CampaignSpecial>)query.executeWithMap(parameters);
+			List<CampaignAction> objs = (List<CampaignAction>)query.executeWithMap(parameters);
 			if (objs != null) {
 				// force to read
-				for (CampaignSpecial obj : objs) {
+				for (CampaignAction obj : objs) {
 					ret.add(obj);
 				}
 			}
@@ -162,16 +162,16 @@ public class CampaignSpecialDAOJDOImpl extends GenericDAOJDO<CampaignSpecial> im
 	 *            The property that will be used to order the obtained dataset
 	 */
 	@Override
-	public List<CampaignSpecial> getUsingAppAndBrandAndStatusAndRange(String appId, String brandId, List<Integer> status, Range range, String order, Boolean detachable) throws ASException {
+	public List<CampaignAction> getUsingAppAndBrandAndStatusAndRange(String appId, String brandId, List<Integer> status, Range range, String order, Boolean detachable) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
-		List<CampaignSpecial> ret = CollectionFactory.createList();
+		List<CampaignAction> ret = CollectionFactory.createList();
 
 		try {
 			Map<String, Object> parameters = CollectionFactory.createMap();
 			List<String> declaredParams = CollectionFactory.createList();
 			List<String> filters = CollectionFactory.createList();
 			
-			Query query = pm.newQuery(CampaignSpecial.class);
+			Query query = pm.newQuery(CampaignAction.class);
 
 			// Brand parameters
 			if( StringUtils.hasText(brandId)) {
@@ -202,10 +202,10 @@ public class CampaignSpecialDAOJDOImpl extends GenericDAOJDO<CampaignSpecial> im
 			
 			// Executes the query
 			@SuppressWarnings("unchecked")
-			List<CampaignSpecial> objs = (List<CampaignSpecial>)query.executeWithMap(parameters);
+			List<CampaignAction> objs = (List<CampaignAction>)query.executeWithMap(parameters);
 			if (objs != null) {
 				// force to read
-				for (CampaignSpecial obj : objs) {
+				for (CampaignAction obj : objs) {
 					if( detachable )
 						ret.add(pm.detachCopy(obj));
 					else
@@ -234,16 +234,16 @@ public class CampaignSpecialDAOJDOImpl extends GenericDAOJDO<CampaignSpecial> im
 	 *            The property that will be used to order the obtained dataset
 	 */
 	@Override
-	public List<CampaignSpecial> getUsingStoreAndStatus(String storeId, List<Integer> status, String order) throws ASException {
+	public List<CampaignAction> getUsingStoreAndStatus(String storeId, List<Integer> status, String order) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
-		List<CampaignSpecial> ret = CollectionFactory.createList();
+		List<CampaignAction> ret = CollectionFactory.createList();
 
 		try {
 			Map<String, Object> parameters = CollectionFactory.createMap();
 			List<String> declaredParams = CollectionFactory.createList();
 			List<String> filters = CollectionFactory.createList();
 			
-			Query query = pm.newQuery(CampaignSpecial.class);
+			Query query = pm.newQuery(CampaignAction.class);
 
 			// Shopping parameters
 			if( StringUtils.hasText(storeId)) {
@@ -264,10 +264,10 @@ public class CampaignSpecialDAOJDOImpl extends GenericDAOJDO<CampaignSpecial> im
 			
 			// Executes the query
 			@SuppressWarnings("unchecked")
-			List<CampaignSpecial> objs = (List<CampaignSpecial>)query.executeWithMap(parameters);
+			List<CampaignAction> objs = (List<CampaignAction>)query.executeWithMap(parameters);
 			if (objs != null) {
 				// force to read
-				for (CampaignSpecial obj : objs) {
+				for (CampaignAction obj : objs) {
 					ret.add(obj);
 				}
 			}

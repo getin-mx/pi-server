@@ -23,8 +23,8 @@ import mobi.allshoppings.auth.UserInfo;
 import mobi.allshoppings.dao.CampaignActivityDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.CampaignAction;
 import mobi.allshoppings.model.CampaignActivity;
-import mobi.allshoppings.model.CampaignSpecial;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
@@ -40,22 +40,18 @@ public class CampaignActivityDAOJDOImpl extends GenericDAOJDO<CampaignActivity> 
 
 	@Override
 	public Key createKey() throws ASException {
-		return keyHelper.createNumericUniqueKey(CampaignActivity.class);
+		return keyHelper.createStringUniqueKey(CampaignActivity.class);
 	}
 
 	@Override
-	public boolean hasSpecialBeenUsedForUserAndDate(CampaignSpecial campaignSpecial, User user, Date date) throws ASException {
+	public boolean hasSpecialBeenUsedForUserAndDate(CampaignAction campaignSpecial, User user, Date date) throws ASException {
 		long dailyCount = countDeliveredUsignCampaignSpecialAndUserAndDate(campaignSpecial, user, date);
-		log.log(Level.INFO, "campaignSpecial is " + campaignSpecial.toString());
-		log.log(Level.INFO, "user is " + user.toString());
-		log.log(Level.INFO, "date is " + date);
-		log.log(Level.INFO, "dailyCount is " + dailyCount);
 		if( dailyCount > 0 ) return true;
 		return false;
 	}
 
 	@Override
-	public boolean hasAvailabilityForDate(CampaignSpecial campaignSpecial, Date date) throws ASException {
+	public boolean hasAvailabilityForDate(CampaignAction campaignSpecial, Date date) throws ASException {
 
 		long count = countDeliveredUsignCampaignSpecial(campaignSpecial);
 		long dailyCount = countDeliveredUsignCampaignSpecialAndUserAndDate(campaignSpecial, null, date);
@@ -68,12 +64,12 @@ public class CampaignActivityDAOJDOImpl extends GenericDAOJDO<CampaignActivity> 
 	}
 
 	@Override
-	public long countDeliveredUsignCampaignSpecial(CampaignSpecial campaignSpecial) throws ASException {
+	public long countDeliveredUsignCampaignSpecial(CampaignAction campaignSpecial) throws ASException {
 		return countDeliveredUsignCampaignSpecialAndUserAndDate(campaignSpecial, null, null);
 	}
 
 	@Override
-	public long countDeliveredUsignCampaignSpecialAndUserAndDate(CampaignSpecial campaignSpecial, User user, Date date) throws ASException {
+	public long countDeliveredUsignCampaignSpecialAndUserAndDate(CampaignAction campaignSpecial, User user, Date date) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 
 		try {
