@@ -1638,6 +1638,15 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("745", "El Galpón de Tacuara Espacio abierto", "elgalpontacuara_ar",null));
 			stores.add(new StoreAdapter("746", "El Galpón de Tacuara Cafetería", "elgalpontacuara_ar",null)); 
 			
+			stores.add(new StoreAdapter("747", "Chilim Balam Parque Lindavista", "chilimbalam_mx", "parquelindavista"));
+			stores.add(new StoreAdapter("748", "Chilim Balam Forum Buenavista", "chilimbalam_mx", "forumbuenavista"));
+			stores.add(new StoreAdapter("749", "Chilim Balam Cosmopol", "chilimbalam_mx", null));
+			stores.add(new StoreAdapter("750", "Chilim Balam Plaza Ciudad Jardín", "chilimbalam_mx", null));
+			stores.add(new StoreAdapter("751", "Chilim Balam Galerías Metepec", "chilimbalam_mx", null));
+			stores.add(new StoreAdapter("752", "Chilim Balam Galerias Serdan", "chilimbalam_mx", null));
+			stores.add(new StoreAdapter("753", "Chilim Balam Galerías Cuernavaca", "chilimbalam_mx", null));
+			stores.add(new StoreAdapter("754", "Chilim Balam Galerías Pachuca", "chilimbalam_mx", null));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				try {
