@@ -1453,7 +1453,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("596","Pakmail Mariano Otero", "pakmail_mx", null));
 			
 			stores.add(new StoreAdapter("597","Sally Beauty World Trade Center", "sallybeauty_mx", null));
-			stores.add(new StoreAdapter("598","Sally Beauty Paseo Interlomas", "sallybeauty_mx", null));
+//			stores.add(new StoreAdapter("598","Sally Beauty Paseo Interlomas", "sallybeauty_mx", null));
 			stores.add(new StoreAdapter("599","Sally Beauty Aragón", "sallybeauty_mx", null));
 			
 			stores.add(new StoreAdapter("600","Ecobutik Centro Histórico", "ecobutik_mx", null));
@@ -1625,7 +1625,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("738", "MT Sport S5 Centro Sur Puebla", "mt_sport_mx",null));
 			stores.add(new StoreAdapter("739", "MT Sport S1 Atlixco", "mt_sport_mx",null));
 			
-			stores.add(new StoreAdapter("740", "El galpón de Tacuara", "elgalpontacuara_ar",null));
+			stores.add(new StoreAdapter("740", "El Galpón de Tacuara", "elgalpontacuara_ar",null));
 			
 			stores.add(new StoreAdapter("741", "Outlet Deportes Venustiano Carranza", "outletdeportes_mx",null));
 			
