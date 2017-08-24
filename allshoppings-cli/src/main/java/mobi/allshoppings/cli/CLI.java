@@ -9,9 +9,6 @@ import java.util.List;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.config.Configurator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
@@ -91,23 +88,6 @@ public class CLI {
 			Method setApplicationContext = clazz.getDeclaredMethod("setApplicationContext", ApplicationContext.class);
 			setApplicationContext.invoke(null, new Object[] {context});
 		} catch( Throwable t ) {}
-
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				logger.debug("Shutting down - closing application");
-				// Shut down everything (e.g. threads) that you need to.
-
-				// then shut down log4j
-				if( LogManager.getContext() instanceof LoggerContext ) {
-					logger.debug("Shutting down log4j2");
-					Configurator.shutdown((LoggerContext)LogManager.getContext());
-				} else
-					logger.warn("Unable to shutdown log4j2");
-
-				if( context != null )
-					context.close();
-			}
-		});
 
 		if( options.has("help")) {
 			try {
