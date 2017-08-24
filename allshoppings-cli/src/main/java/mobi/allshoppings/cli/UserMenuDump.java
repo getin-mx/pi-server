@@ -6391,6 +6391,248 @@ public class UserMenuDump extends AbstractCLI {
 				userDao.create(user);
 			}
 			
+			try {
+				um = userMenuDao.get("hugo_rodriguez", true);
+				userMenuDao.delete("hugo_rodriguez");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("hugo_rodriguez"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("hugo_rodriguez", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Hugo Rodriguez");
+				user.setLastname("Modatelas");
+				user.setEmail("hugo_rodriguez");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("b7cb1719-2f50-45c2-a1fa-66c98cd1a7e4",
+								"f4a78ecf-07d9-4158-bcd4-159a68a247df", "7c10f699-b944-4627-9155-22af377da01f",
+								"6d2955f9-f112-47b3-ae50-6528697c249c", "4da00bc6-ae1a-418a-a784-1f764d281908",
+								"2bad1b20-31c4-44c4-9015-6e9dd5c30b00", "7b7d1c1e-f6af-40b7-8a55-f3bdbf19cde1",
+								"4e8dd00e-a179-40d1-8b72-9389e6e52fb0", "9ccdd1eb-30fe-4304-9bd5-7a4b0614c842",
+								"50b32c68-0998-4323-a404-eee8e316e3eb", "07b5d16f-6b65-4beb-b763-d47f8a089efd",
+								"d93f2cf8-de1f-4e5c-884b-adb87cbbcdf2", "865adafe-7df9-46fc-8201-32f260e5ff06"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "hugo_rodriguez"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("hector_rodriguez", true);
+				userMenuDao.delete("hector_rodriguez");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("hector_rodriguez"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("hector_rodriguez", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Hector Rodriguez");
+				user.setLastname("Modatelas");
+				user.setEmail("hector_rodriguez");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("dd1edbcb-5eeb-467e-af3d-223611492520",
+								"70e3f099-03ef-4df2-9849-0f4f4a3dd411", "94634900-964f-4092-a0dd-e1dc287144ee",
+								"3f7497de-95c8-4bb5-a9a5-6d097133bf7c", "dbd5021e-4d65-47da-a64e-42006513d998",
+								"0125a1b9-0d3a-4383-8377-04674b1fc08f", "9202f7a2-4354-47bb-a6c3-dd775af93a17",
+								"80175990-43cd-4c27-a5ca-d16179c7f55f", "ceade140-174b-464c-9116-70ef2b93317a",
+								"fe9ad717-4f1e-4b28-b9ea-bfa94ace3141", "3307ec01-1e57-40e2-97a3-d1e02227a4b0"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "hector_rodriguez"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("alejandro_saucedo", true);
+				userMenuDao.delete("alejandro_saucedo");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("alejandro_saucedo"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("alejandro_saucedo", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Alejandro Saucedo");
+				user.setLastname("Modatelas");
+				user.setEmail("alejandro_saucedo");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("76eccdaf-348d-4540-af6d-145463e0844e",
+								"740547b3-5c3a-492c-a2f8-bc88345fcc5d", "7e47d9df-f011-4203-9ac5-5aa7222cccb5",
+								"519d19e7-ddf4-47a2-abdc-09e89d1f5c64"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "alejandro_saucedo"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("jorge_velazquez", true);
+				userMenuDao.delete("jorge_velazquez");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("jorge_velazquez"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("jorge_velazquez", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Jorge Velazquez");
+				user.setLastname("Modatelas");
+				user.setEmail("jorge_velazquez");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("08644a45-800d-43ac-b228-78c28d82bad1"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "jorge_velazquez"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("gustavo_sandoval", true);
+				userMenuDao.delete("gustavo_sandoval");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("gustavo_sandoval"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("gustavo_sandoval", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Gustavo Sandoval");
+				user.setLastname("Modatelas");
+				user.setEmail("gustavo_sandoval");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("58131ca7-ae67-4022-bcfa-0af9301bdddc"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "gustavo_sandoval"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("daniel_gonzalez", true);
+				userMenuDao.delete("daniel_gonzalez");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("daniel_gonzalez"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("daniel_gonzalez", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Daniel Gonzalez");
+				user.setLastname("Modatelas");
+				user.setEmail("daniel_gonzalez");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("92fbf40a-20af-479a-88fd-7a2b8c8f4401",
+								"44e14c13-54cb-4592-a84c-538399074698", "9e08742a-b37a-4d7d-9427-c0c585e89fce",
+								"7e129304-5169-4f2d-a51a-9afc61cc3ad7", "8e84228e-cc5e-42b5-a665-179ebcd81511",
+								"9ab15245-554a-4612-8f33-b57d03f58c17", "a6f96106-1f29-4b47-8a2f-b3b28d7e1a8c",
+								"ac082169-dcd8-4e01-adf0-df3054a5b7af"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "daniel_gonzalez"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("francisco_badillo", true);
+				userMenuDao.delete("francisco_badillo");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("francisco_badillo"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("francisco_badillo", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Francisco Badillo");
+				user.setLastname("Modatelas");
+				user.setEmail("francisco_badillo");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("a118c701-143d-4ebc-a40f-ea3277949e10",
+								"7dadd279-08cc-4a51-86cd-d85df6abf6c3", "3d64ba77-e24c-4c06-83f0-63444ab8eaed",
+								"9658cd89-f277-4946-bfcb-9330b2c886c2", "9658cd89-f277-4946-bfcb-9330b2c886c2",
+								"536a6470-a8e1-46f4-bc2d-be7b0ace6ea7", "2b2b88d1-afbc-4da0-be04-1ba057c07e95",
+								"76749515-b97a-4bfa-9cfa-e1521eccb33c", "a7d255b5-3d20-46aa-8c9e-e0696f52b908",
+								"a23edfab-aed9-4562-8100-65544550adf4"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "francisco_badillo"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("adan_hernandez", true);
+				userMenuDao.delete("adan_hernandez");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("adan_hernandez"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("adan_hernandez", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Adan Hernandez");
+				user.setLastname("Modatelas");
+				user.setEmail("adan_hernandez");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("4bb5fd5f-e161-4461-8c9c-84e8172f5466",
+								"06c5b1f3-0f78-4100-9038-2ba9603087c9", "3c506e3a-c23a-4454-b2e2-578f6f4e081c",
+								"24bb9d59-a029-4cdc-9341-e2c6b1061126", "b26c6912-d357-4554-9df9-c054351fa7f6",
+								"7daf5ac9-bd14-47c2-9909-d849fdc09be2", "2d59df41-fae4-4570-8afc-16f0c50ff917",
+								"a3bbd458-fe46-4799-8f78-11d642196a2c"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "adan_hernandez"));
+				userDao.create(user);
+			}
+			
 			// End Modatelas  --------------------------------------------------------------------
 			
 			// Mobo  --------------------------------------------------------------------
