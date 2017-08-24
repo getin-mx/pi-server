@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.jdo.annotations.Embedded;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -57,7 +58,7 @@ public class Store implements ModelKey, Serializable, IAdaptable, Identificable,
 	
 	private Integer fenceSize;
 	private Integer checkinAreaSize;
-	private Float timezone;
+	private String timezone;
 	private String customCheckinMessage;
 	private String externalId;
 
@@ -104,7 +105,7 @@ public class Store implements ModelKey, Serializable, IAdaptable, Identificable,
 		this.contactInfo = new ContactInfo();
 		this.acl = new ACL();
 		this.status = StatusAware.STATUS_ENABLED;
-		this.timezone = 0F;
+		this.timezone = TimeZone.getDefault().toString();
 		this.checkinAreaSize = 50;
 		this.fenceSize = 0;
     }
@@ -450,14 +451,14 @@ public class Store implements ModelKey, Serializable, IAdaptable, Identificable,
 	/**
 	 * @return the timezone
 	 */
-	public Float getTimezone() {
+	public String getTimezone() {
 		return timezone;
 	}
 
 	/**
 	 * @param timezone the timezone to set
 	 */
-	public void setTimezone(Float timezone) {
+	public void setTimezone(String timezone) {
 		this.timezone = timezone;
 	}
 

@@ -118,7 +118,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Map<String, APDAssignation> assignmentsCache = CollectionFactory.createMap();
 		DumperHelper<APHEntry> dumpHelper;
 		boolean cacheBuilt = false;
-		
+
+		// Phase 1, determines entities to process ---------------------------------------------------------------------
 		if(!CollectionUtils.isEmpty(storeIds)) {
 			stores = storeDao.getUsingIdList(storeIds);
 		} else if(!CollectionUtils.isEmpty(brandIds)) {
@@ -133,9 +134,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		for(Store store : stores) 
 			eids.add(store.getIdentifier());
 
-		
-		DumperHelper<APDVisit> apdvDumper = new DumpFactory<APDVisit>().build(null, APDVisit.class);
 		Map<String, Integer> entities = getEntities(null, null, eids);
+
+		// Phase 2, Gets entities to process ---------------------------------------------------------------------
+
+		DumperHelper<APDVisit> apdvDumper = new DumpFactory<APDVisit>().build(null, APDVisit.class);
 		
 		Date curDate = new Date(fromDate.getTime());
 		Date limitDate = new Date(fromDate.getTime() + 86400000);
@@ -179,6 +182,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								}
 							}
 
+							// Determine which antennas are valid for this entity and date 
 							List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, curDate);
 							if( !CollectionUtils.isEmpty(assigs)) {
 								if( assigs.size() == 1 ) {
@@ -188,8 +192,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									if(!apdCache.containsKey(assigs.get(0).getHostname()))
 										apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(), true));
 
-									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + curDate + "...");
-									log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
+									// Get APHE records
+									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + curDate + " using " + assigs.get(0).getHostname() + "...");
 									dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
 									dumpHelper.setFilter(assigs.get(0).getHostname());
 									
@@ -636,7 +640,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	public List<String> getBlackListByStore(Store store) throws ASException{
 		//declare list for macs
 		List<String> macs = CollectionFactory.createList();
-		log.log(Level.INFO, "Initial macs:  " + macs.size() + " macs");
+		log.log(Level.FINE, "Initial macs:  " + macs.size() + " macs");
 
 		if( null != store ) {
 
@@ -650,7 +654,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					macs.add(brand.getMac().toUpperCase().trim());	
 				}
 			}
-			log.log(Level.INFO,"(Generic) -- Load Generic black list: " + blackListGen.size() + " macs");
+			log.log(Level.FINE,"(Generic) -- Load Generic black list: " + blackListGen.size() + " macs");
 
 			//Load blackListbyShopping for shopping
 			if( StringUtils.hasText(store.getShoppingId())) {
@@ -660,7 +664,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						macs.add(shop.getMac().toUpperCase().trim());	
 					}
 				}
-				log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load black list for Shopping: " + blackListbyShopping.size() + " macs");
+				log.log(Level.FINE,"(" +store.getIdentifier()+ ") -- Load black list for Shopping: " + blackListbyShopping.size() + " macs");
 			}
 
 			//Load blackListbyShopping for brand
@@ -670,7 +674,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					macs.add(brand.getMac().toUpperCase().trim());	
 				}
 			}
-			log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load black list for Brand: " + blackListbyBrand.size() + " macs");
+			log.log(Level.FINE,"(" +store.getIdentifier()+ ") -- Load black list for Brand: " + blackListbyBrand.size() + " macs");
 
 
 			//Load blackListbyShopping for store
@@ -681,10 +685,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				}
 			}
 			//Load blackListbyShopping for store
-			log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load black list for Store: " + blackListbyStore.size() + " macs");
+			log.log(Level.FINE,"(" +store.getIdentifier()+ ") -- Load black list for Store: " + blackListbyStore.size() + " macs");
 		}
 
-		log.log(Level.INFO, "TOTAL Blacklist Entries: " + macs.size() + " macs");
+		log.log(Level.FINE, "TOTAL Blacklist Entries: " + macs.size() + " macs");
 
 		//--- End black list --------------
 		return macs;
@@ -701,7 +705,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	public List<String> getEmployeeListByStore(Store store) throws ASException{
 		//declare list for macs
 		List<String> macs = CollectionFactory.createList();
-		log.log(Level.INFO, "Initial macs:  " + macs.size() + " macs");
+		log.log(Level.FINE, "Initial macs:  " + macs.size() + " macs");
 
 		if( null != store ) {
 			macs.clear();
@@ -714,7 +718,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						macs.add(emp_shop.getMac().toUpperCase().trim());	
 					}
 				}
-				log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load Employees in list for Shopping: " + employeesbyShopping.size() + " macs");
+				log.log(Level.FINE,"(" +store.getIdentifier()+ ") -- Load Employees in list for Shopping: " + employeesbyShopping.size() + " macs");
 			}
 
 			//Load blackListbyShopping for brand
@@ -724,7 +728,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					macs.add(emp_brand.getMac().toUpperCase().trim());	
 				}
 			}
-			log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load Employees in list for Brand: " + employeesbyBrand.size() + " macs");
+			log.log(Level.FINE,"(" +store.getIdentifier()+ ") -- Load Employees in list for Brand: " + employeesbyBrand.size() + " macs");
 
 
 			//Load blackListbyShopping for store
@@ -735,10 +739,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				}
 			}
 			//Load blackListbyShopping for store
-			log.log(Level.INFO,"(" +store.getIdentifier()+ ") -- Load Employees list for Store: " + employeesbyStore.size() + " macs");
+			log.log(Level.FINE,"(" +store.getIdentifier()+ ") -- Load Employees list for Store: " + employeesbyStore.size() + " macs");
 		}
 
-		log.log(Level.INFO, "TOTAL Employees: " + macs.size() + " macs");
+		log.log(Level.FINE, "TOTAL Employees: " + macs.size() + " macs");
 
 		//--- End black list --------------
 		return macs;
