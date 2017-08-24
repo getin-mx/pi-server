@@ -546,7 +546,11 @@ implements BDBDashboardBzService {
 			row.put("higherDay", calculateHigherDay());
 			row.put("lowerDay", calculateLowerDay());
 
-			row.put("averagePermanence", Math.round(permanenceInMillis / permancenceQty / 60000D ));
+			if( permanenceInMillis > 0 && permancenceQty > 0 ) {
+				row.put("averagePermanence", Math.round(permanenceInMillis / permancenceQty / 60000D ));
+			} else {
+				row.put("averagePermanence", 0);
+			}
 
 			return row;
 		}
