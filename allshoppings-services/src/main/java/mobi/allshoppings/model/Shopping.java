@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.jdo.annotations.Embedded;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -50,7 +51,7 @@ public class Shopping implements ModelKey, Serializable, Identificable, Indexabl
 	private Date lastUpdate;
 	private Integer fenceSize;
 	private Integer checkinAreaSize;
-	private Float timezone;
+	private String timezone;
 	private String customCheckinMessage;
 	
 	@Persistent(defaultFetchGroup = "true")
@@ -103,7 +104,7 @@ public class Shopping implements ModelKey, Serializable, Identificable, Indexabl
 		this.serviceId = new ArrayList<String>();
 		this.acl = new ACL();
 		this.status = StatusAware.STATUS_ENABLED;
-		this.timezone = 0F;
+		this.timezone = TimeZone.getDefault().toString();
     }
 
 	/**
@@ -523,14 +524,14 @@ public class Shopping implements ModelKey, Serializable, Identificable, Indexabl
 	/**
 	 * @return the timezone
 	 */
-	public Float getTimezone() {
+	public String getTimezone() {
 		return timezone;
 	}
 
 	/**
 	 * @param timezone the timezone to set
 	 */
-	public void setTimezone(Float timezone) {
+	public void setTimezone(String timezone) {
 		this.timezone = timezone;
 	}
 
