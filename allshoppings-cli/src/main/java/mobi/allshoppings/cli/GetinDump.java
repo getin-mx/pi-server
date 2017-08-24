@@ -1453,7 +1453,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("596","Pakmail Mariano Otero", "pakmail_mx", null));
 			
 			stores.add(new StoreAdapter("597","Sally Beauty World Trade Center", "sallybeauty_mx", null));
-			stores.add(new StoreAdapter("598","Sally Beauty Paseo Interlomas", "sallybeauty_mx", null));
+//			stores.add(new StoreAdapter("598","Sally Beauty Paseo Interlomas", "sallybeauty_mx", null));
 			stores.add(new StoreAdapter("599","Sally Beauty Aragón", "sallybeauty_mx", null));
 			
 			stores.add(new StoreAdapter("600","Ecobutik Centro Histórico", "ecobutik_mx", null));
@@ -1625,7 +1625,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("738", "MT Sport S5 Centro Sur Puebla", "mt_sport_mx",null));
 			stores.add(new StoreAdapter("739", "MT Sport S1 Atlixco", "mt_sport_mx",null));
 			
-			stores.add(new StoreAdapter("740", "El galpón de Tacuara", "elgalpontacuara_ar",null));
+			stores.add(new StoreAdapter("740", "El Galpón de Tacuara", "elgalpontacuara_ar",null));
 			
 			stores.add(new StoreAdapter("741", "Outlet Deportes Venustiano Carranza", "outletdeportes_mx",null));
 			
@@ -1634,6 +1634,18 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("743", "Outlet Deportes Punta Norte", "outletdeportes_mx",null));
 			
 			stores.add(new StoreAdapter("744", "Homero 2", "getin_mx",null));
+			
+			stores.add(new StoreAdapter("745", "El Galpón de Tacuara Espacio abierto", "elgalpontacuara_ar",null));
+			stores.add(new StoreAdapter("746", "El Galpón de Tacuara Cafetería", "elgalpontacuara_ar",null)); 
+			
+			stores.add(new StoreAdapter("747", "Chilim Balam Parque Lindavista", "chilimbalam_mx", "parquelindavista"));
+			stores.add(new StoreAdapter("748", "Chilim Balam Forum Buenavista", "chilimbalam_mx", "forumbuenavista"));
+			stores.add(new StoreAdapter("749", "Chilim Balam Cosmopol", "chilimbalam_mx", null));
+			stores.add(new StoreAdapter("750", "Chilim Balam Plaza Ciudad Jardín", "chilimbalam_mx", null));
+			stores.add(new StoreAdapter("751", "Chilim Balam Galerías Metepec", "chilimbalam_mx", null));
+			stores.add(new StoreAdapter("752", "Chilim Balam Galerias Serdan", "chilimbalam_mx", null));
+			stores.add(new StoreAdapter("753", "Chilim Balam Galerías Cuernavaca", "chilimbalam_mx", null));
+			stores.add(new StoreAdapter("754", "Chilim Balam Galerías Pachuca", "chilimbalam_mx", null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {

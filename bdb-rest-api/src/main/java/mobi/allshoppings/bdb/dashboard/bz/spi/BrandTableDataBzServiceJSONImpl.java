@@ -126,34 +126,45 @@ implements BDBDashboardBzService {
 					null, null, null, null, null, null, null, null);
 
 			{
-				Map<String, List<Long>> d = CollectionFactory.createMap();
-				for( DashboardIndicatorData obj : list )
-					try {
-						List<Long> c = d.get(obj.getEntityId());
-						if( c == null ) c = CollectionFactory.createList();
-						c.add((long)(obj.getDoubleValue() / obj.getRecordCount()));
-						d.put(obj.getEntityKind().equals(EntityKind.KIND_INNER_ZONE) ? obj.getEntityId()
-								: obj.getSubentityId(), c);
-					} catch( Exception e ){}
-
-				Iterator<String> i = d.keySet().iterator();
-				while( i.hasNext() ) {
-					String key = i.next();
-					DashboardRecordRep rec = table.findRecordWithEntityId(key, null);
-					if( null != rec ) {
-
-						List<Long> c = d.get(key);
-						Collections.sort(c);
-						if( c.size() == 0 ) 
-							rec.setPermanenceInMillis(0l);
-						else
-							if( c.size() % 2 == 0 && c.size() >= 2 ) {
-								int med = (int)(c.size() / 2);
-								rec.setPermanenceInMillis((c.get(med-1) + c.get(med)) / 2);
-							} else
-								rec.setPermanenceInMillis(c.get((int)Math.floor(c.size() / 2)));
+				for(DashboardIndicatorData obj : list) {
+					DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId(), null);
+					if( rec != null ) {
+						if( obj.getDoubleValue() != null ) rec.setPermanenceInMillis(rec.getPermanenceInMillis() + obj.getDoubleValue().longValue());
+						else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
+						if( obj.getRecordCount() != null ) rec.setPermancenceQty(rec.getPermancenceQty() + obj.getRecordCount());
+						else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
+						
 					}
 				}
+				
+//				Map<String, List<Long>> d = CollectionFactory.createMap();
+//				for( DashboardIndicatorData obj : list )
+//					try {
+//						List<Long> c = d.get(obj.getEntityId());
+//						if( c == null ) c = CollectionFactory.createList();
+//						c.add((long)(obj.getDoubleValue() / obj.getRecordCount()));
+//						d.put(obj.getEntityKind().equals(EntityKind.KIND_INNER_ZONE) ? obj.getEntityId()
+//								: obj.getSubentityId(), c);
+//					} catch( Exception e ){}
+//
+//					Iterator<String> i = d.keySet().iterator();
+//					while( i.hasNext() ) {
+//						String key = i.next();
+//						DashboardRecordRep rec = table.findRecordWithEntityId(key, null);
+//						if( null != rec ) {
+//	
+//							List<Long> c = d.get(key);
+//							Collections.sort(c);
+//							if( c.size() == 0 ) 
+//								rec.setPermanenceInMillis(0l);
+//							else
+//								if( c.size() % 2 == 0 && c.size() >= 2 ) {
+//									int med = (int)(c.size() / 2);
+//									rec.setPermanenceInMillis((c.get(med-1) + c.get(med)) / 2);
+//								} else
+//									rec.setPermanenceInMillis(c.get((int)Math.floor(c.size() / 2)));
+//						}
+//					}
 			}
 
 			// Creates the final JSON Array
@@ -412,6 +423,7 @@ implements BDBDashboardBzService {
 		private Date higherDate;
 		private Date lowerDate;
 		private Long permanenceInMillis;
+		private int permancenceQty;
 		private Map<String, Long> datesCache;
 		private DashboardTableRep parent;
 
@@ -534,7 +546,11 @@ implements BDBDashboardBzService {
 			row.put("higherDay", calculateHigherDay());
 			row.put("lowerDay", calculateLowerDay());
 
-			row.put("averagePermanence", permanenceInMillis / 60000);
+			if( permanenceInMillis > 0 && permancenceQty > 0 ) {
+				row.put("averagePermanence", Math.round(permanenceInMillis / permancenceQty / 60000D ));
+			} else {
+				row.put("averagePermanence", 0);
+			}
 
 			return row;
 		}
@@ -600,6 +616,14 @@ implements BDBDashboardBzService {
 		 */
 		public boolean isHeader() {
 			return header;
+		}
+
+		public int getPermancenceQty() {
+			return permancenceQty;
+		}
+
+		public void setPermancenceQty(int permancenceQty) {
+			this.permancenceQty = permancenceQty;
 		}
 
 		/**
