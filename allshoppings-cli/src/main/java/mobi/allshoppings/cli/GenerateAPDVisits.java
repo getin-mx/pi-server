@@ -3,7 +3,6 @@ package mobi.allshoppings.cli;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -43,7 +42,6 @@ public class GenerateAPDVisits extends AbstractCLI {
 	public static void main(String args[]) throws ASException {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 			APDVisitHelper helper = (APDVisitHelper)getApplicationContext().getBean("apdvisit.helper");
 
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html

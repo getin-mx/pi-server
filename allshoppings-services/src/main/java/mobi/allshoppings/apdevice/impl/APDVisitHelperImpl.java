@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -152,6 +153,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					Integer entityKind = entities.get(entityId);
 					String name = null;
 					Store store = null;
+					
 					if( entityKind.equals(EntityKind.KIND_STORE)) {
 						store = storeDao.get(entityId);
 						name = store.getName();
@@ -183,6 +185,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							}
 
 							// Determine which antennas are valid for this entity and date 
+							String forDate = sdf.format(curDate);
 							List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, curDate);
 							if( !CollectionUtils.isEmpty(assigs)) {
 								if( assigs.size() == 1 ) {
@@ -193,11 +196,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 										apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(), true));
 
 									// Get APHE records
-									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + curDate + " using " + assigs.get(0).getHostname() + "...");
+									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + forDate + " using " + assigs.get(0).getHostname() + "...");
 									dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
 									dumpHelper.setFilter(assigs.get(0).getHostname());
 									
-									Iterator<APHEntry> i = integrateAPHE(dumpHelper, curDate, curDate, limitDate).iterator();
+									Iterator<APHEntry> i = integrateAPHE(dumpHelper, entityId, entityKind, forDate, curDate, limitDate).iterator();
 
 									while( i.hasNext() ) {
 										APHEntry entry = i.next();
@@ -305,10 +308,55 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 	}
 
-	public List<APHEntry> integrateAPHE(DumperHelper<APHEntry> dumpHelper, Date forDate, Date fromDate, Date toDate) {
+	/**
+	 * Obtains the time zone for an entity Id
+	 * 
+	 * @param entityId
+	 *            Entity Id to inspect
+	 * @param entityKind
+	 *            Entity Kind to inspect
+	 * @return The Time zone for the requested entity
+	 */
+	private TimeZone getTimezoneForEntity(String entityId, Integer entityKind) {
+		
+		if( entityKind.equals(EntityKind.KIND_STORE)) {
+			try {
+				Store obj = storeDao.get(entityId, true);
+				TimeZone ret = TimeZone.getTimeZone(obj.getTimezone());
+				return ret;
+			} catch( Exception e ) {
+				log.log(Level.WARNING, e.getMessage(), e);
+			}
+		} else if( entityKind.equals(EntityKind.KIND_INNER_ZONE)) {
+			try {
+				InnerZone obj = innerzoneDao.get(entityId, true);
+				return getTimezoneForEntity(obj.getEntityId(), obj.getEntityKind());
+			} catch( Exception e ) {
+				log.log(Level.WARNING, e.getMessage(), e);
+			}
+		} else if( entityKind.equals(EntityKind.KIND_SHOPPING)) {
+			try {
+				Shopping obj = shoppingDao.get(entityId, true);
+				TimeZone ret = TimeZone.getTimeZone(obj.getTimezone());
+				return ret;
+			} catch( Exception e ) {
+				log.log(Level.WARNING, e.getMessage(), e);
+			}
+		}
+
+		return TimeZone.getDefault();
+	}
+	
+	private List<APHEntry> integrateAPHE(DumperHelper<APHEntry> dumpHelper, String entityId, Integer entityKind, String forStringDate, Date fromDate, Date toDate) {
 		
 		Map<String, APHEntry> map = CollectionFactory.createMap();
 		List<APHEntry> res = CollectionFactory.createList();
+		
+		TimeZone tz = getTimezoneForEntity(entityId, entityKind);
+		Date forDate = new Date();
+		try {
+			forDate = sdf.parse(forStringDate);
+		} catch( Exception e ) {}
 		
 		Iterator<APHEntry> i = dumpHelper.iterator(fromDate, toDate);
 		while(i.hasNext()) {
