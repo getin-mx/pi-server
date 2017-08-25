@@ -15,7 +15,6 @@ import javax.jdo.annotations.PrimaryKey;
 
 import org.springframework.util.StringUtils;
 
-import com.ibm.icu.util.TimeZone;
 import com.inodes.datanucleus.model.Key;
 
 import mobi.allshoppings.model.interfaces.ACLAware;

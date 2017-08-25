@@ -200,7 +200,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
 									dumpHelper.setFilter(assigs.get(0).getHostname());
 									
-									Iterator<APHEntry> i = integrateAPHE(dumpHelper, entityId, entityKind, forDate, curDate, limitDate).iterator();
+									Iterator<APHEntry> i = integrateAPHE(dumpHelper, apdCache.get(assigs.get(0).getHostname()), entityId, entityKind, forDate).iterator();
+									dumpHelper.dispose();
 
 									while( i.hasNext() ) {
 										APHEntry entry = i.next();
@@ -214,8 +215,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 												}
 										}
 									}
-
-									dumpHelper.dispose();
 
 									log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
 									for( APDVisit obj : objs ) {
@@ -347,70 +346,104 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		return TimeZone.getDefault();
 	}
 	
-	private List<APHEntry> integrateAPHE(DumperHelper<APHEntry> dumpHelper, String entityId, Integer entityKind, String forStringDate, Date fromDate, Date toDate) {
+	private List<APHEntry> integrateAPHE(DumperHelper<APHEntry> dumpHelper, APDevice calibration, String entityId, Integer entityKind, String forStringDate) {
 		
 		Map<String, APHEntry> map = CollectionFactory.createMap();
 		List<APHEntry> res = CollectionFactory.createList();
 		
 		TimeZone tz = getTimezoneForEntity(entityId, entityKind);
-		Date forDate = new Date();
-		try {
-			forDate = sdf.parse(forStringDate);
-		} catch( Exception e ) {}
+		Calendar start = Calendar.getInstance();
+		Calendar end = Calendar.getInstance();
+		start.setTimeZone(tz);
+
+		start.set(Integer.parseInt(forStringDate.substring(0,4)), Integer.parseInt(forStringDate.substring(5,7)) -1, Integer.parseInt(forStringDate.substring(8)), 0, 0, 0);
+
+		int startOffsetHours = Integer.parseInt(calibration.getMonitorStart().substring(0,2));
+		int startOffsetMinutes = Integer.parseInt(calibration.getMonitorStart().substring(3));
 		
-		Iterator<APHEntry> i = dumpHelper.iterator(fromDate, toDate);
+		start.add(Calendar.HOUR, startOffsetHours);
+		start.add(Calendar.MINUTE, startOffsetMinutes);
+
+		end.setTimeZone(tz);
+		end.set(Integer.parseInt(forStringDate.substring(0,4)), Integer.parseInt(forStringDate.substring(5,7)) -1, Integer.parseInt(forStringDate.substring(8)), 0, 0, 0);
+
+		int endOffsetHours = Integer.parseInt(calibration.getMonitorEnd().substring(0,2)) + 1; // This one is for giving air to the monitoring limit time
+		int endOffsetMinutes = Integer.parseInt(calibration.getMonitorEnd().substring(3));
+		
+		end.add(Calendar.HOUR, endOffsetHours);
+		end.add(Calendar.MINUTE, endOffsetMinutes);
+		if( endOffsetHours <= startOffsetHours ) {
+			end.add(Calendar.DATE, 1);
+		}
+		
+		start.getTime();
+		end.getTime();
+		SimpleDateFormat gmtSdf = new SimpleDateFormat("yyyy-MM-dd");
+		gmtSdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
+		int lowerLimit = (int)Math.round(((long)(((start.getTime().getTime()) % 86400000) / 1000) / 20));
+		if( gmtSdf.format(start.getTime()).compareTo(forStringDate) < 0 ) {
+			lowerLimit = lowerLimit - 4320;
+		}
+		
+		int higherLimit = (int)Math.round(((long)(((end.getTime().getTime()) % 86400000) / 1000) / 20));
+		if( gmtSdf.format(end.getTime()).compareTo(forStringDate) > 0 ) {
+			higherLimit = higherLimit + 4320;
+		}
+		
+		Iterator<APHEntry> i = dumpHelper.iterator(start.getTime(), end.getTime());
 		while(i.hasNext()) {
 			APHEntry aphe = i.next();
 			APHEntry mapped = map.get(aphe.getMac());
 			if( mapped == null ) {
 				mapped = new APHEntry();
 				mapped.setCreationDateTime(aphe.getCreationDateTime());
-				mapped.setDate(sdf.format(forDate));
+				mapped.setDate(forStringDate);
 				mapped.setDevicePlatform(aphe.getDevicePlatform());
 				mapped.setHostname(aphe.getHostname());
 				mapped.setMac(aphe.getMac());
 				mapped.setKey(aphe.getKey());
 			}
 			
-			if( aphe.getDate().equals(sdf.format(forDate))) {
+			if( aphe.getDate().equals(forStringDate)) {
 				Map<String, Integer> rssi = aphe.getRssi();
 				Map<String, Integer> newRssi = mapped.getRssi();
 				Iterator<String> it = rssi.keySet().iterator();
 				while(it.hasNext()) {
 					String key = it.next();
-					Integer val = rssi.get(key);
-					newRssi.put(key, val);
+					if( Integer.valueOf(key) >= lowerLimit && Integer.valueOf(key) <= higherLimit) {
+						Integer val = rssi.get(key);
+						newRssi.put(key, val);
+					}
 				}
 				mapped.setKey(aphe.getKey());
 			} else {
-				Date d1;
-				try {
-					d1 = sdf.parse(aphe.getDate());
-					if( d1.getTime() < forDate.getTime()) {
-						// Lower Date
-						Map<String, Integer> rssi = aphe.getRssi();
-						Map<String, Integer> newRssi = mapped.getRssi();
-						Iterator<String> it = rssi.keySet().iterator();
-						while(it.hasNext()) {
-							String key = it.next();
-							Integer val = rssi.get(key);
-							String newKey = String.valueOf(Integer.parseInt(key)-4320);
-							newRssi.put(newKey, val);
-						}
-					} else {
-						// Higher Date
-						Map<String, Integer> rssi = aphe.getRssi();
-						Map<String, Integer> newRssi = mapped.getRssi();
-						Iterator<String> it = rssi.keySet().iterator();
-						while(it.hasNext()) {
-							String key = it.next();
-							Integer val = rssi.get(key);
-							String newKey = String.valueOf(Integer.parseInt(key)+4320);
+				if( forStringDate.compareTo(aphe.getDate()) < 0 ) {
+					// Lower Date
+					Map<String, Integer> rssi = aphe.getRssi();
+					Map<String, Integer> newRssi = mapped.getRssi();
+					Iterator<String> it = rssi.keySet().iterator();
+					while(it.hasNext()) {
+						String key = it.next();
+						Integer val = rssi.get(key);
+						String newKey = String.valueOf(Integer.parseInt(key)-4320);
+						if( Integer.valueOf(newKey) >= lowerLimit && Integer.valueOf(newKey) <= higherLimit) {
 							newRssi.put(newKey, val);
 						}
 					}
-				} catch (ParseException e) {
-					log.log(Level.WARNING, e.getMessage(), e);;
+				} else {
+					// Higher Date
+					Map<String, Integer> rssi = aphe.getRssi();
+					Map<String, Integer> newRssi = mapped.getRssi();
+					Iterator<String> it = rssi.keySet().iterator();
+					while(it.hasNext()) {
+						String key = it.next();
+						Integer val = rssi.get(key);
+						String newKey = String.valueOf(Integer.parseInt(key)+4320);
+						if( Integer.valueOf(newKey) >= lowerLimit && Integer.valueOf(newKey) <= higherLimit) {
+							newRssi.put(newKey, val);
+						}
+					}
 				}
 			}
 			
@@ -431,7 +464,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				if( val > aphe.getMaxRssi())
 					aphe.setMaxRssi(val);
 			}
-			res.add(aphe);
+			// Controls banned mac addresses
+			if( aphe.getDataCount() > 2 ) {
+				if( !BANNED.contains(aphe.getMac().toLowerCase())) {
+					res.add(aphe);
+				}
+			}
 		}
 		
 		return res;
@@ -955,12 +993,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					}
 				}
 
-				// Controls banned mac addresses
-				if( BANNED.contains(curEntry.getMac().toLowerCase())) {
-					ret = CollectionFactory.createList();
-					return ret;
-				}
-				
 				// Controls invalid value
 				if( value > -1 ) {
 					ret = CollectionFactory.createList();
@@ -1561,6 +1593,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		visit.setVerified(false);
 		visit.setDeviceUUID(device == null ? null : device.getDeviceUUID());
 		visit.setUserId(null);
+		visit.setForDate(source.getDate());
 		visit.setKey(apdvDao.createKey(visit));
 		
 		return visit;
@@ -1594,6 +1627,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		peasant.setVerified(false);
 		peasant.setDeviceUUID(device == null ? null : device.getDeviceUUID());
 		peasant.setUserId(null);
+		peasant.setForDate(source.getDate());
 		peasant.setKey(apdvDao.createKey(peasant));
 		
 		return peasant;

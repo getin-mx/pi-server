@@ -44,6 +44,7 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 	private Boolean hidePermanence;
 	private Boolean approved;
 	private String apheSource;
+	private String forDate;
 	
 	private Integer totalSegments;
 	private Integer inRangeSegments;
@@ -292,12 +293,26 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 	public void setApproved(Boolean approved) {
 		this.approved = approved;
 	}
-
+	
 	/**
 	 * @return the totalSegments
 	 */
 	public Integer getTotalSegments() {
 		return totalSegments;
+	}
+
+	/**
+	 * @return the forDate
+	 */
+	public String getForDate() {
+		return forDate;
+	}
+
+	/**
+	 * @param forDate the forDate to set
+	 */
+	public void setForDate(String forDate) {
+		this.forDate = forDate;
 	}
 
 	/**

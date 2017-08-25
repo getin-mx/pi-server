@@ -22,6 +22,8 @@ public class APHEntryFileNameResolver implements DumperFileNameResolver<ModelKey
 	private static final SimpleDateFormat year = new SimpleDateFormat("yyyy");
 	private static final SimpleDateFormat month = new SimpleDateFormat("MM");
 	private static final SimpleDateFormat day = new SimpleDateFormat("dd");
+	private static final SimpleDateFormat hour = new SimpleDateFormat("HH");
+	private static final SimpleDateFormat minute = new SimpleDateFormat("mm");
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	public APHEntryFileNameResolver() {
@@ -31,6 +33,8 @@ public class APHEntryFileNameResolver implements DumperFileNameResolver<ModelKey
 		month.setTimeZone(tz);
 		day.setTimeZone(tz);
 		sdf.setTimeZone(tz);
+		hour.setTimeZone(tz);
+		minute.setTimeZone(tz);
 	}
 
 	@Override
@@ -39,13 +43,16 @@ public class APHEntryFileNameResolver implements DumperFileNameResolver<ModelKey
 		return false;
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
 	public String resolveDumpFileName(String baseDir, String baseName, Date forDate, ModelKey element, String filter) {
 
 		String myYear = year.format(forDate);
 		String myMonth = month.format(forDate);
 		String myDay = day.format(forDate);
-
+		String myHour = hour.format(forDate);
+		String myMinute = minute.format(forDate);
+		
 		StringBuffer sb = new StringBuffer();
 
 		if( element == null && !StringUtils.hasText(filter) ) {

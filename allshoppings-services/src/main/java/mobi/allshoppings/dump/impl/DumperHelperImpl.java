@@ -863,7 +863,11 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 					}
 				} else {
 					curDate = new Date(curDate.getTime() + timeFrame);
-					currentFileName = resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate, null, filter);
+					if( curDate.before(toDate) || curDate.equals(toDate) ) {
+						currentFileName = resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate, null, filter);
+					} else {
+						ableToGo = false;
+					}
 				}
 				
 				try {
