@@ -1229,7 +1229,7 @@ public class UserMenuDump extends AbstractCLI {
 			try {
 				um = userMenuDao.get("droc_mx", true);
 				userMenuDao.delete("droc_mx");
-				throw new Exception(); 
+				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu(); 
 		        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
