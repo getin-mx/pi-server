@@ -1013,15 +1013,17 @@ public class DashboardAPDeviceMapperService {
 
 			}
 			// Looks for ticket
-			if( entityKind.equals(EntityKind.KIND_BRAND)) {
-				createStoreTicketDataForDates(sdf.format(date), sdf.format(date), subentityId);
-				createStoreItemDataForDates(sdf.format(date), sdf.format(date), subentityId);
-				createStoreRevenueDataForDates(sdf.format(date), sdf.format(date), subentityId);
-			}
-			if( entityKind.equals(EntityKind.KIND_STORE)) {
-				createStoreTicketDataForDates(sdf.format(date), sdf.format(date), entityId);
-				createStoreItemDataForDates(sdf.format(date), sdf.format(date), entityId);
-				createStoreRevenueDataForDates(sdf.format(date), sdf.format(date), entityId);
+			if( null != entityKind ) {
+				if( entityKind.equals(EntityKind.KIND_BRAND)) {
+					createStoreTicketDataForDates(sdf.format(date), sdf.format(date), subentityId);
+					createStoreItemDataForDates(sdf.format(date), sdf.format(date), subentityId);
+					createStoreRevenueDataForDates(sdf.format(date), sdf.format(date), subentityId);
+				}
+				if( entityKind.equals(EntityKind.KIND_STORE)) {
+					createStoreTicketDataForDates(sdf.format(date), sdf.format(date), entityId);
+					createStoreItemDataForDates(sdf.format(date), sdf.format(date), entityId);
+					createStoreRevenueDataForDates(sdf.format(date), sdf.format(date), entityId);
+				}
 			}
 			
 			log.log(Level.INFO, "Starting Write Procedure...");
