@@ -2126,6 +2126,8 @@ public class UserMenuDump extends AbstractCLI {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.setKey(userMenuDao.createKey("fullsand_mx"));
 				userMenuDao.create(um);
 			}
