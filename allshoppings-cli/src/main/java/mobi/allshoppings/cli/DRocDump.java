@@ -116,6 +116,7 @@ public class DRocDump extends AbstractCLI {
 				names.put(zone.getName(), zone);
 			
 			InnerZone zone;
+			@SuppressWarnings("unused")
 			InnerZone subZone;
 			Map<String, InnerZone> subNames;
 			
