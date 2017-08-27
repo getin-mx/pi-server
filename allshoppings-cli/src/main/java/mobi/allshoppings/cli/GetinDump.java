@@ -24,7 +24,6 @@ import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
-import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.model.tools.KeyHelper;
 
 
