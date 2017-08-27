@@ -1210,6 +1210,8 @@ public class UserMenuDump extends AbstractCLI {
 			User droc = null;
 			try {
 				droc = userDao.get("droc_mx", true);
+				userDao.delete(droc);
+				throw new Exception();
 			} catch( Exception e ) {
 				 droc = new User(); 
 			     droc.setFirstname("DRoc"); 
@@ -1218,7 +1220,8 @@ public class UserMenuDump extends AbstractCLI {
 			     droc.getSecuritySettings().setRole(Role.BRAND); 
 			     droc.getSecuritySettings().setShoppings(new ArrayList<String>()); 
 			     droc.getSecuritySettings().getShoppings().add("mundoe"); 
-			     droc.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
+			     droc.getSecuritySettings().getShoppings().add("plazaaragon"); 
+			     droc.getSecuritySettings().setPassword("F86C872FBDDE97CFDCEEE0E4ACD17F1FCFAFCCF2CE7B22B6FEE17A47B1321EA4"); 
 			     droc.setKey((Key)keyHelper.obtainKey(User.class, "droc_mx")); 
 			     userDao.create(droc); 
 			}
@@ -1226,7 +1229,7 @@ public class UserMenuDump extends AbstractCLI {
 			try {
 				um = userMenuDao.get("droc_mx", true);
 				userMenuDao.delete("droc_mx");
-				throw new Exception(); 
+				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu(); 
 		        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 

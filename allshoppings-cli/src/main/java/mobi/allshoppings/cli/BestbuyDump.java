@@ -20,9 +20,11 @@ import mobi.allshoppings.model.InnerZone;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
-public class VolarisDump extends AbstractCLI {
+public class BestbuyDump extends AbstractCLI {
 
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private static final String STORE_ENTITY = "1491370940990";
+	private static final String ASSIGNATION_DATE = "2017-02-20";
 	
 	public static void setApplicationContext(ApplicationContext ctx) {
 		context = ctx;
@@ -43,20 +45,19 @@ public class VolarisDump extends AbstractCLI {
 			APDeviceDAO apdeviceDao = (APDeviceDAO)getApplicationContext().getBean("apdevice.dao.ref");
 			
 			Map<String, String> aps = CollectionFactory.createMap();
-			aps.put("gihs-0180", "gihs-0180");
-			aps.put("gihs-0201", "gihs-0201");
-			aps.put("gihs-0276", "gihs-0276");
-			aps.put("gihs-0277", "gihs-0277");
-			aps.put("gihs-0278", "gihs-0278");
-			aps.put("gihs-0279", "gihs-0279");
-			aps.put("gihs-0280", "gihs-0280");
-			aps.put("gihs-0281", "gihs-0281");
-			aps.put("gihs-0282", "gihs-0282");
-			aps.put("gihs-0283", "gihs-0283");
-			aps.put("gihs-0284", "gihs-0284");
+			aps.put("gihs-0210", "gihs-0210");
+			aps.put("gihs-0211", "gihs-0211");
+			aps.put("gihs-0212", "gihs-0212");
+			aps.put("gihs-0213", "gihs-0213");
+			aps.put("gihs-0214", "gihs-0214");
+			aps.put("gihs-0215", "gihs-0215");
+			aps.put("gihs-0216", "gihs-0216");
+			aps.put("gihs-0217", "gihs-0217");
+			aps.put("gihs-0218", "gihs-0218");
+			aps.put("gihs-0219", "gihs-0219");
 			
 			
-			List<InnerZone> list = innerZoneDao.getUsingEntityIdAndRange("a9f9d78e-d5f6-42b5-97be-2a84aca5165d", EntityKind.KIND_STORE, null, null, null, true);
+			List<InnerZone> list = innerZoneDao.getUsingEntityIdAndRange(STORE_ENTITY, EntityKind.KIND_STORE, null, null, null, true);
 			Map<String, InnerZone> names = CollectionFactory.createMap();
 			for( InnerZone zone : list ) 
 				names.put(zone.getName(), zone);
@@ -65,10 +66,12 @@ public class VolarisDump extends AbstractCLI {
 			InnerZone subZone;
 			Map<String, InnerZone> subNames;
 			
-			zone = findZone1(names, "Zona Maquinas", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0281","gihs-0282","gihs-0278", "gihs-0277", "gihs-0276", "gihs-0280"), aps);
-			zone = findZone1(names, "Zona Filas", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0279"), aps);
-			zone = findZone1(names, "Zona Servicios Especiales", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0180"), aps);
-			zone = findZone1(names, "Zona Checkin", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0201", "gihs-0284", "gihs-0282"), aps);
+			zone = findZone1(names, "Servicio Al Cliente", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0212"), aps);
+			zone = findZone1(names, "Home & Entertainment", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0213"), aps);
+			zone = findZone1(names, "Home & Entertainment 2", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0210", "gihs-0211"), aps);
+			zone = findZone1(names, "Apliances", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0214", "gihs-0216"), aps);
+			zone = findZone1(names, "Mobile", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0218"), aps);
+			zone = findZone1(names, "IT", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0215", "gihs-0217", "gihs-0219"), aps);
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
@@ -117,7 +120,7 @@ public class VolarisDump extends AbstractCLI {
 					assig.setEntityId(zone.getIdentifier());
 					assig.setEntityKind(EntityKind.KIND_INNER_ZONE);
 					assig.setHostname(hostname);
-					assig.setFromDate(sdf.parse("2017-01-02"));
+					assig.setFromDate(sdf.parse(ASSIGNATION_DATE));
 					assig.setKey(apdaDao.createKey(assig));
 					apdaDao.create(assig);
 				}
@@ -137,7 +140,7 @@ public class VolarisDump extends AbstractCLI {
 		if( !names.containsKey(name)) {
 			zone = new InnerZone();
 			zone.setName(name);
-			zone.setEntityId("a9f9d78e-d5f6-42b5-97be-2a84aca5165d");
+			zone.setEntityId(STORE_ENTITY);
 			zone.setEntityKind(EntityKind.KIND_STORE);
 			zone.setKey(dao.createKey());
 			dao.create(zone);
@@ -163,7 +166,7 @@ public class VolarisDump extends AbstractCLI {
 					assig.setEntityId(zone.getIdentifier());
 					assig.setEntityKind(EntityKind.KIND_INNER_ZONE);
 					assig.setHostname(hostname);
-					assig.setFromDate(sdf.parse("2017-01-02"));
+					assig.setFromDate(sdf.parse(ASSIGNATION_DATE));
 					assig.setKey(apdaDao.createKey(assig));
 					apdaDao.create(assig);
 				}
