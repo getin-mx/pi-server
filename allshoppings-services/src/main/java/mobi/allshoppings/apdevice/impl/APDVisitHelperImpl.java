@@ -454,19 +454,19 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		while(ix.hasNext()) {
 			APHEntry aphe = ix.next();
 			aphe.setDataCount(aphe.getRssi().size());
-			aphe.setMaxRssi(-9999);
-			aphe.setMinRssi(0);
-			Iterator<Integer> ix2 = aphe.getRssi().values().iterator();
-			while(ix2.hasNext()) {
-				Integer val = ix2.next();
-				if( val < aphe.getMinRssi())
-					aphe.setMinRssi(val);
-				if( val > aphe.getMaxRssi())
-					aphe.setMaxRssi(val);
-			}
-			// Controls banned mac addresses
-			if( aphe.getDataCount() > 2 ) {
-				if( !BANNED.contains(aphe.getMac().toLowerCase())) {
+			if( !BANNED.contains(aphe.getMac().toLowerCase())) {
+				if( aphe.getDataCount() > 2 ) {
+					aphe.setMaxRssi(-9999);
+					aphe.setMinRssi(0);
+					Iterator<Integer> ix2 = aphe.getRssi().values().iterator();
+					while(ix2.hasNext()) {
+						Integer val = ix2.next();
+						if( val < aphe.getMinRssi())
+							aphe.setMinRssi(val);
+						if( val > aphe.getMaxRssi())
+							aphe.setMaxRssi(val);
+					}
+					// Controls banned mac addresses
 					res.add(aphe);
 				}
 			}
@@ -1177,7 +1177,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 		for(APHEntry entry : entries) {
 			aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
-//			apheDao.update(entry);
 		}
 
 		// Merges all the time slots
@@ -1507,6 +1506,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			if((visit.getInRangeSegments() * 100 / visit.getTotalSegments()) < VISIT_PERCENTAGE)
 				return false;
 		}
+
+		visit.setDuration((visit.getCheckinFinished().getTime() / 1000) - (visit.getCheckinStarted().getTime() / 1000)); 
 		
 		// If validations are passed, return true
 		return true;
@@ -1561,6 +1562,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		if( t < ts || t >= te )
 			return false;
 
+		visit.setDuration((visit.getCheckinFinished().getTime() / 1000) - (visit.getCheckinStarted().getTime() / 1000)); 
+		
 		// If validations are passed, return true
 		return true;
 	}
