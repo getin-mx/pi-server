@@ -242,6 +242,7 @@ public class ExternalGeoImporter {
 			}
 
 			
+			log.log(Level.INFO, "Writing " + cache.size() + " records in the database...");
 			count = 0;
 			Iterator<ExternalGeo> it = cache.iterator();
 			while(it.hasNext()) {

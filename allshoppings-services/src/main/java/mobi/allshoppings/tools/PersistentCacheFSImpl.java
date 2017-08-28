@@ -239,13 +239,34 @@ public class PersistentCacheFSImpl <V extends Object> {
 			try(BufferedReader br = new BufferedReader(new FileReader(f))) {
 				for(String line; (line = br.readLine()) != null ;) {
 					if( line.startsWith(key + ";;")) {
-						String[] parts = line.split(";;");
-						@SuppressWarnings("unchecked")
-						V element = (V) gson.fromJson(parts[1], valueClazz);
-						map.put(key, element);
-						keys.put(key, 0);
-						lastUsed.put(key, System.currentTimeMillis());
-						break;
+						String ele = line.substring(key.length() + 2);
+						try {
+							@SuppressWarnings("unchecked")
+							V element = (V) gson.fromJson(ele, valueClazz);
+							map.put(key, element);
+							keys.put(key, 0);
+							lastUsed.put(key, System.currentTimeMillis());
+							break;
+						} catch ( com.google.gson.JsonSyntaxException e ) {
+							try {
+								@SuppressWarnings("unchecked")
+								V element = (V) gson.fromJson("{" + ele + "}", valueClazz);
+								map.put(key, element);
+								keys.put(key, 0);
+								lastUsed.put(key, System.currentTimeMillis());
+								break;
+							} catch ( Exception e1 ) {
+								log.log(Level.WARNING, "Cache error: " + e.getMessage(), e1);
+								log.log(Level.WARNING, "Cache line: " + line);
+								log.log(Level.WARNING, "Cache element: " + ele);
+								throw e;
+							}
+						} catch ( Exception e ) {
+							log.log(Level.WARNING, "Cache error: " + e.getMessage(), e);
+							log.log(Level.WARNING, "Cache line: " + line);
+							log.log(Level.WARNING, "Cache element: " + ele);
+							throw e;
+						}
 					}
 				}
 				br.close();
