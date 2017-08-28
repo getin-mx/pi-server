@@ -127,8 +127,8 @@
 		<property name="resourcesDir" value="/usr/local/allshoppings/resources" />
 		<property name="excelTemplate" value="template-2017-02.xlsm" />
 
-		<property name="cacheMaxInMemElements" value="400000" />
-		<property name="cachePageSize" value="5000" />
+		<property name="cacheMaxInMemElements" value="100000" />
+		<property name="cachePageSize" value="1000" />
 		<property name="cacheTempDir" value="/usr/local/allshoppings/dump" />
 		<property name="forceAlgorithm" value="markI" />
 
@@ -950,6 +950,7 @@
 	<bean id="devicelocation.dao.ref" class="mobi.allshoppings.dao.spi.DeviceLocationDAOJDOImpl" />
 	<bean id="devicelocationhistory.dao.ref" class="mobi.allshoppings.dao.spi.DeviceLocationHistoryDAOJDOImpl" />
 	<bean id="devicewifilocationhistory.dao.ref" class="mobi.allshoppings.dao.spi.DeviceWifiLocationHistoryDAOJDOImpl" />
+	<bean id="employeelog.dao.ref" class="mobi.allshoppings.dao.spi.EmployeeLogDAOJDOImpl" />
 	<bean id="usermenu.dao.ref" class="mobi.allshoppings.dao.spi.UserMenuDAOJDOImpl" />
 
 	<!-- ** AOP implementation ** -->

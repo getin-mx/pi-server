@@ -76,6 +76,7 @@
         <class>mobi.allshoppings.model.UserMenuEntry</class>
         <class>mobi.allshoppings.model.UserEntityCache</class>
         <class>mobi.allshoppings.model.ExternalGeo</class>
+        <class>mobi.allshoppings.model.EmployeeLog</class>
 
         <class>mobi.allshoppings.model.tools.ACL</class>
         <class>mobi.allshoppings.model.tools.ViewLocation</class>
