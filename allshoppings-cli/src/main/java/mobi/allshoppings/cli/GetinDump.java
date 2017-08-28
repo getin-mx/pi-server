@@ -900,6 +900,16 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "elgalpontacuara_ar"));
 				brandDao.create(brand);
 			}
+			
+			try {
+				brand = brandDao.get("aditivofranquicias2_mx", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Aditivo Franquicias 2");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "aditivofranquicias2_mx"));
+				brandDao.create(brand);
+			}
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -1517,6 +1527,14 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("752", "Chilim Balam Galerias Serdan", "chilimbalam_mx", null));
 			stores.add(new StoreAdapter("753", "Chilim Balam Galerías Cuernavaca", "chilimbalam_mx", null));
 			stores.add(new StoreAdapter("754", "Chilim Balam Galerías Pachuca", "chilimbalam_mx", null));
+			
+			stores.add(new StoreAdapter("756", "Squalo Veracruz", "squalo_mx", null));
+			
+			stores.add(new StoreAdapter("757", "Aditivo Franquicias 2 Miramontes", "aditivofranquicias2_mx",null));
+			stores.add(new StoreAdapter("758", "Aditivo Franquicias 2 Izazaga", "aditivofranquicias2_mx",null));
+			stores.add(new StoreAdapter("759", "Aditivo Franquicias 2 Coacalco", "aditivofranquicias2_mx",null));
+			stores.add(new StoreAdapter("760", "Aditivo Franquicias 2 La Villa", "aditivofranquicias2_mx",null));
+			stores.add(new StoreAdapter("761", "Aditivo Franquicias 2 Tehuacán", "aditivofranquicias2_mx",null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {

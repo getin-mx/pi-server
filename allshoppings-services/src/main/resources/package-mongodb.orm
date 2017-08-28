@@ -114,6 +114,10 @@
             <field name="key" column="_id" length="100"/>
         </class>
 
+        <class name="EmployeeLog" table="EmployeeLog">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
         <class name="ExportUnit" table="ExportUnit">
             <field name="key" column="_id" length="100"/>
         </class>

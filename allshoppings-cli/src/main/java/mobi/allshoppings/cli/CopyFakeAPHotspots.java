@@ -21,6 +21,7 @@ import mobi.allshoppings.model.APHotspot;
 
 public class CopyFakeAPHotspots extends AbstractCLI {
 
+	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(CopyFakeAPHotspots.class.getName());
 	public static final long TWENTY_FOUR_HOURS = 86400000;
 	
@@ -37,6 +38,7 @@ public class CopyFakeAPHotspots extends AbstractCLI {
 		context = ctx;
 	}
 	
+	@SuppressWarnings("unused")
 	public static void main(String args[]) throws ASException {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
