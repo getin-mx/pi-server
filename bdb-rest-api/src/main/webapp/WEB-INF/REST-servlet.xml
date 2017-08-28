@@ -62,6 +62,7 @@
 				<entry key="/dashboard/assignedBrandList" 		value-ref="spring.dashboard.assignedbrandlist.rest.resource" />
 				<entry key="/dashboard/assignedShoppingList" 	value-ref="spring.dashboard.assignedshoppinglist.rest.resource" />
 				<entry key="/dashboard/assignedStoreList" 		value-ref="spring.dashboard.assignedstorelist.rest.resource" />
+				<entry key="/dashboard/assignedEmployeeList" 	value-ref="spring.dashboard.assignedemployeelist.rest.resource" />
 				<entry key="/dashboard/innerZoneList" 			value-ref="spring.dashboard.innerzonelist.rest.resource" />
 				<entry key="/dashboard/floormapList" 			value-ref="spring.dashboard.floormaplist.rest.resource" />
 				<entry key="/dashboard/floormapData" 			value-ref="spring.dashboard.floormapdata.rest.resource" />
@@ -174,6 +175,9 @@
  	</bean>
  	<bean id="spring.dashboard.assignedstorelist.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboard.assignedstorelist.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.assignedemployeelist.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.assignedemployeelist.rest.resource" />
  	</bean>
  	<bean id="spring.dashboard.innerzonelist.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboard.innerzonelist.rest.resource" />

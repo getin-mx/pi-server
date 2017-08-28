@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.inodes.datanucleus.model.Key;
@@ -30,7 +31,7 @@ public class EmployeeLogDAOJDOImpl extends GenericDAOJDO<EmployeeLog> implements
 	}
 
 	@Override
-	public List<EmployeeLog> getUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date fromDate,
+	public List<EmployeeLog> getUsingEntityIdAndEntityKindAndDate(String employeeId, List<String> entityId, Integer entityKind, Date fromDate,
 			Date toDate, Range range, String order, Map<String, String> attributes, boolean detachable)
 			throws ASException {
 
@@ -45,10 +46,17 @@ public class EmployeeLogDAOJDOImpl extends GenericDAOJDO<EmployeeLog> implements
 
 			Query query = pm.newQuery(clazz);
 
+			// employeeId Parameter
+			if(StringUtils.hasText(employeeId)) {
+				declaredParams.add("String employeeIdParam");
+				filters.add("employeeId == employeeIdParam");
+				parameters.put("employeeIdParam", employeeId);
+			}
+
 			// entityId Parameter
-			if(StringUtils.hasText(entityId)) {
-				declaredParams.add("String entityIdParam");
-				filters.add("entityId == entityIdParam");
+			if(!CollectionUtils.isEmpty(entityId)) {
+				declaredParams.add("java.util.List entityIdParam");
+				filters.add("entityIdParam.contains(entityId)");
 				parameters.put("entityIdParam", entityId);
 			}
 
@@ -115,5 +123,4 @@ public class EmployeeLogDAOJDOImpl extends GenericDAOJDO<EmployeeLog> implements
 		}
 
 	}
-
 }

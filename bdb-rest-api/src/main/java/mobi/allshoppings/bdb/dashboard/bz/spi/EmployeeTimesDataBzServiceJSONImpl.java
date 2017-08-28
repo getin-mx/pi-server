@@ -4,7 +4,6 @@ package mobi.allshoppings.bdb.dashboard.bz.spi;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -13,24 +12,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.APDMAEmployeeDAO;
-import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.EmployeeLogDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDMAEmployee;
-import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.EmployeeLog;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
-import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
 
@@ -45,7 +41,7 @@ implements BDBDashboardBzService {
 	private static final Logger log = Logger.getLogger(EmployeeTimesDataBzServiceJSONImpl.class.getName());
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
-	private static final long ONE_DAY = 86400000;
+	private static final SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Autowired
 	private StoreDAO storeDao;
@@ -53,11 +49,7 @@ implements BDBDashboardBzService {
 	private APDMAEmployeeDAO apdmaeDao;
 	@Autowired
 	private EmployeeLogDAO employeeLogDao;
-	@Autowired
-	private APHEntryDAO apheDao;
-	@Autowired
-	private APHHelper aphHelper;
-
+	
 	/**
 	 * Obtains information about a user
 	 * 
@@ -73,141 +65,66 @@ implements BDBDashboardBzService {
 
 			String entityId = obtainStringValue("entityId", null);
 			Integer entityKind = obtainIntegerValue("entityKind", null);
+			String employeeId = obtainStringValue("employeeId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
 
 			// Get all the stores that matches the brand
-			List<Store> stores = CollectionFactory.createList();
+			Map<String, Store> storeMap = CollectionFactory.createMap();
 			if( entityKind.equals(EntityKind.KIND_BRAND)) {
-				List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), "name"); 
+				List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), null); 
 				for( Store store : tmpStores ) {
 					if( isValidForUser(user, store))
-						stores.add(store);
+						storeMap.put(store.getIdentifier(), store);
 				}
 			} else if( entityKind.equals(EntityKind.KIND_STORE)) {
-				stores.add(storeDao.get(entityId));
+				Store store = storeDao.get(entityId, true);
+				storeMap.put(store.getIdentifier(), store);
 			}
+			List<String> storeList = CollectionFactory.createList();
+			storeList.addAll(storeMap.keySet());
 			
-			// Ordered Store List
-			List<String> storeNames = CollectionFactory.createList();
-			Map<String, Store> storeCacheByName = CollectionFactory.createMap();
-			Map<String, Store> storeCacheById = CollectionFactory.createMap();
-
-			List<APDMAEmployee> employees = CollectionFactory.createList();
-			if( entityKind.equals(EntityKind.KIND_BRAND))
-				employees.addAll(apdmaeDao.getUsingEntityIdAndRange(entityId, entityKind, null, null, null, false));
-			
-			for(Store store : stores ) {
-				storeNames.add(store.getName());
-				storeCacheByName.put(store.getName(), store);
-				storeCacheById.put(store.getIdentifier(), store);
-				employees.addAll(apdmaeDao.getUsingEntityIdAndRange(store.getBrandId(), EntityKind.KIND_BRAND, null, null, null, false));
-				employees.addAll(apdmaeDao.getUsingEntityIdAndRange(entityId, entityKind, null, null, null, false));
-			}
-
-			Collections.sort(storeNames);
-
-			// Ordered employee list
-			List<String> employeeNames = CollectionFactory.createList();
-			Map<String, APDMAEmployee> employeeCacheByName = CollectionFactory.createMap();
-			
-			for(APDMAEmployee employee : employees ) {
-				employeeNames.add(employee.getDescription());
-				employeeCacheByName.put(employee.getDescription(), employee);
-				employeeCacheByName.put(employee.getMac(), employee);
-			}
-			
-			// Gets the data
-			Map<String, Map<String, Map<Date, List<Date>>>> data = CollectionFactory.createMap();
-			Date toDate = new Date(sdf.parse(toStringDate).getTime());
-			Date curDate = new Date(sdf.parse(fromStringDate).getTime());
-
-			while(curDate.before(toDate) || curDate.equals(toDate)) {
-				for( Store store : stores ) {
-
-					Date postDate = new Date(curDate.getTime() + ONE_DAY);
-
-					//FIXME: Change the APDVisit List for the raw APHEntries to avoid employees not seen by Store Calibration limits
-					List<EmployeeLog> emps = employeeLogDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate, postDate, null, null, null, false);
-					for( EmployeeLog emp : emps ) {
-						APHEntry aphe = apheDao.get(emp.getApheSource()); 
-
-						Map<String, Map<Date, List<Date>>> data2 = data.get(store.getIdentifier());
-						if( data2 == null ) data2 = CollectionFactory.createMap();
-						Map<Date, List<Date>> data3 = data2.get(emp.getMac());
-						if( data3 == null ) data3 = CollectionFactory.createMap();
-						List<Date> data4 = data3.get(curDate);
-						if( data4 == null ) {
-							data4 = CollectionFactory.createList();
-							data4.add(null);
-							data4.add(null);
-						}
-
-						List<Integer> times = aphHelper.timeslotToList(aphe.getRssi());
-						if( times.size() > 1 ) {
-							data4.set(0, aphHelper.slotToDate(aphe.getDate(), times.get(0)));
-							data4.set(1, aphHelper.slotToDate(aphe.getDate(), times.get(times.size()-1)));
-
-							data3.put(curDate, data4);
-							data2.put(emp.getMac(), data3);
-							data.put(store.getIdentifier(), data2);
-						}
-
-					}
-
+			// Get all employees 
+			Map<String, APDMAEmployee> employeeMap = CollectionFactory.createMap();
+			if( entityKind.equals(EntityKind.KIND_BRAND)) {
+				List<APDMAEmployee> tmpList = apdmaeDao.getUsingEntityIdAndRange(entityId, entityKind, null, null, null, false);
+				for( APDMAEmployee obj : tmpList ) {
+					employeeMap.put(obj.getMac(), obj);
 				}
-				curDate = new Date(curDate.getTime() + ONE_DAY);
-			}
-
-						
-			// Creates the final JSON Array
-			JSONArray jsonArray = new JSONArray();
-
-			// Titles row
-			JSONArray titles = new JSONArray();
-			titles.put("Tienda");
-			titles.put("Empleado");
-			titles.put("Dia");
-			titles.put("Entrada");
-			titles.put("Salida");
-			jsonArray.put(titles);
-
-			// Values Array
-			for( String name : storeNames ) {
-				Store store = storeCacheByName.get(name);
-				for( String empName : employeeNames ) {
-					APDMAEmployee employee = employeeCacheByName.get(empName);
-
-					Map<String, Map<Date, List<Date>>> data2 = data.get(store.getIdentifier());
-					if( data2 != null ) {
-						
-						Map<Date, List<Date>> data3 = data2.get(employee.getMac());
-						if( data3 != null ) {
-
-							List<Date> dates = CollectionFactory.createList();
-							dates.addAll(data3.keySet());
-							Collections.sort(dates);
-
-							Iterator<Date> i = dates.iterator();
-							while( i.hasNext()) {
-								Date key = i.next();
-								JSONArray row = new JSONArray();
-								row.put(name);
-								row.put(empName);
-								row.put(getDateName(key));
-								List<Date> times = data3.get(key);
-								row.put((times.get(0) == null ? "-" : sdf2.format(times.get(0))));
-								row.put((times.get(1) == null ? "-" : sdf2.format(times.get(1))));
-								jsonArray.put(row);
-							}
-						}
+				Iterator<Store> i = storeMap.values().iterator();
+				while(i.hasNext()) {
+					Store store = i.next();
+					tmpList = apdmaeDao.getUsingEntityIdAndRange(store.getIdentifier(), EntityKind.KIND_STORE, null, null, null, false);
+					for( APDMAEmployee obj : tmpList ) {
+						employeeMap.put(obj.getMac(), obj);
 					}
 				}
+			
+			} else if( entityKind.equals(EntityKind.KIND_STORE)) {
+				List<APDMAEmployee> tmpList = apdmaeDao.getUsingEntityIdAndRange(entityId, entityKind, null, null, null, false);
+				for( APDMAEmployee obj : tmpList ) {
+					employeeMap.put(obj.getMac(), obj);
+				}
+			} 
+
+			Date fromDate = sdf.parse(fromStringDate);
+			Date toDate = sdf.parse(toStringDate);
+			toDate = new Date(toDate.getTime() + 86400000);
+			
+			EmployeeLogTableRep table = new EmployeeLogTableRep();
+			List<EmployeeLog> emps = employeeLogDao.getUsingEntityIdAndEntityKindAndDate(employeeId, storeList, EntityKind.KIND_STORE, fromDate, toDate, null, "checkinStarted,employeeId", null, false);
+			for( EmployeeLog obj : emps ) {
+				table.getRecords().add(new EmployeeLogRecordRep(obj.getEntityId(), obj.getEntityKind(), obj.getMac(), obj.getCheckinStarted(), obj.getCheckinFinished()));
 			}
 
-			// Returns the final value
-			return jsonArray.toString();
-
+			JSONObject resp = new JSONObject();
+			JSONArray data = new JSONArray();
+			for( EmployeeLogRecordRep r : table.records ) {
+				data.put(r.toJSONObject(storeMap, employeeMap));
+			}
+			resp.put("data", data);
+			return resp.toString();
+						
 		} catch (ASException e) {
 			if( e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENEXPIRED_CODE || 
 					e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENMISSING_CODE) {
@@ -222,16 +139,6 @@ implements BDBDashboardBzService {
 		} finally {
 			markEnd(start);
 		}
-	}
-
-	public boolean isValidForUser(User user, Store store) {
-		if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
-			if( user.getSecuritySettings().getStores().contains(store.getIdentifier()))
-				return true;
-			else
-				return false;
-		} else 
-			return true;
 	}
 
 	public String getDateName(Date date) {
@@ -269,5 +176,147 @@ implements BDBDashboardBzService {
 		sb.append(sdf.format(date));
 
 		return sb.toString();
+	}
+
+	public class EmployeeLogRecordRep {
+		
+		private String entityId;
+		private Integer entityKind;
+		private String mac;
+		private Date checkinStarted;
+		private Date checkinFinished;
+
+		public EmployeeLogRecordRep(String entityId, Integer entityKind, String mac, Date checkinStarted,
+				Date checkinFinished) {
+			super();
+			this.entityId = entityId;
+			this.entityKind = entityKind;
+			this.mac = mac;
+			this.checkinStarted = checkinStarted;
+			this.checkinFinished = checkinFinished;
+		}
+
+		/**
+		 * @return the entityId
+		 */
+		public String getEntityId() {
+			return entityId;
+		}
+		
+		/**
+		 * @param entityId the entityId to set
+		 */
+		public void setEntityId(String entityId) {
+			this.entityId = entityId;
+		}
+		
+		/**
+		 * @return the entityKind
+		 */
+		public Integer getEntityKind() {
+			return entityKind;
+		}
+		
+		/**
+		 * @param entityKind the entityKind to set
+		 */
+		public void setEntityKind(Integer entityKind) {
+			this.entityKind = entityKind;
+		}
+		
+		/**
+		 * @return the mac
+		 */
+		public String getMac() {
+			return mac;
+		}
+		
+		/**
+		 * @param mac the mac to set
+		 */
+		public void setMac(String mac) {
+			this.mac = mac;
+		}
+		
+		/**
+		 * @return the checkinStarted
+		 */
+		public Date getCheckinStarted() {
+			return checkinStarted;
+		}
+		
+		/**
+		 * @param checkinStarted the checkinStarted to set
+		 */
+		public void setCheckinStarted(Date checkinStarted) {
+			this.checkinStarted = checkinStarted;
+		}
+		
+		/**
+		 * @return the checkinFinished
+		 */
+		public Date getCheckinFinished() {
+			return checkinFinished;
+		}
+		
+		/**
+		 * @param checkinFinished the checkinFinished to set
+		 */
+		public void setCheckinFinished(Date checkinFinished) {
+			this.checkinFinished = checkinFinished;
+		}
+
+		public JSONObject toJSONObject(Map<String, Store> storeMap, Map<String, APDMAEmployee> employeeMap) {
+			JSONObject ret = new JSONObject();
+			
+			ret.put("store", storeMap.get(entityId).getName());
+			ret.put("employee", employeeMap.get(mac).getDescription());
+			ret.put("date", sdf3.format(checkinStarted));
+			ret.put("start", sdf2.format(checkinStarted));
+			ret.put("finish", sdf2.format(checkinFinished));
+			
+			return ret;
+		}
+	}
+	
+	public class EmployeeLogTableRep {
+		private List<EmployeeLogRecordRep> records;
+
+		public EmployeeLogTableRep() {
+			records = CollectionFactory.createList();
+		}
+
+		/**
+		 * @return the records
+		 */
+		public List<EmployeeLogRecordRep> getRecords() {
+			return records;
+		}
+
+		/**
+		 * @param records the records to set
+		 */
+		public void setRecords(List<EmployeeLogRecordRep> records) {
+			this.records = records;
+		}
+
+		/**
+		 * Gets all the headers in a JSON Array
+		 * @return
+		 */
+		public JSONArray getJSONHeaders() {
+
+			// Titles row
+			JSONArray titles = new JSONArray();
+
+			titles.put("Tienda");
+			titles.put("Empleado");
+			titles.put("Dia");
+			titles.put("Entrada");
+			titles.put("Salida");
+
+			return titles;
+		}
+
 	}
 }
