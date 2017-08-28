@@ -37,7 +37,6 @@ import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.PersistentCacheFSImpl;
-import mobi.allshoppings.tools.PersistentCacheJDOImpl;
 import mobi.allshoppings.tx.PersistenceProvider;
 
 public class ExternalGeoImporter {
@@ -54,6 +53,9 @@ public class ExternalGeoImporter {
 	private StoreDAO storeDao;
 	
 	@Autowired
+	private ExternalGeoDAO externalGeoDao;
+	
+	@Autowired
 	private SystemConfiguration systemConfiguration;
 	
 	private DumperHelper<DeviceLocationHistory> dump;
@@ -67,7 +69,7 @@ public class ExternalGeoImporter {
 		String period = sdfPeriod.format(new Date());
 		
 		// Connections cache
-		PersistentCacheJDOImpl<ExternalGeo> cache = new PersistentCacheJDOImpl<ExternalGeo>(
+		PersistentCacheFSImpl<ExternalGeo> cache = new PersistentCacheFSImpl<ExternalGeo>(
 				ExternalGeo.class, systemConfiguration.getCacheMaxInMemElements(),
 				systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
 
@@ -239,13 +241,19 @@ public class ExternalGeoImporter {
 						|| cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY));
 			}
 
+			
+			count = 0;
 			Iterator<ExternalGeo> it = cache.iterator();
 			while(it.hasNext()) {
 				ExternalGeo obj = it.next();
 				if( obj != null ) {
 					String key = obj.getIdentifier();
 					obj.setUserCount(cacheDevices.containsKey(key) ? cacheDevices.get(key).size() : 0);
-					cache.put(key, obj);
+					externalGeoDao.create(obj);
+					count ++;
+					if( count % 1000 == 0 ) {
+						log.log(Level.INFO, "Writing record " + count + " of " + cache.size() + " in Database...");
+					}
 				}
 			}
 			
