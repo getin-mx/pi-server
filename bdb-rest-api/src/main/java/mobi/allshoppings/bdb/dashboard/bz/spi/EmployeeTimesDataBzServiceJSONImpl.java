@@ -19,14 +19,14 @@ import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.APDMAEmployeeDAO;
-import mobi.allshoppings.dao.APDVisitDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
+import mobi.allshoppings.dao.EmployeeLogDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDMAEmployee;
-import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.APHEntry;
+import mobi.allshoppings.model.EmployeeLog;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
@@ -52,7 +52,7 @@ implements BDBDashboardBzService {
 	@Autowired
 	private APDMAEmployeeDAO apdmaeDao;
 	@Autowired
-	private APDVisitDAO apdvDao;
+	private EmployeeLogDAO employeeLogDao;
 	@Autowired
 	private APHEntryDAO apheDao;
 	@Autowired
@@ -117,7 +117,6 @@ implements BDBDashboardBzService {
 				employeeCacheByName.put(employee.getMac(), employee);
 			}
 			
-			
 			// Gets the data
 			Map<String, Map<String, Map<Date, List<Date>>>> data = CollectionFactory.createMap();
 			Date toDate = new Date(sdf.parse(toStringDate).getTime());
@@ -128,14 +127,14 @@ implements BDBDashboardBzService {
 
 					Date postDate = new Date(curDate.getTime() + ONE_DAY);
 
-					//FIXME: Change the APDVisit List for the raw APHEntries to avoid employees not seen by Store Calibration limits 
-					List<APDVisit> emps = apdvDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate, postDate, APDVisit.CHECKIN_EMPLOYEE, null, null, null, false);
-					for( APDVisit apdv : emps ) {
-						APHEntry aphe = apheDao.get(apdv.getApheSource()); 
+					//FIXME: Change the APDVisit List for the raw APHEntries to avoid employees not seen by Store Calibration limits
+					List<EmployeeLog> emps = employeeLogDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate, postDate, null, null, null, false);
+					for( EmployeeLog emp : emps ) {
+						APHEntry aphe = apheDao.get(emp.getApheSource()); 
 
 						Map<String, Map<Date, List<Date>>> data2 = data.get(store.getIdentifier());
 						if( data2 == null ) data2 = CollectionFactory.createMap();
-						Map<Date, List<Date>> data3 = data2.get(apdv.getMac());
+						Map<Date, List<Date>> data3 = data2.get(emp.getMac());
 						if( data3 == null ) data3 = CollectionFactory.createMap();
 						List<Date> data4 = data3.get(curDate);
 						if( data4 == null ) {
@@ -150,7 +149,7 @@ implements BDBDashboardBzService {
 							data4.set(1, aphHelper.slotToDate(aphe.getDate(), times.get(times.size()-1)));
 
 							data3.put(curDate, data4);
-							data2.put(apdv.getMac(), data3);
+							data2.put(emp.getMac(), data3);
 							data.put(store.getIdentifier(), data2);
 						}
 
