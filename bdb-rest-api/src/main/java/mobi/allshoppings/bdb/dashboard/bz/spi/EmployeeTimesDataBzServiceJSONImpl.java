@@ -3,7 +3,8 @@ package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -114,11 +115,29 @@ implements BDBDashboardBzService {
 			EmployeeLogTableRep table = new EmployeeLogTableRep();
 			List<EmployeeLog> emps = employeeLogDao.getUsingEntityIdAndEntityKindAndDate(employeeId, storeList, EntityKind.KIND_STORE, fromDate, toDate, null, "checkinStarted,employeeId", null, false);
 			for( EmployeeLog obj : emps ) {
-				table.getRecords().add(new EmployeeLogRecordRep(obj.getEntityId(), obj.getEntityKind(), obj.getMac(), obj.getCheckinStarted(), obj.getCheckinFinished()));
+				table.addRecord(obj.getEntityId(), obj.getEntityKind(), obj.getMac(), obj.getCheckinStarted(),
+						obj.getCheckinFinished(), storeMap, employeeMap);
 			}
 
 			JSONObject resp = new JSONObject();
 			JSONArray data = new JSONArray();
+			Collections.sort(table.records, new Comparator<EmployeeLogRecordRep>() {
+
+				@Override
+				public int compare(EmployeeLogRecordRep o1, EmployeeLogRecordRep o2) {
+					if( !o1.getStoreName().equals(o2.getStoreName())) {
+						return o1.getStoreName().compareTo(o2.getStoreName());
+					}
+					if( !o1.getEmployeeName().equals(o2.getEmployeeName())) {
+						return o1.getEmployeeName().compareTo(o2.getEmployeeName());
+					}
+					
+					if( !o1.getCheckinStarted().equals(o2.getCheckinStarted())) {
+						return o1.getCheckinStarted().compareTo(o2.getCheckinStarted());
+					}
+					return 0;
+				}
+			}); 
 			for( EmployeeLogRecordRep r : table.records ) {
 				data.put(r.toJSONObject(storeMap, employeeMap));
 			}
@@ -141,59 +160,28 @@ implements BDBDashboardBzService {
 		}
 	}
 
-	public String getDateName(Date date) {
-		StringBuffer sb = new StringBuffer();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
-
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		int dof = cal.get(Calendar.DAY_OF_WEEK);
-
-		switch(dof) {
-		case Calendar.SUNDAY:
-			sb.append("Dom ");
-			break;
-		case Calendar.MONDAY:
-			sb.append("Lun ");
-			break;
-		case Calendar.TUESDAY:
-			sb.append("Mar ");
-			break;
-		case Calendar.WEDNESDAY:
-			sb.append("Mie ");
-			break;
-		case Calendar.THURSDAY:
-			sb.append("Jue ");
-			break;
-		case Calendar.FRIDAY:
-			sb.append("Vie ");
-			break;
-		case Calendar.SATURDAY:
-			sb.append("Sab ");
-			break;
-		}
-
-		sb.append(sdf.format(date));
-
-		return sb.toString();
-	}
-
 	public class EmployeeLogRecordRep {
 		
 		private String entityId;
 		private Integer entityKind;
+		private String storeName;
+		private String employeeName;
 		private String mac;
 		private Date checkinStarted;
 		private Date checkinFinished;
+		private String forDate;
 
 		public EmployeeLogRecordRep(String entityId, Integer entityKind, String mac, Date checkinStarted,
-				Date checkinFinished) {
+				Date checkinFinished, Map<String, Store> storeMap, Map<String, APDMAEmployee> employeeMap) {
 			super();
 			this.entityId = entityId;
 			this.entityKind = entityKind;
 			this.mac = mac;
 			this.checkinStarted = checkinStarted;
 			this.checkinFinished = checkinFinished;
+			this.forDate = sdf.format(checkinStarted);
+			storeName = storeMap.get(entityId).getName();
+			employeeName = employeeMap.get(mac).getDescription();
 		}
 
 		/**
@@ -224,6 +212,48 @@ implements BDBDashboardBzService {
 			this.entityKind = entityKind;
 		}
 		
+		/**
+		 * @return the storeName
+		 */
+		public String getStoreName() {
+			return storeName;
+		}
+
+		/**
+		 * @param storeName the storeName to set
+		 */
+		public void setStoreName(String storeName) {
+			this.storeName = storeName;
+		}
+
+		/**
+		 * @return the employeeName
+		 */
+		public String getEmployeeName() {
+			return employeeName;
+		}
+
+		/**
+		 * @param employeeName the employeeName to set
+		 */
+		public void setEmployeeName(String employeeName) {
+			this.employeeName = employeeName;
+		}
+
+		/**
+		 * @return the forDate
+		 */
+		public String getForDate() {
+			return forDate;
+		}
+
+		/**
+		 * @param forDate the forDate to set
+		 */
+		public void setForDate(String forDate) {
+			this.forDate = forDate;
+		}
+
 		/**
 		 * @return the mac
 		 */
@@ -265,7 +295,7 @@ implements BDBDashboardBzService {
 		public void setCheckinFinished(Date checkinFinished) {
 			this.checkinFinished = checkinFinished;
 		}
-
+		
 		public JSONObject toJSONObject(Map<String, Store> storeMap, Map<String, APDMAEmployee> employeeMap) {
 			JSONObject ret = new JSONObject();
 			
@@ -298,6 +328,33 @@ implements BDBDashboardBzService {
 		 */
 		public void setRecords(List<EmployeeLogRecordRep> records) {
 			this.records = records;
+		}
+
+		public void addRecord(String entityId, Integer entityKind, String mac, Date checkinStarted,
+				Date checkinFinished, Map<String, Store> storeMap, Map<String, APDMAEmployee> employeeMap) {
+			
+			EmployeeLogRecordRep r = null;
+			String forDate = sdf.format(checkinStarted);
+			for( EmployeeLogRecordRep rec : records ) {
+				if (rec.getEntityId().equals(entityId) && rec.getEntityKind().equals(entityKind)
+						&& rec.getMac().equals(mac) && rec.getForDate().equals(forDate)) {
+					r = rec;
+					break;
+				}	
+			}
+
+			if( r == null ) {
+				records.add(new EmployeeLogRecordRep(entityId, entityKind, mac, checkinStarted, checkinFinished,
+						storeMap, employeeMap));
+			} else {
+				if( r.getCheckinStarted().after(checkinStarted)) {
+					r.setCheckinStarted(checkinStarted);
+				}
+				if( r.getCheckinFinished().before(checkinFinished)) {
+					r.setCheckinFinished(checkinFinished);
+				}
+			}
+			
 		}
 
 		/**
