@@ -49,7 +49,7 @@ public class ReportExportServlet extends HttpServlet {
 		log.log(Level.INFO, "Begining reportExport");
 		try {
 			//FIXME: URL Hardcoded
-			byte[] b = exportHelper.export(req.getParameter("storeId"), "2017-01-02", req.getParameter("toStringDate"), 5, "/tmp");
+			byte[] b = exportHelper.export(req.getParameter("storeId"), "2017-01-02", req.getParameter("toStringDate"), 4, "/tmp");
 
 			long end = new Date().getTime();
 			log.log(Level.INFO, "BrandExport finished in " + (end-start) + "ms");

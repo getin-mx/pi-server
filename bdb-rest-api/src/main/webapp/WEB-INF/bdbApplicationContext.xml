@@ -53,6 +53,7 @@
   	<bean id="dashboard.assignedbrandlist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.AssignedBrandListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.assignedshoppinglist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.AssignedShoppingListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.assignedstorelist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.AssignedStoreListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.assignedemployeelist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.AssignedEmployeeListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.innerzonelist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.InnerZoneListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.floormaplist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.FloorMapListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.floormapdata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.FloorMapDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
