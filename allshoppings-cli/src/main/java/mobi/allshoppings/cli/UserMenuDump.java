@@ -1459,6 +1459,8 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
+				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
 				um.setKey(userMenuDao.createKey("sallybeauty_mx"));
 				userMenuDao.create(um);
 			}
@@ -6662,7 +6664,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("mobo_mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); // alpha123
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("51a62c6b-9596-4e63-8241-21563bf5925e",
 								"5eea383c-c550-44d3-bc5d-a3bbf8cff283", "4459e3ee-0085-4382-95f4-042af4b89195",
