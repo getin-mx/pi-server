@@ -106,12 +106,16 @@ implements BDBDashboardBzService {
 				DashboardRecordRep rec = obj.getEntityKind().equals(EntityKind.KIND_INNER_ZONE)
 						? table.findRecordWithEntityId(obj.getEntityId(), obj.getEntityKind())
 						: table.findRecordWithEntityId(obj.getSubentityId(), EntityKind.KIND_STORE);
+						
+				DashboardRecordRep totals = table.getTotals();
+				
 				if( null != rec ) {
 					if( obj.getElementSubId().equals("visitor_total_peasents"))
 						rec.setPeasants(rec.getPeasants() + obj.getDoubleValue().longValue());
 					else if( obj.getElementSubId().equals("visitor_total_visits")) {
 						rec.setVisitors(rec.getVisitors() + obj.getDoubleValue().longValue());
 						rec.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
+						totals.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
 					} else if( obj.getElementSubId().equals("visitor_total_tickets")) {
 						rec.setTickets(rec.getTickets() + obj.getDoubleValue().longValue());
 					} else if( obj.getElementSubId().equals("visitor_total_revenue"))
@@ -136,35 +140,6 @@ implements BDBDashboardBzService {
 						
 					}
 				}
-				
-//				Map<String, List<Long>> d = CollectionFactory.createMap();
-//				for( DashboardIndicatorData obj : list )
-//					try {
-//						List<Long> c = d.get(obj.getEntityId());
-//						if( c == null ) c = CollectionFactory.createList();
-//						c.add((long)(obj.getDoubleValue() / obj.getRecordCount()));
-//						d.put(obj.getEntityKind().equals(EntityKind.KIND_INNER_ZONE) ? obj.getEntityId()
-//								: obj.getSubentityId(), c);
-//					} catch( Exception e ){}
-//
-//					Iterator<String> i = d.keySet().iterator();
-//					while( i.hasNext() ) {
-//						String key = i.next();
-//						DashboardRecordRep rec = table.findRecordWithEntityId(key, null);
-//						if( null != rec ) {
-//	
-//							List<Long> c = d.get(key);
-//							Collections.sort(c);
-//							if( c.size() == 0 ) 
-//								rec.setPermanenceInMillis(0l);
-//							else
-//								if( c.size() % 2 == 0 && c.size() >= 2 ) {
-//									int med = (int)(c.size() / 2);
-//									rec.setPermanenceInMillis((c.get(med-1) + c.get(med)) / 2);
-//								} else
-//									rec.setPermanenceInMillis(c.get((int)Math.floor(c.size() / 2)));
-//						}
-//					}
 			}
 
 			// Creates the final JSON Array
@@ -176,6 +151,7 @@ implements BDBDashboardBzService {
 					data.put(r.toJSONObject());
 				}
 				resp.put("data", data);
+				resp.put("totals", table.toJSONTotals());
 				return resp.toString();
 				
 			} else {
@@ -281,10 +257,12 @@ implements BDBDashboardBzService {
 	public class DashboardTableRep {
 		private List<Store> stores;
 		private List<DashboardRecordRep> records;
+		private DashboardRecordRep totals;
 
 		public DashboardTableRep() {
 			stores = CollectionFactory.createList();
 			records = CollectionFactory.createList();
+			totals = new DashboardRecordRep(null, 0, null, null, "Totales", null, null);
 		}
 
 		public DashboardRecordRep findRecordWithEntityId(String entityId, Integer entityKind) {
@@ -293,6 +271,20 @@ implements BDBDashboardBzService {
 					return rec;
 			}
 			return null;
+		}
+
+		/**
+		 * @return the totals
+		 */
+		public DashboardRecordRep getTotals() {
+			return totals;
+		}
+
+		/**
+		 * @param totals the totals to set
+		 */
+		public void setTotals(DashboardRecordRep totals) {
+			this.totals = totals;
 		}
 
 		/**
@@ -389,6 +381,35 @@ implements BDBDashboardBzService {
 					totals.setPermanenceInMillis(c.get((int)Math.floor(c.size() / 2)));
 
 			return totals.toJSONArray();
+
+		}
+
+		/**
+		 * Gets the totals JSON Array 
+		 * @return
+		 * @throws ASException
+		 */
+		public JSONObject toJSONTotals() throws ASException {
+
+			totals.setParent(null);
+			totals.setPeasants(0L);
+			totals.setVisitors(0L);
+			totals.setRevenue(0L);
+			totals.setPermanenceInMillis(0L);
+			totals.setPermancenceQty(0);
+
+			for( DashboardRecordRep rec : records ) {
+				if( rec.getLevel() == 0 ) {
+					totals.setPeasants(totals.getPeasants() + rec.getPeasants());
+					totals.setVisitors(totals.getVisitors() + rec.getVisitors());
+					totals.setTickets(totals.getTickets() + rec.getTickets());
+					totals.setRevenue(totals.getRevenue() + rec.getRevenue());
+					totals.setPermanenceInMillis(totals.getPermanenceInMillis() + rec.getPermanenceInMillis());
+					totals.setPermancenceQty(totals.getPermancenceQty() + rec.getPermancenceQty());
+				}
+			}
+
+			return totals.toJSONObject();
 
 		}
 
