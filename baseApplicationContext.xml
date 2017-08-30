@@ -830,7 +830,7 @@
 				<entry><key><value>cinepolis_mx</value></key><value>IA.allshop.2015</value></entry>
 				<entry><key><value>liverpool_mx</value></key><value>rootman01</value></entry>
 				<entry><key><value>getin-apdevice-calibrator</value></key><value>rootman01</value></entry>
-				<entry><key><value>amazing_mx</value></key><value>Getin2016</value></entry>
+				<entry><key><value>amazing_mx</value></key><value>rootman01</value></entry>
 			</map>
 		</property>
 		<property name="APNSandboxCertPassword">
@@ -841,7 +841,7 @@
 				<entry><key><value>cinepolis_mx</value></key><value>allshop</value></entry>
 				<entry><key><value>liverpool_mx</value></key><value>rootman01</value></entry>
 				<entry><key><value>getin-apdevice-calibrator</value></key><value>rootman01</value></entry>
-				<entry><key><value>amazing_mx</value></key><value>Getin2016</value></entry>
+				<entry><key><value>amazing_mx</value></key><value>rootman01</value></entry>
 			</map>
 		</property>
   	</bean>

@@ -137,7 +137,6 @@ implements BDBDashboardBzService {
 						else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
 						if( obj.getRecordCount() != null ) rec.setPermancenceQty(rec.getPermancenceQty() + obj.getRecordCount());
 						else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
-						
 					}
 				}
 			}
