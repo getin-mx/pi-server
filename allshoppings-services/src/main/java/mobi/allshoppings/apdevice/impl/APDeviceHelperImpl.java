@@ -325,7 +325,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			if( device.getLastRecordDate() != null && device.getLastRecordDate().before(limitDate)) {
 				if( device.getStatus() == null ) device.setStatus(StatusAware.STATUS_ENABLED);
 				if( device.getReportStatus() == null ) device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
-				if(device.getReportable() != null && device.getReportable() && device.getReportMailList() != null && device.getReportMailList().size() > 0 ) {
+				if(device.getReportable() != null && device.getReportable()) {
 					if( device.getStatus().equals(StatusAware.STATUS_ENABLED) && device.getReportStatus().equals(APDevice.REPORT_STATUS_NOT_REPORTED)) {
 
 						if( onReportTime(device)) {
@@ -360,7 +360,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 
 			// Now, checks if needs to report a back to life message
 			else {
-				if(device.getReportable() != null && device.getReportable() && device.getReportMailList() != null && device.getReportMailList().size() > 0 ) {
+				if(device.getReportable() != null && device.getReportable()) {
 					if( device.getStatus() == null ) device.setStatus(StatusAware.STATUS_ENABLED);
 					if( device.getReportStatus() == null ) device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
 					if( device.getStatus().equals(StatusAware.STATUS_ENABLED) && device.getReportStatus().equals(APDevice.REPORT_STATUS_REPORTED)) {

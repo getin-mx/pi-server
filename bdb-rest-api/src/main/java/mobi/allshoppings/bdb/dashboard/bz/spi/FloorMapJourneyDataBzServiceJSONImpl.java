@@ -61,8 +61,6 @@ implements BDBDashboardBzService {
 			
 			Range range = new Range(fromRange,toRange);
 			
-//			List<FloorMapJourney> list = helper.process(floorMapId, mac, fromDate, toDate, range);
-			
 			List<FloorMapJourney> list = dao.getUsingFloorMapAndMacAndDate(floorMapId, mac, fromDate, toDate, range, "wordLength DESC");
 			
 			
