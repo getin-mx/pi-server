@@ -76,6 +76,33 @@ public class PushMessageHelperImpl implements PushMessageHelper {
 	}
 
 	@Override
+	public void sendBulkMessage(String appId, String title, String text, String action ) throws ASException {
+		
+		List<DeviceInfo> list = deviceInfoDao.getUsingAppId(appId);
+		for( DeviceInfo dev : list ) {
+			if( StringUtils.hasText(dev.getMessagingToken())) {
+				sendMessage(title, text, action, dev);
+			}
+		}
+		
+	}
+	
+	
+	@Override
+	public void sendMessage(String appId, User user, String title, String text, String action) throws ASException {
+		
+		List<DeviceInfo> list = deviceInfoDao.getUsingUser(user.getIdentifier());
+		for( DeviceInfo dev : list ) {
+			if( StringUtils.hasText(dev.getMessagingToken())) {
+				if( null != appId && appId.equals(dev.getAppId())) {
+					sendMessage(user, title, text, action, dev);
+				}
+			}
+		}
+		
+	}
+	
+	@Override
 	public void sendMessage(User user, String title, String text, String action, DeviceInfo device) throws ASException {
 
 		PushMessageSender sender = getSenderForPlatform(device.getDevicePlatform());
