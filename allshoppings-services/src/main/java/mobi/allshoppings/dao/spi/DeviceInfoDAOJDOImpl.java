@@ -103,7 +103,7 @@ public class DeviceInfoDAOJDOImpl extends GenericDAOJDO<DeviceInfo> implements D
 
 		try {
 
-			Query query = pm.newQuery(DeviceInfo.class);	
+			Query query = pm.newQuery(DeviceInfo.class);
 			query.setFilter("userId == null");
 			if( range != null ) {
 				if( StringUtils.hasText(range.getCursor())) {
@@ -198,6 +198,49 @@ public class DeviceInfoDAOJDOImpl extends GenericDAOJDO<DeviceInfo> implements D
 			query.setFilter("userId == userIdParm");
 			query.setOrdering("lastUpdate desc");
 			parameters.put("userIdParm", userId);
+			
+			@SuppressWarnings("unchecked")
+			List<DeviceInfo> result = (List<DeviceInfo>)query.executeWithMap(parameters);
+
+			if( result.size() == 0 ) {
+				throw ASExceptionHelper.notFoundException();
+			}
+
+			for(DeviceInfo res : result) {
+				ret.add(pm.detachCopy(res));
+			}
+			
+			return ret;
+
+		} catch(ASException e) {
+			if( e.getErrorCode() != ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE ) {
+				log.log(Level.WARNING, "exception catched", e);
+			}
+			throw e;
+		} catch (Exception e) {
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		} finally {
+			pm.close();
+		}
+	}
+
+	@Override
+	public List<DeviceInfo> getUsingAppId(String appId) throws ASException {
+		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+		List<DeviceInfo> ret = CollectionFactory.createList();
+
+		try {
+
+			if(!StringUtils.hasText(appId)) {
+				throw ASExceptionHelper.notAcceptedException();
+			}
+
+			Map<String, Object> parameters = CollectionFactory.createMap();
+			Query query = pm.newQuery(DeviceInfo.class);	
+			query.declareParameters("String appIdParm");
+			query.setFilter("appId == appIdParm");
+			query.setOrdering("lastUpdate desc");
+			parameters.put("appIdParm", appId);
 			
 			@SuppressWarnings("unchecked")
 			List<DeviceInfo> result = (List<DeviceInfo>)query.executeWithMap(parameters);

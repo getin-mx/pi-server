@@ -17,6 +17,7 @@ public interface DeviceInfoDAO extends GenericDAO<DeviceInfo> {
 	DeviceInfo getUsingUserAndDeviceAndPlatform(String userId, String deviceName, String devicePlatform) throws ASException;
 	DeviceInfo getUsingMessagingToken(String messagingToken) throws ASException;
 	List<DeviceInfo> getUsingUser(String userId) throws ASException;
+	List<DeviceInfo> getUsingAppId(String appId) throws ASException;
 	List<DeviceInfo> getUsingKeyList(List<String> keys) throws ASException;
 	List<DeviceInfo> getOrphan(Range range) throws ASException;
 	List<DeviceInfo> getByProximity(GeoPoint geo, Integer presition, Integer limitInMeters, String appId, Date lastUpdate, boolean detachable) throws ASException;
