@@ -168,6 +168,78 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("luis@getin.mx"));
 				userMenuDao.create(um);
 			}
+			
+			 User ignacio = null; 
+		      try { 
+		        ignacio = userDao.get("ignacio@getin.mx", true); 
+		      } catch( Exception e ) { 
+		        ignacio = new User(); 
+		        ignacio.setFirstname("Ignacio"); 
+		        ignacio.setLastname(""); 
+		        ignacio.setEmail("ignacio@getin.mx"); 
+		        ignacio.getSecuritySettings().setRole(Role.ADMIN); 
+		        ignacio.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
+		        ignacio.setKey((Key)keyHelper.obtainKey(User.class, "ignacio@getin.mx")); 
+		        userDao.create(ignacio); 
+		      } 
+		 
+		      try { 
+		        um = userMenuDao.get("ignacio@getin.mx", true); 
+		        userMenuDao.delete("ignacio@getin.mx"); 
+		        throw new Exception(); 
+		      } catch( Exception e ) { 
+		        um = new UserMenu(); 
+		        um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas")); 
+		        um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico")); 
+		        um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura")); 
+		        um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados")); 
+		        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
+		        um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas")); 
+		        um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados")); 
+		        um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios")); 
+		        um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets")); 
+		        um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos")); 
+		        um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue")); 
+		        um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos")); 
+		        um.setKey(userMenuDao.createKey("ignacio@getin.mx")); 
+		        userMenuDao.create(um); 
+		      } 
+		       
+		      User fernando = null; 
+		      try { 
+		        fernando = userDao.get("fernando@getin.mx", true); 
+		      } catch( Exception e ) { 
+		        fernando = new User(); 
+		        fernando.setFirstname("Fernando"); 
+		        fernando.setLastname(""); 
+		        fernando.setEmail("fernando@getin.mx"); 
+		        fernando.getSecuritySettings().setRole(Role.ADMIN); 
+		        fernando.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
+		        fernando.setKey((Key)keyHelper.obtainKey(User.class, "fernando@getin.mx")); 
+		        userDao.create(fernando); 
+		      } 
+		 
+		      try { 
+		        um = userMenuDao.get("fernando@getin.mx", true); 
+		        userMenuDao.delete("fernando@getin.mx"); 
+		        throw new Exception(); 
+		      } catch( Exception e ) { 
+		        um = new UserMenu(); 
+		        um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas")); 
+		        um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico")); 
+		        um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura")); 
+		        um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados")); 
+		        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
+		        um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas")); 
+		        um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados")); 
+		        um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios")); 
+		        um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets")); 
+		        um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos")); 
+		        um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue")); 
+		        um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos")); 
+		        um.setKey(userMenuDao.createKey("fernando@getin.mx")); 
+		        userMenuDao.create(um); 
+		      } 
 
 			User luis2 = null;
 			try {
