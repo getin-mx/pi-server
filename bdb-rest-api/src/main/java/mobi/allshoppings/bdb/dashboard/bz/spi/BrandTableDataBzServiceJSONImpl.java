@@ -119,7 +119,7 @@ implements BDBDashboardBzService {
 					} else if( obj.getElementSubId().equals("visitor_total_tickets")) {
 						rec.setTickets(rec.getTickets() + obj.getDoubleValue().longValue());
 					} else if( obj.getElementSubId().equals("visitor_total_revenue"))
-						rec.setRevenue(rec.getRevenue() + obj.getDoubleValue().longValue());
+						rec.setRevenue(rec.getRevenue() + obj.getDoubleValue());
 				}
 			}
 
@@ -393,7 +393,7 @@ implements BDBDashboardBzService {
 			totals.setParent(null);
 			totals.setPeasants(0L);
 			totals.setVisitors(0L);
-			totals.setRevenue(0L);
+			totals.setRevenue(0.0);
 			totals.setPermanenceInMillis(0L);
 			totals.setPermancenceQty(0);
 
@@ -439,7 +439,7 @@ implements BDBDashboardBzService {
 		private Long peasants;
 		private Long visitors;
 		private Long tickets;
-		private Long revenue;
+		private Double revenue;
 		private Date higherDate;
 		private Date lowerDate;
 		private Long permanenceInMillis;
@@ -460,7 +460,7 @@ implements BDBDashboardBzService {
 			peasants = 0l;
 			visitors = 0l;
 			tickets = 0l;
-			revenue = 0l;
+			revenue = 0.0;
 			permanenceInMillis = 0l;
 
 			try {
@@ -656,14 +656,14 @@ implements BDBDashboardBzService {
 		/**
 		 * @return the revenue
 		 */
-		public Long getRevenue() {
+		public Double getRevenue() {
 			return revenue;
 		}
 
 		/**
 		 * @param revenue the revenue to set
 		 */
-		public void setRevenue(Long revenue) {
+		public void setRevenue(Double revenue) {
 			this.revenue = revenue;
 		}
 
