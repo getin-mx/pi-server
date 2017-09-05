@@ -2735,6 +2735,32 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("moda_holding_mx"));
 				userMenuDao.create(um);
 			}
+			
+			User sbarro = null;
+			try {
+				sbarro = userDao.get("sbarro_mx", true);
+			} catch( Exception e ) {
+				sbarro = new User();
+				sbarro.setFirstname("Sbarro");
+				sbarro.setLastname("Mexico");
+				sbarro.setEmail("sbarro@allshoppings.mobi");
+				sbarro.getSecuritySettings().setRole(Role.BRAND);
+				sbarro.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				sbarro.setKey((Key)keyHelper.obtainKey(User.class, "sbarro_mx"));
+				userDao.create(sbarro);
+			}
+
+			try {
+				um = userMenuDao.get("sbarro_mx", true);
+				userMenuDao.delete("sbarro_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("sbarro_mx"));
+				userMenuDao.create(um);
+			}
+			
 
 			// Fullsand --------------------------------------------------------------------
 			User user = null;
