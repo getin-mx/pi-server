@@ -4253,7 +4253,8 @@ public class UserMenuDump extends AbstractCLI {
 								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
 								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
 								"1479933115741", "1479926604340", 
-								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
+								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c", "4db491d4-3205-40ae-b048-f5b75ac35040",
+								"4523b563-2e0d-4fe2-8321-9e53740854b2"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "bprada@prada.mx"));
 				userDao.create(user);
 			}
@@ -4280,7 +4281,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("gcastellanos@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
+						.setPassword("98697622CC4F72D7637A18DD9A2A3A000CEA2BA6B772C7CE06C599997AB1482A");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72",
 								"2e029627-eb93-4646-999e-ff7894b45cd0", "afb95e1f-1774-46fe-b777-16488c2bcd65",
@@ -4297,7 +4298,8 @@ public class UserMenuDump extends AbstractCLI {
 								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
 								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
 								"1479933115741", "1479926604340", 
-								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
+								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c", "4db491d4-3205-40ae-b048-f5b75ac35040",
+								"4523b563-2e0d-4fe2-8321-9e53740854b2"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "gcastellanos@pradastores.mx"));
 				userDao.create(user);
 			}
@@ -4323,7 +4325,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("maguirre@prada.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
+						.setPassword("5BD1FFF91510543DC94D1912F608A4A22E6203A8B297676C51C5F08B3EEA3769");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72",
 								"2e029627-eb93-4646-999e-ff7894b45cd0", "afb95e1f-1774-46fe-b777-16488c2bcd65",
@@ -4340,7 +4342,8 @@ public class UserMenuDump extends AbstractCLI {
 								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
 								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
 								"1479933115741", "1479926604340", 
-								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
+								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c", "4db491d4-3205-40ae-b048-f5b75ac35040",
+								"4523b563-2e0d-4fe2-8321-9e53740854b2"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "maguirre@prada.mx"));
 				userDao.create(user);
 			}
@@ -4382,7 +4385,8 @@ public class UserMenuDump extends AbstractCLI {
 								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
 								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
 								"1479933115741", "1479926604340", 
-								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
+								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c", "4db491d4-3205-40ae-b048-f5b75ac35040",
+								"4523b563-2e0d-4fe2-8321-9e53740854b2"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "dperez@prada.mx"));
 				userDao.create(user);
 			}
@@ -4424,7 +4428,8 @@ public class UserMenuDump extends AbstractCLI {
 								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
 								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
 								"1479933115741", "1479926604340", 
-								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
+								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c", "4db491d4-3205-40ae-b048-f5b75ac35040",
+								"4523b563-2e0d-4fe2-8321-9e53740854b2"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "truiz@prada.mx"));
 				userDao.create(user);
 			}
@@ -4508,7 +4513,8 @@ public class UserMenuDump extends AbstractCLI {
 								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
 								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
 								"1479933115741", "1479926604340", 
-								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
+								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c", "4db491d4-3205-40ae-b048-f5b75ac35040",
+								"4523b563-2e0d-4fe2-8321-9e53740854b2"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "agutierrez@prada.mx"));
 				userDao.create(user);
 			}
