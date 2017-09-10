@@ -38,7 +38,7 @@ public class CouponsDump extends AbstractCLI {
 	public static void main(String args[]) throws ASException {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			CampaignActionDAO csDao = (CampaignActionDAO)getApplicationContext().getBean("campaignspecial.dao.ref");
+			CampaignActionDAO csDao = (CampaignActionDAO)getApplicationContext().getBean("campaignaction.dao.ref");
 			BrandDAO brandDao = (BrandDAO)getApplicationContext().getBean("brand.dao.ref");
 			OfferTypeDAO otDao = (OfferTypeDAO)getApplicationContext().getBean("offertype.dao.ref");
 			IndexHelper indexHelper = (IndexHelper)getApplicationContext().getBean("index.helper");

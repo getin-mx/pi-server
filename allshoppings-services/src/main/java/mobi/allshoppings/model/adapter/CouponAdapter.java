@@ -13,7 +13,7 @@ public class CouponAdapter extends CampaignActivity implements IGenericAdapter, 
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(CouponAdapter.class.getName());
 	
-	public static final String OPTIONS_CSDAO = "CampaignSpecialDAO";
+	public static final String OPTIONS_CSDAO = "CampaignActionDAO";
 	public static final String OPTIONS_CHELPER = "CampaignHelper";
 	public static final String OPTIONS_SDAO = "ShoppingDAO";
 	public static final String OPTIONS_BDAO = "BrandDAO";

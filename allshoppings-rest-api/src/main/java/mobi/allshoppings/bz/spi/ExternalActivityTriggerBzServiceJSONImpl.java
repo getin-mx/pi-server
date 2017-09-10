@@ -92,11 +92,11 @@ implements ExternalActivityTriggerBzService {
 			ExternalActivityAdapter adapter = new ExternalActivityAdapter();
 			setPropertiesFromJSONObject(obj, adapter, new HashSet<String>());
 
-			CampaignAction cs = csDao.get(adapter.getCampaignSpecialId());
+			CampaignAction cs = csDao.get(adapter.getCampaignActionId());
 
 			ExternalActivityLog eaLog = new ExternalActivityLog();
 			eaLog.setKey(eaDao.createKey());
-			eaLog.setCampaignSpecialId(cs.getIdentifier());
+			eaLog.setCampaignActionId(cs.getIdentifier());
 			eaLog.setEntityId(obj.has("entityId") ? obj.getString("entityId") : null);
 			eaLog.setDescription(obj.has("description") ? obj.getString("description") : null);
 			
@@ -110,7 +110,7 @@ implements ExternalActivityTriggerBzService {
 				
 				// Checks locks for user
 				try {
-					if( ignoreLocks || couponHelper.deviceHasAvailability(device.getDeviceUUID(), adapter.getCampaignSpecialId())) {
+					if( ignoreLocks || couponHelper.deviceHasAvailability(device.getDeviceUUID(), adapter.getCampaignActionId())) {
 
 						if(ignoreLocks || !couponHelper.deviceHasActiveCoupons(device.getDeviceUUID())) {
 							User user = userDao.get(device.getUserId());
@@ -123,7 +123,7 @@ implements ExternalActivityTriggerBzService {
 							CampaignActivity ca = new CampaignActivity();
 							ca.setBrandId(adapter.getBrandId());
 							ca.setCampaignId(null);
-							ca.setCampaignSpecialId(cs.getIdentifier());
+							ca.setCampaignActionId(cs.getIdentifier());
 							ca.setCheckinId(null);
 							ca.setCouponCode(null);
 							ca.setExtras(new Text(""));
@@ -196,23 +196,23 @@ implements ExternalActivityTriggerBzService {
 	}
 
 	public class ExternalActivityAdapter {
-		private String campaignSpecialId;
+		private String campaignActionId;
 		private String actionPrepend;
 		private String brandId;
 		private List<String> devices;
 		private String imageUrl;
 
 		/**
-		 * @return the campaignSpecialId
+		 * @return the campaignActionId
 		 */
-		public String getCampaignSpecialId() {
-			return campaignSpecialId;
+		public String getCampaignActionId() {
+			return campaignActionId;
 		}
 		/**
-		 * @param campaignSpecialId the campaignSpecialId to set
+		 * @param campaignActionId the campaignActionId to set
 		 */
-		public void setCampaignSpecialId(String campaignSpecialId) {
-			this.campaignSpecialId = campaignSpecialId;
+		public void setCampaignActionId(String campaignActionId) {
+			this.campaignActionId = campaignActionId;
 		}
 		/**
 		 * @return the actionPrepend
@@ -267,8 +267,8 @@ implements ExternalActivityTriggerBzService {
 		 */
 		@Override
 		public String toString() {
-			return "ExternalActivityAdapter [campaignSpecialId="
-					+ campaignSpecialId + ", actionPrepend=" + actionPrepend
+			return "ExternalActivityAdapter [campaignActionId="
+					+ campaignActionId + ", actionPrepend=" + actionPrepend
 					+ ", brandId=" + brandId + ", devices=" + devices
 					+ ", imageUrl=" + imageUrl + "]";
 		}

@@ -415,7 +415,7 @@ public class CouponHelperImpl implements CouponHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public boolean deviceHasAvailability(String deviceUUID, String campaignSpecialId) throws ASException {
+	public boolean deviceHasAvailability(String deviceUUID, String campaignActionId) throws ASException {
 
 		try {
 			DeviceInfo di = deviceInfoDao.get(deviceUUID, true);
@@ -432,8 +432,8 @@ public class CouponHelperImpl implements CouponHelper {
 			if(lock.getScope() != 2 ) return false;
 			if(StringUtils.hasText(lock.getCampaignActivityId())) {
 				CampaignActivity ca = caDao.get(lock.getCampaignActivityId(), true);
-				CampaignAction cs = csDao.get(ca.getCampaignSpecialId(), true);
-				if( cs.getIdentifier().equals(campaignSpecialId)) return false;
+				CampaignAction cs = csDao.get(ca.getCampaignActionId(), true);
+				if( cs.getIdentifier().equals(campaignActionId)) return false;
 			}
 		}
 		
