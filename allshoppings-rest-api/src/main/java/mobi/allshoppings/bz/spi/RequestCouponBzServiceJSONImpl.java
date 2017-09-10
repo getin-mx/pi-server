@@ -59,7 +59,7 @@ implements RequestCouponBzService {
 			@SuppressWarnings("unused")
 			boolean test = obj.has("test") ? obj.getBoolean("test") : false;
 
-			if(!StringUtils.hasText(campaignSpecialId) || campaignSpecialId.equals("1430288511084")) {	// cine
+			if(!StringUtils.hasText(campaignActionId) || campaignActionId.equals("1430288511084")) {	// cine
 
 //				SendMovieTicketsService service = new SendMovieTicketsService();
 //				service.doProcess(
@@ -71,7 +71,7 @@ implements RequestCouponBzService {
 //						Arrays.asList(new String[] { "cinepolis_mx_339" }), true,
 //						test, null, true, false);
 
-			} else if( campaignSpecialId.equalsIgnoreCase("1432724594627")) {	// crepa
+			} else if( campaignActionId.equalsIgnoreCase("1432724594627")) {	// crepa
 
 //				SendPromoTicketsService service = new SendPromoTicketsService();
 //				service.doProcess(
@@ -82,7 +82,7 @@ implements RequestCouponBzService {
 //								devices, devices, Arrays.asList(new String[] { "cinepolis_mx_339" }), 
 //								test, true, "1432724594627", true, false);
 
-			} else if( campaignSpecialId.equalsIgnoreCase("1432724531038")) {	// bagui
+			} else if( campaignActionId.equalsIgnoreCase("1432724531038")) {	// bagui
 
 //				SendPromoTicketsService service = new SendPromoTicketsService();
 //				service.doProcess(
