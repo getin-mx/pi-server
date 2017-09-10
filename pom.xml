@@ -17,7 +17,6 @@
 		<module>allshoppings-rest-api</module>
 		<module>allshoppings-services</module>
 		<module>gcm-server</module>
-	    <module>allshoppings-main-be</module>
 	    <module>bdb-rest-api</module>
   </modules>
 
