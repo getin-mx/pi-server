@@ -47,18 +47,19 @@ public class JettyServer {
 			File warFile = new File(FileLoader.getResource("allshoppings-rest-api.war").getFile());
 			webapp.setWar(warFile.getAbsolutePath());
 
-			WebAppContext webapp2 = new WebAppContext();
-			webapp2.setContextPath("/main-be");
-			File warFile2 = new File(FileLoader.getResource("allshoppings-main-be.war").getFile());
-			webapp2.setWar(warFile2.getAbsolutePath());
-
+//			WebAppContext webapp2 = new WebAppContext();
+//			webapp2.setContextPath("/main-be");
+//			File warFile2 = new File(FileLoader.getResource("allshoppings-main-be.war").getFile());
+//			webapp2.setWar(warFile2.getAbsolutePath());
+//
 			WebAppContext webapp3 = new WebAppContext();
 			webapp3.setContextPath("/bdb");
 			File warFile3 = new File(FileLoader.getResource("bdb-rest-api.war").getFile());
 			webapp3.setWar(warFile3.getAbsolutePath());
 
 			ContextHandlerCollection multi = new ContextHandlerCollection();
-			multi.setHandlers(new Handler[] { webapp, webapp2, webapp3 });
+//			multi.setHandlers(new Handler[] { webapp, webapp2, webapp3 });
+			multi.setHandlers(new Handler[] { webapp, webapp3 });
 
 			server.setHandler(multi);
 		}
