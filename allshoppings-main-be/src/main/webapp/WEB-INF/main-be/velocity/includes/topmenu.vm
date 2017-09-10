@@ -1,6 +1,0 @@
-	<div id="pageoptions">
-		<ul>
-			<li><a href="/main-be/logout">Logout</a></li>
-			<!-- <li><a href="/main-be/ayuda.html">Ayuda</a></li>  -->
-		</ul>
-	</div>
