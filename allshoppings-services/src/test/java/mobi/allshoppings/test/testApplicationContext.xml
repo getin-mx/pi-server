@@ -238,7 +238,7 @@
 	<bean id="user.dao.ref" class="mobi.allshoppings.dao.spi.UserDAOJDOImpl" />
 	<bean id="tftoken.dao.ref" class="mobi.allshoppings.dao.spi.TFTokenDAOJDOImpl" />
 	<bean id="favorite.dao.ref" class="mobi.allshoppings.dao.spi.FavoriteDAOJDOImpl" />
-	<bean id="campaignspecial.dao.ref" class="mobi.allshoppings.dao.spi.CampaignSpecialDAOJDOImpl" />
+	<bean id="campaignaction.dao.ref" class="mobi.allshoppings.dao.spi.CampaignActionDAOJDOImpl" />
 	<bean id="campaignactivity.dao.ref" class="mobi.allshoppings.dao.spi.CampaignActivityDAOJDOImpl" />
 	<bean id="checkin.dao.ref" class="mobi.allshoppings.dao.spi.CheckinDAOJDOImpl" />
 	<bean id="aphotspot.dao.ref" class="mobi.allshoppings.dao.spi.APHotspotDAOJDOImpl" />

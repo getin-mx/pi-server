@@ -15,9 +15,9 @@ import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
-public class TouchCampaignSpecials extends AbstractCLI {
+public class TouchCampaignActions extends AbstractCLI {
 
-	private static final Logger log = Logger.getLogger(TouchCampaignSpecials.class.getName());
+	private static final Logger log = Logger.getLogger(TouchCampaignActions.class.getName());
 
 	public static void setApplicationContext(ApplicationContext ctx) {
 		context = ctx;
@@ -31,9 +31,9 @@ public class TouchCampaignSpecials extends AbstractCLI {
 
 	public static void main(String args[]) throws ASException {
 		try {
-			CampaignActionDAO dao = (CampaignActionDAO)getApplicationContext().getBean("campaignspecial.dao.ref");
+			CampaignActionDAO dao = (CampaignActionDAO)getApplicationContext().getBean("campaignaction.dao.ref");
 
-			log.log(Level.INFO, "Touching Campaign Specials....");
+			log.log(Level.INFO, "Touching Campaign Actions....");
 			List<CampaignAction> list = dao.getAll(true);
 			for( CampaignAction obj : list ) {
 				log.log(Level.INFO, "Touching " + obj.getIdentifier() + "...");

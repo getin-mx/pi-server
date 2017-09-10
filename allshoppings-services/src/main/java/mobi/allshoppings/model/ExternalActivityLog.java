@@ -30,7 +30,7 @@ public class ExternalActivityLog implements ModelKey, Serializable, Identificabl
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
 	private Key key;
 
-	private String campaignSpecialId;
+	private String campaignActionId;
 	private String entityId;
 	private String description;
 
@@ -94,17 +94,17 @@ public class ExternalActivityLog implements ModelKey, Serializable, Identificabl
 	}
 
 	/**
-	 * @return the campaignSpecialId
+	 * @return the campaignActionId
 	 */
-	public String getCampaignSpecialId() {
-		return campaignSpecialId;
+	public String getCampaignActionId() {
+		return campaignActionId;
 	}
 
 	/**
-	 * @param campaignSpecialId the campaignSpecialId to set
+	 * @param campaignActionId the campaignActionId to set
 	 */
-	public void setCampaignSpecialId(String campaignSpecialId) {
-		this.campaignSpecialId = campaignSpecialId;
+	public void setCampaignActionId(String campaignActionId) {
+		this.campaignActionId = campaignActionId;
 	}
 
 	/**
@@ -339,8 +339,8 @@ public class ExternalActivityLog implements ModelKey, Serializable, Identificabl
 	 */
 	@Override
 	public String toString() {
-		return "ExternalActivityLog [key=" + key + ", campaignSpecialId="
-				+ campaignSpecialId + ", entityId=" + entityId
+		return "ExternalActivityLog [key=" + key + ", campaignActionId="
+				+ campaignActionId + ", entityId=" + entityId
 				+ ", description=" + description + ", suggestedDevices="
 				+ suggestedDevices + ", suggestedDevicesCount="
 				+ suggestedDevicesCount + ", lockedDevices=" + lockedDevices

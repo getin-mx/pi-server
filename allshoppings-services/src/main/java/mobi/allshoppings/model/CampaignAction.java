@@ -1110,7 +1110,7 @@ public class CampaignAction implements ModelKey, IAdaptable, Serializable, Ident
 	 */
 	@Override
 	public String toString() {
-		return "CampaignSpecial [key=" + key + ", shoppings=" + shoppings + ", brands=" + brands + ", stores=" + stores
+		return "CampaignAction [key=" + key + ", shoppings=" + shoppings + ", brands=" + brands + ", stores=" + stores
 				+ ", appIds=" + appIds + ", offerTypeId=" + offerTypeId + ", offerTypeName=" + offerTypeName
 				+ ", offerTypeRibbonText=" + offerTypeRibbonText + ", areaId=" + areaId + ", name=" + name
 				+ ", campaignId=" + campaignId + ", description=" + description + ", instructions=" + instructions

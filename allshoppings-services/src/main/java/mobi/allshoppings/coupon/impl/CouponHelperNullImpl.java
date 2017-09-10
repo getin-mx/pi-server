@@ -70,7 +70,7 @@ public class CouponHelperNullImpl implements CouponHelper {
 
 	@Override
 	public boolean deviceHasAvailability(String deviceUUID,
-			String campaignSpecialId) throws ASException {
+			String campaignActionId) throws ASException {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -44,19 +44,19 @@ public class CampaignActivityDAOJDOImpl extends GenericDAOJDO<CampaignActivity> 
 	}
 
 	@Override
-	public boolean hasSpecialBeenUsedForUserAndDate(CampaignAction campaignSpecial, User user, Date date) throws ASException {
-		long dailyCount = countDeliveredUsignCampaignSpecialAndUserAndDate(campaignSpecial, user, date);
+	public boolean hasSpecialBeenUsedForUserAndDate(CampaignAction campaignAction, User user, Date date) throws ASException {
+		long dailyCount = countDeliveredUsignCampaignActionAndUserAndDate(campaignAction, user, date);
 		if( dailyCount > 0 ) return true;
 		return false;
 	}
 
 	@Override
-	public boolean hasAvailabilityForDate(CampaignAction campaignSpecial, Date date) throws ASException {
+	public boolean hasAvailabilityForDate(CampaignAction campaignAction, Date date) throws ASException {
 
-		long count = countDeliveredUsignCampaignSpecial(campaignSpecial);
-		long dailyCount = countDeliveredUsignCampaignSpecialAndUserAndDate(campaignSpecial, null, date);
-		if((campaignSpecial.getDailyQuantity() == 0 || dailyCount < campaignSpecial.getDailyQuantity()))
-			if ((campaignSpecial.getQuantity() == 0 || count < campaignSpecial.getQuantity()))
+		long count = countDeliveredUsignCampaignAction(campaignAction);
+		long dailyCount = countDeliveredUsignCampaignActionAndUserAndDate(campaignAction, null, date);
+		if((campaignAction.getDailyQuantity() == 0 || dailyCount < campaignAction.getDailyQuantity()))
+			if ((campaignAction.getQuantity() == 0 || count < campaignAction.getQuantity()))
 				return true;
 		
 		return false;
@@ -64,12 +64,12 @@ public class CampaignActivityDAOJDOImpl extends GenericDAOJDO<CampaignActivity> 
 	}
 
 	@Override
-	public long countDeliveredUsignCampaignSpecial(CampaignAction campaignSpecial) throws ASException {
-		return countDeliveredUsignCampaignSpecialAndUserAndDate(campaignSpecial, null, null);
+	public long countDeliveredUsignCampaignAction(CampaignAction campaignAction) throws ASException {
+		return countDeliveredUsignCampaignActionAndUserAndDate(campaignAction, null, null);
 	}
 
 	@Override
-	public long countDeliveredUsignCampaignSpecialAndUserAndDate(CampaignAction campaignSpecial, User user, Date date) throws ASException {
+	public long countDeliveredUsignCampaignActionAndUserAndDate(CampaignAction campaignAction, User user, Date date) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 
 		try {
@@ -80,10 +80,10 @@ public class CampaignActivityDAOJDOImpl extends GenericDAOJDO<CampaignActivity> 
 			Query query = pm.newQuery(CampaignActivity.class);
 
 			// Campaign Special Parameters
-			if( campaignSpecial != null ) {
-				declaredParams.add("String campaignSpecialIdParam");
-				filters.add("campaignSpecialId == campaignSpecialIdParam");
-				parameters.put("campaignSpecialIdParam", campaignSpecial.getIdentifier());
+			if( campaignAction != null ) {
+				declaredParams.add("String campaignActionIdParam");
+				filters.add("campaignActionId == campaignActionIdParam");
+				parameters.put("campaignActionIdParam", campaignAction.getIdentifier());
 			}
 
 			// Date parameters
@@ -424,12 +424,12 @@ public class CampaignActivityDAOJDOImpl extends GenericDAOJDO<CampaignActivity> 
 	}
 
 	@Override
-	public List<CampaignActivity> getUsingDatesAndCampaignSpecial(Date fromDate, Date toDate, String campaignSpecialId, Range range, String order) throws ASException {
-		return getUsingDatesAndCampaignSpecial(null, fromDate, toDate, campaignSpecialId, range, null, true);
+	public List<CampaignActivity> getUsingDatesAndCampaignAction(Date fromDate, Date toDate, String campaignActionId, Range range, String order) throws ASException {
+		return getUsingDatesAndCampaignAction(null, fromDate, toDate, campaignActionId, range, null, true);
 	}
 	
 	@Override
-	public List<CampaignActivity> getUsingDatesAndCampaignSpecial(PersistenceProvider pp, Date fromDate, Date toDate, String campaignSpecialId, Range range, String order, boolean detachable) throws ASException {
+	public List<CampaignActivity> getUsingDatesAndCampaignAction(PersistenceProvider pp, Date fromDate, Date toDate, String campaignActionId, Range range, String order, boolean detachable) throws ASException {
 		List<CampaignActivity> returnedObjs = new ArrayList<CampaignActivity>();
 
 		PersistenceManager pm;
@@ -447,10 +447,10 @@ public class CampaignActivityDAOJDOImpl extends GenericDAOJDO<CampaignActivity> 
 			Query query = pm.newQuery(clazz);
 
 			// Campaign Special Parameter
-			if( campaignSpecialId != null ) {
-				declaredParams.add("String campaignSpecialIdParam");
-				filters.add("campaignSpecialId == campaignSpecialIdParam");
-				parameters.put("campaignSpecialIdParam", campaignSpecialId);
+			if( campaignActionId != null ) {
+				declaredParams.add("String campaignActionIdParam");
+				filters.add("campaignActionId == campaignActionIdParam");
+				parameters.put("campaignActionIdParam", campaignActionId);
 			}
 
 			// From Date Parameter

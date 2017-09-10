@@ -20,7 +20,7 @@ public class EntityKind {
 	public static final int KIND_NOTIFICATION_LOG = 10;
 	public static final int KIND_REWARD = 11;
 	public static final int KIND_OFFER_PROPOSAL = 12;
-	public static final int KIND_CAMPAIGN_SPECIAL = 13;
+	public static final int KIND_CAMPAIGN_ACTION = 13;
 	public static final int KIND_CHALLENGE = 14;
 	public static final int KIND_FLOOR_MAP = 15;
 	public static final int KIND_WIFI_SPOT = 16;
@@ -62,8 +62,8 @@ public class EntityKind {
 		kindMap.put("rewards", KIND_REWARD);
 		kindMap.put("offerproposal", KIND_OFFER_PROPOSAL);
 		kindMap.put("offerproposals", KIND_OFFER_PROPOSAL);
-		kindMap.put("campaignspecial", KIND_CAMPAIGN_SPECIAL);
-		kindMap.put("campaignspecials", KIND_CAMPAIGN_SPECIAL);
+		kindMap.put("campaignaction", KIND_CAMPAIGN_ACTION);
+		kindMap.put("campaignactions", KIND_CAMPAIGN_ACTION);
 		kindMap.put("challenge", KIND_CHALLENGE);
 		kindMap.put("challenges", KIND_CHALLENGE);
 		kindMap.put("floorMap", KIND_FLOOR_MAP);
@@ -118,7 +118,7 @@ public class EntityKind {
 			return null;
 		case KIND_OFFER_PROPOSAL:
 			return null;
-		case KIND_CAMPAIGN_SPECIAL:
+		case KIND_CAMPAIGN_ACTION:
 			return CampaignAction.class;
 		case KIND_CHALLENGE:
 			return null;
@@ -158,7 +158,7 @@ public class EntityKind {
 	public static boolean isKindValidForGeo(Integer entityKind ) {
 		if (entityKind == KIND_SHOPPING || entityKind == KIND_BRAND
 				|| entityKind == KIND_STORE || entityKind == KIND_OFFER
-				|| entityKind == KIND_REWARD || entityKind == KIND_CAMPAIGN_SPECIAL 
+				|| entityKind == KIND_REWARD || entityKind == KIND_CAMPAIGN_ACTION 
 				|| entityKind == KIND_CHALLENGE || entityKind == KIND_GEO_ACTION_ZONE)
 			return true;
 		return false;
@@ -192,7 +192,7 @@ public class EntityKind {
 			return "Premio";
 		case EntityKind.KIND_OFFER_PROPOSAL:
 			return "Oferta Propuesta";
-		case EntityKind.KIND_CAMPAIGN_SPECIAL:
+		case EntityKind.KIND_CAMPAIGN_ACTION:
 			return "Campa&ntilde;a";
 		case EntityKind.KIND_CHALLENGE:
 			return "Reto";
@@ -241,8 +241,8 @@ public class EntityKind {
 				return "rewards";
 			case EntityKind.KIND_OFFER_PROPOSAL:
 				return "offerProposals";
-			case EntityKind.KIND_CAMPAIGN_SPECIAL:
-				return "campaignSpecials";
+			case EntityKind.KIND_CAMPAIGN_ACTION:
+				return "campaignActions";
 			case EntityKind.KIND_CHALLENGE:
 				return "challenges";
 			case EntityKind.KIND_FLOOR_MAP:
@@ -286,8 +286,8 @@ public class EntityKind {
 				return "reward";
 			case EntityKind.KIND_OFFER_PROPOSAL:
 				return "offerProposal";
-			case EntityKind.KIND_CAMPAIGN_SPECIAL:
-				return "campaignSpecial";
+			case EntityKind.KIND_CAMPAIGN_ACTION:
+				return "campaignAction";
 			case EntityKind.KIND_CHALLENGE:
 				return "challenge";
 			case EntityKind.KIND_FLOOR_MAP:

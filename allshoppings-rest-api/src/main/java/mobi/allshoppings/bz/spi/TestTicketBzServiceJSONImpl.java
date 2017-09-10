@@ -39,7 +39,7 @@ implements TestTicketBzService {
 			List<String> devices = Arrays.asList(new String[] {deviceUUID});
 			
 			@SuppressWarnings("unused")
-			String campaignSpecialId = obj.has("campaignOfferId") ? obj.getString("campaignOfferId") : null;
+			String campaignActionId = obj.has("campaignOfferId") ? obj.getString("campaignOfferId") : null;
 
 			
 			// finally returns the result
@@ -57,23 +57,23 @@ implements TestTicketBzService {
 	}
 
 	public class ExternalActivityAdapter {
-		private String campaignSpecialId;
+		private String campaignActionId;
 		private String actionPrepend;
 		private String brandId;
 		private List<String> devices;
 		private String imageUrl;
 
 		/**
-		 * @return the campaignSpecialId
+		 * @return the campaignActionId
 		 */
-		public String getCampaignSpecialId() {
-			return campaignSpecialId;
+		public String getCampaignActionId() {
+			return campaignActionId;
 		}
 		/**
-		 * @param campaignSpecialId the campaignSpecialId to set
+		 * @param campaignActionId the campaignActionId to set
 		 */
-		public void setCampaignSpecialId(String campaignSpecialId) {
-			this.campaignSpecialId = campaignSpecialId;
+		public void setCampaignActionId(String campaignActionId) {
+			this.campaignActionId = campaignActionId;
 		}
 		/**
 		 * @return the actionPrepend
@@ -128,8 +128,8 @@ implements TestTicketBzService {
 		 */
 		@Override
 		public String toString() {
-			return "ExternalActivityAdapter [campaignSpecialId="
-					+ campaignSpecialId + ", actionPrepend=" + actionPrepend
+			return "ExternalActivityAdapter [campaignActionId="
+					+ campaignActionId + ", actionPrepend=" + actionPrepend
 					+ ", brandId=" + brandId + ", devices=" + devices
 					+ ", imageUrl=" + imageUrl + "]";
 		}
