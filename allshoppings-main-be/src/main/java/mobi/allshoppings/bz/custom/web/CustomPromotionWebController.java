@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import mobi.allshoppings.bz.web.BaseWebController;
+import mobi.allshoppings.dao.CampaignActionDAO;
 import mobi.allshoppings.dao.CampaignActivityDAO;
-import mobi.allshoppings.dao.CampaignSpecialDAO;
 import mobi.allshoppings.dao.UserDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.CampaignAction;
 import mobi.allshoppings.model.CampaignActivity;
-import mobi.allshoppings.model.CampaignSpecial;
 import mobi.allshoppings.model.User;
 
 @Controller
@@ -35,7 +35,7 @@ public class CustomPromotionWebController extends BaseWebController {
 	@Autowired
 	private CampaignActivityDAO dao;
 	@Autowired
-	private CampaignSpecialDAO csDao;
+	private CampaignActionDAO csDao;
 	@Autowired
 	private UserDAO userDao;
 	
@@ -46,7 +46,7 @@ public class CustomPromotionWebController extends BaseWebController {
 		try {
 
 			CampaignActivity ca = identifier.equals("last") ? dao.getLast() : dao.get(identifier, true);
-			CampaignSpecial cs = csDao.get(ca.getCampaignSpecialId());
+			CampaignAction cs = csDao.get(ca.getCampaignSpecialId());
 			User app = userDao.get(customName);
 			
 			JSONObject extras;
