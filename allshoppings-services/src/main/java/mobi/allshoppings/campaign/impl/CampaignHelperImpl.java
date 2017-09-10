@@ -51,7 +51,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 	@Autowired
 	private CheckinDAO checkinDao;
 	@Autowired
-	private CampaignActionDAO campaignSpecialDao;
+	private CampaignActionDAO campaignActionDao;
 	@Autowired
 	private CampaignActivityDAO campaignActivityDao;
 	@Autowired
@@ -75,7 +75,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 
 	@Override
 	public Offer campaignActivityToOffer(CampaignActivity activity) throws ASException {
-		CampaignAction special = campaignSpecialDao.get(activity.getCampaignSpecialId(), true);
+		CampaignAction special = campaignActionDao.get(activity.getCampaignActionId(), true);
 		Offer offer = new Offer();
 		
 		offer.addShopping(activity.getShoppingId());
@@ -97,7 +97,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 	}
 	
 	@Override
-	public CampaignAction getCampaignSpecialForCheckin(User user, Checkin checkin, Date date ) throws ASException {
+	public CampaignAction getCampaignActionForCheckin(User user, Checkin checkin, Date date ) throws ASException {
 
 		// The checkin kind is for a Shopping
 		if( checkin.getEntityKind() == EntityKind.KIND_SHOPPING) {
@@ -105,14 +105,14 @@ public class CampaignHelperImpl implements CampaignHelper {
 			// Now I get the Shopping from the Checkin, and the list of active
 			// campaign specials that the shopping has
 			Shopping shopping = shoppingDao.get(checkin.getEntityId());
-			List<CampaignAction> specialsList = campaignSpecialDao
+			List<CampaignAction> specialsList = campaignActionDao
 					.getUsingShoppingAndStatus(
 							shopping.getIdentifier(),
 							null, null);
 
 			// For each Special, Check requirements
 			for( CampaignAction s : specialsList ) {
-				log.log(Level.INFO, "Special found in getCampaignSpecialForCheckin: " + s);
+				log.log(Level.INFO, "Special found in getCampaignActionForCheckin: " + s);
 				// Check Availability
 				if( hasAvailabilityForDate(s, date)) {
 					log.log(Level.INFO, "This Special has availability for date: " + s);
@@ -134,14 +134,14 @@ public class CampaignHelperImpl implements CampaignHelper {
 			// campaign specials that the shopping has
 			Store store = storeDao.get(checkin.getEntityId());
 			Brand brand = brandDao.get(store.getBrandId());
-			List<CampaignAction> specialsList = campaignSpecialDao
+			List<CampaignAction> specialsList = campaignActionDao
 					.getUsingBrandAndStatus(
 							brand.getIdentifier(),
 							null, null);
 
 			// For each Special, Check requirements
 			for( CampaignAction s : specialsList ) {
-				log.log(Level.INFO, "Special found in getCampaignSpecialForCheckin: " + s);
+				log.log(Level.INFO, "Special found in getCampaignActionForCheckin: " + s);
 				if( s.getShoppings().size() == 0 ) {
 					// Check Availability
 					if( hasAvailabilityForDate(s, date)) {
@@ -170,7 +170,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 
 		CampaignActivity activity = null;
 		
-		CampaignAction special = getCampaignSpecialForCheckin(user, checkin, date);
+		CampaignAction special = getCampaignActionForCheckin(user, checkin, date);
 		log.log(Level.INFO, "Special found: " + special);
 		if( special != null ) {
 			activity = new CampaignActivity();
@@ -204,7 +204,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 			activity.setDeviceUUID(checkin.getDeviceUUID());
 			activity.setCheckinId(checkin.getIdentifier());
 			activity.setCampaignId(special.getCampaignId());
-			activity.setCampaignSpecialId(special.getIdentifier());
+			activity.setCampaignActionId(special.getIdentifier());
 			activity.setUserId(user.getIdentifier());
 			activity.setPromotionType(special.getPromotionType());
 			activity.setLimitDateTime(special.getSpan() > 0 ? DateUtils.add(DateUtils.add(
@@ -273,7 +273,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 			activity.setCheckinId(null);
 			activity.setDeviceUUID(device != null ? device.getIdentifier() : null);
 			activity.setCampaignId(special.getCampaignId());
-			activity.setCampaignSpecialId(special.getIdentifier());
+			activity.setCampaignActionId(special.getIdentifier());
 			activity.setUserId(user.getIdentifier());
 			activity.setPromotionType(special.getPromotionType());
 			activity.setLimitDateTime(special.getSpan() > 0 ? DateUtils.add(DateUtils.add(
@@ -300,7 +300,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 		try { checkin = checkinDao.get(activity.getCheckinId()); } catch( Exception e ) {}
 		
 		User user = userDao.get(activity.getUserId(), true);
-		CampaignAction special = campaignSpecialDao.get(activity.getCampaignSpecialId(), true);
+		CampaignAction special = campaignActionDao.get(activity.getCampaignActionId(), true);
 		if( checkin != null) {
 			device = deviceInfoDao.get(checkin.getDeviceUUID(), true);
 		}
@@ -310,7 +310,7 @@ public class CampaignHelperImpl implements CampaignHelper {
 	@Override
 	public void sendCampaignActivity(User user, DeviceInfo device, Checkin checkin, CampaignActivity activity, 
 			boolean sendMail, boolean sendPush) throws ASException {
-		CampaignAction special = campaignSpecialDao.get(activity.getCampaignSpecialId(), true);
+		CampaignAction special = campaignActionDao.get(activity.getCampaignActionId(), true);
 		sendCampaignActivity(user, device, checkin, special, activity, true, true);
 	}
 	
@@ -387,9 +387,9 @@ public class CampaignHelperImpl implements CampaignHelper {
 	}
 	
 	@Override
-	public boolean hasAvailabilityForDate(CampaignAction campaignSpecial, Date date ) throws ASException {
-		if(campaignActivityDao.hasAvailabilityForDate(campaignSpecial, date)) {
-			long timeDiff = (long)(campaignSpecial.getTimezone() * 3600000);
+	public boolean hasAvailabilityForDate(CampaignAction campaignAction, Date date ) throws ASException {
+		if(campaignActivityDao.hasAvailabilityForDate(campaignAction, date)) {
+			long timeDiff = (long)(campaignAction.getTimezone() * 3600000);
 			Date today = DateUtils.truncate(new Date(date.getTime() + timeDiff), Calendar.DATE);
 			Date todayWithTime = new Date(date.getTime() + timeDiff);
 			
@@ -397,11 +397,11 @@ public class CampaignHelperImpl implements CampaignHelper {
 			log.log(Level.INFO, "todayWithTime is " + todayWithTime);
 			
 			//TODO: Reorganize this same logic in Offers
-			if ((DateUtils.truncate(campaignSpecial.getValidFrom(),	Calendar.DATE).before(today) 
-					|| DateUtils.truncate(campaignSpecial.getValidFrom(), Calendar.DATE).equals(today))
+			if ((DateUtils.truncate(campaignAction.getValidFrom(),	Calendar.DATE).before(today) 
+					|| DateUtils.truncate(campaignAction.getValidFrom(), Calendar.DATE).equals(today))
 					&& 
-					(DateUtils.truncate(campaignSpecial.getValidTo(), Calendar.DATE).after(today) 
-					|| DateUtils.truncate(campaignSpecial.getValidTo(), Calendar.DATE).equals(today))) {
+					(DateUtils.truncate(campaignAction.getValidTo(), Calendar.DATE).after(today) 
+					|| DateUtils.truncate(campaignAction.getValidTo(), Calendar.DATE).equals(today))) {
 				try {
 					// Gets day of week
 					Calendar c = Calendar.getInstance();
@@ -437,23 +437,23 @@ public class CampaignHelperImpl implements CampaignHelper {
 						log.log(Level.INFO, "dayCode is null");
 						return false;
 					}
-					if(!campaignSpecial.getNotifyDays().contains(dayCode)) {
-						log.log(Level.INFO, "campaignSpecial has not a notify day in daycode " + dayCode);
+					if(!campaignAction.getNotifyDays().contains(dayCode)) {
+						log.log(Level.INFO, "campaignAction has not a notify day in daycode " + dayCode);
 						return false;
 					}
 
 					SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 					String hourCode = sdf.format(todayWithTime);
-					if (campaignSpecial.getNotifyFromHour().compareTo(hourCode) <= 0
-							&& campaignSpecial.getNotifyToHour().compareTo(hourCode) >= 0) {
+					if (campaignAction.getNotifyFromHour().compareTo(hourCode) <= 0
+							&& campaignAction.getNotifyToHour().compareTo(hourCode) >= 0) {
 						return true;
 					} else {
 						log.log(Level.INFO,
 								"OK for this day... but not in hour... "
 										+ hourCode + ", fromHour "
-										+ campaignSpecial.getNotifyFromHour()
+										+ campaignAction.getNotifyFromHour()
 										+ ", toHour "
-										+ campaignSpecial.getNotifyToHour());
+										+ campaignAction.getNotifyToHour());
 						return false;
 					}
 					
@@ -467,14 +467,14 @@ public class CampaignHelperImpl implements CampaignHelper {
 				return false;
 			}
 		} else {
-			log.log(Level.INFO, "Getting out from campaignActivityDao.hasAvailabilityForDate(campaignSpecial, date)");
+			log.log(Level.INFO, "Getting out from campaignActivityDao.hasAvailabilityForDate(campaignAction, date)");
 			return false;
 		}
 	}
 	
 	@Override
-	public boolean hasSpecialBeenUsedForUserAndDate(CampaignAction campaignSpecial, User user, Date date) throws ASException {
-		return campaignActivityDao.hasSpecialBeenUsedForUserAndDate(campaignSpecial, user, date);
+	public boolean hasSpecialBeenUsedForUserAndDate(CampaignAction campaignAction, User user, Date date) throws ASException {
+		return campaignActivityDao.hasSpecialBeenUsedForUserAndDate(campaignAction, user, date);
 	}
 
 	@Override

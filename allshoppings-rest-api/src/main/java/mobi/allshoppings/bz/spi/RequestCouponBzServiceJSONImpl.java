@@ -55,7 +55,7 @@ implements RequestCouponBzService {
 			String deviceUUID = obj.getString("deviceUUID");
 			List<String> devices = Arrays.asList(new String[] {deviceUUID});
 			
-			String campaignSpecialId = obj.has("campaignOfferId") ? obj.getString("campaignOfferId") : null;
+			String campaignActionId = obj.has("campaignOfferId") ? obj.getString("campaignOfferId") : null;
 			@SuppressWarnings("unused")
 			boolean test = obj.has("test") ? obj.getBoolean("test") : false;
 
@@ -100,7 +100,7 @@ implements RequestCouponBzService {
 				HttpMessageConverter<?> stringHttpMessageConverternew = new StringHttpMessageConverter();
 				restTemplate.setMessageConverters(Arrays.asList(new HttpMessageConverter<?>[]{formHttpMessageConverter, stringHttpMessageConverternew}));
 				
-				CampaignAction cs = csDao.get(campaignSpecialId, true);
+				CampaignAction cs = csDao.get(campaignActionId, true);
 
 				List<Map<String, Object>> longDevices = CollectionFactory.createList();
 				for( String device : devices ) {
@@ -113,7 +113,7 @@ implements RequestCouponBzService {
 				}
 
 				Map<String, Object> parms = CollectionFactory.createMap();
-				parms.put("campaignSpecialId", cs.getIdentifier());
+				parms.put("campaignActionId", cs.getIdentifier());
 				parms.put("ignoreLocks", true);
 				parms.put("disableOlder", false);
 				parms.put("devices", devices);
@@ -155,23 +155,23 @@ implements RequestCouponBzService {
 	}
 
 	public class ExternalActivityAdapter {
-		private String campaignSpecialId;
+		private String campaignActionId;
 		private String actionPrepend;
 		private String brandId;
 		private List<String> devices;
 		private String imageUrl;
 
 		/**
-		 * @return the campaignSpecialId
+		 * @return the campaignActionId
 		 */
-		public String getCampaignSpecialId() {
-			return campaignSpecialId;
+		public String getCampaignActionId() {
+			return campaignActionId;
 		}
 		/**
-		 * @param campaignSpecialId the campaignSpecialId to set
+		 * @param campaignActionId the campaignActionId to set
 		 */
-		public void setCampaignSpecialId(String campaignSpecialId) {
-			this.campaignSpecialId = campaignSpecialId;
+		public void setCampaignActionId(String campaignActionId) {
+			this.campaignActionId = campaignActionId;
 		}
 		/**
 		 * @return the actionPrepend
@@ -226,8 +226,8 @@ implements RequestCouponBzService {
 		 */
 		@Override
 		public String toString() {
-			return "ExternalActivityAdapter [campaignSpecialId="
-					+ campaignSpecialId + ", actionPrepend=" + actionPrepend
+			return "ExternalActivityAdapter [campaignActionId="
+					+ campaignActionId + ", actionPrepend=" + actionPrepend
 					+ ", brandId=" + brandId + ", devices=" + devices
 					+ ", imageUrl=" + imageUrl + "]";
 		}

@@ -42,7 +42,7 @@ public class CampaignActivity implements ModelKey, IAdaptable, Serializable, Ide
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
     private Key key;
 
-	private String campaignSpecialId;
+	private String campaignActionId;
 	private String campaignId;
 	private String checkinId;
 	private String deviceUUID;
@@ -107,17 +107,17 @@ public class CampaignActivity implements ModelKey, IAdaptable, Serializable, Ide
 	}
 
 	/**
-	 * @return the campaignSpecialId
+	 * @return the campaignActionId
 	 */
-	public String getCampaignSpecialId() {
-		return campaignSpecialId;
+	public String getCampaignActionId() {
+		return campaignActionId;
 	}
 
 	/**
-	 * @param campaignSpecialId the campaignSpecialId to set
+	 * @param campaignActionId the campaignActionId to set
 	 */
-	public void setCampaignSpecialId(String campaignSpecialId) {
-		this.campaignSpecialId = campaignSpecialId;
+	public void setCampaignActionId(String campaignActionId) {
+		this.campaignActionId = campaignActionId;
 	}
 
 	/**
@@ -450,8 +450,8 @@ public class CampaignActivity implements ModelKey, IAdaptable, Serializable, Ide
 	 */
 	@Override
 	public String toString() {
-		return "CampaignActivity [key=" + key + ", campaignSpecialId="
-				+ campaignSpecialId + ", campaignId=" + campaignId
+		return "CampaignActivity [key=" + key + ", campaignActionId="
+				+ campaignActionId + ", campaignId=" + campaignId
 				+ ", checkinId=" + checkinId + ", deviceUUID=" + deviceUUID
 				+ ", userId=" + userId + ", shoppingId=" + shoppingId
 				+ ", brandId=" + brandId + ", financialEntityId="

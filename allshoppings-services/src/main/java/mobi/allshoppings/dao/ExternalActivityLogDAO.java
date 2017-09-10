@@ -14,7 +14,7 @@ import mobi.allshoppings.tx.PersistenceProvider;
 public interface ExternalActivityLogDAO extends GenericDAO<ExternalActivityLog> {
 
 	Key createKey() throws ASException;
-	List<ExternalActivityLog> getUsingDatesAndCampaignSpecial(Date fromDate, Date toDate, String campaignSpecialId, Range range, String order) throws ASException;
-	List<ExternalActivityLog> getUsingDatesAndCampaignSpecial(PersistenceProvider pp, Date fromDate, Date toDate, String campaignSpecialId, Range range, String order, boolean detachable) throws ASException;
+	List<ExternalActivityLog> getUsingDatesAndCampaignAction(Date fromDate, Date toDate, String campaignActionId, Range range, String order) throws ASException;
+	List<ExternalActivityLog> getUsingDatesAndCampaignAction(PersistenceProvider pp, Date fromDate, Date toDate, String campaignActionId, Range range, String order, boolean detachable) throws ASException;
 	
 }

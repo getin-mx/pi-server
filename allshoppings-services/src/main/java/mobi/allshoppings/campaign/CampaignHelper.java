@@ -12,9 +12,9 @@ import mobi.allshoppings.model.User;
 
 public interface CampaignHelper {
 
-	CampaignAction getCampaignSpecialForCheckin(User user, Checkin checkin, Date date ) throws ASException;
-	boolean hasAvailabilityForDate(CampaignAction campaignSpecial, Date date ) throws ASException;
-	boolean hasSpecialBeenUsedForUserAndDate(CampaignAction campaignSpecial, User user, Date date) throws ASException;
+	CampaignAction getCampaignActionForCheckin(User user, Checkin checkin, Date date ) throws ASException;
+	boolean hasAvailabilityForDate(CampaignAction campaignAction, Date date ) throws ASException;
+	boolean hasSpecialBeenUsedForUserAndDate(CampaignAction campaignAction, User user, Date date) throws ASException;
 	CampaignActivity createActivity(User user, Checkin checkin, Date date ) throws ASException;
 	CampaignActivity createActivity(User user, DeviceInfo device, CampaignAction special ) throws ASException;
 	void sendCampaignActivity(CampaignActivity activity ) throws ASException;

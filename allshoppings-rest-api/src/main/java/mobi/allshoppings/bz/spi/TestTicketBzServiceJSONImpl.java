@@ -45,9 +45,10 @@ implements TestTicketBzService {
 			@SuppressWarnings("unused")
 			List<String> devices = Arrays.asList(new String[] {deviceUUID});
 			
-			String campaignSpecialId = obj.has("campaignOfferId") ? obj.getString("campaignOfferId") : null;
+			@SuppressWarnings("unused")
+			String campaignActionId = obj.has("campaignOfferId") ? obj.getString("campaignOfferId") : null;
 
-			if(!StringUtils.hasText(campaignSpecialId) || campaignSpecialId.equals("1430288511084")) {	// cine
+			if(!StringUtils.hasText(campaignActionId) || campaignActionId.equals("1430288511084")) {	// cine
 
 //				SendMovieTicketsService service = new SendMovieTicketsService();
 //				service.doProcess(
@@ -59,7 +60,7 @@ implements TestTicketBzService {
 //						Arrays.asList(new String[] { "cinepolis_mx_339" }), true,
 //						true, null, true, false);
 
-			} else if( campaignSpecialId.equalsIgnoreCase("1432724594627")) {	// crepa
+			} else if( campaignActionId.equalsIgnoreCase("1432724594627")) {	// crepa
 
 //				SendPromoTicketsService service = new SendPromoTicketsService();
 //				service.doProcess(
@@ -70,7 +71,7 @@ implements TestTicketBzService {
 //								devices, devices, Arrays.asList(new String[] { "cinepolis_mx_339" }), 
 //								true, true, "1432724594627", true, false);
 
-			} else if( campaignSpecialId.equalsIgnoreCase("1432724531038")) {	// bagui
+			} else if( campaignActionId.equalsIgnoreCase("1432724531038")) {	// bagui
 
 //				SendPromoTicketsService service = new SendPromoTicketsService();
 //				service.doProcess(
@@ -98,23 +99,23 @@ implements TestTicketBzService {
 	}
 
 	public class ExternalActivityAdapter {
-		private String campaignSpecialId;
+		private String campaignActionId;
 		private String actionPrepend;
 		private String brandId;
 		private List<String> devices;
 		private String imageUrl;
 
 		/**
-		 * @return the campaignSpecialId
+		 * @return the campaignActionId
 		 */
-		public String getCampaignSpecialId() {
-			return campaignSpecialId;
+		public String getCampaignActionId() {
+			return campaignActionId;
 		}
 		/**
-		 * @param campaignSpecialId the campaignSpecialId to set
+		 * @param campaignActionId the campaignActionId to set
 		 */
-		public void setCampaignSpecialId(String campaignSpecialId) {
-			this.campaignSpecialId = campaignSpecialId;
+		public void setCampaignActionId(String campaignActionId) {
+			this.campaignActionId = campaignActionId;
 		}
 		/**
 		 * @return the actionPrepend
@@ -169,8 +170,8 @@ implements TestTicketBzService {
 		 */
 		@Override
 		public String toString() {
-			return "ExternalActivityAdapter [campaignSpecialId="
-					+ campaignSpecialId + ", actionPrepend=" + actionPrepend
+			return "ExternalActivityAdapter [campaignActionId="
+					+ campaignActionId + ", actionPrepend=" + actionPrepend
 					+ ", brandId=" + brandId + ", devices=" + devices
 					+ ", imageUrl=" + imageUrl + "]";
 		}

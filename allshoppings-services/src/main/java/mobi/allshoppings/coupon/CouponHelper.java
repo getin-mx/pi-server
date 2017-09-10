@@ -17,7 +17,7 @@ public interface CouponHelper {
 	void notifyRedemption(String couponCode) throws ASException;
 	boolean hasAvailability(String userId) throws ASException;
 	boolean deviceHasAvailability(String deviceUUID) throws ASException;
-	boolean deviceHasAvailability(String deviceUUID, String campaignSpecialId) throws ASException;
+	boolean deviceHasAvailability(String deviceUUID, String campaignActionId) throws ASException;
 	boolean deviceHasActiveCoupons(String deviceUUID) throws ASException;
 
 }

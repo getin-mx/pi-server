@@ -16,10 +16,10 @@ import mobi.allshoppings.tx.PersistenceProvider;
 public interface CampaignActivityDAO extends GenericDAO<CampaignActivity> {
 
 	Key createKey() throws ASException;
-	boolean hasAvailabilityForDate(CampaignAction campaignSpecial, Date date) throws ASException;
-	long countDeliveredUsignCampaignSpecial(CampaignAction campaignSpecial) throws ASException;
-	long countDeliveredUsignCampaignSpecialAndUserAndDate(CampaignAction campaignSpecial, User user, Date date) throws ASException;
-	boolean hasSpecialBeenUsedForUserAndDate(CampaignAction campaignSpecial, User user, Date date) throws ASException;
+	boolean hasAvailabilityForDate(CampaignAction campaignAction, Date date) throws ASException;
+	long countDeliveredUsignCampaignAction(CampaignAction campaignAction) throws ASException;
+	long countDeliveredUsignCampaignActionAndUserAndDate(CampaignAction campaignAction, User user, Date date) throws ASException;
+	boolean hasSpecialBeenUsedForUserAndDate(CampaignAction campaignAction, User user, Date date) throws ASException;
 	
 	List<CampaignActivity> getUsingUserAndRedeemStatusAndRange(String userId, List<Integer> redeemStatus, Range range, String order) throws ASException;
 	List<CampaignActivity> getUsingUserAndRedeemStatusAndRange(PersistenceProvider pp, String userId, List<Integer> redeemStatus, boolean onlyDisplayableItems, Range range, String order, boolean detachable) throws ASException;
@@ -28,8 +28,8 @@ public interface CampaignActivityDAO extends GenericDAO<CampaignActivity> {
 	CampaignActivity getUsingCouponCode(String couponCode) throws ASException;
 	CampaignActivity getLast() throws ASException;
 	
-	List<CampaignActivity> getUsingDatesAndCampaignSpecial(Date fromDate, Date toDate, String campaignSpecialId, Range range, String order) throws ASException;
-	List<CampaignActivity> getUsingDatesAndCampaignSpecial(PersistenceProvider pp, Date fromDate, Date toDate, String campaignSpecialId, Range range, String order, boolean detachable) throws ASException;
+	List<CampaignActivity> getUsingDatesAndCampaignAction(Date fromDate, Date toDate, String campaignActionId, Range range, String order) throws ASException;
+	List<CampaignActivity> getUsingDatesAndCampaignAction(PersistenceProvider pp, Date fromDate, Date toDate, String campaignActionId, Range range, String order, boolean detachable) throws ASException;
 
 	
 }

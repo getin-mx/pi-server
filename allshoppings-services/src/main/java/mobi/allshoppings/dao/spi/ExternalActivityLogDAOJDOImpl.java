@@ -39,12 +39,12 @@ public class ExternalActivityLogDAOJDOImpl extends GenericDAOJDO<ExternalActivit
 	}
 
 	@Override
-	public List<ExternalActivityLog> getUsingDatesAndCampaignSpecial(Date fromDate, Date toDate, String campaignSpecialId, Range range, String order) throws ASException {
-		return getUsingDatesAndCampaignSpecial(null, fromDate, toDate, campaignSpecialId, range, null, true);
+	public List<ExternalActivityLog> getUsingDatesAndCampaignAction(Date fromDate, Date toDate, String campaignActionId, Range range, String order) throws ASException {
+		return getUsingDatesAndCampaignAction(null, fromDate, toDate, campaignActionId, range, null, true);
 	}
 	
 	@Override
-	public List<ExternalActivityLog> getUsingDatesAndCampaignSpecial(PersistenceProvider pp, Date fromDate, Date toDate, String campaignSpecialId, Range range, String order, boolean detachable) throws ASException {
+	public List<ExternalActivityLog> getUsingDatesAndCampaignAction(PersistenceProvider pp, Date fromDate, Date toDate, String campaignActionId, Range range, String order, boolean detachable) throws ASException {
 		List<ExternalActivityLog> returnedObjs = new ArrayList<ExternalActivityLog>();
 
 		PersistenceManager pm;
@@ -62,10 +62,10 @@ public class ExternalActivityLogDAOJDOImpl extends GenericDAOJDO<ExternalActivit
 			Query query = pm.newQuery(clazz);
 
 			// Campaign Special Parameter
-			if( campaignSpecialId != null ) {
-				declaredParams.add("String campaignSpecialIdParam");
-				filters.add("campaignSpecialId == campaignSpecialIdParam");
-				parameters.put("campaignSpecialIdParam", campaignSpecialId);
+			if( campaignActionId != null ) {
+				declaredParams.add("String campaignActionIdParam");
+				filters.add("campaignActionId == campaignActionIdParam");
+				parameters.put("campaignActionIdParam", campaignActionId);
 			}
 
 			// From Date Parameter
