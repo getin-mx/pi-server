@@ -2761,6 +2761,31 @@ public class UserMenuDump extends AbstractCLI {
 				userMenuDao.create(um);
 			}
 			
+			User mtsport = null;
+			try {
+				mtsport = userDao.get("mt_sport_mx", true);
+			} catch( Exception e ) {
+				mtsport = new User();
+				mtsport.setFirstname("MT Sport");
+				mtsport.setLastname("Mexico");
+				mtsport.setEmail("mtsport@allshoppings.mobi");
+				mtsport.getSecuritySettings().setRole(Role.BRAND);
+				mtsport.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				mtsport.setKey((Key)keyHelper.obtainKey(User.class, "mt_sport_mx"));
+				userDao.create(mtsport);
+			}
+
+			try {
+				um = userMenuDao.get("mt_sport_mx", true);
+				userMenuDao.delete("mt_sport_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("mt_sport_mx"));
+				userMenuDao.create(um);
+			}
+			
 
 			// Fullsand --------------------------------------------------------------------
 			User user = null;
