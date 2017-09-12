@@ -910,6 +910,16 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "aditivofranquicias2_mx"));
 				brandDao.create(brand);
 			}
+			
+			try {
+				brand = brandDao.get("atelier_mx", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Atelier");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "atelier_mx"));
+				brandDao.create(brand);
+			}
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null));
@@ -1540,6 +1550,10 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("763", "Prada Victoria", "prada_mx", null));
 			
 			stores.add(new StoreAdapter("764", "Adolfo Dominguez Antara", "chomarc_mx",null));
+			
+			stores.add(new StoreAdapter("765", "Atelier Polanco", "atelier_mx",null));
+			stores.add(new StoreAdapter("766", "Atelier Pedregal", "atelier_mx",null));
+			stores.add(new StoreAdapter("767", "Atelier Roma", "atelier_mx",null));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
