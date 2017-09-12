@@ -2761,6 +2761,31 @@ public class UserMenuDump extends AbstractCLI {
 				userMenuDao.create(um);
 			}
 			
+			User mtsport = null;
+			try {
+				mtsport = userDao.get("mt_sport_mx", true);
+			} catch( Exception e ) {
+				mtsport = new User();
+				mtsport.setFirstname("MT Sport");
+				mtsport.setLastname("Mexico");
+				mtsport.setEmail("mtsport@allshoppings.mobi");
+				mtsport.getSecuritySettings().setRole(Role.BRAND);
+				mtsport.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				mtsport.setKey((Key)keyHelper.obtainKey(User.class, "mt_sport_mx"));
+				userDao.create(mtsport);
+			}
+
+			try {
+				um = userMenuDao.get("mt_sport_mx", true);
+				userMenuDao.delete("mt_sport_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("mt_sport_mx"));
+				userMenuDao.create(um);
+			}
+			
 
 			// Fullsand --------------------------------------------------------------------
 			User user = null;
@@ -2873,7 +2898,8 @@ public class UserMenuDump extends AbstractCLI {
 						.setStores(Arrays.asList("4df8d43b-b8d6-41a2-a342-082884a5e897",
 								"8b0d5f06-f5f6-4d70-aab5-b3ef1e807d97", "b9e3dee9-fcb8-4c36-9620-2c897b03566f",
 								"b327518a-28a8-4ca0-b82a-bd1e646307ce", "6e39b7d5-dcd5-458b-9088-a2c97be409e3",
-								"743003df-cb85-4f8f-98eb-d41ff31f3e36", "e0bb9d40-7639-47d0-ab38-135b280ac769"));
+								"743003df-cb85-4f8f-98eb-d41ff31f3e36", "e0bb9d40-7639-47d0-ab38-135b280ac769",
+								"3729ac49-92f5-44ba-b40c-4c31bcaf85a9"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "anallerena@chomarc_mx"));
 				userDao.create(user);
 			}
