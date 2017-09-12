@@ -166,8 +166,15 @@ implements BDBDashboardBzService {
 				Collections.sort(dates);
 				devAssig = apdaDao.getUsingEntityIdAndEntityKind(store.getIdentifier(),
 						EntityKind.KIND_STORE);
-				if(devAssig != null && !devAssig.isEmpty()) {
-					dev = devDao.get(devAssig.get(0).getHostname());
+				dev = devAssig != null && !devAssig.isEmpty() ?
+						devDao.get(devAssig.get(0).getHostname()) : null;
+				
+				Iterator<Date> i = dates.iterator();
+				while( i.hasNext()) {
+					Date key = i.next();
+					JSONArray row = new JSONArray();
+					row.put(name);
+					cal.setTime(key);
 					switch(cal.get(Calendar.DAY_OF_WEEK)) {
 					case Calendar.SUNDAY :
 						openTime = dev.getVisitStartSun();
@@ -200,14 +207,6 @@ implements BDBDashboardBzService {
 					default :
 						openTime = closeTime = "";
 					}
-				} else openTime = closeTime = "";
-				
-				Iterator<Date> i = dates.iterator();
-				while( i.hasNext()) {
-					Date key = i.next();
-					JSONArray row = new JSONArray();
-					row.put(name);
-					cal.setTime(key);
 					row.put(openTime);
 					row.put(closeTime);
 					row.put(getDateName(key));
