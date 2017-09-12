@@ -105,12 +105,13 @@ implements BDBDashboardBzService {
 			Calendar cal = Calendar.getInstance();
 			List<APDAssignation> devAssig;
 			APDevice dev;
-			String openCloseTime;
+			String openTime;
+			String closeTime;
 
 			while(curDate.before(toDate) || curDate.equals(toDate)) {
 				for( Store store : stores ) {
-					String openTime = null;
-					String closeTime = null;
+					openTime = null;
+					closeTime = null;
 					
 					List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate);
 					for( APDAssignation assig : assigs ) {
@@ -149,10 +150,11 @@ implements BDBDashboardBzService {
 			// Titles row
 			JSONArray titles = new JSONArray();
 			titles.put("Tienda");
-			titles.put("Apertura/Cierre");
+			titles.put("Apertura registrada");
+			titles.put("Cierre registrado");
 			titles.put("Dia");
-			titles.put("Apertura");
-			titles.put("Cierre");
+			titles.put("Apertura reportada");
+			titles.put("Cierre reportado");
 			jsonArray.put(titles);
 
 			// Values Array
@@ -168,30 +170,37 @@ implements BDBDashboardBzService {
 					dev = devDao.get(devAssig.get(0).getHostname());
 					switch(cal.get(Calendar.DAY_OF_WEEK)) {
 					case Calendar.SUNDAY :
-						openCloseTime = dev.getVisitStartSun() +"/" +dev.getVisitEndSun();
+						openTime = dev.getVisitStartSun();
+						closeTime = dev.getVisitEndSun();
 						break;
 					case Calendar.MONDAY :
-						openCloseTime = dev.getVisitStartMon() +"/" +dev.getVisitEndMon();
+						openTime = dev.getVisitStartMon();
+						closeTime = dev.getVisitEndMon();
 						break;
 					case Calendar.TUESDAY :
-						openCloseTime = dev.getVisitStartTue() +"/" +dev.getVisitEndTue();
+						openTime = dev.getVisitStartTue();
+						closeTime = dev.getVisitEndTue();
 						break;
 					case Calendar.WEDNESDAY :
-						openCloseTime = dev.getVisitStartWed() +"/" +dev.getVisitEndWed();
+						openTime = dev.getVisitStartWed();
+						closeTime = dev.getVisitEndWed();
 						break;
 					case Calendar.THURSDAY :
-						openCloseTime = dev.getVisitStartThu() +"/" +dev.getVisitEndThu();
+						openTime = dev.getVisitStartThu();
+						closeTime = dev.getVisitEndThu();
 						break;
 					case Calendar.FRIDAY :
-						openCloseTime = dev.getVisitStartFri() +"/" +dev.getVisitEndFri();
+						openTime = dev.getVisitStartFri();
+						closeTime = dev.getVisitEndFri();
 						break;
 					case Calendar.SATURDAY :
-						openCloseTime = dev.getVisitStartSat() +"/" +dev.getVisitEndSat();
+						openTime = dev.getVisitStartSat();
+						closeTime = dev.getVisitEndSat();
 						break;
 					default :
-						openCloseTime = "";
+						openTime = closeTime = "";
 					}
-				} else openCloseTime = "";
+				} else openTime = closeTime = "";
 				
 				Iterator<Date> i = dates.iterator();
 				while( i.hasNext()) {
@@ -199,7 +208,8 @@ implements BDBDashboardBzService {
 					JSONArray row = new JSONArray();
 					row.put(name);
 					cal.setTime(key);
-					row.put(openCloseTime);
+					row.put(openTime);
+					row.put(closeTime);
 					row.put(getDateName(key));
 					List<String> times = rowData.get(key);
 					row.put((times.get(0) == null ? "-" : times.get(0)));
