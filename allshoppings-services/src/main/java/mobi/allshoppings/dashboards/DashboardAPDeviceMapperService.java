@@ -759,6 +759,7 @@ public class DashboardAPDeviceMapperService {
 
 						// visitor_total_records --------------------------------------------------------------------------------
 						// ------------------------------------------------------------------------------------------------------
+						tz = TimeZone.getTimeZone(store.getTimezone());
 						obj = buildBasicDashboardIndicatorData(
 								"apd_visitor", "Visitantes", "visitor_total_records",
 								"Total", v.getCheckinStarted(),
