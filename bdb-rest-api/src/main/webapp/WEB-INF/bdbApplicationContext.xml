@@ -44,11 +44,10 @@
   	<bean id="auditlog.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBAuditLogBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="requestprocess.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBRequestProcessBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
 
-
 	<!-- Dashboard Services -->
   	<bean id="dashboard.storesfilter.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.StoresFilterDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
 	<bean id="dashboard.repetitions.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.RepetitionsBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
-  	
+
   	<bean id="dashboard.timelinedata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.TimelineDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.timelinehour.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.TimelineHourBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.heatmaptabledata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.HeatmapTableDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
