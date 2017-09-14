@@ -11,7 +11,6 @@
 	<bean id="root" class="mobi.allshoppings.tools.RestletExtensionSpringRouter">
 		<property name="routesMap">
 			<map>
-				<entry key="/dashoard/storesFilter" value-ref="spring.dashboardstoresfilter.rest.resource" />
 				<entry key="/dashoard/timelineDataByCinema" value-ref="spring.dashboardtimelinedatabycinema.rest.resource" />
 				<entry key="/dashoard/timelineDataByProvince" value-ref="spring.dashboardtimelinedatabyprovince.rest.resource" />
 				<entry key="/dashoard/repetitions" value-ref="spring.dashboardrepetitions.rest.resource" />
@@ -84,9 +83,6 @@
 	</bean>
  	
  	<!-- ** REST resources ** -->
- 	<bean id="spring.dashboardstoresfilter.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboardstoresfilter.rest.resource" />
- 	</bean>
  	<bean id="spring.cinema.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="cinema.rest.resource" />
  	</bean>
