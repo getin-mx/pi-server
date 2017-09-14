@@ -737,6 +737,7 @@ public class DashboardAPDeviceMapperService {
 							storeCache.put(String.valueOf(v.getEntityId()), store);
 							tz = TimeZone.getTimeZone(store.getTimezone());
 						}
+						tz = TimeZone.getTimeZone(store.getTimezone());
 						entityId = store.getBrandId();
 						shoppingId = store.getShoppingId();
 						subentityId = store.getIdentifier();
@@ -759,7 +760,6 @@ public class DashboardAPDeviceMapperService {
 
 						// visitor_total_records --------------------------------------------------------------------------------
 						// ------------------------------------------------------------------------------------------------------
-						tz = TimeZone.getTimeZone(store.getTimezone());
 						obj = buildBasicDashboardIndicatorData(
 								"apd_visitor", "Visitantes", "visitor_total_records",
 								"Total", v.getCheckinStarted(),
