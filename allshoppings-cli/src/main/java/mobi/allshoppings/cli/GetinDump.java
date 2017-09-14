@@ -1574,27 +1574,27 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("764", "Adolfo Dominguez Antara", "chomarc_mx",null, 0));
 			
-			stores.add(new StoreAdapter("765", "Atelier Polanco", "atelier_mx",null));
-			stores.add(new StoreAdapter("766", "Atelier Pedregal", "atelier_mx",null));
-			stores.add(new StoreAdapter("767", "Atelier Roma", "atelier_mx",null));
+			stores.add(new StoreAdapter("765", "Atelier Polanco", "atelier_mx",null, 0));
+			stores.add(new StoreAdapter("766", "Atelier Pedregal", "atelier_mx",null, 0));
+			stores.add(new StoreAdapter("767", "Atelier Roma", "atelier_mx",null, 0));
 			
-			stores.add(new StoreAdapter("768", "Modatelas Ixtlahuaca", "modatelas_mx", null));
-			stores.add(new StoreAdapter("769", "Modatelas Tonala", "modatelas_mx", null));
-			stores.add(new StoreAdapter("770", "Modatelas Zumpango III", "modatelas_mx", null));
-			stores.add(new StoreAdapter("771", "Modatelas Morelia IV", "modatelas_mx", null));
-			stores.add(new StoreAdapter("772", "Modatelas Huahapan De Leon", "modatelas_mx", null));
-			stores.add(new StoreAdapter("773", "Modatelas Auatlan De Navarro", "modatelas_mx", null));
-			stores.add(new StoreAdapter("774", "Modatelas Poza Rica II", "modatelas_mx", null));
-			stores.add(new StoreAdapter("775", "Modatelas San Juan Ddel Rio", "modatelas_mx", null));
-			stores.add(new StoreAdapter("776", "Modatelas Ixmiquilpan", "modatelas_mx", null));
+			stores.add(new StoreAdapter("768", "Modatelas Ixtlahuaca", "modatelas_mx", null, 0));
+			stores.add(new StoreAdapter("769", "Modatelas Tonala", "modatelas_mx", null, 0));
+			stores.add(new StoreAdapter("770", "Modatelas Zumpango III", "modatelas_mx", null, 0));
+			stores.add(new StoreAdapter("771", "Modatelas Morelia IV", "modatelas_mx", null, 0));
+			stores.add(new StoreAdapter("772", "Modatelas Huahapan De Leon", "modatelas_mx", null, 0));
+			stores.add(new StoreAdapter("773", "Modatelas Auatlan De Navarro", "modatelas_mx", null, 0));
+			stores.add(new StoreAdapter("774", "Modatelas Poza Rica II", "modatelas_mx", null, 0));
+			stores.add(new StoreAdapter("775", "Modatelas San Juan Ddel Rio", "modatelas_mx", null, 0));
+			stores.add(new StoreAdapter("776", "Modatelas Ixmiquilpan", "modatelas_mx", null, 0));
 			
-			stores.add(new StoreAdapter("777", "Fraiche Chihuahua", "fraiche_mx", null));
-			stores.add(new StoreAdapter("778", "Fraiche Heroes de Tecamac", "fraiche_mx", null));
-			stores.add(new StoreAdapter("779", "Fraiche Nezahualcoyotl", "fraiche_mx", null));
-			stores.add(new StoreAdapter("780", "Fraiche Guelatao", "fraiche_mx", null));
-			stores.add(new StoreAdapter("781", "Fraiche Guanajuato", "fraiche_mx", null));
-			stores.add(new StoreAdapter("782", "Fraiche Viaducto Piedad", "fraiche_mx", null));
-			stores.add(new StoreAdapter("783", "Fraiche Av. Canal Miramontes", "fraiche_mx", null));
+			stores.add(new StoreAdapter("777", "Fraiche Chihuahua", "fraiche_mx", null, 0));
+			stores.add(new StoreAdapter("778", "Fraiche Heroes de Tecamac", "fraiche_mx", null, 0));
+			stores.add(new StoreAdapter("779", "Fraiche Nezahualcoyotl", "fraiche_mx", null, 0));
+			stores.add(new StoreAdapter("780", "Fraiche Guelatao", "fraiche_mx", null, 0));
+			stores.add(new StoreAdapter("781", "Fraiche Guanajuato", "fraiche_mx", null, 0));
+			stores.add(new StoreAdapter("782", "Fraiche Viaducto Piedad", "fraiche_mx", null, 0));
+			stores.add(new StoreAdapter("783", "Fraiche Av. Canal Miramontes", "fraiche_mx", null, 0));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
