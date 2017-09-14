@@ -32,6 +32,8 @@ public class GenerateAPDVisits extends AbstractCLI {
 		parser.accepts( "shoppingIds", "List of comma separated shoppings (superseeds brandIds and storeIds)").withRequiredArg().ofType( String.class );
 		parser.accepts( "onlyEmployees", "Only process employees").withRequiredArg().ofType( Boolean.class );
 		parser.accepts( "onlyDashboards", "Only process dashboards with preexisting APDVisit data").withRequiredArg().ofType( Boolean.class );
+		parser.accepts( "updateDashboards", "Update dashboards with preexisting APDVisit data").withRequiredArg().ofType( Boolean.class );
+		parser.accepts( "deletePreviousRecors", "Delete previus dashboards").withRequiredArg().ofType( Boolean.class );
 		return parser;
 	}
 
@@ -49,6 +51,8 @@ public class GenerateAPDVisits extends AbstractCLI {
 
 			boolean onlyEmployees = false;
 			boolean onlyDashboards = false;
+			boolean updateDashboards = false;
+			boolean deletePreviousRecors = false;
 			String sFromDate = null;
 			String sToDate = null;
 			Date fromDate = null;
@@ -110,6 +114,14 @@ public class GenerateAPDVisits extends AbstractCLI {
 				if(options.has("onlyDashboards")) {
 					onlyDashboards = (Boolean)options.valueOf("onlyDashboards");
 				}
+				
+				if(options.has("updateDashboards")) {
+					updateDashboards = (Boolean)options.valueOf("updateDashboards");
+				}
+				
+				if(options.has("deletePreviousRecors")) {
+					deletePreviousRecors = (Boolean)options.valueOf("deletePreviousRecors");
+				}
 
 			} catch( Exception e ) {
 				e.printStackTrace();
@@ -119,9 +131,9 @@ public class GenerateAPDVisits extends AbstractCLI {
 			log.log(Level.INFO, "Generating APDVisits");
 			
 			if( shoppings.isEmpty() )
-				helper.generateAPDVisits(brands, stores, fromDate, toDate, false, true, onlyEmployees, onlyDashboards);
+				helper.generateAPDVisits(brands, stores, fromDate, toDate, deletePreviousRecors, updateDashboards, onlyEmployees, onlyDashboards);
 			else
-				helper.generateAPDVisits(shoppings, fromDate, toDate, false, true, onlyEmployees, onlyDashboards);
+				helper.generateAPDVisits(shoppings, fromDate, toDate, deletePreviousRecors, updateDashboards, onlyEmployees, onlyDashboards);
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
