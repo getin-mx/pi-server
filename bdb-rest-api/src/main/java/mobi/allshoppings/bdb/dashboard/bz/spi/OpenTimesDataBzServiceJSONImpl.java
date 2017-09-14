@@ -18,11 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.APDAssignationDAO;
+import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APUptimeDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDAssignation;
+import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APUptime;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Store;
@@ -49,6 +51,8 @@ implements BDBDashboardBzService {
 	private APDAssignationDAO apdaDao;
 	@Autowired
 	private APUptimeDAO apuDao;
+	@Autowired
+	private APDeviceDAO devDao;
 
 	/**
 	 * Obtains information about a user
@@ -97,11 +101,17 @@ implements BDBDashboardBzService {
 			Map<String, Map<Date, List<String>>> data = CollectionFactory.createMap();
 			Date toDate = new Date(sdf.parse(toStringDate).getTime());
 			Date curDate = new Date(sdf.parse(fromStringDate).getTime());
+			
+			Calendar cal = Calendar.getInstance();
+			List<APDAssignation> devAssig;
+			APDevice dev;
+			String openTime;
+			String closeTime;
 
 			while(curDate.before(toDate) || curDate.equals(toDate)) {
 				for( Store store : stores ) {
-					String openTime = null;
-					String closeTime = null;
+					openTime = null;
+					closeTime = null;
 					
 					List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate);
 					for( APDAssignation assig : assigs ) {
@@ -140,9 +150,11 @@ implements BDBDashboardBzService {
 			// Titles row
 			JSONArray titles = new JSONArray();
 			titles.put("Tienda");
+			titles.put("Apertura registrada");
+			titles.put("Cierre registrado");
 			titles.put("Dia");
-			titles.put("Apertura");
-			titles.put("Cierre");
+			titles.put("Apertura reportada");
+			titles.put("Cierre reportado");
 			jsonArray.put(titles);
 
 			// Values Array
@@ -152,12 +164,51 @@ implements BDBDashboardBzService {
 				List<Date> dates = CollectionFactory.createList();
 				dates.addAll(rowData.keySet());
 				Collections.sort(dates);
+				devAssig = apdaDao.getUsingEntityIdAndEntityKind(store.getIdentifier(),
+						EntityKind.KIND_STORE);
+				dev = devAssig != null && !devAssig.isEmpty() ?
+						devDao.get(devAssig.get(0).getHostname()) : null;
 				
 				Iterator<Date> i = dates.iterator();
 				while( i.hasNext()) {
 					Date key = i.next();
 					JSONArray row = new JSONArray();
 					row.put(name);
+					cal.setTime(key);
+					switch(cal.get(Calendar.DAY_OF_WEEK)) {
+					case Calendar.SUNDAY :
+						openTime = dev.getVisitStartSun();
+						closeTime = dev.getVisitEndSun();
+						break;
+					case Calendar.MONDAY :
+						openTime = dev.getVisitStartMon();
+						closeTime = dev.getVisitEndMon();
+						break;
+					case Calendar.TUESDAY :
+						openTime = dev.getVisitStartTue();
+						closeTime = dev.getVisitEndTue();
+						break;
+					case Calendar.WEDNESDAY :
+						openTime = dev.getVisitStartWed();
+						closeTime = dev.getVisitEndWed();
+						break;
+					case Calendar.THURSDAY :
+						openTime = dev.getVisitStartThu();
+						closeTime = dev.getVisitEndThu();
+						break;
+					case Calendar.FRIDAY :
+						openTime = dev.getVisitStartFri();
+						closeTime = dev.getVisitEndFri();
+						break;
+					case Calendar.SATURDAY :
+						openTime = dev.getVisitStartSat();
+						closeTime = dev.getVisitEndSat();
+						break;
+					default :
+						openTime = closeTime = "";
+					}
+					row.put(openTime);
+					row.put(closeTime);
 					row.put(getDateName(key));
 					List<String> times = rowData.get(key);
 					row.put((times.get(0) == null ? "-" : times.get(0)));
