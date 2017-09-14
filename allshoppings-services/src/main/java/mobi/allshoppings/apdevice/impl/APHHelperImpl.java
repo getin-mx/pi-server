@@ -668,9 +668,9 @@ public class APHHelperImpl implements APHHelper {
 			dumpHelper.setFilter(hostname);
 			Date xdate = new Date(toDate.getTime() - 3600000);
 			Iterator<String> i = dumpHelper.stringIterator(fromDate, xdate);
+			JSONObject json;
 			while( i.hasNext() ) {
-				String s = i.next();
-				JSONObject json = new JSONObject(s);
+				json = new JSONObject(i.next());
 				if( totals % 1000 == 0 ) 
 					log.log(Level.INFO, "Processing for date " + new Date(json.getLong("creationDateTime")) + " with " + cache.size() + " records so far (" + cache.getHits() + "/" + cache.getMisses() + "/" + cache.getStores() + "/" + cache.getLoads() + ")...");
 
