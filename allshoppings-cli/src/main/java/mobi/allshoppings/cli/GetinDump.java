@@ -24,6 +24,7 @@ import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.model.tools.KeyHelper;
 
 
@@ -923,6 +924,9 @@ public class GetinDump extends AbstractCLI {
 			
 			try {
 				brand = brandDao.get("fraiche_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED); 
+		        brandDao.update(brand);
+		        log.log(Level.INFO, "Se ha creado la marca "+brand.getName());
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Fraiche");
@@ -1575,7 +1579,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("775", "Modatelas San Juan Ddel Rio", "modatelas_mx", null));
 			stores.add(new StoreAdapter("776", "Modatelas Ixmiquilpan", "modatelas_mx", null));
 			
-			stores.add(new StoreAdapter("777", "Fraiche Chichuahua", "fraiche_mx", null));
+			stores.add(new StoreAdapter("777", "Fraiche Chihuahua", "fraiche_mx", null));
 			stores.add(new StoreAdapter("778", "Fraiche Heroes de Tecamac", "fraiche_mx", null));
 			stores.add(new StoreAdapter("779", "Fraiche Nezahualcoyotl", "fraiche_mx", null));
 			stores.add(new StoreAdapter("780", "Fraiche Guelatao", "fraiche_mx", null));
@@ -1589,6 +1593,7 @@ public class GetinDump extends AbstractCLI {
 					store = storeDao.getUsingExternalId(obj.getExternalKey());
 					store.setName(obj.getName());
 					storeDao.update(store);
+					log.log(Level.INFO, "Se ha modificado la tienta "+obj.getName());
 				} catch( Exception e ) {
 					shopping = obj.getShoppingId() == null ? null : shoppingDao.get(obj.getShoppingId(), true);
 					brand = brandDao.get(obj.getBrandId(), true);
@@ -1602,6 +1607,7 @@ public class GetinDump extends AbstractCLI {
 					store.setKey(obj.getShoppingId() == null ? storeDao.createKey()
 							: storeDao.createKey(obj.getShoppingId(), obj.getBrandId()));
 					storeDao.create(store);
+					log.log(Level.INFO, "Se ha creado la tienta "+obj.getName());
 				}
 			} 	
 
@@ -1621,6 +1627,7 @@ public class GetinDump extends AbstractCLI {
 			}
 
 		} catch( Exception e ) {
+			e.printStackTrace();
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
 		System.exit(0);
