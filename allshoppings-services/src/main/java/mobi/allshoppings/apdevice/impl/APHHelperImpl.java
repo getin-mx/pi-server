@@ -43,7 +43,9 @@ public class APHHelperImpl implements APHHelper {
 	private static final Logger log = Logger.getLogger(APHHelperImpl.class.getName());
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static final long ONE_HOUR = 3600000;
+	private static final long HOUR_IN_MILLIS = 3600000;
+	private static final long DAY_IN_MILLIS = 86400000;
+	private static final Calendar CALENDAR = Calendar.getInstance();
 	
 	private PersistentCacheFSImpl<APHEntry> cache;
 
@@ -310,7 +312,10 @@ public class APHHelperImpl implements APHHelper {
 	@Override
 	public APHEntry setFramedRSSI(APHEntry aphe, Date forDate, Integer rssi) {
 		if( rssi == null || rssi.equals(0)) return aphe;
-		long secondsOfDay = (long)(((forDate.getTime()) % 86400000) / 1000);
+		//long secondsOfDay = (long)(((forDate.getTime()) % 86400000) / 1000);
+		CALENDAR.setTime(forDate);
+		long secondsOfDay = CALENDAR.get(Calendar.SECOND) +CALENDAR.get(Calendar.MINUTE) *60
+				+CALENDAR.get(Calendar.HOUR_OF_DAY) *60 *60;
 		int frame = (int)Math.round((secondsOfDay / 20));
 		aphe.getRssi().put(String.valueOf(frame), rssi);
 		aphe.setDataCount(aphe.getRssi().size());
@@ -472,7 +477,7 @@ public class APHHelperImpl implements APHHelper {
 	public void artificiateRSSI(Map<String, APDevice> apdevices, Date fromDate, Date toDate) throws ASException {
 		
 		Date d1 = new Date(fromDate.getTime());
-		Date d2 = new Date(d1.getTime() + 86400000);
+		Date d2 = new Date(d1.getTime() + DAY_IN_MILLIS);
 		while( d1.before(toDate)) {
 			Iterator<String> i = apdevices.keySet().iterator();
 			while(i.hasNext()) {
@@ -637,7 +642,7 @@ public class APHHelperImpl implements APHHelper {
 		// Pre build cache
 		if( buildCache ) {
 			log.log(Level.INFO, "Building Cache");
-			buildCache(fromDate, new Date(toDate.getTime() - 86400000), null);
+			buildCache(fromDate, new Date(toDate.getTime() - DAY_IN_MILLIS), null);
 		} else {
 			setCacheBuilt(true);
 		}
@@ -666,7 +671,7 @@ public class APHHelperImpl implements APHHelper {
 
 			dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
 			dumpHelper.setFilter(hostname);
-			Date xdate = new Date(toDate.getTime() - 3600000);
+			Date xdate = new Date(toDate.getTime() - HOUR_IN_MILLIS);
 			Iterator<String> i = dumpHelper.stringIterator(fromDate, xdate);
 			JSONObject json;
 			while( i.hasNext() ) {
@@ -728,7 +733,7 @@ public class APHHelperImpl implements APHHelper {
 		// Pre build cache
 		if( buildCache ) {
 			log.log(Level.INFO, "Building Cache");
-			buildCache(fromDate, new Date(toDate.getTime() - 86400000), null);
+			buildCache(fromDate, new Date(toDate.getTime() - DAY_IN_MILLIS), null);
 		} else {
 			setCacheBuilt(true);
 		}
@@ -757,7 +762,7 @@ public class APHHelperImpl implements APHHelper {
 
 			dumpHelper = new DumpFactory<ExternalAPHotspot>().build(null, ExternalAPHotspot.class);
 			dumpHelper.setFilter(hostname);
-			Date xdate = new Date(toDate.getTime() - 3600000);
+			Date xdate = new Date(toDate.getTime() - HOUR_IN_MILLIS);
 			Iterator<ExternalAPHotspot> i = dumpHelper.iterator(fromDate, xdate);
 			while( i.hasNext() ) {
 				ExternalAPHotspot obj = i.next();
@@ -765,7 +770,7 @@ public class APHHelperImpl implements APHHelper {
 					log.log(Level.INFO, "Processing for date " + obj.getCreationDateTime() + " with " + cache.size() + " records so far (" + cache.getHits() + "/" + cache.getMisses() + "/" + cache.getStores() + "/" + cache.getLoads() + ")...");
 
 				if( obj.getLastSeen() == null )
-					obj.setLastSeen(new Date(obj.getFirstSeen().getTime() + ONE_HOUR));
+					obj.setLastSeen(new Date(obj.getFirstSeen().getTime() + HOUR_IN_MILLIS));
 
 				if(isValidMacAddress(obj.getMac()))
 					setFramedRSSI(obj);

@@ -550,6 +550,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 						if( apdevices.contains(aphe.getHostname())) {
 							Key apuKey = apuDao.createKey(aphe.getHostname(), date);
 							APUptime apu = cache.get(apuKey.getName());
+							if(apu == null || apu.getRecord() == null) continue;
 							Iterator<String> slots = aphe.getRssi().keySet().iterator();
 							while(slots.hasNext()) {
 								try {
@@ -557,11 +558,9 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 									Date vDate = aphHelper.slotToDate(aphe.getDate(), Integer.valueOf(slot));
 									if(( vDate.after(date) || vDate.equals(date)) && ( vDate.before(xtoDate) || vDate.equals(xtoDate))) {
 										String key = APUptime.getRecordKey(vDate);
-										if( apu != null && apu.getRecord() != null ) {
-											Integer val = apu.getRecord().get(key);
-											if( val.equals(0)) {
-												apu.getRecord().put(key, 1);
-											}
+										Integer val = apu.getRecord().get(key);
+										if( val.equals(0)) {
+											apu.getRecord().put(key, 1);
 										}
 									}
 								} catch( Exception e ) {}
@@ -572,7 +571,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 
 			}
 			
-			date = new Date(date.getTime() + 86400000);
+			date.setTime(date.getTime() + ONE_DAY);
 			
 			log.log(Level.INFO, "Disposing APHEntry Cache...");
 			dumpHelper.dispose();
