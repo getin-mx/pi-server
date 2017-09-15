@@ -1596,6 +1596,8 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("782", "Fraiche Viaducto Piedad", "fraiche_mx", null, 0));
 			stores.add(new StoreAdapter("783", "Fraiche Av. Canal Miramontes", "fraiche_mx", null, 0));
 			
+			stores.add(new StoreAdapter("784", "Pakmail Mixcoac", "pakmail_mx", null, 0));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				log.log(Level.INFO, "Processing store" + obj.getName());
