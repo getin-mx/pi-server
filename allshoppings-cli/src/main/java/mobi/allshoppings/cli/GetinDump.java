@@ -1474,7 +1474,7 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("691","Mobo Town Center Nicolás Romero", "mobo_mx", null, 0));
 			
-			stores.add(new StoreAdapter("692","Farmacias Similares Ermita 3", "farmacias_similares_mx", null, 0));
+			stores.add(new StoreAdapter("692","Farmacias Similares Ermita 4", "farmacias_similares_mx", null, 0));
 			stores.add(new StoreAdapter("693","Farmacias Similares Zaragoza 1", "farmacias_similares_mx", null, 0));
 			stores.add(new StoreAdapter("694","Farmacias Similares Eje Central 2", "farmacias_similares_mx", null, 0));
 			stores.add(new StoreAdapter("695","Farmacias Similares Centro 6", "farmacias_similares_mx", null, 0));
