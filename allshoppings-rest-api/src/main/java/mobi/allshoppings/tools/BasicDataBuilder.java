@@ -1,6 +1,5 @@
 package mobi.allshoppings.tools;
 
-import java.util.Date;
 import java.util.logging.Logger;
 
 import mobi.allshoppings.auth.AuthHelper;
@@ -44,11 +43,11 @@ public class BasicDataBuilder {
 	 * @throws ASException
 	 */
 	public static void warmUp() throws ASException {
-		long start = new Date().getTime();
+		long time = System.currentTimeMillis();
 		BasicDataBuilder bdb = new BasicDataBuilder();
 		bdb.userDao.get("admin", true);
-		long end = new Date().getTime();
-		log.info("warmup in " + (end - start) + " ms.");
+		time = System.currentTimeMillis() -time;
+		log.info("warmup in " + time + " ms.");
 	}
 	
 	/**
