@@ -7055,7 +7055,8 @@ public class UserMenuDump extends AbstractCLI {
 								"d0e0a2d7-95b2-4d6f-8b5c-f36e2a697e6c", "fb994fb0-099c-4ae3-902f-f45df7c77cbe",
 								"1479331294155", "b0abfa8a-8c56-4a00-9ab8-a5ccf72cfa2f",
 								"b6aa02b2-8e4d-4e94-93f6-6cae7215cff1", "9ee4d4be-0d6f-4516-804c-8ecacbb5dd30",
-								"fb9ba533-212b-4b26-b9a8-73026e5059f0", "1479331293676"));
+								"fb9ba533-212b-4b26-b9a8-73026e5059f0", "1479331293676",
+								"976e42c8-2cef-4802-8fb6-0c7eba3900cb"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "jogomez@squalo.com"));
 				userDao.create(user);
 			}
