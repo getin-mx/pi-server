@@ -61,6 +61,8 @@ public class Store implements ModelKey, Serializable, IAdaptable, Identificable,
 	private String timezone;
 	private String customCheckinMessage;
 	private String externalId;
+	private int storeKind;
+	private int storeLocationKind;
 
 	@Persistent(defaultFetchGroup = "true")
 	@Embedded
@@ -615,5 +617,23 @@ public class Store implements ModelKey, Serializable, IAdaptable, Identificable,
 	public String getCountry() {
 		return this.address != null ? this.address.getCountry() : null;
 	}
+
+	public int getStoreKind() {
+		return storeKind;
+	}
+
+	public void setStoreKind(int storeKind) {
+		this.storeKind = storeKind;
+	}
+
+	public int getStoreLocationKind() {
+		return storeLocationKind;
+	}
+
+	public void setStoreLocationKind(int storeLocationKind) {
+		this.storeLocationKind = storeLocationKind;
+	}
+	
+	
 
 }
