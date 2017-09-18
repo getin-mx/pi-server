@@ -1134,7 +1134,7 @@ public class DashboardAPDeviceMapperService {
 				for( StoreTicket ticket: tickets){
 					
 					DashboardIndicatorData obj;
-					String forDate = sdf.format(ticket.getDate());
+					String forDate = ticket.getDate();
 					TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
 					
 					// visitor_total_tickets --------------------------------------------------------------------------------
@@ -1201,7 +1201,7 @@ public class DashboardAPDeviceMapperService {
 				for( StoreItem item: items){		
 					
 					DashboardIndicatorData obj;
-					String forDate = sdf.format(item.getDate());
+					String forDate = item.getDate();
 					TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
 	
 					// visitor_total_itemss --------------------------------------------------------------------------------
@@ -1252,7 +1252,7 @@ public class DashboardAPDeviceMapperService {
 				for( StoreRevenue revenue: revenues){		
 					
 					DashboardIndicatorData obj;
-					String forDate = sdf.format(revenue.getDate());
+					String forDate = revenue.getDate();
 					TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
 	
 					// visitor_total_revenues --------------------------------------------------------------------------------
