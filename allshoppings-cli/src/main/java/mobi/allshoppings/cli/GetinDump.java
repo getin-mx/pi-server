@@ -827,7 +827,7 @@ public class GetinDump extends AbstractCLI {
 				brand = new Brand();
 				brand.setName("Dentalia");
 				brand.setCountry("Mexico");
-				brand.setStatus(StatusAware.STATUS_DISABLED);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "dentalia_mx"));
 				brandDao.create(brand);
 			}
