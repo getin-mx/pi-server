@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,6 +49,8 @@ import mobi.allshoppings.tools.CollectionFactory;
 public class ExcelExportHelperImpl implements ExcelExportHelper {
 
 	private static final Logger log = Logger.getLogger(ExcelExportHelperImpl.class.getName());
+	
+	static final DecimalFormat DF = new DecimalFormat("00");
 	
 	@Autowired
 	DashboardIndicatorDataDAO didDao;
@@ -508,6 +511,14 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		}
 	}
 
+	/**
+	 * Returns the given date in the format MM YYYY and in spanish.
+	 * @param date - The date to formate.
+	 * @return String - A string that reads the given date in spanish and in the format MM YYYY.
+	 * @deprecated Using locales and standard ISOs is a better practice. So, is encouraged the
+	 * use of {@link #dateToString(Date, Locale) } for better and more flexible results.
+	 */
+	@Deprecated
 	public String getStringDate(Date date) {
 		StringBuffer sb = new StringBuffer();
 		Calendar cal = Calendar.getInstance();
@@ -568,16 +579,15 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		}
 
 		public static String getKey(Date date, int hour) {
-			DecimalFormat df = new DecimalFormat("00");
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);
 			int day = cal.get(Calendar.DAY_OF_WEEK);
-			return df.format(day) + "-" + df.format(hour);
+			return DF.format(day) + "-" + DF.format(hour);
 		}
 		
 		public String getKey() {
-			DecimalFormat df = new DecimalFormat("00");
-			return df.format(day) + "-" + df.format(hour);
+			DecimalFormat DF = new DecimalFormat("00");
+			return DF.format(day) + "-" + DF.format(hour);
 		}
 		
 		/**
@@ -807,8 +817,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		}
 		
 		public static String calculateHour(int hour) {
-			DecimalFormat df = new DecimalFormat("00");
-			return df.format(hour) + ":00Hs";
+			return DF.format(hour) + ":00Hs";
 		}
 		
 		public String toString() {
@@ -819,8 +828,6 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	
 	public class TrafficEntry {
 
-		private final DecimalFormat df = new DecimalFormat("00");
-		
 		private String date;
 		private long peasants;
 		private long visits;
@@ -912,9 +919,9 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				break;
 			}
 			
-			sb.append(df.format(cal.get(Calendar.DATE)));
+			sb.append(DF.format(cal.get(Calendar.DATE)));
 			sb.append("/");
-			sb.append(df.format(cal.get(Calendar.MONTH) + 1));
+			sb.append(DF.format(cal.get(Calendar.MONTH) + 1));
 			
 			this.setDate(sb.toString());
 		}
@@ -939,4 +946,17 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 
 		return sb.toString();
 	}
+	
+	private String dateToString(Date date, Locale locale) {
+		// TODO implement
+		return null;
+	}
+	
+	@Override
+	public byte[] exportDB(String[] sotresId, String fromDate, String toDate, String countryISO,
+			String languageISO) throws ASException {
+		// TODO implement
+		return null;
+	}
+	
 }

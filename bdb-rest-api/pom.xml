@@ -80,6 +80,13 @@
 			<version>0.1</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>JoptSimple</groupId>
+			<artifactId>joptsimple</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${user.home}/.m2/repository/net/sf/jopt-simple/jopt-simple/4.7/jopt-simple-4.7.jar</systemPath>
+		</dependency>
 
 		<!-- Restlet Framework -->
 		<dependency>
