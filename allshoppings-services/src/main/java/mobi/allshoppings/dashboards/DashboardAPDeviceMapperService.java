@@ -1299,11 +1299,11 @@ public class DashboardAPDeviceMapperService {
 		obj.setEntityId(entityId);
 		obj.setEntityKind(entityKind);
 		try { obj.setDate(sdf.parse(forDate)); } catch(Exception e ){}
-		obj.setDate(DateUtils.truncate(date, Calendar.DATE));
 		obj.setStringDate(forDate);
 
 		Calendar c = Calendar.getInstance();
 		c.setTime(obj.getDate());
+		c.setTimeZone(tz);
 		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 
 		obj.setDayOfWeek(dayOfWeek);
