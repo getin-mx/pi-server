@@ -3889,7 +3889,8 @@ public class UserMenuDump extends AbstractCLI {
 						"fefc2dd0-233e-42e6-9fb4-058545ea0926", "791d303b-3f45-4037-a6f4-2ba9c1e15c75",
 						"e43a9f92-7db7-46d1-8a74-3f629eea2b47", "dcb748f6-a060-43da-9a13-aea9ca02245a",
 						"247b4ead-822f-4713-9465-177666b2e31c", "40b7b23d-f2b4-4f70-be05-a0ad51ce44ba",
-						"b35dc502-9b07-4c26-8926-84d962926869", "440dfccd-73b3-48a5-98c8-d893a01a085f"));
+						"b35dc502-9b07-4c26-8926-84d962926869", "440dfccd-73b3-48a5-98c8-d893a01a085f",
+						"01bf63e5-6b31-4bf9-beb6-2a9dcbb8a304"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "mariel.zamudio@outletdeportes.mx"));
 				userDao.create(user);
 			}
