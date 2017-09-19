@@ -1587,7 +1587,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("772", "Modatelas Huahapan De Leon", "modatelas_mx", null, 0));
 			stores.add(new StoreAdapter("773", "Modatelas Auatlan De Navarro", "modatelas_mx", null, 0));
 			stores.add(new StoreAdapter("774", "Modatelas Poza Rica II", "modatelas_mx", null, 0));
-			stores.add(new StoreAdapter("775", "Modatelas San Juan Ddel Rio", "modatelas_mx", null, 0));
+			stores.add(new StoreAdapter("775", "Modatelas San Juan Del Rio", "modatelas_mx", null, 0));
 			stores.add(new StoreAdapter("776", "Modatelas Ixmiquilpan", "modatelas_mx", null, 0));
 			
 			stores.add(new StoreAdapter("777", "Fraiche Chihuahua", "fraiche_mx", null, 0));
