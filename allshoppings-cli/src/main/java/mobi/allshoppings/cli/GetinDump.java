@@ -823,12 +823,11 @@ public class GetinDump extends AbstractCLI {
 			
 			try {
 				brand = brandDao.get("dentalia_mx", true);
-				brand.setStatus(StatusAware.STATUS_DISABLED);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Dentalia");
 				brand.setCountry("Mexico");
-				brand.setStatus(StatusAware.STATUS_DISABLED);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "dentalia_mx"));
 				brandDao.create(brand);
 			}
@@ -1306,7 +1305,7 @@ public class GetinDump extends AbstractCLI {
 
 			stores.add(new StoreAdapter("557","Clarins Perisur", "clarins_mx",null, 0));
 
-			stores.add(new StoreAdapter("558", "Botanicus El Rosario", "botanicus_mx", null, 0));
+//			stores.add(new StoreAdapter("558", "Botanicus El Rosario", "botanicus_mx", null, 0));
 			stores.add(new StoreAdapter("559", "Gameplanet Santa Fe I", "gameplanet_mx", null, 0));
 			stores.add(new StoreAdapter("560", "Gameplanet Universidad", "gameplanet_mx", null, 0));
 			stores.add(new StoreAdapter("561", "Gameplanet Portal San Angel", "gameplanet_mx", null, 0));
@@ -1403,7 +1402,7 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("624","Carolina Herrera", "carolina_herrera_il", null, 0));
 			
-			stores.add(new StoreAdapter("625","Botanicus El Rosario", "botanicus_mx", null, 0));
+//			stores.add(new StoreAdapter("625","Botanicus El Rosario", "botanicus_mx", null, 0));
 			
 			stores.add(new StoreAdapter("626","Aditivo Vallejo", "aditivo_mx", null, 0));
 			stores.add(new StoreAdapter("627","Aditivo Ecatepec", "aditivo_mx", null, 0));
@@ -1587,7 +1586,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("772", "Modatelas Huahapan De Leon", "modatelas_mx", null, 0));
 			stores.add(new StoreAdapter("773", "Modatelas Auatlan De Navarro", "modatelas_mx", null, 0));
 			stores.add(new StoreAdapter("774", "Modatelas Poza Rica II", "modatelas_mx", null, 0));
-			stores.add(new StoreAdapter("775", "Modatelas San Juan Ddel Rio", "modatelas_mx", null, 0));
+			stores.add(new StoreAdapter("775", "Modatelas San Juan Del Rio", "modatelas_mx", null, 0));
 			stores.add(new StoreAdapter("776", "Modatelas Ixmiquilpan", "modatelas_mx", null, 0));
 			
 			stores.add(new StoreAdapter("777", "Fraiche Chihuahua", "fraiche_mx", null, 0));
@@ -1601,6 +1600,10 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("784", "Pakmail Mixcoac", "pakmail_mx", null, 0));
 			
 			stores.add(new StoreAdapter("785","Botanicus Polanco 2", "botanicus_mx", null, 0));
+			
+			stores.add(new StoreAdapter("786","Aditivo Poza Rica", "aditivo_mx", null, 0));
+			
+			stores.add(new StoreAdapter("787","Botanicus Forum Cuernavaca", "botanicus_mx", null, 0));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
