@@ -1305,7 +1305,7 @@ public class GetinDump extends AbstractCLI {
 
 			stores.add(new StoreAdapter("557","Clarins Perisur", "clarins_mx",null, 0));
 
-			stores.add(new StoreAdapter("558", "Botanicus El Rosario", "botanicus_mx", null, 0));
+//			stores.add(new StoreAdapter("558", "Botanicus El Rosario", "botanicus_mx", null, 0));
 			stores.add(new StoreAdapter("559", "Gameplanet Santa Fe I", "gameplanet_mx", null, 0));
 			stores.add(new StoreAdapter("560", "Gameplanet Universidad", "gameplanet_mx", null, 0));
 			stores.add(new StoreAdapter("561", "Gameplanet Portal San Angel", "gameplanet_mx", null, 0));
@@ -1402,7 +1402,7 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("624","Carolina Herrera", "carolina_herrera_il", null, 0));
 			
-			stores.add(new StoreAdapter("625","Botanicus El Rosario", "botanicus_mx", null, 0));
+//			stores.add(new StoreAdapter("625","Botanicus El Rosario", "botanicus_mx", null, 0));
 			
 			stores.add(new StoreAdapter("626","Aditivo Vallejo", "aditivo_mx", null, 0));
 			stores.add(new StoreAdapter("627","Aditivo Ecatepec", "aditivo_mx", null, 0));
