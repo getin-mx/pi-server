@@ -5,14 +5,14 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -30,7 +30,7 @@ public class DBExportServlet extends HttpServlet {
 	
 	private String[] storesId, employeesId;
 	private String fromDate, toDate, countryISO, languageISO, destFile, brandId;
-	private boolean visits, sotres;
+	private boolean visits, stores;
 	
 	private static final long serialVersionUID = 6006971372478805453L;
 	private static final Logger LOG = Logger.getLogger(DBExportServlet.class.getSimpleName());
@@ -59,22 +59,50 @@ public class DBExportServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		byte[] rawCsv;
-		if(req == null || resp == null) {
-			
-		} else {
-			
-			//FIXME: Check Auth Token
-			
+		try {
+			byte[] rawCsv;
+			if(req != null && resp != null) {
+				fromDate = req.getParameter(FROM_DATE_PARAM);
+				toDate = req.getParameter(TO_DATE_PARAM);
+				brandId = req.getParameter(BRAND_PARAM);
+				List<String> helperCollection = CollectionFactory.createList();
+				StringBuilder storesIds = new StringBuilder();
+				String aux;
+				for(String store : req.getParameter(STORES_PARAM).split(",")) {
+					aux = store.trim();
+					if(!helperCollection.contains(aux)) helperCollection.add(aux);
+					storesIds.append(aux).append('-');
+				}
+				storesIds.replace(storesIds.length() -1, storesIds.length(), "");
+				storesId = helperCollection.toArray(new String[0]);
+				if(!StringUtils.hasText(brandId) && storesId == null)
+					throw ASExceptionHelper.defaultException("At least, one brand or store ID must be given",
+							null);
+				helperCollection.clear();
+				for(String emp : req.getParameter(EMPLOYEE_PARAM).split(",")) {
+					aux = emp.trim();
+					if(helperCollection.contains(emp)) helperCollection.add(aux);
+				}
+				employeesId = helperCollection.toArray(new String[0]);
+				visits = req.getParameter(VISITS_OPTION_PARAM).equalsIgnoreCase("true");
+				stores = req.getParameter(STORES_OPTION_PARAM).equalsIgnoreCase("true");
+				destFile = StringUtils.hasText(brandId) ? brandId : "";
+				destFile += storesIds.toString();
+			} else {
+				//FIXME: Check Auth Token
+			}//if parameters are null, read from class attributes
+			long benchmark = System.currentTimeMillis();
+			rawCsv = exportHelper.exportDB(storesId, fromDate, toDate, countryISO, languageISO);
 			resp.setHeader("Content-Disposition", "inline; filename=\"report.xls\"");
 			resp.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 			resp.setHeader("Content-Length", String.valueOf(rawCsv.length));
-		}//if parameters are null, read from class attributes
-		// TODO call the method that does things... you know.... those... things...
-		rawCsv = exportHelper.exportDB(sotresId, fromDate, toDate, countryISO, languageISO);
-		OutputStream os = resp.getOutputStream();
-		os.write(rawCsv);
-		os.flush();
+			OutputStream os = resp.getOutputStream();
+			os.write(rawCsv);
+			os.flush();
+			LOG.log(Level.FINE, "DB Exported to MS Excel in " +(System.currentTimeMillis() -benchmark) +"ms");
+		} catch(ASException e) {
+			LOG.log(Level.SEVERE, e.getMessage(), e);
+		}
 		
 	}
 	
@@ -111,7 +139,7 @@ public class DBExportServlet extends HttpServlet {
 		return parser;
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ASException {
 		OptionSet options = parser.parse(args);
 		DBExportServlet dbExport = new DBExportServlet();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -146,18 +174,16 @@ public class DBExportServlet extends HttpServlet {
 			dbExport.employeesId = helperCollection.toArray(new String[0]);
 		}//retrieves employees (if any)
 		if(options.has(VISITS_OPTION_PARAM))
-			dbExport.visits = options.valueOf(VISITS_OPTION_PARAM).equals("true");
+			dbExport.visits = options.valueOf(VISITS_OPTION_PARAM).toString().equalsIgnoreCase("true");
 		if(options.has(STORES_OPTION_PARAM))
-			dbExport.sotres = options.valueOf(VISITS_OPTION_PARAM).equals("true");
+			dbExport.stores = options.valueOf(VISITS_OPTION_PARAM).toString().equalsIgnoreCase("true");
 		dbExport.destFile = StringUtils.hasText(dbExport.brandId) ? dbExport.brandId : "";
 		dbExport.destFile += storesIds.toString();
-		// TODO populate dbExport things
 		try {
 			dbExport.doGet(null, null);
 		} catch(IOException | ServletException e) {
-			LOG.log(Level.WARN, "Couldn't export DB\n\n" +e.getMessage());
+			throw ASExceptionHelper.defaultException("Couldn't export DB", e);
 		}
-		LOG.log(Level.INFO, "Voy");
 	}
 	
 }

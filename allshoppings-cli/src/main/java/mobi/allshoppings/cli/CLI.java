@@ -48,11 +48,14 @@ public class CLI {
 		} else {
 			className = args[0];
 		}
-
+		int i;
+		if(args[0].equalsIgnoreCase("-lit")) {
+			className = args[1].trim();
+			i = 2;
+		} else i = 1;
+		
 		List<String> newArgList = new ArrayList<String>();
-		for( int i = 1; i < args.length; i++ ) {
-			newArgList.add(args[i]);
-		}
+		for(; i < args.length; i++ ) newArgList.add(args[i]);
 
 		OptionParser parser = new OptionParser();
 		parser.accepts( "datastore", "Datastore configuration properties file. Defauts to $ALLSHOPPINGS/etc/datastore.properties" ).withRequiredArg().ofType( String.class );

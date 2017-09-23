@@ -3,7 +3,9 @@ package mobi.allshoppings.exporter.impl;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -61,6 +63,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 
 	private static final SimpleDateFormat year = new SimpleDateFormat("yyyy");
 	private static final SimpleDateFormat month = new SimpleDateFormat("MM");
+	private static final int DAY_IN_MILLIS = 86400000;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -96,7 +99,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				TrafficEntry e = new TrafficEntry();
 				e.setUnformmatedDate(curDate);
 				map.put(sdf.format(curDate), e);
-				curDate = new Date(curDate.getTime() + 86400000L);
+				curDate = new Date(curDate.getTime() + DAY_IN_MILLIS);
 			}
 
 			// Creates the data map
@@ -947,16 +950,380 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		return sb.toString();
 	}
 	
+	public static String resolveDumpFileName(String baseName, Date forDate) {
+		String myYear = year.format(forDate);
+		String myMonth = month.format(forDate);
+		StringBuffer sb = new StringBuffer();
+		sb.append("db-dump").append(File.separator);
+		sb.append(myYear).append(File.separator);
+		sb.append(myMonth).append(File.separator);
+		sb.append(baseName).append(".csv");
+		return sb.toString();
+	}
+	
 	private String dateToString(Date date, Locale locale) {
-		// TODO implement
-		return null;
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy", locale);
+		return sdf.format(date);
 	}
 	
 	@Override
-	public byte[] exportDB(String[] sotresId, String fromDate, String toDate, String countryISO,
-			String languageISO) throws ASException {
-		// TODO implement
-		return null;
+	public byte[] exportDB(String[] storesId, String fromDate, String toDate, String countryISO,
+			String languageISO, String outDir) throws ASException {
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Store store;
+		String brandId, storeName;
+		Map<String, TrafficEntry> trafficMap = CollectionFactory.createMap();
+		Map<String, HourEntry> hourMap = CollectionFactory.createMap();
+		Map<String, PermanenceEntry> permanenceMap = CollectionFactory.createMap();
+		Map<String, DateAndHourEntry> dateAndHourMap = CollectionFactory.createMap();
+		Date initialDate;
+		Date finalDate;
+		try {
+			initialDate = sdf.parse(fromDate);
+			finalDate = sdf.parse(toDate);
+		} catch(ParseException ex) {
+			log.log(Level.SEVERE, ex.getMessage(), ex);
+			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
+		}
+		Date curDate = new Date(initialDate.getTime());
+		final Locale spanish = new Locale(languageISO);
+		String dateName = dateToString(finalDate, spanish);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(finalDate);
+		cal.add(Calendar.DATE, 1 -(7 *4));
+		Date limitDate = cal.getTime();
+		TrafficEntry trafficEntry;
+		HourEntry hourEntry;
+		PermanenceEntry permanenceEntry;
+		DateAndHourEntry dateAndHourEntry;
+		List<DashboardIndicatorData> list;
+		Iterator<DashboardIndicatorData> i;
+		DashboardIndicatorData obj;
+		long totalVisitsPermanence = 0;
+		long totalVisitsCount = 0;
+		List<XSSFCell> modelTrafficByDay1 = CollectionFactory.createList();
+		List<XSSFCell> modelTrafficByDay2 = CollectionFactory.createList();
+		List<XSSFCell> modelTrafficByHour = CollectionFactory.createList();
+		List<XSSFCell> modelPermanence = CollectionFactory.createList();
+		List<XSSFCell> modelHour = CollectionFactory.createList();
+		int rowIndex = 10;
+		int partialIndex = 0;
+		XSSFRow row, row2;
+		List<XSSFCell> model, model2;
+		XSSFCell cell, cell2;
+		for(String storeId : storesId) {
+			store = storeDao.get(storeId, false);
+			brandId = store.getBrandId();
+			storeName = store.getName();
+			log.log(Level.INFO, "Processing store " + storeName + "...");
+			while(curDate.compareTo(finalDate) < 1) {
+				trafficEntry = new TrafficEntry();
+				trafficEntry.setUnformmatedDate(curDate);
+				trafficMap.put(sdf.format(curDate), trafficEntry);
+				curDate = new Date(curDate.getTime() +DAY_IN_MILLIS);
+			} for(int j = 0; j < 24; j++ ) {
+				hourEntry = new HourEntry();
+				permanenceEntry = new PermanenceEntry();
+				hourEntry.setUnformattedHour(j);
+				permanenceEntry.setUnformattedHour(j);
+				hourMap.put(hourEntry.getHour(), hourEntry);
+				permanenceMap.put(permanenceEntry.getHour(), permanenceEntry);
+				for(int k = 1; k < 8; k++) {
+					dateAndHourEntry = new DateAndHourEntry();
+					dateAndHourEntry.setDay(k);
+					dateAndHourEntry.setHour(j);
+					dateAndHourMap.put(dateAndHourEntry.getKey(), dateAndHourEntry);
+				}
+			}
+			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND,
+					Arrays.asList("apd_visitor"), Arrays.asList("visitor_total_peasents",
+							"visitor_total_visits", "visitor_total_tickets"), null, storeId, "D",
+					sdf.format(initialDate), sdf.format(finalDate), null, null, null, null, null, null,
+					null, null);
+			log.log(Level.INFO, "Using " + list.size() + " elements...");
+			i = list.iterator();
+			while(i.hasNext()) {
+				obj = i.next();
+				trafficEntry = trafficMap.get(obj.getStringDate());
+				if("visitor_total_peasents".equals(obj.getElementSubId())) 
+					trafficEntry.setPeasants(trafficEntry.getPeasants()
+							+ obj.getDoubleValue().longValue());
+				else if( "visitor_total_visits".equals(obj.getElementSubId()))
+					trafficEntry.setVisits(trafficEntry.getVisits()
+							+ obj.getDoubleValue().longValue());
+				else if( "visitor_total_tickets".equals(obj.getElementSubId()))
+					trafficEntry.setTickets(trafficEntry.getTickets()
+							+ obj.getDoubleValue().longValue());
+				trafficMap.put(obj.getStringDate(), trafficEntry);
+			}
+			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND, Arrays.asList("apd_visitor"),
+					Arrays.asList("visitor_total_peasents", "visitor_total_visits"), null, storeId, "D",
+					sdf.format(limitDate), sdf.format(finalDate), null, null, null, null, null, null,
+					null, null);
+			log.log(Level.INFO, "Using " + list.size() + " elements...");
+			i = list.iterator();
+			while(i.hasNext()) {
+				obj = i.next();
+				hourEntry = hourMap.get(HourEntry.calculateHour(obj.getTimeZone()));
+				if( "visitor_total_peasents".equals(obj.getElementSubId()))
+					hourEntry.setPeasants(hourEntry.getPeasants() + obj.getDoubleValue().longValue());
+				else if( "visitor_total_visits".equals(obj.getElementSubId())) {
+					hourEntry.setVisits(hourEntry.getVisits() + obj.getDoubleValue().longValue());
+					dateAndHourEntry = dateAndHourMap.get(DateAndHourEntry.getKey(obj.getDate(),
+							obj.getTimeZone()));
+					dateAndHourEntry.setVisits(dateAndHourEntry.getVisits() + obj.getDoubleValue().longValue());
+					dateAndHourMap.put(dateAndHourEntry.getKey(), dateAndHourEntry);
+				}
+				hourMap.put(hourEntry.getHour(), hourEntry);
+			}
+			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND, Arrays.asList("apd_permanence"),
+					Arrays.asList("permanence_hourly_peasents", "permanence_hourly_visits"), null, storeId, "D",
+					sdf.format(limitDate), sdf.format(finalDate), null, null, null, null, null, null, null, null);	
+			log.log(Level.INFO, "Using " + list.size() + " elements...");
+			i = list.iterator();
+			while(i.hasNext()) {
+				obj = i.next();
+				permanenceEntry = permanenceMap.get(PermanenceEntry.calculateHour(
+						obj.getTimeZone()));
+				if("permanence_hourly_peasents".equals(obj.getElementSubId())) {
+					permanenceEntry.setPeasants(permanenceEntry.getPeasants()
+							+ obj.getDoubleValue().longValue());
+					permanenceEntry.setPeasantsCount(permanenceEntry.getPeasantsCount()
+							+ obj.getRecordCount());
+				} else if("permanence_hourly_visits".equals(obj.getElementSubId())) {
+					permanenceEntry.setVisits(permanenceEntry.getVisits()
+							+ obj.getDoubleValue().longValue());
+					permanenceEntry.setVisitsCount(permanenceEntry.getVisitsCount()
+							+ obj.getRecordCount());
+					totalVisitsPermanence += obj.getDoubleValue().longValue();
+					totalVisitsCount += obj.getRecordCount();
+				}
+				permanenceMap.put(permanenceEntry.getHour(), permanenceEntry);
+			}
+		}
+		curDate = new Date(initialDate.getTime());
+		String filename = resolveDumpFileName(outDir, finalDate);
+		File dir = new File(filename).getParentFile();
+		if(!dir.exists()) dir.mkdirs();
+		FileWriter writer = new FileWriter(filename);
+		CellCopyPolicy policy = new CellCopyPolicy();
+		policy.setCopyCellFormula(true);
+		policy.setCopyCellStyle(true);
+		
+		while() {
+			trafficEntry = trafficMap.get(sdf.format(curDate));
+			
+		}
+		
+		XSSFEvaluationWorkbook fpWb, fpWb2;
+		Ptg[] tokens, tokens2;
+		RefPtg refPtg, refPtg2;
+		
+		while(curDate.compareTo(finalDate) < 1) {
+			
+			row = trafficByDay.getRow(rowIndex);
+			if(null == row) row = trafficByDay.createRow(rowIndex);
+			model = partialIndex == 0 ? modelTrafficByDay1 : modelTrafficByDay2;
+			for(int j = 0; j < model.size(); j++) {
+				cell = row.createCell(j);
+				cell.copyCellFrom(model.get(j), policy);
+				if( model.get(j).getCellTypeEnum() == CellType.STRING &&
+						model.get(j).getStringCellValue().equals("<stringDate>")) {
+					cell.setCellType(CellType.STRING);
+					cell.setCellValue(trafficEntry.getDate());
+				} else if(model.get(j).getCellTypeEnum() == CellType.STRING &&
+						model.get(j).getStringCellValue().equals("<peasants>")) {
+						cell.setCellType(CellType.NUMERIC);
+						cell.setCellValue(trafficEntry.getPeasants());
+				} if( model.get(j).getCellTypeEnum() == CellType.STRING &&
+						model.get(j).getStringCellValue().equals("<visits>")) {
+					cell.setCellType(CellType.NUMERIC);
+					cell.setCellValue(trafficEntry.getVisits());
+				} if( model.get(j).getCellTypeEnum() == CellType.STRING &&
+						model.get(j).getStringCellValue().equals("<tickets>")) {
+					cell.setCellType(CellType.NUMERIC);
+					cell.setCellValue(trafficEntry.getTickets());
+				} if( model.get(j).getCellTypeEnum() == CellType.FORMULA ) {
+					fpWb = XSSFEvaluationWorkbook.create(workbook);
+					tokens = FormulaParser.parse(model.get(j).getCellFormula(),
+							fpWb, FormulaType.CELL, workbook.getSheetIndex(formulae));
+					for(Ptg token : tokens) {
+						if(token instanceof RefPtg ) {
+							refPtg = (RefPtg) token;
+							refPtg.setColumn(refPtg.getColumn() -1);
+							if(refPtg.getRow() == model.get(j).getRowIndex())
+								refPtg.setRow(rowIndex);
+							else
+								refPtg.setRow(refPtg.getRow() + rowIndex - 1);
+						}
+					}
+					cell.setCellFormula(FormulaRenderer.toFormulaString(fpWb, tokens));
+				}
+			}
+			curDate = new Date(curDate.getTime() +DAY_IN_MILLIS);
+			partialIndex++;
+			rowIndex++;
+		}
+		rowIndex = 3;
+		partialIndex = 0;
+		for(int k = 0; k < 24; k++) {
+			hourEntry = hourMap.get(HourEntry.calculateHour(k));
+			permanenceEntry = permanenceMap.get(PermanenceEntry.calculateHour(k));
+			row2 = permanence.getRow(rowIndex);
+			if( null == row2 ) row2 = permanence.createRow(rowIndex);
+			model2 = modelPermanence;
+			
+			row = trafficByHour.getRow(rowIndex);
+			if(null == row) row = trafficByHour.createRow(rowIndex);
+			model = modelTrafficByHour;
+			for(int j = 0; j < model.size(); j++) {
+				cell = row.createCell(j);
+				cell.copyCellFrom(model.get(j), policy);
+				if(model.get(j).getCellTypeEnum() == CellType.STRING &&
+						model.get(j).getStringCellValue().equals("<stringHour>")) {
+					cell.setCellType(CellType.STRING);
+					cell.setCellValue(hourEntry.getHour());
+				} else if( model.get(j).getCellTypeEnum() == CellType.STRING &&
+						model.get(j).getStringCellValue().equals("<peasants>")) {
+						cell.setCellType(CellType.NUMERIC);
+						cell.setCellValue(hourEntry.getPeasants());
+				} if(model.get(j).getCellTypeEnum() == CellType.STRING &&
+						model.get(j).getStringCellValue().equals("<visits>")) {
+					cell.setCellType(CellType.NUMERIC);
+					cell.setCellValue(hourEntry.getVisits());
+				} if(model.get(j).getCellTypeEnum() == CellType.FORMULA) {
+					fpWb = XSSFEvaluationWorkbook.create(workbook);
+					tokens = FormulaParser.parse(model.get(j).getCellFormula(), fpWb,
+							FormulaType.CELL, workbook.getSheetIndex(formulae));
+					for(Ptg token : tokens) {
+						if(token instanceof RefPtg ) {
+							refPtg = (RefPtg) token;
+							refPtg.setColumn(refPtg.getColumn() -1);
+							if(refPtg.getRow() == model.get(j).getRowIndex())
+								refPtg.setRow(rowIndex);
+							else
+								refPtg.setRow(refPtg.getRow() + rowIndex - 1);
+						}
+					}
+					cell.setCellFormula(FormulaRenderer.toFormulaString(fpWb, tokens));
+				}
+			} for( int j = 0; j < model2.size(); j++ ) {
+				cell2 = row.createCell(j);
+				cell2.copyCellFrom(model2.get(j), policy);
+				if(model2.get(j).getCellTypeEnum() == CellType.STRING &&
+						model2.get(j).getStringCellValue().equals("<stringHour>")) {
+					cell2.setCellType(CellType.STRING);
+					cell2.setCellValue(permanenceEntry.getHour());
+				} else if( model2.get(j).getCellTypeEnum() == CellType.STRING &&
+					model2.get(j).getStringCellValue().equals("<peasants>")) {
+						cell2.setCellType(CellType.NUMERIC);
+						cell2.setCellValue(permanenceEntry.getFormattedPeasants());
+				} if(model2.get(j).getCellTypeEnum() == CellType.STRING &&
+						model2.get(j).getStringCellValue().equals("<visits>")) {
+					cell2.setCellType(CellType.NUMERIC);
+					cell2.setCellValue(permanenceEntry.getFormattedVisits());
+				} if(model2.get(j).getCellTypeEnum() == CellType.FORMULA) {
+					fpWb2 = XSSFEvaluationWorkbook.create(workbook);
+					tokens2 = FormulaParser.parse(model2.get(j).getCellFormula(), fpWb2,
+							FormulaType.CELL, workbook.getSheetIndex(formulae));
+					for(Ptg token : tokens) {
+						if(token instanceof RefPtg) {
+							refPtg2 = (RefPtg) token;
+							refPtg2.setColumn(refPtg2.getColumn() -1);
+							if(refPtg2.getRow() == model2.get(j).getRowIndex())
+								refPtg2.setRow(rowIndex);
+							else
+								refPtg2.setRow(refPtg2.getRow() + rowIndex - 1);
+						}
+					}
+					cell2.setCellFormula(FormulaRenderer.toFormulaString(fpWb2, tokens2));
+				}
+
+			}
+			partialIndex++;
+			rowIndex++;
+		}
+		int cellIndex = 0;
+		Iterator<String> keys = dateAndHourMap.keySet().iterator();
+		String key;
+		while(keys.hasNext()) {
+			key = keys.next();
+			dateAndHourEntry = dateAndHourMap.get(key);
+			switch (dateAndHourEntry.getDay()) {
+			case Calendar.SUNDAY:
+				rowIndex = 8;
+				break;
+			case Calendar.MONDAY:
+				rowIndex = 2;
+				break;
+			case Calendar.TUESDAY:
+				rowIndex = 3;
+				break;
+			case Calendar.WEDNESDAY:
+				rowIndex = 4;
+				break;
+			case Calendar.THURSDAY:
+				rowIndex = 5;
+				break;
+			case Calendar.FRIDAY:
+				rowIndex = 6;
+				break;
+			case Calendar.SATURDAY:
+				rowIndex = 7;
+				break;
+			}
+			cellIndex = 4 + dateAndHourEntry.getHour();
+			row = highHours.getRow(rowIndex);
+			if(null == row) row = highHours.createRow(rowIndex);
+			model = modelHour;
+			cell = row.getCell(cellIndex);
+			if(cell == null) cell = row.createCell(cellIndex);
+			cell.copyCellFrom(model.get(0), policy);
+			if(dateAndHourEntry.getVisits() > 0 )
+				cell.setCellValue(dateAndHourEntry.getVisits());
+			cellIndex = 3 + dateAndHourEntry.getHour();
+			row = deadHours.getRow(rowIndex);
+			if(null == row) row = deadHours.createRow(rowIndex);
+			cell = row.getCell(cellIndex);
+			if(cell == null) cell = row.createCell(cellIndex);
+			cell.copyCellFrom(model.get(0), policy);
+			if(dateAndHourEntry.getVisits() > 0 )
+				cell.setCellValue(dateAndHourEntry.getVisits());
+		}
+		Iterator<Row> prows = print.iterator();
+		Iterator<Cell> pcells;
+		while(prows.hasNext()) {
+			row = (XSSFRow) prows.next();
+			pcells = row.iterator();
+			while(pcells.hasNext()) {
+				cell = (XSSFCell) pcells.next();
+				if(cell.getCellTypeEnum() == CellType.STRING &&
+						cell.getStringCellValue().equals("<storeName>")) {
+					cell.setCellValue(storeName);
+				} if(cell.getCellTypeEnum() == CellType.STRING &&
+						cell.getStringCellValue().equals("<dateName>")) {
+					cell.setCellValue(dateName);
+				} if( cell.getCellTypeEnum() == CellType.STRING &&
+						cell.getStringCellValue().equals("<permanence>")) {
+					int p = (int) (totalVisitsCount > 0 ?
+							(totalVisitsPermanence / totalVisitsCount / 60000) : 0);
+					cell.setCellValue(p);
+				}
+			}
+		}
+		log.log(Level.INFO, "Rendering Formulae...");
+		XSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
+		File tmp = File.createTempFile("getin", "data");
+		FileOutputStream fos = new FileOutputStream(tmp);
+		workbook.write(fos);
+		fos.flush();
+		fos.close();
+		tmp.delete();
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		workbook.write(bos);
+		bos.close();
+		workbook.close();
+		return bos.toByteArray();
 	}
 	
 }
