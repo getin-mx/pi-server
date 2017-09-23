@@ -6459,7 +6459,7 @@ public class UserMenuDump extends AbstractCLI {
 								"1b509e3a-068e-4062-9781-d04c175db304", "95744605-8649-4091-bdfe-5426ad0b6b3e",
 								"fbbc3da9-1403-4206-8b22-e1aed2b0ec40", "ce91457a-f7dc-49d0-93ff-79259e553769",
 								"61374a58-a679-4532-811a-aa3340bcc47e", "2b06d29f-204e-4a38-ac87-b77cb7d39578",
-								"07c6552d-c3fe-445b-aac4-e1d2c234d2ca"));
+								"07c6552d-c3fe-445b-aac4-e1d2c234d2ca", "efb69866-6bc0-44e3-8dc2-f436dfc82773"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "juan@aditivo.mx"));
 				userDao.create(user);
 			}
@@ -6497,7 +6497,7 @@ public class UserMenuDump extends AbstractCLI {
 								"8cac6f24-fc71-4e4a-b556-5bfe06191f3f", "23178716-9ef5-4b57-b88e-ea85d080c0f7",
 								"6ad6e636-f5ec-4d8f-a499-c85055e03f4e", "2fc001ca-b8c4-4a5c-b7e2-c732c9f98ce0",
 								"b6d96f4a-d9f7-4537-87ae-c6b3f4b3c5e5", "9a14f70c-52eb-4756-8fb3-b48ee8b86094",
-								"625f5d03-6726-4bb2-894e-60749397dba6"));
+								"625f5d03-6726-4bb2-894e-60749397dba6", "2a90e8ab-fe34-4a3f-8bd4-0480ce4f40f8"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "ricardol@aditivo.mx"));
 				userDao.create(user);
 			}
