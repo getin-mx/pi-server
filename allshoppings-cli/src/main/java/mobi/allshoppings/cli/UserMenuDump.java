@@ -6484,7 +6484,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("ricardol@aditivo.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("63644d2e-f052-45cb-94f2-911331f298f2",
 								"4d768d73-b9a9-44a0-bbbe-dc00a04f52ec", "5d8fa91b-b783-46ef-b615-c6aba8dec1fd",
