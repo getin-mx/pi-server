@@ -92,9 +92,10 @@ public class DBExportServlet extends HttpServlet {
 				//FIXME: Check Auth Token
 			}//if parameters are null, read from class attributes
 			long benchmark = System.currentTimeMillis();
-			rawCsv = exportHelper.exportDB(storesId, fromDate, toDate, countryISO, languageISO);
-			resp.setHeader("Content-Disposition", "inline; filename=\"report.xls\"");
-			resp.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+			rawCsv = exportHelper.exportDB(storesId, fromDate, toDate, countryISO, languageISO,
+					destFile);
+			resp.setHeader("Content-Disposition", "inline; filename=\"data.csv\"");
+			resp.setHeader("Content-type", "text/csv");
 			resp.setHeader("Content-Length", String.valueOf(rawCsv.length));
 			OutputStream os = resp.getOutputStream();
 			os.write(rawCsv);
