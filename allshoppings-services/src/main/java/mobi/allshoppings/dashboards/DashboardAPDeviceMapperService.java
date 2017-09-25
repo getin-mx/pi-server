@@ -1136,8 +1136,9 @@ public class DashboardAPDeviceMapperService {
 				TimeZone tz;
 				for( StoreTicket ticket: tickets){
 					
-					forDate = ticket.getDate();
-					tz = TimeZone.getTimeZone(store.getTimezone());
+					DashboardIndicatorData obj;
+					String forDate = ticket.getDate();
+					TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
 					
 					// visitor_total_tickets --------------------------------------------------------------------------------
 					// ------------------------------------------------------------------------------------------------------
@@ -1205,8 +1206,9 @@ public class DashboardAPDeviceMapperService {
 				TimeZone tz;
 				for( StoreItem item: items){		
 					
-					forDate = item.getDate();
-					tz = TimeZone.getTimeZone(store.getTimezone());
+					DashboardIndicatorData obj;
+					String forDate = item.getDate();
+					TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
 	
 					// visitor_total_itemss --------------------------------------------------------------------------------
 					// ------------------------------------------------------------------------------------------------------
@@ -1258,9 +1260,9 @@ public class DashboardAPDeviceMapperService {
 				TimeZone tz;
 				for( StoreRevenue revenue: revenues){		
 					
-					
-					forDate = revenue.getDate();
-					tz = TimeZone.getTimeZone(store.getTimezone());
+					DashboardIndicatorData obj;
+					String forDate = revenue.getDate();
+					TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
 	
 					// visitor_total_revenues --------------------------------------------------------------------------------
 					// ------------------------------------------------------------------------------------------------------
@@ -1306,11 +1308,11 @@ public class DashboardAPDeviceMapperService {
 		obj.setEntityId(entityId);
 		obj.setEntityKind(entityKind);
 		try { obj.setDate(sdf.parse(forDate)); } catch(Exception e ){}
-		obj.setDate(DateUtils.truncate(date, Calendar.DATE));
 		obj.setStringDate(forDate);
 
 		Calendar c = Calendar.getInstance();
 		c.setTime(obj.getDate());
+		c.setTimeZone(tz);
 		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 
 		obj.setDayOfWeek(dayOfWeek);

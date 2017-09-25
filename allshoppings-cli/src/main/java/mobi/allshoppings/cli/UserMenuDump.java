@@ -3889,7 +3889,8 @@ public class UserMenuDump extends AbstractCLI {
 						"fefc2dd0-233e-42e6-9fb4-058545ea0926", "791d303b-3f45-4037-a6f4-2ba9c1e15c75",
 						"e43a9f92-7db7-46d1-8a74-3f629eea2b47", "dcb748f6-a060-43da-9a13-aea9ca02245a",
 						"247b4ead-822f-4713-9465-177666b2e31c", "40b7b23d-f2b4-4f70-be05-a0ad51ce44ba",
-						"b35dc502-9b07-4c26-8926-84d962926869", "440dfccd-73b3-48a5-98c8-d893a01a085f"));
+						"b35dc502-9b07-4c26-8926-84d962926869", "440dfccd-73b3-48a5-98c8-d893a01a085f",
+						"01bf63e5-6b31-4bf9-beb6-2a9dcbb8a304"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "mariel.zamudio@outletdeportes.mx"));
 				userDao.create(user);
 			}
@@ -6439,7 +6440,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("juan@aditivo.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("ffc0b360-00d5-4e8f-8bef-f0472df6cb5f",
 								"1fac0105-51f2-4a5f-ac3f-eaf4b6d311ed", "f33140b3-3ecd-4d70-bfcc-159f47ac9058",
@@ -6458,7 +6459,7 @@ public class UserMenuDump extends AbstractCLI {
 								"1b509e3a-068e-4062-9781-d04c175db304", "95744605-8649-4091-bdfe-5426ad0b6b3e",
 								"fbbc3da9-1403-4206-8b22-e1aed2b0ec40", "ce91457a-f7dc-49d0-93ff-79259e553769",
 								"61374a58-a679-4532-811a-aa3340bcc47e", "2b06d29f-204e-4a38-ac87-b77cb7d39578",
-								"07c6552d-c3fe-445b-aac4-e1d2c234d2ca"));
+								"07c6552d-c3fe-445b-aac4-e1d2c234d2ca", "efb69866-6bc0-44e3-8dc2-f436dfc82773"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "juan@aditivo.mx"));
 				userDao.create(user);
 			}
@@ -6483,7 +6484,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setEmail("ricardol@aditivo.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("63644d2e-f052-45cb-94f2-911331f298f2",
 								"4d768d73-b9a9-44a0-bbbe-dc00a04f52ec", "5d8fa91b-b783-46ef-b615-c6aba8dec1fd",
@@ -6496,7 +6497,7 @@ public class UserMenuDump extends AbstractCLI {
 								"8cac6f24-fc71-4e4a-b556-5bfe06191f3f", "23178716-9ef5-4b57-b88e-ea85d080c0f7",
 								"6ad6e636-f5ec-4d8f-a499-c85055e03f4e", "2fc001ca-b8c4-4a5c-b7e2-c732c9f98ce0",
 								"b6d96f4a-d9f7-4537-87ae-c6b3f4b3c5e5", "9a14f70c-52eb-4756-8fb3-b48ee8b86094",
-								"625f5d03-6726-4bb2-894e-60749397dba6"));
+								"625f5d03-6726-4bb2-894e-60749397dba6", "2a90e8ab-fe34-4a3f-8bd4-0480ce4f40f8"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "ricardol@aditivo.mx"));
 				userDao.create(user);
 			}
@@ -7055,7 +7056,8 @@ public class UserMenuDump extends AbstractCLI {
 								"d0e0a2d7-95b2-4d6f-8b5c-f36e2a697e6c", "fb994fb0-099c-4ae3-902f-f45df7c77cbe",
 								"1479331294155", "b0abfa8a-8c56-4a00-9ab8-a5ccf72cfa2f",
 								"b6aa02b2-8e4d-4e94-93f6-6cae7215cff1", "9ee4d4be-0d6f-4516-804c-8ecacbb5dd30",
-								"fb9ba533-212b-4b26-b9a8-73026e5059f0", "1479331293676"));
+								"fb9ba533-212b-4b26-b9a8-73026e5059f0", "1479331293676",
+								"976e42c8-2cef-4802-8fb6-0c7eba3900cb"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "jogomez@squalo.com"));
 				userDao.create(user);
 			}
