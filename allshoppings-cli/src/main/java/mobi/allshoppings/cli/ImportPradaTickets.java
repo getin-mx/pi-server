@@ -94,7 +94,8 @@ public class ImportPradaTickets extends AbstractCLI {
 			String user = "getin";
 			String pass = "Getin*2017";
 			
-			String query1 = "SELECT * FROM dbo.Datos_Venta";
+			//String query1 = "SELECT * FROM dbo.Datos_Venta";
+			String query1 = "SELECT * FROM Ventas";
 			
 			try {
 				// Prepares SQL Connection
@@ -119,7 +120,7 @@ public class ImportPradaTickets extends AbstractCLI {
 					List<String> reportableUsers = CollectionFactory.createList();
 					reportableUsers.addAll(systemConfiguration.getApdReportMailList());
 
-					for( String mail : reportableUsers) {
+					/*for( String mail : reportableUsers) {
 						User fake = new User();
 						fake.setEmail(mail);
 						try {
@@ -128,7 +129,7 @@ public class ImportPradaTickets extends AbstractCLI {
 							// If mail server rejected the message, keep going
 							log.log(Level.SEVERE, e.getMessage(), e);
 						}
-					}
+					}*/
 
 					
 					throw ex;
@@ -147,7 +148,8 @@ public class ImportPradaTickets extends AbstractCLI {
 				int count = 0;
 				while(rs.next()) {
 					Date forDate = rs.getDate(1);
-					if(( forDate.after(d1) || forDate.equals(d1)) && ( forDate.before(d2) || forDate.equals(d2))) { 
+					log.log(Level.INFO, rs.toString());//TODO remove
+					/*if(( forDate.after(d1) || forDate.equals(d1)) && ( forDate.before(d2) || forDate.equals(d2))) { 
 						String identifier = rs.getString(2);
 						Integer tickets = rs.getInt(4);
 
@@ -178,7 +180,7 @@ public class ImportPradaTickets extends AbstractCLI {
 								log.log(Level.WARNING, e.getMessage(), e);
 							}
 						}
-					}
+					}*/
 				}
 
 				end = System.currentTimeMillis();
