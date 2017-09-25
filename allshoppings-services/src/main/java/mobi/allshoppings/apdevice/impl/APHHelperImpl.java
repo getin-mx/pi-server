@@ -313,7 +313,9 @@ public class APHHelperImpl implements APHHelper {
 	public APHEntry setFramedRSSI(APHEntry aphe, Date forDate, Integer rssi) {
 		if( rssi == null || rssi.equals(0)) return aphe;
 		//long secondsOfDay = (long)(((forDate.getTime()) % 86400000) / 1000);
+		TimeZone tz = TimeZone.getTimeZone("GMT");
 		CALENDAR.setTime(forDate);
+		CALENDAR.setTimeZone(tz);
 		long secondsOfDay = CALENDAR.get(Calendar.SECOND) +CALENDAR.get(Calendar.MINUTE) *60
 				+CALENDAR.get(Calendar.HOUR_OF_DAY) *60 *60;
 		int frame = (int)Math.round((secondsOfDay / 20));
