@@ -17,12 +17,16 @@ import org.springframework.context.ApplicationContext;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.dao.StoreDAO;
+import mobi.allshoppings.dao.StoreItemDAO;
+import mobi.allshoppings.dao.StoreRevenueDAO;
 import mobi.allshoppings.dao.StoreTicketDAO;
 import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.mail.MailHelper;
 import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.StoreItem;
+import mobi.allshoppings.model.StoreRevenue;
 import mobi.allshoppings.model.StoreTicket;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.User;
@@ -47,13 +51,19 @@ public class ImportPradaTickets extends AbstractCLI {
 	
 	public static void main(String args[]) throws ASException {
 		try {
-			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			StoreDAO storeDao = (StoreDAO)getApplicationContext().getBean("store.dao.ref");
-			StoreTicketDAO storeTicketDao = (StoreTicketDAO)getApplicationContext().getBean("storeticket.dao.ref");
-			DashboardAPDeviceMapperService mapper = (DashboardAPDeviceMapperService)getApplicationContext().getBean("dashboard.apdevice.mapper");
+			StoreTicketDAO storeTicketDao = (StoreTicketDAO)
+					getApplicationContext().getBean("storeticket.dao.ref");
+			StoreItemDAO storeItemDao = (StoreItemDAO)
+					getApplicationContext().getBean("storeitem.dao.ref");
+			StoreRevenueDAO storeRevenueDao = (StoreRevenueDAO)
+					getApplicationContext().getBean("storerevenue.dao.ref");	
+			DashboardAPDeviceMapperService mapper = (DashboardAPDeviceMapperService)
+					getApplicationContext().getBean("dashboard.apdevice.mapper");
 			MailHelper mailHelper = (MailHelper)getApplicationContext().getBean("mail.helper");
-			SystemConfiguration systemConfiguration = (SystemConfiguration)getApplicationContext().getBean("system.configuration");
+			SystemConfiguration systemConfiguration = (SystemConfiguration)
+					getApplicationContext().getBean("system.configuration");
 			
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
 			OptionSet options = parser.parse(args);
@@ -94,7 +104,6 @@ public class ImportPradaTickets extends AbstractCLI {
 			String user = "getin";
 			String pass = "Getin*2017";
 			
-			//String query1 = "SELECT * FROM dbo.Datos_Venta";
 			String query1 = "SELECT * FROM Ventas";
 			
 			try {
@@ -120,7 +129,7 @@ public class ImportPradaTickets extends AbstractCLI {
 					List<String> reportableUsers = CollectionFactory.createList();
 					reportableUsers.addAll(systemConfiguration.getApdReportMailList());
 
-					/*for( String mail : reportableUsers) {
+					for( String mail : reportableUsers) {
 						User fake = new User();
 						fake.setEmail(mail);
 						try {
@@ -129,9 +138,7 @@ public class ImportPradaTickets extends AbstractCLI {
 							// If mail server rejected the message, keep going
 							log.log(Level.SEVERE, e.getMessage(), e);
 						}
-					}*/
-
-					
+					}
 					throw ex;
 				}
 
@@ -146,18 +153,29 @@ public class ImportPradaTickets extends AbstractCLI {
 				Date d2 = sdf.parse(toDate);
 
 				int count = 0;
+				String identifier, d;
+				Integer tickets, items;
+				Double revenue;
+				Store s;
+				StoreTicket st;
+				StoreRevenue sr;
+				StoreItem si;
 				while(rs.next()) {
 					Date forDate = rs.getDate(1);
-					log.log(Level.INFO, rs.toString());//TODO remove
-					/*if(( forDate.after(d1) || forDate.equals(d1)) && ( forDate.before(d2) || forDate.equals(d2))) { 
-						String identifier = rs.getString(2);
-						Integer tickets = rs.getInt(4);
-
-						log.log(Level.INFO, forDate + "\t" + identifier + "\t" + tickets);
+					if(( forDate.after(d1) || forDate.equals(d1)) && ( forDate.before(d2) ||
+							forDate.equals(d2))) { 
+						identifier = rs.getString(2);
+						tickets = rs.getInt(4);
+						revenue = rs.getDouble(5);
+						items = rs.getInt(6);
+						log.log(Level.INFO, forDate + "\t" + identifier + "\t" + tickets +
+								"\t" + revenue + "\t" + items);
 						try {
-							Store s = storeDao.get(identifier, true);
-							String d = sdf.format(forDate);
-							StoreTicket st = null;
+							s = storeDao.get(identifier, true);
+							d = sdf.format(forDate);
+							st = null;
+							sr = null;
+							si = null;
 							try {
 								st = storeTicketDao.getUsingStoreIdAndDate(identifier, d, true);
 								st.setQty(tickets);
@@ -170,9 +188,34 @@ public class ImportPradaTickets extends AbstractCLI {
 								st.setKey(storeTicketDao.createKey());
 								st.setQty(tickets);
 								storeTicketDao.create(st);
-							}
-
+							} try {
+								sr = storeRevenueDao.getUsingStoreIdAndDate(identifier, d, true);
+								sr.setQty(revenue);
+								storeRevenueDao.update(sr);
+							} catch(Exception e) {
+								sr = new StoreRevenue();
+								sr.setBrandId(s.getBrandId());
+								sr.setDate(d);
+								sr.setStoreId(identifier);
+								sr.setKey(storeRevenueDao.createKey());
+								sr.setQty(revenue);
+								storeRevenueDao.create(sr);
+							} try {
+								si = storeItemDao.getUsingStoreIdAndDate(identifier, d, true);
+								si.setQty(items);
+								storeItemDao.update(si);
+							} catch(Exception e) {
+								si = new StoreItem();
+								si.setBrandId(s.getBrandId());
+								si.setDate(d);
+								si.setStoreId(identifier);
+								si.setKey(storeItemDao.createKey());
+								si.setQty(items);
+								storeItemDao.create(si);
+							}	
 							mapper.createStoreTicketDataForDates(d, d, identifier);
+							mapper.createStoreRevenueDataForDates(d, d, identifier);
+							mapper.createStoreItemDataForDates(d, d, identifier);
 							count++;
 
 						} catch( ASException e ) {
@@ -180,12 +223,10 @@ public class ImportPradaTickets extends AbstractCLI {
 								log.log(Level.WARNING, e.getMessage(), e);
 							}
 						}
-					}*/
+					}
 				}
-
 				end = System.currentTimeMillis();
 				log.log(Level.INFO, "Process ended in " + (end-start) + "ms for " + count + " records!");
-				
 			} catch( Exception e ) {
 				throw ASExceptionHelper.defaultException(e.getMessage(), e);
 			} finally {

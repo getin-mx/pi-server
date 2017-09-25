@@ -1134,7 +1134,7 @@ public class DashboardAPDeviceMapperService {
 				for( StoreTicket ticket: tickets){
 					
 					DashboardIndicatorData obj;
-					String forDate = sdf.format(ticket.getDate());
+					String forDate = ticket.getDate();
 					TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
 					
 					// visitor_total_tickets --------------------------------------------------------------------------------
