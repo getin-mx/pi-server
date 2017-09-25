@@ -984,28 +984,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		List<DashboardIndicatorData> list;
 		Iterator<DashboardIndicatorData> i;
 		DashboardIndicatorData obj;
-		String filename = resolveDumpFileName(outDir, finalDate);
-		File dir = new File(filename).getParentFile();
-		if(!dir.exists()) dir.mkdirs();
-		FileWriter writer = null;
-		File tmp;
-		FileOutputStream fos = null;
-		ByteArrayOutputStream bos; 
-		try {
-			writer = new FileWriter(filename);
-			writer.write("devicePlatform,date,storeName,sales,tickets,items\n");
-			tmp = File.createTempFile("getin", "data");
-			fos = new FileOutputStream(tmp);
-			bos = new ByteArrayOutputStream();
-			bos.writeTo(fos);
-		} catch(IOException ex) {
-			try {
-				if(writer != null) writer.close();
-				if(fos != null) fos.close();
-			} catch(IOException e) {}
-			log.log(Level.SEVERE, ex.getMessage(), ex);
-			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
-		}
+		
 		// processing begins
 		for(String storeId : storesId) {
 			store = storeDao.get(storeId, false);
@@ -1095,19 +1074,50 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 							+ obj.getRecordCount());
 				}
 				permanenceMap.put(permanenceEntry.getHour(), permanenceEntry);
-			} try {
-				//TODO write store data
-				fos.flush();
-				writer.flush();
-				bos.flush();
-			} catch(IOException ex) {
-				try {
-					writer.close();
-				} catch(IOException e) {}
-				log.log(Level.SEVERE, ex.getMessage(), ex);
-				throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
 			}
-		} try {
+			
+			
+		}
+		// TODO open file
+
+		String filename = resolveDumpFileName(outDir, finalDate);
+		File dir = new File(filename).getParentFile();
+		if(!dir.exists()) dir.mkdirs();
+		FileWriter writer = null;
+		File tmp;
+		FileOutputStream fos = null;
+		ByteArrayOutputStream bos; 
+		try {
+			writer = new FileWriter(filename);
+			writer.write("devicePlatform,date,storeName,sales,tickets,items\n");
+			tmp = File.createTempFile("getin", "data");
+			fos = new FileOutputStream(tmp);
+			bos = new ByteArrayOutputStream();
+			bos.writeTo(fos);
+		} catch(IOException ex) {
+			try {
+				if(writer != null) writer.close();
+				if(fos != null) fos.close();
+			} catch(IOException e) {}
+			log.log(Level.SEVERE, ex.getMessage(), ex);
+			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
+		}
+			
+		try {
+			//TODO write store data
+			fos.flush();
+			writer.flush();
+			bos.flush();
+		} catch(IOException ex) {
+			try {
+				writer.close();
+			} catch(IOException e) {}
+			log.log(Level.SEVERE, ex.getMessage(), ex);
+			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
+		}
+		
+				
+		try {
 			fos.close();
 			tmp.delete();
 			writer.close();
