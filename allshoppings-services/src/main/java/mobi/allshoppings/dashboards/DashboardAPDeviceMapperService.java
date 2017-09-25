@@ -1131,11 +1131,13 @@ public class DashboardAPDeviceMapperService {
 			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
+				DashboardIndicatorData obj;
+				String forDate;
+				TimeZone tz;
 				for( StoreTicket ticket: tickets){
 					
-					DashboardIndicatorData obj;
-					String forDate = ticket.getDate();
-					TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
+					forDate = ticket.getDate();
+					tz = TimeZone.getTimeZone(store.getTimezone());
 					
 					// visitor_total_tickets --------------------------------------------------------------------------------
 					// ------------------------------------------------------------------------------------------------------
@@ -1198,11 +1200,13 @@ public class DashboardAPDeviceMapperService {
 			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
+				DashboardIndicatorData obj;
+				String forDate;
+				TimeZone tz;
 				for( StoreItem item: items){		
 					
-					DashboardIndicatorData obj;
-					String forDate = sdf.format(item.getDate());
-					TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
+					forDate = item.getDate();
+					tz = TimeZone.getTimeZone(store.getTimezone());
 	
 					// visitor_total_itemss --------------------------------------------------------------------------------
 					// ------------------------------------------------------------------------------------------------------
@@ -1249,11 +1253,14 @@ public class DashboardAPDeviceMapperService {
 			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
+				DashboardIndicatorData obj;
+				String forDate;
+				TimeZone tz;
 				for( StoreRevenue revenue: revenues){		
 					
-					DashboardIndicatorData obj;
-					String forDate = sdf.format(revenue.getDate());
-					TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
+					
+					forDate = revenue.getDate();
+					tz = TimeZone.getTimeZone(store.getTimezone());
 	
 					// visitor_total_revenues --------------------------------------------------------------------------------
 					// ------------------------------------------------------------------------------------------------------
