@@ -1,5 +1,7 @@
 package mobi.allshoppings.exporter;
 
+import java.util.List;
+
 import mobi.allshoppings.exception.ASException;
 
 public interface ExcelExportHelper {
@@ -15,7 +17,7 @@ public interface ExcelExportHelper {
 	 */
 	byte[] export(String storeId, String fromDate, String toDate, int weeks, String outDir) throws ASException;
 	
-	byte[] exportDB(String[] sotresId, String fromDate, String toDate, String countryISO,
-			String languageISO, String outDir, boolean saveTmp) throws ASException;
+	byte[] exportDB(List<String> sotresId, String brandId, String fromDate, String toDate,
+			String countryISO, String languageISO, String outDir, boolean saveTmp) throws ASException;
 
 }
