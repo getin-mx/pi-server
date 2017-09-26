@@ -3,7 +3,6 @@ package mobi.allshoppings.exporter.impl;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -26,7 +25,11 @@ import org.apache.poi.ss.formula.ptg.RefPtg;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellCopyPolicy;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFEvaluationWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
@@ -64,7 +67,21 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	private static final SimpleDateFormat year = new SimpleDateFormat("yyyy");
 	private static final SimpleDateFormat month = new SimpleDateFormat("MM");
 	private static final int DAY_IN_MILLIS = 86400000;
-
+	
+	private static final byte CHEKIN_DATETIME_CELL_INDEX = 0;
+	private static final byte CHECKIN_DURATION_CELL_INDEX = 1;
+	private static final byte DEVICE_CELL_INDEX = 2;
+	private static final byte REVENUE_CELL_INDEX = 3;
+	private static final byte ITEMS_CELL_INDEX = 4;
+	private static final byte TICKETS_CELL_INDEX = 5;
+	
+	private static final String CHECKIN_DATETIME_CELL_TITLE = "checkinDate";
+	private static final String CHECKIN_DURATION_CELL_TITLE = "checkingDurationSeconds";
+	private static final String DEVICE_CELL_TITLE = "devicePlatform";
+	private static final String REVENUE_CELL_TITLE = "revenue";
+	private static final String ITEMS_CELL_TITLE = "item";
+	private static final String TICKETS_CELL_TITLE = "tickets";
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	public byte[] export(String storeId, String fromDate, String toDate, int weeks, String outDir) throws ASException {
@@ -942,20 +959,9 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		return sb.toString();
 	}
 	
-	public static String resolveDumpFileName(String baseName, Date forDate) {
-		String myYear = year.format(forDate);
-		String myMonth = month.format(forDate);
-		StringBuffer sb = new StringBuffer();
-		sb.append("db-dump").append(File.separator);
-		sb.append(myYear).append(File.separator);
-		sb.append(myMonth).append(File.separator);
-		sb.append(baseName).append(".csv");
-		return sb.toString();
-	}
-	
 	@Override
 	public byte[] exportDB(String[] storesId, String fromDate, String toDate, String countryISO,
-			String languageISO, String outDir) throws ASException {
+			String languageISO, String outDir, boolean saveTmp) throws ASException {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Store store;
 		String brandId, storeName;
@@ -984,6 +990,11 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		List<DashboardIndicatorData> list;
 		Iterator<DashboardIndicatorData> i;
 		DashboardIndicatorData obj;
+		Workbook workbook = new XSSFWorkbook();
+		Sheet storeSheet;
+		Row row;
+		Cell cell;
+		CreationHelper helper = workbook.getCreationHelper();
 		
 		// processing begins
 		for(String storeId : storesId) {
@@ -1075,57 +1086,46 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				}
 				permanenceMap.put(permanenceEntry.getHour(), permanenceEntry);
 			}
-			
-			
+			// write data to workbook
+			storeSheet = workbook.createSheet(WorkbookUtil.createSafeSheetName(storeName).trim());
+			int rowIndex = 0;
+			row = storeSheet.createRow(rowIndex);
+			cell = row.createCell(CHEKIN_DATETIME_CELL_INDEX);
+			cell.setCellValue(helper.createRichTextString(CHECKIN_DATETIME_CELL_TITLE));
+			cell = row.createCell(CHECKIN_DURATION_CELL_INDEX);
+			cell.setCellValue(helper.createRichTextString(CHECKIN_DURATION_CELL_TITLE));
+			cell = row.createCell(DEVICE_CELL_INDEX);
+			cell.setCellValue(helper.createRichTextString(DEVICE_CELL_TITLE));
+			cell = row.createCell(REVENUE_CELL_INDEX);
+			cell.setCellValue(helper.createRichTextString(REVENUE_CELL_TITLE));
+			cell = row.createCell(ITEMS_CELL_INDEX);
+			cell.setCellValue(helper.createRichTextString(ITEMS_CELL_TITLE));
+			cell = row.createCell(TICKETS_CELL_INDEX);
+			cell.setCellValue(helper.createRichTextString(TICKETS_CELL_TITLE));
+			// TODO write data 			
 		}
-		// TODO open file
-
-		String filename = resolveDumpFileName(outDir, finalDate);
-		File dir = new File(filename).getParentFile();
-		if(!dir.exists()) dir.mkdirs();
-		FileWriter writer = null;
-		File tmp;
-		FileOutputStream fos = null;
-		ByteArrayOutputStream bos; 
 		try {
-			writer = new FileWriter(filename);
-			writer.write("devicePlatform,date,storeName,sales,tickets,items\n");
-			tmp = File.createTempFile("getin", "data");
-			fos = new FileOutputStream(tmp);
-			bos = new ByteArrayOutputStream();
-			bos.writeTo(fos);
-		} catch(IOException ex) {
-			try {
-				if(writer != null) writer.close();
-				if(fos != null) fos.close();
-			} catch(IOException e) {}
-			log.log(Level.SEVERE, ex.getMessage(), ex);
-			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
-		}
-			
-		try {
-			//TODO write store data
-			fos.flush();
-			writer.flush();
-			bos.flush();
-		} catch(IOException ex) {
-			try {
-				writer.close();
-			} catch(IOException e) {}
-			log.log(Level.SEVERE, ex.getMessage(), ex);
-			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
-		}
-		
-				
-		try {
-			fos.close();
-			tmp.delete();
-			writer.close();
+			if(saveTmp) {
+				FileOutputStream fos;
+				File tmp = File.createTempFile("getin", "data");
+				fos = new FileOutputStream(tmp);
+				workbook.write(fos);
+				fos.flush();
+				fos.close();
+				workbook.close();
+				return null;
+			} else {
+				ByteArrayOutputStream bos;
+				bos = new ByteArrayOutputStream();
+				workbook.write(bos);
+				bos.flush();
+				workbook.close();
+				return bos.toByteArray();
+			}
 		} catch(IOException ex) {
 			log.log(Level.SEVERE, ex.getMessage(), ex);
 			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
 		}
-		return bos.toByteArray();
 	}
 	
 }

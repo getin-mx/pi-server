@@ -15,6 +15,7 @@ public interface ExcelExportHelper {
 	 */
 	byte[] export(String storeId, String fromDate, String toDate, int weeks, String outDir) throws ASException;
 	
-	byte[] exportDB(String[] sotresId, String fromDate, String toDate, String countryISO, String languageISO, String outDir) throws ASException;
+	byte[] exportDB(String[] sotresId, String fromDate, String toDate, String countryISO,
+			String languageISO, String outDir, boolean saveTmp) throws ASException;
 
 }
