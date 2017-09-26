@@ -7120,7 +7120,7 @@ public class UserMenuDump extends AbstractCLI {
 				userDao.create(user);
 			}
 			
-			// Aditivo Franquicias  --------------------------------------------------------------------
+			// Aditivo Franquicias Michan  --------------------------------------------------------------------
 			
 			try {
 				um = userMenuDao.get("franquiciasmichan_mx", true);
@@ -7151,7 +7151,40 @@ public class UserMenuDump extends AbstractCLI {
 				userDao.create(user);
 			}
 			
-			// End Aditivo Franquicias  --------------------------------------------------------------------
+			// End Aditivo Franquicias Michan  --------------------------------------------------------------------
+			
+			// Aditivo Franquicias  --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("daniel@aditivofranquicias_mx", true);
+				userMenuDao.delete("daniel@aditivofranquicias_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("daniel@aditivofranquicias_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("daniel@aditivofranquicias_mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Aditivo Franquicias");
+				user.setLastname("");
+				user.setEmail("daniel@aditivofranquicias_mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("d5ab041f-0200-4190-ada9-72b55067def4",
+								"2a29cfac-2b38-4e61-99d1-001118a9e8b7", "580c8099-a9c1-4540-852e-13875d156ec4",
+								"87f3e3df-c011-4b5e-bd58-d3c6e59a22f7"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "daniel@aditivofranquicias_mx"));
+				userDao.create(user);
+			}
+			
+			// Aditivo Franquicias  --------------------------------------------------------------------
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
