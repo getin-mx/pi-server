@@ -1131,9 +1131,7 @@ public class DashboardAPDeviceMapperService {
 			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
-				DashboardIndicatorData obj;
-				String forDate;
-				TimeZone tz;
+				
 				for( StoreTicket ticket: tickets){
 					
 					DashboardIndicatorData obj;
@@ -1201,9 +1199,7 @@ public class DashboardAPDeviceMapperService {
 			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
-				DashboardIndicatorData obj;
-				String forDate;
-				TimeZone tz;
+				
 				for( StoreItem item: items){		
 					
 					DashboardIndicatorData obj;
@@ -1255,9 +1251,7 @@ public class DashboardAPDeviceMapperService {
 			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
-				DashboardIndicatorData obj;
-				String forDate;
-				TimeZone tz;
+				
 				for( StoreRevenue revenue: revenues){		
 					
 					DashboardIndicatorData obj;
