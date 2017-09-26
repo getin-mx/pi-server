@@ -94,8 +94,8 @@ public class DBExportServlet extends HttpServlet {
 			long benchmark = System.currentTimeMillis();
 			rawCsv = exportHelper.exportDB(storesId, fromDate, toDate, countryISO, languageISO,
 					destFile);
-			resp.setHeader("Content-Disposition", "inline; filename=\"data.csv\"");
-			resp.setHeader("Content-type", "text/csv");
+			resp.setHeader("Content-Disposition", "inline; filename=\"report.xlsx\"");
+			resp.setHeader("Content-type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 			resp.setHeader("Content-Length", String.valueOf(rawCsv.length));
 			OutputStream os = resp.getOutputStream();
 			os.write(rawCsv);
