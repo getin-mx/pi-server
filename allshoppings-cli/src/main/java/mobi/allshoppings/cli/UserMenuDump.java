@@ -1736,6 +1736,32 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("annik_mx"));
 				userMenuDao.create(um);
 			}
+			
+			User atelier = null;
+			try {
+				atelier = userDao.get("atelier_mx", true);
+			} catch( Exception e ) {
+				atelier = new User();
+				atelier.setFirstname("Atelier");
+				atelier.setLastname("Mexico");
+				atelier.setEmail("atelier@allshoppings.mobi");
+				atelier.getSecuritySettings().setRole(Role.BRAND);
+				atelier.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				atelier.setKey((Key)keyHelper.obtainKey(User.class, "atelier_mx"));
+				userDao.create(atelier);
+			}
+
+			try {
+				um = userMenuDao.get("atelier_mx", true);
+				userMenuDao.delete("atelier_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
+				um.setKey(userMenuDao.createKey("atelier_mx"));
+				userMenuDao.create(um);
+			}
 
 			User aditivo = null;
 			try {
