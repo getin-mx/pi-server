@@ -7177,9 +7177,9 @@ public class UserMenuDump extends AbstractCLI {
 				user.getSecuritySettings()
 						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				user.getSecuritySettings()
-						.setStores(Arrays.asList("d5ab041f-0200-4190-ada9-72b55067def4",
-								"2a29cfac-2b38-4e61-99d1-001118a9e8b7", "580c8099-a9c1-4540-852e-13875d156ec4",
-								"87f3e3df-c011-4b5e-bd58-d3c6e59a22f7"));
+						.setStores(Arrays.asList("a45fc81f-900e-457e-854e-df4a312bb0e1",
+								"d2eab997-2497-49b3-b1bd-15cf80f05fc7", "8d2335b7-4cc3-4f76-b274-86137b34b4e5",
+								"3c9e6b60-bdcd-4268-99eb-a9c9f719f625"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "daniel@aditivofranquicias_mx"));
 				userDao.create(user);
 			}
