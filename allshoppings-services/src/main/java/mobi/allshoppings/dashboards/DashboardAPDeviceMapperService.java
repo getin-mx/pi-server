@@ -89,6 +89,7 @@ public class DashboardAPDeviceMapperService {
 	private static final SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	private static final Gson gson = GsonFactory.getInstance();
+	private static final Calendar CALENDAR = Calendar.getInstance();
 
 	/**
 	 * DAOs 
@@ -693,7 +694,8 @@ public class DashboardAPDeviceMapperService {
 
 		log.log(Level.INFO, "Starting to create apd_visitor Performance Dashboard for Day " + date + "...");
 		long startTime = new Date().getTime();
-
+		CALENDAR.setTime(date);
+		//CALENDAR.setTimeZone(tz);
 		Date processDate = DateUtils.truncate(date, Calendar.DAY_OF_MONTH);
 		Date limitDate = DateUtils.addDays(processDate, 1);
 
@@ -753,7 +755,7 @@ public class DashboardAPDeviceMapperService {
 						subentityId = entityId;
 						tz = getTimezoneForEntity(entityId, EntityKind.KIND_INNER_ZONE);
 					}
-					
+					CALENDAR.setTimeZone(tz);
 					
 					if( store != null || shopping != null || zone != null ) {
 						DashboardIndicatorData obj;
@@ -1299,15 +1301,18 @@ public class DashboardAPDeviceMapperService {
 			) throws ASException {
 
 		DashboardIndicatorData obj = new DashboardIndicatorData();
-		obj.setEntityId(entityId);
-		obj.setEntityKind(entityKind);
-		try { obj.setDate(sdf.parse(forDate)); } catch(Exception e ){}
-		obj.setStringDate(forDate);
-
+		
 		Calendar c = Calendar.getInstance();
-		c.setTime(obj.getDate());
+		c.set(Integer.parseInt(forDate.substring(0,4)), Integer.parseInt(forDate.substring(5,7)) -1, Integer.parseInt(forDate.substring(8)), 0, 0, 0);
 		c.setTimeZone(tz);
 		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+		
+		obj.setEntityId(entityId);
+		obj.setEntityKind(entityKind);
+		try { obj.setDate(c.getTime()); } catch(Exception e ){}
+		obj.setStringDate(sdf.format(c.getTime()));
+
+		
 
 		obj.setDayOfWeek(dayOfWeek);
 

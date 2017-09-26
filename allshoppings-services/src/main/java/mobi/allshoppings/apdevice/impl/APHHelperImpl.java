@@ -313,9 +313,8 @@ public class APHHelperImpl implements APHHelper {
 	public APHEntry setFramedRSSI(APHEntry aphe, Date forDate, Integer rssi) {
 		if( rssi == null || rssi.equals(0)) return aphe;
 		//long secondsOfDay = (long)(((forDate.getTime()) % 86400000) / 1000);
-		TimeZone tz = TimeZone.getTimeZone("GMT");
 		CALENDAR.setTime(forDate);
-		CALENDAR.setTimeZone(tz);
+		CALENDAR.setTimeZone(gmt);
 		long secondsOfDay = CALENDAR.get(Calendar.SECOND) +CALENDAR.get(Calendar.MINUTE) *60
 				+CALENDAR.get(Calendar.HOUR_OF_DAY) *60 *60;
 		int frame = (int)Math.round((secondsOfDay / 20));
@@ -361,7 +360,9 @@ public class APHHelperImpl implements APHHelper {
 	@Override
 	public APHEntry setFramedRSSI(JSONObject aph) {
 		try {
-			String date = sdf.format(new Date(aph.getLong("creationDateTime")));
+			CALENDAR.setTimeInMillis(aph.getLong("creationDateTime"));
+			CALENDAR.setTimeZone(gmt);
+			String date = sdf.format(CALENDAR.getTime());
 			APHEntry aphe = getFromCache(aph.getString("hostname"), aph.getString("mac"), date);
 			return putInCache(setFramedRSSI(aphe, new Date(aph.getLong("creationDateTime")), aph.getInt("signalDB")));
 		} catch( Exception e ) {

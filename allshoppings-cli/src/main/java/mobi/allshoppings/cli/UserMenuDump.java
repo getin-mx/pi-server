@@ -1736,6 +1736,32 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("annik_mx"));
 				userMenuDao.create(um);
 			}
+			
+			User atelier = null;
+			try {
+				atelier = userDao.get("atelier_mx", true);
+			} catch( Exception e ) {
+				atelier = new User();
+				atelier.setFirstname("Atelier");
+				atelier.setLastname("Mexico");
+				atelier.setEmail("atelier@allshoppings.mobi");
+				atelier.getSecuritySettings().setRole(Role.BRAND);
+				atelier.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				atelier.setKey((Key)keyHelper.obtainKey(User.class, "atelier_mx"));
+				userDao.create(atelier);
+			}
+
+			try {
+				um = userMenuDao.get("atelier_mx", true);
+				userMenuDao.delete("atelier_mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
+				um.setKey(userMenuDao.createKey("atelier_mx"));
+				userMenuDao.create(um);
+			}
 
 			User aditivo = null;
 			try {
@@ -7094,7 +7120,7 @@ public class UserMenuDump extends AbstractCLI {
 				userDao.create(user);
 			}
 			
-			// Aditivo Franquicias  --------------------------------------------------------------------
+			// Aditivo Franquicias Michan  --------------------------------------------------------------------
 			
 			try {
 				um = userMenuDao.get("franquiciasmichan_mx", true);
@@ -7125,7 +7151,95 @@ public class UserMenuDump extends AbstractCLI {
 				userDao.create(user);
 			}
 			
+			// End Aditivo Franquicias Michan  --------------------------------------------------------------------
+			
+			// Aditivo Franquicias  --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("daniel@aditivofranquicias_mx", true);
+				userMenuDao.delete("daniel@aditivofranquicias_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("daniel@aditivofranquicias_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("daniel@aditivofranquicias_mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Aditivo Franquicias");
+				user.setLastname("");
+				user.setEmail("daniel@aditivofranquicias_mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("a45fc81f-900e-457e-854e-df4a312bb0e1",
+								"d2eab997-2497-49b3-b1bd-15cf80f05fc7", "8d2335b7-4cc3-4f76-b274-86137b34b4e5",
+								"3c9e6b60-bdcd-4268-99eb-a9c9f719f625"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "daniel@aditivofranquicias_mx"));
+				userDao.create(user);
+			}
+			
+			try {
+				um = userMenuDao.get("aditivo_franquicias_mx", true);
+				userMenuDao.delete("aditivo_franquicias_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
+				um.setKey(userMenuDao.createKey("aditivo_franquicias_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("aditivo_franquicias_mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Aditivo Franquicias");
+				user.setLastname("");
+				user.setEmail("aditivo_franquicias_mx");
+				user.getSecuritySettings().setRole(Role.BRAND);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.setKey((Key) keyHelper.obtainKey(User.class, "aditivo_franquicias_mx"));
+				userDao.create(user);
+			}
+			
 			// End Aditivo Franquicias  --------------------------------------------------------------------
+			
+			// Aditivo Franquicias 2  --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("aditivofranquicias2_mx", true);
+				userMenuDao.delete("aditivofranquicias2_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("aditivofranquicias2_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("aditivofranquicias2_mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Aditivo Franquicias 2");
+				user.setLastname("");
+				user.setEmail("aditivofranquicias2_mx");
+				user.getSecuritySettings().setRole(Role.BRAND);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.setKey((Key) keyHelper.obtainKey(User.class, "aditivofranquicias2_mx"));
+				userDao.create(user);
+			}
+			
+			// End Aditivo Franquicias 2 --------------------------------------------------------------------
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
