@@ -963,7 +963,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("199", "Vicky Form Parque Tezontle", "vickyform_mx", "parquetezontle", 0));
 			stores.add(new StoreAdapter("170", "Finca SantaVeracruz Reforma", "fincasantaveracruz_mx", null, 0));
 			stores.add(new StoreAdapter("171", "Finca SantaVeracruz Sevilla", "fincasantaveracruz_mx", null, 0));
-			stores.add(new StoreAdapter("173", "Fullsand Perisur", "fullsand_mx", "perisur", 0));
+			stores.add(new StoreAdapter("173", "FULLSAND PERISUR", "fullsand_mx", "perisur", 0));
 //			stores.add(new StoreAdapter("174", "Fullsand Aragon", "fullsand_mx", "multiplazaaragon", 0));
 			stores.add(new StoreAdapter("185", "Invicta Aeropuerto", "invicta_mx", "aeropuertobenitojuarez", 0));
 			stores.add(new StoreAdapter("192", "Mobo Antara Old", "mobo_mx", "antara", 0));
@@ -1061,7 +1061,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("319","Sally Beauty Delta", "sallybeauty_mx","parquedelta", 0));
 //			stores.add(new StoreAdapter("320","Sally Beauty Metepec", "sallybeauty_mx",null, 0));
 			stores.add(new StoreAdapter("321","Roku Condesa", "roku_mx",null, 0));
-			stores.add(new StoreAdapter("322", "Fullsand Galerías Guadalajara", "fullsand_mx", null, 0));
+			stores.add(new StoreAdapter("322", "FULLSAND GALERIAS GDL", "fullsand_mx", null, 0));
 			stores.add(new StoreAdapter("323", "La Nueva Orizaba Central de Abastos", "saavedra_mx", null, 0));
 			stores.add(new StoreAdapter("324", "La Parroquia Central de Abastos", "saavedra_mx", null, 0));
 			stores.add(new StoreAdapter("325", "La Martina Cancún", "chomarc_mx",null, 0));
@@ -1160,7 +1160,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("418", "Best Buy Central", "bestbuy_mx", "centrosantafe", 0));
 			stores.add(new StoreAdapter("419", "Modatelas La Aurora", "modatelas_mx", null, 0));
 			stores.add(new StoreAdapter("420", "Modatelas Las Maravillas", "modatelas_mx", null, 0));
-			stores.add(new StoreAdapter("421", "Fullsand Acapulco Diamante", "fullsand_mx", null, 0));			
+			stores.add(new StoreAdapter("421", "FULLSAND ACA DIAMANTE", "fullsand_mx", null, 0));			
 			stores.add(new StoreAdapter("433", "Monte de Piedad - 96", "montedepiedad_mx", null, 0));
 			stores.add(new StoreAdapter("434", "Monte de Piedad - 61", "montedepiedad_mx", null, 0));
 			stores.add(new StoreAdapter("435", "Monte de Piedad - 305", "montedepiedad_mx", null, 0));
@@ -1195,7 +1195,7 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("464", "Annik Desierto de los Leones", "annik_mx", "grandsanfrancisco", 0));
 			stores.add(new StoreAdapter("465", "Annik San Jerónimo", "annik_mx", null, 0));
-			stores.add(new StoreAdapter("466", "Fullsand La Quinta Playa del Carmen", "fullsand_mx", null, 0));
+			stores.add(new StoreAdapter("466", "FULLSAND LA QUINTA", "fullsand_mx", null, 0));
 			stores.add(new StoreAdapter("467", "Volaris AICM Nacional", "volaris_mx", null, 0));
 
 			stores.add(new StoreAdapter("468", "Pamela de Haro Athos", "pameladeharo_mx", null, 0));
@@ -1208,7 +1208,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("474", "Fitness Center", "clubcasablanca_mx", null, 0));
 
 			stores.add(new StoreAdapter("475", "Outlet Deportes Isabel la Catolica II", "outletdeportes_mx",null, 0));
-			stores.add(new StoreAdapter("476", "Fullsand Américas Cancún", "fullsand_mx", null, 0));			
+			stores.add(new StoreAdapter("476", "FULLSAND AMERICAS", "fullsand_mx", null, 0));			
 
 			stores.add(new StoreAdapter("477", "Universo de Fragancias Naucalpan", "universodefragancias_mx", null, 0));			
 			stores.add(new StoreAdapter("478", "Aditivo Vidal Alcocer", "aditivo_mx", null, 0));			
