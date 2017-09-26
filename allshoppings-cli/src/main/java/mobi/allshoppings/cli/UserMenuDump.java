@@ -7184,6 +7184,31 @@ public class UserMenuDump extends AbstractCLI {
 				userDao.create(user);
 			}
 			
+			try {
+				um = userMenuDao.get("aditivo_franquicias_mx", true);
+				userMenuDao.delete("aditivo_franquicias_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("aditivo_franquicias_mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("aditivo_franquicias_mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Aditivo Franquicias");
+				user.setLastname("");
+				user.setEmail("aditivo_franquicias_mx");
+				user.getSecuritySettings().setRole(Role.BRAND);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.setKey((Key) keyHelper.obtainKey(User.class, "aditivo_franquicias_mx"));
+				userDao.create(user);
+			}
+			
 			// Aditivo Franquicias  --------------------------------------------------------------------
 
 		} catch( Exception e ) {
