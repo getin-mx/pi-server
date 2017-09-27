@@ -170,7 +170,8 @@ implements DashboardTimelineHourBzService {
 								counterArray[i] = new Integer(0);
 							}
 						}
-
+						
+						try {
 						// Position calc according to the timezone
 						int position = hourMap.get(obj.getTimeZone());
 						if( config.getTimezone().equals("-06:00")) {
@@ -197,6 +198,10 @@ implements DashboardTimelineHourBzService {
 								log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
 						}
 						resultMap.put(key, valArray);
+						}catch (Exception e) {
+							log.log(Level.WARNING, e.getMessage());
+							log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
+						}
 					}
 				}
 			}

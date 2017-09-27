@@ -152,7 +152,9 @@ implements DashboardHeatmapTableHourBzService {
 
 					// Sets the double value
 					obj.setDayOfWeek(mapDayOfWeek(obj.getDayOfWeek()));
-					Long val = xData.get(obj.getDayOfWeek());
+					try {
+						Long val = xData.get(obj.getDayOfWeek());
+					
 					if( val == null ) val = 0L;
 					val += obj.getDoubleValue().intValue();
 					xData.put(obj.getDayOfWeek(), val);
@@ -166,6 +168,10 @@ implements DashboardHeatmapTableHourBzService {
 					else 
 						log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
 					xData.put(obj.getDayOfWeek(), val);
+					} catch (Exception e) {
+						log.log(Level.WARNING, e.getMessage());
+						log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
+					}
 				}
 			}
 			
