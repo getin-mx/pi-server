@@ -37,17 +37,26 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import com.google.common.io.Files;
 
+import mobi.allshoppings.dao.APDVisitDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.StoreDAO;
+import mobi.allshoppings.dao.StoreItemDAO;
+import mobi.allshoppings.dao.StoreRevenueDAO;
+import mobi.allshoppings.dao.StoreTicketDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.exporter.ExcelExportHelper;
+import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.StoreItem;
+import mobi.allshoppings.model.StoreRevenue;
+import mobi.allshoppings.model.StoreTicket;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.tools.CollectionFactory;
 
@@ -63,6 +72,14 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	private StoreDAO storeDao;
 	@Autowired
 	private SystemConfiguration systemConfiguration;
+	@Autowired
+	private APDVisitDAO apdVisitDao;	
+	@Autowired
+	private StoreRevenueDAO sRevenueDao;
+	@Autowired
+	private StoreItemDAO sItemDao;
+	@Autowired
+	private StoreTicketDAO sTicketDao;
 
 	private static final SimpleDateFormat year = new SimpleDateFormat("yyyy");
 	private static final SimpleDateFormat month = new SimpleDateFormat("MM");
@@ -960,15 +977,17 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	}
 	
 	@Override
-	public byte[] exportDB(String[] storesId, String fromDate, String toDate, String countryISO,
-			String languageISO, String outDir, boolean saveTmp) throws ASException {
+	public byte[] exportDB(List<String> storesId, String brandId, String fromDate, String toDate,
+			String outDir, boolean saveTmp) throws ASException {
+		if(brandId != null && StringUtils.hasText(brandId)) {
+			for(Store current : storeDao.getUsingBrandAndStatus(brandId, null, null)) {
+				if(!storesId.contains(current.getIdentifier()))
+					storesId.add(current.getIdentifier());
+			}
+			
+		}
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Store store;
-		String brandId, storeName;
-		Map<String, TrafficEntry> trafficMap = CollectionFactory.createMap();
-		Map<String, HourEntry> hourMap = CollectionFactory.createMap();
-		Map<String, PermanenceEntry> permanenceMap = CollectionFactory.createMap();
-		Map<String, DateAndHourEntry> dateAndHourMap = CollectionFactory.createMap();
 		Date initialDate;
 		Date finalDate;
 		try {
@@ -978,118 +997,31 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			log.log(Level.SEVERE, ex.getMessage(), ex);
 			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
 		}
-		Date curDate = new Date(initialDate.getTime());
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(finalDate);
-		cal.add(Calendar.DATE, 1 -(7 *4));
-		Date limitDate = cal.getTime();
-		TrafficEntry trafficEntry;
-		HourEntry hourEntry;
-		PermanenceEntry permanenceEntry;
-		DateAndHourEntry dateAndHourEntry;
-		List<DashboardIndicatorData> list;
-		Iterator<DashboardIndicatorData> i;
-		DashboardIndicatorData obj;
 		Workbook workbook = new XSSFWorkbook();
 		Sheet storeSheet;
 		Row row;
 		Cell cell;
 		CreationHelper helper = workbook.getCreationHelper();
+		int rowIndex = 0;
+		String parsedDate;
 		
+		List<APDVisit> visits = apdVisitDao.getUsingStoresAndDate(storesId, initialDate,
+				finalDate, null, false);
+		Iterator<APDVisit> i;
+		APDVisit sVisit;
+		Date curDate, endOfDay;
+		boolean first;
+		List<APDVisit> currentStoreVisits = CollectionFactory.createList();
+		StoreRevenue revenue;
+		StoreItem items;
+		StoreTicket tickets;
 		// processing begins
 		for(String storeId : storesId) {
 			store = storeDao.get(storeId, false);
-			brandId = store.getBrandId();
-			storeName = store.getName();
-			log.log(Level.INFO, "Processing store " + storeName + "...");
-			while(curDate.compareTo(finalDate) < 1) {
-				trafficEntry = new TrafficEntry();
-				trafficEntry.setUnformmatedDate(curDate);
-				trafficMap.put(sdf.format(curDate), trafficEntry);
-				curDate.setTime(curDate.getTime() +DAY_IN_MILLIS);
-			} for(int j = 0; j < 24; j++ ) {
-				hourEntry = new HourEntry();
-				permanenceEntry = new PermanenceEntry();
-				hourEntry.setUnformattedHour(j);
-				permanenceEntry.setUnformattedHour(j);
-				hourMap.put(hourEntry.getHour(), hourEntry);
-				permanenceMap.put(permanenceEntry.getHour(), permanenceEntry);
-				for(int k = 1; k < 8; k++) {
-					dateAndHourEntry = new DateAndHourEntry();
-					dateAndHourEntry.setDay(k);
-					dateAndHourEntry.setHour(j);
-					dateAndHourMap.put(dateAndHourEntry.getKey(), dateAndHourEntry);
-				}
-			}
-			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND,
-					Arrays.asList("apd_visitor"), Arrays.asList("visitor_total_peasents",
-							"visitor_total_visits", "visitor_total_tickets"), null, storeId, "D",
-					sdf.format(initialDate), sdf.format(finalDate), null, null, null, null, null,
-					null, null, null);
-			log.log(Level.INFO, "Using " + list.size() + " elements...");
-			i = list.iterator();
-			while(i.hasNext()) {
-				obj = i.next();
-				trafficEntry = trafficMap.get(obj.getStringDate());
-				if("visitor_total_peasents".equals(obj.getElementSubId())) 
-					trafficEntry.setPeasants(trafficEntry.getPeasants()
-							+ obj.getDoubleValue().longValue());
-				else if( "visitor_total_visits".equals(obj.getElementSubId()))
-					trafficEntry.setVisits(trafficEntry.getVisits()
-							+ obj.getDoubleValue().longValue());
-				else if( "visitor_total_tickets".equals(obj.getElementSubId()))
-					trafficEntry.setTickets(trafficEntry.getTickets()
-							+ obj.getDoubleValue().longValue());
-				trafficMap.put(obj.getStringDate(), trafficEntry);
-			}
-			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND,
-					Arrays.asList("apd_visitor"), Arrays.asList("visitor_total_peasents",
-							"visitor_total_visits"), null, storeId, "D", sdf.format(limitDate),
-					sdf.format(finalDate), null, null, null, null, null, null, null, null);
-			log.log(Level.INFO, "Using " + list.size() + " elements...");
-			i = list.iterator();
-			while(i.hasNext()) {
-				obj = i.next();
-				hourEntry = hourMap.get(HourEntry.calculateHour(obj.getTimeZone()));
-				if( "visitor_total_peasents".equals(obj.getElementSubId()))
-					hourEntry.setPeasants(hourEntry.getPeasants() + obj.getDoubleValue().longValue());
-				else if( "visitor_total_visits".equals(obj.getElementSubId())) {
-					hourEntry.setVisits(hourEntry.getVisits() + obj.getDoubleValue().longValue());
-					dateAndHourEntry = dateAndHourMap.get(DateAndHourEntry.getKey(obj.getDate(),
-							obj.getTimeZone()));
-					dateAndHourEntry.setVisits(dateAndHourEntry.getVisits()
-							+ obj.getDoubleValue().longValue());
-					dateAndHourMap.put(dateAndHourEntry.getKey(), dateAndHourEntry);
-				}
-				hourMap.put(hourEntry.getHour(), hourEntry);
-			}
-			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND,
-					Arrays.asList("apd_permanence"), Arrays.asList("permanence_hourly_peasents",
-							"permanence_hourly_visits"), null, storeId, "D", sdf.format(limitDate),
-					sdf.format(finalDate), null, null, null, null, null, null, null, null);	
-			log.log(Level.INFO, "Using " + list.size() + " elements...");
-			i = list.iterator();
-			while(i.hasNext()) {
-				obj = i.next();
-				permanenceEntry = permanenceMap.get(PermanenceEntry.calculateHour(
-						obj.getTimeZone()));
-				if("permanence_hourly_peasents".equals(obj.getElementSubId())) {
-					permanenceEntry.setPeasants(permanenceEntry.getPeasants()
-							+ obj.getDoubleValue().longValue());
-					permanenceEntry.setPeasantsCount(permanenceEntry.getPeasantsCount()
-							+ obj.getRecordCount());
-				} else if("permanence_hourly_visits".equals(obj.getElementSubId())) {
-					permanenceEntry.setVisits(permanenceEntry.getVisits()
-							+ obj.getDoubleValue().longValue());
-					permanenceEntry.setVisitsCount(permanenceEntry.getVisitsCount()
-							+ obj.getRecordCount());
-				}
-				permanenceMap.put(permanenceEntry.getHour(), permanenceEntry);
-			}
-			// write data to workbook
-			storeSheet = workbook.createSheet(WorkbookUtil.createSafeSheetName(storeName).trim());
-			int rowIndex = 0;
-			row = storeSheet.createRow(rowIndex);
+			//creates a workbook sheet for each store, and adds some headers
+			storeSheet = workbook.createSheet(WorkbookUtil.createSafeSheetName(
+					store.getName().trim()));
+			row = storeSheet.createRow(rowIndex++);
 			cell = row.createCell(CHEKIN_DATETIME_CELL_INDEX);
 			cell.setCellValue(helper.createRichTextString(CHECKIN_DATETIME_CELL_TITLE));
 			cell = row.createCell(CHECKIN_DURATION_CELL_INDEX);
@@ -1102,15 +1034,71 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			cell.setCellValue(helper.createRichTextString(ITEMS_CELL_TITLE));
 			cell = row.createCell(TICKETS_CELL_INDEX);
 			cell.setCellValue(helper.createRichTextString(TICKETS_CELL_TITLE));
-			// TODO write data 			
+			curDate = new Date(initialDate.getTime());
+			endOfDay = new Date(curDate.getTime() +DAY_IN_MILLIS);
+			// adds a row for each segment of data
+			log.log(Level.INFO, "Processing store " + store.getName() + "...");
+			while(curDate.compareTo(finalDate) <= 0) {
+				parsedDate = sdf.format(curDate);
+				row = storeSheet.createRow(rowIndex++);
+				try {
+					revenue = sRevenueDao.getUsingStoreIdAndDate(storeId, parsedDate, true);
+				} catch(ASException e) {
+					revenue = new StoreRevenue();
+					revenue.setQty(0.0);
+				} try {
+					items = sItemDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
+				} catch(ASException e) {
+					items = new StoreItem();
+					items.setQty(0);
+				} try {
+					tickets = sTicketDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
+				} catch(ASException e) {
+					tickets = new StoreTicket();
+					tickets.setQty(0);
+				}
+				row.createCell(REVENUE_CELL_INDEX).setCellValue(revenue.getQty());
+				row.createCell(ITEMS_CELL_INDEX).setCellValue(items.getQty());
+				row.createCell(TICKETS_CELL_INDEX).setCellValue(tickets.getQty());
+				for(i = visits.iterator(); i.hasNext();) {
+					sVisit = i.next();
+					// TODO BUG los datos del checkin no se almacenan en el excel
+					if(sVisit.getCheckinStarted().compareTo(curDate) >= 0
+							&& sVisit.getCheckinStarted().compareTo(endOfDay) <= 0) {
+						i.remove();
+						currentStoreVisits.add(sVisit);
+					}
+				}
+				if(!currentStoreVisits.isEmpty()) {
+					first = true;
+					for(APDVisit visit : currentStoreVisits) {
+						if(first)
+							first = false;
+						else
+							row = storeSheet.createRow(rowIndex++);
+						row.createCell(CHECKIN_DURATION_CELL_INDEX).setCellValue(
+								visit.getDuration());
+						row.createCell(CHEKIN_DATETIME_CELL_INDEX).setCellValue(
+								visit.getCheckinStarted());
+						row.createCell(DEVICE_CELL_INDEX).setCellValue(
+								helper.createRichTextString(visit.getDevicePlatform()));
+					}
+				}
+				currentStoreVisits.clear();
+				// updates date to end eventually
+				curDate.setTime(endOfDay.getTime());
+				endOfDay.setTime(curDate.getTime() +DAY_IN_MILLIS);
+				rowIndex = 1;
+			}
 		}
 		try {
 			if(saveTmp) {
 				FileOutputStream fos;
-				File tmp = File.createTempFile("getin", "data");
+				File tmp = File.createTempFile(outDir, "data.xlsx");
 				fos = new FileOutputStream(tmp);
 				workbook.write(fos);
 				fos.flush();
+				log.log(Level.INFO, "Excel created in " +tmp.getAbsolutePath());
 				fos.close();
 				workbook.close();
 				return null;
