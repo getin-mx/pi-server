@@ -1292,6 +1292,7 @@ public class DashboardAPDeviceMapperService {
 		log.log(Level.INFO, "Finished to create store revenue Dashboard for Day " + fromDate + " to: " + toDate + " total time: "+ (endTime - startTime) + "ms");
 	}
 	
+	@SuppressWarnings("deprecation")
 	public DashboardIndicatorData buildBasicDashboardIndicatorData(
 			String elementId, String elementName, String elementSubId,
 			String elementSubName, Date date, String periodType,
@@ -1320,7 +1321,7 @@ public class DashboardAPDeviceMapperService {
 		obj.setElementName(elementName);
 		obj.setElementSubId(elementSubId);
 		obj.setElementSubName(elementSubName);
-		obj.setTimeZone(getTimeZone(tz, date));
+		obj.setTimeZone(c.getTime().getHours() -1); 
 		obj.setMovieId(null);
 		obj.setMovieName(null);
 		if( store != null ) {
