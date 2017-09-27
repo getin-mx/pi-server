@@ -41,12 +41,13 @@ import org.springframework.util.StringUtils;
 
 import com.google.common.io.Files;
 
-import mobi.allshoppings.dao.APDVisitDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dao.StoreItemDAO;
 import mobi.allshoppings.dao.StoreRevenueDAO;
 import mobi.allshoppings.dao.StoreTicketDAO;
+import mobi.allshoppings.dump.DumperHelper;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.exporter.ExcelExportHelper;
@@ -73,14 +74,12 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	@Autowired
 	private SystemConfiguration systemConfiguration;
 	@Autowired
-	private APDVisitDAO apdVisitDao;	
-	@Autowired
 	private StoreRevenueDAO sRevenueDao;
 	@Autowired
 	private StoreItemDAO sItemDao;
 	@Autowired
 	private StoreTicketDAO sTicketDao;
-
+	
 	private static final SimpleDateFormat year = new SimpleDateFormat("yyyy");
 	private static final SimpleDateFormat month = new SimpleDateFormat("MM");
 	private static final int DAY_IN_MILLIS = 86400000;
@@ -983,44 +982,41 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			for(Store current : storeDao.getUsingBrandAndStatus(brandId, null, null)) {
 				if(!storesId.contains(current.getIdentifier()))
 					storesId.add(current.getIdentifier());
-			}
-			
-		}
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Store store;
-		Date initialDate;
-		Date finalDate;
-		try {
-			initialDate = sdf.parse(fromDate);
-			finalDate = sdf.parse(toDate);
-		} catch(ParseException ex) {
-			log.log(Level.SEVERE, ex.getMessage(), ex);
-			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
+}
 		}
 		Workbook workbook = new XSSFWorkbook();
 		Sheet storeSheet;
 		Row row;
 		Cell cell;
 		CreationHelper helper = workbook.getCreationHelper();
-		int rowIndex = 0;
+		int rowIndex;
+		Store store;
+		DumperHelper<APDVisit> apdVisitDump = new DumpFactory<APDVisit>().build(null, APDVisit.class);
+		Iterator<APDVisit> apdVisitIterator;
+		APDVisit visit;
+		Date initialDate,finalDate, curDate;
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			initialDate = sdf.parse(fromDate);
+			finalDate = sdf.parse(toDate);
+		} catch(ParseException ex) {
+			log.log(Level.SEVERE, ex.getMessage(), ex);
+			try { workbook.close(); } catch(IOException e) {}
+			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
+		}
+		boolean needsRow;
 		String parsedDate;
-		
-		List<APDVisit> visits = apdVisitDao.getUsingStoresAndDate(storesId, initialDate,
-				finalDate, null, false);
-		Iterator<APDVisit> i;
-		APDVisit sVisit;
-		Date curDate, endOfDay;
-		boolean first;
-		List<APDVisit> currentStoreVisits = CollectionFactory.createList();
 		StoreRevenue revenue;
 		StoreItem items;
 		StoreTicket tickets;
 		// processing begins
 		for(String storeId : storesId) {
 			store = storeDao.get(storeId, false);
+			log.log(Level.INFO, "Processing store " + store.getName() + "...");
 			//creates a workbook sheet for each store, and adds some headers
 			storeSheet = workbook.createSheet(WorkbookUtil.createSafeSheetName(
 					store.getName().trim()));
+			rowIndex = 1;
 			row = storeSheet.createRow(rowIndex++);
 			cell = row.createCell(CHEKIN_DATETIME_CELL_INDEX);
 			cell.setCellValue(helper.createRichTextString(CHECKIN_DATETIME_CELL_TITLE));
@@ -1035,12 +1031,12 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			cell = row.createCell(TICKETS_CELL_INDEX);
 			cell.setCellValue(helper.createRichTextString(TICKETS_CELL_TITLE));
 			curDate = new Date(initialDate.getTime());
-			endOfDay = new Date(curDate.getTime() +DAY_IN_MILLIS);
 			// adds a row for each segment of data
-			log.log(Level.INFO, "Processing store " + store.getName() + "...");
+			needsRow = true;
 			while(curDate.compareTo(finalDate) <= 0) {
 				parsedDate = sdf.format(curDate);
 				row = storeSheet.createRow(rowIndex++);
+				needsRow = false;
 				try {
 					revenue = sRevenueDao.getUsingStoreIdAndDate(storeId, parsedDate, true);
 				} catch(ASException e) {
@@ -1060,7 +1056,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				row.createCell(REVENUE_CELL_INDEX).setCellValue(revenue.getQty());
 				row.createCell(ITEMS_CELL_INDEX).setCellValue(items.getQty());
 				row.createCell(TICKETS_CELL_INDEX).setCellValue(tickets.getQty());
-				for(i = visits.iterator(); i.hasNext();) {
+				/*for(i = visits.iterator(); i.hasNext();) {
 					sVisit = i.next();
 					// TODO BUG los datos del checkin no se almacenan en el excel
 					if(sVisit.getCheckinStarted().compareTo(curDate) >= 0
@@ -1085,16 +1081,25 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 					}
 				}
 				currentStoreVisits.clear();
-				// updates date to end eventually
-				curDate.setTime(endOfDay.getTime());
-				endOfDay.setTime(curDate.getTime() +DAY_IN_MILLIS);
-				rowIndex = 1;
+				// updates date to end eventually */
+				curDate.setTime(curDate.getTime() +DAY_IN_MILLIS);
 			}
-		}
-		try {
+			log.log(Level.INFO, apdVisitDump.getMultipleNameOptions(initialDate).toString());//TODO remove
+			apdVisitDump.setFilter(storeId);
+			apdVisitIterator = apdVisitDump.iterator(initialDate, finalDate);
+			while(apdVisitIterator.hasNext()) {
+				if(needsRow) row = storeSheet.createRow(rowIndex++);
+				needsRow = true;
+				visit = apdVisitIterator.next();
+				row.createCell(CHECKIN_DURATION_CELL_INDEX).setCellValue(visit.getDuration());
+				row.createCell(CHEKIN_DATETIME_CELL_INDEX).setCellValue(visit.getCheckinStarted());
+				row.createCell(DEVICE_CELL_INDEX).setCellValue(helper.createRichTextString(
+						visit.getDevicePlatform()));
+			}
+		} try {
 			if(saveTmp) {
 				FileOutputStream fos;
-				File tmp = File.createTempFile(outDir, "data.xlsx");
+				File tmp = File.createTempFile(outDir +"_", "_data.xlsx");
 				fos = new FileOutputStream(tmp);
 				workbook.write(fos);
 				fos.flush();
