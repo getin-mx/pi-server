@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
 >
 
@@ -13,7 +13,6 @@
 			<map>
 				<entry key="/dashoard/timelineDataByCinema" value-ref="spring.dashboardtimelinedatabycinema.rest.resource" />
 				<entry key="/dashoard/timelineDataByProvince" value-ref="spring.dashboardtimelinedatabyprovince.rest.resource" />
-				<entry key="/dashoard/repetitions" value-ref="spring.dashboardrepetitions.rest.resource" />
 				<entry key="/dashoard/timelineData" value-ref="spring.dashboardtimelinedata.rest.resource" />
 				<entry key="/dashoard/timelineHour" value-ref="spring.dashboardtimelinehour.rest.resource" />
 				<entry key="/dashoard/timelineGDT" value-ref="spring.dashboardtimelinegdt.rest.resource" />
@@ -43,7 +42,7 @@
 
 				<entry key="/coupons" value-ref="spring.coupons.rest.resource" />
 				<entry key="/coupons/{couponId}" value-ref="spring.coupon.rest.resource" />
-				
+
 				<entry key="/deviceInfo" value-ref="spring.deviceinfo.rest.resource" />
 				<entry key="/deviceLocation" value-ref="spring.devicelocation.rest.resource" />
 				<entry key="/deviceWifiLocation" value-ref="spring.devicewifilocation.rest.resource" />
@@ -74,14 +73,14 @@
 				<entry key="/offers" value-ref="spring.offers.rest.resource" />
 				<entry key="/offers/{offerId}" value-ref="spring.offer.rest.resource" />
 				<entry key="/{kind}/{entityId}/offers" value-ref="spring.offers.rest.resource" />
-				
+
 				<entry key="/tools/forcepass" value-ref="spring.forcepass.rest.resource" />
 				<entry key="/replica" value-ref="spring.replica.rest.resource" />
-				
+
 			</map>
 		</property>
 	</bean>
- 	
+
  	<!-- ** REST resources ** -->
  	<bean id="spring.cinema.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="cinema.rest.resource" />

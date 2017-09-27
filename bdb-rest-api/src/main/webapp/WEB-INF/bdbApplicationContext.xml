@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
 >
 
 	<!-- Import common resources -->
 	<import resource="file:${baseApplicationContext}" />
-	
+
 	 <!-- ** REST resource ** -->
   	<bean id="base.rest.resource" class="mobi.allshoppings.bdb.bz.BDBRestBaseServerResource" abstract="true" />
   	<bean id="dummy.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBDummyBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="ipaddress.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBIPAddressBzServicePlainImpl" parent="base.rest.resource" scope="prototype" />
-	
+
 	<bean id="auth.rest.resource" class="mobi.allshoppings.bdb.auth.spi.BDBAuthBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="pass.rest.resource" class="mobi.allshoppings.bdb.auth.spi.BDBPassBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="user.rest.resource" class="mobi.allshoppings.bdb.bz.spi.BDBUserBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
@@ -47,6 +47,7 @@
 
 	<!-- Dashboard Services -->
   	<bean id="dashboard.storesfilter.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.StoresFilterDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+	<bean id="dashboard.repetitions.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.RepetitionsBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.opentimes.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.OpenTimesDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.employeetimes.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.EmployeeTimesDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.apuptime.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.APUptimeDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
@@ -77,5 +78,5 @@
   	<bean id="dashboardexport.util" class="mobi.allshoppings.bdb.tools.XSSFDashboardExport" scope="singleton" />
   	<bean id="csvdetailsexport.util" class="mobi.allshoppings.bdb.tools.CSVVisitDetailExport" scope="singleton" />
   	<bean id="csvapdevicesexport.util" class="mobi.allshoppings.bdb.tools.CSVAPDeviceExport" scope="singleton" />
-	
+
 </beans>

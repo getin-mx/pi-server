@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
 >
 
 	<!-- Import common resources -->
 	<import resource="file:${baseApplicationContext}" />
-	
+
 	<bean id="points.service" class="mobi.allshoppings.ranking.impl.PointsServiceNullImpl" scope="singleton" />
 	<bean id="hotspot.service" class="mobi.allshoppings.geocoding.impl.HotspotServiceNullImpl" scope="singleton" />
 	<bean id="lock.helper" class="mobi.allshoppings.lock.impl.LockHelperPIImpl" scope="singleton" />
@@ -20,12 +20,10 @@
 	 <!-- ** REST resource ** -->
   	<bean id="base.rest.resource" class="mobi.allshoppings.bz.RestBaseServerResource" abstract="true" />
 	<bean id="rest.service" class="mobi.allshoppings.bz.spi.RestAdapterBzServiceJSONImpl" scope="singleton" />
-	
+
   	<bean id="auth.rest.resource" class="mobi.allshoppings.auth.spi.AuthBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="pass.rest.resource" class="mobi.allshoppings.auth.spi.PassBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="user.rest.resource" class="mobi.allshoppings.bz.spi.UserBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
-
-  	<bean id="dashboardrepetitions.rest.resource" class="mobi.allshoppings.bz.spi.DashboardRepetitionsBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardtimelinehour.rest.resource" class="mobi.allshoppings.bz.spi.DashboardTimelineHourBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardtimelinedata.rest.resource" class="mobi.allshoppings.bz.spi.DashboardTimelineDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardtimelinedatabycinema.rest.resource" class="mobi.allshoppings.bz.spi.DashboardTimelineDataByCinemaBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
@@ -85,10 +83,10 @@
 
 	<!-- Business Service validation beans -->
 	<bean id="user.bz.validator" class="mobi.allshoppings.bz.validation.UserBzValidation" scope="singleton" />
-	
+
 	<!-- Business Service Helpers beans -->
 	<bean id="spring.velocity.helper" class="mobi.allshoppings.bz.web.tools.SpringVelocityHelper" scope="singleton" />
-	
+
 	<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
         <property name="resourceLoaderPath" value="/WEB-INF/main-be/velocity/"/>
         <property name="velocityProperties">
@@ -99,5 +97,5 @@
 			</props>
 		</property>
 	</bean>
-			
+
 </beans>
