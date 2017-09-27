@@ -705,7 +705,7 @@ public class DashboardAPDeviceMapperService {
 		try {
 
 			// Prepares the Object Query
-			Date dateFrom = new Date(date.getTime());
+			Date dateFrom = CALENDAR.getTime();
 			Date dateTo = new Date(dateFrom.getTime() + 86400000);
 			Range range = null;
 			String entityId = null;
@@ -1321,7 +1321,7 @@ public class DashboardAPDeviceMapperService {
 		obj.setElementName(elementName);
 		obj.setElementSubId(elementSubId);
 		obj.setElementSubName(elementSubName);
-		obj.setTimeZone(c.getTime().getHours() -1); 
+		obj.setTimeZone(getTimeZone(tz, date)); 
 		obj.setMovieId(null);
 		obj.setMovieName(null);
 		if( store != null ) {
