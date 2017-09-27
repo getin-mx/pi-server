@@ -41,7 +41,7 @@ extends BDBRestBaseServerResource
 implements BDBDashboardBzService {
 
 	private static final Logger log = Logger.getLogger(BrandTableDataBzServiceJSONImpl.class.getName());
-	
+
 	@Autowired
 	private DashboardIndicatorDataDAO dao;
 	@Autowired
@@ -54,7 +54,7 @@ implements BDBDashboardBzService {
 
 	/**
 	 * Obtains information about a user
-	 * 
+	 *
 	 * @return A JSON representation of the selected fields for a user
 	 */
 	@Override
@@ -73,13 +73,13 @@ implements BDBDashboardBzService {
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
 			String format = obtainStringValue("format", "table");
-			
+
 			// Initializes the table using the received information
 			DashboardTableRep table = new DashboardTableRep();
 			List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), "name");
 			List<Store> tmpStores2 = CollectionFactory.createList();
 			for( Store store : tmpStores ) {
-				if( isValidForUser(user, store) )
+			 	if( isValidForUser(user, store) )
 					tmpStores2.add(store);
 			}
 			table.setStores(tmpStores2);
@@ -91,13 +91,13 @@ implements BDBDashboardBzService {
 			});
 			List<String> entityIds = initializeTableRecords(table, fromStringDate, toStringDate);
 			entityIds.add(entityId);
-			
+
 			// Starts to Collect the data
 			List<DashboardIndicatorData> list;
 
 			// peasents, visits, and tickets
 			list = dao.getUsingFilters(entityIds, null, Arrays.asList("apd_visitor"),
-					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets", "visitor_total_revenue"), null,
+					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets", "visitor_total_items", "visitor_total_revenue"), null,
 					null, null, fromStringDate, toStringDate, null, null, null, null, null, null,
 					null, null);
 
@@ -106,9 +106,9 @@ implements BDBDashboardBzService {
 				DashboardRecordRep rec = obj.getEntityKind().equals(EntityKind.KIND_INNER_ZONE)
 						? table.findRecordWithEntityId(obj.getEntityId(), obj.getEntityKind())
 						: table.findRecordWithEntityId(obj.getSubentityId(), EntityKind.KIND_STORE);
-						
+
 				DashboardRecordRep totals = table.getTotals();
-				
+
 				if( null != rec ) {
 					if( obj.getElementSubId().equals("visitor_total_peasents"))
 						rec.setPeasants(rec.getPeasants() + obj.getDoubleValue().longValue());
@@ -118,8 +118,12 @@ implements BDBDashboardBzService {
 						totals.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
 					} else if( obj.getElementSubId().equals("visitor_total_tickets")) {
 						rec.setTickets(rec.getTickets() + obj.getDoubleValue().longValue());
-					} else if( obj.getElementSubId().equals("visitor_total_revenue"))
+					} else if( obj.getElementSubId().equals("visitor_total_items")) {
+						rec.setItems(rec.getItems() + (int) obj.getDoubleValue().longValue());
+					}
+					else if( obj.getElementSubId().equals("visitor_total_revenue"))
 						rec.setRevenue(rec.getRevenue() + obj.getDoubleValue());
+
 				}
 			}
 
@@ -143,7 +147,7 @@ implements BDBDashboardBzService {
 
 			// Creates the final JSON Array
 			if( format.equals("json")) {
-			
+
 				JSONObject resp = new JSONObject();
 				JSONArray data = new JSONArray();
 				for( DashboardRecordRep r : table.records ) {
@@ -152,7 +156,7 @@ implements BDBDashboardBzService {
 				resp.put("data", data);
 				resp.put("totals", table.toJSONTotals());
 				return resp.toString();
-				
+
 			} else {
 				JSONArray jsonArray = new JSONArray();
 				jsonArray.put(table.getJSONHeaders());
@@ -165,7 +169,7 @@ implements BDBDashboardBzService {
 			}
 
 		} catch (ASException e) {
-			if( e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENEXPIRED_CODE || 
+			if( e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENEXPIRED_CODE ||
 					e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENMISSING_CODE) {
 				log.log(Level.INFO, e.getMessage());
 			} else {
@@ -266,7 +270,7 @@ implements BDBDashboardBzService {
 
 		public DashboardRecordRep findRecordWithEntityId(String entityId, Integer entityKind) {
 			for(DashboardRecordRep rec : records ) {
-				if( rec.getEntityId().equals(entityId) && (entityKind == null || rec.getEntityKind().equals(entityKind))) 
+				if( rec.getEntityId().equals(entityId) && (entityKind == null || rec.getEntityKind().equals(entityKind)))
 					return rec;
 			}
 			return null;
@@ -324,6 +328,7 @@ implements BDBDashboardBzService {
 			titles.put("Paseantes");
 			titles.put("Visitantes");
 			titles.put("Tickets");
+			titles.put("Items");
 			titles.put("Revenue");
 			titles.put("Paseantes/Visitantes");
 			titles.put("Visitantes/Tickets");
@@ -335,7 +340,7 @@ implements BDBDashboardBzService {
 		}
 
 		/**
-		 * Gets the totals JSON Array 
+		 * Gets the totals JSON Array
 		 * @return
 		 * @throws ASException
 		 */
@@ -349,6 +354,7 @@ implements BDBDashboardBzService {
 					totals.setPeasants(totals.getPeasants() + rec.getPeasants());
 					totals.setVisitors(totals.getVisitors() + rec.getVisitors());
 					totals.setTickets(totals.getTickets() + rec.getTickets());
+					totals.setItems(totals.getItems() + rec.getItems());
 					totals.setRevenue(totals.getRevenue() + rec.getRevenue());
 					c.add(rec.getPermanenceInMillis());
 
@@ -370,7 +376,7 @@ implements BDBDashboardBzService {
 			}
 
 			Collections.sort(c);
-			if( c.size() == 0 ) 
+			if( c.size() == 0 )
 				totals.setPermanenceInMillis(0l);
 			else
 				if( c.size() % 2 == 0 && c.size() >= 2 ) {
@@ -384,7 +390,7 @@ implements BDBDashboardBzService {
 		}
 
 		/**
-		 * Gets the totals JSON Array 
+		 * Gets the totals JSON Array
 		 * @return
 		 * @throws ASException
 		 */
@@ -394,6 +400,7 @@ implements BDBDashboardBzService {
 			totals.setPeasants(0L);
 			totals.setVisitors(0L);
 			totals.setRevenue(0.0);
+			totals.setItems(0);
 			totals.setPermanenceInMillis(0L);
 			totals.setPermancenceQty(0);
 
@@ -402,6 +409,7 @@ implements BDBDashboardBzService {
 					totals.setPeasants(totals.getPeasants() + rec.getPeasants());
 					totals.setVisitors(totals.getVisitors() + rec.getVisitors());
 					totals.setTickets(totals.getTickets() + rec.getTickets());
+					totals.setItems(totals.getItems() + rec.getItems());
 					totals.setRevenue(totals.getRevenue() + rec.getRevenue());
 					totals.setPermanenceInMillis(totals.getPermanenceInMillis() + rec.getPermanenceInMillis());
 					totals.setPermancenceQty(totals.getPermancenceQty() + rec.getPermancenceQty());
@@ -438,6 +446,7 @@ implements BDBDashboardBzService {
 		private String title;
 		private Long peasants;
 		private Long visitors;
+		private int items;
 		private Long tickets;
 		private Double revenue;
 		private Date higherDate;
@@ -460,6 +469,7 @@ implements BDBDashboardBzService {
 			peasants = 0l;
 			visitors = 0l;
 			tickets = 0l;
+			items = 0;
 			revenue = 0.0;
 			permanenceInMillis = 0l;
 
@@ -510,6 +520,7 @@ implements BDBDashboardBzService {
 			row.put(h1 + String.valueOf(peasants) + h2);
 			row.put(h1 + String.valueOf(visitors) + h2);
 			row.put(h1 + String.valueOf(tickets) + h2);
+			row.put(h1 + String.valueOf(items)    + h2);
 			row.put(h1 + String.valueOf(revenue) + h2);
 
 			// peasents_conversion
@@ -549,6 +560,7 @@ implements BDBDashboardBzService {
 			row.put("peasants", peasants);
 			row.put("visitors", visitors);
 			row.put("tickets", tickets);
+			row.put("items", items);
 			row.put("revenue", revenue);
 
 			// peasents_conversion
@@ -833,6 +845,14 @@ implements BDBDashboardBzService {
 		 */
 		public void setParent(DashboardTableRep parent) {
 			this.parent = parent;
+		}
+
+		public int getItems() {
+			return items;
+		}
+
+		public void setItems(int items) {
+			this.items = items;
 		}
 
 	}
