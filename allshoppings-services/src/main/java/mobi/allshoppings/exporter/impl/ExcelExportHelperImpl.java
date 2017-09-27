@@ -978,7 +978,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	
 	@Override
 	public byte[] exportDB(List<String> storesId, String brandId, String fromDate, String toDate,
-			String countryISO, String languageISO, String outDir, boolean saveTmp) throws ASException {
+			String outDir, boolean saveTmp) throws ASException {
 		if(brandId != null && StringUtils.hasText(brandId)) {
 			for(Store current : storeDao.getUsingBrandAndStatus(brandId, null, null)) {
 				if(!storesId.contains(current.getIdentifier()))
@@ -1007,13 +1007,14 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		
 		List<APDVisit> visits = apdVisitDao.getUsingStoresAndDate(storesId, initialDate,
 				finalDate, null, false);
-		StoreRevenue revenue;
-		StoreItem items;
-		StoreTicket tickets;
 		Iterator<APDVisit> i;
 		APDVisit sVisit;
 		Date curDate, endOfDay;
+		boolean first;
 		List<APDVisit> currentStoreVisits = CollectionFactory.createList();
+		StoreRevenue revenue;
+		StoreItem items;
+		StoreTicket tickets;
 		// processing begins
 		for(String storeId : storesId) {
 			store = storeDao.get(storeId, false);
@@ -1039,15 +1040,29 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			log.log(Level.INFO, "Processing store " + store.getName() + "...");
 			while(curDate.compareTo(finalDate) <= 0) {
 				parsedDate = sdf.format(curDate);
-				revenue = sRevenueDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
-				items = sItemDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
-				tickets = sTicketDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
 				row = storeSheet.createRow(rowIndex++);
-				cell = row.createCell(DAY_IN_MILLIS);
-				cell.setCellValue(curDate);
-				// TODO load other fields first
+				try {
+					revenue = sRevenueDao.getUsingStoreIdAndDate(storeId, parsedDate, true);
+				} catch(ASException e) {
+					revenue = new StoreRevenue();
+					revenue.setQty(0.0);
+				} try {
+					items = sItemDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
+				} catch(ASException e) {
+					items = new StoreItem();
+					items.setQty(0);
+				} try {
+					tickets = sTicketDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
+				} catch(ASException e) {
+					tickets = new StoreTicket();
+					tickets.setQty(0);
+				}
+				row.createCell(REVENUE_CELL_INDEX).setCellValue(revenue.getQty());
+				row.createCell(ITEMS_CELL_INDEX).setCellValue(items.getQty());
+				row.createCell(TICKETS_CELL_INDEX).setCellValue(tickets.getQty());
 				for(i = visits.iterator(); i.hasNext();) {
 					sVisit = i.next();
+					// TODO BUG los datos del checkin no se almacenan en el excel
 					if(sVisit.getCheckinStarted().compareTo(curDate) >= 0
 							&& sVisit.getCheckinStarted().compareTo(endOfDay) <= 0) {
 						i.remove();
@@ -1055,29 +1070,35 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 					}
 				}
 				if(!currentStoreVisits.isEmpty()) {
-					//TODO dump into excel
+					first = true;
+					for(APDVisit visit : currentStoreVisits) {
+						if(first)
+							first = false;
+						else
+							row = storeSheet.createRow(rowIndex++);
+						row.createCell(CHECKIN_DURATION_CELL_INDEX).setCellValue(
+								visit.getDuration());
+						row.createCell(CHEKIN_DATETIME_CELL_INDEX).setCellValue(
+								visit.getCheckinStarted());
+						row.createCell(DEVICE_CELL_INDEX).setCellValue(
+								helper.createRichTextString(visit.getDevicePlatform()));
+					}
 				}
 				currentStoreVisits.clear();
-				
-				// write data to workbook
-				
 				// updates date to end eventually
 				curDate.setTime(endOfDay.getTime());
 				endOfDay.setTime(curDate.getTime() +DAY_IN_MILLIS);
+				rowIndex = 1;
 			}
-			
-			
-			
-			//TODO end. Don't touch this! (paw-waw-waw-waw..!!!) */
-			
 		}
 		try {
 			if(saveTmp) {
 				FileOutputStream fos;
-				File tmp = File.createTempFile("getin", "data");
+				File tmp = File.createTempFile(outDir, "data.xlsx");
 				fos = new FileOutputStream(tmp);
 				workbook.write(fos);
 				fos.flush();
+				log.log(Level.INFO, "Excel created in " +tmp.getAbsolutePath());
 				fos.close();
 				workbook.close();
 				return null;

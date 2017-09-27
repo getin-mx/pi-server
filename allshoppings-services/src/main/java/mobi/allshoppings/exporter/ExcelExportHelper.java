@@ -18,6 +18,6 @@ public interface ExcelExportHelper {
 	byte[] export(String storeId, String fromDate, String toDate, int weeks, String outDir) throws ASException;
 	
 	byte[] exportDB(List<String> sotresId, String brandId, String fromDate, String toDate,
-			String countryISO, String languageISO, String outDir, boolean saveTmp) throws ASException;
+			String outDir, boolean saveTmp) throws ASException;
 
 }
