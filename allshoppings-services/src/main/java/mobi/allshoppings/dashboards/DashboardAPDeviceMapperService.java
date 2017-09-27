@@ -1303,7 +1303,7 @@ public class DashboardAPDeviceMapperService {
 		DashboardIndicatorData obj = new DashboardIndicatorData();
 		
 		Calendar c = Calendar.getInstance();
-		c.set(Integer.parseInt(forDate.substring(0,4)), Integer.parseInt(forDate.substring(5,7)) -1, Integer.parseInt(forDate.substring(8)), 0, 0, 0);
+		c.setTime(date);
 		c.setTimeZone(tz);
 		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 		
