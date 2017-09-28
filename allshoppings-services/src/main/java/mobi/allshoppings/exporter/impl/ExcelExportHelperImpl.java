@@ -24,6 +24,7 @@ import org.apache.poi.ss.formula.ptg.Ptg;
 import org.apache.poi.ss.formula.ptg.RefPtg;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellCopyPolicy;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
@@ -84,12 +85,13 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	private static final SimpleDateFormat month = new SimpleDateFormat("MM");
 	private static final int DAY_IN_MILLIS = 86400000;
 	
-	private static final byte CHEKIN_DATETIME_CELL_INDEX = 0;
+	private static final byte CHECKIN_DATETIME_CELL_INDEX = 0;
 	private static final byte CHECKIN_DURATION_CELL_INDEX = 1;
 	private static final byte DEVICE_CELL_INDEX = 2;
-	private static final byte REVENUE_CELL_INDEX = 3;
-	private static final byte ITEMS_CELL_INDEX = 4;
-	private static final byte TICKETS_CELL_INDEX = 5;
+	private static final byte REVENUE_CELL_INDEX = 4;
+	private static final byte ITEMS_CELL_INDEX = 5;
+	private static final byte TICKETS_CELL_INDEX = 6;
+	private static final byte DATA_DATE_CELL_INDEX = 7;
 	
 	private static final String CHECKIN_DATETIME_CELL_TITLE = "checkinDate";
 	private static final String CHECKIN_DURATION_CELL_TITLE = "checkingDurationSeconds";
@@ -97,6 +99,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	private static final String REVENUE_CELL_TITLE = "revenue";
 	private static final String ITEMS_CELL_TITLE = "item";
 	private static final String TICKETS_CELL_TITLE = "tickets";
+	private static final String DATA_DATE_CELL_TITLE = "dataDate";
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -987,8 +990,14 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		Workbook workbook = new XSSFWorkbook();
 		Sheet storeSheet;
 		Row row;
-		Cell cell;
 		CreationHelper helper = workbook.getCreationHelper();
+		CellStyle checkinStyle = workbook.createCellStyle();
+		checkinStyle.setDataFormat(helper.createDataFormat().getFormat("m/d/yy h:mm:ss"));
+		CellStyle dataDStyle = workbook.createCellStyle();
+		dataDStyle.setDataFormat(helper.createDataFormat().getFormat("m/d/yy"));
+		CellStyle currencyStyle = workbook.createCellStyle();
+		currencyStyle.setDataFormat(helper.createDataFormat().getFormat("$#,##0.00"));
+		Cell cell;
 		int rowIndex;
 		Store store;
 		DumperHelper<APDVisit> apdVisitDump = new DumpFactory<APDVisit>().build(null, APDVisit.class);
@@ -1004,7 +1013,6 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			try { workbook.close(); } catch(IOException e) {}
 			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
 		}
-		boolean needsRow;
 		String parsedDate;
 		StoreRevenue revenue;
 		StoreItem items;
@@ -1012,31 +1020,32 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		// processing begins
 		for(String storeId : storesId) {
 			store = storeDao.get(storeId, false);
-			log.log(Level.INFO, "Processing store " + store.getName() + "...");
+			log.log(Level.INFO, "Processing store " + store.getName() +" for period " +fromDate +" - "
+						+toDate + "...");
 			//creates a workbook sheet for each store, and adds some headers
 			storeSheet = workbook.createSheet(WorkbookUtil.createSafeSheetName(
 					store.getName().trim()));
-			rowIndex = 1;
+			rowIndex = 0;
 			row = storeSheet.createRow(rowIndex++);
-			cell = row.createCell(CHEKIN_DATETIME_CELL_INDEX);
-			cell.setCellValue(helper.createRichTextString(CHECKIN_DATETIME_CELL_TITLE));
-			cell = row.createCell(CHECKIN_DURATION_CELL_INDEX);
-			cell.setCellValue(helper.createRichTextString(CHECKIN_DURATION_CELL_TITLE));
-			cell = row.createCell(DEVICE_CELL_INDEX);
-			cell.setCellValue(helper.createRichTextString(DEVICE_CELL_TITLE));
-			cell = row.createCell(REVENUE_CELL_INDEX);
-			cell.setCellValue(helper.createRichTextString(REVENUE_CELL_TITLE));
-			cell = row.createCell(ITEMS_CELL_INDEX);
-			cell.setCellValue(helper.createRichTextString(ITEMS_CELL_TITLE));
-			cell = row.createCell(TICKETS_CELL_INDEX);
-			cell.setCellValue(helper.createRichTextString(TICKETS_CELL_TITLE));
+			row.createCell(CHECKIN_DATETIME_CELL_INDEX)
+					.setCellValue(helper.createRichTextString(CHECKIN_DATETIME_CELL_TITLE));
+			row.createCell(CHECKIN_DURATION_CELL_INDEX)
+					.setCellValue(helper.createRichTextString(CHECKIN_DURATION_CELL_TITLE));
+			row.createCell(DEVICE_CELL_INDEX)
+					.setCellValue(helper.createRichTextString(DEVICE_CELL_TITLE));
+			row.createCell(REVENUE_CELL_INDEX)
+					.setCellValue(helper.createRichTextString(REVENUE_CELL_TITLE));
+			row.createCell(ITEMS_CELL_INDEX)
+					.setCellValue(helper.createRichTextString(ITEMS_CELL_TITLE));
+			row.createCell(TICKETS_CELL_INDEX)
+					.setCellValue(helper.createRichTextString(TICKETS_CELL_TITLE));
+			row.createCell(DATA_DATE_CELL_INDEX)
+					.setCellValue(helper.createRichTextString(DATA_DATE_CELL_TITLE));
 			curDate = new Date(initialDate.getTime());
 			// adds a row for each segment of data
-			needsRow = true;
 			while(curDate.compareTo(finalDate) <= 0) {
 				parsedDate = sdf.format(curDate);
 				row = storeSheet.createRow(rowIndex++);
-				needsRow = false;
 				try {
 					revenue = sRevenueDao.getUsingStoreIdAndDate(storeId, parsedDate, true);
 				} catch(ASException e) {
@@ -1053,49 +1062,38 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 					tickets = new StoreTicket();
 					tickets.setQty(0);
 				}
-				row.createCell(REVENUE_CELL_INDEX).setCellValue(revenue.getQty());
+				cell = row.createCell(REVENUE_CELL_INDEX);
+				cell.setCellValue(revenue.getQty());
+				cell.setCellStyle(currencyStyle);
 				row.createCell(ITEMS_CELL_INDEX).setCellValue(items.getQty());
 				row.createCell(TICKETS_CELL_INDEX).setCellValue(tickets.getQty());
-				/*for(i = visits.iterator(); i.hasNext();) {
-					sVisit = i.next();
-					// TODO BUG los datos del checkin no se almacenan en el excel
-					if(sVisit.getCheckinStarted().compareTo(curDate) >= 0
-							&& sVisit.getCheckinStarted().compareTo(endOfDay) <= 0) {
-						i.remove();
-						currentStoreVisits.add(sVisit);
-					}
-				}
-				if(!currentStoreVisits.isEmpty()) {
-					first = true;
-					for(APDVisit visit : currentStoreVisits) {
-						if(first)
-							first = false;
-						else
-							row = storeSheet.createRow(rowIndex++);
-						row.createCell(CHECKIN_DURATION_CELL_INDEX).setCellValue(
-								visit.getDuration());
-						row.createCell(CHEKIN_DATETIME_CELL_INDEX).setCellValue(
-								visit.getCheckinStarted());
-						row.createCell(DEVICE_CELL_INDEX).setCellValue(
-								helper.createRichTextString(visit.getDevicePlatform()));
-					}
-				}
-				currentStoreVisits.clear();
-				// updates date to end eventually */
+				cell = row.createCell(DATA_DATE_CELL_INDEX);
+				cell.setCellValue(curDate);
+				cell.setCellStyle(dataDStyle);
 				curDate.setTime(curDate.getTime() +DAY_IN_MILLIS);
 			}
-			log.log(Level.INFO, apdVisitDump.getMultipleNameOptions(initialDate).toString());//TODO remove
 			apdVisitDump.setFilter(storeId);
 			apdVisitIterator = apdVisitDump.iterator(initialDate, finalDate);
+			rowIndex = 1;
 			while(apdVisitIterator.hasNext()) {
-				if(needsRow) row = storeSheet.createRow(rowIndex++);
-				needsRow = true;
+				row = storeSheet.getRow(rowIndex);
+				if(row == null) row = storeSheet.createRow(rowIndex);
+				rowIndex++;
 				visit = apdVisitIterator.next();
-				row.createCell(CHECKIN_DURATION_CELL_INDEX).setCellValue(visit.getDuration());
-				row.createCell(CHEKIN_DATETIME_CELL_INDEX).setCellValue(visit.getCheckinStarted());
+				cell = row.createCell(CHECKIN_DATETIME_CELL_INDEX);
+				cell.setCellValue(visit.getCheckinStarted());
+				cell.setCellStyle(checkinStyle);
+				row.createCell(CHECKIN_DURATION_CELL_INDEX).setCellValue(visit.getDuration() /1000);
 				row.createCell(DEVICE_CELL_INDEX).setCellValue(helper.createRichTextString(
 						visit.getDevicePlatform()));
 			}
+			storeSheet.autoSizeColumn(CHECKIN_DATETIME_CELL_INDEX);
+			storeSheet.autoSizeColumn(CHECKIN_DURATION_CELL_INDEX);
+			storeSheet.autoSizeColumn(DEVICE_CELL_INDEX);
+			storeSheet.autoSizeColumn(REVENUE_CELL_INDEX);
+			storeSheet.autoSizeColumn(ITEMS_CELL_INDEX);
+			storeSheet.autoSizeColumn(TICKETS_CELL_INDEX);
+			storeSheet.autoSizeColumn(DATA_DATE_CELL_INDEX);
 		} try {
 			if(saveTmp) {
 				FileOutputStream fos;
