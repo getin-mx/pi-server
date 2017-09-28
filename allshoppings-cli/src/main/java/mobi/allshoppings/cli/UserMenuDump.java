@@ -1801,7 +1801,12 @@ public class UserMenuDump extends AbstractCLI {
 						"3bd9d22b-65d9-44af-805f-87a77af5f691", "54d1aba3-3e2c-4de4-8065-c55a50109dbc",
 						"ffc0b360-00d5-4e8f-8bef-f0472df6cb5f", "ce91457a-f7dc-49d0-93ff-79259e553769",
 						"f7b002fd-5c0c-4e2f-9879-0e98bda6cd5d", "b251d67f-b441-42d2-b69d-6a84c036e123",
-						"61374a58-a679-4532-811a-aa3340bcc47e", "3928b1d6-2fb7-4a62-a081-9e5a23e78e91"));
+						"61374a58-a679-4532-811a-aa3340bcc47e", "3928b1d6-2fb7-4a62-a081-9e5a23e78e91",
+						"a45fc81f-900e-457e-854e-df4a312bb0e1", "d2eab997-2497-49b3-b1bd-15cf80f05fc7",
+						"8d2335b7-4cc3-4f76-b274-86137b34b4e5", "3c9e6b60-bdcd-4268-99eb-a9c9f719f625",
+						"07acea43-4a6c-4adc-896c-00b1f4781242", "2fea9047-6da8-4493-b97c-f3cdd809a18d",
+						"800f4a09-34f7-4116-bf5c-4b0ab45175c8", "75746850-9ae4-4aa4-bf8f-3bf01daf2775",
+						"0867dbd4-53f1-4602-8a48-e0c07bd752da"));
 				aditivo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				aditivo.setKey((Key)keyHelper.obtainKey(User.class, "aditivo_mx"));
 				userDao.create(aditivo);
