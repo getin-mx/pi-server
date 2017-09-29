@@ -103,7 +103,8 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public byte[] export(String storeId, String fromDate, String toDate, int weeks, String outDir) throws ASException {
+	public byte[] export(String storeId, String fromDate, String toDate, int weeks, String outDir)
+			throws ASException {
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -114,10 +115,10 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			final String storeName = store.getName();
 
 			// Defines working variables
-			Map<String, TrafficEntry> map = CollectionFactory.createMap();
-			Map<String, HourEntry> map2 = CollectionFactory.createMap();
-			Map<String, PermanenceEntry> map3 = CollectionFactory.createMap();
-			Map<String, DateAndHourEntry> map4 = CollectionFactory.createMap();
+			Map<String, TrafficEntry> trafficMap = CollectionFactory.createMap();
+			Map<String, HourEntry> hourMap = CollectionFactory.createMap();
+			Map<String, PermanenceEntry> permanenceMap = CollectionFactory.createMap();
+			Map<String, DateAndHourEntry> dateAndHourMap = CollectionFactory.createMap();
 			Date initialDate = sdf.parse(fromDate);
 			Date finalDate = sdf.parse(toDate);
 			Date curDate = new Date(initialDate.getTime());
@@ -131,25 +132,25 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			log.log(Level.INFO, "Processing store " + storeName + "...");
 
 			// Creates the data map
-			while( sdf.format(curDate).compareTo(sdf.format(finalDate)) < 1) {
+			while(curDate.compareTo(finalDate) < 1) {
 				TrafficEntry e = new TrafficEntry();
 				e.setUnformmatedDate(curDate);
-				map.put(sdf.format(curDate), e);
-				curDate = new Date(curDate.getTime() + DAY_IN_MILLIS);
+				trafficMap.put(sdf.format(curDate), e);
+				curDate.setTime(curDate.getTime() + DAY_IN_MILLIS);
 			}
 
 			// Creates the data map
 			for(int j = 0; j < 24; j++ ) {
 				HourEntry e = new HourEntry();
 				e.setUnformattedHour(j);
-				map2.put(e.getHour(), e);
+				hourMap.put(e.getHour(), e);
 			}
 
 			// Creates the data map
 			for(int j = 0; j < 24; j++ ) {
 				PermanenceEntry e = new PermanenceEntry();
 				e.setUnformattedHour(j);
-				map3.put(e.getHour(), e);
+				permanenceMap.put(e.getHour(), e);
 			}
 
 			// Creates the data map
@@ -158,22 +159,26 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 					DateAndHourEntry e = new DateAndHourEntry();
 					e.setDay(k);
 					e.setHour(j);
-					map4.put(e.getKey(), e);
+					dateAndHourMap.put(e.getKey(), e);
 				}
 			}
 
+			String parsedInitD = sdf.format(initialDate);
+			String parsedFinalD = sdf.format(finalDate); 
+			
 			// Now iterates the Dashboard Indicator Data List for Traffic by Day graph 
-			List<DashboardIndicatorData> list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND,
-					Arrays.asList("apd_visitor"),
-					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets"), null,
-					storeId, "D", sdf.format(initialDate), sdf.format(finalDate), null, null, null, null, null, null, null, null);
+			List<DashboardIndicatorData> list = didDao.getUsingFilters(brandId,
+					EntityKind.KIND_BRAND, Arrays.asList("apd_visitor"), Arrays.asList(
+							"visitor_total_peasents", "visitor_total_visits",
+							"visitor_total_tickets"), null, storeId, "D", parsedInitD,
+					parsedFinalD, null, null, null, null, null, null, null, null);
 
 			log.log(Level.INFO, "Using " + list.size() + " elements...");
 
 			Iterator<DashboardIndicatorData> i = list.iterator();
 			while(i.hasNext()) {
 				DashboardIndicatorData obj = i.next();
-				TrafficEntry e = map.get(obj.getStringDate());
+				TrafficEntry e = trafficMap.get(obj.getStringDate());
 				try {
 					if( "visitor_total_peasents".equals(obj.getElementSubId())) {
 						e.setPeasants(e.getPeasants() + obj.getDoubleValue().longValue());
@@ -185,39 +190,40 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				} catch( Exception e1 ) {
 					e1.printStackTrace();
 				}
-				map.put(obj.getStringDate(), e);
+				trafficMap.put(obj.getStringDate(), e);
 			}
 
 			// How iterates the Dashboard Indicator Data List for Traffic by Hour graph
-			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND,
-					Arrays.asList("apd_visitor"),
-					Arrays.asList("visitor_total_peasents", "visitor_total_visits"), null,
-					storeId, "D", sdf.format(limitDate), sdf.format(finalDate), null, null, null, null, null, null, null, null);
+			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND, Arrays.asList("apd_visitor"),
+					Arrays.asList("visitor_total_peasents", "visitor_total_visits"), null, storeId, "D",
+					// TODO look for limit date and store parse
+					sdf.format(limitDate), parsedFinalD, null, null, null, null, null, null, null, null);
 
 			log.log(Level.INFO, "Using " + list.size() + " elements...");
 
 			i = list.iterator();
 			while(i.hasNext()) {
 				DashboardIndicatorData obj = i.next();
-				HourEntry e = map2.get(HourEntry.calculateHour(obj.getTimeZone()));
+				HourEntry e = hourMap.get(HourEntry.calculateHour(obj.getTimeZone()));
 				if( "visitor_total_peasents".equals(obj.getElementSubId())) {
 					e.setPeasants(e.getPeasants() + obj.getDoubleValue().longValue());
 				} else if( "visitor_total_visits".equals(obj.getElementSubId())) {
 					e.setVisits(e.getVisits() + obj.getDoubleValue().longValue());
 
-					DateAndHourEntry e2 = map4.get(DateAndHourEntry.getKey(obj.getDate(), obj.getTimeZone()));
+					DateAndHourEntry e2 = dateAndHourMap.get(DateAndHourEntry.getKey(obj.getDate(),
+							obj.getTimeZone()));
 					e2.setVisits(e2.getVisits() + obj.getDoubleValue().longValue());
-					map4.put(e2.getKey(), e2);
+					dateAndHourMap.put(e2.getKey(), e2);
 
 				}
-				map2.put(e.getHour(), e);
+				hourMap.put(e.getHour(), e);
 			}
 
 			// Now iterates the Dashboard Indicator Data List for Permanence Graph 
-			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND,
-					Arrays.asList("apd_permanence"),
-					Arrays.asList("permanence_hourly_peasents", "permanence_hourly_visits"), null,
-					storeId, "D", sdf.format(limitDate), sdf.format(finalDate), null, null, null, null, null, null, null, null);
+			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND, Arrays.asList("apd_permanence"),
+					Arrays.asList("permanence_hourly_peasents", "permanence_hourly_visits"), null, storeId,
+					"D", sdf.format(limitDate), sdf.format(finalDate), null, null, null, null, null, null,
+					null, null);
 
 			log.log(Level.INFO, "Using " + list.size() + " elements...");
 
@@ -227,7 +233,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			while(i.hasNext()) {
 				DashboardIndicatorData obj = i.next();
 				System.out.println(obj.getStringDate());
-				PermanenceEntry e = map3.get(PermanenceEntry.calculateHour(obj.getTimeZone()));
+				PermanenceEntry e = permanenceMap.get(PermanenceEntry.calculateHour(obj.getTimeZone()));
 				if( "permanence_hourly_peasents".equals(obj.getElementSubId())) {
 					e.setPeasants(e.getPeasants() + obj.getDoubleValue().longValue());
 					e.setPeasantsCount(e.getPeasantsCount() + obj.getRecordCount());
@@ -237,7 +243,29 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 					totalVisitsPermanence += obj.getDoubleValue().longValue();
 					totalVisitsCount += obj.getRecordCount();
 				}
-				map3.put(e.getHour(), e);
+				permanenceMap.put(e.getHour(), e);
+			}
+			
+			// TODO por día, está mal; curDate es...?
+			StoreRevenue revenue;
+			StoreItem items;
+			StoreTicket tickets;
+			String parsedDate = sdf.format(curDate);
+			try {
+				revenue = sRevenueDao.getUsingStoreIdAndDate(storeId, parsedDate, true);
+			} catch(ASException e) {
+				revenue = new StoreRevenue();
+				revenue.setQty(0.0);
+			} try {
+				items = sItemDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
+			} catch(ASException e) {
+				items = new StoreItem();
+				items.setQty(0);
+			} try {
+				tickets = sTicketDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
+			} catch(ASException e) {
+				tickets = new StoreTicket();
+				tickets.setQty(0);
 			}
 
 			// Opens the template
@@ -252,11 +280,13 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 					new File(filename));
 			XSSFWorkbook workbook = new XSSFWorkbook(filename);
 			XSSFSheet trafficByDay = workbook.getSheet("Trafico por Dia");
+			// TODO follow this sheet
 			XSSFSheet trafficByHour = workbook.getSheet("Trafico por Hora");
 			XSSFSheet permanence = workbook.getSheet("Permanencia");
 			XSSFSheet highHours = workbook.getSheet("Horas Pico");
 			XSSFSheet deadHours = workbook.getSheet("Horas Muertas");
 			XSSFSheet formulae = workbook.getSheet("Formulae");
+			// TODO follow this sheet
 			XSSFSheet print = workbook.getSheet("Impresión PDF");
 
 			// Gets the model cells
@@ -285,8 +315,8 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			int rowIndex = 10;
 			curDate = new Date(initialDate.getTime());
 			int partialIndex = 0;
-			while( sdf.format(curDate).compareTo(sdf.format(finalDate)) < 1) {
-				TrafficEntry e = map.get(sdf.format(curDate));
+			while(curDate.compareTo(finalDate) < 1) {//TODO aqui
+				TrafficEntry e = trafficMap.get(sdf.format(curDate));
 
 				XSSFRow row = trafficByDay.getRow(rowIndex);
 				if( null == row ) row = trafficByDay.createRow(rowIndex);
@@ -339,7 +369,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			rowIndex = 3;
 			partialIndex = 0;
 			for( int k = 0; k < 24; k++ ) {
-				HourEntry e = map2.get(HourEntry.calculateHour(k));
+				HourEntry e = hourMap.get(HourEntry.calculateHour(k));
 
 				XSSFRow row = trafficByHour.getRow(rowIndex);
 				if(null == row) row = trafficByHour.createRow(rowIndex);
@@ -387,7 +417,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			rowIndex = 3;
 			partialIndex = 0;
 			for( int k = 0; k < 24; k++ ) {
-				PermanenceEntry e = map3.get(PermanenceEntry.calculateHour(k));
+				PermanenceEntry e = permanenceMap.get(PermanenceEntry.calculateHour(k));
 
 				XSSFRow row = permanence.getRow(rowIndex);
 				if( null == row ) row = permanence.createRow(rowIndex);
@@ -433,10 +463,10 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 
 			// Iterates the data map for the High and Dead hours sheets
 			int cellIndex = 0;
-			Iterator<String> keys = map4.keySet().iterator();
+			Iterator<String> keys = dateAndHourMap.keySet().iterator();
 			while( keys.hasNext() ) {
 				String key = keys.next();
-				DateAndHourEntry e = map4.get(key);
+				DateAndHourEntry e = dateAndHourMap.get(key);
 				switch (e.getDay()) {
 				case Calendar.SUNDAY:
 					rowIndex = 8;
