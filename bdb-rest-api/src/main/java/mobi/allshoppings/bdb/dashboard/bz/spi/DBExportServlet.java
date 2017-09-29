@@ -70,13 +70,16 @@ public class DBExportServlet extends HttpServlet {
 						null);
 			destFile = StringUtils.hasText(brandId) ? brandId : "";
 			destFile += storesIds.toString();
+			if(destFile.length() > 200) destFile = destFile.substring(0, 200) +"__";
 			long benchmark = System.currentTimeMillis();
 			rawCsv = exportHelper.exportDB(storesId, brandId, fromDate, toDate, destFile, false);
 			String fileName = req.getParameter(DESTINATION_FILE_PARAM);
 			int index;
 			if(fileName == null) fileName = "report";
-			else if((index = fileName.indexOf('.')) >= 0) 
-				fileName = index == 0 ? "report" : fileName.substring(0, index);
+			else if((index = fileName.indexOf('.')) >= 0) { 
+				if(index > 200) index = 200;
+				fileName = index == 0 ? "report" : fileName.substring(0, index) +"__";
+			}
 			resp.setHeader("Content-Disposition", "inline; filename=\"" +fileName +".xlsx\"");
 			resp.setHeader("Content-type",
 					"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
