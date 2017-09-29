@@ -5591,6 +5591,33 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "esfera@pradastores.mx"));
 				userDao.create(user);
 			}
+			try {
+				um = userMenuDao.get("pvictoria@pradastores.mx", true);
+				userMenuDao.delete("pvictoria@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("pvictoria@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("pvictoria@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Prada Victoria");
+				user.setLastname("");
+				user.setEmail("pvictoria@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("9ce30430-d923-481f-9b32-caa5139972fe"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "pvictoria@pradastores.mx"));
+				userDao.create(user);
+			}
+			
 
 			// End Prada  --------------------------------------------------------------------
 			
