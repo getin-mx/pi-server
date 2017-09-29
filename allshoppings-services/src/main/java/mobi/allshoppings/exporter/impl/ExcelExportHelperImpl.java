@@ -193,11 +193,12 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				trafficMap.put(obj.getStringDate(), e);
 			}
 
+			String parsedLimitD = sdf.format(limitDate);
+			
 			// How iterates the Dashboard Indicator Data List for Traffic by Hour graph
 			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND, Arrays.asList("apd_visitor"),
 					Arrays.asList("visitor_total_peasents", "visitor_total_visits"), null, storeId, "D",
-					// TODO look for limit date and store parse
-					sdf.format(limitDate), parsedFinalD, null, null, null, null, null, null, null, null);
+					parsedLimitD, parsedFinalD, null, null, null, null, null, null, null, null);
 
 			log.log(Level.INFO, "Using " + list.size() + " elements...");
 
@@ -222,7 +223,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			// Now iterates the Dashboard Indicator Data List for Permanence Graph 
 			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND, Arrays.asList("apd_permanence"),
 					Arrays.asList("permanence_hourly_peasents", "permanence_hourly_visits"), null, storeId,
-					"D", sdf.format(limitDate), sdf.format(finalDate), null, null, null, null, null, null,
+					"D", parsedLimitD, parsedFinalD, null, null, null, null, null, null,
 					null, null);
 
 			log.log(Level.INFO, "Using " + list.size() + " elements...");
@@ -246,28 +247,6 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				permanenceMap.put(e.getHour(), e);
 			}
 			
-			// TODO por día, está mal; curDate es...?
-			StoreRevenue revenue;
-			StoreItem items;
-			StoreTicket tickets;
-			String parsedDate = sdf.format(curDate);
-			try {
-				revenue = sRevenueDao.getUsingStoreIdAndDate(storeId, parsedDate, true);
-			} catch(ASException e) {
-				revenue = new StoreRevenue();
-				revenue.setQty(0.0);
-			} try {
-				items = sItemDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
-			} catch(ASException e) {
-				items = new StoreItem();
-				items.setQty(0);
-			} try {
-				tickets = sTicketDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
-			} catch(ASException e) {
-				tickets = new StoreTicket();
-				tickets.setQty(0);
-			}
-
 			// Opens the template
 			ZipSecureFile.setMinInflateRatio(0);
 
@@ -313,10 +292,25 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 
 			// Iterates the data map for the Traffic by day sheet
 			int rowIndex = 10;
-			curDate = new Date(initialDate.getTime());
+			curDate.setTime(initialDate.getTime());
 			int partialIndex = 0;
-			while(curDate.compareTo(finalDate) < 1) {//TODO aqui
-				TrafficEntry e = trafficMap.get(sdf.format(curDate));
+			while(curDate.compareTo(finalDate) < 1) {
+				
+				StoreRevenue revenue;
+				StoreItem items;
+				String parsedDate = sdf.format(curDate);
+				try {
+					revenue = sRevenueDao.getUsingStoreIdAndDate(storeId, parsedDate, true);
+				} catch(ASException e) {
+					revenue = new StoreRevenue();
+					revenue.setQty(0.0);
+				} try {
+					items = sItemDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
+				} catch(ASException e) {
+					items = new StoreItem();
+					items.setQty(0);
+				}
+				TrafficEntry e = trafficMap.get(parsedDate);
 
 				XSSFRow row = trafficByDay.getRow(rowIndex);
 				if( null == row ) row = trafficByDay.createRow(rowIndex);
@@ -326,30 +320,32 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				for( int j = 0; j < model.size(); j++ ) {
 					cell = row.createCell(j);
 					cell.copyCellFrom(model.get(j), policy);
-					if( model.get(j).getCellTypeEnum() == CellType.STRING && model.get(j).getStringCellValue().equals("<stringDate>")) {
+					if(model.get(j).getCellTypeEnum() == CellType.STRING &&
+							model.get(j).getStringCellValue().equals("<stringDate>")) {
 						cell.setCellType(CellType.STRING);
 						cell.setCellValue(e.getDate());
-					} else
-						if( model.get(j).getCellTypeEnum() == CellType.STRING && model.get(j).getStringCellValue().equals("<peasants>")) {
+					} else if(model.get(j).getCellTypeEnum() == CellType.STRING &&
+							model.get(j).getStringCellValue().equals("<peasants>")) {
 							cell.setCellType(CellType.NUMERIC);
 							cell.setCellValue(e.getPeasants());
-						}
-					if( model.get(j).getCellTypeEnum() == CellType.STRING && model.get(j).getStringCellValue().equals("<visits>")) {
+					} if(model.get(j).getCellTypeEnum() == CellType.STRING &&
+							model.get(j).getStringCellValue().equals("<visits>")) {
 						cell.setCellType(CellType.NUMERIC);
 						cell.setCellValue(e.getVisits());
-					}
-					if( model.get(j).getCellTypeEnum() == CellType.STRING && model.get(j).getStringCellValue().equals("<tickets>")) {
+					} if(model.get(j).getCellTypeEnum() == CellType.STRING &&
+							model.get(j).getStringCellValue().equals("<tickets>")) {
 						cell.setCellType(CellType.NUMERIC);
 						cell.setCellValue(e.getTickets());
-					}
-					if( model.get(j).getCellTypeEnum() == CellType.FORMULA ) {
+						// TODO add items & revenue ???
+					} if(model.get(j).getCellTypeEnum() == CellType.FORMULA) {
 						XSSFEvaluationWorkbook fpWb = XSSFEvaluationWorkbook.create(workbook);
-						Ptg [] tokens = FormulaParser.parse(model.get(j).getCellFormula(), fpWb, FormulaType.CELL, workbook.getSheetIndex(formulae));
-						for( Ptg token : tokens ) {
-							if(token instanceof RefPtg ) {
-								RefPtg refPtg = (RefPtg)token;
-								refPtg.setColumn(refPtg.getColumn()-1);
-								if( refPtg.getRow() == model.get(j).getRowIndex())
+						Ptg[] tokens = FormulaParser.parse(model.get(j).getCellFormula(), fpWb,
+								FormulaType.CELL, workbook.getSheetIndex(formulae));
+						for(Ptg token : tokens) {
+							if(token instanceof RefPtg) {
+								RefPtg refPtg = (RefPtg) token;
+								refPtg.setColumn(refPtg.getColumn() -1);
+								if(refPtg.getRow() == model.get(j).getRowIndex())
 									refPtg.setRow(rowIndex);
 								else
 									refPtg.setRow(refPtg.getRow() + rowIndex - 1);
@@ -360,7 +356,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 
 				}
 
-				curDate = new Date(curDate.getTime() + 86400000L);
+				curDate.setTime(curDate.getTime() + DAY_IN_MILLIS);
 				partialIndex++;
 				rowIndex++;
 			}
@@ -379,26 +375,28 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				for( int j = 0; j < model.size(); j++ ) {
 					cell = row.createCell(j);
 					cell.copyCellFrom(model.get(j), policy);
-					if( model.get(j).getCellTypeEnum() == CellType.STRING && model.get(j).getStringCellValue().equals("<stringHour>")) {
+					if(model.get(j).getCellTypeEnum() == CellType.STRING &&
+							model.get(j).getStringCellValue().equals("<stringHour>")) {
 						cell.setCellType(CellType.STRING);
 						cell.setCellValue(e.getHour());
-					} else
-						if( model.get(j).getCellTypeEnum() == CellType.STRING && model.get(j).getStringCellValue().equals("<peasants>")) {
+					} else if(model.get(j).getCellTypeEnum() == CellType.STRING &&
+						model.get(j).getStringCellValue().equals("<peasants>")) {
 							cell.setCellType(CellType.NUMERIC);
 							cell.setCellValue(e.getPeasants());
-						}
-					if( model.get(j).getCellTypeEnum() == CellType.STRING && model.get(j).getStringCellValue().equals("<visits>")) {
+					} if(model.get(j).getCellTypeEnum() == CellType.STRING && 
+							model.get(j).getStringCellValue().equals("<visits>")) {
 						cell.setCellType(CellType.NUMERIC);
 						cell.setCellValue(e.getVisits());
-					}
-					if( model.get(j).getCellTypeEnum() == CellType.FORMULA ) {
+						// TODO add tickets and revenue ??? nope....
+					} if(model.get(j).getCellTypeEnum() == CellType.FORMULA) {
 						XSSFEvaluationWorkbook fpWb = XSSFEvaluationWorkbook.create(workbook);
-						Ptg [] tokens = FormulaParser.parse(model.get(j).getCellFormula(), fpWb, FormulaType.CELL, workbook.getSheetIndex(formulae));
-						for( Ptg token : tokens ) {
-							if(token instanceof RefPtg ) {
-								RefPtg refPtg = (RefPtg)token;
-								refPtg.setColumn(refPtg.getColumn()-1);
-								if( refPtg.getRow() == model.get(j).getRowIndex())
+						Ptg [] tokens = FormulaParser.parse(model.get(j).getCellFormula(), fpWb,
+								FormulaType.CELL, workbook.getSheetIndex(formulae));
+						for(Ptg token : tokens) {
+							if(token instanceof RefPtg) {
+								RefPtg refPtg = (RefPtg) token;
+								refPtg.setColumn(refPtg.getColumn() -1);
+								if(refPtg.getRow() == model.get(j).getRowIndex())
 									refPtg.setRow(rowIndex);
 								else
 									refPtg.setRow(refPtg.getRow() + rowIndex - 1);
@@ -406,9 +404,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 						}
 						cell.setCellFormula(FormulaRenderer.toFormulaString(fpWb, tokens));
 					}
-
 				}
-
 				partialIndex++;
 				rowIndex++;
 			}
@@ -427,26 +423,27 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				for( int j = 0; j < model.size(); j++ ) {
 					cell = row.createCell(j);
 					cell.copyCellFrom(model.get(j), policy);
-					if( model.get(j).getCellTypeEnum() == CellType.STRING && model.get(j).getStringCellValue().equals("<stringHour>")) {
+					if( model.get(j).getCellTypeEnum() == CellType.STRING &&
+							model.get(j).getStringCellValue().equals("<stringHour>")) {
 						cell.setCellType(CellType.STRING);
 						cell.setCellValue(e.getHour());
-					} else
-						if( model.get(j).getCellTypeEnum() == CellType.STRING && model.get(j).getStringCellValue().equals("<peasants>")) {
+					} else if(model.get(j).getCellTypeEnum() == CellType.STRING &&
+							model.get(j).getStringCellValue().equals("<peasants>")) {
 							cell.setCellType(CellType.NUMERIC);
 							cell.setCellValue(e.getFormattedPeasants());
-						}
-					if( model.get(j).getCellTypeEnum() == CellType.STRING && model.get(j).getStringCellValue().equals("<visits>")) {
+					} if(model.get(j).getCellTypeEnum() == CellType.STRING &&
+							model.get(j).getStringCellValue().equals("<visits>")) {
 						cell.setCellType(CellType.NUMERIC);
 						cell.setCellValue(e.getFormattedVisits());
-					}
-					if( model.get(j).getCellTypeEnum() == CellType.FORMULA ) {
+					} if(model.get(j).getCellTypeEnum() == CellType.FORMULA) {
 						XSSFEvaluationWorkbook fpWb = XSSFEvaluationWorkbook.create(workbook);
-						Ptg [] tokens = FormulaParser.parse(model.get(j).getCellFormula(), fpWb, FormulaType.CELL, workbook.getSheetIndex(formulae));
-						for( Ptg token : tokens ) {
-							if(token instanceof RefPtg ) {
-								RefPtg refPtg = (RefPtg)token;
-								refPtg.setColumn(refPtg.getColumn()-1);
-								if( refPtg.getRow() == model.get(j).getRowIndex())
+						Ptg [] tokens = FormulaParser.parse(model.get(j).getCellFormula(), fpWb,
+								FormulaType.CELL, workbook.getSheetIndex(formulae));
+						for(Ptg token : tokens) {
+							if(token instanceof RefPtg) {
+								RefPtg refPtg = (RefPtg) token;
+								refPtg.setColumn(refPtg.getColumn() -1);
+								if(refPtg.getRow() == model.get(j).getRowIndex())
 									refPtg.setRow(rowIndex);
 								else
 									refPtg.setRow(refPtg.getRow() + rowIndex - 1);
@@ -454,17 +451,14 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 						}
 						cell.setCellFormula(FormulaRenderer.toFormulaString(fpWb, tokens));
 					}
-
 				}
-
 				partialIndex++;
 				rowIndex++;
 			}
-
 			// Iterates the data map for the High and Dead hours sheets
 			int cellIndex = 0;
 			Iterator<String> keys = dateAndHourMap.keySet().iterator();
-			while( keys.hasNext() ) {
+			while(keys.hasNext()) {
 				String key = keys.next();
 				DateAndHourEntry e = dateAndHourMap.get(key);
 				switch (e.getDay()) {
@@ -491,53 +485,48 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 					break;
 				}
 				cellIndex = 4 + e.getHour();
-
 				XSSFRow row = highHours.getRow(rowIndex);
 				if( null == row ) row = highHours.createRow(rowIndex);
+				// TODO aquí, que pasa con model1 y 2?? Esos tiene los dataos nuevos...???
 				List<XSSFCell> model = modelHour;
-
 				XSSFCell cell = row.getCell(cellIndex);
 				if( cell == null ) cell = row.createCell(cellIndex);
 				cell.copyCellFrom(model.get(0), policy);
 				if( e.getVisits() > 0 ) {
 					cell.setCellValue(e.getVisits());
 				}
-
 				cellIndex = 3 + e.getHour();
 				row = deadHours.getRow(rowIndex);
-				if( null == row ) row = deadHours.createRow(rowIndex);
-
+				if(null == row) row = deadHours.createRow(rowIndex);
 				cell = row.getCell(cellIndex);
 				if( cell == null ) cell = row.createCell(cellIndex);
 				cell.copyCellFrom(model.get(0), policy);
 				if( e.getVisits() > 0 ) {
 					cell.setCellValue(e.getVisits());
 				}
-
 			}
-
 			// Iterates the printing page sheets
 			Iterator<Row> prows = print.iterator();
 			while(prows.hasNext()) {
-				XSSFRow row = (XSSFRow)prows.next();
+				XSSFRow row = (XSSFRow) prows.next();
 				Iterator<Cell> pcells = row.iterator();
 				while(pcells.hasNext()) {
-					XSSFCell cell = (XSSFCell)pcells.next();
-					if( cell.getCellTypeEnum() == CellType.STRING && cell.getStringCellValue().equals("<storeName>")) {
+					XSSFCell cell = (XSSFCell) pcells.next();
+					if(cell.getCellTypeEnum() == CellType.STRING &&
+							cell.getStringCellValue().equals("<storeName>")) {
 						cell.setCellValue(storeName);
-					}
-					if( cell.getCellTypeEnum() == CellType.STRING && cell.getStringCellValue().equals("<dateName>")) {
+					} if(cell.getCellTypeEnum() == CellType.STRING &&
+							cell.getStringCellValue().equals("<dateName>")) {
 						cell.setCellValue(dateName);
-					}
-					if( cell.getCellTypeEnum() == CellType.STRING && cell.getStringCellValue().equals("<permanence>")) {
-						int p = (int)(totalVisitsCount > 0 ? (totalVisitsPermanence / totalVisitsCount / 60000) : 0);
+					} if(cell.getCellTypeEnum() == CellType.STRING &&
+							cell.getStringCellValue().equals("<permanence>")) {
+						int p = (int)(totalVisitsCount > 0 ?
+								(totalVisitsPermanence / totalVisitsCount / 60000) : 0);
 						cell.setCellValue(p);
 					}
 				}
 			}
-
 			log.log(Level.INFO, "Rendering Formulae...");
-
 			try {
 				XSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
 			} catch( Exception e ) {
@@ -549,19 +538,14 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			fos.flush();
 			fos.close();
 			tmp.delete();
-
 			workbook.write(bos);
 			bos.close();
-			
 			workbook.close();
-			
 			return bos.toByteArray();
-			
 		} catch( Exception ex ) {
 			log.log(Level.SEVERE, ex.getMessage(), ex);
 			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
 		}
-		
 	}
 
 	public void getTemplateRow(List<XSSFCell> target, XSSFRow row, String search) {
