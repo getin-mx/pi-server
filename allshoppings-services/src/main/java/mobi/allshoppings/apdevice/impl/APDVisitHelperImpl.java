@@ -61,6 +61,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private static final int VISIT_PERCENTAGE = 25;
 	private static final List<String> BANNED = Arrays.asList("00:00:00:00:00:00");
+	private static final int DAY_IN_MILLIS = 86400000;
 
 	@Autowired
 	private APDVisitDAO apdvDao;
@@ -142,7 +143,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		DumperHelper<APDVisit> apdvDumper = new DumpFactory<APDVisit>().build(null, APDVisit.class);
 		
 		Date curDate = new Date(fromDate.getTime());
-		Date limitDate = new Date(fromDate.getTime() + 86400000);
+		Date limitDate = new Date(fromDate.getTime() + DAY_IN_MILLIS);
 		while( curDate.before(toDate) || (fromDate.equals(toDate) && curDate.equals(toDate))) {
 
 			try {
@@ -177,7 +178,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								log.log(Level.INFO, "Deleting previous visits...");
 								try {
 									apdvDao.deleteUsingEntityIdAndEntityKindAndDate(entityId, entityKind,
-											curDate, new Date(curDate.getTime() + 86400000), 
+											curDate, new Date(curDate.getTime() + DAY_IN_MILLIS),
 											onlyEmployees ? APDVisit.CHECKIN_EMPLOYEE : null);
 								} catch( Exception e ) {
 									log.log(Level.WARNING, e.getMessage(), e);
@@ -186,30 +187,38 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 							// Determine which antennas are valid for this entity and date 
 							String forDate = sdf.format(curDate);
-							List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, curDate);
+							List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(
+									entityId, entityKind, curDate);
 							if( !CollectionUtils.isEmpty(assigs)) {
 								if( assigs.size() == 1 ) {
 
 									assignmentsCache.clear();
 									assignmentsCache.put(assigs.get(0).getHostname(), assigs.get(0));
 									if(!apdCache.containsKey(assigs.get(0).getHostname()))
-										apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(), true));
+										apdCache.put(assigs.get(0).getHostname(),
+												apdDao.get(assigs.get(0).getHostname(), true));
 
 									// Get APHE records
-									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + forDate + " using " + assigs.get(0).getHostname() + "...");
+									log.log(Level.INFO, "Fetching APHEntries for " + name + " and "
+												+ forDate + " using " + assigs.get(0).getHostname() + "...");
 									dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
 									dumpHelper.setFilter(assigs.get(0).getHostname());
 									
-									Iterator<APHEntry> i = integrateAPHE(dumpHelper, apdCache.get(assigs.get(0).getHostname()), entityId, entityKind, forDate).iterator();
+									Iterator<APHEntry> i = integrateAPHE(dumpHelper, apdCache.get(
+											assigs.get(0).getHostname()), entityId, entityKind, forDate)
+											.iterator();
 									dumpHelper.dispose();
 
 									while( i.hasNext() ) {
 										APHEntry entry = i.next();
 										// Employee check
-										if(!onlyEmployees || employeeListMacs.contains(entry.getMac().toUpperCase())) {
-											List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
+										if(!onlyEmployees || employeeListMacs.contains(
+												entry.getMac().toUpperCase())) {
+											List<APDVisit> visitList = aphEntryToVisits(entry, apdCache,
+													assignmentsCache,blackListMacs,employeeListMacs);
 											for(APDVisit visit : visitList )
-												if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE)) {
+												if(!onlyEmployees || visit.getCheckinType().equals(
+														APDVisit.CHECKIN_EMPLOYEE)) {
 													objs.add(visit);
 													keys.add(visit.getIdentifier());
 												}
@@ -229,11 +238,14 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 										hostnames.add(assig.getHostname());
 										assignmentsCache.put(assig.getHostname(), assig);
 										if(!apdCache.containsKey(assig.getHostname()))
-											apdCache.put(assig.getHostname(), apdDao.get(assig.getHostname(), true));
+											apdCache.put(assig.getHostname(), apdDao.get(assig.getHostname(),
+													true));
 									}
 
-									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + curDate + "...");
-									log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and " + curDate + "...");
+									log.log(Level.INFO, "Fetching APHEntries for " + name + " and "
+												+ curDate + "...");
+									log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and "
+												+ curDate + "...");
 									dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
 									for( String hostname : hostnames ) {
 										dumpHelper.setFilter(hostname);
@@ -254,9 +266,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									while(i.hasNext()) {
 										String key = i.next();
 										List<APHEntry> e = cache.get(key);
-										List<APDVisit> visitList = aphEntryToVisits(e, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
+										List<APDVisit> visitList = aphEntryToVisits(e, apdCache,
+												assignmentsCache,blackListMacs,employeeListMacs);
 										for(APDVisit visit : visitList ) {
-											if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
+											if(!onlyEmployees || visit.getCheckinType().equals(
+													APDVisit.CHECKIN_EMPLOYEE))
 												objs.add(visit);
 										}
 									}
@@ -283,7 +297,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							}
 
 							didDao.deleteUsingSubentityIdAndElementIdAndDate(entityId,
-									Arrays.asList(new String[] { "apd_visitor", "apd_permanence", "apd_occupation" }), curDate, curDate);
+									Arrays.asList(new String[] { "apd_visitor", "apd_permanence",
+											"apd_occupation" }), curDate, curDate);
 							mapper.createAPDVisitPerformanceDashboardForDay(curDate,
 									Arrays.asList(new String[] { entityId }), entityKind, objs);
 						}
@@ -296,8 +311,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				log.log(Level.SEVERE, e1.getMessage(), e1);
 			}
 			
-			curDate = new Date(curDate.getTime() + 86400000);
-			limitDate = new Date(curDate.getTime() + 86400000);
+			curDate = new Date(curDate.getTime() + DAY_IN_MILLIS);
+			limitDate = new Date(curDate.getTime() + DAY_IN_MILLIS);
 			
 			apdvDumper.flush();
 			

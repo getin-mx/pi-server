@@ -706,7 +706,7 @@ public class DashboardAPDeviceMapperService {
 
 			// Prepares the Object Query
 			Date dateFrom = CALENDAR.getTime();
-			Date dateTo = new Date(dateFrom.getTime() + 86400000);
+			Date dateTo = new Date(dateFrom.getTime() + TWENTY_FOUR_HOURS);
 			Range range = null;
 			String entityId = null;
 			if( !CollectionUtils.isEmpty( entityIds ))
@@ -717,8 +717,9 @@ public class DashboardAPDeviceMapperService {
 			// Looks for all visit records
 			Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
 			// FIXME: Be aware to get the APDV Records from Dump and not from Database!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-			List<APDVisit> list = (data == null || data.size() == 0) ? apdvDao.getUsingEntityIdAndEntityKindAndDate(
-					entityId, entityKind, dateFrom, dateTo, null, range, null, null, false) : data;
+			List<APDVisit> list = (data == null || data.size() == 0) ?
+					apdvDao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, dateFrom, dateTo,
+							null, range, null, null, false) : data;
 			log.log(Level.INFO, list.size() + " records to process... ");
 			for(APDVisit v : list ) {
 
@@ -854,7 +855,8 @@ public class DashboardAPDeviceMapperService {
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
-								obj.setDoubleValue(obj.getDoubleValue() + calculateDiffTime(v.getCheckinFinished(), v.getCheckinStarted()));
+								obj.setDoubleValue(obj.getDoubleValue()
+										+ calculateDiffTime(v.getCheckinFinished(), v.getCheckinStarted()));
 								obj.setRecordCount(obj.getRecordCount() + 1);
 								indicatorsSet.put(obj.getKey().getName(), obj);
 
@@ -869,7 +871,9 @@ public class DashboardAPDeviceMapperService {
 
 										if(indicatorsSet.containsKey(obj.getKey().getName())) 
 											obj = indicatorsSet.get(obj.getKey().getName());
-										obj.setDoubleValue(obj.getDoubleValue() + calculateDiffTime(v.getCheckinFinished(), v.getCheckinStarted()));
+										obj.setDoubleValue(obj.getDoubleValue()
+												+ calculateDiffTime(v.getCheckinFinished(),
+														v.getCheckinStarted()));
 										obj.setRecordCount(obj.getRecordCount() + 1);
 										indicatorsSet.put(obj.getKey().getName(), obj);
 									} else if( v.getDevicePlatform().equalsIgnoreCase("android")) {
@@ -881,7 +885,9 @@ public class DashboardAPDeviceMapperService {
 
 										if(indicatorsSet.containsKey(obj.getKey().getName())) 
 											obj = indicatorsSet.get(obj.getKey().getName());
-										obj.setDoubleValue(obj.getDoubleValue() + calculateDiffTime(v.getCheckinFinished(), v.getCheckinStarted()));
+										obj.setDoubleValue(obj.getDoubleValue()
+												+ calculateDiffTime(v.getCheckinFinished(),
+														v.getCheckinStarted()));
 										obj.setRecordCount(obj.getRecordCount() + 1);
 										indicatorsSet.put(obj.getKey().getName(), obj);
 									}
@@ -894,7 +900,8 @@ public class DashboardAPDeviceMapperService {
 							init.setTime(v.getCheckinStarted());
 							Calendar finish = Calendar.getInstance();
 							finish.setTime(v.getCheckinFinished());
-							while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) && init.get(Calendar.HOUR_OF_DAY) < 23) {
+							while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) &&
+									init.get(Calendar.HOUR_OF_DAY) < 23) {
 								obj = buildBasicDashboardIndicatorData(
 										"apd_occupation", "Ocupacion", "occupation_hourly_peasants",
 										"Paseantes", init.getTime(),
@@ -963,7 +970,8 @@ public class DashboardAPDeviceMapperService {
 
 								if(indicatorsSet.containsKey(obj.getKey().getName())) 
 									obj = indicatorsSet.get(obj.getKey().getName());
-								obj.setDoubleValue(obj.getDoubleValue() + calculateDiffTime(v.getCheckinFinished(), v.getCheckinStarted()));
+								obj.setDoubleValue(obj.getDoubleValue()
+										+ calculateDiffTime(v.getCheckinFinished(), v.getCheckinStarted()));
 								obj.setRecordCount(obj.getRecordCount() + 1);
 								indicatorsSet.put(obj.getKey().getName(), obj);
 
@@ -978,19 +986,25 @@ public class DashboardAPDeviceMapperService {
 
 										if(indicatorsSet.containsKey(obj.getKey().getName())) 
 											obj = indicatorsSet.get(obj.getKey().getName());
-										obj.setDoubleValue(obj.getDoubleValue() + calculateDiffTime(v.getCheckinFinished(), v.getCheckinStarted()));
+										obj.setDoubleValue(obj.getDoubleValue()
+												+ calculateDiffTime(v.getCheckinFinished(),
+														v.getCheckinStarted()));
 										obj.setRecordCount(obj.getRecordCount() + 1);
 										indicatorsSet.put(obj.getKey().getName(), obj);
 									} else if( v.getDevicePlatform().equalsIgnoreCase("android")) {
 										obj = buildBasicDashboardIndicatorData(
-												"apd_permanence", "Permanencia", "permanence_hourly_visits_android",
-												"Visitas Android", v.getCheckinStarted(),
+												"apd_permanence", "Permanencia",
+												"permanence_hourly_visits_android", "Visitas Android",
+												v.getCheckinStarted(),
 												DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-												store, shopping, null, entityId, entityKind, tz, v.getForDate());
+												store, shopping, null, entityId, entityKind, tz,
+												v.getForDate());
 
 										if(indicatorsSet.containsKey(obj.getKey().getName())) 
 											obj = indicatorsSet.get(obj.getKey().getName());
-										obj.setDoubleValue(obj.getDoubleValue() + calculateDiffTime(v.getCheckinFinished(), v.getCheckinStarted()));
+										obj.setDoubleValue(obj.getDoubleValue()
+												+ calculateDiffTime(v.getCheckinFinished(),
+														v.getCheckinStarted()));
 										obj.setRecordCount(obj.getRecordCount() + 1);
 										indicatorsSet.put(obj.getKey().getName(), obj);
 									}
@@ -1003,7 +1017,8 @@ public class DashboardAPDeviceMapperService {
 							init.setTime(v.getCheckinStarted());
 							Calendar finish = Calendar.getInstance();
 							finish.setTime(v.getCheckinFinished());
-							while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) && init.get(Calendar.HOUR_OF_DAY) < 23) {
+							while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) &&
+									init.get(Calendar.HOUR_OF_DAY) < 23) {
 								obj = buildBasicDashboardIndicatorData(
 										"apd_occupation", "Ocupacion", "occupation_hourly_visits", 
 										"Visitas", init.getTime(),
@@ -1292,36 +1307,31 @@ public class DashboardAPDeviceMapperService {
 		log.log(Level.INFO, "Finished to create store revenue Dashboard for Day " + fromDate + " to: " + toDate + " total time: "+ (endTime - startTime) + "ms");
 	}
 	
-	@SuppressWarnings("deprecation")
-	public DashboardIndicatorData buildBasicDashboardIndicatorData(
-			String elementId, String elementName, String elementSubId,
-			String elementSubName, Date date, String periodType,
-			String shoppingId, Store store, Shopping shopping,
-			String subentityName, String entityId, Integer entityKind,
-			TimeZone tz, String forDate
-			) throws ASException {
+	public DashboardIndicatorData buildBasicDashboardIndicatorData(String elementId, String elementName,
+			String elementSubId, String elementSubName, Date date, String periodType, String shoppingId,
+			Store store, Shopping shopping, String subentityName, String entityId, Integer entityKind,
+			TimeZone tz, String forDate) throws ASException {
 
 		DashboardIndicatorData obj = new DashboardIndicatorData();
-		
-		Calendar c = Calendar.getInstance();
-		c.setTime(date);
-		c.setTimeZone(tz);
-		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-		
 		obj.setEntityId(entityId);
 		obj.setEntityKind(entityKind);
-		try { obj.setDate(c.getTime()); } catch(Exception e ){}
-		obj.setStringDate(sdf.format(c.getTime()));
-
 		
-
-		obj.setDayOfWeek(dayOfWeek);
-
 		obj.setElementId(elementId);
 		obj.setElementName(elementName);
 		obj.setElementSubId(elementSubId);
 		obj.setElementSubName(elementSubName);
-		obj.setTimeZone(getTimeZone(tz, date)); 
+		
+		// TODO check if correct
+		obj.setTimeZone(getTimeZone(tz, date));
+		CALENDAR.setTime(date);
+		CALENDAR.setTimeZone(tz);
+		CALENDAR.add(Calendar.HOUR_OF_DAY, obj.getTimeZone() *(tz.getOffset(date.getTime()) >= 0 ? 1 : -1));
+		
+		obj.setStringDate(sdf.format(CALENDAR.getTime()));
+		int dayOfWeek = CALENDAR.get(Calendar.DAY_OF_WEEK);
+		obj.setDayOfWeek(dayOfWeek);
+		try { obj.setDate(CALENDAR.getTime()); } catch(Exception e ){}
+		
 		obj.setMovieId(null);
 		obj.setMovieName(null);
 		if( store != null ) {
@@ -1353,10 +1363,10 @@ public class DashboardAPDeviceMapperService {
 	}
 
 	public int getTimeZone(TimeZone tz, Date date) {
-		Calendar c = Calendar.getInstance();
-		c.setTime(date);
-		c.setTimeZone(tz);
-		return c.get(Calendar.HOUR_OF_DAY);
+		CALENDAR.setTime(date);
+		CALENDAR.setTimeZone(tz);
+		// FIXME
+		return CALENDAR.get(Calendar.HOUR_OF_DAY);
 	}
 
 	public String getDeviceType(String mac) {
