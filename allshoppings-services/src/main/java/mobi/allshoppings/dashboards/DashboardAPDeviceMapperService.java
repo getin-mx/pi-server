@@ -695,7 +695,6 @@ public class DashboardAPDeviceMapperService {
 		log.log(Level.INFO, "Starting to create apd_visitor Performance Dashboard for Day " + date + "...");
 		long startTime = new Date().getTime();
 		CALENDAR.setTime(date);
-		//CALENDAR.setTimeZone(tz);
 		Date processDate = DateUtils.truncate(date, Calendar.DAY_OF_MONTH);
 		Date limitDate = DateUtils.addDays(processDate, 1);
 
@@ -1310,9 +1309,10 @@ public class DashboardAPDeviceMapperService {
 	public DashboardIndicatorData buildBasicDashboardIndicatorData(String elementId, String elementName,
 			String elementSubId, String elementSubName, Date date, String periodType, String shoppingId,
 			Store store, Shopping shopping, String subentityName, String entityId, Integer entityKind,
-			TimeZone tz, String forDate) throws ASException {
+			TimeZone tz, String forDate) throws ASException, ParseException {
 
 		DashboardIndicatorData obj = new DashboardIndicatorData();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		obj.setEntityId(entityId);
 		obj.setEntityKind(entityKind);
 		
@@ -1325,10 +1325,10 @@ public class DashboardAPDeviceMapperService {
 		obj.setTimeZone(getTimeZone(tz, date));
 		CALENDAR.setTime(date);
 		CALENDAR.setTimeZone(tz);
-		CALENDAR.add(Calendar.HOUR_OF_DAY, obj.getTimeZone() *(tz.getOffset(date.getTime()) >= 0 ? 1 : -1));
-		
-		obj.setStringDate(sdf.format(CALENDAR.getTime()));
-		int dayOfWeek = CALENDAR.get(Calendar.DAY_OF_WEEK);
+		obj.setStringDate(forDate);
+		Date day = sdf.parse(forDate);
+		@SuppressWarnings("deprecation")
+		int dayOfWeek = day.getDay() + 1;
 		obj.setDayOfWeek(dayOfWeek);
 		try { obj.setDate(CALENDAR.getTime()); } catch(Exception e ){}
 		
