@@ -259,13 +259,11 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 					new File(filename));
 			XSSFWorkbook workbook = new XSSFWorkbook(filename);
 			XSSFSheet trafficByDay = workbook.getSheet("Trafico por Dia");
-			// TODO follow this sheet
 			XSSFSheet trafficByHour = workbook.getSheet("Trafico por Hora");
 			XSSFSheet permanence = workbook.getSheet("Permanencia");
 			XSSFSheet highHours = workbook.getSheet("Horas Pico");
 			XSSFSheet deadHours = workbook.getSheet("Horas Muertas");
 			XSSFSheet formulae = workbook.getSheet("Formulae");
-			// TODO follow this sheet
 			XSSFSheet print = workbook.getSheet("Impresión PDF");
 
 			// Gets the model cells
@@ -311,13 +309,12 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 					items.setQty(0);
 				}
 				TrafficEntry e = trafficMap.get(parsedDate);
-
 				XSSFRow row = trafficByDay.getRow(rowIndex);
 				if( null == row ) row = trafficByDay.createRow(rowIndex);
 				List<XSSFCell> model = partialIndex == 0 ? modelTrafficByDay1 : modelTrafficByDay2;
 
 				XSSFCell cell;
-				for( int j = 0; j < model.size(); j++ ) {
+				for(int j = 0; j < model.size(); j++) {
 					cell = row.createCell(j);
 					cell.copyCellFrom(model.get(j), policy);
 					if(model.get(j).getCellTypeEnum() == CellType.STRING &&
@@ -336,7 +333,14 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 							model.get(j).getStringCellValue().equals("<tickets>")) {
 						cell.setCellType(CellType.NUMERIC);
 						cell.setCellValue(e.getTickets());
-						// TODO add items & revenue YEAH THERE
+					} if(model.get(j).getCellTypeEnum() == CellType.STRING &&
+							model.get(j).getStringCellValue().equals("<items>")) {
+						cell.setCellType(CellType.NUMERIC);
+						cell.setCellValue(items.getQty());
+					} if(model.get(j).getCellTypeEnum() == CellType.STRING &&
+							model.get(j).getStringCellValue().equals("<revenue>")) {
+						cell.setCellType(CellType.NUMERIC);
+						cell.setCellValue(revenue.getQty());
 					} if(model.get(j).getCellTypeEnum() == CellType.FORMULA) {
 						XSSFEvaluationWorkbook fpWb = XSSFEvaluationWorkbook.create(workbook);
 						Ptg[] tokens = FormulaParser.parse(model.get(j).getCellFormula(), fpWb,
@@ -532,6 +536,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			}
 			File tmp = File.createTempFile("getin", "data");
 			FileOutputStream fos = new FileOutputStream(tmp);
+			log.log(Level.INFO, "Written to: " +tmp.getAbsolutePath());
 			workbook.write(fos);
 			fos.flush();
 			fos.close();
