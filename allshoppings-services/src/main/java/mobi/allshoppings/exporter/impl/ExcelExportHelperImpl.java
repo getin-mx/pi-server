@@ -336,7 +336,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 							model.get(j).getStringCellValue().equals("<tickets>")) {
 						cell.setCellType(CellType.NUMERIC);
 						cell.setCellValue(e.getTickets());
-						// TODO add items & revenue ???
+						// TODO add items & revenue YEAH THERE
 					} if(model.get(j).getCellTypeEnum() == CellType.FORMULA) {
 						XSSFEvaluationWorkbook fpWb = XSSFEvaluationWorkbook.create(workbook);
 						Ptg[] tokens = FormulaParser.parse(model.get(j).getCellFormula(), fpWb,
@@ -387,7 +387,6 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 							model.get(j).getStringCellValue().equals("<visits>")) {
 						cell.setCellType(CellType.NUMERIC);
 						cell.setCellValue(e.getVisits());
-						// TODO add tickets and revenue ??? nope....
 					} if(model.get(j).getCellTypeEnum() == CellType.FORMULA) {
 						XSSFEvaluationWorkbook fpWb = XSSFEvaluationWorkbook.create(workbook);
 						Ptg [] tokens = FormulaParser.parse(model.get(j).getCellFormula(), fpWb,
@@ -487,7 +486,6 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				cellIndex = 4 + e.getHour();
 				XSSFRow row = highHours.getRow(rowIndex);
 				if( null == row ) row = highHours.createRow(rowIndex);
-				// TODO aquí, que pasa con model1 y 2?? Esos tiene los dataos nuevos...???
 				List<XSSFCell> model = modelHour;
 				XSSFCell cell = row.getCell(cellIndex);
 				if( cell == null ) cell = row.createCell(cellIndex);
@@ -1108,7 +1106,9 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			storeSheet.autoSizeColumn(ITEMS_CELL_INDEX);
 			storeSheet.autoSizeColumn(TICKETS_CELL_INDEX);
 			storeSheet.autoSizeColumn(DATA_DATE_CELL_INDEX);
-		} try {
+		}
+		apdVisitDump.dispose();
+		try {
 			if(saveTmp) {
 				FileOutputStream fos;
 				File tmp = File.createTempFile(outDir +"_", "_data.xlsx");
