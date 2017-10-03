@@ -150,6 +150,8 @@ public class DashboardAPDeviceMapperService {
 	public static final int PHASE_FLOORMAP_TRACKING = 3;
 	public static final int PHASE_APDVISIT = 4;
 	public static final int PHASE_EXTERNAL_APDEVICE_HEATMAP = 5;
+	
+	private Date lastDate = new Date();//TODO debug remove
 
 	// General Driver ----------------------------------------------------------------------------------------------------------------------------------------
 	public void createDashboardDataForDays(String baseDir, Date fromDate, Date toDate, List<String> entityIds, List<Integer> phases) throws ASException {
@@ -1312,7 +1314,6 @@ public class DashboardAPDeviceMapperService {
 			TimeZone tz, String forDate) throws ASException, ParseException {
 
 		DashboardIndicatorData obj = new DashboardIndicatorData();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		obj.setEntityId(entityId);
 		obj.setEntityKind(entityKind);
 		
@@ -1324,12 +1325,14 @@ public class DashboardAPDeviceMapperService {
 		// TODO check if correct
 		obj.setTimeZone(getTimeZone(tz, date));
 		CALENDAR.setTime(date);
+		lastDate = date;
 		CALENDAR.setTimeZone(tz);
 		obj.setStringDate(forDate);
+		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date day = sdf.parse(forDate);
 		@SuppressWarnings("deprecation")
-		int dayOfWeek = day.getDay() + 1;
-		obj.setDayOfWeek(dayOfWeek);
+		int dayOfWeek = (day.getDay() + 1) %7;*/
+		obj.setDayOfWeek((CALENDAR.get(Calendar.DAY_OF_WEEK) +1) %7);
 		try { obj.setDate(CALENDAR.getTime()); } catch(Exception e ){}
 		
 		obj.setMovieId(null);
@@ -1365,7 +1368,6 @@ public class DashboardAPDeviceMapperService {
 	public int getTimeZone(TimeZone tz, Date date) {
 		CALENDAR.setTime(date);
 		CALENDAR.setTimeZone(tz);
-		// FIXME
 		return CALENDAR.get(Calendar.HOUR_OF_DAY);
 	}
 
