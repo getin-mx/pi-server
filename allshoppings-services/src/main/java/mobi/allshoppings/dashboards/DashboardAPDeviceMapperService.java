@@ -1325,7 +1325,7 @@ public class DashboardAPDeviceMapperService {
 		CALENDAR.setTime(date);
 		CALENDAR.setTimeZone(tz);
 		obj.setStringDate(forDate);
-		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date day = sdf.parse(forDate);
 		@SuppressWarnings("deprecation")
 		int dayOfWeek = day.getDay() == 0 ? 7 : day.getDay() + 1; 
