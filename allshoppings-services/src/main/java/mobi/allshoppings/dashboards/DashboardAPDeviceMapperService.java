@@ -1328,7 +1328,7 @@ public class DashboardAPDeviceMapperService {
 		obj.setStringDate(forDate);
 		Date day = sdf.parse(forDate);
 		@SuppressWarnings("deprecation")
-		int dayOfWeek = day.getDay() + 1;
+		int dayOfWeek = day.getDay() == 0 ? 7 : day.getDay() + 1; 
 		obj.setDayOfWeek(dayOfWeek);
 		try { obj.setDate(CALENDAR.getTime()); } catch(Exception e ){}
 		
