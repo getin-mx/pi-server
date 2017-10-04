@@ -105,7 +105,7 @@
  	    <lookup-method name="create" bean="dashboard.heatmaptabledata.rest.resource" />
  	</bean>
  	<bean id="spring.dashboard.heatmaptablehour.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboard.heatmaptabledata.rest.resource" />
+ 	    <lookup-method name="create" bean="dashboard.heatmaptablehour.rest.resource" />
  	</bean>
  	<bean id="spring.dummy.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dummy.rest.resource" />
