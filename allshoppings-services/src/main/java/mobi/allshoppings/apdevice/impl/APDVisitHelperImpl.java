@@ -53,6 +53,9 @@ import mobi.allshoppings.tools.CollectionFactory;
 
 public class APDVisitHelperImpl implements APDVisitHelper {
 
+	private final Calendar START_CALENDAR = Calendar.getInstance();
+	private final Calendar END_CALENDAR = Calendar.getInstance();
+	
 	public static final String ALGORITHM_MARKII = "markII";
 	
 	private static final Logger log = Logger.getLogger(APDVisitHelperImpl.class.getName());
@@ -62,7 +65,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	private static final int VISIT_PERCENTAGE = 25;
 	private static final List<String> BANNED = Arrays.asList("00:00:00:00:00:00");
 	private static final int DAY_IN_MILLIS = 86400000;
-
+	
 	@Autowired
 	private APDVisitDAO apdvDao;
 	
@@ -366,47 +369,95 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Map<String, APHEntry> map = CollectionFactory.createMap();
 		List<APHEntry> res = CollectionFactory.createList();
 		
-		TimeZone tz = getTimezoneForEntity(entityId, entityKind);
-		Calendar start = Calendar.getInstance();
-		Calendar end = Calendar.getInstance();
-		start.setTimeZone(tz);
+		//TimeZone tz = getTimezoneForEntity(entityId, entityKind);
+		START_CALENDAR.clear();
+		END_CALENDAR.clear();
+		//start.setTimeZone(tz);
 
-		start.set(Integer.parseInt(forStringDate.substring(0,4)), Integer.parseInt(forStringDate.substring(5,7)) -1, Integer.parseInt(forStringDate.substring(8)), 0, 0, 0);
+		int year = Integer.parseInt(forStringDate.substring(0,4));
+		int month = Integer.parseInt(forStringDate.substring(5,7)) -1;
+		int day = Integer.parseInt(forStringDate.substring(8));
+		
+		START_CALENDAR.set(year, month, day);
+		
+		String startTime, endTime;
+		switch(START_CALENDAR.get(Calendar.DAY_OF_WEEK)) {
+		case Calendar.SUNDAY :
+			startTime = calibration.getVisitStartSun();
+			endTime = calibration.getVisitEndSun();
+			break;
+		case Calendar.MONDAY :
+			startTime = calibration.getVisitStartMon();
+			endTime = calibration.getVisitEndMon();
+			break;
+		case Calendar.TUESDAY :
+			startTime = calibration.getVisitStartTue();
+			endTime = calibration.getVisitEndTue();
+			break;
+		case Calendar.WEDNESDAY :
+			startTime = calibration.getVisitStartWed();
+			endTime = calibration.getVisitEndWed();
+			break;
+		case Calendar.THURSDAY :
+			startTime = calibration.getVisitStartThu();
+			endTime = calibration.getVisitEndThu();
+			break;
+		case Calendar.FRIDAY :
+			startTime = calibration.getVisitStartFri();
+			endTime = calibration.getVisitEndFri();
+			break;
+		case Calendar.SATURDAY :
+			startTime = calibration.getVisitStartSat();
+			endTime = calibration.getVisitEndSat();
+		default :
+			startTime = endTime = "00:00";
+		}
+		
+		START_CALENDAR.set(Calendar.HOUR_OF_DAY, Integer.parseInt(startTime.substring(0, 2)));
+		START_CALENDAR.set(Calendar.MINUTE, Integer.parseInt(startTime.substring(3, 5)));
+		
+		END_CALENDAR.set(year, month, day, Integer.parseInt(endTime.substring(0, 2)),
+				Integer.parseInt(endTime.substring(3, 5)));
+		
 
-		int startOffsetHours = Integer.parseInt(calibration.getMonitorStart().substring(0,2));
+		/*int startOffsetHours = Integer.parseInt(calibration.getMonitorStart().substring(0,2));
 		int startOffsetMinutes = Integer.parseInt(calibration.getMonitorStart().substring(3));
 		
 		start.add(Calendar.HOUR, startOffsetHours);
 		start.add(Calendar.MINUTE, startOffsetMinutes);
 
-		end.setTimeZone(tz);
+		//end.setTimeZone(tz);
 		end.set(Integer.parseInt(forStringDate.substring(0,4)), Integer.parseInt(forStringDate.substring(5,7)) -1, Integer.parseInt(forStringDate.substring(8)), 0, 0, 0);
 
 		int endOffsetHours = Integer.parseInt(calibration.getMonitorEnd().substring(0,2)) + 1; // This one is for giving air to the monitoring limit time
-		int endOffsetMinutes = Integer.parseInt(calibration.getMonitorEnd().substring(3));
-		
+		int endOffsetMinutes = Integer.parseInt(calibration.getMonitorEnd().substring(3));//TODO se repite la instruc
+		// TODO es posible reciclar variables
 		end.add(Calendar.HOUR, endOffsetHours);
 		end.add(Calendar.MINUTE, endOffsetMinutes);
 		if( endOffsetHours <= startOffsetHours ) {
 			end.add(Calendar.DATE, 1);
 		}
 		
-		start.getTime();
-		end.getTime();
-		SimpleDateFormat gmtSdf = new SimpleDateFormat("yyyy-MM-dd");
-		gmtSdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		start.getTime();// TODO instrucciones inecesarias
+		end.getTime();*/
+		SimpleDateFormat gmtSdf = new SimpleDateFormat("yyyy-MM-dd");//TODO es relamnte necesario?
+		gmtSdf.setTimeZone(TimeZone.getTimeZone("GMT"));// TODO el estático sólo no es GMT, gran cosa
 		
-		int lowerLimit = (int)Math.round(((long)(((start.getTime().getTime()) % 86400000) / 1000) / 20));
-		if( gmtSdf.format(start.getTime()).compareTo(forStringDate) < 0 ) {
-			lowerLimit = lowerLimit - 4320;
+		//int lowerLimit = (int)Math.round(((long)(((START_CALENDAR.getTime().getTime()) % 86400000) / 1000) / 20));
+		int lowerLimit  = (START_CALENDAR.get(Calendar.SECOND) +START_CALENDAR.get(Calendar.MINUTE) *60
+				+START_CALENDAR.get(Calendar.HOUR_OF_DAY) *60 *60) /20;
+		if( gmtSdf.format(START_CALENDAR.getTime()).compareTo(forStringDate) < 0 ) {
+			lowerLimit -= 4320;
 		}
 		
-		int higherLimit = (int)Math.round(((long)(((end.getTime().getTime()) % 86400000) / 1000) / 20));
-		if( gmtSdf.format(end.getTime()).compareTo(forStringDate) > 0 ) {
-			higherLimit = higherLimit + 4320;
+		//int higherLimit = (int)Math.round(((long)(((end.getTime().getTime()) % 86400000) / 1000) / 20));
+		int higherLimit = (END_CALENDAR.get(Calendar.SECOND) +END_CALENDAR.get(Calendar.MINUTE) *60
+				+END_CALENDAR.get(Calendar.HOUR_OF_DAY) *60 *60) /20;
+		if( gmtSdf.format(END_CALENDAR.getTime()).compareTo(forStringDate) > 0 ) {
+			higherLimit += 4320;
 		}
 		
-		Iterator<APHEntry> i = dumpHelper.iterator(start.getTime(), end.getTime());
+		Iterator<APHEntry> i = dumpHelper.iterator(START_CALENDAR.getTime(), END_CALENDAR.getTime());
 		while(i.hasNext()) {
 			APHEntry aphe = i.next();
 			APHEntry mapped = map.get(aphe.getMac());

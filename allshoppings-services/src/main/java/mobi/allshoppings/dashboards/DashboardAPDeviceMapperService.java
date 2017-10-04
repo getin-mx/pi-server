@@ -1320,7 +1320,6 @@ public class DashboardAPDeviceMapperService {
 		obj.setElementSubId(elementSubId);
 		obj.setElementSubName(elementSubName);
 		
-		// TODO check if correct
 		obj.setTimeZone(getTimeZone(tz, date));
 		CALENDAR.setTime(date);
 		CALENDAR.setTimeZone(tz);
