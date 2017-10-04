@@ -444,17 +444,25 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		gmtSdf.setTimeZone(TimeZone.getTimeZone("GMT"));// TODO el estático sólo no es GMT, gran cosa
 		
 		//int lowerLimit = (int)Math.round(((long)(((START_CALENDAR.getTime().getTime()) % 86400000) / 1000) / 20));
+		
 		int lowerLimit  = (START_CALENDAR.get(Calendar.SECOND) +START_CALENDAR.get(Calendar.MINUTE) *60
 				+START_CALENDAR.get(Calendar.HOUR_OF_DAY) *60 *60) /20;
-		if( gmtSdf.format(START_CALENDAR.getTime()).compareTo(forStringDate) < 0 ) {
+		/*if( gmtSdf.format(START_CALENDAR.getTime()).compareTo(forStringDate) < 0 ) {
 			lowerLimit -= 4320;
-		}
+		}*/
 		
 		//int higherLimit = (int)Math.round(((long)(((end.getTime().getTime()) % 86400000) / 1000) / 20));
 		int higherLimit = (END_CALENDAR.get(Calendar.SECOND) +END_CALENDAR.get(Calendar.MINUTE) *60
 				+END_CALENDAR.get(Calendar.HOUR_OF_DAY) *60 *60) /20;
-		if( gmtSdf.format(END_CALENDAR.getTime()).compareTo(forStringDate) > 0 ) {
+		/*if( gmtSdf.format(END_CALENDAR.getTime()).compareTo(forStringDate) > 0 ) {
 			higherLimit += 4320;
+		}*/
+		
+		if(lowerLimit > higherLimit) {
+			int aux = lowerLimit;
+			lowerLimit = higherLimit;
+			higherLimit = aux;
+			END_CALENDAR.add(Calendar.DATE, 1);
 		}
 		
 		Iterator<APHEntry> i = dumpHelper.iterator(START_CALENDAR.getTime(), END_CALENDAR.getTime());
@@ -516,7 +524,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			map.put(mapped.getMac(), mapped);
 		}
 
-		Iterator<APHEntry> ix = map.values().iterator();
+		Iterator<APHEntry> ix = map.values().iterator();//TODO check from here
 		while(ix.hasNext()) {
 			APHEntry aphe = ix.next();
 			aphe.setDataCount(aphe.getRssi().size());
