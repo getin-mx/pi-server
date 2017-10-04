@@ -59,6 +59,10 @@
 				<entry key="/dashboard/storesFilter" 			value-ref="spring.dashboard.storesfilter.rest.resource" />
 				<entry key="/dashboard/opentimes" 				value-ref="spring.dashboard.opentimes.rest.resource" />
 				<entry key="/dashboard/repetitions" 			value-ref="spring.dashboard.repetitions.rest.resource" />
+				<entry key="/dashboard/timelineData" 			value-ref="spring.dashboard.timelinedata.rest.resource" />
+				<entry key="/dashboard/timelineHour" 			value-ref="spring.dashboard.timelinehour.rest.resource" />
+				<entry key="/dashboard/heatmapTableData" 		value-ref="spring.dashboard.heatmaptabledata.rest.resource" />
+				<entry key="/dashboard/heatmapTableHour" 		value-ref="spring.dashboard.heatmaptablehour.rest.resource" />
 				<entry key="/dashboard/employeetimes" 			value-ref="spring.dashboard.employeetimes.rest.resource" />
 				<entry key="/dashboard/apuptime" 				value-ref="spring.dashboard.apuptime.rest.resource" />
 				<entry key="/dashboard/assignedBrandList" 		value-ref="spring.dashboard.assignedbrandlist.rest.resource" />
@@ -90,6 +94,18 @@
  	</bean>
  	<bean id="spring.dashboard.repetitions.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboard.repetitions.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.timelinedata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.timelinedata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.timelinehour.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.timelinehour.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.heatmaptabledata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.heatmaptabledata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.heatmaptablehour.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.heatmaptabledata.rest.resource" />
  	</bean>
  	<bean id="spring.dummy.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dummy.rest.resource" />

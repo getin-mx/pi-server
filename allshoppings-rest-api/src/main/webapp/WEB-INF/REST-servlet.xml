@@ -13,8 +13,6 @@
 			<map>
 				<entry key="/dashoard/timelineDataByCinema" value-ref="spring.dashboardtimelinedatabycinema.rest.resource" />
 				<entry key="/dashoard/timelineDataByProvince" value-ref="spring.dashboardtimelinedatabyprovince.rest.resource" />
-				<entry key="/dashoard/timelineData" value-ref="spring.dashboardtimelinedata.rest.resource" />
-				<entry key="/dashoard/timelineHour" value-ref="spring.dashboardtimelinehour.rest.resource" />
 				<entry key="/dashoard/timelineGDT" value-ref="spring.dashboardtimelinegdt.rest.resource" />
 				<entry key="/dashoard/funnelData" value-ref="spring.dashboardfunneldata.rest.resource" />
 				<entry key="/dashoard/pieData" value-ref="spring.dashboardpiedata.rest.resource" />
@@ -24,8 +22,6 @@
 				<entry key="/dashoard/shoppingTableData" value-ref="spring.dashboardshoppingtabledata.rest.resource" />
 				<entry key="/dashoard/topData" value-ref="spring.dashboardtopdata.rest.resource" />
 				<entry key="/dashoard/relationData" value-ref="spring.dashboardrelationdata.rest.resource" />
-				<entry key="/dashoard/heatmapTableData" value-ref="spring.dashboardheatmaptabledata.rest.resource" />
-				<entry key="/dashoard/heatmapTableHour" value-ref="spring.dashboardheatmaptablehour.rest.resource" />
 				<entry key="/dashoard/floormapData" value-ref="spring.dashboardfloormapdata.rest.resource" />
 				<entry key="/dashoard/externalGeo" value-ref="spring.dashboardexternalgeo.rest.resource" />
 				<entry key="/dashoard/apdeviceStatus" value-ref="spring.dashboardapdevicestatus.rest.resource" />
@@ -85,15 +81,6 @@
  	<bean id="spring.cinema.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="cinema.rest.resource" />
  	</bean>
- 	<bean id="spring.dashboardrepetitions.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboardrepetitions.rest.resource" />
- 	</bean>
- 	<bean id="spring.dashboardtimelinehour.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboardtimelinehour.rest.resource" />
- 	</bean>
- 	<bean id="spring.dashboardtimelinedata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboardtimelinedata.rest.resource" />
- 	</bean>
  	<bean id="spring.dashboardtimelinedatabycinema.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboardtimelinedatabycinema.rest.resource" />
  	</bean>
@@ -102,12 +89,6 @@
  	</bean>
  	<bean id="spring.dashboardtimelinegdt.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboardtimelinegdt.rest.resource" />
- 	</bean>
- 	<bean id="spring.dashboardheatmaptabledata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboardheatmaptabledata.rest.resource" />
- 	</bean>
- 	<bean id="spring.dashboardheatmaptablehour.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboardheatmaptablehour.rest.resource" />
  	</bean>
  	<bean id="spring.dashboardfunneldata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboardfunneldata.rest.resource" />

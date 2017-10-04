@@ -24,8 +24,6 @@
   	<bean id="auth.rest.resource" class="mobi.allshoppings.auth.spi.AuthBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="pass.rest.resource" class="mobi.allshoppings.auth.spi.PassBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="user.rest.resource" class="mobi.allshoppings.bz.spi.UserBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
-  	<bean id="dashboardtimelinehour.rest.resource" class="mobi.allshoppings.bz.spi.DashboardTimelineHourBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
-  	<bean id="dashboardtimelinedata.rest.resource" class="mobi.allshoppings.bz.spi.DashboardTimelineDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardtimelinedatabycinema.rest.resource" class="mobi.allshoppings.bz.spi.DashboardTimelineDataByCinemaBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardtimelinedatabyprovince.rest.resource" class="mobi.allshoppings.bz.spi.DashboardTimelineDataByProvinceBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardtimelinegdt.rest.resource" class="mobi.allshoppings.bz.spi.DashboardTimelineGDTBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
@@ -36,8 +34,6 @@
   	<bean id="dashboardbrandtabledata2.rest.resource" class="mobi.allshoppings.bz.spi.DashboardBrandTableData2BzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardshoppingtabledata.rest.resource" class="mobi.allshoppings.bz.spi.DashboardShoppingTableDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardrelationdata.rest.resource" class="mobi.allshoppings.bz.spi.DashboardRelationDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
-  	<bean id="dashboardheatmaptabledata.rest.resource" class="mobi.allshoppings.bz.spi.DashboardHeatmapTableDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
-  	<bean id="dashboardheatmaptablehour.rest.resource" class="mobi.allshoppings.bz.spi.DashboardHeatmapTableHourBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardfloormapdata.rest.resource" class="mobi.allshoppings.bz.spi.DashboardFloorMapDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardtopdata.rest.resource" class="mobi.allshoppings.bz.spi.DashboardTopDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboardexternalgeo.rest.resource" class="mobi.allshoppings.bz.spi.DashboardExternalGeoBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
