@@ -42,6 +42,8 @@ import mobi.allshoppings.tx.PersistenceProvider;
 public class ExternalGeoImporter {
 
 	private static final Logger log = Logger.getLogger(ExternalGeoImporter.class.getName());
+	
+	private static final int DAY_IN_MILLIS = 86400000;
 
 	@Autowired
 	private ExternalGeoDAO dao;
@@ -163,7 +165,7 @@ public class ExternalGeoImporter {
 			Date toDate = sdf.parse(systemConfiguration.getExternalGeoToDate());
 			while(workDate.before(toDate) || workDate.equals(toDate)) {
 				workFrom = new Date(workDate.getTime());
-				workTo = new Date(workFrom.getTime() + 86400000 /* 24 hours */);
+				workTo = new Date(workFrom.getTime() + DAY_IN_MILLIS);
 
 				Iterator<JSONObject> it = dump.jsonIterator(workFrom, workTo);
 

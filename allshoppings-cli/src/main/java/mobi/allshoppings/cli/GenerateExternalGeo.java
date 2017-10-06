@@ -18,12 +18,14 @@ import mobi.allshoppings.exporter.ExternalGeoImporter;
 public class GenerateExternalGeo extends AbstractCLI {
 
 	private static final Logger log = Logger.getLogger(GenerateExternalGeo.class.getName());
+	private static final String ENTITY_IDS_PARAM = "entityIds";
+	private static final String ENTITY_KIND_PARAM = "entityKind";
 	
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
 		else parser = base;
-		parser.accepts( "entityIds", "Comma separated list of Entity Id" ).withRequiredArg().ofType( String.class );
-		parser.accepts( "entityKind", "Entity Kind" ).withRequiredArg().ofType( Integer.class );
+		parser.accepts(ENTITY_IDS_PARAM, "Comma separated list of Entity Id" ).withRequiredArg().ofType( String.class );
+		parser.accepts(ENTITY_KIND_PARAM, "Entity Kind" ).withRequiredArg().ofType( Integer.class );
 		return parser;
 	}
 
@@ -44,6 +46,9 @@ public class GenerateExternalGeo extends AbstractCLI {
 			
 			try {
 				if( options.has("help")) usage(parser);
+				if(!options.has(ENTITY_IDS_PARAM))
+					throw ASExceptionHelper.defaultException("No data source given: Entity IDs "
+							+ " are required (at least one)", null);
 
 				sEntityIds = (String)options.valueOf("entityIds");
 				if(sEntityIds != null) {

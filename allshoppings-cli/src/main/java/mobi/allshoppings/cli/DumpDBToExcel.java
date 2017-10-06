@@ -79,11 +79,13 @@ public class DumpDBToExcel extends AbstractCLI {
 		String destFile = StringUtils.hasText(brandId) ? brandId : "";
 		destFile += storesIds.toString();
 		if(destFile.length() > 200) destFile = destFile.substring(0, 200) +"__";
-		ExcelExportHelper helper = (ExcelExportHelper) getApplicationContext().getBean("excel.export.helper");
+		ExcelExportHelper helper = (ExcelExportHelper) getApplicationContext()
+				.getBean("excel.export.helper");
 		LOG.log(Level.INFO, "Exporting to Excel...");
 		long benchmark = System.currentTimeMillis();
 		helper.exportDB(storesId, brandId, fromDate, toDate, destFile, true);
-		LOG.log(Level.INFO, "DB Exported to MS Excel in " +(System.currentTimeMillis() -benchmark) +"ms");
+		LOG.log(Level.INFO, "DB Exported to MS Excel in " +(System.currentTimeMillis() -benchmark)
+				+"ms");
 	}
 	
 }

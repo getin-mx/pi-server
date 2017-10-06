@@ -85,13 +85,16 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	private static final SimpleDateFormat month = new SimpleDateFormat("MM");
 	private static final int DAY_IN_MILLIS = 86400000;
 	
-	private static final byte CHECKIN_DATETIME_CELL_INDEX = 0;
-	private static final byte CHECKIN_DURATION_CELL_INDEX = 1;
-	private static final byte DEVICE_CELL_INDEX = 2;
-	private static final byte REVENUE_CELL_INDEX = 4;
-	private static final byte ITEMS_CELL_INDEX = 5;
-	private static final byte TICKETS_CELL_INDEX = 6;
-	private static final byte DATA_DATE_CELL_INDEX = 7;
+	private static final byte DATETIME_CELL_INDEX = 0;
+	private static final byte MONTH_CELL_INDEX = 1;
+	private static final byte WEEK_OF_YEAR_INDEX = 2;
+	private static final byte DAY_OF_WEEK_INDEX = 3;
+	private static final byte PEASENTS_CELL_INDEX = 4;
+	private static final byte VISITS_CELL_INDEX = 5;
+	private static final byte UPTIME_CELL_INDEX = 6;
+	private static final byte STORE_NAME_CELL_INDEX = 7;
+	
+	private static final byte HOUR_CELL_INDEX = 4;
 	
 	private static final String CHECKIN_DATETIME_CELL_TITLE = "checkinDate";
 	private static final String CHECKIN_DURATION_CELL_TITLE = "checkingDurationSeconds";
@@ -1002,7 +1005,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			for(Store current : storeDao.getUsingBrandAndStatus(brandId, null, null)) {
 				if(!storesId.contains(current.getIdentifier()))
 					storesId.add(current.getIdentifier());
-}
+			}
 		}
 		Workbook workbook = new XSSFWorkbook();
 		Sheet storeSheet;
@@ -1030,6 +1033,8 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			try { workbook.close(); } catch(IOException e) {}
 			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
 		}
+		storeSheet = workbook.createSheet(WorkbookUtil.createSafeSheetName(brandId));
+		//TODO sheet per day and sheet per hours
 		String parsedDate;
 		StoreRevenue revenue;
 		StoreItem items;
@@ -1040,11 +1045,10 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			log.log(Level.INFO, "Processing store " + store.getName() +" for period " +fromDate +" - "
 						+toDate + "...");
 			//creates a workbook sheet for each store, and adds some headers
-			storeSheet = workbook.createSheet(WorkbookUtil.createSafeSheetName(
-					store.getName().trim()));
 			rowIndex = 0;
 			row = storeSheet.createRow(rowIndex++);
-			row.createCell(CHECKIN_DATETIME_CELL_INDEX)
+			// FIXME
+			/*row.createCell(CHECKIN_DATETIME_CELL_INDEX)
 					.setCellValue(helper.createRichTextString(CHECKIN_DATETIME_CELL_TITLE));
 			row.createCell(CHECKIN_DURATION_CELL_INDEX)
 					.setCellValue(helper.createRichTextString(CHECKIN_DURATION_CELL_TITLE));
@@ -1110,7 +1114,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			storeSheet.autoSizeColumn(REVENUE_CELL_INDEX);
 			storeSheet.autoSizeColumn(ITEMS_CELL_INDEX);
 			storeSheet.autoSizeColumn(TICKETS_CELL_INDEX);
-			storeSheet.autoSizeColumn(DATA_DATE_CELL_INDEX);
+			storeSheet.autoSizeColumn(DATA_DATE_CELL_INDEX);*/
 		}
 		apdVisitDump.dispose();
 		try {
