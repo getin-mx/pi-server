@@ -12,7 +12,6 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.datastore.JDOConnection;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.springframework.context.ApplicationContext;
 
 import com.mongodb.BasicDBObject;
@@ -90,7 +89,7 @@ public class HotspotComparer extends AbstractCLI {
 		c.addOption(com.mongodb.Bytes.QUERYOPTION_NOTIMEOUT);
 		Iterator<DBObject> it = c.iterator();
 		File file = new File("/usr/local/allshoppings/debug/missing_aphotspots/"
-				+hostname +".txt");
+				+hostname +".json");
 		file.getParentFile().mkdirs();
 		PrintWriter writer = null;
 		boolean any = false;
