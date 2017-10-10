@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,6 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,24 +87,27 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	private static final SimpleDateFormat month = new SimpleDateFormat("MM");
 	private static final int DAY_IN_MILLIS = 86400000;
 	
-	private static final byte DATETIME_CELL_INDEX = 0;
+	private static final byte DATE_CELL_INDEX = 0;
 	private static final byte MONTH_CELL_INDEX = 1;
 	private static final byte WEEK_OF_YEAR_INDEX = 2;
 	private static final byte DAY_OF_WEEK_INDEX = 3;
 	private static final byte PEASENTS_CELL_INDEX = 4;
 	private static final byte VISITS_CELL_INDEX = 5;
-	private static final byte UPTIME_CELL_INDEX = 6;
+	private static final byte TICKET_CELL_INDEX = 6;
 	private static final byte STORE_NAME_CELL_INDEX = 7;
 	
 	private static final byte HOUR_CELL_INDEX = 4;
 	
-	private static final String CHECKIN_DATETIME_CELL_TITLE = "checkinDate";
-	private static final String CHECKIN_DURATION_CELL_TITLE = "checkingDurationSeconds";
-	private static final String DEVICE_CELL_TITLE = "devicePlatform";
-	private static final String REVENUE_CELL_TITLE = "revenue";
-	private static final String ITEMS_CELL_TITLE = "item";
-	private static final String TICKETS_CELL_TITLE = "tickets";
-	private static final String DATA_DATE_CELL_TITLE = "dataDate";
+	private static final String DATE_CELL_TITLE = "Fecha";
+	private static final String MONTH_CELL_TITLE = "Mes";
+	private static final String WEEK_OF_YEAR_CELL_TITLE = "Semana";
+	private static final String DAY_OF_WEEK_CELL_TITLE = "D\u00EDa";
+	private static final String PEASENTS_CELL_TITLE = "Paseantes";
+	private static final String VISITS_CELL_TITLE = "Visitas";
+	private static final String TICKET_CELL_TITLE = "Ticket";
+	private static final String STORE_NAME_CELL_TITLE = "Tienda";
+	
+	private static final String HOUR_CELL_TITLE = "Hora";
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -1008,20 +1013,20 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			}
 		}
 		Workbook workbook = new XSSFWorkbook();
-		Sheet storeSheet;
+		Sheet dailySheet;
 		Row row;
 		CreationHelper helper = workbook.getCreationHelper();
-		CellStyle checkinStyle = workbook.createCellStyle();
-		checkinStyle.setDataFormat(helper.createDataFormat().getFormat("m/d/yy h:mm:ss"));
+		/*CellStyle checkinStyle = workbook.createCellStyle();
+		checkinStyle.setDataFormat(helper.createDataFormat().getFormat("m/d/yy h:mm:ss"));*/
 		CellStyle dataDStyle = workbook.createCellStyle();
 		dataDStyle.setDataFormat(helper.createDataFormat().getFormat("m/d/yy"));
-		CellStyle currencyStyle = workbook.createCellStyle();
-		currencyStyle.setDataFormat(helper.createDataFormat().getFormat("$#,##0.00"));
+		/*CellStyle currencyStyle = workbook.createCellStyle();
+		currencyStyle.setDataFormat(helper.createDataFormat().getFormat("$#,##0.00"));*/
 		Cell cell;
-		int rowIndex;
+		int rowIndex = 0;
 		Store store;
 		DumperHelper<APDVisit> apdVisitDump = new DumpFactory<APDVisit>().build(null, APDVisit.class);
-		Iterator<APDVisit> apdVisitIterator;
+		Iterator<APDVisit> apdVisitIt;
 		APDVisit visit;
 		Date initialDate,finalDate, curDate;
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -1033,89 +1038,78 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			try { workbook.close(); } catch(IOException e) {}
 			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
 		}
-		storeSheet = workbook.createSheet(WorkbookUtil.createSafeSheetName(brandId));
+		dailySheet = workbook.createSheet(WorkbookUtil.createSafeSheetName(brandId));
 		//TODO sheet per day and sheet per hours
 		String parsedDate;
-		StoreRevenue revenue;
-		StoreItem items;
 		StoreTicket tickets;
+		Calendar cal = Calendar.getInstance();
+		String[] daysOfWeek = new DateFormatSymbols(new Locale("es")).getShortWeekdays();
+		row = dailySheet.createRow(rowIndex++);
+		row.createCell(DATE_CELL_INDEX)
+				.setCellValue(helper.createRichTextString(DATE_CELL_TITLE));
+		row.createCell(MONTH_CELL_INDEX)
+				.setCellValue(helper.createRichTextString(MONTH_CELL_TITLE));
+		row.createCell(WEEK_OF_YEAR_INDEX)
+				.setCellValue(helper.createRichTextString(WEEK_OF_YEAR_CELL_TITLE));
+		row.createCell(DAY_OF_WEEK_INDEX)
+				.setCellValue(helper.createRichTextString(DAY_OF_WEEK_CELL_TITLE));
+		row.createCell(PEASENTS_CELL_INDEX)
+				.setCellValue(helper.createRichTextString(PEASENTS_CELL_TITLE));
+		row.createCell(VISITS_CELL_INDEX)
+				.setCellValue(helper.createRichTextString(VISITS_CELL_TITLE));
+		row.createCell(TICKET_CELL_INDEX)
+				.setCellValue(helper.createRichTextString(TICKET_CELL_TITLE));
+		row.createCell(STORE_NAME_CELL_INDEX)
+				.setCellValue(helper.createRichTextString(STORE_NAME_CELL_TITLE));
 		// processing begins
 		for(String storeId : storesId) {
 			store = storeDao.get(storeId, false);
 			log.log(Level.INFO, "Processing store " + store.getName() +" for period " +fromDate +" - "
 						+toDate + "...");
 			//creates a workbook sheet for each store, and adds some headers
-			rowIndex = 0;
-			row = storeSheet.createRow(rowIndex++);
-			// FIXME
-			/*row.createCell(CHECKIN_DATETIME_CELL_INDEX)
-					.setCellValue(helper.createRichTextString(CHECKIN_DATETIME_CELL_TITLE));
-			row.createCell(CHECKIN_DURATION_CELL_INDEX)
-					.setCellValue(helper.createRichTextString(CHECKIN_DURATION_CELL_TITLE));
-			row.createCell(DEVICE_CELL_INDEX)
-					.setCellValue(helper.createRichTextString(DEVICE_CELL_TITLE));
-			row.createCell(REVENUE_CELL_INDEX)
-					.setCellValue(helper.createRichTextString(REVENUE_CELL_TITLE));
-			row.createCell(ITEMS_CELL_INDEX)
-					.setCellValue(helper.createRichTextString(ITEMS_CELL_TITLE));
-			row.createCell(TICKETS_CELL_INDEX)
-					.setCellValue(helper.createRichTextString(TICKETS_CELL_TITLE));
-			row.createCell(DATA_DATE_CELL_INDEX)
-					.setCellValue(helper.createRichTextString(DATA_DATE_CELL_TITLE));
 			curDate = new Date(initialDate.getTime());
 			// adds a row for each segment of data
 			while(curDate.compareTo(finalDate) <= 0) {
 				parsedDate = sdf.format(curDate);
-				row = storeSheet.createRow(rowIndex++);
+				row = dailySheet.createRow(rowIndex++);
 				try {
-					revenue = sRevenueDao.getUsingStoreIdAndDate(storeId, parsedDate, true);
-				} catch(ASException e) {
-					revenue = new StoreRevenue();
-					revenue.setQty(0.0);
-				} try {
-					items = sItemDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
-				} catch(ASException e) {
-					items = new StoreItem();
-					items.setQty(0);
-				} try {
 					tickets = sTicketDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
 				} catch(ASException e) {
 					tickets = new StoreTicket();
 					tickets.setQty(0);
 				}
-				cell = row.createCell(REVENUE_CELL_INDEX);
-				cell.setCellValue(revenue.getQty());
-				cell.setCellStyle(currencyStyle);
-				row.createCell(ITEMS_CELL_INDEX).setCellValue(items.getQty());
-				row.createCell(TICKETS_CELL_INDEX).setCellValue(tickets.getQty());
-				cell = row.createCell(DATA_DATE_CELL_INDEX);
+				cell = row.createCell(DATE_CELL_INDEX);
 				cell.setCellValue(curDate);
 				cell.setCellStyle(dataDStyle);
+				cal.setTime(curDate);
+				row.createCell(MONTH_CELL_INDEX).setCellValue(cal.get(Calendar.MONTH) +1);
+				row.createCell(WEEK_OF_YEAR_INDEX).setCellValue(cal.get(Calendar.WEEK_OF_YEAR));
+				row.createCell(DAY_OF_WEEK_INDEX).setCellValue(daysOfWeek[cal.get(Calendar.DAY_OF_WEEK)]);
+				apdVisitDump.setFilter(storeId);
+				apdVisitIt = apdVisitDump.iterator(curDate, curDate);
+				long visitCount, peasantCount;
+				visitCount = peasantCount = 0;
+				while(apdVisitIt.hasNext()) {
+					visit = apdVisitIt.next();
+					if(visit.getEntityKind() == APDVisit.CHECKIN_PEASANT) peasantCount++;
+					else if(visit.getEntityKind() == APDVisit.CHECKIN_VISIT) visitCount++;
+				}
+				row.createCell(PEASENTS_CELL_INDEX).setCellValue(peasantCount);
+				row.createCell(VISITS_CELL_INDEX).setCellValue(visitCount);
+				row.createCell(TICKET_CELL_INDEX).setCellValue(tickets.getQty());
+				row.createCell(STORE_NAME_CELL_INDEX).setCellValue(store.getName());
 				curDate.setTime(curDate.getTime() +DAY_IN_MILLIS);
 			}
-			apdVisitDump.setFilter(storeId);
-			apdVisitIterator = apdVisitDump.iterator(initialDate, finalDate);
-			rowIndex = 1;
-			while(apdVisitIterator.hasNext()) {
-				row = storeSheet.getRow(rowIndex);
-				if(row == null) row = storeSheet.createRow(rowIndex);
-				rowIndex++;
-				visit = apdVisitIterator.next();
-				cell = row.createCell(CHECKIN_DATETIME_CELL_INDEX);
-				cell.setCellValue(visit.getCheckinStarted());
-				cell.setCellStyle(checkinStyle);
-				row.createCell(CHECKIN_DURATION_CELL_INDEX).setCellValue(visit.getDuration() /1000);
-				row.createCell(DEVICE_CELL_INDEX).setCellValue(helper.createRichTextString(
-						visit.getDevicePlatform()));
-			}
-			storeSheet.autoSizeColumn(CHECKIN_DATETIME_CELL_INDEX);
-			storeSheet.autoSizeColumn(CHECKIN_DURATION_CELL_INDEX);
-			storeSheet.autoSizeColumn(DEVICE_CELL_INDEX);
-			storeSheet.autoSizeColumn(REVENUE_CELL_INDEX);
-			storeSheet.autoSizeColumn(ITEMS_CELL_INDEX);
-			storeSheet.autoSizeColumn(TICKETS_CELL_INDEX);
-			storeSheet.autoSizeColumn(DATA_DATE_CELL_INDEX);*/
 		}
+		//dailySheet.autoSizeColumn(DATE_CELL_INDEX);
+		dailySheet.autoSizeColumn(MONTH_CELL_INDEX);
+		dailySheet.autoSizeColumn(WEEK_OF_YEAR_INDEX);
+		dailySheet.autoSizeColumn(DAY_OF_WEEK_INDEX);
+		dailySheet.autoSizeColumn(PEASENTS_CELL_INDEX);
+		dailySheet.autoSizeColumn(VISITS_CELL_INDEX);
+		dailySheet.autoSizeColumn(TICKET_CELL_INDEX);
+		dailySheet.autoSizeColumn(STORE_NAME_CELL_INDEX);
+		// TODO add hourly sheet
 		apdVisitDump.dispose();
 		try {
 			if(saveTmp) {
