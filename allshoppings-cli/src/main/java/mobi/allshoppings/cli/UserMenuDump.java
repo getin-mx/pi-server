@@ -2232,6 +2232,7 @@ public class UserMenuDump extends AbstractCLI {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
 				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
