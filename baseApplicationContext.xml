@@ -89,8 +89,9 @@
 		<property name="solrUrl" value="http://aragorn.getin.mx:8983/solr/allshoppings" />
 		<property name="getinSqlUrl" value="jdbc:mysql://getinold.allshoppings.mobi:3306/getin?user=api&amp;password=VZ52sBPTeg33rq7w" />
 		<property name="defaultDumpDirectory" value="/usr/local/allshoppings/dump/" />
-		<property name="externalGeoFromDate" value="2017-01-01" />
-		<property name="externalGeoToDate" value="2017-01-02" />
+		<property name="externalGeoFromDate" value="2017-07-13" />
+        <property name="externalGeoToDate" value="2017-07-15" />
+
 		<property name="floorMapTracking">
 			<list>
 				<value>modatelas_tacubaya_pb</value>
