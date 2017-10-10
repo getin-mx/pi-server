@@ -7272,6 +7272,35 @@ public class UserMenuDump extends AbstractCLI {
 				userDao.create(user);
 			}
 			
+			try {
+				um = userMenuDao.get("ricardo@aditivo.mx", true);
+				userMenuDao.delete("ricardo@aditivo.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("ricardo@aditivo.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("ricardo@aditivo.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Aditivo");
+				user.setLastname("");
+				user.setEmail("ricardo@aditivo.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("07acea43-4a6c-4adc-896c-00b1f4781242",
+								"2fea9047-6da8-4493-b97c-f3cdd809a18d", "800f4a09-34f7-4116-bf5c-4b0ab45175c8",
+								"75746850-9ae4-4aa4-bf8f-3bf01daf2775", "0867dbd4-53f1-4602-8a48-e0c07bd752da"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "ricardo@aditivo.mx"));
+				userDao.create(user);
+			}
+			
 			// End Aditivo Franquicias 2 --------------------------------------------------------------------
 			
 			try {
@@ -7287,6 +7316,8 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("angel@yogome.com", true);
+				userDao.delete(user);
+				throw new Exception();
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Angel Hernandez");
@@ -7295,6 +7326,8 @@ public class UserMenuDump extends AbstractCLI {
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
 						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+					    .setStores(Arrays.asList("241f8851-fa36-4de4-a3e9-673b6879b00b"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "angel@yogome.com"));
 				userDao.create(user);
 			}
