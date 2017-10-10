@@ -89,8 +89,8 @@
 		<property name="solrUrl" value="http://aragorn.getin.mx:8983/solr/allshoppings" />
 		<property name="getinSqlUrl" value="jdbc:mysql://getinold.allshoppings.mobi:3306/getin?user=api&amp;password=VZ52sBPTeg33rq7w" />
 		<property name="defaultDumpDirectory" value="/usr/local/allshoppings/dump/" />
-		<property name="externalGeoFromDate" value="2017-07-13" />
-        <property name="externalGeoToDate" value="2017-07-15" />
+		<property name="externalGeoFromDate" value="2017-09-30" />
+        <property name="externalGeoToDate" value="2017-10-01" />
 
 		<property name="floorMapTracking">
 			<list>

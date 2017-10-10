@@ -48,6 +48,7 @@ import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dao.StoreItemDAO;
 import mobi.allshoppings.dao.StoreRevenueDAO;
+import mobi.allshoppings.dao.StoreTicketByHourDAO;
 import mobi.allshoppings.dao.StoreTicketDAO;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.impl.DumpFactory;
@@ -61,6 +62,7 @@ import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.StoreItem;
 import mobi.allshoppings.model.StoreRevenue;
 import mobi.allshoppings.model.StoreTicket;
+import mobi.allshoppings.model.StoreTicketByHour;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.tools.CollectionFactory;
 
@@ -82,10 +84,15 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	private StoreItemDAO sItemDao;
 	@Autowired
 	private StoreTicketDAO sTicketDao;
+	@Autowired
+	private StoreTicketByHourDAO sTicketHourDao;
+	@Autowired
+	private DashboardIndicatorDataDAO dashboardDataDao;
 	
 	private static final SimpleDateFormat year = new SimpleDateFormat("yyyy");
 	private static final SimpleDateFormat month = new SimpleDateFormat("MM");
 	private static final int DAY_IN_MILLIS = 86400000;
+	private static final int HOUR_IN_MILLIS = 3600000;
 	
 	private static final byte DATE_CELL_INDEX = 0;
 	private static final byte MONTH_CELL_INDEX = 1;
@@ -1013,13 +1020,15 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			}
 		}
 		Workbook workbook = new XSSFWorkbook();
-		Sheet dailySheet;
+		Sheet currentSheet;
 		Row row;
 		CreationHelper helper = workbook.getCreationHelper();
 		/*CellStyle checkinStyle = workbook.createCellStyle();
 		checkinStyle.setDataFormat(helper.createDataFormat().getFormat("m/d/yy h:mm:ss"));*/
 		CellStyle dataDStyle = workbook.createCellStyle();
 		dataDStyle.setDataFormat(helper.createDataFormat().getFormat("m/d/yy"));
+		CellStyle hourStyle = workbook.createCellStyle();
+		hourStyle.setDataFormat(helper.createDataFormat().getFormat("h:mm"));
 		/*CellStyle currencyStyle = workbook.createCellStyle();
 		currencyStyle.setDataFormat(helper.createDataFormat().getFormat("$#,##0.00"));*/
 		Cell cell;
@@ -1030,6 +1039,8 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		APDVisit visit;
 		Date initialDate,finalDate, curDate;
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		final SimpleDateFormat hourlySdf = new SimpleDateFormat("HH:mm");
+		int dayLoop;
 		try {
 			initialDate = sdf.parse(fromDate);
 			finalDate = sdf.parse(toDate);
@@ -1038,40 +1049,31 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			try { workbook.close(); } catch(IOException e) {}
 			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
 		}
-		dailySheet = workbook.createSheet(WorkbookUtil.createSafeSheetName(brandId));
-		//TODO sheet per day and sheet per hours
+		currentSheet = workbook.createSheet(WorkbookUtil.createSafeSheetName(brandId +" datos diarios"));
 		String parsedDate;
 		StoreTicket tickets;
 		Calendar cal = Calendar.getInstance();
 		String[] daysOfWeek = new DateFormatSymbols(new Locale("es")).getShortWeekdays();
-		row = dailySheet.createRow(rowIndex++);
-		row.createCell(DATE_CELL_INDEX)
-				.setCellValue(helper.createRichTextString(DATE_CELL_TITLE));
-		row.createCell(MONTH_CELL_INDEX)
-				.setCellValue(helper.createRichTextString(MONTH_CELL_TITLE));
-		row.createCell(WEEK_OF_YEAR_INDEX)
-				.setCellValue(helper.createRichTextString(WEEK_OF_YEAR_CELL_TITLE));
-		row.createCell(DAY_OF_WEEK_INDEX)
-				.setCellValue(helper.createRichTextString(DAY_OF_WEEK_CELL_TITLE));
-		row.createCell(PEASENTS_CELL_INDEX)
-				.setCellValue(helper.createRichTextString(PEASENTS_CELL_TITLE));
-		row.createCell(VISITS_CELL_INDEX)
-				.setCellValue(helper.createRichTextString(VISITS_CELL_TITLE));
-		row.createCell(TICKET_CELL_INDEX)
-				.setCellValue(helper.createRichTextString(TICKET_CELL_TITLE));
-		row.createCell(STORE_NAME_CELL_INDEX)
-				.setCellValue(helper.createRichTextString(STORE_NAME_CELL_TITLE));
+		row = currentSheet.createRow(rowIndex++);
+		row.createCell(DATE_CELL_INDEX).setCellValue(helper.createRichTextString(DATE_CELL_TITLE));
+		row.createCell(MONTH_CELL_INDEX).setCellValue(helper.createRichTextString(MONTH_CELL_TITLE));
+		row.createCell(WEEK_OF_YEAR_INDEX).setCellValue(helper.createRichTextString(WEEK_OF_YEAR_CELL_TITLE));
+		row.createCell(DAY_OF_WEEK_INDEX).setCellValue(helper.createRichTextString(DAY_OF_WEEK_CELL_TITLE));
+		row.createCell(PEASENTS_CELL_INDEX).setCellValue(helper.createRichTextString(PEASENTS_CELL_TITLE));
+		row.createCell(VISITS_CELL_INDEX).setCellValue(helper.createRichTextString(VISITS_CELL_TITLE));
+		row.createCell(TICKET_CELL_INDEX).setCellValue(helper.createRichTextString(TICKET_CELL_TITLE));
+		row.createCell(STORE_NAME_CELL_INDEX).setCellValue(helper.createRichTextString(STORE_NAME_CELL_TITLE));
 		// processing begins
 		for(String storeId : storesId) {
 			store = storeDao.get(storeId, false);
 			log.log(Level.INFO, "Processing store " + store.getName() +" for period " +fromDate +" - "
 						+toDate + "...");
-			//creates a workbook sheet for each store, and adds some headers
 			curDate = new Date(initialDate.getTime());
+			apdVisitDump.setFilter(storeId);
 			// adds a row for each segment of data
 			while(curDate.compareTo(finalDate) <= 0) {
 				parsedDate = sdf.format(curDate);
-				row = dailySheet.createRow(rowIndex++);
+				row = currentSheet.createRow(rowIndex++);
 				try {
 					tickets = sTicketDao.getUsingStoreIdAndDate(storeId, parsedDate, false);
 				} catch(ASException e) {
@@ -1085,7 +1087,6 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				row.createCell(MONTH_CELL_INDEX).setCellValue(cal.get(Calendar.MONTH) +1);
 				row.createCell(WEEK_OF_YEAR_INDEX).setCellValue(cal.get(Calendar.WEEK_OF_YEAR));
 				row.createCell(DAY_OF_WEEK_INDEX).setCellValue(daysOfWeek[cal.get(Calendar.DAY_OF_WEEK)]);
-				apdVisitDump.setFilter(storeId);
 				apdVisitIt = apdVisitDump.iterator(curDate, curDate);
 				long visitCount, peasantCount;
 				visitCount = peasantCount = 0;
@@ -1099,18 +1100,91 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				row.createCell(TICKET_CELL_INDEX).setCellValue(tickets.getQty());
 				row.createCell(STORE_NAME_CELL_INDEX).setCellValue(store.getName());
 				curDate.setTime(curDate.getTime() +DAY_IN_MILLIS);
-			}
-		}
-		//dailySheet.autoSizeColumn(DATE_CELL_INDEX);
-		dailySheet.autoSizeColumn(MONTH_CELL_INDEX);
-		dailySheet.autoSizeColumn(WEEK_OF_YEAR_INDEX);
-		dailySheet.autoSizeColumn(DAY_OF_WEEK_INDEX);
-		dailySheet.autoSizeColumn(PEASENTS_CELL_INDEX);
-		dailySheet.autoSizeColumn(VISITS_CELL_INDEX);
-		dailySheet.autoSizeColumn(TICKET_CELL_INDEX);
-		dailySheet.autoSizeColumn(STORE_NAME_CELL_INDEX);
-		// TODO add hourly sheet
+			}//for each day
+		}//for each store
+		//currentSheet.autoSizeColumn(DATE_CELL_INDEX);
+		currentSheet.autoSizeColumn(MONTH_CELL_INDEX);
+		currentSheet.autoSizeColumn(WEEK_OF_YEAR_INDEX);
+		currentSheet.autoSizeColumn(DAY_OF_WEEK_INDEX);
+		currentSheet.autoSizeColumn(PEASENTS_CELL_INDEX);
+		currentSheet.autoSizeColumn(VISITS_CELL_INDEX);
+		currentSheet.autoSizeColumn(TICKET_CELL_INDEX);
+		currentSheet.autoSizeColumn(STORE_NAME_CELL_INDEX);
+		currentSheet = workbook.createSheet(WorkbookUtil.createSafeSheetName(brandId +" datos por hora"));
+		rowIndex = 0;
+		row = currentSheet.createRow(rowIndex++);
+		row.createCell(DATE_CELL_INDEX).setCellValue(helper.createRichTextString(DATE_CELL_TITLE));
+		row.createCell(MONTH_CELL_INDEX).setCellValue(helper.createRichTextString(MONTH_CELL_TITLE));
+		row.createCell(WEEK_OF_YEAR_INDEX).setCellValue(helper.createRichTextString(WEEK_OF_YEAR_CELL_TITLE));
+		row.createCell(DAY_OF_WEEK_INDEX).setCellValue(helper.createRichTextString(DAY_OF_WEEK_CELL_TITLE));
+		row.createCell(HOUR_CELL_INDEX).setCellValue(helper.createRichTextString(HOUR_CELL_TITLE));
+		row.createCell(PEASENTS_CELL_INDEX).setCellValue(helper.createRichTextString(PEASENTS_CELL_TITLE));
+		row.createCell(VISITS_CELL_INDEX).setCellValue(helper.createRichTextString(VISITS_CELL_TITLE));
+		row.createCell(TICKET_CELL_INDEX).setCellValue(helper.createRichTextString(TICKET_CELL_TITLE));
+		row.createCell(STORE_NAME_CELL_INDEX).setCellValue(helper.createRichTextString(STORE_NAME_CELL_TITLE));
+		Map<Integer, DashboardIndicatorData> visits = CollectionFactory.createMap();
+		Map<Integer, DashboardIndicatorData> peasents = CollectionFactory.createMap();
+		for(String storeId : storesId) {
+			store = storeDao.get(storeId, false);
+			log.log(Level.INFO, "Processing store " + store.getName() +" for period " +fromDate +" - "
+						+toDate + "...");
+			curDate = new Date(initialDate.getTime());
+			// adds a row for each segment of data
+			dayLoop = 0;
+			apdVisitDump.setFilter(storeId);
+			while(curDate.compareTo(finalDate) <= 0) {
+				parsedDate = sdf.format(curDate);
+				row = currentSheet.createRow(rowIndex++);
+				cell = row.createCell(DATE_CELL_INDEX);
+				cell.setCellValue(curDate);
+				cell.setCellStyle(dataDStyle);
+				
+				if(dayLoop == 0) {
+					cal.setTime(curDate);
+					visits.clear();
+					peasents.clear();
+					List<DashboardIndicatorData> data = dashboardDataDao.getUsingFilters(store.getBrandId(),
+							null, "apd_occupation", "occupation_hourly_visits", null, storeId, null,
+							parsedDate, parsedDate, null, null, null, null, null, null, null, null);
+					for(DashboardIndicatorData singleData : data) visits.put(singleData.timeZone, singleData);
+					data = dashboardDataDao.getUsingFilters(store.getBrandId(), null,
+							"apd_occupation", "occupation_hourly_peasants", null, storeId, null, parsedDate,
+							parsedDate, null, null, null, null, null, null, null, null);
+					for(DashboardIndicatorData singleData : data)
+						peasents.put(singleData.timeZone, singleData);
+				}
+				row.createCell(MONTH_CELL_INDEX).setCellValue(cal.get(Calendar.MONTH) +1);
+				row.createCell(WEEK_OF_YEAR_INDEX).setCellValue(cal.get(Calendar.WEEK_OF_YEAR));
+				row.createCell(DAY_OF_WEEK_INDEX).setCellValue(daysOfWeek[cal.get(Calendar.DAY_OF_WEEK)]);
+				cell = row.createCell(HOUR_CELL_INDEX);
+				cell.setCellValue(hourlySdf.format(curDate));
+				cell.setCellStyle(hourStyle);
+				row.createCell(PEASENTS_CELL_INDEX +1).setCellValue(peasents.containsKey(dayLoop) ?
+						peasents.get(dayLoop).doubleValue : 0);
+				row.createCell(VISITS_CELL_INDEX +1).setCellValue(visits.containsKey(dayLoop) ?
+						visits.get(dayLoop).doubleValue : 0);
+				try {
+					StoreTicketByHour hourlyTickets = sTicketHourDao.getUsingStoreIdAndDateAndHour(storeId,
+							parsedDate, hourlySdf.format(curDate), false);
+					row.createCell(TICKET_CELL_INDEX +1).setCellValue(hourlyTickets.getQty());
+				} catch(ASException e) {
+					row.createCell(TICKET_CELL_INDEX +1).setCellValue(helper.createRichTextString("NA"));
+				}
+				row.createCell(STORE_NAME_CELL_INDEX +1).setCellValue(store.getName());
+				curDate.setTime(curDate.getTime() +HOUR_IN_MILLIS);
+				dayLoop = (dayLoop +1) %24;
+			}//por cada día
+		}//por cada tienda
 		apdVisitDump.dispose();
+		currentSheet.autoSizeColumn(DATE_CELL_INDEX);
+		currentSheet.autoSizeColumn(MONTH_CELL_INDEX);
+		currentSheet.autoSizeColumn(WEEK_OF_YEAR_INDEX);
+		currentSheet.autoSizeColumn(DAY_OF_WEEK_INDEX);
+		currentSheet.autoSizeColumn(HOUR_CELL_INDEX);
+		currentSheet.autoSizeColumn(PEASENTS_CELL_INDEX +1);
+		currentSheet.autoSizeColumn(VISITS_CELL_INDEX +1);
+		currentSheet.autoSizeColumn(TICKET_CELL_INDEX +1);
+		currentSheet.autoSizeColumn(STORE_NAME_CELL_INDEX +1);
 		try {
 			if(saveTmp) {
 				FileOutputStream fos;
