@@ -52,7 +52,7 @@
   	<bean id="dashboard.timelinedata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.TimelineDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.timelinehour.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.TimelineHourBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.heatmaptabledata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.HeatmapTableDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
-  	<bean id="dashboard.heatmaptablehour.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.HeatpamTableHourBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.heatmaptablehour.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.HeatmapTableHourBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	
   	<bean id="dashboard.opentimes.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.OpenTimesDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.employeetimes.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.EmployeeTimesDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />

@@ -2232,6 +2232,7 @@ public class UserMenuDump extends AbstractCLI {
 			} catch( Exception e ) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
 				um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
@@ -2467,6 +2468,7 @@ public class UserMenuDump extends AbstractCLI {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.influencemap", "fa-map-marker", "Mapa de Influencia"));
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 				um.setKey(userMenuDao.createKey("farmaciasyza_mx"));
 				userMenuDao.create(um);
 			}
@@ -3048,7 +3050,7 @@ public class UserMenuDump extends AbstractCLI {
 								"d22be9e5-74a7-4671-aa7e-1a464bb748b7", "2ed6fea4-efb3-4aef-bc5c-af1e3d712b4b",
 								"cc13c199-5969-4010-aedb-bf01a4428786", "ba26aea6-dda1-4bfe-a270-23350be7105e",
 								"95d98d90-ba0b-42e1-843b-4a0e5c09db4b", "62c734bd-15fa-4bc5-a542-d38dd30e4546",
-								"94b9e9fc-3f73-4926-9890-fe0d924952fc"));
+								"94b9e9fc-3f73-4926-9890-fe0d924952fc", "ec77ff67-9221-4c41-afba-0c47f73e0ba3"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "ginatena@chomarc_mx"));
 				userDao.create(user);
 			}
@@ -7271,7 +7273,65 @@ public class UserMenuDump extends AbstractCLI {
 				userDao.create(user);
 			}
 			
+			try {
+				um = userMenuDao.get("ricardo@aditivo.mx", true);
+				userMenuDao.delete("ricardo@aditivo.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("ricardo@aditivo.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("ricardo@aditivo.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Aditivo");
+				user.setLastname("");
+				user.setEmail("ricardo@aditivo.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("07acea43-4a6c-4adc-896c-00b1f4781242",
+								"2fea9047-6da8-4493-b97c-f3cdd809a18d", "800f4a09-34f7-4116-bf5c-4b0ab45175c8",
+								"75746850-9ae4-4aa4-bf8f-3bf01daf2775", "0867dbd4-53f1-4602-8a48-e0c07bd752da"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "ricardo@aditivo.mx"));
+				userDao.create(user);
+			}
+			
 			// End Aditivo Franquicias 2 --------------------------------------------------------------------
+			
+			try {
+				um = userMenuDao.get("angel@yogome.com", true);
+				userMenuDao.delete("angel@yogome.com");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.devicemessage", "fa-laptop", "Notificaciones"));
+				um.setKey(userMenuDao.createKey("angel@yogome.com"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("angel@yogome.com", true);
+				userDao.delete(user);
+				throw new Exception();
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Angel Hernandez");
+				user.setLastname("");
+				user.setEmail("angel@yogome.com");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				user.getSecuritySettings()
+					    .setStores(Arrays.asList("241f8851-fa36-4de4-a3e9-673b6879b00b"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "angel@yogome.com"));
+				userDao.create(user);
+			}
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
