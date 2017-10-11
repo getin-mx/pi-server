@@ -119,15 +119,15 @@ implements BDBTimelineDataBzService {
 			}
 			
 			// Creates the result map
-			Map<String, Double[]> resultMap = CollectionFactory.createMap();
+			Map<String, Integer[]> resultMap = CollectionFactory.createMap();
 			if(!CollectionUtils.isEmpty(orderList)) {
 				for( String order : orderList ) {
 					String key = aliasMap.get(order);
-					Double[] valArray = resultMap.get(key);
+					Integer[] valArray = resultMap.get(key);
 					if( valArray == null ) {
-						valArray = new Double[dateMap.keySet().size()];
+						valArray = new Integer[dateMap.keySet().size()];
 						for( int i = 0; i < dateMap.keySet().size(); i++ ) {
-							valArray[i] = new Double(0.0);
+							valArray[i] = new Integer(0);
 						}
 					}
 					resultMap.put(key, valArray);
@@ -141,15 +141,15 @@ implements BDBTimelineDataBzService {
 					String orderKey = obj.getElementSubId();
 					if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
 						aliasMap.put(orderKey, key);
-						Double[] valArray = resultMap.get(key);
+						Integer[] valArray = resultMap.get(key);
 						if( valArray == null ) {
-							valArray = new Double[dateMap.keySet().size()];
+							valArray = new Integer[dateMap.keySet().size()];
 							for( int i = 0; i < dateMap.keySet().size(); i++ ) {
-								valArray[i] = new Double(0.0);
+								valArray[i] = new Integer(0);
 							}
 						}
 						int position = dateMap.get(objDate);
-						valArray[position] += obj.getDoubleValue();
+						valArray[position] += obj.getDoubleValue().intValue();
 						resultMap.put(key, valArray);
 					}
 				}
@@ -157,14 +157,14 @@ implements BDBTimelineDataBzService {
 
 			// Checks if it has to erase blank spaces
  			if( eraseBlanks) {
-				Double[] eraseMap = new Double[dateMap.keySet().size()];
+				Integer[] eraseMap = new Integer[dateMap.keySet().size()];
 				for( int i = 0; i < eraseMap.length; i++ )
-					eraseMap[i] = 0.0;
+					eraseMap[i] = 0;
 
 				Iterator<String> it = resultMap.keySet().iterator();
 				while(it.hasNext()) {
 					String key = it.next();
-					Double[] valArray = resultMap.get(key);
+					Integer[] valArray = resultMap.get(key);
 					for( int x = 0; x < valArray.length; x++ )
 						if( valArray[x] > 0 ) eraseMap[x]++;
 				}
@@ -176,8 +176,8 @@ implements BDBTimelineDataBzService {
 				it = resultMap.keySet().iterator();
 				while(it.hasNext()) {
 					String key = it.next();
-					Double[] valArray = resultMap.get(key);
-					Double[] newArray = new Double[newCount];
+					Integer[] valArray = resultMap.get(key);
+					Integer[] newArray = new Integer[newCount];
 					int x = 0;
 					for( int i = 0; i < valArray.length; i++ ) {
 						if(eraseMap[i] > 0 ) {
