@@ -32,15 +32,15 @@ public class XSSFDashboardExport {
 	private BrandDAO brandDao;
 	@Autowired
 	private StoreDAO storeDao;
-	
+
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
-	
+
 	public byte[] createXSSFBrandDashboardRepresentation(String authToken, String baseUrl, String brandId, String storeId, Date dateFrom, Date dateTo) throws ASException {
-		
+
 		// Get the Brand
 		Brand brand = brandDao.get(brandId, true);
-		
+
 		// Get the Store
 		Store store = !StringUtils.hasText(storeId) ? null : storeDao.get(storeId, true);
 
@@ -51,7 +51,7 @@ public class XSSFDashboardExport {
 				+ "&onlyExternalIds=true";
 		String tableString = get(tableUrl);
 		JSONArray tableJson = new JSONArray(tableString);
-		
+
 //		System.out.println(tableJson);
 
 		// Daily Visits -------------------------------------------------------------------------------------------------
@@ -62,10 +62,10 @@ public class XSSFDashboardExport {
 				+ "&fromStringDate=" + sdf.format(dateFrom) + "&toStringDate=" + sdf.format(dateTo)
 				+ "&eraseBlanks=false";
 		String dailyString = get(dailyUrl);
-		JSONObject dailyJson = new JSONObject(dailyString);		
-		
+		JSONObject dailyJson = new JSONObject(dailyString);
+
 //		System.out.println(dailyJson);
-		
+
 		// Hourly Visits -------------------------------------------------------------------------------------------------
 		String trafHourUrl = baseUrl + "dashoard/timelineHour?authToken=" + authToken + "&entityId=" + brandId + "&entityKind=1"
 				+ (StringUtils.hasText(storeId) ? "&subentityId=" + storeId : "")
@@ -74,10 +74,10 @@ public class XSSFDashboardExport {
 				+ "&fromStringDate=" + sdf.format(dateFrom) + "&toStringDate=" + sdf.format(dateTo)
 				+ "&average=true&toMinutes=true&eraseBlanks=true";
 		String trafHourString = get(trafHourUrl);
-		JSONObject trafHourJson = new JSONObject(trafHourString);		
-		
+		JSONObject trafHourJson = new JSONObject(trafHourString);
+
 //		System.out.println(trafHourJson);
-		
+
 		// Daily Permanence -------------------------------------------------------------------------------------------------
 		String permHourUrl = baseUrl + "dashoard/timelineHour?authToken=" + authToken + "&entityId=" + brandId + "&entityKind=1"
 				+ (StringUtils.hasText(storeId) ? "&subentityId=" + storeId : "")
@@ -86,8 +86,8 @@ public class XSSFDashboardExport {
 				+ "&fromStringDate=" + sdf.format(dateFrom) + "&toStringDate=" + sdf.format(dateTo)
 				+ "&eraseBlanks=true";
 		String permHourString = get(permHourUrl);
-		JSONObject permHourJson = new JSONObject(permHourString);		
-		
+		JSONObject permHourJson = new JSONObject(permHourString);
+
 //		System.out.println(permHourJson);
 
 		// Data Format ------------------------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ public class XSSFDashboardExport {
 			@SuppressWarnings("resource")
 			HSSFWorkbook wb = new HSSFWorkbook();
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			
+
 		    HSSFFont defaultFont= wb.createFont();
 		    defaultFont.setFontHeightInPoints((short)10);
 		    defaultFont.setFontName("Arial");
@@ -110,23 +110,23 @@ public class XSSFDashboardExport {
 		    font.setColor(IndexedColors.BLACK.getIndex());
 		    font.setBold(true);
 		    font.setItalic(false);
-			
+
 		    HSSFCellStyle bold = wb.createCellStyle();
 		    bold.setFont(font);
 
 		    // General Table ---------------------------------------------------------------------------------------------------------------
 			HSSFSheet sheet = wb.createSheet("General");
 			int rowId = 0;
-			
+
 			HSSFRow row = sheet.createRow(rowId++);
 			HSSFCell cell = row.createCell(0);
 			cell.setCellValue("Reporte de Cadena " + brand.getName() + (store != null ? " - " + store.getName() : "")
 					+ " del dia " + sdf2.format(dateFrom) + " al dia " + sdf2.format(dateTo));
 			cell.setCellStyle(bold);
 			sheet.addMergedRegion(new CellRangeAddress(0,0,0,8));
-			
+
 			row = sheet.createRow(rowId++);
-			
+
 			for( int i = 0; i < tableJson.length(); i++) {
 				JSONArray jsonRow = tableJson.getJSONArray(i);
 				row = sheet.createRow(rowId++);
@@ -138,24 +138,24 @@ public class XSSFDashboardExport {
 					}
 				}
 			}
-			
+
 			for( int i = 0; i < 9; i ++ ) {
 				sheet.autoSizeColumn(i);
 			}
-			
+
 		    // Traffic ---------------------------------------------------------------------------------------------------------------
 			sheet = wb.createSheet("Trafico por Dia");
 			rowId = 0;
-			
+
 			row = sheet.createRow(rowId++);
 			cell = row.createCell(0);
 			cell.setCellValue("Reporte de Cadena " + brand.getName() + (store != null ? " - " + store.getName() : "")
 					+ " del dia " + sdf2.format(dateFrom) + " al dia " + sdf2.format(dateTo));
 			cell.setCellStyle(bold);
 			sheet.addMergedRegion(new CellRangeAddress(0,0,0,8));
-			
+
 			row = sheet.createRow(rowId++);
-			
+
 			JSONArray categories = dailyJson.getJSONArray("categories");
 			JSONArray series = dailyJson.getJSONArray("series");
 			row = sheet.createRow(rowId++);
@@ -181,7 +181,7 @@ public class XSSFDashboardExport {
 					}
 				}
 			}
-			
+
 			for( int i = 0; i < 9; i ++ ) {
 				sheet.autoSizeColumn(i);
 			}
@@ -189,16 +189,16 @@ public class XSSFDashboardExport {
 			// Visits per Hour ---------------------------------------------------------------------------------------------------------------
 			sheet = wb.createSheet("Trafico por Hora");
 			rowId = 0;
-			
+
 			row = sheet.createRow(rowId++);
 			cell = row.createCell(0);
 			cell.setCellValue("Reporte de Cadena " + brand.getName() + (store != null ? " - " + store.getName() : "")
 					+ " del dia " + sdf2.format(dateFrom) + " al dia " + sdf2.format(dateTo));
 			cell.setCellStyle(bold);
 			sheet.addMergedRegion(new CellRangeAddress(0,0,0,8));
-			
+
 			row = sheet.createRow(rowId++);
-			
+
 			categories = permHourJson.getJSONArray("categories");
 			series = permHourJson.getJSONArray("series");
 			row = sheet.createRow(rowId++);
@@ -224,24 +224,24 @@ public class XSSFDashboardExport {
 					}
 				}
 			}
-			
+
 			for( int i = 0; i < 9; i ++ ) {
 				sheet.autoSizeColumn(i);
 			}
-			
+
 			// Permanence ---------------------------------------------------------------------------------------------------------------
 			sheet = wb.createSheet("Permanencia Promedio");
 			rowId = 0;
-			
+
 			row = sheet.createRow(rowId++);
 			cell = row.createCell(0);
 			cell.setCellValue("Reporte de Cadena " + brand.getName() + (store != null ? " - " + store.getName() : "")
 					+ " del dia " + sdf2.format(dateFrom) + " al dia " + sdf2.format(dateTo));
 			cell.setCellStyle(bold);
 			sheet.addMergedRegion(new CellRangeAddress(0,0,0,8));
-			
+
 			row = sheet.createRow(rowId++);
-			
+
 			categories = trafHourJson.getJSONArray("categories");
 			series = trafHourJson.getJSONArray("series");
 			row = sheet.createRow(rowId++);
@@ -267,21 +267,21 @@ public class XSSFDashboardExport {
 					}
 				}
 			}
-			
+
 			for( int i = 0; i < 9; i ++ ) {
 				sheet.autoSizeColumn(i);
 			}
-			
+
 			wb.write(bos);
 			bos.close();
-			
+
 			return bos.toByteArray();
-			
+
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
 	}
-	
+
 	private String get(String url) throws ASException {
 		try {
 			URL burl = new URL(url);
@@ -298,5 +298,5 @@ public class XSSFDashboardExport {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
 	}
-	
+
 }
