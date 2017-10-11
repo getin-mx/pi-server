@@ -58,6 +58,7 @@ implements BDBDashboardBzService {
 			String entityId = obtainStringValue("entityId", null);
 			Integer entityKind = obtainIntegerValue("entityKind", null);
 			Boolean onlyExternalIds = obtainBooleanValue("onlyExternalIds", false);
+			Integer storeType = obtainIntegerValue("storeType", null);
 			List<Integer> status = Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED});
 			
 			
@@ -97,11 +98,13 @@ implements BDBDashboardBzService {
 			// Creates the list
 			List<NameAndIdAdapter> adapter = CollectionFactory.createList();
 			for( Store b : storeList ) {
-					NameAndIdAdapter obj = new NameAndIdAdapter();
-					obj.setIdentifier(b.getIdentifier());
-					obj.setName(b.getName());
-					obj.setAvatarId(b.getAvatarId());
-					adapter.add(obj);
+					if(storeType == 0 || storeType == null || storeType == b.getStoreKind()) {
+						NameAndIdAdapter obj = new NameAndIdAdapter();
+						obj.setIdentifier(b.getIdentifier());
+						obj.setName(b.getName());
+						obj.setAvatarId(b.getAvatarId());
+						adapter.add(obj);
+					}
 			}
 			
 			returnValue = this.getJSONRepresentationFromArrayOfObjects(
