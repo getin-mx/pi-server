@@ -504,6 +504,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			}
 			File tmp = File.createTempFile("getin", "data");
 			FileOutputStream fos = new FileOutputStream(tmp);
+			log.log(Level.INFO, "Written to: " +tmp.getAbsolutePath());
 			workbook.write(fos);
 			fos.flush();
 			fos.close();
