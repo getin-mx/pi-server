@@ -49,14 +49,13 @@ public class GenerateExternalGeo extends AbstractCLI {
 				if(!options.has(ENTITY_IDS_PARAM))
 					throw ASExceptionHelper.defaultException("No data source given: Entity IDs "
 							+ " are required (at least one)", null);
+				if(!options.has(ENTITY_KIND_PARAM))
+					throw ASExceptionHelper.defaultException("A entity kind is needed; it should resonate "
+							+ "with the entity IDs", null);
 
 				sEntityIds = (String)options.valueOf("entityIds");
-				if(sEntityIds != null) {
-					String parts[] = sEntityIds.split(",");
-					for(int i = 0; i < parts.length; i++) {
-						entityIds.add(parts[i].trim());
-					}
-				}
+				String parts[] = sEntityIds.split(",");
+				for(int i = 0; i < parts.length; i++) entityIds.add(parts[i].trim());
 				entityKind = (Integer)options.valueOf("entityKind");
 				
 			} catch( Exception e ) {

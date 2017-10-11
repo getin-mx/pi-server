@@ -67,6 +67,7 @@ public class ExternalGeoImporter {
 		SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdfPeriod = new SimpleDateFormat("yyyy-MM");
+		SimpleDateFormat mordorSdf = new SimpleDateFormat("MMM d, yyyy h:mm:ss a");
 		
 		String period = sdfPeriod.format(new Date());
 		
@@ -175,12 +176,15 @@ public class ExternalGeoImporter {
 						count++;
 						JSONObject json = it.next();
 						// Filter for only use matched devices
-						if( json != null && json.has("deviceUUID") && devices.containsKey(json.getString("deviceUUID"))) {
+						if( json != null && json.has("deviceUUID") &&
+								devices.containsKey(json.getString("deviceUUID"))) {
 
 							String uuid = json.getString("deviceUUID");
-							@SuppressWarnings("deprecation")
-							Date d = new Date(json.getString("lastUpdate"));
-							int hour = Integer.valueOf(sdfHour.format(d));
+							//@SuppressWarnings("deprecation")
+							//Date d = new Date(json.getString("lastUpdate"));
+							
+							int hour = Integer.valueOf(sdfHour.format(mordorSdf.parse(
+									json.getString("lastUpdate"))));
 
 							Map<Integer, HashSet<String>> devices2 = devices.get(uuid);
 							Iterator<Integer> itx = devices2.keySet().iterator();
@@ -190,6 +194,8 @@ public class ExternalGeoImporter {
 								for( String id : ids ) {
 									try {
 										Integer myType = dao.getType(type, hour);
+										period = sdfPeriod.format(
+												mordorSdf.parse(json.getString("lastUpdate")));
 										String key = dao.getHash(new Float(json.getDouble("lat")), 
 												new Float(json.getDouble("lon")), period, id, entityKind, myType);
 
@@ -237,7 +243,7 @@ public class ExternalGeoImporter {
 				// Iterates to next day
 				Calendar cal = Calendar.getInstance();
 				do {
-					workDate = new Date(workDate.getTime() + 86400000 /* 24 hours */);
+					workDate = new Date(workDate.getTime() + DAY_IN_MILLIS);
 					cal.setTime(workDate);
 				} while((cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY 
 						|| cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY));
@@ -252,7 +258,11 @@ public class ExternalGeoImporter {
 				if( obj != null ) {
 					String key = obj.getIdentifier();
 					obj.setUserCount(cacheDevices.containsKey(key) ? cacheDevices.get(key).size() : 0);
-					externalGeoDao.create(obj);
+					try {
+						if(!externalGeoDao.get(key).equals(obj)) externalGeoDao.update(obj);
+					} catch(ASException e) {
+						externalGeoDao.create(obj);
+					}
 					count ++;
 					if( count % 1000 == 0 ) {
 						log.log(Level.INFO, "Writing record " + count + " of " + cache.size() + " in Database...");
