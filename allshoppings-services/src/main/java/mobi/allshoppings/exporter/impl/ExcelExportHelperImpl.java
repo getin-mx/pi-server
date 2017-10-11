@@ -1118,10 +1118,11 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		row.createCell(WEEK_OF_YEAR_INDEX).setCellValue(helper.createRichTextString(WEEK_OF_YEAR_CELL_TITLE));
 		row.createCell(DAY_OF_WEEK_INDEX).setCellValue(helper.createRichTextString(DAY_OF_WEEK_CELL_TITLE));
 		row.createCell(HOUR_CELL_INDEX).setCellValue(helper.createRichTextString(HOUR_CELL_TITLE));
-		row.createCell(PEASENTS_CELL_INDEX).setCellValue(helper.createRichTextString(PEASENTS_CELL_TITLE));
-		row.createCell(VISITS_CELL_INDEX).setCellValue(helper.createRichTextString(VISITS_CELL_TITLE));
-		row.createCell(TICKET_CELL_INDEX).setCellValue(helper.createRichTextString(TICKET_CELL_TITLE));
-		row.createCell(STORE_NAME_CELL_INDEX).setCellValue(helper.createRichTextString(STORE_NAME_CELL_TITLE));
+		row.createCell(PEASENTS_CELL_INDEX +1).setCellValue(helper.createRichTextString(PEASENTS_CELL_TITLE));
+		row.createCell(VISITS_CELL_INDEX +1).setCellValue(helper.createRichTextString(VISITS_CELL_TITLE));
+		row.createCell(TICKET_CELL_INDEX +1).setCellValue(helper.createRichTextString(TICKET_CELL_TITLE));
+		row.createCell(STORE_NAME_CELL_INDEX +1).setCellValue(helper.createRichTextString(
+				STORE_NAME_CELL_TITLE));
 		Map<Integer, DashboardIndicatorData> visits = CollectionFactory.createMap();
 		Map<Integer, DashboardIndicatorData> peasents = CollectionFactory.createMap();
 		for(String storeId : storesId) {
