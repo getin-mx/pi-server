@@ -89,24 +89,6 @@
 	</bean>
 
  	<!-- ** REST resources ** -->
- 	<bean id="spring.dashboard.storesfilter.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboard.storesfilter.rest.resource" />
- 	</bean>
- 	<bean id="spring.dashboard.repetitions.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboard.repetitions.rest.resource" />
- 	</bean>
- 	<bean id="spring.dashboard.timelinedata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboard.timelinedata.rest.resource" />
- 	</bean>
- 	<bean id="spring.dashboard.timelinehour.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboard.timelinehour.rest.resource" />
- 	</bean>
- 	<bean id="spring.dashboard.heatmaptabledata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboard.heatmaptabledata.rest.resource" />
- 	</bean>
- 	<bean id="spring.dashboard.heatmaptablehour.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboard.heatmaptablehour.rest.resource" />
- 	</bean>
  	<bean id="spring.dummy.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dummy.rest.resource" />
  	</bean>
@@ -181,7 +163,26 @@
 	</bean>
 
 
-	<!-- Dashboard Recources -->
+	<!-- Dashboard Resources -->
+ 	<bean id="spring.dashboard.storesfilter.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.storesfilter.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.repetitions.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.repetitions.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.timelinedata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.timelinedata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.timelinehour.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.timelinehour.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.heatmaptabledata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.heatmaptabledata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.heatmaptablehour.rest.resource" class="org.restlet.ext.spring.SpringFinder">
+ 	    <lookup-method name="create" bean="dashboard.heatmaptablehour.rest.resource" />
+ 	</bean>
+
  	<bean id="spring.dashboard.employeetimes.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboard.employeetimes.rest.resource" />
  	</bean>

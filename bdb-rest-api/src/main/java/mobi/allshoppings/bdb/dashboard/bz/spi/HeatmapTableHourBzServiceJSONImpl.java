@@ -1,4 +1,4 @@
-package mobi.allshoppings.bdb.bz;
+package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
 import java.util.Arrays;

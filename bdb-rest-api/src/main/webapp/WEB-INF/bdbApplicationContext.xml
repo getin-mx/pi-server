@@ -53,6 +53,7 @@
   	<bean id="dashboard.timelinehour.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.TimelineHourBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.heatmaptabledata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.HeatmapTableDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.heatmaptablehour.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.HeatmapTableHourBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+  	<bean id="dashboard.heatmapdata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.HeatmapDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	
   	<bean id="dashboard.opentimes.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.OpenTimesDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.employeetimes.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.EmployeeTimesDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
@@ -66,7 +67,6 @@
   	<bean id="dashboard.floormaplist.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.FloorMapListBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.floormapdata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.FloorMapDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.floormapjourneydata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.FloorMapJourneyDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
-  	<bean id="dashboard.heatmapdata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.HeatmapDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.piedata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.PieDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.aphentrydata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.APHEntryDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.externalgeodata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.ExternalGeoDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
