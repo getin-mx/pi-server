@@ -48,6 +48,10 @@ import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dao.StoreItemDAO;
 import mobi.allshoppings.dao.StoreRevenueDAO;
+import mobi.allshoppings.dao.StoreTicketByHourDAO;
+import mobi.allshoppings.dao.StoreTicketDAO;
+import mobi.allshoppings.dump.DumperHelper;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.exporter.ExcelExportHelper;
@@ -57,12 +61,14 @@ import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.StoreItem;
 import mobi.allshoppings.model.StoreRevenue;
+import mobi.allshoppings.model.StoreTicket;
+import mobi.allshoppings.model.StoreTicketByHour;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.tools.CollectionFactory;
 
 public class ExcelExportHelperImpl implements ExcelExportHelper {
 
-	private static final Logger log = Logger.getLogger(ExcelExportHelperImpl.class.getName());
+private static final Logger log = Logger.getLogger(ExcelExportHelperImpl.class.getName());
 	
 	static final DecimalFormat DF = new DecimalFormat("00");
 	
@@ -70,10 +76,6 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	DashboardIndicatorDataDAO didDao;
 	@Autowired
 	private StoreDAO storeDao;
-	@Autowired
-	private StoreRevenueDAO sRevenueDao;
-	@Autowired
-	private StoreItemDAO sItemDao;
 	@Autowired
 	private SystemConfiguration systemConfiguration;
 	@Autowired
@@ -89,9 +91,31 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	
 	private static final SimpleDateFormat year = new SimpleDateFormat("yyyy");
 	private static final SimpleDateFormat month = new SimpleDateFormat("MM");
-	
 	private static final int DAY_IN_MILLIS = 86400000;
-
+	private static final int HOUR_IN_MILLIS = 3600000;
+	
+	private static final byte DATE_CELL_INDEX = 0;
+	private static final byte MONTH_CELL_INDEX = 1;
+	private static final byte WEEK_OF_YEAR_INDEX = 2;
+	private static final byte DAY_OF_WEEK_INDEX = 3;
+	private static final byte PEASENTS_CELL_INDEX = 4;
+	private static final byte VISITS_CELL_INDEX = 5;
+	private static final byte TICKET_CELL_INDEX = 6;
+	private static final byte STORE_NAME_CELL_INDEX = 7;
+	
+	private static final byte HOUR_CELL_INDEX = 4;
+	
+	private static final String DATE_CELL_TITLE = "Fecha";
+	private static final String MONTH_CELL_TITLE = "Mes";
+	private static final String WEEK_OF_YEAR_CELL_TITLE = "Semana";
+	private static final String DAY_OF_WEEK_CELL_TITLE = "D\u00EDa";
+	private static final String PEASENTS_CELL_TITLE = "Paseantes";
+	private static final String VISITS_CELL_TITLE = "Visitas";
+	private static final String TICKET_CELL_TITLE = "Ticket";
+	private static final String STORE_NAME_CELL_TITLE = "Tienda";
+	
+	private static final String HOUR_CELL_TITLE = "Hora";
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	public byte[] export(String storeId, String fromDate, String toDate, int weeks, String outDir)
