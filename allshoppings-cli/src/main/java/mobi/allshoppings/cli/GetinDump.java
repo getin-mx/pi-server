@@ -936,13 +936,26 @@ public class GetinDump extends AbstractCLI {
 				brand = brandDao.get("fraiche_mx", true);
 				brand.setStatus(StatusAware.STATUS_ENABLED); 
 		        brandDao.update(brand);
-		        log.log(Level.INFO, "Se ha creado la marca "+brand.getName());
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Fraiche");
 				brand.setCountry("Mexico");
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "fraiche_mx"));
 				brandDao.create(brand);
+				log.log(Level.INFO, "Se ha creado la marca "+brand.getName());
+			}
+			
+			try {
+				brand = brandDao.get("brunocorza_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED); 
+		        brandDao.update(brand);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Bruno Corza");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "brunocorza_mx"));
+				brandDao.create(brand);
+				log.log(Level.INFO, "Se ha creado la marca "+brand.getName());
 			}
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
@@ -1612,6 +1625,12 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("790","MT Sport S3 Orizaba Plaza Valle", "mt_sport_mx", null, 0));
 			stores.add(new StoreAdapter("791","MT Sport S6 Orizaba Centro", "mt_sport_mx", null, 0));
 			stores.add(new StoreAdapter("792","MT Sport S7 Apizaco", "mt_sport_mx", null, 0));
+			
+			stores.add(new StoreAdapter("793","Bruno Corza Galerías Insurgentes", "brunocorza_mx", null, 0));
+			stores.add(new StoreAdapter("794","Bruno Corza Polanco", "brunocorza_mx", null, 0));
+			stores.add(new StoreAdapter("795","Bruno Corza Mundo E", "brunocorza_mx", null, 0));
+			stores.add(new StoreAdapter("796","Bruno Corza Cosmopol", "brunocorza_mx", null, 0));
+			stores.add(new StoreAdapter("797","Bruno Corza Angelópolis", "brunocorza_mx", null, 0));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
