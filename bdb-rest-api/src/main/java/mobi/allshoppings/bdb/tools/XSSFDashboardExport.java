@@ -46,7 +46,7 @@ public class XSSFDashboardExport {
 
 		// Data Acquisition ---------------------------------------------------------------------------------------------
 		// Table --------------------------------------------------------------------------------------------------------
-		String tableUrl = baseUrl + "dashoard/brandTableData?authToken=" + authToken + "&entityId=" + brandId
+		String tableUrl = baseUrl + "dashboard/brandTableData?authToken=" + authToken + "&entityId=" + brandId
 				+ "&entityKind=1" + "&fromStringDate=" + sdf.format(dateFrom) + "&toStringDate=" + sdf.format(dateTo)
 				+ "&onlyExternalIds=true";
 		String tableString = get(tableUrl);
@@ -55,10 +55,10 @@ public class XSSFDashboardExport {
 //		System.out.println(tableJson);
 
 		// Daily Visits -------------------------------------------------------------------------------------------------
-		String dailyUrl = baseUrl + "dashoard/timelineData?authToken=" + authToken + "&entityId=" + brandId + "&entityKind=1"
+		String dailyUrl = baseUrl + "dashboard/timelineData?authToken=" + authToken + "&entityId=" + brandId + "&entityKind=1"
 				+ (StringUtils.hasText(storeId) ? "&subentityId=" + storeId : "")
 				+ "&elementId=apd_visitor&subIdOrder=visitor_total_peasents,visitor_total_visits,visitor_total_peasents_ios,"
-				+ "visitor_total_peasents_android,visitor_total_visits_ios,visitor_total_visits_android,visitor_total_tickets,visitor_total_revenue"
+				+ "visitor_total_peasents_android,visitor_total_visits_ios,visitor_total_visits_android,visitor_total_tickets,visitor_total_items,visitor_total_revenue"
 				+ "&fromStringDate=" + sdf.format(dateFrom) + "&toStringDate=" + sdf.format(dateTo)
 				+ "&eraseBlanks=false";
 		String dailyString = get(dailyUrl);
@@ -67,7 +67,7 @@ public class XSSFDashboardExport {
 //		System.out.println(dailyJson);
 		
 		// Hourly Visits -------------------------------------------------------------------------------------------------
-		String trafHourUrl = baseUrl + "dashoard/timelineHour?authToken=" + authToken + "&entityId=" + brandId + "&entityKind=1"
+		String trafHourUrl = baseUrl + "dashboard/timelineHour?authToken=" + authToken + "&entityId=" + brandId + "&entityKind=1"
 				+ (StringUtils.hasText(storeId) ? "&subentityId=" + storeId : "")
 				+ "&elementId=apd_permanence&subIdOrder=permanence_hourly_peasents,permanence_hourly_visits,"
 				+ "permanence_hourly_peasents_ios,permanence_hourly_peasents_android,permanence_hourly_visits_ios,permanence_hourly_visits_android"
@@ -79,7 +79,7 @@ public class XSSFDashboardExport {
 //		System.out.println(trafHourJson);
 		
 		// Daily Permanence -------------------------------------------------------------------------------------------------
-		String permHourUrl = baseUrl + "dashoard/timelineHour?authToken=" + authToken + "&entityId=" + brandId + "&entityKind=1"
+		String permHourUrl = baseUrl + "dashboard/timelineHour?authToken=" + authToken + "&entityId=" + brandId + "&entityKind=1"
 				+ (StringUtils.hasText(storeId) ? "&subentityId=" + storeId : "")
 				+ "&elementId=apd_visitor&subIdOrder=visitor_total_peasents,visitor_total_visits,visitor_total_peasents_ios,"
 				+ "visitor_total_peasents_android,visitor_total_visits_ios,visitor_total_visits_android"
@@ -177,7 +177,8 @@ public class XSSFDashboardExport {
 				for( int x = 0; x < series.length(); x++) {
 					if(series.getJSONObject(x).has("name")) {
 						cell = row.createCell(x+1);
-						cell.setCellValue(series.getJSONObject(x).getJSONArray("data").getInt(i));
+						cell.setCellStyle(bold);
+						cell.setCellValue(series.getJSONObject(x).getJSONArray("data").getDouble(i));
 					}
 				}
 			}

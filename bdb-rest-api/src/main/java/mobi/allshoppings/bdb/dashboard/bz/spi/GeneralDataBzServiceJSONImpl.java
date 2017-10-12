@@ -514,25 +514,7 @@ implements BDBDashboardBzService {
 			sum.setPeasants(peasants);
 			sum.setVisits(visits);
 			sum.setTickets(tickets);
-
-			{
-				long total = 0;
-				long count = 0;
-				Iterator<String> it = ticketsByDate.keySet().iterator();
-				while( it.hasNext() ) {
-					String key = it.next();
-					Long val = ticketsByDate.get(key);
-					if( val != null ) {
-						total += val;
-						count++;
-					}
-				}
-				if( count > 0 )
-					sum.setAvgTickets(total/count);
-				else
-					sum.setAvgTickets(0);
-
-			}
+			sum.setAvgTickets(revenue/tickets);
 			
 			{
 				List<PerformanceEntry> performance = CollectionFactory.createList();
