@@ -177,7 +177,6 @@ public class XSSFDashboardExport {
 				for( int x = 0; x < series.length(); x++) {
 					if(series.getJSONObject(x).has("name")) {
 						cell = row.createCell(x+1);
-						cell.setCellStyle(bold);
 						cell.setCellValue(series.getJSONObject(x).getJSONArray("data").getDouble(i));
 					}
 				}
