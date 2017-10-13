@@ -917,10 +917,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public List<APDVisit> aphEntryToVisits(APHEntry entry, Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache,List<String> blackListMacs, List<String> employeeListMacs) throws ASException {
+	public List<APDVisit> aphEntryToVisits(APHEntry entry, Map<String, APDevice> apdCache,
+			Map<String, APDAssignation> assignmentsCache,List<String> blackListMacs,
+			List<String> employeeListMacs) throws ASException {
 		List<APHEntry> entries = CollectionFactory.createList();
 		entries.add(entry);
-		return aphEntryToVisits(entries, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
+		return aphEntryToVisits(entries, apdCache, assignmentsCache, blackListMacs, employeeListMacs);
 	}	
 
 	/**
