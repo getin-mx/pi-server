@@ -7,15 +7,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.datastore.JDOConnection;
 
-import org.joda.time.DateTime;
 import org.springframework.context.ApplicationContext;
 
+import com.inodes.util.CollectionFactory;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCursor;
@@ -76,6 +77,7 @@ public class HotspotComparer extends AbstractCLI {
 		} catch(ParseException e) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
+		Map<String, APHotspot> hotspots = CollectionFactory.createMap();
 		
 		// Creates JDO Connection
 		PersistenceManager pm;
@@ -85,10 +87,10 @@ public class HotspotComparer extends AbstractCLI {
 		// Gets Native connection from JDO
 		JDOConnection jdoConn = pm.getDataStoreConnection();
 		DB db = (DB)jdoConn.getNativeConnection();
-		DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
 		for(String collection : options.valueOf(COLLECTIONS_PARAM).toString().split(",")) {
 			collection = collection.trim();
 			LOG.log(Level.INFO, "Searching for missing data in collection " +collection);
+			DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
 			dumper.setFilter(hostname);
 			DBObject obj;
 			BasicDBObject query = new BasicDBObject();
@@ -100,7 +102,7 @@ public class HotspotComparer extends AbstractCLI {
 			DBCursor c = db.getCollection(collection).find(query);
 			LOG.log(Level.INFO, "Found " +c.count() +" entries in collection " +collection);
 			c.addOption(com.mongodb.Bytes.QUERYOPTION_NOTIMEOUT);
-			Iterator<DBObject> it = c.iterator();
+			Iterator<DBObject> dbDumpIt = c.iterator();
 			File file = new File("/tmp/aphotspot/" +collection +".json");
 			file.getParentFile().mkdirs();
 			PrintWriter writer = null;
@@ -108,11 +110,19 @@ public class HotspotComparer extends AbstractCLI {
 			try {
 				writer = new PrintWriter(file);
 			} catch(IOException e) {
-				ASExceptionHelper.defaultException(e.getMessage(), e);
-			} while(it.hasNext()) {
-				obj = it.next();
-				if(!dumper.iterator(new DateTime(obj.get("firstSeen")).toDate(),
-						new DateTime(obj.get("lastSeen")).toDate()).hasNext()) {
+				LOG.log(Level.INFO, "Problem creataing dump file " +file, e);
+				continue;
+			} 
+			Iterator<APHotspot> hotspotIterator = dumper.iterator(fromDate, toDate);
+			hotspots.clear();
+			while(hotspotIterator.hasNext()) {
+				APHotspot hotspot = hotspotIterator.next();
+				hotspots.put("APHotspot(\\\"" +hotspot.getIdentifier() +"\\\")", hotspot);
+			} while(dbDumpIt.hasNext()) {
+				obj = dbDumpIt.next();
+				/*if(!dumper.iterator(new DateTime(obj.get("firstSeen")).toDate(),
+						new DateTime(obj.get("lastSeen")).toDate()).hasNext()) {*/
+				if(hotspots.get(obj.get("_id")) == null) {
 					writer.println(obj);
 					count++;
 				}
