@@ -369,10 +369,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Map<String, APHEntry> map = CollectionFactory.createMap();
 		List<APHEntry> res = CollectionFactory.createList();
 		
-		//TimeZone tz = getTimezoneForEntity(entityId, entityKind);
+		TimeZone tz = TimeZone.getTimeZone("GTM");
 		START_CALENDAR.clear();
 		END_CALENDAR.clear();
-		//start.setTimeZone(tz);
+		
+		START_CALENDAR.setTimeZone(tz);
+		END_CALENDAR.setTimeZone(tz);
 
 		int year = Integer.parseInt(forStringDate.substring(0,4));
 		int month = Integer.parseInt(forStringDate.substring(5,7)) -1;
@@ -436,10 +438,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		end.add(Calendar.MINUTE, endOffsetMinutes);
 		if( endOffsetHours <= startOffsetHours ) {
 			end.add(Calendar.DATE, 1);
-		}
+		}*/
 		
-		start.getTime();// TODO instrucciones inecesarias
-		end.getTime();*/
 		SimpleDateFormat gmtSdf = new SimpleDateFormat("yyyy-MM-dd");//TODO es relamnte necesario?
 		gmtSdf.setTimeZone(TimeZone.getTimeZone("GMT"));// TODO el estático sólo no es GMT, gran cosa
 		
@@ -990,7 +990,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		// Merges all the time slots
 		List<Integer> slots = CollectionFactory.createList();
-		if( entries.size() > 1 ) {
+		if(entries.size() > 1) {
 			for( APHEntry entry : entries ) {
 				// Checks for BlackList
 				if(!blackListMacs.contains(entry.getMac().toUpperCase().trim())){
