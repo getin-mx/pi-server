@@ -1,10 +1,12 @@
 package mobi.allshoppings.cli;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
@@ -37,6 +39,8 @@ public class HotspotComparer extends AbstractCLI {
 	private static final String TO_DATE_PARAM = "toDate";
 	private static final String HOSTNAME = "hostname";
 	private static final String COLLECTIONS_PARAM = "collections";
+	
+	private static final String DEST_DIR = "/tmp/missing-aphotspot";
 	
 	private static final Logger LOG = Logger.getLogger(HotspotComparer.class.getName());
 	
@@ -77,12 +81,27 @@ public class HotspotComparer extends AbstractCLI {
 		} catch(ParseException e) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
+		File file = new File(DEST_DIR);
+		if(file.exists()) {
+			if(file.isDirectory()) clearRun(file);
+			else throw ASExceptionHelper.defaultException("There is a file named " +DEST_DIR, null);
+		}
 		Map<String, APHotspot> hotspots = CollectionFactory.createMap();
+		Calendar cal = Calendar.getInstance();
+		DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
+		dumper.setFilter(hostname);
+		Iterator<APHotspot> hotspotIterator = dumper.iterator(fromDate, toDate);
+		hotspots.clear();
+		while(hotspotIterator.hasNext()) {
+			APHotspot hotspot = hotspotIterator.next();
+			hotspots.put("APHotspot(\"" +hotspot.getIdentifier() +"\")", hotspot);
+		}
 		
 		// Creates JDO Connection
 		PersistenceManager pm;
 		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		pm.currentTransaction().begin();
+		dumper.dispose();
 		
 		// Gets Native connection from JDO
 		JDOConnection jdoConn = pm.getDataStoreConnection();
@@ -90,41 +109,33 @@ public class HotspotComparer extends AbstractCLI {
 		for(String collection : options.valueOf(COLLECTIONS_PARAM).toString().split(",")) {
 			collection = collection.trim();
 			LOG.log(Level.INFO, "Searching for missing data in collection " +collection);
-			DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
-			dumper.setFilter(hostname);
-			DBObject obj;
 			BasicDBObject query = new BasicDBObject();
 			query.put("hostname", hostname);
-			/*fromDate = new DateTime(fromDate, DateTimeZone.getDefault()).toDate();
-			toDate = new DateTime(toDate, DateTimeZone.getDefault()).toDate();*/
 			query.put("firstSeen", new BasicDBObject("$gte", fromDate));
 			query.put("lastSeen", new BasicDBObject("$lte", toDate));
 			DBCursor c = db.getCollection(collection).find(query);
 			LOG.log(Level.INFO, "Found " +c.count() +" entries in collection " +collection);
 			c.addOption(com.mongodb.Bytes.QUERYOPTION_NOTIMEOUT);
 			Iterator<DBObject> dbDumpIt = c.iterator();
-			File file = new File("/tmp/aphotspot/" +collection +".json");
-			file.getParentFile().mkdirs();
-			PrintWriter writer = null;
 			int count = 0;
-			try {
-				writer = new PrintWriter(file);
-			} catch(IOException e) {
-				LOG.log(Level.INFO, "Problem creataing dump file " +file, e);
-				continue;
-			} 
-			Iterator<APHotspot> hotspotIterator = dumper.iterator(fromDate, toDate);
-			hotspots.clear();
-			while(hotspotIterator.hasNext()) {
-				APHotspot hotspot = hotspotIterator.next();
-				hotspots.put("APHotspot(\\\"" +hotspot.getIdentifier() +"\\\")", hotspot);
-			} while(dbDumpIt.hasNext()) {
-				obj = dbDumpIt.next();
-				/*if(!dumper.iterator(new DateTime(obj.get("firstSeen")).toDate(),
-						new DateTime(obj.get("lastSeen")).toDate()).hasNext()) {*/
-				if(hotspots.get(obj.get("_id")) == null) {
-					writer.println(obj);
-					count++;
+			while(dbDumpIt.hasNext()) {
+				DBObject obj = dbDumpIt.next();
+				if(hotspots.get(obj.get("_id").toString()) == null) {
+					cal.setTime((Date) obj.get("creationDateTime"));
+					file = new File(DEST_DIR +"/" +cal.get(Calendar.YEAR) +"/" +(Calendar.MONTH +1) +"/"
+							+cal.get(Calendar.DAY_OF_MONTH) +"/" +cal.get(Calendar.HOUR_OF_DAY) +"/"
+							+hostname +".json");
+					file.getParentFile().mkdirs();
+					PrintWriter writer = null;
+					try {
+						writer = new PrintWriter(new FileOutputStream(file, true));
+						writer.println(obj);
+						writer.flush();
+						writer.close();
+						count++;
+					} catch(IOException e) {
+						LOG.log(Level.INFO, "Problem creataing dump file " +file, e);
+					}
 				}
 			}
 			c.close();
@@ -136,11 +147,17 @@ public class HotspotComparer extends AbstractCLI {
 						+" from dates " +fromDate +" - " +toDate +" in collection " +collection
 						+". Great job! :)");
 			}
-			writer.flush();
-			writer.close();
-			dumper.dispose();
 		}
-				
+	}
+	
+	private static void clearRun(File dir) {
+		File[] subFs = dir.listFiles();
+		if(subFs == null) return;
+		for(File f : subFs) {
+			if(f.isDirectory()) clearRun(f);
+			else f.delete();
+		}
+		dir.delete();
 	}
 	
 }
