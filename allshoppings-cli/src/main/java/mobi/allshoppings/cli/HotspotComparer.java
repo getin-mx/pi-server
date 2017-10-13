@@ -101,8 +101,7 @@ public class HotspotComparer extends AbstractCLI {
 			LOG.log(Level.INFO, "Found " +c.count() +" entries in collection " +collection);
 			c.addOption(com.mongodb.Bytes.QUERYOPTION_NOTIMEOUT);
 			Iterator<DBObject> it = c.iterator();
-			File file = new File("/usr/local/allshoppings/debug/missing_aphotspots/"
-					+collection +".json");
+			File file = new File("/tmp/aphotspot/" +collection +".json");
 			file.getParentFile().mkdirs();
 			PrintWriter writer = null;
 			int count = 0;
