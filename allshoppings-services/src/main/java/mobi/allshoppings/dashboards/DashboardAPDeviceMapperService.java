@@ -693,7 +693,7 @@ public class DashboardAPDeviceMapperService {
 	public void createAPDVisitPerformanceDashboardForDay(Date date, List<String> entityIds, Integer entityKind, List<APDVisit> data) throws ASException {
 
 		log.log(Level.INFO, "Starting to create apd_visitor Performance Dashboard for Day " + date + "...");
-		long startTime = new Date().getTime();
+		long startTime = System.currentTimeMillis();
 		CALENDAR.setTime(date);
 		Date processDate = DateUtils.truncate(date, Calendar.DAY_OF_MONTH);
 		Date limitDate = DateUtils.addDays(processDate, 1);
@@ -755,7 +755,7 @@ public class DashboardAPDeviceMapperService {
 						subentityId = entityId;
 						tz = getTimezoneForEntity(entityId, EntityKind.KIND_INNER_ZONE);
 					}
-					CALENDAR.setTimeZone(tz);
+					CALENDAR.setTimeZone(tz);// TODO ponerlo arriba
 					
 					if( store != null || shopping != null || zone != null ) {
 						DashboardIndicatorData obj;
@@ -1322,7 +1322,8 @@ public class DashboardAPDeviceMapperService {
 		
 		obj.setTimeZone(getTimeZone(tz, date));
 		CALENDAR.setTime(date);
-		CALENDAR.setTimeZone(tz);
+		//CALENDAR.setTimeZone(tz);
+		CALENDAR.setTimeZone(TimeZone.getTimeZone("GMT"));
 		obj.setStringDate(forDate);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date day = sdf.parse(forDate);

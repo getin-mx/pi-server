@@ -121,7 +121,7 @@ public class HotspotComparer extends AbstractCLI {
 			while(dbDumpIt.hasNext()) {
 				DBObject obj = dbDumpIt.next();
 				if(hotspots.get(obj.get("_id").toString()) == null) {
-					cal.setTime((Date) obj.get("creationDateTime"));// TODO asegurar que los digitos son a 2
+					cal.setTime((Date) obj.get("creationDateTime"));// TODO buggy date's incorrect, string 2 digits
 					file = new File(DEST_DIR +"/" +cal.get(Calendar.YEAR) +"/" +(Calendar.MONTH +1) +"/"
 							+cal.get(Calendar.DAY_OF_MONTH) +"/" +cal.get(Calendar.HOUR_OF_DAY) +"/"
 							+hostname +".json");
@@ -129,7 +129,19 @@ public class HotspotComparer extends AbstractCLI {
 					PrintWriter writer = null;
 					try {
 						writer = new PrintWriter(new FileOutputStream(file, true));
-						writer.println(obj);
+						writer.println("\"hostname\":\"" +hostname +"\",\"signalDB\":"
+								//TODO add sgnal
+								+",\"lastUpdate\":"
+								//TODO add last update
+								+",{\"key\":{\"kind\":\"APHotspot\",\"name\":\""
+								// TODO add name
+								+"\",\"id\":0},\"mac\":\""
+								// TODO add mac
+								+"\",\"date\":\""
+								// TODO string date
+								+"\",\"creationDateTime\":"
+								// TODO creation date timestamp
+								+"}");
 						writer.flush();
 						writer.close();
 						count++;
