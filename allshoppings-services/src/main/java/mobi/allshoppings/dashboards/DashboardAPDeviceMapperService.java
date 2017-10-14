@@ -690,7 +690,8 @@ public class DashboardAPDeviceMapperService {
 
 	// apd_visitor performance -------------------------------------------------------------------------------------------------------------------------
 
-	public void createAPDVisitPerformanceDashboardForDay(Date date, List<String> entityIds, Integer entityKind, List<APDVisit> data) throws ASException {
+	public void createAPDVisitPerformanceDashboardForDay(Date date, List<String> entityIds,
+			Integer entityKind, List<APDVisit> data) throws ASException {
 
 		log.log(Level.INFO, "Starting to create apd_visitor Performance Dashboard for Day " + date + "...");
 		long startTime = System.currentTimeMillis();
@@ -1320,10 +1321,14 @@ public class DashboardAPDeviceMapperService {
 		obj.setElementSubId(elementSubId);
 		obj.setElementSubName(elementSubName);
 		
-		obj.setTimeZone(getTimeZone(tz, date));
 		CALENDAR.setTime(date);
-		//CALENDAR.setTimeZone(tz);
 		CALENDAR.setTimeZone(TimeZone.getTimeZone("GMT"));
+		date = CALENDAR.getTime();
+		int i = getTimeZone(tz, date);// TODO remove
+		obj.setTimeZone(getTimeZone(tz, date));
+		
+		//CALENDAR.setTimeZone(tz);
+		
 		obj.setStringDate(forDate);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date day = sdf.parse(forDate);

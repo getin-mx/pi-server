@@ -737,7 +737,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									while(i.hasNext()) {
 										String key = i.next();
 										List<APHEntry> e = cache.get(key);
-										List<APDVisit> visitList = aphEntryToVisits(e, apdCache, assignmentsCache,blackListMacs,employeeListMacs);
+										List<APDVisit> visitList = aphEntryToVisits(e, apdCache,
+												assignmentsCache,blackListMacs,employeeListMacs);
 										for(APDVisit visit : visitList ) {
 											if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
 												objs.add(visit);
@@ -935,7 +936,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 */
 	@SuppressWarnings("unused")
 	@Override
-	public List<APDVisit> aphEntryToVisits(List<APHEntry> entries, Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, List<String> employeeListMacs) throws ASException {
+	public List<APDVisit> aphEntryToVisits(List<APHEntry> entries, Map<String, APDevice> apdCache,
+			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,
+			List<String> employeeListMacs) throws ASException {
 
 		int COMMON = 0;
 		int MARKII = 1;
@@ -974,7 +977,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @return A list with created visits
 	 * @throws ASException
 	 */
-	private List<APDVisit> aphEntryToVisitsMarkII(List<APHEntry> entries, Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, List<String> employeeListMacs) throws ASException {
+	private List<APDVisit> aphEntryToVisitsMarkII(List<APHEntry> entries, Map<String, APDevice> apdCache,
+			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,
+			List<String> employeeListMacs) throws ASException {
 
 		// Validates entries
 		if( CollectionUtils.isEmpty(entries))
@@ -1038,7 +1043,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			for( APHEntry entry : entries ) {
 				try {
 					assignments.put(entry.getHostname(),
-							apdaDao.getOneUsingHostnameAndDate(entry.getHostname(), sdf.parse(entry.getDate())));
+							apdaDao.getOneUsingHostnameAndDate(entry.getHostname(),
+									sdf.parse(entry.getDate())));
 				} catch( Exception e ) {
 					log.log(Level.SEVERE, "Error parsing date " + entry.getDate(), e);
 				}
@@ -1241,7 +1247,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @return A list with created visits
 	 * @throws ASException
 	 */
-	private List<APDVisit> aphEntryToVisitsCommon(List<APHEntry> entries, Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, List<String> employeeListMacs) throws ASException {
+	private List<APDVisit> aphEntryToVisitsCommon(List<APHEntry> entries, Map<String, APDevice> apdCache,
+			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,
+			List<String> employeeListMacs) throws ASException {
 
 		// Validates entries
 		if( CollectionUtils.isEmpty(entries))
@@ -1367,12 +1375,14 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 						// Add a new peasant if there is no peasant active
 						if( currentPeasant == null )
-							currentPeasant = createPeasant(curEntry, curDate, null, assignments.get(curEntry.getHostname()));
+							currentPeasant = createPeasant(curEntry, curDate, null,
+									assignments.get(curEntry.getHostname()));
 						lastPeasantSlot = slot;
 						// Checks for power for visit
 						if( value >= dev.getVisitPowerThreshold()) {
 							if( currentVisit == null )
-								currentVisit = createVisit(curEntry, curDate, null, assignments.get(curEntry.getHostname()), isEmployee);
+								currentVisit = createVisit(curEntry, curDate, null,
+										assignments.get(curEntry.getHostname()), isEmployee);
 							lastVisitSlot = slot;
 						} else {
 							// Closes the visit if it was too far for more time than specified in visit gap threshold
@@ -1494,99 +1504,30 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		if( time > device.getVisitMaxThreshold())
 			return false;
 
-		// Validate Hour of day  
-		int t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
-		int ts = 0;
-		int te = 0;
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(visit.getCheckinStarted());
-		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-		switch(dayOfWeek) {
-		case Calendar.SUNDAY:
-			if( !device.getVisitsOnSun()) return false;
-			ts = Integer.valueOf(tf2.format(tf.parse(device.getVisitStartSun())));
-			te = Integer.valueOf(tf2.format(tf.parse(device.getVisitEndSun())));
-			break;
-		case Calendar.MONDAY:
-			if( !device.getVisitsOnMon()) return false;
-			ts = Integer.valueOf(tf2.format(tf.parse(device.getVisitStartMon())));
-			te = Integer.valueOf(tf2.format(tf.parse(device.getVisitEndMon())));
-			break;
-		case Calendar.TUESDAY:
-			if( !device.getVisitsOnTue()) return false;
-			ts = Integer.valueOf(tf2.format(tf.parse(device.getVisitStartTue())));
-			te = Integer.valueOf(tf2.format(tf.parse(device.getVisitEndTue())));
-			break;
-		case Calendar.WEDNESDAY:
-			if( !device.getVisitsOnWed()) return false;
-			ts = Integer.valueOf(tf2.format(tf.parse(device.getVisitStartWed())));
-			te = Integer.valueOf(tf2.format(tf.parse(device.getVisitEndWed())));
-			break;
-		case Calendar.THURSDAY:
-			if( !device.getVisitsOnThu()) return false;
-			ts = Integer.valueOf(tf2.format(tf.parse(device.getVisitStartThu())));
-			te = Integer.valueOf(tf2.format(tf.parse(device.getVisitEndThu())));
-			break;
-		case Calendar.FRIDAY:
-			if( !device.getVisitsOnFri()) return false;
-			ts = Integer.valueOf(tf2.format(tf.parse(device.getVisitStartFri())));
-			te = Integer.valueOf(tf2.format(tf.parse(device.getVisitEndFri())));
-			break;
-		case Calendar.SATURDAY:
-			if( !device.getVisitsOnSat()) return false;
-			ts = Integer.valueOf(tf2.format(tf.parse(device.getVisitStartSat())));
-			te = Integer.valueOf(tf2.format(tf.parse(device.getVisitEndSat())));
-			break;
-		}
-		
-		if( ts >= te )
-			te = te + 2400;
-		
-		if( te > 2400 && t < ts )
-			t = t + 2400;
-
-		if( t < ts || t >= te )
-			return false;
-		
-		// Validate Monitor Hour
-		t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
-		ts = Integer.valueOf(tf2.format(tf.parse(device.getMonitorStart())));
-		te = Integer.valueOf(tf2.format(tf.parse(device.getMonitorEnd())));
-
-		if( ts >= te )
-			te = te + 2400;
-		
-		if( te > 2400 && t < ts )
-			t = t + 2400;
-
-		if( t < ts || t >= te )
-			return false;
-
-		// Validates Pass Hour 
-		t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
-		ts = Integer.valueOf(tf2.format(tf.parse(device.getPassStart())));
-		te = Integer.valueOf(tf2.format(tf.parse(device.getPassEnd())));
-
-		if( ts >= te )
-			te = te + 2400;
-		
-		if( te > 2400 && t < ts )
-			t = t + 2400;
-
-		if( t < ts || t >= te )
-			return false;
-
 		// Total segments percentage check
 		if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
 				&& null != visit.getTotalSegments() && visit.getTotalSegments() > 0 ) {
 			if((visit.getInRangeSegments() * 100 / visit.getTotalSegments()) < VISIT_PERCENTAGE)
 				return false;
 		}
-
-		visit.setDuration((visit.getCheckinFinished().getTime() / 1000) - (visit.getCheckinStarted().getTime() / 1000)); 
 		
-		// If validations are passed, return true
-		return true;
+		visit.setDuration((visit.getCheckinFinished().getTime() / 1000)
+				-(visit.getCheckinStarted().getTime() / 1000));
+		
+		// TODO Validate day
+		
+		// Validate Monitor Hour  
+		int t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
+		int ts = Integer.valueOf(tf2.format(tf.parse(device.getMonitorStart())));
+		int te = Integer.valueOf(tf2.format(tf.parse(device.getMonitorEnd())));
+
+		if( ts >= te ) {
+			int aux = ts;
+			ts = te;
+			te = aux;
+		}
+		
+		return te >= t && t >= ts;
 	}
 
 
@@ -1602,26 +1543,29 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 */
 	private boolean isPeasantValid(APDVisit visit, APDevice device,Boolean isEmployee) throws ParseException {
 		
-		if( isEmployee )
-			visit.setCheckinType(APDVisit.CHECKIN_EMPLOYEE);
+		if( isEmployee ) visit.setCheckinType(APDVisit.CHECKIN_EMPLOYEE);
 		
-		// Validate Hour of day
+		/*
+		// TODO Validate day
 		int t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
 		int ts = 0;
-		int te = 0;
+		int te = 0; */
 		
 		// Validate Monitor Hour
-		t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
-		ts = Integer.valueOf(tf2.format(tf.parse(device.getMonitorStart())));
-		te = Integer.valueOf(tf2.format(tf.parse(device.getMonitorEnd())));
-
-		if( ts >= te )
-			te = te + 2400;
+		int t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
+		int ts = Integer.valueOf(tf2.format(tf.parse(device.getMonitorStart())));
+		int te = Integer.valueOf(tf2.format(tf.parse(device.getMonitorEnd())));
 		
-		if( te > 2400 && t < ts )
-			t = t + 2400;
+		if( ts >= te ) {
+			int aux = ts;
+			ts = te;
+			te = aux;
+		}
+		visit.setDuration((visit.getCheckinFinished().getTime() / 1000) - (visit.getCheckinStarted().getTime() / 1000));
+		
+		return te >= t && t >= ts;
 
-		if( t < ts || t >= te )
+		/*if( t < ts || t >= te )
 			return false;
 
 		// Validates Pass Hour 
@@ -1638,10 +1582,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		if( t < ts || t >= te )
 			return false;
 
-		visit.setDuration((visit.getCheckinFinished().getTime() / 1000) - (visit.getCheckinStarted().getTime() / 1000)); 
-		
 		// If validations are passed, return true
-		return true;
+		return true;*/
 	}
 
 	/**
@@ -1690,7 +1632,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @return A new fully formed visit
 	 * @throws ASException
 	 */
-	private APDVisit createPeasant(APHEntry source, Date date, DeviceInfo device, APDAssignation assign) throws ASException {
+	private APDVisit createPeasant(APHEntry source, Date date, DeviceInfo device, APDAssignation assign)
+			throws ASException {
 		
 		String entityId = assign.getEntityId();
 		Integer entityKind = assign.getEntityKind();
