@@ -55,6 +55,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 	private final Calendar START_CALENDAR = Calendar.getInstance();
 	private final Calendar END_CALENDAR = Calendar.getInstance();
+	private final Calendar WORK_CALENDAR = Calendar.getInstance();
 	
 	public static final String ALGORITHM_MARKII = "markII";
 	
@@ -62,7 +63,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	private static final SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
 	private static final SimpleDateFormat tf2 = new SimpleDateFormat("HHmm");
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	private static final int VISIT_PERCENTAGE = 25;
+	private static final int VISIT_PERCENTAGE = 15;
 	private static final List<String> BANNED = Arrays.asList("00:00:00:00:00:00");
 	private static final int DAY_IN_MILLIS = 86400000;
 	
@@ -1084,13 +1085,16 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				if( value != null ) {
 
 					Date curDate = aphHelper.slotToDate(curEntry.getDate(), slot);
+					// TODO date is wrong from here
 					APDevice dev = apd.get(curEntry.getHostname());
 					dev.completeDefaults();
 					
 					// Closes open visits in case of slot continuity disruption
-					if( lastSlot != null && slot != (lastSlot + 1) && (slot - lastSlot) > (dev.getVisitGapThreshold() * 3)) {
+					if( lastSlot != null && slot != (lastSlot + 1) &&
+							(slot -lastSlot) > (dev.getVisitGapThreshold() * 3)) {
 						if( currentVisit != null ) {
-							currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+							currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(),
+									lastSlot));
 							addPermanenceCheck(currentVisit, currentPeasant, dev);
 							if(isVisitValid(currentVisit, dev, isEmployee))
 								ret.add(currentVisit);
@@ -1098,7 +1102,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						}
 
 						if( currentPeasant != null ) {
-							currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+							currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(),
+									lastSlot));
 							if(isPeasantValid(currentPeasant, dev, isEmployee))
 								ret.add(currentPeasant);
 							currentPeasant = null;
@@ -1112,12 +1117,14 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 						// Add a new peasant if there is no peasant active
 						if( currentPeasant == null )
-							currentPeasant = createPeasant(curEntry, curDate, null, assignments.get(curEntry.getHostname()));
+							currentPeasant = createPeasant(curEntry, curDate, null, assignments.get(
+									curEntry.getHostname()));
 						lastPeasantSlot = slot;
 						// Checks for power for visit
 						if( value >= dev.getVisitPowerThreshold()) {
 							if( currentVisit == null )
-								currentVisit = createVisit(curEntry, curDate, null, assignments.get(curEntry.getHostname()), isEmployee);
+								currentVisit = createVisit(curEntry, curDate, null, assignments.get(
+										curEntry.getHostname()), isEmployee);
 							currentVisit.addInRangeSegment();
 							lastVisitSlot = slot;
 						} else {
@@ -1133,7 +1140,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 										if((lastVisitSlot + (dev.getVisitDecay() * 3)) < finishSlot)
 											finishSlot = (int)(lastVisitSlot + (dev.getVisitDecay() * 3));
 
-										currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), finishSlot));
+										currentVisit.setCheckinFinished(aphHelper.slotToDate(
+												curEntry.getDate(), finishSlot));
 										addPermanenceCheck(currentVisit, currentPeasant, dev);
 										if(isVisitValid(currentVisit, dev, isEmployee))
 											ret.add(currentVisit);
@@ -1156,7 +1164,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 								// Closes open visits
 								if( currentVisit != null ) {
-									currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), finishSlot));
+									currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(),
+											finishSlot));
 									addPermanenceCheck(currentVisit, currentPeasant, dev);
 									if(isVisitValid(currentVisit, dev, isEmployee))
 										ret.add(currentVisit);
@@ -1164,7 +1173,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								}
 
 								if( currentPeasant != null ) {
-									currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), finishSlot));
+									currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(),
+											finishSlot));
 									if(isPeasantValid(currentPeasant, dev,isEmployee))
 										ret.add(currentPeasant);
 									currentPeasant = null;
@@ -1505,16 +1515,32 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			return false;
 
 		// Total segments percentage check
-		if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
+		/*if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
 				&& null != visit.getTotalSegments() && visit.getTotalSegments() > 0 ) {
 			if((visit.getInRangeSegments() * 100 / visit.getTotalSegments()) < VISIT_PERCENTAGE)
 				return false;
+		}*/
+		
+		visit.setDuration(time *60l);
+		
+		WORK_CALENDAR.clear();
+		WORK_CALENDAR.setTime(visit.getCheckinStarted());
+		switch(WORK_CALENDAR.get(Calendar.DAY_OF_WEEK)) {
+		case Calendar.SUNDAY :
+			if(!device.getVisitsOnSun()) return false;
+		case Calendar.MONDAY :
+			if(!device.getVisitsOnMon()) return false;
+		case Calendar.TUESDAY :
+			if(!device.getVisitsOnTue()) return false;
+		case Calendar.WEDNESDAY :
+			if(!device.getVisitsOnWed()) return false;
+		case Calendar.THURSDAY :
+			if(!device.getVisitsOnThu()) return false;
+		case Calendar.FRIDAY :
+			if(!device.getVisitsOnFri()) return false;
+		case Calendar.SATURDAY :
+			if(!device.getVisitsOnSat()) return false;
 		}
-		
-		visit.setDuration((visit.getCheckinFinished().getTime() / 1000)
-				-(visit.getCheckinStarted().getTime() / 1000));
-		
-		// TODO Validate day
 		
 		// Validate Monitor Hour  
 		int t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
@@ -1545,11 +1571,31 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		if( isEmployee ) visit.setCheckinType(APDVisit.CHECKIN_EMPLOYEE);
 		
-		/*
-		// TODO Validate day
-		int t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
-		int ts = 0;
-		int te = 0; */
+		WORK_CALENDAR.clear();
+		WORK_CALENDAR.setTime(visit.getCheckinStarted());
+		switch(WORK_CALENDAR.get(Calendar.DAY_OF_WEEK)) {
+		case Calendar.SUNDAY :
+			if(!device.getVisitsOnSun()) return false;
+			else break;
+		case Calendar.MONDAY :
+			if(!device.getVisitsOnMon()) return false;
+			else break;
+		case Calendar.TUESDAY :
+			if(!device.getVisitsOnTue()) return false;
+			else break;
+		case Calendar.WEDNESDAY :
+			if(!device.getVisitsOnWed()) return false;
+			else break;
+		case Calendar.THURSDAY :
+			if(!device.getVisitsOnThu()) return false;
+			else break;
+		case Calendar.FRIDAY :
+			if(!device.getVisitsOnFri()) return false;
+			else break;
+		case Calendar.SATURDAY :
+			if(!device.getVisitsOnSat()) return false;
+			else break;
+		}
 		
 		// Validate Monitor Hour
 		int t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
@@ -1561,29 +1607,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			ts = te;
 			te = aux;
 		}
-		visit.setDuration((visit.getCheckinFinished().getTime() / 1000) - (visit.getCheckinStarted().getTime() / 1000));
+		visit.setDuration((visit.getCheckinFinished().getTime() -visit.getCheckinStarted().getTime()) / 1000);
 		
 		return te >= t && t >= ts;
-
-		/*if( t < ts || t >= te )
-			return false;
-
-		// Validates Pass Hour 
-		t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
-		ts = Integer.valueOf(tf2.format(tf.parse(device.getPassStart())));
-		te = Integer.valueOf(tf2.format(tf.parse(device.getPassEnd())));
-
-		if( ts >= te )
-			te = te + 2400;
-		
-		if( te > 2400 && t < ts )
-			t = t + 2400;
-
-		if( t < ts || t >= te )
-			return false;
-
-		// If validations are passed, return true
-		return true;*/
 	}
 
 	/**
@@ -1598,7 +1624,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @return A new fully formed visit
 	 * @throws ASException
 	 */
-	private APDVisit createVisit(APHEntry source, Date date, DeviceInfo device, APDAssignation assign, Boolean isEmployee) throws ASException {
+	private APDVisit createVisit(APHEntry source, Date date, DeviceInfo device, APDAssignation assign,
+			Boolean isEmployee) throws ASException {
 		
 		String entityId = assign.getEntityId();
 		Integer entityKind = assign.getEntityKind();

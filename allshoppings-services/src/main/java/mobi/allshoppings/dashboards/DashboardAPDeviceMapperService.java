@@ -881,7 +881,8 @@ public class DashboardAPDeviceMapperService {
 												"apd_permanence", "Permanencia", "permanence_hourly_peasents_android",
 												"Paseantes Android", v.getCheckinStarted(),
 												DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-												store, shopping, null, entityId, entityKind, tz, v.getForDate());
+												store, shopping, null, entityId, entityKind, tz,
+												v.getForDate());
 
 										if(indicatorsSet.containsKey(obj.getKey().getName())) 
 											obj = indicatorsSet.get(obj.getKey().getName());
@@ -1321,10 +1322,8 @@ public class DashboardAPDeviceMapperService {
 		obj.setElementSubId(elementSubId);
 		obj.setElementSubName(elementSubName);
 		
-		CALENDAR.setTime(date);
-		CALENDAR.setTimeZone(TimeZone.getTimeZone("GMT"));
-		date = CALENDAR.getTime();
-		int i = getTimeZone(tz, date);// TODO remove
+		//int i = getTimeZone(tz, date);// TODO remove
+		int i = getTimeZone(tz, date);
 		obj.setTimeZone(getTimeZone(tz, date));
 		
 		//CALENDAR.setTimeZone(tz);
@@ -1368,9 +1367,11 @@ public class DashboardAPDeviceMapperService {
 	}
 
 	public int getTimeZone(TimeZone tz, Date date) {
+		CALENDAR.clear();
 		CALENDAR.setTime(date);
-		CALENDAR.setTimeZone(tz);
-		return CALENDAR.get(Calendar.HOUR_OF_DAY);
+		CALENDAR.setTimeZone(TimeZone.getTimeZone("GMT"));
+		return CALENDAR.get(Calendar.HOUR_OF_DAY)
+				+(TimeZone.getDefault().getOffset(date.getTime()) /(1000 *60 *60));
 	}
 
 	public String getDeviceType(String mac) {

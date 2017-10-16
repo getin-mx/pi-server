@@ -315,9 +315,9 @@ public class APHHelperImpl implements APHHelper {
 		//long secondsOfDay = (long)(((forDate.getTime()) % 86400000) / 1000);
 		CALENDAR.setTime(forDate);
 		CALENDAR.setTimeZone(gmt);
-		long secondsOfDay = CALENDAR.get(Calendar.SECOND) +CALENDAR.get(Calendar.MINUTE) *60
+		int secondsOfDay = CALENDAR.get(Calendar.SECOND) +CALENDAR.get(Calendar.MINUTE) *60
 				+CALENDAR.get(Calendar.HOUR_OF_DAY) *60 *60;
-		int frame = (int)Math.round((secondsOfDay / 20));
+		int frame = secondsOfDay /20;
 		aphe.getRssi().put(String.valueOf(frame), rssi);
 		aphe.setDataCount(aphe.getRssi().size());
 		if( null == aphe.getMinRssi() || rssi < aphe.getMinRssi() )
@@ -895,8 +895,9 @@ public class APHHelperImpl implements APHHelper {
 	@Override
 	public Date slotToDate(String date, int t) throws ParseException {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(sdf.parse(date));
-		cal.add(Calendar.SECOND, slotToSeconds(t));
+		Date d = sdf.parse(date);
+		cal.setTime(d);
+		cal.add(Calendar.SECOND, slotToSeconds(t) -tz.getOffset(d.getTime()) /1000);
 		return cal.getTime();
 	}
 }
