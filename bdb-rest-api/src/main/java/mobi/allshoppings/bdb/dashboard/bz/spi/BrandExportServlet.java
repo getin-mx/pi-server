@@ -52,7 +52,7 @@ public class BrandExportServlet extends HttpServlet {
 		try {
 			//FIXME: URL Hardcoded
 			byte[] b = exporter.createXSSFBrandDashboardRepresentation(req.getParameter("authToken"),
-					"http://dashboard.getin.mx/appv2/", req.getParameter("brandId"), req.getParameter("storeId"),
+					"http://localhost:8081/bdb/", req.getParameter("brandId"), req.getParameter("storeId"),
 					sdf.parse(req.getParameter("fromStringDate")), sdf.parse(req.getParameter("toStringDate")));
 
 			long end = new Date().getTime();
@@ -67,7 +67,7 @@ public class BrandExportServlet extends HttpServlet {
 			return;
 		} catch (Exception e) {
 			log.log(Level.SEVERE, e.getMessage(), e);
-		}		
+		}
 	}
 
 }

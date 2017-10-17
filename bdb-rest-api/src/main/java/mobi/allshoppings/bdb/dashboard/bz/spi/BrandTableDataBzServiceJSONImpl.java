@@ -330,7 +330,7 @@ implements BDBDashboardBzService {
 			titles.put("Tickets");
 			titles.put("Items");
 			titles.put("Revenue");
-			titles.put("Paseantes/Visitantes");
+			titles.put("Visitantes/Paseantes");
 			titles.put("Visitantes/Tickets");
 			titles.put("Día más Alto");
 			titles.put("Día más Bajo");
