@@ -13,11 +13,6 @@
 			<map>
 				<entry key="/dashoard/timelineDataByCinema" value-ref="spring.dashboardtimelinedatabycinema.rest.resource" />
 				<entry key="/dashoard/timelineDataByProvince" value-ref="spring.dashboardtimelinedatabyprovince.rest.resource" />
-<<<<<<< HEAD
-=======
-				<entry key="/dashoard/timelineData" value-ref="spring.dashboardtimelinedata.rest.resource" />
-				<entry key="/dashoard/timelineHour" value-ref="spring.dashboardtimelinehour.rest.resource" />
->>>>>>> refactor@repetitions
 				<entry key="/dashoard/timelineGDT" value-ref="spring.dashboardtimelinegdt.rest.resource" />
 				<entry key="/dashoard/funnelData" value-ref="spring.dashboardfunneldata.rest.resource" />
 				<entry key="/dashoard/pieData" value-ref="spring.dashboardpiedata.rest.resource" />
@@ -86,15 +81,6 @@
  	<bean id="spring.cinema.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="cinema.rest.resource" />
  	</bean>
-<<<<<<< HEAD
-=======
- 	<bean id="spring.dashboardtimelinehour.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboardtimelinehour.rest.resource" />
- 	</bean>
- 	<bean id="spring.dashboardtimelinedata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
- 	    <lookup-method name="create" bean="dashboardtimelinedata.rest.resource" />
- 	</bean>
->>>>>>> refactor@repetitions
  	<bean id="spring.dashboardtimelinedatabycinema.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboardtimelinedatabycinema.rest.resource" />
  	</bean>
