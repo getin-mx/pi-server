@@ -1632,6 +1632,10 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("796","Bruno Corza Cosmopol", "brunocorza_mx", null, 0));
 			stores.add(new StoreAdapter("797","Bruno Corza Angelópolis", "brunocorza_mx", null, 0));
 			
+			stores.add(new StoreAdapter("780","MT Sport S11 Puebla Centro 1", "mt_sport_mx", null, 0));
+			
+			stores.add(new StoreAdapter("781","Opticas Devlyn Cervantes Saavedra", "devlyn_mx", null, 0));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				log.log(Level.INFO, "Processing store" + obj.getName());

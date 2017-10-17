@@ -67,7 +67,7 @@ public class BrandExportServlet extends HttpServlet {
 			return;
 		} catch (Exception e) {
 			log.log(Level.SEVERE, e.getMessage(), e);
-		}		
+		}
 	}
 
 }
