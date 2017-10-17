@@ -7623,8 +7623,130 @@ public class UserMenuDump extends AbstractCLI {
 				octavio.setKey((Key)keyHelper.obtainKey(User.class, "octavio")); 
 			     userDao.create(octavio); 
 			}
+			
+			User frisa = null;
+			try {
+				frisa = userDao.get("dir_frisa", true);
+			} catch( Exception e ) {
+				frisa = new User(); 
+				frisa.setFirstname("Gerardo"); 
+				frisa.setLastname("H"); 
+				frisa.setEmail("dir_frisa@allshoppings.mobi"); 
+				frisa.getSecuritySettings().setRole(Role.BRAND); 
+				frisa.getSecuritySettings().setShoppings(new ArrayList<String>()); 
+				frisa.getSecuritySettings().getShoppings().add("mundoe"); 
+				frisa.getSecuritySettings().getShoppings().add("plazaaragon");
+				frisa.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
+				frisa.setKey((Key)keyHelper.obtainKey(User.class, "dir_frisa")); 
+			     userDao.create(frisa); 
+			}
+			
+			User jmiguel = null;
+			try {
+				jmiguel = userDao.get("jmiguel", true);
+			} catch( Exception e ) {
+				jmiguel = new User(); 
+				jmiguel.setFirstname("Jose Miguel"); 
+				jmiguel.setLastname("Cobo"); 
+				jmiguel.setEmail("jmiguel@allshoppings.mobi"); 
+				jmiguel.getSecuritySettings().setRole(Role.BRAND); 
+				jmiguel.getSecuritySettings().setShoppings(new ArrayList<String>()); 
+				jmiguel.getSecuritySettings().getShoppings().add("mundoe"); 
+				jmiguel.getSecuritySettings().getShoppings().add("plazaaragon");
+				jmiguel.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
+				jmiguel.setKey((Key)keyHelper.obtainKey(User.class, "jmiguel")); 
+			     userDao.create(jmiguel); 
+			}
 				
 				// End Cliente
+			
+				// Mundo E
+				
+			User gerenciaME = null;
+			try {
+				gerenciaME = userDao.get("gerenciaME", true);
+			} catch( Exception e ) {
+				gerenciaME = new User(); 
+				gerenciaME.setFirstname("gerencia Mundo E"); 
+				gerenciaME.setLastname(""); 
+				gerenciaME.setEmail("gerenciaME@allshoppings.mobi"); 
+				gerenciaME.getSecuritySettings().setRole(Role.BRAND); 
+				gerenciaME.getSecuritySettings().setShoppings(new ArrayList<String>()); 
+				gerenciaME.getSecuritySettings().getShoppings().add("mundoe"); 
+				gerenciaME.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
+				gerenciaME.setKey((Key)keyHelper.obtainKey(User.class, "gerenciaME")); 
+			     userDao.create(gerenciaME); 
+			}
+			
+			User marketing = null;
+			try {
+				marketing = userDao.get("marketing", true);
+			} catch( Exception e ) {
+				marketing = new User(); 
+				marketing.setFirstname("marketing"); 
+				marketing.setLastname(""); 
+				marketing.setEmail("marketing@allshoppings.mobi"); 
+				marketing.getSecuritySettings().setRole(Role.BRAND); 
+				marketing.getSecuritySettings().setShoppings(new ArrayList<String>()); 
+				marketing.getSecuritySettings().getShoppings().add("mundoe"); 
+				marketing.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
+				marketing.setKey((Key)keyHelper.obtainKey(User.class, "marketing")); 
+			     userDao.create(marketing); 
+			}
+			
+			User alejandro = null;
+			try {
+				alejandro = userDao.get("alejandro", true);
+			} catch( Exception e ) {
+				alejandro = new User(); 
+				alejandro.setFirstname("Comnet"); 
+				alejandro.setLastname(""); 
+				alejandro.setEmail("alejandro@allshoppings.mobi"); 
+				alejandro.getSecuritySettings().setRole(Role.BRAND); 
+				alejandro.getSecuritySettings().setShoppings(new ArrayList<String>()); 
+				alejandro.getSecuritySettings().getShoppings().add("mundoe"); 
+				alejandro.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
+				alejandro.setKey((Key)keyHelper.obtainKey(User.class, "alejandro")); 
+			     userDao.create(alejandro); 
+			}
+			
+				// End Mundo E
+			
+				// Aragon
+				
+			User gerenciaA = null;
+			try {
+				gerenciaA = userDao.get("gerenciaA", true);
+			} catch( Exception e ) {
+				gerenciaA = new User(); 
+				gerenciaA.setFirstname("Gerencia Aragon"); 
+				gerenciaA.setLastname(""); 
+				gerenciaA.setEmail("gerenciaA@allshoppings.mobi"); 
+				gerenciaA.getSecuritySettings().setRole(Role.BRAND); 
+				gerenciaA.getSecuritySettings().setShoppings(new ArrayList<String>()); 
+				frisa.getSecuritySettings().getShoppings().add("plazaaragon");
+				gerenciaA.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
+				gerenciaA.setKey((Key)keyHelper.obtainKey(User.class, "gerenciaA")); 
+			     userDao.create(gerenciaA); 
+			}
+			
+			User cesar = null;
+			try {
+				cesar = userDao.get("cesar", true);
+			} catch( Exception e ) {
+				cesar = new User(); 
+				cesar.setFirstname("Marketing"); 
+				cesar.setLastname(""); 
+				cesar.setEmail("cesar@allshoppings.mobi"); 
+				cesar.getSecuritySettings().setRole(Role.BRAND); 
+				cesar.getSecuritySettings().setShoppings(new ArrayList<String>()); 
+				frisa.getSecuritySettings().getShoppings().add("plazaaragon");
+				cesar.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
+				cesar.setKey((Key)keyHelper.obtainKey(User.class, "cesar")); 
+			     userDao.create(cesar); 
+			}
+			
+				// End Aragon
 			
 			// End Droc Users ----------------------------------------------------------------------------
 			
