@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,7 @@ import javax.jdo.datastore.JDOConnection;
 
 import org.springframework.context.ApplicationContext;
 
+import com.google.gson.Gson;
 import com.inodes.util.CollectionFactory;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -26,12 +28,15 @@ import com.mongodb.DBObject;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import mobi.allshoppings.dao.APHotspotDAO;
 import mobi.allshoppings.dao.spi.DAOJDOPersistentManagerFactory;
 import mobi.allshoppings.dump.DumperHelper;
+import mobi.allshoppings.dump.impl.APHotspotDumperPlugin;
 import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APHotspot;
+import mobi.allshoppings.tools.GsonFactory;
 
 public class HotspotComparer extends AbstractCLI {
 
@@ -41,6 +46,7 @@ public class HotspotComparer extends AbstractCLI {
 	private static final String COLLECTIONS_PARAM = "collections";
 	
 	private static final String DEST_DIR = "/tmp/missing-aphotspot";
+	private static final int DEST_DIR_LENGTH = DEST_DIR.length();
 	
 	private static final Logger LOG = Logger.getLogger(HotspotComparer.class.getName());
 	
@@ -91,21 +97,24 @@ public class HotspotComparer extends AbstractCLI {
 		DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
 		dumper.setFilter(hostname);
 		Iterator<APHotspot> hotspotIterator = dumper.iterator(fromDate, toDate);
-		hotspots.clear();
 		while(hotspotIterator.hasNext()) {
 			APHotspot hotspot = hotspotIterator.next();
 			hotspots.put("APHotspot(\"" +hotspot.getIdentifier() +"\")", hotspot);
 		}
+		dumper.dispose();
+		APHotspotDumperPlugin hotPlugin = new APHotspotDumperPlugin();
+		Gson gson = GsonFactory.getInstance();
+		APHotspotDAO aphDao = (APHotspotDAO)getApplicationContext().getBean("aphotspot.dao.ref");
 		
 		// Creates JDO Connection
 		PersistenceManager pm;
 		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		pm.currentTransaction().begin();
-		dumper.dispose();
 		
 		// Gets Native connection from JDO
 		JDOConnection jdoConn = pm.getDataStoreConnection();
 		DB db = (DB)jdoConn.getNativeConnection();
+		List<String> dests = CollectionFactory.createList();
 		for(String collection : options.valueOf(COLLECTIONS_PARAM).toString().split(",")) {
 			collection = collection.trim();
 			LOG.log(Level.INFO, "Searching for missing data in collection " +collection);
@@ -129,22 +138,22 @@ public class HotspotComparer extends AbstractCLI {
 							+hostname +".json");
 					file.getParentFile().mkdirs();
 					PrintWriter writer = null;
+					APHotspot hotspot = new APHotspot();
+					hotspot.setHostname(hostname);
+					hotspot.setFirstSeen((Date)obj.get("firstSeen"));
+					hotspot.setLastSeen((Date)obj.get("lastSeen"));
+					hotspot.setMac(obj.get("mac").toString().toLowerCase());
+					hotspot.setSignalDB((Integer)obj.get("signalDB"));
+					hotspot.setCount((Integer)obj.get("count"));
+					hotspot.setLastUpdate((Date)obj.get("lastUpdate"));
+					hotspot.setCreationDateTime(hotspot.getLastUpdate());
+					hotspot.setKey(aphDao.createKey());
 					try {
 						writer = new PrintWriter(new FileOutputStream(file, true));
-						writer.println("\"hostname\":\"" +hostname +"\",\"signalDB\":"
-								+obj.get("signalDB") +",\"lastUpdate\":"
-								+((Date)obj.get("lastUpdate")).getTime()
-								+",{\"key\":{\"kind\":\"APHotspot\",\"name\":\""
-								+obj.get("") // TODO add name check dump implementation
-								+"\",\"id\":0},\"mac\":\""
-								// TODO add mac
-								+"\",\"date\":\""
-								// TODO string date
-								+"\",\"creationDateTime\":"
-								// TODO creation date timestamp
-								+"}");
+						writer.println(hotPlugin.toJson(hotspot, gson.toJson(hotspot)));
 						writer.flush();
 						writer.close();
+						dests.add(file.getPath().substring(DEST_DIR_LENGTH));
 						count++;
 					} catch(IOException e) {
 						LOG.log(Level.INFO, "Problem creataing dump file " +file, e);

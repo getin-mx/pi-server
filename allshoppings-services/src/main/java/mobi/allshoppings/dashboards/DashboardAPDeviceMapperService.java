@@ -1322,8 +1322,6 @@ public class DashboardAPDeviceMapperService {
 		obj.setElementSubId(elementSubId);
 		obj.setElementSubName(elementSubName);
 		
-		//int i = getTimeZone(tz, date);// TODO remove
-		int i = getTimeZone(tz, date);
 		obj.setTimeZone(getTimeZone(tz, date));
 		
 		//CALENDAR.setTimeZone(tz);
@@ -1331,9 +1329,13 @@ public class DashboardAPDeviceMapperService {
 		obj.setStringDate(forDate);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date day = sdf.parse(forDate);
-		@SuppressWarnings("deprecation")
-		int dayOfWeek = day.getDay() == 0 ? 7 : day.getDay() + 1; 
-		obj.setDayOfWeek(dayOfWeek);
+		
+		/*@SuppressWarnings("deprecation")
+		int dayOfWeek = day.getDay() == 0 ? 7 : day.getDay() + 1;*/ 
+		CALENDAR.clear();
+		CALENDAR.setTimeZone(TimeZone.getTimeZone("GMT"));
+		CALENDAR.setTime(day);
+		obj.setDayOfWeek(CALENDAR.get(Calendar.DAY_OF_WEEK));
 		try { obj.setDate(CALENDAR.getTime()); } catch(Exception e ){}
 		
 		obj.setMovieId(null);
@@ -1370,8 +1372,10 @@ public class DashboardAPDeviceMapperService {
 		CALENDAR.clear();
 		CALENDAR.setTime(date);
 		CALENDAR.setTimeZone(TimeZone.getTimeZone("GMT"));
-		return CALENDAR.get(Calendar.HOUR_OF_DAY)
+		int res = CALENDAR.get(Calendar.HOUR_OF_DAY)
 				+(TimeZone.getDefault().getOffset(date.getTime()) /(1000 *60 *60));
+		if(res < 0) res += 24;
+		return res;
 	}
 
 	public String getDeviceType(String mac) {

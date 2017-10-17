@@ -63,7 +63,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	private static final SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
 	private static final SimpleDateFormat tf2 = new SimpleDateFormat("HHmm");
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	private static final int VISIT_PERCENTAGE = 15;
+	private static final int VISIT_PERCENTAGE = 25;
 	private static final List<String> BANNED = Arrays.asList("00:00:00:00:00:00");
 	private static final int DAY_IN_MILLIS = 86400000;
 	
@@ -412,6 +412,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		case Calendar.SATURDAY :
 			startTime = calibration.getVisitStartSat();
 			endTime = calibration.getVisitEndSat();
+			break;
 		default :
 			startTime = endTime = "00:00";
 		}
@@ -629,7 +630,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		DumperHelper<APDVisit> apdvDumper = new DumpFactory<APDVisit>().build(null, APDVisit.class);
 		
 		Date curDate = new Date(fromDate.getTime());
-		Date limitDate = new Date(fromDate.getTime() + 86400000);
+		Date limitDate = new Date(fromDate.getTime() + DAY_IN_MILLIS);
 		while( curDate.before(toDate) || (fromDate.equals(toDate) && curDate.equals(toDate))) {
 
 			try {
@@ -1085,7 +1086,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				if( value != null ) {
 
 					Date curDate = aphHelper.slotToDate(curEntry.getDate(), slot);
-					// TODO date is wrong from here
 					APDevice dev = apd.get(curEntry.getHostname());
 					dev.completeDefaults();
 					
@@ -1481,7 +1481,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			visit.setHidePermanence(true);
 		
 		try {
-			if (isVisitValid(visit, device, false) && peasant != null && (peasant.getCheckinStarted().before(visit.getCheckinStarted())
+			if (isVisitValid(visit, device, false) && peasant != null &&
+					(peasant.getCheckinStarted().before(visit.getCheckinStarted())
 					|| peasant.getCheckinStarted().equals(visit.getCheckinStarted())))
 				peasant.setHidePermanence(true);
 		} catch(Exception e ) {}
@@ -1514,12 +1515,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		if( time > device.getVisitMaxThreshold())
 			return false;
 
-		// Total segments percentage check
-		/*if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
+		// Total segments percentage check TODO check if doesnt break anything 
+		if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
 				&& null != visit.getTotalSegments() && visit.getTotalSegments() > 0 ) {
 			if((visit.getInRangeSegments() * 100 / visit.getTotalSegments()) < VISIT_PERCENTAGE)
 				return false;
-		}*/
+		}
 		
 		visit.setDuration(time *60l);
 		
