@@ -7309,7 +7309,8 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "angel@yogome.com"));
 				userDao.create(user);
 			}
-
+			
+			UserMenuDumpTwo.createMissingUsers();
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
