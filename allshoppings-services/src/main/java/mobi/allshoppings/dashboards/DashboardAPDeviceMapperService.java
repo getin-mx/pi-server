@@ -680,7 +680,8 @@ public class DashboardAPDeviceMapperService {
 			log.log(Level.INFO, "Starting Write Procedure...");
 
 			long endTime = new Date().getTime();
-			log.log(Level.INFO, "Finished to create Floor Map Tracking Dashboard for Day " + date + " in " + (endTime - startTime) + "ms");
+			log.log(Level.INFO, "Finished to create Floor Map Tracking Dashboard for Day " + date + " in "
+					+ (endTime - startTime) + "ms");
 
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);

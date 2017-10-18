@@ -696,10 +696,10 @@ public class APHHelperImpl implements APHHelper {
 			Iterator<APHEntry> x = cache.iterator();
 			while(x.hasNext()) {
 				APHEntry aphe = x.next();
-				if( aphe.getDataCount() > 2 ) {
+				//if( aphe.getDataCount() > 2 ) {
 					aphe.setKey(apheDao.createKey(aphe));
 					apheDumper.dump(aphe);
-				}
+				//}
 			}
 			log.log(Level.INFO, "Disposing cache");
 			cache.dispose();

@@ -531,7 +531,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			APHEntry aphe = ix.next();
 			aphe.setDataCount(aphe.getRssi().size());
 			if( !BANNED.contains(aphe.getMac().toLowerCase())) {
-				if( aphe.getDataCount() > 2 ) {
+				//if( aphe.getDataCount() > 2 ) {
 					aphe.setMaxRssi(-9999);
 					aphe.setMinRssi(0);
 					Iterator<Integer> ix2 = aphe.getRssi().values().iterator();
@@ -544,7 +544,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					}
 					// Controls banned mac addresses
 					res.add(aphe);
-				}
+				//}
 			}
 		}
 		
