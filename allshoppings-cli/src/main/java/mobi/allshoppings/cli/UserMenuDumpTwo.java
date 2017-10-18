@@ -33,8 +33,12 @@ public class UserMenuDumpTwo extends AbstractCLI {
 		else parser = base;
 		return parser;
 	}
+	
+	public static void main(String[] args) throws ASException {
+		createMissingUsers();
+	}
 
-	public static void main(String args[]) throws ASException {
+	public static void createMissingUsers() throws ASException {
 		try {
 			UserMenuDAO userMenuDao = (UserMenuDAO)getApplicationContext().getBean("usermenu.dao.ref");
 			UserDAO userDao = (UserDAO)getApplicationContext().getBean("user.dao.ref");
