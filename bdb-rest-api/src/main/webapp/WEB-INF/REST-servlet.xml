@@ -13,7 +13,7 @@
 			<map>
 				<entry key="/dummy" 						value-ref="spring.dummy.rest.resource" />
 				<entry key="/myip" 							value-ref="spring.ipaddress.rest.resource" />
-			    <entry key="/auth" 							value-ref="spring.auth.rest.resource" />
+			  <entry key="/auth" 							value-ref="spring.auth.rest.resource" />
 				<entry key="/pass" 							value-ref="spring.pass.rest.resource" />
 				<entry key="/user" 							value-ref="spring.user.rest.resource" />
 				<entry key="/user/{identifier}" 			value-ref="spring.user.rest.resource" />
@@ -182,7 +182,6 @@
  	<bean id="spring.dashboard.heatmaptablehour.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboard.heatmaptablehour.rest.resource" />
  	</bean>
-
  	<bean id="spring.dashboard.employeetimes.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboard.employeetimes.rest.resource" />
  	</bean>

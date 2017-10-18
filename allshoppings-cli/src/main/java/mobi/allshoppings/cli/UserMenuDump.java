@@ -1292,7 +1292,7 @@ public class UserMenuDump extends AbstractCLI {
 			     droc.getSecuritySettings().setRole(Role.BRAND); 
 			     droc.getSecuritySettings().setShoppings(new ArrayList<String>()); 
 			     droc.getSecuritySettings().getShoppings().add("mundoe"); 
-			     droc.getSecuritySettings().getShoppings().add("plazaaragon"); 
+			     droc.getSecuritySettings().getShoppings().add("plazaaragon");
 			     droc.getSecuritySettings().setPassword("F86C872FBDDE97CFDCEEE0E4ACD17F1FCFAFCCF2CE7B22B6FEE17A47B1321EA4"); 
 			     droc.setKey((Key)keyHelper.obtainKey(User.class, "droc_mx")); 
 			     userDao.create(droc); 
@@ -6945,19 +6945,9 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("mtorre@mobo.mx", true);
+				userDao.delete(user);
 			} catch (Exception e) {
-				user = new User();
-				user.setFirstname("Mobo");
-				user.setLastname("");
-				user.setEmail("mtorre@mobo.mx");
-				user.getSecuritySettings().setRole(Role.STORE);
-				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				user.getSecuritySettings()
-						.setStores(Arrays.asList("f7e7ac30-e0f3-4c8b-be85-9a4ae88c0400", 
-								"749fe355-833e-4d93-a0db-e613135aa2d0", "fe83b69e-7a67-45c8-a08c-8c78c8867d3a"));
-				user.setKey((Key) keyHelper.obtainKey(User.class, "mtorre@mobo.mx"));
-				userDao.create(user);
+				
 			}
 			
 			try {
@@ -6973,22 +6963,9 @@ public class UserMenuDump extends AbstractCLI {
 
 			try {
 				user = userDao.get("ugodinez@mobo.mx", true);
+				userDao.delete(user);
 			} catch (Exception e) {
-				user = new User();
-				user.setFirstname("Mobo");
-				user.setLastname("");
-				user.setEmail("ugodinez@mobo.mx");
-				user.getSecuritySettings().setRole(Role.STORE);
-				user.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				user.getSecuritySettings()
-						.setStores(Arrays.asList("51a62c6b-9596-4e63-8241-21563bf5925e",
-								"5eea383c-c550-44d3-bc5d-a3bbf8cff283", "4459e3ee-0085-4382-95f4-042af4b89195",
-								"1498839031159",
-								"7fe9aeb4-a017-45b5-a388-90f88a3b2455", "320f0fb2-713b-46ba-8930-36fe497f0c47",
-								"9d760b01-cdae-4391-bab9-32e40f6bb338", "a8fad67e-e27f-4c5a-9313-e877015943fd"));
-				user.setKey((Key) keyHelper.obtainKey(User.class, "ugodinez@mobo.mx"));
-				userDao.create(user);
+				
 			}
 			
 			// End Mobo  --------------------------------------------------------------------
@@ -7332,7 +7309,8 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "angel@yogome.com"));
 				userDao.create(user);
 			}
-
+			
+			UserMenuDumpTwo.createMissingUsers();
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
