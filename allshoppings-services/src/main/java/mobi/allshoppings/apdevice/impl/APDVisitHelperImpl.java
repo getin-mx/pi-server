@@ -1121,7 +1121,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									curEntry.getHostname()));
 						lastPeasantSlot = slot;
 						// Checks for power for visit
-						if( value >= dev.getVisitPowerThreshold()) {
+						if( value >= dev.getVisitPowerThreshold() -2) {
 							if( currentVisit == null )
 								currentVisit = createVisit(curEntry, curDate, null, assignments.get(
 										curEntry.getHostname()), isEmployee);
@@ -1528,11 +1528,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			return false;
 		
 		// Total segments percentage check TODO check if doesnt break anything 
-		/*if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
+		if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
 				&& null != visit.getTotalSegments() && visit.getTotalSegments() > 0 ) {
 			if((visit.getInRangeSegments() * 100 / visit.getTotalSegments()) < VISIT_PERCENTAGE)
 				return false;
-		}*/
+		}//*/
 		
 		visit.setDuration(time *60l);
 		
