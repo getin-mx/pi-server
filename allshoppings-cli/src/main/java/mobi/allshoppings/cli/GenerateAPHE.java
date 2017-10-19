@@ -81,7 +81,10 @@ public class GenerateAPHE extends AbstractCLI {
 			log.log(Level.INFO, "Generating APHEntries");
 			List<String> hostnames = CollectionFactory.createList();
 			if(StringUtils.hasText(hostname)) {
-				hostnames.add(hostname);
+				String[] hn = hostname.split(",");
+				for(String chn : hn){
+					hostnames.add(chn);
+				}
 			}
 			
 			helper.setScanInDevices(false);
