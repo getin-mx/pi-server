@@ -60,13 +60,13 @@ public class GenerateAPHE extends AbstractCLI {
 				if( StringUtils.hasText(sFromDate)) {
 					fromDate = sdf.parse(sFromDate);
 				} else {
-					fromDate = sdf.parse(sdf.format(new Date(new Date().getTime() - 86400000 /* 24 hours */)));
+					fromDate = sdf.parse(sdf.format(new Date(new Date().getTime() -TWENTY_FOUR_HOURS)));
 				}
 				
 				if( StringUtils.hasText(sToDate)) {
 					toDate = sdf.parse(sToDate);
 				} else {
-					toDate = new Date(fromDate.getTime() + 86400000 /* 24 hours */);
+					toDate = new Date(fromDate.getTime() +TWENTY_FOUR_HOURS);
 				}
 				
 				if( options.has("hostname")) {
