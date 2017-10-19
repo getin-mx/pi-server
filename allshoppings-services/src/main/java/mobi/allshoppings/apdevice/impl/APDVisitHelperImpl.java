@@ -63,7 +63,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	private static final SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
 	private static final SimpleDateFormat tf2 = new SimpleDateFormat("HHmm");
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	private static final int VISIT_PERCENTAGE = 25;
+	private static final int VISIT_PERCENTAGE = 20;
 	private static final List<String> BANNED = Arrays.asList("00:00:00:00:00:00");
 	private static final int DAY_IN_MILLIS = 86400000;
 	
@@ -1240,8 +1240,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			tmp.addAll(ret);
 			ret.clear();
 			for( APDVisit v : tmp ) {
-				if(!v.getCheckinType().equals(APDVisit.CHECKIN_VISIT))
+				if(!v.getCheckinType().equals(APDVisit.CHECKIN_VISIT)) ret.add(v);
+				else {
+					v.setCheckinType(APDVisit.CHECKIN_PEASANT);
 					ret.add(v);
+				}
 			}
 		}
 		// End Checks for max visits per day using RepeatThreshold
@@ -1361,9 +1364,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					dev.completeDefaults();
 					
 					// Closes open visits in case of slot continuity disruption
-					if( lastSlot != null && slot != (lastSlot + 1) && (slot - lastSlot) > (dev.getVisitGapThreshold() * 3)) {
+					if( lastSlot != null && slot != (lastSlot + 1) &&
+							(slot - lastSlot) > (dev.getVisitGapThreshold() * 3)) {
 						if( currentVisit != null ) {
-							currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+							currentVisit.setCheckinFinished(
+									aphHelper.slotToDate(curEntry.getDate(), lastSlot));
 							addPermanenceCheck(currentVisit, currentPeasant, dev);
 							if(isVisitValid(currentVisit, dev, isEmployee))
 								ret.add(currentVisit);
@@ -1371,7 +1376,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						}
 
 						if( currentPeasant != null ) {
-							currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), lastSlot));
+							currentPeasant.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(),
+									lastSlot));
 							if(isPeasantValid(currentPeasant, dev, isEmployee))
 								ret.add(currentPeasant);
 							currentPeasant = null;
@@ -1501,26 +1507,32 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 */
 	private boolean isVisitValid(APDVisit visit, APDevice device, boolean isEmployee) throws ParseException {
 		
+		int time = (int)(visit.getCheckinFinished().getTime() -visit.getCheckinStarted().getTime()) / 60000;
+		
+		// Validate Minimum time for visit  
+		if( time < device.getVisitTimeThreshold()) {
+			visit.setCheckinType(APDVisit.CHECKIN_PEASANT);
+			return isPeasantValid(visit, device, isEmployee);
+		}
+			//return false;
+
+		// Validate Maximum time for visit  
+		if( time > device.getVisitMaxThreshold()) {
+			visit.setCheckinType(APDVisit.CHECKIN_PEASANT);
+			return isPeasantValid(visit, device, isEmployee);
+		}
+			//return false;
+
 		// Employees doesn't generate visits
 		if( isEmployee )
 			return false;
 		
-		int time = (int)(visit.getCheckinFinished().getTime() - visit.getCheckinStarted().getTime()) / 60000;
-		
-		// Validate Minimum time for visit  
-		if( time < device.getVisitTimeThreshold())
-			return false;
-
-		// Validate Maximum time for visit  
-		if( time > device.getVisitMaxThreshold())
-			return false;
-
 		// Total segments percentage check TODO check if doesnt break anything 
-		if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
+		/*if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
 				&& null != visit.getTotalSegments() && visit.getTotalSegments() > 0 ) {
 			if((visit.getInRangeSegments() * 100 / visit.getTotalSegments()) < VISIT_PERCENTAGE)
 				return false;
-		}
+		}*/
 		
 		visit.setDuration(time *60l);
 		
@@ -1608,9 +1620,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			ts = te;
 			te = aux;
 		}
-		visit.setDuration((visit.getCheckinFinished().getTime() -visit.getCheckinStarted().getTime()) / 1000);
+		Long time = (visit.getCheckinFinished().getTime() -visit.getCheckinStarted().getTime()) / 60000;
 		
-		return te >= t && t >= ts;
+		visit.setDuration(time);
+		
+		return te >= t && t >= ts && time <= 60 *60;
 	}
 
 	/**
