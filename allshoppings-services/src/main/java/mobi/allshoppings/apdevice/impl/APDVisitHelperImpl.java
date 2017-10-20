@@ -996,6 +996,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		}
 		
 		// Merges all the time slots
+		//TODO Clean slots
 		List<Integer> slots = CollectionFactory.createList();
 		if(entries.size() > 1) {
 			for( APHEntry entry : entries ) {
@@ -1030,6 +1031,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			return ret;
 		
 		// Adds all the devices in the cache
+		// TODO remove apd
 		Map<String,APDevice> apd = CollectionFactory.createMap();
 		if( apdCache == null || apdCache.size() == 0 ) {
 			for( APHEntry entry : entries ) {
@@ -1091,7 +1093,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					
 					// Closes open visits in case of slot continuity disruption
 					if( lastSlot != null && slot != (lastSlot + 1) &&
-							(slot -lastSlot) > (dev.getVisitGapThreshold() * 3)) {
+							(slot -lastSlot) > (dev.getVisitGapThreshold() * 3)) { //TODO Ask about the vale and creaate a local variable 
 						if( currentVisit != null ) {
 							currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(),
 									lastSlot));
@@ -1121,7 +1123,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									curEntry.getHostname()));
 						lastPeasantSlot = slot;
 						// Checks for power for visit
-						if( value >= dev.getVisitPowerThreshold() -2) {
+						if( value >= dev.getVisitPowerThreshold() ) {
 							if( currentVisit == null )
 								currentVisit = createVisit(curEntry, curDate, null, assignments.get(
 										curEntry.getHostname()), isEmployee);
@@ -1199,7 +1201,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				int finishSlot = lastSlot;
 				APDevice dev1 = apd.get(curEntry.getHostname());
 				if((lastVisitSlot + (dev1.getVisitDecay() * 3)) < finishSlot)
-					finishSlot = (int)(lastVisitSlot + (dev1.getVisitDecay() * 3));
+					finishSlot = (int)(lastVisitSlot + (dev1.getVisitDecay() * 3)); //TODO ask about decay
 				currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry.getDate(), finishSlot));
 				addPermanenceCheck(currentVisit, currentPeasant, apd.get(curEntry.getHostname()));
 				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname()), isEmployee))
@@ -1235,7 +1237,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			if( visit.getCheckinType().equals(APDVisit.CHECKIN_VISIT))
 				count++;
 		}
-		if( count > repepatThreshold ) {
+		if( count > repepatThreshold ) {// TODO discard changes from external context
 			List<APDVisit> tmp = CollectionFactory.createList();
 			tmp.addAll(ret);
 			ret.clear();
@@ -1510,7 +1512,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		int time = (int)(visit.getCheckinFinished().getTime() -visit.getCheckinStarted().getTime()) / 60000;
 		
 		// Validate Minimum time for visit  
-		if( time < device.getVisitTimeThreshold()) {
+		if( time < device.getVisitTimeThreshold()) {// TODO change name for getVisitMin
 			visit.setCheckinType(APDVisit.CHECKIN_PEASANT);
 			return isPeasantValid(visit, device, isEmployee);
 		}
