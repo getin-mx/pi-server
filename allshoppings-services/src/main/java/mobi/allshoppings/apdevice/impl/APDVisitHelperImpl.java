@@ -1245,7 +1245,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				if(!v.getCheckinType().equals(APDVisit.CHECKIN_VISIT)) ret.add(v);
 				else {
 					v.setCheckinType(APDVisit.CHECKIN_PEASANT);
-					ret.add(v);
+					//ret.add(v);
 				}
 			}
 		}
