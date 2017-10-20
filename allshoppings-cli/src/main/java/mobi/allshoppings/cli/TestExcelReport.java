@@ -47,9 +47,24 @@ public class TestExcelReport extends AbstractCLI {
 //			final List<String> storeIds = Arrays.asList("39132498-241e-4efb-a416-06f37f2f5b10","d40631ed-c981-4be9-8585-b74fe552832e"); // fullsand cancun y playa
 //			final List<String> storeIds = Arrays.asList("0804ce51-a635-40be-8952-28cc25c946dd","b6b1a93f-0116-4d9a-ad40-9c6842eaa8c0","c0d2ccb9-0ed4-45f8-8f4c-770ddb4495b4","5cad0cb3-196a-4f3f-b4f4-224f610f6467","f718f26a-c6de-4149-9605-d737450b7bd9","e43a9f92-7db7-46d1-8a74-3f629eea2b47","40b7b23d-f2b4-4f70-be05-a0ad51ce44ba","fb111c5b-db32-4129-a09a-f15269f57285","dcb748f6-a060-43da-9a13-aea9ca02245a","791d303b-3f45-4037-a6f4-2ba9c1e15c75","958d7395-fb37-4b8b-a716-b2c1a9ffdb9f","440dfccd-73b3-48a5-98c8-d893a01a085f","247b4ead-822f-4713-9465-177666b2e31c","3a361ad5-9748-4bfa-9a69-460fd8214e6e","23b16093-fbbf-4d9a-811b-6c82bd0eb940","01bf63e5-6b31-4bf9-beb6-2a9dcbb8a304","9bbf47a2-5a32-4ae3-b217-858c7c1e2703","115e5c3c-7850-4e3e-82d1-16b15b5256a5","41e68dc9-254d-4803-82b7-c083eeaf28df","9263926c-88e3-435b-ad7e-1920abfb73a6","649c6de9-05aa-40de-bd39-7b1d37921658");
 			//final List<String> storeIds = Arrays.asList("d3b6966e-c922-4e70-a473-9a549ed0ee89","e4916614-3cb8-4fc2-a58c-8b16c63d966c","d030cc71-91c1-46a1-9309-bbf4ddcfa393","7665f9e2-c66a-43ad-aa0e-8fc93feffb4e","ec9cec0d-d8a1-488e-b3e2-bf4b4f667b66","bcd4d47a-432b-4fab-8391-83f56080ebd4","aebd6f9e-158e-469a-8c43-2668677a4edb","b52192c9-37aa-464d-9243-81eb7cf51124","94b9e9fc-3f73-4926-9890-fe0d924952fc","e0bb9d40-7639-47d0-ab38-135b280ac769");
-			final List<String> storeIds = Arrays.asList("1479926604326", "1479926604340", "1479933115741"); // pradas
-			final String FROM_DATE = "2017-01-02"; // Retail Calendar initial 2017 day
-			final String TO_DATE = "2017-01-31"; // Retail Calendar final march day
+			final List<String> storeIds = Arrays.asList("5982c91b-1465-446b-afb2-53a5e7372b72", "4568bab3-27eb-4d49-84cd-3fa594acd3df", 
+					"2e029627-eb93-4646-999e-ff7894b45cd0", "afb95e1f-1774-46fe-b777-16488c2bcd65",
+					"4db491d4-3205-40ae-b048-f5b75ac35040", "61534aa2-ec08-471e-9378-eff26344edec",
+					"2179a275-e43a-42ac-b6e7-6eedf3f4ee0a", "8b3c8cd2-0727-48f8-bc61-ab47d507969c",
+					"6b51b0f6-4e52-41b0-b59d-cec9e89c042b", "74bd6202-8be7-4ec3-9ebd-5141f3ca49bd",
+					"f94a2759-554c-49a4-a32d-84c81cfe98cc", "ce7bdec9-4de3-4d1c-8fe2-80b02f88f083",
+					"82979029-3ca9-4bc3-aaaf-d9ccdfca562c", "4523b563-2e0d-4fe2-8321-9e53740854b2",
+					"3bc93117-4e24-4298-bcbe-7d5de3c38efb", "7cfdde1e-b869-4ee9-b787-3c5a3f297bb1",
+					"f8610b0e-158d-4f38-9c8a-dd2bf7a3f3a1", "e3d005b1-9162-49c1-855c-cc0eaf19b8b7",
+					"d662d502-4d45-40e1-a160-a8d1639d57c3", "d9ea5f0b-2ac8-48a0-87e1-0b2e02d74cef",
+					"e53ead22-8663-4e09-b0e7-069e91c1fae9", "3acd7c49-a32d-4b45-9064-d7360c11b6ed",
+					"f4fea5b7-475c-483f-896d-64422319382d", "4f9302f7-c155-46c7-b780-17834270a7f7",
+					"bd39ba69-eb84-4679-b3e2-0f9276eb76b7", "a062c268-877d-47e4-80aa-894da6ec93cc",
+					"1479926604326" 					  , "49272db7-dee7-4230-bbfb-d9bdcc296f59",
+					"1479933115741" 					  , "1479926604340",
+					"9ce30430-d923-481f-9b32-caa5139972fe", "b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"); // pradas
+			final String FROM_DATE = "2017-01-01"; // Retail Calendar initial 2017 day
+			final String TO_DATE = "2017-10-18"; // Retail Calendar final march day
 			final String outDir = "/usr/local/allshoppings/dump/";
 
 			final List<Thread> tList = CollectionFactory.createList();
