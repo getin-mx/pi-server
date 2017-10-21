@@ -1,4 +1,4 @@
-	package mobi.allshoppings.cli;
+package mobi.allshoppings.cli;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -66,9 +66,9 @@ public class VolarisDump extends AbstractCLI {
 			Map<String, InnerZone> subNames;
 			
 			zone = findZone1(names, "Zona Maquinas", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0281","gihs-0282","gihs-0278", "gihs-0277", "gihs-0276", "gihs-0280"), aps);
-			zone = findZone1(names, "Zona Filas", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0279"), aps);
+			zone = findZone1(names, "Zona Filas", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0279", "gihs-0201"), aps);
 			zone = findZone1(names, "Zona Servicios Especiales", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0180"), aps);
-			zone = findZone1(names, "Zona Checkin", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0201", "gihs-0284", "gihs-0282"), aps);
+			zone = findZone1(names, "Zona Checkin", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0283", "gihs-0284"), aps);
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

@@ -95,6 +95,10 @@ public class ProcessUtilsImpl implements ProcessUtils {
 					fProcess.setStatus(errorCode == 0 ? StatusAware.STATUS_SUCCEEDED : StatusAware.STATUS_ERROR);
 					
 					fProcess.setLog(stdout.toString() + stderr.toString());
+					// This is a control to avoid memcached overflow... the
+					// contents of this field are just logs, so they are not
+					// SOOOO important
+					if( fProcess.getLog().length() > 786432 ) fProcess.setLog(fProcess.getLog().substring(0, 786432));
 					
 					try {
 						dao.update(fProcess);
