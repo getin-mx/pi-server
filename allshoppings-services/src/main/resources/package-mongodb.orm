@@ -34,6 +34,10 @@
             <field name="key" column="_id" length="100"/>
         </class>
 
+        <class name="APDVAnalysis" table="APDVAnalysis">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
         <class name="APHotspot" table="APHotspot">
             <field name="key" column="_id" length="100"/>
         </class>

@@ -51,5 +51,6 @@ public interface APHHelper {
 	void artificiateRSSI(Map<String, APDevice> apdevices, Date fromDate, Date toDate) throws ASException;
 	void generateAPHEntriesFromDump(Date fromDate, Date toDate, List<String> hostnames, boolean buildCache) throws ASException;
 	void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, List<String> hostnames, boolean buildCache) throws ASException;
+	void generateAPDVAnalysis(Date forDate, String entityId, Integer entityKind) throws ASException;
 
 }

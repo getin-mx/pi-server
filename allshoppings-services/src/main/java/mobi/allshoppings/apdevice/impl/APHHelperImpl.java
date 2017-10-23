@@ -618,6 +618,11 @@ public class APHHelperImpl implements APHHelper {
 		Matcher m = p.matcher(mac);
 		return m.find();
 	}
+	
+	@Override
+	public void generateAPDVAnalysis(Date forDate, String entityId, Integer entityKind) throws ASException {
+		
+	}
 
 	/**
 	 * Generates the APHEntries tables from dump
@@ -632,6 +637,7 @@ public class APHHelperImpl implements APHHelper {
 	 *            Devices to match
 	 * @throws ASException
 	 */
+	
 	@Override
 	public void generateAPHEntriesFromDump(Date fromDate, Date toDate, List<String> hostnames, boolean buildCache) throws ASException {
 
