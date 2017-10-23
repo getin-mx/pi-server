@@ -7232,6 +7232,7 @@ public class UserMenuDump extends AbstractCLI {
 			} catch (Exception e) {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.setKey(userMenuDao.createKey("aditivofranquicias2_mx"));
 				userMenuDao.create(um);
 			}
