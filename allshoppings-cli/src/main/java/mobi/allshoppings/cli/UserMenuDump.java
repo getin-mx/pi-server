@@ -1806,7 +1806,8 @@ public class UserMenuDump extends AbstractCLI {
 						"8d2335b7-4cc3-4f76-b274-86137b34b4e5", "3c9e6b60-bdcd-4268-99eb-a9c9f719f625",
 						"07acea43-4a6c-4adc-896c-00b1f4781242", "2fea9047-6da8-4493-b97c-f3cdd809a18d",
 						"800f4a09-34f7-4116-bf5c-4b0ab45175c8", "75746850-9ae4-4aa4-bf8f-3bf01daf2775",
-						"0867dbd4-53f1-4602-8a48-e0c07bd752da"));
+						"0867dbd4-53f1-4602-8a48-e0c07bd752da", "dd77a5a2-6523-4325-b65c-1e3e3554028d",
+						"efb69866-6bc0-44e3-8dc2-f436dfc82773"));
 				aditivo.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				aditivo.setKey((Key)keyHelper.obtainKey(User.class, "aditivo_mx"));
 				userDao.create(aditivo);
