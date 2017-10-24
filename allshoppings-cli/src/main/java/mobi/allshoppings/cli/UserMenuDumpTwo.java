@@ -318,6 +318,35 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				userDao.create(user);
 			}
 			
+			try {
+				um = userMenuDao.get("daniel@aditivo.mx", true);
+				userMenuDao.delete("daniel@aditivo.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("daniel@aditivo.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("daniel@aditivo.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Daniel");
+				user.setLastname("");
+				user.setEmail("daniel@aditivo.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("a45fc81f-900e-457e-854e-df4a312bb0e1",
+								"d2eab997-2497-49b3-b1bd-15cf80f05fc7", "8d2335b7-4cc3-4f76-b274-86137b34b4e5",
+								"3c9e6b60-bdcd-4268-99eb-a9c9f719f625"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "daniel@aditivo.mx"));
+				userDao.create(user);
+			}
+			
 			// End Aditivo ------------------------------------------------------------------------
 			
 			// Droc Users -------------------------------------------------------------------------
