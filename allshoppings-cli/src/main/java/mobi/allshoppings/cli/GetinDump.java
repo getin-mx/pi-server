@@ -843,6 +843,16 @@ public class GetinDump extends AbstractCLI {
 			}
 			
 			try {
+				brand = brandDao.get("juguetron_mx", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Juguetron");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "juguetron_mx"));
+				brandDao.create(brand);
+			}
+			
+			try {
 				brand = brandDao.get("moda_holding_mx", true);
 			} catch( Exception e ) {
 				brand = new Brand();
@@ -934,8 +944,6 @@ public class GetinDump extends AbstractCLI {
 			
 			try {
 				brand = brandDao.get("fraiche_mx", true);
-				brand.setStatus(StatusAware.STATUS_ENABLED); 
-		        brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Fraiche");
@@ -947,8 +955,6 @@ public class GetinDump extends AbstractCLI {
 			
 			try {
 				brand = brandDao.get("brunocorza_mx", true);
-				brand.setStatus(StatusAware.STATUS_ENABLED); 
-		        brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Bruno Corza");
@@ -1635,6 +1641,10 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("798","MT Sport S11 Puebla Centro 1", "mt_sport_mx", null, 0));
 			
 			stores.add(new StoreAdapter("799","Opticas Devlyn Cervantes Saavedra", "devlyn_mx", null, 0));
+			
+			stores.add(new StoreAdapter("800","Juguetron Santa Fe", "juguetron_mx", null, 0));
+			stores.add(new StoreAdapter("801","Juguetron Puebla", "juguetron_mx", null, 0));
+			stores.add(new StoreAdapter("802","Juguetron Guadalajara", "juguetron_mx", null, 0));
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
