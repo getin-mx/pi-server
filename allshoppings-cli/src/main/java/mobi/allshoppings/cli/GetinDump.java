@@ -843,10 +843,11 @@ public class GetinDump extends AbstractCLI {
 			}
 			
 			try {
+				
 				brand = brandDao.get("juguetron_mx", true);
+				brand.setStatus(0);
 			} catch( Exception e ) {
 				brand = new Brand();
-				brand.setStatus(StatusAware.STATUS_ENABLED);
 				brand.setName("Juguetron");
 				brand.setCountry("Mexico");
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "juguetron_mx"));
