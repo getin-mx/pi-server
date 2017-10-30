@@ -1642,9 +1642,9 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("799","Opticas Devlyn Cervantes Saavedra", "devlyn_mx", null, 0));
 			
-			stores.add(new StoreAdapter("800","Juguetron Santa Fe", "juguetron_mx", null, 0));
-			stores.add(new StoreAdapter("801","Juguetron Puebla", "juguetron_mx", null, 0));
-			stores.add(new StoreAdapter("802","Juguetron Guadalajara", "juguetron_mx", null, 0));
+			stores.add(new StoreAdapter("800","Juguetron Santa Fe", "juguetron_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("801","Juguetron Puebla", "juguetron_mx", null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("802","Juguetron Guadalajara", "juguetron_mx", null, GetinDump.MALL));
 			
 			stores.add(new StoreAdapter("803", "Vicky Form Vallejo I", "vickyform_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("804", "Vicky Form Tlalnepantla I", "vickyform_mx", null, GetinDump.FOOT_STREET));
@@ -1655,6 +1655,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("807", "Grupo Pavel Johnston & Murphy Plaza Carso", "grupopavel_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("808", "Grupo Pavel Johnston & Murphy Antara", "grupopavel_mx", null, GetinDump.MALL));
 
+			
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
