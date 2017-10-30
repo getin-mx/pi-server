@@ -845,7 +845,6 @@ public class GetinDump extends AbstractCLI {
 			try {
 				
 				brand = brandDao.get("juguetron_mx", true);
-				brand.setStatus(0);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Juguetron");
