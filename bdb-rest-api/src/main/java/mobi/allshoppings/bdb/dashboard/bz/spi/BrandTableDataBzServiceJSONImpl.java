@@ -60,7 +60,6 @@ implements BDBDashboardBzService {
 	@Override
 	public String retrieve()
 	{
-		log.log(Level.INFO, "WASUP!!!");
 		long start = markStart();
 		try {
 			// obtain the id and validates the auth token
