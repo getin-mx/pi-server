@@ -688,6 +688,33 @@ public class UserMenuDumpTwo extends AbstractCLI {
 		}
 		
 		
+		User demodevlyn = null;
+		try {
+			demodevlyn = userDao.get("demo_devlyn_mx", true);
+		} catch( Exception e ) {
+			demodevlyn = new User();
+			demodevlyn.setFirstname("DevlynDemo");
+			demodevlyn.setLastname("Mexico");
+			demodevlyn.setEmail("demodevlyn@allshoppings.mobi");
+			demodevlyn.getSecuritySettings().setRole(Role.BRAND);
+			demodevlyn.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+			demodevlyn.setKey((Key)keyHelper.obtainKey(User.class, "demo_devlyn_mx"));
+			userDao.create(demodevlyn);
+		}
+
+		try {
+			um = userMenuDao.get("demo_devlyn_mx", true);
+			userMenuDao.delete("demo_devlyn_mx");
+			throw new Exception();
+		} catch( Exception e ) {
+			um = new UserMenu();
+			um.getEntries().add(new UserMenuEntry("index.demodevlyn", "fa-area-chart", "Tráfico"));
+			um.setKey(userMenuDao.createKey("demo_devlyn_mx"));
+			userMenuDao.create(um);
+		}
+
+		
+		
 			// End Aragon
 		
 		// End Droc Users ----------------------------------------------------------------------------
