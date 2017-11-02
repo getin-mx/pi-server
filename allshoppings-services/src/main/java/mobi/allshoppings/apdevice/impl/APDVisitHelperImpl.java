@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -1554,6 +1556,110 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			
 		}
 
+	}
+	
+	@Override
+	public List<APDVisit> fakeVisitsWith(Store store, Date copyFromDate,
+			Date copyToDate, Date insertFromDate) throws ASException {
+		
+		log.log(Level.INFO, "Processing for store " +store.getName());
+		
+		List<APDVisit> sources = apdvDao.getUsingEntityIdAndEntityKindAndDate(
+				store.getIdentifier(), EntityKind.KIND_STORE, copyFromDate, copyToDate,
+				null, null, null, null, false);
+		
+		if(sources.isEmpty()) {
+			log.log(Level.INFO, "Nothing to do here (source day "
+					+ "is empty)");
+			return null;
+		}
+		log.log(Level.INFO, "Copying " +sources.size() +" vists...");
+		
+		sources.sort(new Comparator<APDVisit>() {
+
+			@Override
+			public int compare(APDVisit o1, APDVisit o2) {
+				return o1.getCheckinStarted().compareTo(o2.getCheckinStarted());
+			}
+			
+		});
+		
+		Date lastStartD = sources.get(0).getCheckinStarted();
+		Date lastFinishD = sources.get(0).getCheckinFinished();
+		List<APDVisit> res = CollectionFactory.createList();
+		TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
+		Calendar aux = Calendar.getInstance();
+		aux.setTime(copyFromDate);
+		aux.add(Calendar.MILLISECOND, -tz.getOffset(copyFromDate.getTime()));
+		int lowerLimit = aux.get(Calendar.HOUR_OF_DAY);
+		aux.clear();
+		aux.setTime(copyToDate);
+		aux.add(Calendar.MILLISECOND, -tz.getOffset(copyToDate.getTime()));
+		int upperLimit = aux.get(Calendar.HOUR_OF_DAY);
+		
+		for(APDVisit visit : sources) {
+			aux.clear();
+			aux.setTime(visit.getCheckinStarted());
+			if(lowerLimit > aux.get(Calendar.HOUR_OF_DAY) ||
+					upperLimit < aux.get(Calendar.HOUR_OF_DAY)) continue;
+			APDVisit _new = new APDVisit();
+			_new.setApheSource(visit.getApheSource());
+			_new.setApproved(visit.getApproved());
+			_new.setCheckinStarted(copyDateHours(insertFromDate, lastStartD,
+					visit.getCheckinStarted(), tz));
+			_new.setCheckinFinished(copyDateHours(insertFromDate, lastFinishD,
+					visit.getCheckinFinished(), tz));
+			_new.setCheckinType(visit.getCheckinType());
+			_new.setDevicePlatform(visit.getDevicePlatform());
+			_new.setDeviceUUID(visit.getDeviceUUID());
+			_new.setEntityId(visit.getEntityId());
+			_new.setEntityKind(visit.getEntityKind());
+			_new.setHidePermanence(visit.getHidePermanence());
+			_new.setInRangeSegments(visit.getInRangeSegments());
+			_new.setLastUpdate(visit.getLastUpdate());
+			_new.setMac(visit.getMac());
+			_new.setTotalSegments(visit.getTotalSegments());
+			_new.setUserId(visit.getUserId());
+			_new.setVerified(visit.getVerified());
+			_new.setKey(apdvDao.createKey(_new));
+			lastFinishD.setTime(visit.getCheckinFinished().getTime());
+			lastStartD.setTime(visit.getCheckinStarted().getTime());
+			res.add(_new);
+			try {
+				apdvDao.createOrUpdate(_new);
+			} catch(ASException e) {
+				log.log(Level.INFO, "Problem inserting " +_new, e);
+			}
+		}
+		return res;
+	}
+	
+	private Date copyDateHours(Date base, Date last, Date current, TimeZone tz) {
+		Calendar cal = Calendar.getInstance();
+		Calendar aux = Calendar.getInstance();
+		cal.setTime(last);
+		aux.setTime(current);
+		int hours = aux.get(Calendar.HOUR_OF_DAY);
+		int minutes = aux.get(Calendar.MINUTE);
+		int seconds = aux.get(Calendar.SECOND);
+		int millis = aux.get(Calendar.MILLISECOND);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		aux.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		aux.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		aux.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		aux.set(Calendar.MILLISECOND, 0);
+		long diff = cal.getTimeInMillis() -aux.getTimeInMillis();
+		cal.clear();
+		cal.setTime(base);
+		cal.add(Calendar.MILLISECOND, (int)diff -tz.getOffset(base.getTime()));
+		cal.set(Calendar.HOUR_OF_DAY, hours);
+		cal.set(Calendar.MINUTE, minutes);
+		cal.set(Calendar.SECOND, seconds);
+		cal.set(Calendar.MILLISECOND, millis);
+		return cal.getTime();
 	}
 	
 }
