@@ -133,15 +133,13 @@ implements BDBDashboardBzService {
 					null, null, fromStringDate, toStringDate,
 					null, null, null, null, null, null, null, null);
 
-			{
-				for(DashboardIndicatorData obj : list) {
-					DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId(), null);
-					if( rec != null ) {
-						if( obj.getDoubleValue() != null ) rec.setPermanenceInMillis(rec.getPermanenceInMillis() + obj.getDoubleValue().longValue());
-						else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
-						if( obj.getRecordCount() != null ) rec.setPermancenceQty(rec.getPermancenceQty() + obj.getRecordCount());
-						else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
-					}
+			for(DashboardIndicatorData obj : list) {
+				DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId(), null);
+				if( rec != null ) {
+					if( obj.getDoubleValue() != null ) rec.setPermanenceInMillis(rec.getPermanenceInMillis() + obj.getDoubleValue().longValue());
+					else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
+					if( obj.getRecordCount() != null ) rec.setPermancenceQty(rec.getPermancenceQty() + obj.getRecordCount());
+					else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
 				}
 			}
 
@@ -331,7 +329,7 @@ implements BDBDashboardBzService {
 			titles.put("Items");
 			titles.put("Revenue");
 			titles.put("Visitantes/Paseantes");
-			titles.put("Visitantes/Tickets");
+			titles.put("Tickets/Visitantes");
 			titles.put("Día más Alto");
 			titles.put("Día más Bajo");
 			titles.put("Permanencia Promedio");
@@ -340,7 +338,7 @@ implements BDBDashboardBzService {
 		}
 
 		/**
-		 * Gets the totals JSON Array
+		 * Gets the totals JSON Array, used in report
 		 * @return
 		 * @throws ASException
 		 */
@@ -356,7 +354,9 @@ implements BDBDashboardBzService {
 					totals.setTickets(totals.getTickets() + rec.getTickets());
 					totals.setItems(totals.getItems() + rec.getItems());
 					totals.setRevenue(totals.getRevenue() + rec.getRevenue());
-					c.add(rec.getPermanenceInMillis());
+					totals.setPermanenceInMillis(totals.getPermanenceInMillis() + rec.getPermanenceInMillis());
+					totals.setPermancenceQty(totals.getPermancenceQty() + rec.getPermancenceQty());
+					//c.add(rec.getPermanenceInMillis());
 
 					Map<String, Long> datesCache = totals.getDatesCache();
 					Map<String, Long> recDatesCache = rec.getDatesCache();
@@ -375,17 +375,18 @@ implements BDBDashboardBzService {
 				}
 			}
 
-			Collections.sort(c);
-			if( c.size() == 0 )
-				totals.setPermanenceInMillis(0l);
-			else
-				if( c.size() % 2 == 0 && c.size() >= 2 ) {
-					int med = (int)(c.size() / 2);
-					totals.setPermanenceInMillis((c.get(med-1) + c.get(med)) / 2);
-				} else
-					totals.setPermanenceInMillis(c.get((int)Math.floor(c.size() / 2)));
+//			//Se obtiene la mediana de la permanencia
+//			Collections.sort(c);
+//			if( c.size() == 0 )
+//				totals.setPermanenceInMillis(0l);
+//			else
+//				if( c.size() % 2 == 0 && c.size() >= 2 ) {
+//					int med = (int)(c.size() / 2);
+//					totals.setPermanenceInMillis((c.get(med-1) + c.get(med)) / 2);
+//				} else
+//					totals.setPermanenceInMillis(c.get((int)Math.floor(c.size() / 2)));
 
-			return totals.toJSONArray();
+			return totals.toJSONArray(true);
 
 		}
 
@@ -432,7 +433,7 @@ implements BDBDashboardBzService {
 				array = new JSONArray();
 
 			for( DashboardRecordRep rec : records )
-				array.put(rec.toJSONArray());
+				array.put(rec.toJSONArray(false));
 
 			return array;
 		}
@@ -472,6 +473,7 @@ implements BDBDashboardBzService {
 			items = 0;
 			revenue = 0.0;
 			permanenceInMillis = 0l;
+			permancenceQty = 0;
 
 			try {
 				datesCache = CollectionFactory.createMap();
@@ -502,11 +504,13 @@ implements BDBDashboardBzService {
 		 * @return
 		 * @throws ASException
 		 */
-		public JSONArray toJSONArray() throws ASException {
+		public JSONArray toJSONArray(boolean calculatesTotals) throws ASException {
 			JSONArray row = new JSONArray();
-
+			
 			String h1 = "";
 			String h2 = "";
+			long permanence = 0;
+			
 			if( isHeader() ) {
 				h1 = "<b>";
 				h2 = "</b>";
@@ -537,14 +541,17 @@ implements BDBDashboardBzService {
 
 			row.put(h1 + calculateHigherDay() + h2);
 			row.put(h1 + calculateLowerDay() + h2);
-
-			row.put(h1 + String.valueOf(Math.round(permanenceInMillis / 60000)) + " mins"  + h2);
+			
+			if (permanenceInMillis > 0 && permancenceQty > 0) {
+				permanence = (int)Math.round(permanenceInMillis/ permancenceQty / 60000D);
+			}
+			row.put(h1 + String.valueOf(permanence) + " mins"  + h2);	
 
 			return row;
 		}
 
 		/**
-		 * Transforms this record in a JSONArray
+		 * Transforms this record in a JSONObject
 		 * @return
 		 * @throws ASException
 		 */
@@ -579,7 +586,7 @@ implements BDBDashboardBzService {
 			row.put("lowerDay", calculateLowerDay());
 
 			if( permanenceInMillis > 0 && permancenceQty > 0 ) {
-				row.put("averagePermanence", Math.round(permanenceInMillis / permancenceQty / 60000D ));
+				row.put("averagePermanence", Math.round(permanenceInMillis / permancenceQty / 60000D));
 			} else {
 				row.put("averagePermanence", 0);
 			}
