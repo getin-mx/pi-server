@@ -9,6 +9,7 @@ import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHEntry;
+import mobi.allshoppings.model.Store;
 
 public interface APDVisitHelper {
 
@@ -23,10 +24,14 @@ public interface APDVisitHelper {
 			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, List<String> employeeListMacs)
 			throws ASException;
 
-	List<APDVisit> aphEntryToVisits(List<APHEntry> entries, Map<String, APDevice> apdCache,
-			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, List<String> employeeListMacs)
-			throws ASException;
+	List<APDVisit> aphEntryToVisits(List<APHEntry> entries,
+			Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache,
+			List<String> blackListMacs, List<String> employeeListMacs) throws ASException;
 
-	void fakeVisitsWith(String storeId, String fakeWithStoreId, Date fromDate, Date toDate) throws ASException;
+	void fakeVisitsWith(String storeId, String fakeWithStoreId, Date fromDate,
+			Date toDate) throws ASException;
+	
+	List<APDVisit> fakeVisitsWith(Store store, Date copyFromDate, Date copyToDate,
+			Date insertFromDate) throws ASException;
 	
 }

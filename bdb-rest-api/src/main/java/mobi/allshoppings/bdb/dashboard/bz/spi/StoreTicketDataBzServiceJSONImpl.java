@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -65,6 +66,10 @@ implements BDBDashboardBzService, BDBPostBzService {
 	@Autowired
 	private BrandDAO brandDao;
 	
+	static {
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+	}
+	
 	/**
 	 * Obtains a Dashboard report prepared to form a shopping center heatmap
 	 * 
@@ -92,8 +97,9 @@ implements BDBDashboardBzService, BDBPostBzService {
 			JSONArray jsonArray = new JSONArray();
 			JSONArray dateArray = new JSONArray();
 			while( curDate.before(limitDate) || curDate.equals(limitDate) ) {
-				dateArray.put(sdf.format(curDate));
-				StoreTicket obj = tmp.get(sdf.format(curDate));
+				String parsedDate = sdf.format(curDate);
+				dateArray.put(parsedDate);
+				StoreTicket obj = tmp.get(parsedDate);
 				if( obj == null ) {
 					jsonArray.put(0);
 				} else {
