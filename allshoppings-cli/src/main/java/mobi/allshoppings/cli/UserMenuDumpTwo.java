@@ -721,7 +721,8 @@ public class UserMenuDumpTwo extends AbstractCLI {
 		User userAriel;
 		
 		try {
-			userAriel = userDao.get("ariel@chilimbalam.com.mx", true);
+			userDao.delete("ariel@chilimbalam.com.mx");
+			throw new Exception();
 		} catch( Exception e ) {
 			userAriel = new User();
 			userAriel.setFirstname("Ariel");
