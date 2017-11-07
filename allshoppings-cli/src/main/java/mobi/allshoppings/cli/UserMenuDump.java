@@ -1458,50 +1458,26 @@ public class UserMenuDump extends AbstractCLI {
 				userMenuDao.create(um);
 			}
 			
-			User userChilimbalam = null;
+			User us1;
+			
 			try {
-				userChilimbalam = userDao.get("ariel@chilimbalam.com.mx", true);
+				us1 = userDao.get("ariel@chilimbalam.com.mx", true);
 			} catch( Exception e ) {
-				userChilimbalam = new User();
-				userChilimbalam.setFirstname("Ariel");
-				userChilimbalam.setLastname("Chilim");
-				userChilimbalam.setEmail("ariel@chilimbalam.com.mx");
-				userChilimbalam.getSecuritySettings().setRole(Role.BRAND);
-				userChilimbalam.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				userChilimbalam.setKey((Key)keyHelper.obtainKey(User.class, "ariel@chilimbalam.com.mx"));
-				userDao.create(userChilimbalam);
-				
+				us1 = new User();
+				us1.setFirstname("Ariel");
+				us1.setLastname("");
+				us1.setEmail("ariel@chilimbalam.com.mx");
+				us1.getSecuritySettings().setRole(Role.STORE);
+				us1.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				us1.getSecuritySettings()
+				.setStores(Arrays.asList("1471039822636", "1471039822656", "1471039822677", "1503537460654", "1503537460669", 
+				                          "65ceefa9-f1ef-4007-a6f2-e3dd0d8ac10b", "15457473-3aef-4c31-8cca-7f4e0c089bf1",
+				                          "f36a7e58-d155-49f7-a130-39ecbae772a2", "ce3944c0-5678-4709-9555-10b71d647199",
+				                          "f1b7a285-f0e8-47e6-8063-04e7d09108e3", "cfdc5dcc-a6af-47ea-9cd4-29ef8a08ada4"));
+				us1.setKey((Key)keyHelper.obtainKey(User.class, "ariel@chilimbalam.com.mx"));
+				userDao.create(us1);
 			}
-			
-			
-			userChilimbalam = null;
-			try {
-				userChilimbalam = userDao.get("hmorales@chilimbalam.com.mx", true);
-			} catch( Exception e ) {
-				userChilimbalam = new User();
-				userChilimbalam.setFirstname("H");
-				userChilimbalam.setLastname("Morales");
-				userChilimbalam.setEmail("hmorales@chilimbalam.com.mx");
-				userChilimbalam.getSecuritySettings().setRole(Role.BRAND);
-				userChilimbalam.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				userChilimbalam.setKey((Key)keyHelper.obtainKey(User.class, "hmorales@chilimbalam.com.mx"));
-				userDao.create(userChilimbalam);
-			}
-			
-			userChilimbalam = null;
-			try {
-				userChilimbalam = userDao.get("arocha@chilimbalam.com.mx", true);
-			} catch( Exception e ) {
-				userChilimbalam = new User();
-				userChilimbalam.setFirstname("A");
-				userChilimbalam.setLastname("Rocha");
-				userChilimbalam.setEmail("arocha@chilimbalam.com.mx");
-				userChilimbalam.getSecuritySettings().setRole(Role.BRAND);
-				userChilimbalam.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				userChilimbalam.setKey((Key)keyHelper.obtainKey(User.class, "arocha@chilimbalam.com.mx"));
-				userDao.create(userChilimbalam);
-			}
-			
+
 			try {
 				um = userMenuDao.get("ariel@chilimbalam.com.mx", true);
 				userMenuDao.delete("ariel@chilimbalam.com.mx");
@@ -1510,28 +1486,6 @@ public class UserMenuDump extends AbstractCLI {
 				um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("ariel@chilimbalam.com.mx"));
-				userMenuDao.create(um);
-			}
-			
-			try {
-				um = userMenuDao.get("hmorales@chilimbalam.com.mx", true);
-				userMenuDao.delete("hmorales@chilimbalam.com.mx");
-				throw new Exception();
-			} catch( Exception e ) {
-				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.setKey(userMenuDao.createKey("hmorales@chilimbalam.com.mx"));
-				userMenuDao.create(um);
-			}
-			
-			try {
-				um = userMenuDao.get("arocha@chilimbalam.com.mx", true);
-				userMenuDao.delete("arocha@chilimbalam.com.mx");
-				throw new Exception();
-			} catch( Exception e ) {
-				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.setKey(userMenuDao.createKey("arocha@chilimbalam.com.mx"));
 				userMenuDao.create(um);
 			}
 			
