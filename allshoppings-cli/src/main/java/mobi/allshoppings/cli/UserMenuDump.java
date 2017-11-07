@@ -1501,7 +1501,6 @@ public class UserMenuDump extends AbstractCLI {
 				userChilimbalam.setKey((Key)keyHelper.obtainKey(User.class, "arocha@chilimbalam.com.mx"));
 				userDao.create(userChilimbalam);
 			}
-
 			
 			try {
 				um = userMenuDao.get("ariel@chilimbalam.com.mx", true);
@@ -1513,6 +1512,29 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("ariel@chilimbalam.com.mx"));
 				userMenuDao.create(um);
 			}
+			
+			try {
+				um = userMenuDao.get("hmorales@chilimbalam.com.mx", true);
+				userMenuDao.delete("hmorales@chilimbalam.com.mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("hmorales@chilimbalam.com.mx"));
+				userMenuDao.create(um);
+			}
+			
+			try {
+				um = userMenuDao.get("arocha@chilimbalam.com.mx", true);
+				userMenuDao.delete("arocha@chilimbalam.com.mx");
+				throw new Exception();
+			} catch( Exception e ) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("arocha@chilimbalam.com.mx"));
+				userMenuDao.create(um);
+			}
+			
 			
 			User capadeozono = null;
 			try {
