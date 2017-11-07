@@ -715,6 +715,9 @@ public class UserMenuDumpTwo extends AbstractCLI {
 		}
 		
 		//User Ariel
+		//Inserting Ariel
+		log.log(Level.INFO, "Inserting Ariel user...");
+
 		User userAriel;
 		
 		try {
