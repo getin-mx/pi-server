@@ -4623,38 +4623,6 @@ public class UserMenuDump extends AbstractCLI {
 				// End complete access --------------------------------------------------
 			
 				// Zona Norte -----------------------------------------------------------
-
-			try {
-				um = userMenuDao.get("lamartinez@pradastores.mx", true);
-				userMenuDao.delete("lamartinez@pradastores.mx");
-				throw new Exception();
-			} catch (Exception e) {
-				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.setKey(userMenuDao.createKey("lamartinez@pradastores.mx"));
-				userMenuDao.create(um);
-			}
-
-			try {
-				user = userDao.get("lamartinez@pradastores.mx", true);
-			} catch (Exception e) {
-				user = new User();
-				user.setFirstname("Luis Arturo Martínez");
-				user.setLastname("");
-				user.setEmail("lamartinez@pradastores.mx");
-				user.getSecuritySettings().setRole(Role.STORE);
-				user.getSecuritySettings()
-						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
-				user.getSecuritySettings()
-						.setStores(Arrays.asList("1479933115741",
-								"2179a275-e43a-42ac-b6e7-6eedf3f4ee0a", "a062c268-877d-47e4-80aa-894da6ec93cc",
-								"82979029-3ca9-4bc3-aaaf-d9ccdfca562c", "49272db7-dee7-4230-bbfb-d9bdcc296f59",
-								"6b51b0f6-4e52-41b0-b59d-cec9e89c042b", "3bc93117-4e24-4298-bcbe-7d5de3c38efb",
-								"5982c91b-1465-446b-afb2-53a5e7372b72", "ce7bdec9-4de3-4d1c-8fe2-80b02f88f083",
-								"9ce30430-d923-481f-9b32-caa5139972fe"));
-				user.setKey((Key) keyHelper.obtainKey(User.class, "lamartinez@pradastores.mx"));
-				userDao.create(user);
-			}
 			
 			try {
 				um = userMenuDao.get("santafe@pradastores.mx", true);

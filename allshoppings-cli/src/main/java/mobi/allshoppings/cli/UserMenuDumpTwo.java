@@ -29,26 +29,28 @@ public class UserMenuDumpTwo extends AbstractCLI {
 	}
 
 	public static OptionParser buildOptionParser(OptionParser base) {
-		if( base == null ) parser = new OptionParser();
-		else parser = base;
+		if (base == null)
+			parser = new OptionParser();
+		else
+			parser = base;
 		return parser;
 	}
-	
+
 	public static void main(String[] args) throws ASException {
 		createMissingUsers();
 	}
 
 	public static void createMissingUsers() throws ASException {
 		try {
-			UserMenuDAO userMenuDao = (UserMenuDAO)getApplicationContext().getBean("usermenu.dao.ref");
-			UserDAO userDao = (UserDAO)getApplicationContext().getBean("user.dao.ref");
-			KeyHelper keyHelper = (KeyHelper)getApplicationContext().getBean("key.helper");
+			UserMenuDAO userMenuDao = (UserMenuDAO) getApplicationContext().getBean("usermenu.dao.ref");
+			UserDAO userDao = (UserDAO) getApplicationContext().getBean("user.dao.ref");
+			KeyHelper keyHelper = (KeyHelper) getApplicationContext().getBean("key.helper");
 
 			log.log(Level.INFO, "Dumping Getin Users....");
 
 			UserMenu um = null;
 			User user = null;
-			
+
 			// Aditivo -----------------------------------------------------------------
 			try {
 				um = userMenuDao.get("carlos@aditivo.mx", true);
@@ -79,7 +81,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "carlos@aditivo.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("hector@aditivo.mx", true);
 				userMenuDao.delete("hector@aditivo.mx");
@@ -109,7 +111,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "hector@aditivo.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("isaias@aditivo.mx", true);
 				userMenuDao.delete("isaias@aditivo.mx");
@@ -139,7 +141,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "isaias@aditivo.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("alberto@aditivo.mx", true);
 				userMenuDao.delete("alberto@aditivo.mx");
@@ -169,7 +171,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "alberto@aditivo.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("angelo@aditivo.mx", true);
 				userMenuDao.delete("angelo@aditivo.mx");
@@ -199,7 +201,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "angelo@aditivo.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("aaron@aditivo.mx", true);
 				userMenuDao.delete("aaron@aditivo.mx");
@@ -229,7 +231,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "aaron@aditivo.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("joser@aditivo.mx", true);
 				userMenuDao.delete("joser@aditivo.mx");
@@ -259,7 +261,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "joser@aditivo.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("ignacio@aditivo.mx", true);
 				userMenuDao.delete("ignacio@aditivo.mx");
@@ -288,7 +290,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "ignacio@aditivo.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("miguel@aditivo.mx", true);
 				userMenuDao.delete("miguel@aditivo.mx");
@@ -317,7 +319,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "miguel@aditivo.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("daniel@aditivo.mx", true);
 				userMenuDao.delete("daniel@aditivo.mx");
@@ -346,482 +348,527 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "daniel@aditivo.mx"));
 				userDao.create(user);
 			}
-			
-			// End Aditivo ------------------------------------------------------------------------
-			
-			// Droc Users -------------------------------------------------------------------------
-				// Admins
-		
-		User julius = null;
-		try {
-			julius = userDao.get("julius", true);
-		} catch( Exception e ) {
-			julius = new User(); 
-			julius.setFirstname("Julius"); 
-			julius.setLastname("Dokulil"); 
-			julius.setEmail("julius@allshoppings.mobi"); 
-			julius.getSecuritySettings().setRole(Role.SHOPPING); 
-			julius.getSecuritySettings().setShoppings(new ArrayList<String>()); 
-			julius.getSecuritySettings().getShoppings().add("mundoe"); 
-			julius.getSecuritySettings().getShoppings().add("plazaaragon");
-			julius.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
-			julius.setKey((Key)keyHelper.obtainKey(User.class, "julius")); 
-		     userDao.create(julius); 
-		}
-		
-		try {
-			um = userMenuDao.get("julius", true);
-			userMenuDao.delete("julius");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("julius")); 
-	        userMenuDao.create(um); 
-		}
-		
-		User eross = null;
-		try {
-			eross = userDao.get("eross", true);
-		} catch( Exception e ) {
-			eross = new User(); 
-			eross.setFirstname("Eduardo"); 
-			eross.setLastname("Ross"); 
-			eross.setEmail("eross@allshoppings.mobi"); 
-			eross.getSecuritySettings().setRole(Role.SHOPPING); 
-			eross.getSecuritySettings().setShoppings(new ArrayList<String>()); 
-			eross.getSecuritySettings().getShoppings().add("mundoe"); 
-			eross.getSecuritySettings().getShoppings().add("plazaaragon");
-			eross.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
-			eross.setKey((Key)keyHelper.obtainKey(User.class, "eross")); 
-		     userDao.create(eross); 
-		}
-		
-		try {
-			um = userMenuDao.get("eross", true);
-			userMenuDao.delete("eross");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("eross")); 
-	        userMenuDao.create(um); 
-		}
-		
-		
-		User fdiaz = null;
-		try {
-			fdiaz = userDao.get("fdiaz", true);
-		} catch( Exception e ) {
-			fdiaz = new User(); 
-			fdiaz.setFirstname("Fernando"); 
-			fdiaz.setLastname("Diaz"); 
-			fdiaz.setEmail("fdiaz@allshoppings.mobi"); 
-			fdiaz.getSecuritySettings().setRole(Role.SHOPPING); 
-			fdiaz.getSecuritySettings().setShoppings(new ArrayList<String>()); 
-			fdiaz.getSecuritySettings().getShoppings().add("mundoe"); 
-			fdiaz.getSecuritySettings().getShoppings().add("plazaaragon");
-			fdiaz.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
-			fdiaz.setKey((Key)keyHelper.obtainKey(User.class, "fdiaz")); 
-		     userDao.create(fdiaz); 
-		}
-		
-		try {
-			um = userMenuDao.get("fdiaz", true);
-			userMenuDao.delete("fdiaz");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("fdiaz")); 
-	        userMenuDao.create(um); 
-		}
-		
-		
+
+			// End Aditivo
+			// ------------------------------------------------------------------------
+
+			// Droc Users
+			// -------------------------------------------------------------------------
+			// Admins
+
+			User julius = null;
+			try {
+				julius = userDao.get("julius", true);
+			} catch (Exception e) {
+				julius = new User();
+				julius.setFirstname("Julius");
+				julius.setLastname("Dokulil");
+				julius.setEmail("julius@allshoppings.mobi");
+				julius.getSecuritySettings().setRole(Role.SHOPPING);
+				julius.getSecuritySettings().setShoppings(new ArrayList<String>());
+				julius.getSecuritySettings().getShoppings().add("mundoe");
+				julius.getSecuritySettings().getShoppings().add("plazaaragon");
+				julius.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				julius.setKey((Key) keyHelper.obtainKey(User.class, "julius"));
+				userDao.create(julius);
+			}
+
+			try {
+				um = userMenuDao.get("julius", true);
+				userMenuDao.delete("julius");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.setKey(userMenuDao.createKey("julius"));
+				userMenuDao.create(um);
+			}
+
+			User eross = null;
+			try {
+				eross = userDao.get("eross", true);
+			} catch (Exception e) {
+				eross = new User();
+				eross.setFirstname("Eduardo");
+				eross.setLastname("Ross");
+				eross.setEmail("eross@allshoppings.mobi");
+				eross.getSecuritySettings().setRole(Role.SHOPPING);
+				eross.getSecuritySettings().setShoppings(new ArrayList<String>());
+				eross.getSecuritySettings().getShoppings().add("mundoe");
+				eross.getSecuritySettings().getShoppings().add("plazaaragon");
+				eross.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				eross.setKey((Key) keyHelper.obtainKey(User.class, "eross"));
+				userDao.create(eross);
+			}
+
+			try {
+				um = userMenuDao.get("eross", true);
+				userMenuDao.delete("eross");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.setKey(userMenuDao.createKey("eross"));
+				userMenuDao.create(um);
+			}
+
+			User fdiaz = null;
+			try {
+				fdiaz = userDao.get("fdiaz", true);
+			} catch (Exception e) {
+				fdiaz = new User();
+				fdiaz.setFirstname("Fernando");
+				fdiaz.setLastname("Diaz");
+				fdiaz.setEmail("fdiaz@allshoppings.mobi");
+				fdiaz.getSecuritySettings().setRole(Role.SHOPPING);
+				fdiaz.getSecuritySettings().setShoppings(new ArrayList<String>());
+				fdiaz.getSecuritySettings().getShoppings().add("mundoe");
+				fdiaz.getSecuritySettings().getShoppings().add("plazaaragon");
+				fdiaz.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				fdiaz.setKey((Key) keyHelper.obtainKey(User.class, "fdiaz"));
+				userDao.create(fdiaz);
+			}
+
+			try {
+				um = userMenuDao.get("fdiaz", true);
+				userMenuDao.delete("fdiaz");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.setKey(userMenuDao.createKey("fdiaz"));
+				userMenuDao.create(um);
+			}
+
 			// End Andmins
-		
+
 			// Cliente
-			
-		User octavio = null;
-		try {
-			octavio = userDao.get("octavio", true);
-		} catch( Exception e ) {
-			octavio = new User(); 
-			octavio.setFirstname("Octavio"); 
-			octavio.setLastname("Perez"); 
-			octavio.setEmail("octavio@allshoppings.mobi"); 
-			octavio.getSecuritySettings().setRole(Role.SHOPPING); 
-			octavio.getSecuritySettings().setShoppings(new ArrayList<String>()); 
-			octavio.getSecuritySettings().getShoppings().add("mundoe"); 
-			octavio.getSecuritySettings().getShoppings().add("plazaaragon");
-			octavio.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
-			octavio.setKey((Key)keyHelper.obtainKey(User.class, "octavio")); 
-		     userDao.create(octavio); 
-		}
-		
-		try {
-			um = userMenuDao.get("octavio", true);
-			userMenuDao.delete("octavio");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("octavio")); 
-	        userMenuDao.create(um); 
-		}
-		
-		
-		User frisa = null;
-		try {
-			frisa = userDao.get("dir_frisa", true);
-		} catch( Exception e ) {
-			frisa = new User(); 
-			frisa.setFirstname("Gerardo"); 
-			frisa.setLastname("H"); 
-			frisa.setEmail("dir_frisa@allshoppings.mobi"); 
-			frisa.getSecuritySettings().setRole(Role.SHOPPING); 
-			frisa.getSecuritySettings().setShoppings(new ArrayList<String>()); 
-			frisa.getSecuritySettings().getShoppings().add("mundoe"); 
-			frisa.getSecuritySettings().getShoppings().add("plazaaragon");
-			frisa.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
-			frisa.setKey((Key)keyHelper.obtainKey(User.class, "dir_frisa")); 
-		     userDao.create(frisa); 
-		}
-		
-		try {
-			um = userMenuDao.get("dir_frisa", true);
-			userMenuDao.delete("dir_frisa");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("dir_frisa")); 
-	        userMenuDao.create(um); 
-		}
-		
-		
-		User jmiguel = null;
-		try {
-			jmiguel = userDao.get("jmiguel", true);
-		} catch( Exception e ) {
-			jmiguel = new User(); 
-			jmiguel.setFirstname("Jose Miguel"); 
-			jmiguel.setLastname("Cobo"); 
-			jmiguel.setEmail("jmiguel@allshoppings.mobi"); 
-			jmiguel.getSecuritySettings().setRole(Role.SHOPPING); 
-			jmiguel.getSecuritySettings().setShoppings(new ArrayList<String>()); 
-			jmiguel.getSecuritySettings().getShoppings().add("mundoe"); 
-			jmiguel.getSecuritySettings().getShoppings().add("plazaaragon");
-			jmiguel.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
-			jmiguel.setKey((Key)keyHelper.obtainKey(User.class, "jmiguel")); 
-		     userDao.create(jmiguel); 
-		}
-		
-		try {
-			um = userMenuDao.get("jmiguel", true);
-			userMenuDao.delete("jmiguel");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("jmiguel")); 
-	        userMenuDao.create(um); 
-		}
-		
-			
+
+			User octavio = null;
+			try {
+				octavio = userDao.get("octavio", true);
+			} catch (Exception e) {
+				octavio = new User();
+				octavio.setFirstname("Octavio");
+				octavio.setLastname("Perez");
+				octavio.setEmail("octavio@allshoppings.mobi");
+				octavio.getSecuritySettings().setRole(Role.SHOPPING);
+				octavio.getSecuritySettings().setShoppings(new ArrayList<String>());
+				octavio.getSecuritySettings().getShoppings().add("mundoe");
+				octavio.getSecuritySettings().getShoppings().add("plazaaragon");
+				octavio.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				octavio.setKey((Key) keyHelper.obtainKey(User.class, "octavio"));
+				userDao.create(octavio);
+			}
+
+			try {
+				um = userMenuDao.get("octavio", true);
+				userMenuDao.delete("octavio");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.setKey(userMenuDao.createKey("octavio"));
+				userMenuDao.create(um);
+			}
+
+			User frisa = null;
+			try {
+				frisa = userDao.get("dir_frisa", true);
+			} catch (Exception e) {
+				frisa = new User();
+				frisa.setFirstname("Gerardo");
+				frisa.setLastname("H");
+				frisa.setEmail("dir_frisa@allshoppings.mobi");
+				frisa.getSecuritySettings().setRole(Role.SHOPPING);
+				frisa.getSecuritySettings().setShoppings(new ArrayList<String>());
+				frisa.getSecuritySettings().getShoppings().add("mundoe");
+				frisa.getSecuritySettings().getShoppings().add("plazaaragon");
+				frisa.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				frisa.setKey((Key) keyHelper.obtainKey(User.class, "dir_frisa"));
+				userDao.create(frisa);
+			}
+
+			try {
+				um = userMenuDao.get("dir_frisa", true);
+				userMenuDao.delete("dir_frisa");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.setKey(userMenuDao.createKey("dir_frisa"));
+				userMenuDao.create(um);
+			}
+
+			User jmiguel = null;
+			try {
+				jmiguel = userDao.get("jmiguel", true);
+			} catch (Exception e) {
+				jmiguel = new User();
+				jmiguel.setFirstname("Jose Miguel");
+				jmiguel.setLastname("Cobo");
+				jmiguel.setEmail("jmiguel@allshoppings.mobi");
+				jmiguel.getSecuritySettings().setRole(Role.SHOPPING);
+				jmiguel.getSecuritySettings().setShoppings(new ArrayList<String>());
+				jmiguel.getSecuritySettings().getShoppings().add("mundoe");
+				jmiguel.getSecuritySettings().getShoppings().add("plazaaragon");
+				jmiguel.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				jmiguel.setKey((Key) keyHelper.obtainKey(User.class, "jmiguel"));
+				userDao.create(jmiguel);
+			}
+
+			try {
+				um = userMenuDao.get("jmiguel", true);
+				userMenuDao.delete("jmiguel");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.setKey(userMenuDao.createKey("jmiguel"));
+				userMenuDao.create(um);
+			}
+
 			// End Cliente
-		
+
 			// Mundo E
-			
-		User gerenciaME = null;
-		try {
-			gerenciaME = userDao.get("gerenciaME", true);
-		} catch( Exception e ) {
-			gerenciaME = new User(); 
-			gerenciaME.setFirstname("gerencia Mundo E"); 
-			gerenciaME.setLastname(""); 
-			gerenciaME.setEmail("gerenciaME@allshoppings.mobi"); 
-			gerenciaME.getSecuritySettings().setRole(Role.SHOPPING); 
-			gerenciaME.getSecuritySettings().setShoppings(new ArrayList<String>()); 
-			gerenciaME.getSecuritySettings().getShoppings().add("mundoe"); 
-			gerenciaME.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
-			gerenciaME.setKey((Key)keyHelper.obtainKey(User.class, "gerenciaME")); 
-		     userDao.create(gerenciaME); 
-		}
-		
-		try {
-			um = userMenuDao.get("gerenciaME", true);
-			userMenuDao.delete("gerenciaME");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("gerenciaME")); 
-	        userMenuDao.create(um); 
-		}
-		
-		
-		User marketing = null;
-		try {
-			marketing = userDao.get("marketing", true);
-		} catch( Exception e ) {
-			marketing = new User(); 
-			marketing.setFirstname("marketing"); 
-			marketing.setLastname(""); 
-			marketing.setEmail("marketing@allshoppings.mobi"); 
-			marketing.getSecuritySettings().setRole(Role.SHOPPING); 
-			marketing.getSecuritySettings().setShoppings(new ArrayList<String>()); 
-			marketing.getSecuritySettings().getShoppings().add("mundoe"); 
-			marketing.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
-			marketing.setKey((Key)keyHelper.obtainKey(User.class, "marketing")); 
-		     userDao.create(marketing); 
-		}
-		
-		try {
-			um = userMenuDao.get("marketing", true);
-			userMenuDao.delete("marketing");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("marketing")); 
-	        userMenuDao.create(um); 
-		}
-		
-		
-		User alejandro = null;
-		try {
-			alejandro = userDao.get("alejandro", true);
-		} catch( Exception e ) {
-			alejandro = new User(); 
-			alejandro.setFirstname("Comnet"); 
-			alejandro.setLastname(""); 
-			alejandro.setEmail("alejandro@allshoppings.mobi"); 
-			alejandro.getSecuritySettings().setRole(Role.SHOPPING); 
-			alejandro.getSecuritySettings().setShoppings(new ArrayList<String>()); 
-			alejandro.getSecuritySettings().getShoppings().add("mundoe"); 
-			alejandro.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
-			alejandro.setKey((Key)keyHelper.obtainKey(User.class, "alejandro")); 
-		     userDao.create(alejandro); 
-		}
-		
-		try {
-			um = userMenuDao.get("alejandro", true);
-			userMenuDao.delete("alejandro");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("alejandro")); 
-	        userMenuDao.create(um); 
-		}
-		
-		
+
+			User gerenciaME = null;
+			try {
+				gerenciaME = userDao.get("gerenciaME", true);
+			} catch (Exception e) {
+				gerenciaME = new User();
+				gerenciaME.setFirstname("gerencia Mundo E");
+				gerenciaME.setLastname("");
+				gerenciaME.setEmail("gerenciaME@allshoppings.mobi");
+				gerenciaME.getSecuritySettings().setRole(Role.SHOPPING);
+				gerenciaME.getSecuritySettings().setShoppings(new ArrayList<String>());
+				gerenciaME.getSecuritySettings().getShoppings().add("mundoe");
+				gerenciaME.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				gerenciaME.setKey((Key) keyHelper.obtainKey(User.class, "gerenciaME"));
+				userDao.create(gerenciaME);
+			}
+
+			try {
+				um = userMenuDao.get("gerenciaME", true);
+				userMenuDao.delete("gerenciaME");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.setKey(userMenuDao.createKey("gerenciaME"));
+				userMenuDao.create(um);
+			}
+
+			User marketing = null;
+			try {
+				marketing = userDao.get("marketing", true);
+			} catch (Exception e) {
+				marketing = new User();
+				marketing.setFirstname("marketing");
+				marketing.setLastname("");
+				marketing.setEmail("marketing@allshoppings.mobi");
+				marketing.getSecuritySettings().setRole(Role.SHOPPING);
+				marketing.getSecuritySettings().setShoppings(new ArrayList<String>());
+				marketing.getSecuritySettings().getShoppings().add("mundoe");
+				marketing.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				marketing.setKey((Key) keyHelper.obtainKey(User.class, "marketing"));
+				userDao.create(marketing);
+			}
+
+			try {
+				um = userMenuDao.get("marketing", true);
+				userMenuDao.delete("marketing");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.setKey(userMenuDao.createKey("marketing"));
+				userMenuDao.create(um);
+			}
+
+			User alejandro = null;
+			try {
+				alejandro = userDao.get("alejandro", true);
+			} catch (Exception e) {
+				alejandro = new User();
+				alejandro.setFirstname("Comnet");
+				alejandro.setLastname("");
+				alejandro.setEmail("alejandro@allshoppings.mobi");
+				alejandro.getSecuritySettings().setRole(Role.SHOPPING);
+				alejandro.getSecuritySettings().setShoppings(new ArrayList<String>());
+				alejandro.getSecuritySettings().getShoppings().add("mundoe");
+				alejandro.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				alejandro.setKey((Key) keyHelper.obtainKey(User.class, "alejandro"));
+				userDao.create(alejandro);
+			}
+
+			try {
+				um = userMenuDao.get("alejandro", true);
+				userMenuDao.delete("alejandro");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.setKey(userMenuDao.createKey("alejandro"));
+				userMenuDao.create(um);
+			}
+
 			// End Mundo E
-		
+
 			// Aragon
-			
-		User gerenciaA = null;
-		try {
-			gerenciaA = userDao.get("gerenciaA", true);
-		} catch( Exception e ) {
-			gerenciaA = new User(); 
-			gerenciaA.setFirstname("Gerencia Aragon"); 
-			gerenciaA.setLastname(""); 
-			gerenciaA.setEmail("gerenciaA@allshoppings.mobi"); 
-			gerenciaA.getSecuritySettings().setRole(Role.SHOPPING); 
-			gerenciaA.getSecuritySettings().setShoppings(new ArrayList<String>()); 
-			frisa.getSecuritySettings().getShoppings().add("plazaaragon");
-			gerenciaA.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
-			gerenciaA.setKey((Key)keyHelper.obtainKey(User.class, "gerenciaA")); 
-		     userDao.create(gerenciaA); 
-		}
-		
-		try {
-			um = userMenuDao.get("gerenciaA", true);
-			userMenuDao.delete("gerenciaA");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("gerenciaA")); 
-	        userMenuDao.create(um); 
-		}
-		
-		
-		User cesar = null;
-		try {
-			cesar = userDao.get("cesar", true);
-		} catch( Exception e ) {
-			cesar = new User(); 
-			cesar.setFirstname("Marketing"); 
-			cesar.setLastname(""); 
-			cesar.setEmail("cesar@allshoppings.mobi"); 
-			cesar.getSecuritySettings().setRole(Role.SHOPPING); 
-			cesar.getSecuritySettings().setShoppings(new ArrayList<String>()); 
-			frisa.getSecuritySettings().getShoppings().add("plazaaragon");
-			cesar.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
-			cesar.setKey((Key)keyHelper.obtainKey(User.class, "cesar")); 
-		     userDao.create(cesar); 
-		}
-		
-		try {
-			um = userMenuDao.get("cesar", true);
-			userMenuDao.delete("cesar");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("cesar")); 
-	        userMenuDao.create(um); 
-		}
-		
-		
-		User demodevlyn = null;
-		try {
-			demodevlyn = userDao.get("demo_devlyn_mx", true);
-		} catch( Exception e ) {
-			demodevlyn = new User();
-			demodevlyn.setFirstname("DevlynDemo");
-			demodevlyn.setLastname("Mexico");
-			demodevlyn.setEmail("demodevlyn@allshoppings.mobi");
-			demodevlyn.getSecuritySettings().setRole(Role.BRAND);
-			demodevlyn.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-			demodevlyn.setKey((Key)keyHelper.obtainKey(User.class, "demo_devlyn_mx"));
-			userDao.create(demodevlyn);
-		}
 
-		
-		try {
-			um = userMenuDao.get("demo_devlyn_mx", true);
-			userMenuDao.delete("demo_devlyn_mx");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu();
-			um.getEntries().add(new UserMenuEntry("index.demodevlyn", "fa-area-chart", "Tráfico"));
-			um.setKey(userMenuDao.createKey("demo_devlyn_mx"));
-			userMenuDao.create(um);
-		}
-		
-		//User Ariel
-		//Inserting Ariel
-		log.log(Level.INFO, "Inserting Ariel user...");
+			User gerenciaA = null;
+			try {
+				gerenciaA = userDao.get("gerenciaA", true);
+			} catch (Exception e) {
+				gerenciaA = new User();
+				gerenciaA.setFirstname("Gerencia Aragon");
+				gerenciaA.setLastname("");
+				gerenciaA.setEmail("gerenciaA@allshoppings.mobi");
+				gerenciaA.getSecuritySettings().setRole(Role.SHOPPING);
+				gerenciaA.getSecuritySettings().setShoppings(new ArrayList<String>());
+				frisa.getSecuritySettings().getShoppings().add("plazaaragon");
+				gerenciaA.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				gerenciaA.setKey((Key) keyHelper.obtainKey(User.class, "gerenciaA"));
+				userDao.create(gerenciaA);
+			}
 
-		User userAriel;
-		
-		try {
-			userDao.delete("ariel@chilimbalam.com.mx");
-			throw new Exception();
-		} catch( Exception e ) {
-			userAriel = new User();
-			userAriel.setFirstname("Ariel");
-			userAriel.setLastname("");
-			userAriel.setEmail("ariel@chilimbalam.com.mx");
-			userAriel.getSecuritySettings().setRole(Role.STORE);
-			userAriel.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-			userAriel.getSecuritySettings()
-			.setStores(Arrays.asList("1471039822636", "1471039822656", "1471039822677", "1503537460654", "1503537460669", 
-			                          "65ceefa9-f1ef-4007-a6f2-e3dd0d8ac10b", "15457473-3aef-4c31-8cca-7f4e0c089bf1",
-			                          "f36a7e58-d155-49f7-a130-39ecbae772a2", "ce3944c0-5678-4709-9555-10b71d647199",
-			                          "f1b7a285-f0e8-47e6-8063-04e7d09108e3", "cfdc5dcc-a6af-47ea-9cd4-29ef8a08ada4"));
-			userAriel.setKey((Key)keyHelper.obtainKey(User.class, "ariel@chilimbalam.com.mx"));
-			userDao.create(userAriel);
-		}
+			try {
+				um = userMenuDao.get("gerenciaA", true);
+				userMenuDao.delete("gerenciaA");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.setKey(userMenuDao.createKey("gerenciaA"));
+				userMenuDao.create(um);
+			}
 
-		try {
-			um = userMenuDao.get("ariel@chilimbalam.com.mx", true);
-			userMenuDao.delete("ariel@chilimbalam.com.mx");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu();
-			um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-			um.setKey(userMenuDao.createKey("ariel@chilimbalam.com.mx"));
-			userMenuDao.create(um);
-		}
-		
-		
-		//hmorales
-		User HMorales = null;
-		try {
-			userDao.delete("hmorales@chilimbalam.com.mx");
-			throw new Exception();
-		} catch( Exception e ) {
-			HMorales = new User();
-			HMorales.setFirstname("H");
-			HMorales.setLastname("Morales");
-			HMorales.setEmail("hmorales@chilimbalam.com.mx");
-			HMorales.getSecuritySettings().setRole(Role.STORE);
-			HMorales.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-			HMorales.getSecuritySettings()
-			.setStores(Arrays.asList("1471039822636", "1471039822656", "1471039822677", "1503537460654", "1503537460669", 
-			                          "65ceefa9-f1ef-4007-a6f2-e3dd0d8ac10b", "15457473-3aef-4c31-8cca-7f4e0c089bf1",
-			                          "f36a7e58-d155-49f7-a130-39ecbae772a2", "ce3944c0-5678-4709-9555-10b71d647199",
-			                          "f1b7a285-f0e8-47e6-8063-04e7d09108e3", "cfdc5dcc-a6af-47ea-9cd4-29ef8a08ada4"));
-			HMorales.setKey((Key)keyHelper.obtainKey(User.class, "hmorales@chilimbalam.com.mx"));
-			userDao.create(HMorales);
-		}
+			User cesar = null;
+			try {
+				cesar = userDao.get("cesar", true);
+			} catch (Exception e) {
+				cesar = new User();
+				cesar.setFirstname("Marketing");
+				cesar.setLastname("");
+				cesar.setEmail("cesar@allshoppings.mobi");
+				cesar.getSecuritySettings().setRole(Role.SHOPPING);
+				cesar.getSecuritySettings().setShoppings(new ArrayList<String>());
+				frisa.getSecuritySettings().getShoppings().add("plazaaragon");
+				cesar.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				cesar.setKey((Key) keyHelper.obtainKey(User.class, "cesar"));
+				userDao.create(cesar);
+			}
 
-		try {
-			//um = userMenuDao.get("hmorales@chilimbalam.com.mx", true);
-			userMenuDao.delete("hmorales@chilimbalam.com.mx");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu();
-			um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-			um.setKey(userMenuDao.createKey("hmorales@chilimbalam.com.mx"));
-			userMenuDao.create(um);
-		}
-		
-		//arocha
-		User Arocha = null;
-		try {
-			userDao.delete("arocha@chilimbalam.com.mx");
-			throw new Exception();
-		} catch( Exception e ) {
-			Arocha = new User();
-			Arocha.setFirstname("A");
-			Arocha.setLastname("Rocha");
-			Arocha.setEmail("arocha@chilimbalam.com.mx");
-			Arocha.getSecuritySettings().setRole(Role.STORE);
-			Arocha.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-			Arocha.getSecuritySettings()
-			.setStores(Arrays.asList("1471039822636", "1471039822656", "1471039822677", "1503537460654", "1503537460669", 
-			                          "65ceefa9-f1ef-4007-a6f2-e3dd0d8ac10b", "15457473-3aef-4c31-8cca-7f4e0c089bf1",
-			                          "f36a7e58-d155-49f7-a130-39ecbae772a2", "ce3944c0-5678-4709-9555-10b71d647199",
-			                          "f1b7a285-f0e8-47e6-8063-04e7d09108e3", "cfdc5dcc-a6af-47ea-9cd4-29ef8a08ada4"));
-			Arocha.setKey((Key)keyHelper.obtainKey(User.class, "arocha@chilimbalam.com.mx"));
-			userDao.create(Arocha);
-		}
+			try {
+				um = userMenuDao.get("cesar", true);
+				userMenuDao.delete("cesar");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
+				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				um.setKey(userMenuDao.createKey("cesar"));
+				userMenuDao.create(um);
+			}
 
-		try {
-			um = userMenuDao.get("arocha@chilimbalam.com.mx", true);
-			userMenuDao.delete("arocha@chilimbalam.com.mx");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu();
-			um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-			um.setKey(userMenuDao.createKey("arocha@chilimbalam.com.mx"));
-			userMenuDao.create(um);
-		}
+			User demodevlyn = null;
+			try {
+				demodevlyn = userDao.get("demo_devlyn_mx", true);
+			} catch (Exception e) {
+				demodevlyn = new User();
+				demodevlyn.setFirstname("DevlynDemo");
+				demodevlyn.setLastname("Mexico");
+				demodevlyn.setEmail("demodevlyn@allshoppings.mobi");
+				demodevlyn.getSecuritySettings().setRole(Role.BRAND);
+				demodevlyn.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				demodevlyn.setKey((Key) keyHelper.obtainKey(User.class, "demo_devlyn_mx"));
+				userDao.create(demodevlyn);
+			}
 
-		
-		
+			try {
+				um = userMenuDao.get("demo_devlyn_mx", true);
+				userMenuDao.delete("demo_devlyn_mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.demodevlyn", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("demo_devlyn_mx"));
+				userMenuDao.create(um);
+			}
+
+			// User Ariel
+			// Inserting Ariel
+			log.log(Level.INFO, "Inserting Chilimbalam users...");
+
+			User userAriel;
+
+			try {
+				userDao.delete("ariel@chilimbalam.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				userAriel = new User();
+				userAriel.setFirstname("Ariel");
+				userAriel.setLastname("");
+				userAriel.setEmail("ariel@chilimbalam.com.mx");
+				userAriel.getSecuritySettings().setRole(Role.STORE);
+				userAriel.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				userAriel.getSecuritySettings()
+						.setStores(Arrays.asList("1471039822636", "1471039822656", "1471039822677", "1503537460654",
+								"1503537460669", "65ceefa9-f1ef-4007-a6f2-e3dd0d8ac10b",
+								"15457473-3aef-4c31-8cca-7f4e0c089bf1", "f36a7e58-d155-49f7-a130-39ecbae772a2",
+								"ce3944c0-5678-4709-9555-10b71d647199", "f1b7a285-f0e8-47e6-8063-04e7d09108e3",
+								"cfdc5dcc-a6af-47ea-9cd4-29ef8a08ada4"));
+				userAriel.setKey((Key) keyHelper.obtainKey(User.class, "ariel@chilimbalam.com.mx"));
+				userDao.create(userAriel);
+			}
+
+			try {
+				um = userMenuDao.get("ariel@chilimbalam.com.mx", true);
+				userMenuDao.delete("ariel@chilimbalam.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("ariel@chilimbalam.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			// hmorales
+			User HMorales = null;
+			try {
+				userDao.delete("hmorales@chilimbalam.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				HMorales = new User();
+				HMorales.setFirstname("H");
+				HMorales.setLastname("Morales");
+				HMorales.setEmail("hmorales@chilimbalam.com.mx");
+				HMorales.getSecuritySettings().setRole(Role.STORE);
+				HMorales.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				HMorales.getSecuritySettings()
+						.setStores(Arrays.asList("1471039822636", "1471039822656", "1471039822677", "1503537460654",
+								"1503537460669", "65ceefa9-f1ef-4007-a6f2-e3dd0d8ac10b",
+								"15457473-3aef-4c31-8cca-7f4e0c089bf1", "f36a7e58-d155-49f7-a130-39ecbae772a2",
+								"ce3944c0-5678-4709-9555-10b71d647199", "f1b7a285-f0e8-47e6-8063-04e7d09108e3",
+								"cfdc5dcc-a6af-47ea-9cd4-29ef8a08ada4"));
+				HMorales.setKey((Key) keyHelper.obtainKey(User.class, "hmorales@chilimbalam.com.mx"));
+				userDao.create(HMorales);
+			}
+
+			try {
+				// um = userMenuDao.get("hmorales@chilimbalam.com.mx", true);
+				userMenuDao.delete("hmorales@chilimbalam.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("hmorales@chilimbalam.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			// arocha
+			User Arocha = null;
+			try {
+				userDao.delete("arocha@chilimbalam.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				Arocha = new User();
+				Arocha.setFirstname("A");
+				Arocha.setLastname("Rocha");
+				Arocha.setEmail("arocha@chilimbalam.com.mx");
+				Arocha.getSecuritySettings().setRole(Role.STORE);
+				Arocha.getSecuritySettings()
+						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+				Arocha.getSecuritySettings()
+						.setStores(Arrays.asList("1471039822636", "1471039822656", "1471039822677", "1503537460654",
+								"1503537460669", "65ceefa9-f1ef-4007-a6f2-e3dd0d8ac10b",
+								"15457473-3aef-4c31-8cca-7f4e0c089bf1", "f36a7e58-d155-49f7-a130-39ecbae772a2",
+								"ce3944c0-5678-4709-9555-10b71d647199", "f1b7a285-f0e8-47e6-8063-04e7d09108e3",
+								"cfdc5dcc-a6af-47ea-9cd4-29ef8a08ada4"));
+				Arocha.setKey((Key) keyHelper.obtainKey(User.class, "arocha@chilimbalam.com.mx"));
+				userDao.create(Arocha);
+			}
+
+			try {
+				um = userMenuDao.get("arocha@chilimbalam.com.mx", true);
+				userMenuDao.delete("arocha@chilimbalam.com.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("arocha@chilimbalam.com.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				log.log(Level.INFO, "Deleting fCanela...");
+				userDao.delete("fcanela@pradastores.mx");
+				userMenuDao.delete("fcanela@pradastores.mx");
+			} catch (Exception e) {
+				log.log(Level.INFO, "Couldn't delete F Canela..." + e);
+			}
+
+			try {
+				um = userMenuDao.get("lamartinez@pradastores.mx", true);
+				userMenuDao.delete("lamartinez@pradastores.mx");
+				throw new Exception();
+			} catch (Exception e) {
+				um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.setKey(userMenuDao.createKey("lamartinez@pradastores.mx"));
+				userMenuDao.create(um);
+			}
+
+			try {
+				user = userDao.get("lamartinez@pradastores.mx", true);
+			} catch (Exception e) {
+				user = new User();
+				user.setFirstname("Luis Arturo Martínez");
+				user.setLastname("");
+				user.setEmail("lamartinez@pradastores.mx");
+				user.getSecuritySettings().setRole(Role.STORE);
+				user.getSecuritySettings()
+						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
+				user.getSecuritySettings()
+						.setStores(Arrays.asList("1479933115741", "2179a275-e43a-42ac-b6e7-6eedf3f4ee0a",
+								"a062c268-877d-47e4-80aa-894da6ec93cc", "82979029-3ca9-4bc3-aaaf-d9ccdfca562c",
+								"1479926604340", "1479926604340", "6b51b0f6-4e52-41b0-b59d-cec9e89c042b",
+								"3bc93117-4e24-4298-bcbe-7d5de3c38efb", "5982c91b-1465-446b-afb2-53a5e7372b72",
+								"ce7bdec9-4de3-4d1c-8fe2-80b02f88f083", "9ce30430-d923-481f-9b32-caa5139972fe"));
+				user.setKey((Key) keyHelper.obtainKey(User.class, "lamartinez@pradastores.mx"));
+				userDao.create(user);
+			}
+
 			// End Aragon
-		
-		// End Droc Users ----------------------------------------------------------------------------
+			// End Droc Users
+			// ----------------------------------------------------------------------------
 
-		} catch( Exception e ) {
+		} catch (Exception e) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
 		System.exit(0);
