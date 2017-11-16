@@ -1543,10 +1543,10 @@ public class GetinDump extends AbstractCLI {
 //			stores.add(new StoreAdapter("727", "Aditivo Franquicia Plaza Central", "franquicias_edmond_bcprint_mx",null, 0));
 //			stores.add(new StoreAdapter("728", "Aditivo Franquicia Cuernavaca", "franquicias_edmond_bcprint_mx",null, 0));
 			
-			stores.add(new StoreAdapter("729", "Aditivo Franquicia Tlahuac", "aditivo_franquicias_mx",null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("730", "Aditivo Franquicia Xochimilco", "aditivo_franquicias_mx",null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("731", "Aditivo Franquicia Plaza Central", "aditivo_franquicias_mx",null, GetinDump.MALL));
-			stores.add(new StoreAdapter("732", "Aditivo Franquicia Cuernavaca", "aditivo_franquicias_mx",null, GetinDump.MALL));
+			stores.add(new StoreAdapter("729", "Aditivo Franquicias Edmond Tlahuac", "aditivo_franquicias_mx",null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("730", "Aditivo Franquicias Edmond Xochimilco", "aditivo_franquicias_mx",null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("731", "Aditivo Franquicias Edmond Plaza Central", "aditivo_franquicias_mx",null, GetinDump.MALL));
+			stores.add(new StoreAdapter("732", "Aditivo Franquicias Edmond Cuernavaca", "aditivo_franquicias_mx",null, GetinDump.MALL));
 			
 			stores.add(new StoreAdapter("733", "Sally Beauty Galerias Insurgentes", "sallybeauty_mx",null, GetinDump.MALL));
 			
@@ -1690,7 +1690,7 @@ public class GetinDump extends AbstractCLI {
 					store.setKey(obj.getShoppingId() == null ? storeDao.createKey()
 							: storeDao.createKey(obj.getShoppingId(), obj.getBrandId()));
 					storeDao.create(store);
-					log.log(Level.INFO, "Se ha creado la tienta "+obj.getName());
+					log.log(Level.INFO, "Se ha creado la tienda "+obj.getName());
 				}
 			} 	
 
