@@ -1584,11 +1584,11 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("756", "Squalo Veracruz", "squalo_mx", null, GetinDump.MALL));
 			
-			stores.add(new StoreAdapter("757", "Aditivo Franquicias 2 Miramontes", "aditivofranquicias2_mx",null, GetinDump.MALL));
-			stores.add(new StoreAdapter("758", "Aditivo Franquicias 2 Izazaga", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("759", "Aditivo Franquicias 2 Coacalco", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("760", "Aditivo Franquicias 2 La Villa", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("761", "Aditivo Franquicias 2 Tehuacán", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("757", "Aditivo Franquicias Celia Miramontes", "aditivofranquicias2_mx",null, GetinDump.MALL));
+			stores.add(new StoreAdapter("758", "Aditivo Franquicias Celia Izazaga", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("759", "Aditivo Franquicias Celia Coacalco", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("760", "Aditivo Franquicias Celia La Villa", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("761", "Aditivo Franquicias Celia Tehuacán", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
 			
 			stores.add(new StoreAdapter("762", "Prada Esfera", "prada_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("763", "Prada Victoria", "prada_mx", null, GetinDump.MALL));
