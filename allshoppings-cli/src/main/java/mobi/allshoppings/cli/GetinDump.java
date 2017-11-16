@@ -1662,6 +1662,8 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("812", "Modatelas Palenque - Chiapas", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			
 			stores.add(new StoreAdapter("813", "MT Sport S12 Puebla Centro 2", "mt_sport_mx",null, GetinDump.FOOT_STREET));
+			
+			stores.add(new StoreAdapter("814", "Universo de Fragancias Vallejo", "universodefragancias_mx", null, GetinDump.MALL));			
 
 			
 			
