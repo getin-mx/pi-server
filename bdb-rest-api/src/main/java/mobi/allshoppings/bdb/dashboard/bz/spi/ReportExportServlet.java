@@ -2,7 +2,6 @@ package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,10 +12,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import mobi.allshoppings.dao.UserDAO;
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.exporter.ExcelExportHelper;
+import mobi.allshoppings.model.User;
 
 @SuppressWarnings("serial")
 public class ReportExportServlet extends HttpServlet {
@@ -25,6 +29,8 @@ public class ReportExportServlet extends HttpServlet {
 
 	@Autowired
 	private ExcelExportHelper exportHelper;
+	@Autowired
+	private UserDAO userDao;
 
 	/**
 	 * Initialization method
@@ -43,15 +49,29 @@ public class ReportExportServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		//FIXME: Check Auth Token
+		String userToken = req.getParameter("authToken");
+		User user = null;
 		
-		long start = new Date().getTime();
+		if(StringUtils.hasText(userToken)) {
+			try {
+				user = userDao.getByAuthToken(userToken);
+			} catch(ASException e) {
+				if(e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENEXPIRED_CODE
+						|| e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENMISSING_CODE)
+					log.log(Level.INFO, "Mario (token) is missing", e);
+				else
+					log.log(Level.SEVERE, "", e);
+			}
+		}
+		
+		long start = System.currentTimeMillis();
 		log.log(Level.INFO, "Begining reportExport");
 		try {
 			//FIXME: URL Hardcoded
-			byte[] b = exportHelper.export(req.getParameter("storeId"), "2017-01-02", req.getParameter("toStringDate"), 4, "/tmp");
+			byte[] b = exportHelper.export(req.getParameter("storeId"), "2017-01-02",
+					req.getParameter("toStringDate"), 4, "/tmp", user);
 
-			long end = new Date().getTime();
+			long end = System.currentTimeMillis();
 			log.log(Level.INFO, "BrandExport finished in " + (end-start) + "ms");
 
 			resp.setHeader("Content-Disposition", "inline; filename=\"report.xls\"");

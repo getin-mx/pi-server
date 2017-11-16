@@ -5,13 +5,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,49 +23,139 @@ import javax.jdo.datastore.JDOConnection;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.io.FileUtils;
 import org.datanucleus.util.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.util.StringUtils;
 
 import com.google.gson.Gson;
+import com.ibm.icu.util.Calendar;
 import com.inodes.datanucleus.model.Blob;
 import com.inodes.datanucleus.model.Email;
 import com.inodes.datanucleus.model.Key;
 import com.inodes.datanucleus.model.Text;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 import mobi.allshoppings.dao.spi.DAOJDOPersistentManagerFactory;
+import mobi.allshoppings.dump.CloudFileManager;
+import mobi.allshoppings.dump.DumperFileNameResolver;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.DumperPlugin;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.DeviceLocationHistory;
-import mobi.allshoppings.model.DeviceWifiLocationHistory;
+import mobi.allshoppings.model.APDVisit;
+import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl;
 import mobi.allshoppings.tools.CollectionFactory;
+import mobi.allshoppings.tools.GsonFactory;
 
 public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 
+	public static final long TIMEFRAME_ONE_HOUR = 3600000;
+	public static final long TIMEFRAME_ONE_DAY = 86400000;
+	public static final long TWENTY_THREE_HOURS = 82800000;
+	
 	private static final SimpleDateFormat year = new SimpleDateFormat("yyyy");
 	private static final SimpleDateFormat month = new SimpleDateFormat("MM");
 	private static final SimpleDateFormat day = new SimpleDateFormat("dd");
 	private static final SimpleDateFormat hour = new SimpleDateFormat("HH");
 	private static final Logger log = Logger.getLogger(DumperHelperImpl.class.getName());
-	private static final Gson gson = new Gson();
 	private static final int BUFFER = 100;
+	
+	private static Gson gson = GsonFactory.getInstance();
 
 	private Class<T> clazz;
 	private String baseDir;
+	private boolean tmpDir = false;
 	private List<DumperPlugin<ModelKey>> registeredPlugins;
+	private DumperFileNameResolver<ModelKey> fileNameResolver;
+	private List<String> currentCachedFileNames;
+	private String filter;
+	private CloudFileManager cfm;
+	private String lastFileUsed;
+	private T instance;
+	private long timeFrame;
 	
 	public DumperHelperImpl(String baseDir, Class<T> clazz) {
 		this.baseDir = baseDir;
 		this.clazz = clazz;
 		registeredPlugins = CollectionFactory.createList();
+		
+		TimeZone tz = TimeZone.getTimeZone("GMT");
+		year.setTimeZone(tz);
+		month.setTimeZone(tz);
+		day.setTimeZone(tz);
+		hour.setTimeZone(tz);
+
+		this.timeFrame = TIMEFRAME_ONE_HOUR;
+		
+		try {
+			instance = clazz.newInstance();
+		} catch( Exception e ) {
+			instance = null;
+		}
+	}
+
+	/**
+	 * @return the tmpDir
+	 */
+	public boolean isTmpDir() {
+		return tmpDir;
+	}
+
+	/**
+	 * @param tmpDir the tmpDir to set
+	 */
+	public void setTmpDir(boolean tmpDir) {
+		this.tmpDir = tmpDir;
+	}
+
+	/**
+	 * @return the filter
+	 */
+	public String getFilter() {
+		return filter;
+	}
+
+	/**
+	 * @return the timeFrame
+	 */
+	public long getTimeFrame() {
+		return timeFrame;
+	}
+
+	/**
+	 * @param timeFrame the timeFrame to set
+	 */
+	@Override
+	public void setTimeFrame(long timeFrame) {
+		this.timeFrame = timeFrame;
+	}
+
+	/**
+	 * @return the baseDir
+	 */
+	public String getBaseDir() {
+		return baseDir;
+	}
+
+	/**
+	 * @param baseDir the baseDir to set
+	 */
+	public void setBaseDir(String baseDir) {
+		this.baseDir = baseDir;
+	}
+
+	/**
+	 * @param filter the filter to set
+	 */
+	public void setFilter(String filter) {
+		this.filter = filter;
 	}
 
 	/**
@@ -73,7 +166,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		if(!registeredPlugins.contains(plugin))
 			registeredPlugins.add(plugin);
 	}
-	
+
 	/**
 	 * @see mobi.allshoppings.dump.DumperHelper#unregisterPlugin(DumperPlugin)
 	 */
@@ -81,12 +174,136 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	public void unregisterPlugin(DumperPlugin<ModelKey> plugin) {
 		registeredPlugins.remove(plugin);
 	}
+
+	@Override
+	public void registerFileNameResolver(DumperFileNameResolver<ModelKey> fileNameResolver) {
+		this.fileNameResolver = fileNameResolver;
+	}
+	
+	@Override
+	public void unregisterFileNameResolver() {
+		fileNameResolver = null;
+	}
 	
 	/**
 	 * @see mobi.allshoppings.dump.DumperHelper#dumpModelKey(String, Date, Date, boolean)
 	 */
 	@Override
-	public void dumpModelKey(String collection, Date fromDate, Date toDate, boolean deleteAfterDump, boolean moveCollectionBeforeDump) throws ASException {
+	public void dumpModelKey(String collection, Date fromDate, Date toDate,
+			boolean deleteAfterDump, boolean moveCollectionBeforeDump)
+					throws ASException {
+
+		// Special dumper for model key
+		if(clazz.equals(APDVisit.class)) {
+			dumpAPDVisit(collection, fromDate, toDate, deleteAfterDump,
+					moveCollectionBeforeDump);
+			return;
+		}
+		
+		// Prepares local variables
+		long count = 0;
+		long processed = 0;
+		long batchSize = 100;
+
+		long initTime = System.currentTimeMillis();
+
+		// Creates JDO Connection
+		PersistenceManager pm;
+		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+		pm.currentTransaction().begin();
+
+		// Gets Native connection from JDO
+		JDOConnection jdoConn = pm.getDataStoreConnection();
+		DB db = (DB)jdoConn.getNativeConnection();
+
+		SimpleDateFormat backupSDF = new SimpleDateFormat("yyyyMMddHHmm");
+		// Moves the collection if requested
+		if( moveCollectionBeforeDump) {
+			String newCollection = "BK" + collection + backupSDF.format(new Date());
+			db.getCollection(collection).rename(newCollection);
+			collection = newCollection;
+			
+			Set<String> collections = db.getCollectionNames();
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.WEEK_OF_YEAR, -1);
+			for(String coll : collections) {
+				try {
+					if(coll.startsWith("BK") &&
+							backupSDF.parse(coll.substring(coll.length()))
+							.compareTo(cal.getTime()) <= 0)
+						db.getCollection(coll).drop();
+				} catch(ParseException e) {
+					log.log(Level.INFO, "Could not remove collection " +coll, e);
+				}
+				
+			}//drops all backups
+		}
+		try {
+			// Prepares the cursor
+			DBCursor c = db.getCollection(collection).find();
+			c.addOption(com.mongodb.Bytes.QUERYOPTION_NOTIMEOUT);
+			Iterator<DBObject> i = c.iterator();
+
+			// Counts the total records to export
+			long totalRecords = c.count();
+			log.log(Level.INFO, totalRecords + " records found");
+
+			while(i.hasNext()) {
+				// Gets the DB Object
+				DBObject dbo = i.next();
+
+				T obj = clazz.newInstance();
+				setPropertiesFromDBObject(dbo, obj);
+				
+				if ((fromDate == null ||
+						fromDate.compareTo(obj.getCreationDateTime()) <= 0)
+						&& (toDate == null ||
+						toDate.compareTo(obj.getCreationDateTime()) >= 0)) {
+					// Apply pre dump plugins
+					applyPreDumpPlugins(obj);
+					
+					// Dumps the object
+					dump(obj);
+					
+					// Apply post dump plugins
+					applyPostDumpPlugins(obj);
+					
+					processed ++;
+
+					if( deleteAfterDump ) {
+						db.getCollection(collection).remove(dbo);
+					}
+				}
+				obj = null;
+				count++;
+
+				if( count % batchSize == 0 )
+					log.log(Level.INFO, "Processed " + count + " of " + totalRecords + " with " + processed + " results...");
+			}
+
+			long finalTime = System.currentTimeMillis();
+			log.log(Level.INFO, "Finally Processed " + count + " of " + totalRecords + " with " + processed + " results in " + (finalTime - initTime) + "ms");
+
+			if( cfm != null ) {
+				cfm.flush();
+				cfm.forceCleanup();
+			}
+			
+		} catch( Exception e ) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		} finally {
+			jdoConn.close();
+			pm.currentTransaction().commit();
+		}
+	}
+
+	/**
+	 * @see mobi.allshoppings.dump.DumperHelper#dumpModelKey(String, Date, Date, boolean)
+	 */
+	@Override
+	public void dumpAPDVisit(String collection, Date fromDate, Date toDate,
+			boolean deleteAfterDump, boolean moveCollectionBeforeDump) throws ASException {
 
 		// Prepares local variables
 		long count = 0;
@@ -114,7 +331,14 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 				
 		try {
 			// Prepares the cursor
-			DBCursor c = db.getCollection(collection).find();
+			DBCursor c;
+			if( fromDate != null && toDate != null ) {
+				BasicDBObject query = new BasicDBObject("checkinStarted", 
+	                      new BasicDBObject("$gte", fromDate).append("$lt", toDate));
+				c = db.getCollection(collection).find(query);
+			} else {
+				c = db.getCollection(collection).find();
+			}
 			c.addOption(com.mongodb.Bytes.QUERYOPTION_NOTIMEOUT);
 			Iterator<DBObject> i = c.iterator();
 
@@ -128,33 +352,39 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 
 				T obj = clazz.newInstance();
 				setPropertiesFromDBObject(dbo, obj);
-				if ((fromDate == null || fromDate.before(obj.getCreationDateTime()))
-						&& (toDate == null || toDate.after(obj.getCreationDateTime()))) {
 
-					// Apply pre dump plugins
-					applyPreDumpPlugins(obj);
-					
-					// Dumps the object
-					dump(obj);
-					
-					// Apply post dump plugins
-					applyPostDumpPlugins(obj);
-					
-					processed ++;
+				// Apply pre dump plugins
+				applyPreDumpPlugins(obj);
 
-					if( deleteAfterDump ) {
-						db.getCollection(collection).remove(dbo);
-					}
+				// Dumps the object
+				dump(obj);
+
+				// Apply post dump plugins
+				applyPostDumpPlugins(obj);
+
+				processed ++;
+
+				if( deleteAfterDump ) {
+					db.getCollection(collection).remove(dbo);
 				}
+				
 				obj = null;
 				count++;
 
 				if( count % batchSize == 0 )
-					log.log(Level.INFO, "Processed " + count + " of " + totalRecords + " with " + processed + " results...");
+					log.log(Level.INFO, "Processed " + count + " of "
+							+ totalRecords + " with " + processed + " results...");
 			}
 
 			long finalTime = new Date().getTime();
-			log.log(Level.INFO, "Finally Processed " + count + " of " + totalRecords + " with " + processed + " results in " + (finalTime - initTime) + "ms");
+			log.log(Level.INFO, "Finally Processed " + count + " of "
+						+ totalRecords + " with " + processed + " results in " + (finalTime - initTime) + "ms");
+
+			if( cfm != null ) {
+				cfm.flush();
+				cfm.forceCleanup();
+			}
+			
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
@@ -172,7 +402,29 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 			if(plugin.isAvailableFor(obj)) plugin.preDump(obj);
 		}
 	}
-	
+
+	/**
+	 * @see mobi.allshoppings.dump.DumperHelper#applyJsonPlugins(ModelKey)
+	 */
+	public String applyJsonPlugins(T obj) throws ASException {
+		String json = gson.toJson(obj);
+		for(DumperPlugin<ModelKey> plugin : registeredPlugins) {
+			if(plugin.isAvailableFor(obj)) json = plugin.toJson(obj, json);
+		}
+		return json;
+	}
+
+	/**
+	 * @see mobi.allshoppings.dump.DumperHelper#applyJsonPlugins(ModelKey)
+	 */
+	public String applyJsonPlugins(JSONObject obj) throws ASException {
+		String json = obj.toString();
+		for(DumperPlugin<ModelKey> plugin : registeredPlugins) {
+			if(plugin.isAvailableFor(instance)) json = plugin.toJson(obj, json);
+		}
+		return json;
+	}
+
 	/**
 	 * @see mobi.allshoppings.dump.DumperHelper#applyPostDumpPlugins(ModelKey)
 	 */
@@ -186,40 +438,75 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	 * @see mobi.allshoppings.dump.DumperHelper#dump(ModelKey)
 	 */
 	@Override
-	public void dump(T obj) throws IOException {
-		DumperHelperImpl.dump(gson.toJson(obj), baseDir, clazz.getSimpleName(), obj.getCreationDateTime());
+	public void dump(T obj) throws ASException {
+		this.dump(obj, baseDir, clazz.getSimpleName(), obj.getCreationDateTime(), obj);
 	}
 
-	public static void dump(String jsonRep, String baseDir, String baseName, Date forDate) throws IOException {
-		String fileName = resolveDumpFileName(baseDir, baseName, forDate);
-		File file = new File(fileName);
-		dump( jsonRep, file);
+	public void dump(T obj, String baseDir, String baseName, Date forDate, T element) throws ASException {
+		try {
+			String fileName = resolveDumpFileName(baseDir, baseName, forDate, element, null);
+			File file = new File(fileName);
+			String jsonRep = applyJsonPlugins(obj);
+			dump( jsonRep, file);
+			if( cfm != null ) 
+				cfm.registerFileForUpdate(fileName);
+		} catch( ASException e ) {
+			throw e;
+		} catch( Exception e ) {
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		}
+	}
+
+	public void dump(JSONObject obj, String baseDir, String baseName, Date forDate, String filter) throws ASException {
+		try {
+			String fileName = resolveDumpFileName(baseDir, baseName, forDate, null, filter);
+			File file = new File(fileName);
+			String jsonRep = applyJsonPlugins(obj);
+			dump( jsonRep, file);
+			if( cfm != null ) 
+				cfm.registerFileForUpdate(fileName);
+		} catch( ASException e ) {
+			throw e;
+		} catch( Exception e ) {
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		}
 	}
 
 	/**
 	 * @see mobi.allshoppings.dump.DumperHelper#resolveDumpFileName(Date)
 	 */
 	@Override
-	public String resolveDumpFileName( Date forDate ) {
-		return resolveDumpFileName(baseDir, clazz.getSimpleName(), forDate);
+	public String resolveDumpFileName( Date forDate, T element ) {
+		return resolveDumpFileName(baseDir, clazz.getSimpleName(), forDate, element, null);
 	}
 	
-	public static String resolveDumpFileName(String baseDir, String baseName, Date forDate) {
-		String myYear = year.format(forDate);
-		String myMonth = month.format(forDate);
-		String myDay = day.format(forDate);
-		String myHour = hour.format(forDate);
+	public String resolveDumpFileName(String baseDir, String baseName, Date forDate, T element, String filter) {
 
-		StringBuffer sb = new StringBuffer();
-		sb.append(baseDir);
-		if(!baseDir.endsWith(File.separator)) sb.append(File.separator);
-		sb.append(myYear).append(File.separator);
-		sb.append(myMonth).append(File.separator);
-		sb.append(myDay).append(File.separator);
-		sb.append(myHour).append(File.separator);
-		sb.append(baseName).append(".json");
+		String fileName = null;
+		if( fileNameResolver != null ) {
+			fileName = fileNameResolver.resolveDumpFileName(baseDir, baseName, forDate, element, filter);
+		}
 
-		return sb.toString();
+		if( fileName == null ) {
+
+			String myYear = year.format(forDate);
+			String myMonth = month.format(forDate);
+			String myDay = day.format(forDate);
+			String myHour = hour.format(forDate);
+
+			StringBuffer sb = new StringBuffer();
+			sb.append(baseDir);
+			if(!baseDir.endsWith(File.separator)) sb.append(File.separator);
+			sb.append(myYear).append(File.separator);
+			sb.append(myMonth).append(File.separator);
+			sb.append(myDay).append(File.separator);
+			sb.append(myHour).append(File.separator);
+			sb.append(baseName).append(".json");
+
+			return sb.toString();
+		} else {
+			return fileName;
+		}
 	}
 
 	public static void dump(String jsonRep, File file) throws IOException {
@@ -238,8 +525,6 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 			try {
 				fos.write(jsonRep.getBytes());
 				fos.write("\n".getBytes());
-				fos.flush();
-				fos.close();
 			} catch( Throwable t ) {
 				throw t;
 			} finally {
@@ -267,88 +552,83 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	}
 
 	/**
+	 * @see mobi.allshoppings.dump.DumperHelper#getMultipleNameOptions(Date)
+	 */
+	@Override
+	public List<String> getMultipleNameOptions(Date date) {
+		List<String> ret = CollectionFactory.createList();
+		
+		Date toDate = new Date(date.getTime() + TWENTY_THREE_HOURS);
+		Date myDate = new Date(date.getTime());
+		while( myDate.before(toDate) || myDate.equals(toDate)) {
+			try {
+				if( fileNameResolver != null && fileNameResolver.mayHaveMultiple() && !StringUtils.hasText(filter)) {
+					List<String> l = fileNameResolver.getMultipleFileOptions(baseDir,
+							clazz.getSimpleName(), myDate, cfm);
+					for( String e : l ) {
+						File f = new File(e);
+						String[] parts = f.getName().split("\\.");
+						StringBuffer sn = new StringBuffer();
+						String n = null;
+						for( int i = 0; i < parts.length -1; i++) {
+							if( i != 0 ) sn.append(".");
+							sn.append(parts[i]);
+						}
+						n = sn.toString();
+						if( !ret.contains(n))
+							ret.add(n);
+					}
+				}
+			} catch (ASException e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
+			myDate = new Date(myDate.getTime() + timeFrame);
+		}
+
+		return ret;
+	}
+	
+	/**
+	 * @see mobi.allshoppings.dump.DumperHelper#getMultipleFileOptions(Date)
+	 */
+	@Override
+	public List<String> getMultipleFileOptions(Date date) {
+
+		List<String> ret = CollectionFactory.createList();
+		
+		Date toDate = new Date(date.getTime() + TWENTY_THREE_HOURS);
+		Date myDate = new Date(date.getTime());
+		while( myDate.before(toDate) || myDate.equals(toDate)) {
+			try {
+				if( fileNameResolver != null && fileNameResolver.mayHaveMultiple() && !StringUtils.hasText(filter)) {
+					List<String> l = fileNameResolver.getMultipleFileOptions(baseDir,
+							clazz.getSimpleName(), myDate, cfm);
+					for( String e : l ) {
+						File f = new File(e);
+						String n = f.getName();
+						if( !ret.contains(n))
+							ret.add(n);
+					}
+				}
+			} catch (ASException e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
+			myDate = new Date(myDate.getTime() + timeFrame);
+		}
+
+		return ret;
+	
+	}
+	
+	
+	/**
 	 * @see mobi.allshoppings.dump.DumperHelper#iterator(Date, Date)
 	 */
 	@Override
 	public Iterator<JSONObject> jsonIterator(Date fromDate, Date toDate) {
 		return new DumpJSONIterator(fromDate, toDate);
 	}
-
-	/**
-	 * @see mobi.allshoppings.dump.DumperHelper#retrieveModelKeyList(Date, Date)
-	 */
-	@Override
-	public List<T> retrieveModelKeyList(Date fromDate, Date toDate) throws IOException {
-		List<T> ret = CollectionFactory.createList();
-		
-		Date curDate = new Date(fromDate.getTime());
-		while(curDate.before(toDate) || curDate.equals(toDate)) {
-			
-			File f = new File(resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate));
-			if( f.exists() && f.canRead()) {
-				try(BufferedReader br = new BufferedReader(new FileReader(f))) {
-				    for(String line; (line = br.readLine()) != null; ) {
-				        try {
-				        	T element = gson.fromJson(line, clazz);
-				        	ret.add(element);
-				        } catch( Exception e ) {
-				        	log.log(Level.SEVERE, e.getMessage(), e);
-				        }
-				    }
-					br.close();
-				}
-			}
-			
-			curDate = new Date(curDate.getTime() + 3600000);
-		}
-		
-		return ret;
-	}
 	
-	@Override
-	public void fakeModelKey(Date fromDate, Date toDate) throws ASException {
-		Calendar cal1 = Calendar.getInstance();
-		cal1.setTime(toDate);
-		
-		Calendar cal2 = Calendar.getInstance();
-		
-		Date fromWorkDate = DateUtils.truncate(fromDate, Calendar.DATE);
-		Date toWorkDate = DateUtils.addMinutes(DateUtils.addDays(fromWorkDate, 1), -1); 
-		
-		Iterator<T> i = iterator(fromWorkDate, toWorkDate);
-		while(i.hasNext()) {
-			T obj = i.next();
-			if(obj instanceof DeviceLocationHistory) {
-				DeviceLocationHistory ele = (DeviceLocationHistory)obj;
-				if( ele != null && ele.getLastUpdate() != null ) {
-					cal2.setTime(ele.getCreationDateTime());
-					cal2.set(cal1.get(Calendar.YEAR), cal1.get(Calendar.MONTH), cal1.get(Calendar.DATE));
-					ele.setCreationDateTime(cal2.getTime());
-				}
-			}
-			if(obj instanceof DeviceWifiLocationHistory) {
-				DeviceWifiLocationHistory ele = (DeviceWifiLocationHistory)obj;
-				if( ele != null && ele.getLastUpdate() != null ) {
-					cal2.setTime(ele.getCreationDateTime());
-					cal2.set(cal1.get(Calendar.YEAR), cal1.get(Calendar.MONTH), cal1.get(Calendar.DATE));
-					ele.setCreationDateTime(cal2.getTime());
-				}
-			}
-
-			if( obj != null && obj.getLastUpdate() != null ) {
-				cal2.setTime(obj.getLastUpdate());
-				cal2.set(cal1.get(Calendar.YEAR), cal1.get(Calendar.MONTH), cal1.get(Calendar.DATE));
-				obj.setLastUpdate(cal2.getTime());
-			}
-
-			try {
-				dump(obj);
-			} catch( Exception e ) {
-				throw ASExceptionHelper.defaultException(e.getMessage(), e);
-			}
-		}
-	}
-
 	/**
 	 * Sets properties of an entity object based in the attributes received in
 	 * JSON representation
@@ -371,6 +651,17 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 					Object fieldValue = dbo.get(key);
 					if( fieldValue instanceof DBObject ) {
 						Object data = PropertyUtils.getProperty(obj, key);
+						if(obj instanceof APHEntry && (key.equals("rssi" ) ||
+								key.equalsIgnoreCase("artificialRssi"))) {
+							Map<String, Integer> rssi = CollectionFactory.createMap();
+							DBObject map = (BasicDBObject) fieldValue;
+							for(String subKey : map.keySet()) {
+								rssi.put(subKey,
+										Integer.valueOf(map.get(subKey).toString()));
+							}
+							PropertyUtils.setProperty(obj, key, rssi);
+							continue;
+						}
 						setPropertiesFromDBObject((DBObject)fieldValue, data);
 					} else {
 						if (PropertyUtils.getPropertyType(obj, key) == Text.class) {
@@ -471,8 +762,12 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 
 		@Override
 		public JSONObject next() {
-			JSONObject element = new JSONObject(iterator.next());
-			return element;
+			try {
+				JSONObject element = new JSONObject(iterator.next());
+				return element;
+			} catch( Exception e ) {
+				return new JSONObject();
+			}
 		}
 
 		@Override
@@ -496,6 +791,41 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 			counter = 0;
 			this.fromDate = fromDate;
 			this.toDate = toDate;
+
+			this.registerPrefetchFiles();
+			if( cfm != null ) {
+				try {
+					cfm.startPrefetch();
+				} catch( ASException e ) {
+					log.log(Level.SEVERE, e.getMessage(), e);
+				}
+			}
+		}
+		
+		private void registerPrefetchFiles() {
+			if( cfm != null ) {
+				Date myDate = new Date(fromDate.getTime());
+				while( myDate.before(toDate) || myDate.equals(toDate)) {
+					try {
+						if( fileNameResolver != null && fileNameResolver.mayHaveMultiple() && !StringUtils.hasText(filter)) {
+							List<String> l = fileNameResolver.getMultipleFileOptions(baseDir,
+									clazz.getSimpleName(), myDate, cfm);
+							for( String e : l ) {
+								cfm.registerFileForPrefetch(e);
+							}
+						} else {
+							try {
+								cfm.registerFileForPrefetch(resolveDumpFileName(baseDir, clazz.getSimpleName(), myDate, null, filter));
+							} catch (ASException e) {
+								e.printStackTrace();
+							}
+						}
+					} catch (ASException e) {
+						log.log(Level.SEVERE, e.getMessage(), e);
+					}
+					myDate = new Date(myDate.getTime() + timeFrame);
+				}
+			}
 		}
 		
 		@Override
@@ -542,32 +872,74 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 
 				// Establishes the process Date
 				if( curDate == null )
-					curDate = new Date(fromDate.getTime());
-				else
-					curDate = new Date(curDate.getTime() + 3600000);
+					curDate = new Date(fromDate.getTime() - timeFrame);
 
 				if(curDate.equals(toDate) || curDate.after(toDate))
 					break;
 				
 				i = 0;
-				File f = new File(resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate));
-				if( f.exists() && f.canRead()) {
-					try {
-						br = new BufferedReader(new FileReader(f));
-						for(String line; i < BUFFER && (line = br.readLine()) != null; ) {
-							try {
-								elements.add(line);
-								i++;
-							} catch( Exception e ) {
-								log.log(Level.SEVERE, e.getMessage(), e);
+
+				boolean ableToGo = true;
+				String currentFileName = null;
+				if( fileNameResolver != null && fileNameResolver.mayHaveMultiple() && !StringUtils.hasText(filter)) {
+					if( currentCachedFileNames == null || currentCachedFileNames.size() == 0 ) {
+						curDate = new Date(curDate.getTime() + timeFrame);
+						try {
+							currentCachedFileNames = fileNameResolver.getMultipleFileOptions(baseDir,
+									clazz.getSimpleName(), curDate, cfm);
+						} catch( ASException e ) {
+							log.log(Level.SEVERE, e.getMessage(), e);
+							ableToGo = false;
+						}
+					}
+
+					if( currentCachedFileNames.size() > 0 ) {
+						currentFileName = currentCachedFileNames.get(0);
+						currentCachedFileNames.remove(0);
+					} else {
+						ableToGo = false;
+					}
+				} else {
+					curDate = new Date(curDate.getTime() + timeFrame);
+					if( curDate.before(toDate) || curDate.equals(toDate) ) {
+						currentFileName = resolveDumpFileName(baseDir, clazz.getSimpleName(), curDate, null, filter);
+					} else {
+						ableToGo = false;
+					}
+				}
+				
+				try {
+					if( ableToGo ) {
+						if( !currentFileName.equals(lastFileUsed)) {
+							if( StringUtils.hasText(lastFileUsed) && cfm != null )
+								cfm.registerFileAsDisposable(lastFileUsed);
+							lastFileUsed = currentFileName;
+						}
+
+						if( cfm == null || cfm.checkLocalCopyIntegrity(currentFileName, true)) {
+							File f = new File(currentFileName);
+							if( f.exists() && f.canRead()) {
+								try {
+									br = new BufferedReader(new FileReader(f));
+									for(String line; i < BUFFER && (line = br.readLine()) != null; ) {
+										try {
+											elements.add(line);
+											i++;
+										} catch( Exception e ) {
+											log.log(Level.SEVERE, e.getMessage(), e);
+										}
+									}
+
+									if( elements.size() > 0 ) break;
+
+								} catch( Exception e ) {
+									log.log(Level.SEVERE, e.getMessage(), e);
+								}
 							}
 						}
-						
-						if( elements.size() > 0 ) break;
-						
-					} catch( Exception e ) {
-						log.log(Level.SEVERE, e.getMessage(), e);
 					}
+				} catch( ASException e ) {
+					log.log(Level.SEVERE, e.getMessage(), e);
 				}
 
 			}
@@ -593,4 +965,42 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		}
 		
 	}
+
+	@Override
+	public void registerCloudFileManager(CloudFileManager cloudFileManager) {
+		this.cfm = cloudFileManager;
+	}
+
+	@Override
+	public void unregisterCloudFileManager() {
+		this.cfm = null;
+	}
+
+	@Override
+	public void flush() throws ASException {
+		if( cfm != null )
+			cfm.flush();
+	}
+
+	@Override
+	public void dispose() {
+		if( cfm != null )
+			cfm.dispose();
+
+		if(tmpDir) {
+			try {
+				FileUtils.deleteDirectory(new File(baseDir));
+			} catch( Exception e ) {
+				log.log(Level.WARNING, e.getMessage(), e);
+			}
+		}
+		
+	}
+
+	@Override
+	public void startPrefetch() throws ASException {
+		if( cfm != null )
+			cfm.startPrefetch();
+	}
+
 }

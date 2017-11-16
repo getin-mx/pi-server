@@ -18,4 +18,9 @@ public class MailHelperNullImpl implements MailHelper {
 			Map<String, Object> replaceValues) throws ASException {
 	}
 
+	@Override
+	public void sendMessageWithAttachMents(User user, String subject, String message, String attachmentPath,
+			String attachmentName) throws ASException {
+	}
+
 }

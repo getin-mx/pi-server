@@ -1,5 +1,6 @@
 package mobi.allshoppings.dump.impl;
 
+import org.json.JSONObject;
 import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.dump.DumperPlugin;
@@ -33,6 +34,18 @@ public class DeviceWifiLocationHistoryDumperPlugin implements DumperPlugin<Model
 	@Override
 	public void postDump(ModelKey element) throws ASException {
 		// Nothing to do here
+	}
+
+	@Override
+	public String toJson(ModelKey element, String jsonRep) throws ASException {
+		// Nothing to do here
+		return jsonRep;
+	}
+
+	@Override
+	public String toJson(JSONObject element, String jsonRep) throws ASException {
+		// Nothing to do here
+		return jsonRep;
 	}
 
 }

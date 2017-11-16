@@ -1803,7 +1803,8 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	@Override
 	public List<T> getUsingIdList(PersistenceProvider pp, List<String> idList,
 			boolean detachable) throws ASException {
-		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+		PersistenceManager pm = DAOJDOPersistentManagerFactory.get()
+				.getPersistenceManager();
 		List<T> ret = CollectionFactory.createList();
 
 		try {

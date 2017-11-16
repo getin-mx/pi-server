@@ -318,35 +318,6 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				userDao.create(user);
 			}
 			
-			try {
-				um = userMenuDao.get("daniel@aditivo.mx", true);
-				userMenuDao.delete("daniel@aditivo.mx");
-				throw new Exception();
-			} catch (Exception e) {
-				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.setKey(userMenuDao.createKey("daniel@aditivo.mx"));
-				userMenuDao.create(um);
-			}
-
-			try {
-				user = userDao.get("daniel@aditivo.mx", true);
-			} catch (Exception e) {
-				user = new User();
-				user.setFirstname("Daniel");
-				user.setLastname("");
-				user.setEmail("daniel@aditivo.mx");
-				user.getSecuritySettings().setRole(Role.STORE);
-				user.getSecuritySettings()
-						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
-				user.getSecuritySettings()
-						.setStores(Arrays.asList("a45fc81f-900e-457e-854e-df4a312bb0e1",
-								"d2eab997-2497-49b3-b1bd-15cf80f05fc7", "8d2335b7-4cc3-4f76-b274-86137b34b4e5",
-								"3c9e6b60-bdcd-4268-99eb-a9c9f719f625"));
-				user.setKey((Key) keyHelper.obtainKey(User.class, "daniel@aditivo.mx"));
-				userDao.create(user);
-			}
-			
 			// End Aditivo ------------------------------------------------------------------------
 			
 			// Droc Users -------------------------------------------------------------------------
@@ -360,25 +331,13 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			julius.setFirstname("Julius"); 
 			julius.setLastname("Dokulil"); 
 			julius.setEmail("julius@allshoppings.mobi"); 
-			julius.getSecuritySettings().setRole(Role.SHOPPING); 
+			julius.getSecuritySettings().setRole(Role.BRAND); 
 			julius.getSecuritySettings().setShoppings(new ArrayList<String>()); 
 			julius.getSecuritySettings().getShoppings().add("mundoe"); 
 			julius.getSecuritySettings().getShoppings().add("plazaaragon");
 			julius.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
 			julius.setKey((Key)keyHelper.obtainKey(User.class, "julius")); 
 		     userDao.create(julius); 
-		}
-		
-		try {
-			um = userMenuDao.get("julius", true);
-			userMenuDao.delete("julius");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("julius")); 
-	        userMenuDao.create(um); 
 		}
 		
 		User eross = null;
@@ -389,7 +348,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			eross.setFirstname("Eduardo"); 
 			eross.setLastname("Ross"); 
 			eross.setEmail("eross@allshoppings.mobi"); 
-			eross.getSecuritySettings().setRole(Role.SHOPPING); 
+			eross.getSecuritySettings().setRole(Role.BRAND); 
 			eross.getSecuritySettings().setShoppings(new ArrayList<String>()); 
 			eross.getSecuritySettings().getShoppings().add("mundoe"); 
 			eross.getSecuritySettings().getShoppings().add("plazaaragon");
@@ -397,19 +356,6 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			eross.setKey((Key)keyHelper.obtainKey(User.class, "eross")); 
 		     userDao.create(eross); 
 		}
-		
-		try {
-			um = userMenuDao.get("eross", true);
-			userMenuDao.delete("eross");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("eross")); 
-	        userMenuDao.create(um); 
-		}
-		
 		
 		User fdiaz = null;
 		try {
@@ -419,7 +365,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			fdiaz.setFirstname("Fernando"); 
 			fdiaz.setLastname("Diaz"); 
 			fdiaz.setEmail("fdiaz@allshoppings.mobi"); 
-			fdiaz.getSecuritySettings().setRole(Role.SHOPPING); 
+			fdiaz.getSecuritySettings().setRole(Role.BRAND); 
 			fdiaz.getSecuritySettings().setShoppings(new ArrayList<String>()); 
 			fdiaz.getSecuritySettings().getShoppings().add("mundoe"); 
 			fdiaz.getSecuritySettings().getShoppings().add("plazaaragon");
@@ -427,19 +373,6 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			fdiaz.setKey((Key)keyHelper.obtainKey(User.class, "fdiaz")); 
 		     userDao.create(fdiaz); 
 		}
-		
-		try {
-			um = userMenuDao.get("fdiaz", true);
-			userMenuDao.delete("fdiaz");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("fdiaz")); 
-	        userMenuDao.create(um); 
-		}
-		
 		
 			// End Andmins
 		
@@ -453,7 +386,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			octavio.setFirstname("Octavio"); 
 			octavio.setLastname("Perez"); 
 			octavio.setEmail("octavio@allshoppings.mobi"); 
-			octavio.getSecuritySettings().setRole(Role.SHOPPING); 
+			octavio.getSecuritySettings().setRole(Role.BRAND); 
 			octavio.getSecuritySettings().setShoppings(new ArrayList<String>()); 
 			octavio.getSecuritySettings().getShoppings().add("mundoe"); 
 			octavio.getSecuritySettings().getShoppings().add("plazaaragon");
@@ -461,19 +394,6 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			octavio.setKey((Key)keyHelper.obtainKey(User.class, "octavio")); 
 		     userDao.create(octavio); 
 		}
-		
-		try {
-			um = userMenuDao.get("octavio", true);
-			userMenuDao.delete("octavio");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("octavio")); 
-	        userMenuDao.create(um); 
-		}
-		
 		
 		User frisa = null;
 		try {
@@ -483,7 +403,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			frisa.setFirstname("Gerardo"); 
 			frisa.setLastname("H"); 
 			frisa.setEmail("dir_frisa@allshoppings.mobi"); 
-			frisa.getSecuritySettings().setRole(Role.SHOPPING); 
+			frisa.getSecuritySettings().setRole(Role.BRAND); 
 			frisa.getSecuritySettings().setShoppings(new ArrayList<String>()); 
 			frisa.getSecuritySettings().getShoppings().add("mundoe"); 
 			frisa.getSecuritySettings().getShoppings().add("plazaaragon");
@@ -491,19 +411,6 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			frisa.setKey((Key)keyHelper.obtainKey(User.class, "dir_frisa")); 
 		     userDao.create(frisa); 
 		}
-		
-		try {
-			um = userMenuDao.get("dir_frisa", true);
-			userMenuDao.delete("dir_frisa");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("dir_frisa")); 
-	        userMenuDao.create(um); 
-		}
-		
 		
 		User jmiguel = null;
 		try {
@@ -513,7 +420,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			jmiguel.setFirstname("Jose Miguel"); 
 			jmiguel.setLastname("Cobo"); 
 			jmiguel.setEmail("jmiguel@allshoppings.mobi"); 
-			jmiguel.getSecuritySettings().setRole(Role.SHOPPING); 
+			jmiguel.getSecuritySettings().setRole(Role.BRAND); 
 			jmiguel.getSecuritySettings().setShoppings(new ArrayList<String>()); 
 			jmiguel.getSecuritySettings().getShoppings().add("mundoe"); 
 			jmiguel.getSecuritySettings().getShoppings().add("plazaaragon");
@@ -521,19 +428,6 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			jmiguel.setKey((Key)keyHelper.obtainKey(User.class, "jmiguel")); 
 		     userDao.create(jmiguel); 
 		}
-		
-		try {
-			um = userMenuDao.get("jmiguel", true);
-			userMenuDao.delete("jmiguel");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("jmiguel")); 
-	        userMenuDao.create(um); 
-		}
-		
 			
 			// End Cliente
 		
@@ -547,26 +441,13 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			gerenciaME.setFirstname("gerencia Mundo E"); 
 			gerenciaME.setLastname(""); 
 			gerenciaME.setEmail("gerenciaME@allshoppings.mobi"); 
-			gerenciaME.getSecuritySettings().setRole(Role.SHOPPING); 
+			gerenciaME.getSecuritySettings().setRole(Role.BRAND); 
 			gerenciaME.getSecuritySettings().setShoppings(new ArrayList<String>()); 
 			gerenciaME.getSecuritySettings().getShoppings().add("mundoe"); 
 			gerenciaME.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
 			gerenciaME.setKey((Key)keyHelper.obtainKey(User.class, "gerenciaME")); 
 		     userDao.create(gerenciaME); 
 		}
-		
-		try {
-			um = userMenuDao.get("gerenciaME", true);
-			userMenuDao.delete("gerenciaME");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("gerenciaME")); 
-	        userMenuDao.create(um); 
-		}
-		
 		
 		User marketing = null;
 		try {
@@ -576,26 +457,13 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			marketing.setFirstname("marketing"); 
 			marketing.setLastname(""); 
 			marketing.setEmail("marketing@allshoppings.mobi"); 
-			marketing.getSecuritySettings().setRole(Role.SHOPPING); 
+			marketing.getSecuritySettings().setRole(Role.BRAND); 
 			marketing.getSecuritySettings().setShoppings(new ArrayList<String>()); 
 			marketing.getSecuritySettings().getShoppings().add("mundoe"); 
 			marketing.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
 			marketing.setKey((Key)keyHelper.obtainKey(User.class, "marketing")); 
 		     userDao.create(marketing); 
 		}
-		
-		try {
-			um = userMenuDao.get("marketing", true);
-			userMenuDao.delete("marketing");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("marketing")); 
-	        userMenuDao.create(um); 
-		}
-		
 		
 		User alejandro = null;
 		try {
@@ -605,26 +473,13 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			alejandro.setFirstname("Comnet"); 
 			alejandro.setLastname(""); 
 			alejandro.setEmail("alejandro@allshoppings.mobi"); 
-			alejandro.getSecuritySettings().setRole(Role.SHOPPING); 
+			alejandro.getSecuritySettings().setRole(Role.BRAND); 
 			alejandro.getSecuritySettings().setShoppings(new ArrayList<String>()); 
 			alejandro.getSecuritySettings().getShoppings().add("mundoe"); 
 			alejandro.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
 			alejandro.setKey((Key)keyHelper.obtainKey(User.class, "alejandro")); 
 		     userDao.create(alejandro); 
 		}
-		
-		try {
-			um = userMenuDao.get("alejandro", true);
-			userMenuDao.delete("alejandro");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("alejandro")); 
-	        userMenuDao.create(um); 
-		}
-		
 		
 			// End Mundo E
 		
@@ -638,26 +493,13 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			gerenciaA.setFirstname("Gerencia Aragon"); 
 			gerenciaA.setLastname(""); 
 			gerenciaA.setEmail("gerenciaA@allshoppings.mobi"); 
-			gerenciaA.getSecuritySettings().setRole(Role.SHOPPING); 
+			gerenciaA.getSecuritySettings().setRole(Role.BRAND); 
 			gerenciaA.getSecuritySettings().setShoppings(new ArrayList<String>()); 
 			frisa.getSecuritySettings().getShoppings().add("plazaaragon");
 			gerenciaA.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
 			gerenciaA.setKey((Key)keyHelper.obtainKey(User.class, "gerenciaA")); 
 		     userDao.create(gerenciaA); 
 		}
-		
-		try {
-			um = userMenuDao.get("gerenciaA", true);
-			userMenuDao.delete("gerenciaA");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("gerenciaA")); 
-	        userMenuDao.create(um); 
-		}
-		
 		
 		User cesar = null;
 		try {
@@ -667,53 +509,13 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			cesar.setFirstname("Marketing"); 
 			cesar.setLastname(""); 
 			cesar.setEmail("cesar@allshoppings.mobi"); 
-			cesar.getSecuritySettings().setRole(Role.SHOPPING); 
+			cesar.getSecuritySettings().setRole(Role.BRAND); 
 			cesar.getSecuritySettings().setShoppings(new ArrayList<String>()); 
 			frisa.getSecuritySettings().getShoppings().add("plazaaragon");
 			cesar.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
 			cesar.setKey((Key)keyHelper.obtainKey(User.class, "cesar")); 
 		     userDao.create(cesar); 
 		}
-		
-		try {
-			um = userMenuDao.get("cesar", true);
-			userMenuDao.delete("cesar");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu(); 
-	        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-	        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-	        um.setKey(userMenuDao.createKey("cesar")); 
-	        userMenuDao.create(um); 
-		}
-		
-		
-		User demodevlyn = null;
-		try {
-			demodevlyn = userDao.get("demo_devlyn_mx", true);
-		} catch( Exception e ) {
-			demodevlyn = new User();
-			demodevlyn.setFirstname("DevlynDemo");
-			demodevlyn.setLastname("Mexico");
-			demodevlyn.setEmail("demodevlyn@allshoppings.mobi");
-			demodevlyn.getSecuritySettings().setRole(Role.BRAND);
-			demodevlyn.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-			demodevlyn.setKey((Key)keyHelper.obtainKey(User.class, "demo_devlyn_mx"));
-			userDao.create(demodevlyn);
-		}
-
-		try {
-			um = userMenuDao.get("demo_devlyn_mx", true);
-			userMenuDao.delete("demo_devlyn_mx");
-			throw new Exception();
-		} catch( Exception e ) {
-			um = new UserMenu();
-			um.getEntries().add(new UserMenuEntry("index.demodevlyn", "fa-area-chart", "Tráfico"));
-			um.setKey(userMenuDao.createKey("demo_devlyn_mx"));
-			userMenuDao.create(um);
-		}
-
-		
 		
 			// End Aragon
 		

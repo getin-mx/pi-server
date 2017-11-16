@@ -47,4 +47,12 @@ public interface DashboardIndicatorDataDAO extends GenericDAO<DashboardIndicator
 	void deleteUsingSubentityIdAndElementIdAndDate(String subentityId,
 			List<String> elementId, Date fromDate, Date toDate)
 			throws ASException;
+	
+	/**
+	 * Prepares the DAO to use a time zoned date to string parser. This will only
+	 * take effect on the first call to any CRUD operation. Be aware that this method
+	 * is mean to be temporal, and not only it should dissapear when all time
+	 * zone constraints are fixed; but not all methods may use a time zoned parser.
+	 */
+	void useTimedZone();
 }

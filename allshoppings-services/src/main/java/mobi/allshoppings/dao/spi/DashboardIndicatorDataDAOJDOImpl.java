@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
@@ -30,6 +31,13 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 	private static final Logger log = Logger.getLogger(DashboardIndicatorDataDAOJDOImpl.class.getName());
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private static final SimpleDateFormat zonedSdf = new SimpleDateFormat("yyyy-MM-dd");
+	
+	static {
+		zonedSdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+	}
+	
+	private boolean useTimeZonedParser;
 	
 	public DashboardIndicatorDataDAOJDOImpl() {
 		super(DashboardIndicatorData.class);
@@ -250,16 +258,20 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 			if(null != elementId && elementId.size() > 0 )
 				parts.add(new BasicDBObject("elementId", new BasicDBObject("$in", elementId)));
 			if(null != fromDate && null == toDate ) {
-				String fromDateString = sdf.format(fromDate);
+				String fromDateString = useTimeZonedParser ? zonedSdf.format(fromDate) :
+					sdf.format(fromDate);
 				parts.add(new BasicDBObject("stringDate", new BasicDBObject("$gte", fromDateString)));
 			}
 			if(null == fromDate && null != toDate ) {
-				String toDateString = sdf.format(toDate);
+				String toDateString = useTimeZonedParser ? zonedSdf.format(toDate) :
+					sdf.format(toDate);
 				parts.add(new BasicDBObject("stringDate", new BasicDBObject("$lte", toDateString)));
 			}
 			if(null != fromDate && null != toDate ) {
-				String fromDateString = sdf.format(fromDate);
-				String toDateString = sdf.format(toDate);
+				String fromDateString = useTimeZonedParser ? zonedSdf.format(fromDate) :
+						sdf.format(fromDate);
+				String toDateString = useTimeZonedParser ? zonedSdf.format(toDate) :
+					sdf.format(toDate);
 				parts.add(new BasicDBObject("$and", Arrays.asList(
 						new BasicDBObject("stringDate", new BasicDBObject("$gte", fromDateString)),
 						new BasicDBObject("stringDate", new BasicDBObject("$lte", toDateString))
@@ -271,7 +283,7 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 			jdoConn.close();
 			
 			pm.evictAll(true, DashboardIndicatorData.class);
-						
+			useTimeZonedParser = false;
 			return;
 			
 		} catch (Exception e) {
@@ -280,5 +292,16 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 			pm.close();
 		}		
 
+	}
+	
+	/**
+	 * Prepares the DAO to use a time zoned date to string parser. This will only
+	 * take effect on the first call to any CRUD operation. Be aware that this method
+	 * is mean to be temporal, and not only it should dissapear when all time
+	 * zone constraints are fixed; but not all methods may use a time zoned parser.
+	 */
+	@Override
+	public void useTimedZone() {
+		useTimeZonedParser = true;
 	}
 }

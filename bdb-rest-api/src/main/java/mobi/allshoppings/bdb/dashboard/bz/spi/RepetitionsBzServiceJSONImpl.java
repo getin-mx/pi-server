@@ -15,8 +15,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import mobi.allshoppings.bdb.bz.BDBTimelineHourBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
+import mobi.allshoppings.bdb.bz.BDBTimelineHourBzService;
 import mobi.allshoppings.dao.APDVisitDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;

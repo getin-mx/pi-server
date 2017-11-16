@@ -3,6 +3,7 @@ package mobi.allshoppings.cli;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -20,7 +21,8 @@ import mobi.allshoppings.tools.CollectionFactory;
 public class GenerateAPDVisits extends AbstractCLI {
 
 	private static final Logger log = Logger.getLogger(GenerateAPDVisits.class.getName());
-	public static final long TWENTY_FOUR_HOURS = 86400000;
+	public static final int TWENTY_FOUR_HOURS = 86400000;
+	public static final int TWELVE_HOURS = TWENTY_FOUR_HOURS /2;
 	
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
@@ -32,6 +34,9 @@ public class GenerateAPDVisits extends AbstractCLI {
 		parser.accepts( "shoppingIds", "List of comma separated shoppings (superseeds brandIds and storeIds)").withRequiredArg().ofType( String.class );
 		parser.accepts( "onlyEmployees", "Only process employees").withRequiredArg().ofType( Boolean.class );
 		parser.accepts( "onlyDashboards", "Only process dashboards with preexisting APDVisit data").withRequiredArg().ofType( Boolean.class );
+		parser.accepts( "updateDashboards", "Update dashboards with preexisting APDVisit data").withRequiredArg().ofType( Boolean.class );
+		parser.accepts( "deletePreviousRecords", "Delete previus dashboards")
+				.withRequiredArg().ofType( Boolean.class );
 		return parser;
 	}
 
@@ -42,6 +47,7 @@ public class GenerateAPDVisits extends AbstractCLI {
 	public static void main(String args[]) throws ASException {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 			APDVisitHelper helper = (APDVisitHelper)getApplicationContext().getBean("apdvisit.helper");
 
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
@@ -49,6 +55,8 @@ public class GenerateAPDVisits extends AbstractCLI {
 
 			boolean onlyEmployees = false;
 			boolean onlyDashboards = false;
+			boolean updateDashboards = false;
+			boolean deletePreviousRecors = false;
 			String sFromDate = null;
 			String sToDate = null;
 			Date fromDate = null;
@@ -64,16 +72,15 @@ public class GenerateAPDVisits extends AbstractCLI {
 				if( options.has("fromDate")) sFromDate = (String)options.valueOf("fromDate");
 				if( options.has("toDate")) sToDate = (String)options.valueOf("toDate");
 				
-				if( StringUtils.hasText(sFromDate)) {
-					fromDate = sdf.parse(sFromDate);
-				} else {
-					fromDate = sdf.parse(sdf.format(new Date(new Date().getTime() - 86400000 /* 24 hours */)));
-				}
+				fromDate = StringUtils.hasText(sFromDate) ? sdf.parse(sFromDate) :
+					sdf.parse(sdf.format(
+							new Date(System.currentTimeMillis() - TWENTY_FOUR_HOURS)));
 				
 				if( StringUtils.hasText(sToDate)) {
 					toDate = sdf.parse(sToDate);
+					toDate.setTime(toDate.getTime() +TWELVE_HOURS);
 				} else {
-					toDate = new Date(fromDate.getTime() + 86400000 /* 24 hours */);
+					toDate = new Date(fromDate.getTime() + TWENTY_FOUR_HOURS);
 				}
 
 				if(options.has("brandIds")) {
@@ -110,6 +117,14 @@ public class GenerateAPDVisits extends AbstractCLI {
 				if(options.has("onlyDashboards")) {
 					onlyDashboards = (Boolean)options.valueOf("onlyDashboards");
 				}
+				
+				if(options.has("updateDashboards")) {
+					updateDashboards = (Boolean)options.valueOf("updateDashboards");
+				}
+				
+				if(options.has("deletePreviousRecors")) {
+					deletePreviousRecors = (Boolean)options.valueOf("deletePreviousRecors");
+				}
 
 			} catch( Exception e ) {
 				e.printStackTrace();
@@ -117,10 +132,11 @@ public class GenerateAPDVisits extends AbstractCLI {
 			}
 
 			log.log(Level.INFO, "Generating APDVisits");
+			
 			if( shoppings.isEmpty() )
-				helper.generateAPDVisits(brands, stores, fromDate, toDate, true, true, onlyEmployees, onlyDashboards);
+				helper.generateAPDVisits(brands, stores, fromDate, toDate, deletePreviousRecors, updateDashboards, onlyEmployees, onlyDashboards);
 			else
-				helper.generateAPDVisits(shoppings, fromDate, toDate, true, true, onlyEmployees, onlyDashboards);
+				helper.generateAPDVisits(shoppings, fromDate, toDate, deletePreviousRecors, updateDashboards, onlyEmployees, onlyDashboards);
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

@@ -2,6 +2,7 @@ package mobi.allshoppings.cli;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -10,8 +11,7 @@ import org.springframework.util.StringUtils;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.dump.DumperHelper;
-import mobi.allshoppings.dump.impl.DeviceWifiLocationHistoryDumperPlugin;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.interfaces.ModelKey;
@@ -28,9 +28,7 @@ public class DumpHistory extends AbstractCLI {
 		parser.accepts( "toDate", "Date To" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "entity", "Entity to dump (for example, DeviceLocationHistory)").withRequiredArg().ofType( String.class );
 		parser.accepts( "collection", "DB Collection to dump (for example, DeviceLocationHistory)").withRequiredArg().ofType( String.class );
-		parser.accepts( "outDir", "Output Directory (for example, /tmp/dump)").withRequiredArg().ofType( String.class );
 		parser.accepts( "deleteAfterDump", "Do I have to delete the entity from the DB after dump?").withRequiredArg().ofType( Boolean.class );
-		parser.accepts( "usePlugins", "Do I have to add the pre defined plugins?").withRequiredArg().ofType( Boolean.class );
 		parser.accepts( "renameCollection", "Do I have to rename the collection before run?").withRequiredArg().ofType( Boolean.class );
 		return parser;
 	}
@@ -39,6 +37,8 @@ public class DumpHistory extends AbstractCLI {
 	public static void main(String args[]) throws ASException {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			TimeZone tz = TimeZone.getTimeZone("GMT");
+			sdf.setTimeZone(tz);
 			
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
 			OptionSet options = parser.parse(args);
@@ -50,10 +50,8 @@ public class DumpHistory extends AbstractCLI {
 
 			String sEntity = null;
 			String sCollection = null;
-			String sOutDir = null;
 			Boolean deleteAfterDump = true;
 			Boolean renameCollection = false;
-			Boolean usePlugins = true;
 			
 			Class<ModelKey> entity = null;
 			
@@ -72,35 +70,25 @@ public class DumpHistory extends AbstractCLI {
 				if( options.has("collection")) sCollection = (String)options.valueOf("collection");
 				else sCollection = new String(sEntity);
 
-				if( options.has("outDir")) sOutDir = (String)options.valueOf("outDir");
-				else usage(parser);
-				
-				if( StringUtils.hasText(sFromDate)) {
-					fromDate = sdf.parse(sFromDate);
-				} else {
-					fromDate = new Date(0L);
-				}
-				
-				if( StringUtils.hasText(sToDate)) {
-					toDate = sdf.parse(sToDate);
-				} else {
-					toDate = new Date();
-				}
+				fromDate = StringUtils.hasText(sFromDate) ? sdf.parse(sFromDate) :
+					new Date(0L);
+				toDate = StringUtils.hasText(sToDate) ? sdf.parse(sToDate) :
+					new Date();
 				
 			} catch( Exception e ) {
 				e.printStackTrace();
 				usage(parser);
 			}
 
-			log.log(Level.INFO, "Starting dump for entity " + entity.getName() + " from " + fromDate + " to " + toDate);
-			DumperHelper<ModelKey> dumper = new DumperHelperImpl<ModelKey>(sOutDir, entity);
+			log.log(Level.INFO, "Starting dump for entity " + entity.getName()
+					+ " from " + fromDate + " to " + toDate);
+			DumperHelper<ModelKey> dumper = new DumpFactory<ModelKey>()
+					.build(null, entity);
 			
-			// Add plugins
-			if( usePlugins) {
-				dumper.registerPlugin(new DeviceWifiLocationHistoryDumperPlugin());
-			}
+			dumper.dumpModelKey(sCollection, fromDate, toDate, deleteAfterDump,
+					renameCollection);
 			
-			dumper.dumpModelKey(sCollection, fromDate, toDate, deleteAfterDump, renameCollection);
+			dumper.dispose();
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

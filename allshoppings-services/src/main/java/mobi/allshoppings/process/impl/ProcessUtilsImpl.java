@@ -43,7 +43,9 @@ public class ProcessUtilsImpl implements ProcessUtils {
 		StringBuffer sb = new StringBuffer();
 		
 		if( process.getProcessType().equals(Process.PROCESS_TYPE_GENERATE_VISITS)) {
-			sb.append("aspi2 GenerateAPDVisits --datastore /usr/local/allshoppings/etc/datastore.nocache.properties --storeIds ")
+			sb.append("/usr/local/allshoppings/bin/aspi2 GenerateAPDVisits "
+					+ "--datastore /usr/local/allshoppings/etc/datastore.nocache.properties "
+					+ "--updateDashboards true --storeIds ")
 			.append(process.getEntityId())
 			.append(" --fromDate ")
 			.append(json.getString("fromDate"))
@@ -98,7 +100,8 @@ public class ProcessUtilsImpl implements ProcessUtils {
 					// This is a control to avoid memcached overflow... the
 					// contents of this field are just logs, so they are not
 					// SOOOO important
-					if( fProcess.getLog().length() > 786432 ) fProcess.setLog(fProcess.getLog().substring(0, 786432));
+					if( fProcess.getLog().length() > 786432 )
+						fProcess.setLog(fProcess.getLog().substring(0, 786432));
 					
 					try {
 						dao.update(fProcess);

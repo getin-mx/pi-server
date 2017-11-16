@@ -27,7 +27,34 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            The plugin to unregister
 	 */
 	void unregisterPlugin(DumperPlugin<ModelKey> plugin);
+
+	/**
+	 * Registers a new Cloud File Manager
+	 * 
+	 * @param cloudFileManager
+	 *            The Cloud File Manager to register
+	 */
+	void registerCloudFileManager(CloudFileManager cloudFileManager);
+
+	/**
+	 * Unregisters the previous cloud file manager
+	 */
+	void unregisterCloudFileManager();
 	
+	/**
+	 * Triggers a flush to the registered Cloud File Manager
+	 * 
+	 * @throws ASException
+	 */
+	void flush() throws ASException;
+
+	/**
+	 * Triggers a start prefetch
+	 * 
+	 * @throws ASException
+	 */
+	void startPrefetch() throws ASException;
+
 	/**
 	 * Applies all the plugins registered for an object before dumping the
 	 * object
@@ -37,7 +64,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 * @throws ASException
 	 */
 	void applyPreDumpPlugins(T obj) throws ASException;
-	
+
 	/**
 	 * Applies all the plugins registered for an object after dumping the
 	 * object
@@ -47,7 +74,38 @@ public interface DumperHelper<T extends ModelKey> {
 	 * @throws ASException
 	 */
 	void applyPostDumpPlugins(T obj) throws ASException;
+
+	/**
+	 * Specifies a file name filter
+	 * 
+	 * @param filter
+	 *            The specified file name filter
+	 */
+	void setFilter(String filter);
+
+	/**
+	 * Specifies a time frame for rolling files
+	 * 
+	 * @param timeFrame
+	 *            The time frame to specify
+	 */
+	void setTimeFrame(long timeFrame);
 	
+	/**
+	 * Specifies if the working directory is temporary
+	 * 
+	 * @param tmpDir
+	 *            true if the directory is temporary
+	 */
+	public void setTmpDir(boolean tmpDir);
+	
+	/**
+	 * Obtains the current file name filter
+	 * 
+	 * @return The current file name filter
+	 */
+	String getFilter();
+
 	/**
 	 * Dumps a ModelKey database to a set of files
 	 * 
@@ -59,20 +117,21 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            Do I have to delete the object after successful dump?
 	 * @throws ASException
 	 */
-	public void dumpModelKey(String collection, Date fromDate, Date toDate, boolean deleteAfterDump, boolean moveCollectionBeforeDump) throws ASException;
+	void dumpModelKey(String collection, Date fromDate, Date toDate, boolean deleteAfterDump, boolean moveCollectionBeforeDump) throws ASException;
 
 	/**
-	 * Fakes a Dump batch.
+	 * Special dump from APDVisit
 	 * 
 	 * @param fromDate
 	 *            From which date
 	 * @param toDate
 	 *            To which date
+	 * @param deleteAfterDump
+	 *            Do I have to delete the object after successful dump?
 	 * @throws ASException
 	 */
-	public void fakeModelKey(Date fromDate, Date toDate) throws ASException;
-
-
+	void dumpAPDVisit(String collection, Date fromDate, Date toDate, boolean deleteAfterDump, boolean moveCollectionBeforeDump) throws ASException;
+	
 	/**
 	 * Dumps a single ModelKey object
 	 * 
@@ -82,16 +141,36 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            DeviceLocationHistory Object to dump
 	 * @throws IOException
 	 */
-	public void dump(T obj) throws IOException;
+	void dump(T obj) throws ASException;
+
+	/**
+	 * Obtains a list of potential names for a date
+	 * 
+	 * @param fromDate
+	 *            The specified date
+	 * @return A fully formed list of names
+	 */
+	List<String> getMultipleFileOptions(Date date);
+
+	/**
+	 * Obtains a list of potential names for a date
+	 * 
+	 * @param fromDate
+	 *            The specified date
+	 * @return A fully formed list of names
+	 */
+	List<String> getMultipleNameOptions(Date date);
 
 	/**
 	 * Resolves the file name for a dump file based in its date and time
 	 * 
 	 * @param forDate
 	 *            The date and time to calculate the name from
+	 * @param element
+	 *            The element to resolve from
 	 * @return A fully formed file name for the dump file
 	 */
-	public String resolveDumpFileName(Date forDate);
+	String resolveDumpFileName(Date forDate, T element);
 
 	/**
 	 * Gets an iterator with all the saved entities in a date range
@@ -102,7 +181,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            Date and time to which to retrieve entities
 	 * @return An iterator with all the selected records
 	 */
-	public Iterator<T> iterator(Date fromDate, Date toDate);
+	Iterator<T> iterator(Date fromDate, Date toDate);
 
 	/**
 	 * Gets an iterator with all the saved entities in a date range, in its
@@ -114,7 +193,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            Date and time to which to retrieve entities
 	 * @return An iterator with all the selected records
 	 */
-	public Iterator<String> stringIterator(Date fromDate, Date toDate);
+	Iterator<String> stringIterator(Date fromDate, Date toDate);
 
 	/**
 	 * Gets an iterator with all the saved entities in a date range, in its
@@ -126,18 +205,25 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            Date and time to which to retrieve entities
 	 * @return An iterator with all the selected records
 	 */
-	public Iterator<JSONObject> jsonIterator(Date fromDate, Date toDate);
+	Iterator<JSONObject> jsonIterator(Date fromDate, Date toDate);
 
 	/**
-	 * Gets a list with all the saved entities in a date rante
+	 * Adds a new name discriminator to the name helper
 	 * 
-	 * @param fromDate
-	 *            Date and time from which to retrieve entities
-	 * @param toDate
-	 *            Date and time to which to retrieve entities
-	 * @return A list with all the selected records
-	 * @throws IOException
+	 * @param discriminator
+	 *            The field that will be used as discriminator
 	 */
-	public List<T> retrieveModelKeyList(Date fromDate, Date toDate) throws IOException;
+	void registerFileNameResolver(DumperFileNameResolver<ModelKey> discriminator);
+
+	/**
+	 * Removes a name discriminator from the name helper
+	 */
+	void unregisterFileNameResolver();
+	
+	/**
+	 * Finalizes the object
+	 */
+	void dispose();
+	
 
 }

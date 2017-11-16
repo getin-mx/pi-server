@@ -17,8 +17,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import mobi.allshoppings.bdb.bz.BDBTimelineHourBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
+import mobi.allshoppings.bdb.bz.BDBTimelineHourBzService;
 import mobi.allshoppings.dao.DashboardConfigurationDAO;
 import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
@@ -39,7 +39,6 @@ extends BDBRestBaseServerResource
 implements BDBTimelineHourBzService {
 
 	private static final Logger log = Logger.getLogger(TimelineHourBzServiceJSONImpl.class.getName());
-	
 	@Autowired
 	private DashboardIndicatorDataDAO dao;
 	@Autowired
@@ -103,6 +102,8 @@ implements BDBTimelineHourBzService {
 			if(!CollectionUtils.isEmpty(orderList)) {
 				for( String order : orderList ) {
 					try {
+						if(order.contains("ios") || order.contains("android"))
+							continue;
 						DashboardIndicatorAlias alias = diAliasDao.getUsingFilters(entityId, entityKind, elementId, order);
 						aliasMap.put(order, alias.getElementSubName());
 					} catch( ASException e ) {
@@ -209,6 +210,7 @@ implements BDBTimelineHourBzService {
 					Long[] valArray = resultMap.get(key);
 					Integer[] counterArray = counterMap.get(key);
 					for( int x = 0; x < valArray.length; x++) {
+						if(counterArray == null || counterArray[x] == null) continue;
 						if( counterArray[x] != 0 ) {
 							if( toMinutes ) {
 								valArray[x] = new Long(Math.round(valArray[x] / counterArray[x] / 60000));

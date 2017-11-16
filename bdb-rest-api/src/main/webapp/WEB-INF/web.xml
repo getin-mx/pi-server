@@ -97,6 +97,14 @@
 		<servlet-name>APDeviceExport</servlet-name>
 		<url-pattern>/dashboard/apdeviceExport</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>DBExport</servlet-name>
+		<servlet-class>mobi.allshoppings.bdb.dashboard.bz.spi.DBExportServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DBExport</servlet-name>
+		<url-pattern>/dashboard/dbExport</url-pattern>
+	</servlet-mapping>
 
 	<!-- Servlet that handles initial configuration -->
 	<servlet>

@@ -1,5 +1,6 @@
 package mobi.allshoppings.bz.spi;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,20 +15,22 @@ import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.bz.ReportAccessPointHotSpotBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.dao.APDeviceDAO;
-import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.APHotspotDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDevice;
-import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
 
 /**
- *
+ * Receives and stores data from antennas.
  */
-public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerResource implements ReportAccessPointHotSpotBzService {
+public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerResource
+		implements ReportAccessPointHotSpotBzService {
 
-	private static final Logger log = Logger.getLogger(ReportAccessPointHotSpotBzServiceJSONImpl.class.getName());
+	private static final Logger log = Logger.getLogger(
+			ReportAccessPointHotSpotBzServiceJSONImpl.class.getName());
+	
+	private final Calendar CALENDAR = Calendar.getInstance();
 
 	@Autowired
 	private APDeviceDAO apdDao;
@@ -37,8 +40,8 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 //	private APDeviceTriggerEntryDAO triggerDao;
 	@Autowired
 	private APHHelper aphHelper;
-	@Autowired
-	private APHEntryDAO apheDao;
+	/*@Autowired
+	private APHEntryDAO apheDao;*/
 
 	@Override
 	public String post(final JsonRepresentation entity) {
@@ -50,8 +53,9 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 
 			JSONArray data = obj.getJSONArray("data");
 
-			log.log(Level.INFO, "Reporting " + data.length() + " AP Members from " + hostname);
-			log.log(Level.FINEST, obj.toString());
+			log.log(Level.INFO, "Reporting " + data.length() + " AP Members from "
+					+ hostname);
+			//log.log(Level.FINEST, obj.toString());
 
 			// Sets the device last data
 			APDevice device = null;
@@ -80,85 +84,36 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 
 					APHotspot aphotspot = new APHotspot();
 					aphotspot.setHostname(hostname);
-					aphotspot.setFirstSeen(new Date(ele.getLong("firstSeen") * 1000));
-					aphotspot.setLastSeen(new Date(ele.getLong("lastSeen") * 1000));
+					aphotspot.setFirstSeen(restoreDate(
+							ele.getLong("firstSeen") * 1000));
+					aphotspot.setLastSeen(restoreDate(ele.getLong("lastSeen") * 1000));
 					aphotspot.setMac(ele.getString("mac").toLowerCase());
 					aphotspot.setSignalDB(ele.getInt("signalDB"));
 					aphotspot.setCount(ele.getInt("count"));
 					aphotspot.setKey(dao.createKey());
 
-					if(aphHelper.isValidMacAddress(aphotspot.getMac()) && aphotspot.getSignalDB() < 0) {
+					if(aphHelper.isValidMacAddress(aphotspot.getMac()) && 
+							aphotspot.getSignalDB() < 0) {
 						dao.create(aphotspot);
-
-						// Updates APHEntries
-						try {
+						/*DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>()
+								.build(null, APHotspot.class);
+						dumper.append(aphotspot);
+						dumper.flush();
+						dumper.dispose();*/
+						// Updates APHEntries 
+						/*try {
 							aphHelper.setUseCache(false);
 							APHEntry aphe = aphHelper.setFramedRSSI(aphotspot);
-//							aphHelper.artificiateRSSI(aphe, device);
 							apheDao.createOrUpdate(aphe);
 						} catch( Exception e ) {
 							log.log(Level.SEVERE, "Error updating APHEntries", e);
-						}
-
-						// Try to Execute Triggers
-//						try {
-//							List<APDeviceTriggerEntry> triggers = triggerDao.getUsingCoincidence(hostname, aphotspot.getMac());
-//							for(APDeviceTriggerEntry entry : triggers ) {
-//								try {
-//									IAPDeviceTrigger trigger = (IAPDeviceTrigger)Class.forName(entry.getTriggerClassName()).newInstance();
-//									trigger.execute(hostname, aphotspot.getMac(), aphotspot.getSignalDB(), entry.getTriggerMetadata());
-//								} catch( Throwable e ) {
-//									log.log(Level.SEVERE, "Error excecuting APDevice Triggers", e);
-//								}
-//							}
-//						} catch( ASException e ) {
-//							log.log(Level.SEVERE, "Error excecuting APDevice Triggers", e);
-//						}
-
-						// Creates locks if needed
-						// TODO: This should be moved to a trigger
-//						try {
-//							List<DeviceInfo> diList = diDao.getUsingMAC(aphotspot.getMac());
-//							for(DeviceInfo di : diList ) {
-//								log.log(Level.WARNING, "Adding lock for device " + di.getDeviceUUID() );
-//								//FIXME: Add subEntityId and subEntityKind
-//								lockHelper.deviceMessageLock(di.getDeviceUUID(), DeviceMessageLock.SCOPE_GLOBAL, null, 
-//										now, systemConfiguration.getDefaultProximityLock(), null, null);
-//							}
-//						} catch ( ASException e ) {
-//							if( e.getErrorCode() != ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE )
-//								throw e;
-//						}
-
-//						try {
-//							replicateRecord(aphotspot);
-//						} catch( Exception e ) {
-//							log.log(Level.WARNING, e.getMessage(), e);
-//						}
+						}// */
 					}
 					
 				} catch( Exception e ) {
 					log.log(Level.SEVERE, e.getMessage(), e);
 				}
 			}
-			
-//			// Submits a check for the antennas
-//			final String deviceHostname = device.getHostname();
-//			if(device.getLastInfoUpdate() == null 
-//					|| ( new Date().getTime() - device.getLastInfoUpdate().getTime()) > 14400000) {
-//				new Thread(new Runnable() {
-//					@Override
-//					public void run() {
-//						try {
-//							apdHelper.updateAPDeviceInfo(deviceHostname);
-//						} catch (ASException e) {
-//							log.log(Level.SEVERE, e.getMessage(), e);
-//						}
-//					}
-//				}).start();
-//			}
-			
-			// And sends the return message
 			return generateJSONOkResponse().toString();
 
 		} catch (JSONException e) {
@@ -172,4 +127,31 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 		}
 
 	}
+	
+	private Date restoreDate(long time) {
+		CALENDAR.clear();
+		CALENDAR.setTimeInMillis(time);
+		Calendar now = Calendar.getInstance();
+		now.setTimeInMillis(System.currentTimeMillis());
+		int yearsDiff = Math.abs(CALENDAR.get(Calendar.YEAR)
+				-now.get(Calendar.YEAR));
+		int monthsDiff = Math.abs(CALENDAR.get(Calendar.MONTH)
+				-now.get(Calendar.MONTH));
+		int daysDiff = Math.abs(CALENDAR.get(Calendar.DATE)
+				-now.get(Calendar.DATE));
+		if(yearsDiff > 1 || (yearsDiff != 0 &&
+				(now.get(Calendar.MONTH) > 0 ||
+				now.get(Calendar.DATE) > 1
+				|| now.get(Calendar.HOUR_OF_DAY) > 2)))
+			CALENDAR.set(Calendar.YEAR, now.get(Calendar.YEAR));
+		if(monthsDiff > 1 || (monthsDiff != 0 &&
+				(now.get(Calendar.DATE) > 1 ||
+				now.get(Calendar.HOUR_OF_DAY) > 2)))
+			CALENDAR.set(Calendar.MONTH, now.get(Calendar.MONTH));
+		if(daysDiff > 1 || (daysDiff != 0 &&
+				now.get(Calendar.HOUR_OF_DAY) > 2))
+			CALENDAR.set(Calendar.DATE, now.get(Calendar.DATE));
+		return CALENDAR.getTime();
+	}
+	
 }

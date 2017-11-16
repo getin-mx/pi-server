@@ -1,0 +1,43 @@
+/usr/local/allshoppings/bin/cleanlogs
+
+/usr/local/allshoppings/bin/aspi TouchBrands
+/usr/local/allshoppings/bin/aspi TouchStores
+/usr/local/allshoppings/bin/aspi TouchAPDevices
+/usr/local/allshoppings/bin/aspi TouchUsers
+
+/usr/local/allshoppings/bin/aspi DumpHistory --collection DeviceLocationHistory --entity DeviceLocationHistory --outDir /usr/local/allshoppings/dump --deleteAfterDump false --renameCollection true >> /usr/local/allshoppings/log/DumpDeviceLocationHistory.log 2>> /usr/local/allshoppings/log/DumpDeviceLocationHistory.log
+
+/usr/local/allshoppings/bin/aspi DumpHistory --collection DeviceWifiLocationHistory --entity DeviceWifiLocationHistory --outDir /usr/local/allshoppings/dump --deleteAfterDump false --renameCollection true >> /usr/local/allshoppings/log/DumpDeviceWifiLocationHistory.log 2>> /usr/local/allshoppings/log/DumpDeviceWifiLocationHistory.log
+
+/usr/local/allshoppings/bin/aspi DumpHistory --collection APHotspot --entity APHotspot --outDir /usr/local/allshoppings/dump --deleteAfterDump false --renameCollection true >> /usr/local/allshoppings/log/DumpAPHotspot.log 2>> /usr/local/allshoppings/log/DumpAPHotspot.log
+
+/usr/local/allshoppings/bin/aspi6 GenerateAPDVisits --datastore /usr/local/allshoppings/etc/datastore.nocache.properties > /usr/local/allshoppings/log/GenerateAPDVisits.log 2>> /usr/local/allshoppings/log/GenerateAPDVisits.log
+
+/usr/local/allshoppings/bin/aspi6 UpdateDashboards --datastore /usr/local/allshoppings/etc/datastore.nocache.properties >> /usr/local/allshoppings/log/UpdateDashboards.log 2>> /usr/local/allshoppings/log/UpdateDashboards.log
+
+/usr/local/allshoppings/bin/aspi6 RunExportUnits --datastore /usr/local/allshoppings/etc/datastore.nocache.properties > /usr/local/allshoppings/log/RunExportUnits.log 2>> /usr/local/allshoppings/log/RunExportUnits.log
+
+# Server checks
+* * * * * /usr/local/allshoppings/bin/server-check
+
+# Daily processes
+0 0 * * * /usr/local/allshoppings/bin/daily.sh
+
+# Maint processes
+0 4 * * * /usr/local/allshoppings/bin/aspi UpdateCheckins --outDir /usr/local/allshoppings/dump >> /usr/local/allshoppings/log/UpdateCheckins.log 2>> /usr/local/allshoppings/log/UpdateCheckins.log
+0 5 * * * /usr/local/allshoppings/bin/aspi CinepolisUpdateCheckins --outDir /usr/local/allshoppings/dump >> /usr/local/allshoppings/log/CinepolisUpdateCheckins.log 2>> /usr/local/allshoppings/log/CinepolisUpdateCheckins.log
+* 9,10,11,12,13,14,15,16,17,18,19,20,21,22 * * * /usr/local/allshoppings/bin/aspi ReportAPDevices > /usr/local/allshoppings/log/ReportAPDevices.log 2>> /usr/local/allshoppings/log/ReportAPDevices.log
+0 5 * * * /usr/local/allshoppings/bin/aspi CalculateAPUptime --outDir /usr/local/allshoppings/dump >> /usr/local/allshoppings/log/CalculateAPUptime.log 2>> /usr/local/allshoppings/log/CalculateAPUptime.log
+0 * * * * /usr/local/allshoppings/bin/aspi RestartAPDevice >> /usr/local/allshoppings/log/RestartAPDevice 2>> /usr/local/allshoppings/log/RestartAPDevice
+0 * * * * /usr/local/allshoppings/bin/aspi CancelPendingProcesses >> /usr/local/allshoppings/log/CancelPendingProcesses.log 2>> /usr/local/allshoppings/log/CancelPendingProcesses.log
+
+# Update and send processes
+0/30 * * * * /usr/local/allshoppings/bin/aspi CinepolisUpdateShowtimes >>  /usr/local/allshoppings/log/CinepolisUpdateShowtimes.log 2>> /usr/local/allshoppings/log/CinepolisUpdateShowtimes.log
+0 0,12 * * * /usr/local/allshoppings/bin/aspi CinepolisUpdateMovies >> /usr/local/allshoppings/log/CinepolisUpdateMovies.log 2>> /usr/local/allshoppings/log/CinepolisUpdateMovies.log
+
+# Dashboards
+0 * * * * /usr/local/allshoppings/bin/aspi CinepolisUpdateDashboards --phase 1 >> /usr/local/allshoppings/log/CinepolisUpdateDashboards.log 2>> /usr/local/allshoppings/log/CinepolisUpdateDashboards.log
+0 8 * * * /usr/local/allshoppings/bin/aspi CinepolisUpdateDashboards --phase 2 >> /usr/local/allshoppings/log/CinepolisUpdateDashboards.log 2>> /usr/local/allshoppings/log/CinepolisUpdateDashboards.log
+
+# MundoE
+0 3 * * * /usr/local/allshoppings/bin/mundoe.sh > /usr/local/allshoppings/log/mundoe.log 2>> /usr/local/allshoppings/log/mundoe.log

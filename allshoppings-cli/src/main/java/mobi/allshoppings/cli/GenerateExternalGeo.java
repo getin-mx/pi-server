@@ -18,13 +18,14 @@ import mobi.allshoppings.exporter.ExternalGeoImporter;
 public class GenerateExternalGeo extends AbstractCLI {
 
 	private static final Logger log = Logger.getLogger(GenerateExternalGeo.class.getName());
+	private static final String ENTITY_IDS_PARAM = "entityIds";
+	private static final String ENTITY_KIND_PARAM = "entityKind";
 	
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
 		else parser = base;
-		parser.accepts( "entityIds", "Comma separated list of Entity Id" ).withRequiredArg().ofType( String.class );
-		parser.accepts( "entityKind", "Entity Kind" ).withRequiredArg().ofType( Integer.class );
-		parser.accepts( "outDir", "Output Directory (for example, /tmp/dump)").withRequiredArg().ofType( String.class );
+		parser.accepts(ENTITY_IDS_PARAM, "Comma separated list of Entity Id" ).withRequiredArg().ofType( String.class );
+		parser.accepts(ENTITY_KIND_PARAM, "Entity Kind" ).withRequiredArg().ofType( Integer.class );
 		return parser;
 	}
 
@@ -41,21 +42,21 @@ public class GenerateExternalGeo extends AbstractCLI {
 
 			String sEntityIds = null;
 			Integer entityKind = null;
-			String outDir = null;
 			List<String> entityIds = CollectionFactory.createList();
 			
 			try {
 				if( options.has("help")) usage(parser);
+				if(!options.has(ENTITY_IDS_PARAM))
+					throw ASExceptionHelper.defaultException("No data source given: Entity IDs "
+							+ " are required (at least one)", null);
+				if(!options.has(ENTITY_KIND_PARAM))
+					throw ASExceptionHelper.defaultException("A entity kind is needed; it should resonate "
+							+ "with the entity IDs", null);
 
 				sEntityIds = (String)options.valueOf("entityIds");
-				if(sEntityIds != null) {
-					String parts[] = sEntityIds.split(",");
-					for(int i = 0; i < parts.length; i++) {
-						entityIds.add(parts[i].trim());
-					}
-				}
+				String parts[] = sEntityIds.split(",");
+				for(int i = 0; i < parts.length; i++) entityIds.add(parts[i].trim());
 				entityKind = (Integer)options.valueOf("entityKind");
-				outDir = (String)options.valueOf("outDir");
 				
 			} catch( Exception e ) {
 				usage(parser);
@@ -63,7 +64,7 @@ public class GenerateExternalGeo extends AbstractCLI {
 			}
 			
 			log.log(Level.INFO, "Updating External Geo with GPS References...");
-			importer.importFromGpsRecords(entityIds, entityKind, outDir);
+			importer.importFromGpsRecords(entityIds, entityKind);
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

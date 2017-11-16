@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import mobi.allshoppings.bz.RequestCouponBzService;
@@ -40,6 +41,7 @@ implements RequestCouponBzService {
 	@Autowired
 	private CampaignActionDAO csDao;
 	
+	@SuppressWarnings("unused")
 	@Override
 	public String post(final JsonRepresentation entity) {
 		long start = markStart();
@@ -57,7 +59,41 @@ implements RequestCouponBzService {
 			@SuppressWarnings("unused")
 			boolean test = obj.has("test") ? obj.getBoolean("test") : false;
 
-			{ // Generic coupon implementation 
+			if(!StringUtils.hasText(campaignActionId) || campaignActionId.equals("1430288511084")) {	// cine
+
+//				SendMovieTicketsService service = new SendMovieTicketsService();
+//				service.doProcess(
+//						new Date(),
+//						86400000, /* 24 hours */
+//						systemConfiguration.getExternalActivityTriggerURL() + "?authToken="
+//						+ this.getParameters().get("authToken"),
+//						600000 /* 10 minutes */, devices, devices, false,
+//						Arrays.asList(new String[] { "cinepolis_mx_339" }), true,
+//						test, null, true, false);
+
+			} else if( campaignActionId.equalsIgnoreCase("1432724594627")) {	// crepa
+
+//				SendPromoTicketsService service = new SendPromoTicketsService();
+//				service.doProcess(
+//						new Date(),
+//						systemConfiguration.getExternalActivityTriggerURL() + "?authToken="
+//								+ this.getParameters().get("authToken"),
+//								3600000 /* 1 hour */,
+//								devices, devices, Arrays.asList(new String[] { "cinepolis_mx_339" }), 
+//								test, true, "1432724594627", true, false);
+
+			} else if( campaignActionId.equalsIgnoreCase("1432724531038")) {	// bagui
+
+//				SendPromoTicketsService service = new SendPromoTicketsService();
+//				service.doProcess(
+//						new Date(),
+//						systemConfiguration.getExternalActivityTriggerURL() + "?authToken=" 
+//								+ this.getParameters().get("authToken"),
+//								3600000 /* 1 hour */,
+//								devices, devices, Arrays.asList(new String[] { "cinepolis_mx_339" }), 
+//								test, true, "1432724531038", true, false);
+
+			} else { // Generic coupon implementation 
 
 				RestTemplate restTemplate = new RestTemplate();
 				HttpMessageConverter<?> formHttpMessageConverter = new MappingJackson2HttpMessageConverter();

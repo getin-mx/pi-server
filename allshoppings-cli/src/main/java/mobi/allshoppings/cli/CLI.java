@@ -48,7 +48,6 @@ public class CLI {
 		} else {
 			className = args[0];
 		}
-
 		List<String> newArgList = new ArrayList<String>();
 		for( int i = 1; i < args.length; i++ ) {
 			newArgList.add(args[i]);

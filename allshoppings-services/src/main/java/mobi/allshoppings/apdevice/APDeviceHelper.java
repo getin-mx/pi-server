@@ -12,7 +12,7 @@ public interface APDeviceHelper {
 
 	void updateDeviceData(String identifier, String description, boolean enableAlerts, List<String> alertMails) throws ASException;
 	void reportDownDevices() throws ASException;
-	void calculateUptimeFromDump(String baseDir, Date fromDate, Date toDate, List<String> apdevices) throws ASException;
+	void calculateUptime(Date fromDate, Date toDate, List<String> apdevices) throws ASException;
 
 	// Utilities
 	void updateAPDeviceInfo(String identifier) throws ASException;
@@ -27,7 +27,6 @@ public interface APDeviceHelper {
 	APDevice geoIp(APDevice apd) throws ASException;
 	void updateAssignationsUsingAPDevice(String hostname) throws ASException;
 	void unassignUsingAPDevice(String hostname) throws ASException;
-	void importRecordsFromFileSystem(String dir, String backupDir, Date fakeDeviationStartDate) throws ASException;
 	
 	// Mac Addresses Utilites
 	String getDevicePlatform(String mac, Map<String, MacVendor> cache);

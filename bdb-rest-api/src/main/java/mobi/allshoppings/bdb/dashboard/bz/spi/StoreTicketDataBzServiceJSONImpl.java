@@ -96,8 +96,9 @@ implements BDBDashboardBzService, BDBPostBzService {
 			Date limitDate = sdf.parse(toDate);
 			JSONArray jsonArray = new JSONArray();
 			JSONArray dateArray = new JSONArray();
+			String parsedDate;
 			while( curDate.before(limitDate) || curDate.equals(limitDate) ) {
-				String parsedDate = sdf.format(curDate);
+				parsedDate = sdf.format(curDate);
 				dateArray.put(parsedDate);
 				StoreTicket obj = tmp.get(parsedDate);
 				if( obj == null ) {

@@ -8,11 +8,14 @@ import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.bz.TestTicketBzService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.SystemConfiguration;
 
 
 /**
@@ -24,6 +27,10 @@ implements TestTicketBzService {
 
 	private static final Logger log = Logger.getLogger(TestTicketBzServiceJSONImpl.class.getName());
 
+	@SuppressWarnings("unused")
+	@Autowired
+	private SystemConfiguration systemConfiguration;
+	
 	@Override
 	public String post(final JsonRepresentation entity) {
 		long start = markStart();
@@ -41,6 +48,41 @@ implements TestTicketBzService {
 			@SuppressWarnings("unused")
 			String campaignActionId = obj.has("campaignOfferId") ? obj.getString("campaignOfferId") : null;
 
+			if(!StringUtils.hasText(campaignActionId) || campaignActionId.equals("1430288511084")) {	// cine
+
+//				SendMovieTicketsService service = new SendMovieTicketsService();
+//				service.doProcess(
+//						new Date(),
+//						86400000, /* 24 hours */
+//						systemConfiguration.getExternalActivityTriggerURL() + "?authToken="
+//						+ "2A2C192578F597CEE6BC3EE8A26B9F7DB0DBA4B0CD8930FDC3D2BB0E7D1B8CC9",
+//						600000 /* 10 minutes */, devices, devices, false,
+//						Arrays.asList(new String[] { "cinepolis_mx_339" }), true,
+//						true, null, true, false);
+
+			} else if( campaignActionId.equalsIgnoreCase("1432724594627")) {	// crepa
+
+//				SendPromoTicketsService service = new SendPromoTicketsService();
+//				service.doProcess(
+//						new Date(),
+//						systemConfiguration.getExternalActivityTriggerURL() + "?authToken="
+//								+ "2A2C192578F597CEE6BC3EE8A26B9F7DB0DBA4B0CD8930FDC3D2BB0E7D1B8CC9",
+//								3600000 /* 1 hour */,
+//								devices, devices, Arrays.asList(new String[] { "cinepolis_mx_339" }), 
+//								true, true, "1432724594627", true, false);
+
+			} else if( campaignActionId.equalsIgnoreCase("1432724531038")) {	// bagui
+
+//				SendPromoTicketsService service = new SendPromoTicketsService();
+//				service.doProcess(
+//						new Date(),
+//						systemConfiguration.getExternalActivityTriggerURL() + "?authToken="
+//								+ "2A2C192578F597CEE6BC3EE8A26B9F7DB0DBA4B0CD8930FDC3D2BB0E7D1B8CC9",
+//								3600000 /* 1 hour */,
+//								devices, devices, Arrays.asList(new String[] { "cinepolis_mx_339" }), 
+//								true, true, "1432724531038", true, false);
+
+			}
 			
 			// finally returns the result
 			return generateJSONOkResponse().toString();

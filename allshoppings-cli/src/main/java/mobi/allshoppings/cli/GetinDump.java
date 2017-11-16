@@ -843,17 +843,6 @@ public class GetinDump extends AbstractCLI {
 			}
 			
 			try {
-				
-				brand = brandDao.get("juguetron_mx", true);
-			} catch( Exception e ) {
-				brand = new Brand();
-				brand.setName("Juguetron");
-				brand.setCountry("Mexico");
-				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "juguetron_mx"));
-				brandDao.create(brand);
-			}
-			
-			try {
 				brand = brandDao.get("moda_holding_mx", true);
 			} catch( Exception e ) {
 				brand = new Brand();
@@ -945,6 +934,8 @@ public class GetinDump extends AbstractCLI {
 			
 			try {
 				brand = brandDao.get("fraiche_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED); 
+		        brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Fraiche");
@@ -956,6 +947,8 @@ public class GetinDump extends AbstractCLI {
 			
 			try {
 				brand = brandDao.get("brunocorza_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED); 
+		        brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Bruno Corza");
@@ -1126,8 +1119,8 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("364", "Modatelas Ermita II", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("365", "Modatelas Iztapalapa", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("366", "Modatelas Zaragoza", "modatelas_mx", null, GetinDump.MALL));
-			stores.add(new StoreAdapter("367", "Modatelas Coacalco III", "modatelas_mx", null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("368", "Modatelas Coacalco II", "modatelas_mx", null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("367", "Modatelas Coacalco II", "modatelas_mx", null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("368", "Modatelas Coacalco III", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("369", "La Taberna Del León Loreto", "latabernadelleon_mx", null, 0));
 			stores.add(new StoreAdapter("370", "Demo4 Santa Fe", "demo4_mx", null, 0));
 			stores.add(new StoreAdapter("371", "Demo4 Coacalco", "demo4_mx", null, 0));
@@ -1548,7 +1541,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("731", "Aditivo Franquicia Plaza Central", "aditivo_franquicias_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("732", "Aditivo Franquicia Cuernavaca", "aditivo_franquicias_mx",null, GetinDump.MALL));
 			
-			stores.add(new StoreAdapter("733", "Sally Beauty Galerias Insurgentes", "sallybeauty_mx",null, GetinDump.MALL));
+			stores.add(new StoreAdapter("733", "Sally Beauty Plaza Insurgentes", "sallybeauty_mx",null, GetinDump.MALL));
 			
 			stores.add(new StoreAdapter("734", "Sportium Santa Fe II", "getin_mx",null, 0));
 //			stores.add(new StoreAdapter("735", "Sportium Patio Santa Fe", "sportium_mx",null, 0));
@@ -1643,21 +1636,6 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("799","Opticas Devlyn Cervantes Saavedra", "devlyn_mx", null, 0));
 			
-			stores.add(new StoreAdapter("800","Juguetron Santa Fe", "juguetron_mx", null, GetinDump.MALL));
-			stores.add(new StoreAdapter("801","Juguetron Puebla", "juguetron_mx", null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("802","Juguetron Guadalajara", "juguetron_mx", null, GetinDump.MALL));
-			
-			stores.add(new StoreAdapter("803", "Vicky Form Vallejo I", "vickyform_mx", null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("804", "Vicky Form Tlalnepantla I", "vickyform_mx", null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("805", "Vicky Form Taxqueña", "vickyform_mx", null, GetinDump.FOOT_STREET));
-
-			stores.add(new StoreAdapter("806","Sally Beauty Patio La Raza", "sallybeauty_mx",null, GetinDump.FOOT_STREET));
-			
-			stores.add(new StoreAdapter("807", "Grupo Pavel Johnston & Murphy Plaza Carso", "grupopavel_mx", null, GetinDump.MALL));
-			stores.add(new StoreAdapter("808", "Grupo Pavel Johnston & Murphy Antara", "grupopavel_mx", null, GetinDump.MALL));
-
-			
-			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				log.log(Level.INFO, "Processing store" + obj.getName());
@@ -1666,7 +1644,7 @@ public class GetinDump extends AbstractCLI {
 					store.setName(obj.getName());
 					store.setStoreKind(obj.getStoreKind());
 					storeDao.update(store);
-					log.log(Level.INFO, "Se ha modificado la tienda "+obj.getName());
+					log.log(Level.INFO, "Se ha modificado la tienta "+obj.getName());
 				} catch( Exception e ) {
 					shopping = obj.getShoppingId() == null ? null : shoppingDao.get(obj.getShoppingId(), true);
 					brand = brandDao.get(obj.getBrandId(), true);

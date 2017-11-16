@@ -17,13 +17,13 @@ import mobi.allshoppings.location.CheckinUpdaterService;
 public class UpdateCheckins extends AbstractCLI {
 
 	private static final Logger log = Logger.getLogger(UpdateCheckins.class.getName());
+	private static final int TWENTY_FIVE_HOURS = 90000000;
 	
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
 		else parser = base;
 		parser.accepts( "fromDate", "Date From" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "toDate", "Date To" ).withRequiredArg().ofType( String.class );
-		parser.accepts( "outDir", "Output Directory (for example, /tmp/dump)").withRequiredArg().ofType( String.class );
 		return parser;
 	}
 
@@ -38,17 +38,15 @@ public class UpdateCheckins extends AbstractCLI {
 			String sToDate = null;
 			Date fromDate = null;
 			Date toDate = null;
-			String sOutDir = null;
 			
 			try {
-				if( options.has("fromDate")) sFromDate = (String)options.valueOf("fromDate");
+				if( options.has("fromDate")) sFromDate =
+						(String)options.valueOf("fromDate");
 				if( options.has("toDate")) sToDate = (String)options.valueOf("toDate");
 				
-				if( StringUtils.hasText(sFromDate)) {
-					fromDate = sdf.parse(sFromDate);
-				} else {
-					fromDate = sdf.parse(sdf.format(new Date(new Date().getTime() - 90000000 /* 25 hours */)));
-				}
+				if( StringUtils.hasText(sFromDate)) fromDate = sdf.parse(sFromDate);
+				else fromDate = sdf.parse(sdf.format(new Date(System.currentTimeMillis()
+						-TWENTY_FIVE_HOURS)));
 				
 				if( StringUtils.hasText(sToDate)) {
 					toDate = sdf.parse(sToDate);
@@ -56,9 +54,6 @@ public class UpdateCheckins extends AbstractCLI {
 					toDate = new Date();
 				}
 				
-				if( options.has("outDir")) sOutDir = (String)options.valueOf("outDir");
-				else usage(parser);
-
 			} catch( Exception e ) {
 				e.printStackTrace();
 				usage(parser);
@@ -66,7 +61,7 @@ public class UpdateCheckins extends AbstractCLI {
 
 			log.log(Level.INFO, "Updating Checkin from " + fromDate + " to " + toDate);
 			CheckinUpdaterService service = new CheckinUpdaterService();
-			service.updateCheckins(sOutDir, fromDate, toDate);
+			service.updateCheckins(fromDate, toDate);
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

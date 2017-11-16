@@ -16,11 +16,6 @@
 	<name>Datanucleus GAE Mappings</name>
 	<url>http://www.inodes-it.com</url>
 
-	<scm>
-		<url>http://development.inodes-it.com/svn/repos/mobi.allshoppings/com.inodes.datanucleus-gae-mappingsy/trunk</url>
-		<connection>scm:svn:http://development.inodes-it.com/svn/repos/mobi.allshoppings/com.inodes.datanucleus-gae-mappings/trunk</connection>
-	</scm>
-
 	<licenses>
 		<license>
 			<name>Apache 2</name>
@@ -61,16 +56,19 @@
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-core</artifactId>
 			<version>[3.2.0, 3.2.99)</version>
+			<!--version>4.0.1</version-->
 		</dependency>
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-rdbms</artifactId>
 			<version>[3.2.0, 3.2.99)</version>
+			<!--version>4.0.1</version-->
 		</dependency>
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-api-jdo</artifactId>
 			<version>[3.2.0, 3.2.99)</version>
+			<!--version>4.0.1</version-->
 		</dependency>
 		<dependency>
 			<groupId>javax.jdo</groupId>

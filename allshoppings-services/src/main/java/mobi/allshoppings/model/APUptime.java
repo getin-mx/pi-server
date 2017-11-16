@@ -88,8 +88,8 @@ public class APUptime implements ModelKey, Serializable, Identificable {
 	 * @return The internal record key
 	 */
 	public static String getRecordKey(Date date) {
-		long d = ((long)(date.getTime() / SEPARATOR)) * SEPARATOR;
-		return t.format(new Date(d));
+		//long d = ((long)(date.getTime() / SEPARATOR)) * SEPARATOR;
+		return t.format(date);
 	}
 	
 	/**

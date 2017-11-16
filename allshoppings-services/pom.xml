@@ -15,11 +15,6 @@
 	<name>AllShoppings Common Services</name>
 	<url>http://www.allshoppings.mobi</url>
 
-	<scm>
-		<url>http://development.inodes-it.com/svn/repos/mobi.allshoppings/cinepolis-services/trunk</url>
-		<connection>scm:svn:http://development.inodes-it.com/svn/repos/mobi.allshoppings/cinepolis-services/trunk</connection>
-	</scm>
-
 	<licenses>
 		<license>
 			<name>Apache 2</name>
@@ -313,6 +308,13 @@
 			<version>1.2</version>
 		</dependency>
 
+		<!-- XS3 -->
+		<dependency>
+			<groupId>mobi.allshoppings</groupId>
+			<artifactId>xs3-client-api</artifactId>
+			<version>0.1</version>
+		</dependency>
+
 		<!-- Google GCM -->
 		<dependency>
 			<groupId>mobi.allshoppings</groupId>
@@ -347,6 +349,11 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.6</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.microsoft.sqlserver</groupId>
+		    <artifactId>mssql-jdbc</artifactId>
+		    <version>6.2.1.jre7</version>
 		</dependency>
 
 		<!-- Barcode Encoder -->
@@ -431,6 +438,13 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>3.15</version>
+		</dependency>
+
+		<!-- Amazon AWS -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>1.6.12</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->

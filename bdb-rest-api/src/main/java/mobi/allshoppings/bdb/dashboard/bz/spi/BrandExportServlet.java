@@ -3,7 +3,6 @@ package mobi.allshoppings.bdb.dashboard.bz.spi;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -45,9 +45,7 @@ public class BrandExportServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		//FIXME: Check Auth Token
-
-		long start = new Date().getTime();
+		long start = System.currentTimeMillis();
 		log.log(Level.INFO, "Begining brandExport");
 		try {
 			//FIXME: URL Hardcoded
@@ -55,7 +53,7 @@ public class BrandExportServlet extends HttpServlet {
 					"http://localhost:8081/bdb/", req.getParameter("brandId"), req.getParameter("storeId"),
 					sdf.parse(req.getParameter("fromStringDate")), sdf.parse(req.getParameter("toStringDate")));
 
-			long end = new Date().getTime();
+			long end = System.currentTimeMillis();
 			log.log(Level.INFO, "BrandExport finished in " + (end-start) + "ms");
 
 			resp.setHeader("Content-Disposition", "inline; filename=\"report.xls\"");
