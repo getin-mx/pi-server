@@ -877,7 +877,7 @@ public class GetinDump extends AbstractCLI {
 				brand = brandDao.get("aditivo_franquicias_mx", true);
 			} catch( Exception e ) {
 				brand = new Brand();
-				brand.setName("Aditivo Franquicias");
+				brand.setName("Aditivo Franquicias Edmond");
 				brand.setCountry("Mexico");
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "aditivo_franquicias_mx"));
 				brandDao.create(brand);
@@ -927,7 +927,7 @@ public class GetinDump extends AbstractCLI {
 				brand = brandDao.get("aditivofranquicias2_mx", true);
 			} catch( Exception e ) {
 				brand = new Brand();
-				brand.setName("Aditivo Franquicias 2");
+				brand.setName("Aditivo Franquicias Celia");
 				brand.setCountry("Mexico");
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "aditivofranquicias2_mx"));
 				brandDao.create(brand);
