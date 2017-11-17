@@ -1538,6 +1538,28 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("799","Opticas Devlyn Cervantes Saavedra", "devlyn_mx", null, 0));
 			
+			stores.add(new StoreAdapter("800","Juguetron Santa Fe", "juguetron_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("801","Juguetron Puebla", "juguetron_mx", null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("802","Juguetron Guadalajara", "juguetron_mx", null, GetinDump.MALL));
+			
+			stores.add(new StoreAdapter("803", "Vicky Form Vallejo I", "vickyform_mx", null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("804", "Vicky Form Tlalnepantla I", "vickyform_mx", null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("805", "Vicky Form Taxqueña", "vickyform_mx", null, GetinDump.FOOT_STREET));
+
+			stores.add(new StoreAdapter("806","Sally Beauty Patio La Raza", "sallybeauty_mx",null, GetinDump.FOOT_STREET));
+			
+			stores.add(new StoreAdapter("807", "Grupo Pavel Johnston & Murphy Plaza Carso", "grupopavel_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("808", "Grupo Pavel Johnston & Murphy Antara", "grupopavel_mx", null, GetinDump.MALL));
+
+			stores.add(new StoreAdapter("809", "Modatelas San Vicente Chicoloapan", "modatelas_mx", null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("810", "Modatelas San Martin Texmelucan", "modatelas_mx", null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("811", "Modatelas Coatepec", "modatelas_mx", null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("812", "Modatelas Palenque - Chiapas", "modatelas_mx", null, GetinDump.FOOT_STREET));
+			
+			stores.add(new StoreAdapter("813", "MT Sport S12 Puebla Centro 2", "mt_sport_mx",null, GetinDump.FOOT_STREET));
+			
+			stores.add(new StoreAdapter("814", "Universo de Fragancias Vallejo", "universodefragancias_mx", null, GetinDump.MALL));
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				log.log(Level.INFO, "Processing store" + obj.getName());
