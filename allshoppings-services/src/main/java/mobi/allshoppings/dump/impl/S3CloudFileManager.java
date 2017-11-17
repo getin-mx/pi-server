@@ -358,7 +358,7 @@ public class S3CloudFileManager implements CloudFileManager {
 			connect();
 		
 		boolean done = false;
-		int retriesLeft = 15;
+		int retriesLeft = 4;
 		
 		while( !done ) {
 			try {
@@ -387,10 +387,10 @@ public class S3CloudFileManager implements CloudFileManager {
 
 		File file = new File(tmpPath + fileName);
 		log.log(Level.FINE, "Downloading object " + objectKey + " into " + file.getAbsolutePath());
-		long start = new Date().getTime();
+		long start = System.currentTimeMillis();
 
 		boolean done = false;
-		int retriesLeft = 15;
+		int retriesLeft = 4;
 		
 		while(!done) {
 			try {
