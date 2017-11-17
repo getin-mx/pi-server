@@ -45,7 +45,7 @@ public class ProcessUtilsImpl implements ProcessUtils {
 		if( process.getProcessType().equals(Process.PROCESS_TYPE_GENERATE_VISITS)) {
 			sb.append("/usr/local/allshoppings/bin/aspi2 GenerateAPDVisits "
 					+ "--datastore /usr/local/allshoppings/etc/datastore.nocache.properties "
-					+ "--updateDashboards true --onlyDashboards false"
+					+ "--updateDashboards true --onlyDashboards false "
 					+ "--deletePreviousRecords true --storeIds ")
 			.append(process.getEntityId())
 			.append(" --fromDate ")

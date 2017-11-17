@@ -102,8 +102,6 @@ implements BDBTimelineHourBzService {
 			if(!CollectionUtils.isEmpty(orderList)) {
 				for( String order : orderList ) {
 					try {
-						if(order.contains("ios") || order.contains("android"))
-							continue;
 						DashboardIndicatorAlias alias = diAliasDao.getUsingFilters(entityId, entityKind, elementId, order);
 						aliasMap.put(order, alias.getElementSubName());
 					} catch( ASException e ) {
