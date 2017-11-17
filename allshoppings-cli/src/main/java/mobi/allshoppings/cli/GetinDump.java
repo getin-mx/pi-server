@@ -1663,8 +1663,15 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("813", "MT Sport S12 Puebla Centro 2", "mt_sport_mx",null, GetinDump.FOOT_STREET));
 			
-			stores.add(new StoreAdapter("814", "Universo de Fragancias Vallejo", "universodefragancias_mx", null, GetinDump.MALL));			
+			stores.add(new StoreAdapter("814", "Universo de Fragancias Vallejo", "universodefragancias_mx", null, GetinDump.MALL));
+			
+			stores.add(new StoreAdapter("815", "Aditivo Franquicias Edmond Xalapa Centro", "aditivo_franquicias_mx",null, GetinDump.MALL));
+			
+			stores.add(new StoreAdapter("816", "Aditivo Franquicias Edmond Xalapa2", "aditivo_franquicias_mx",null, GetinDump.MALL));
 
+			stores.add(new StoreAdapter("817","Juguetron Galerías Serdán", "juguetron_mx", null, GetinDump.MALL));
+			
+			stores.add(new StoreAdapter("818","Juguetron Parque Puebla", "juguetron_mx", null, GetinDump.MALL));
 			
 			
 			Store store;
