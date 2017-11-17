@@ -44,6 +44,8 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 	private Boolean hidePermanence;
 	private Boolean approved;
 	private String apheSource;
+	private String forDate;
+	private Long duration;
 	
 	private Integer totalSegments;
 	private Integer inRangeSegments;
@@ -55,6 +57,7 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 		checkinType = CHECKIN_AUTO;
 		hidePermanence = false;
 		approved = true;
+		duration = 0L; 
 	}
 	
 	/**
@@ -292,12 +295,26 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 	public void setApproved(Boolean approved) {
 		this.approved = approved;
 	}
-
+	
 	/**
 	 * @return the totalSegments
 	 */
 	public Integer getTotalSegments() {
 		return totalSegments;
+	}
+
+	/**
+	 * @return the forDate
+	 */
+	public String getForDate() {
+		return forDate;
+	}
+
+	/**
+	 * @param forDate the forDate to set
+	 */
+	public void setForDate(String forDate) {
+		this.forDate = forDate;
 	}
 
 	/**
@@ -319,6 +336,20 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 	 */
 	public void setInRangeSegments(Integer inRangeSegments) {
 		this.inRangeSegments = inRangeSegments;
+	}
+
+	/**
+	 * @return the duration
+	 */
+	public Long getDuration() {
+		return duration;
+	}
+
+	/**
+	 * @param duration the duration to set
+	 */
+	public void setDuration(Long duration) {
+		this.duration = duration;
 	}
 
 	public void addInRangeSegment() {

@@ -47,7 +47,16 @@ public class TouchBrands extends AbstractCLI {
 					try {
 						imageDao.get(obj.getAvatarId(), true);
 					} catch( Exception e ) {
-						downloader.downloadImage(obj.getAvatarId(), "http://allshoppings1.appspot.com/img/" + obj.getAvatarId(), null, 0,0,0,0);
+						try {
+							downloader.downloadImage(obj.getAvatarId(),
+									"http://allshoppings1.appspot.com/img/"
+											+obj.getAvatarId(), null, 0,0,0,0);
+						} catch(Exception e1) {
+							log.log(Level.WARN, "Could not retreive brand image from: "
+									+"http://allshoppings1.appspot.com/img/"
+									+obj.getAvatarId(), e1);
+							continue;
+						}
 					}
 				}
 				brandDao.update(obj);

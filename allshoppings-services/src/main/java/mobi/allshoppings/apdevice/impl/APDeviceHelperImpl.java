@@ -12,13 +12,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,7 +30,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import com.google.common.io.Files;
 import com.ibm.icu.util.Calendar;
 import com.inodes.datanucleus.model.Blob;
 import com.inodes.datanucleus.model.Email;
@@ -44,22 +42,19 @@ import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
-import mobi.allshoppings.dao.APHEntryDAO;
-import mobi.allshoppings.dao.APHotspotDAO;
 import mobi.allshoppings.dao.APUptimeDAO;
 import mobi.allshoppings.dao.InnerZoneDAO;
 import mobi.allshoppings.dao.MacVendorDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dump.DumperHelper;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.mail.MailHelper;
 import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHEntry;
-import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.APUptime;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.InnerZone;
@@ -81,7 +76,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	public static final long TEN_MINUTES = 10 * 60 * 1000;
 	public static final long THIRTY_MINUTES = 30 * 60 * 1000;
 	public static final long ONE_DAY = 24 * 60 * 60 * 1000;
-	
+
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
 
@@ -108,13 +103,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	@Autowired
 	private IndexHelper indexHelper;
 	@Autowired
-	private APHotspotDAO aphDao;
-	@Autowired
 	private APHHelper aphHelper;
-	@Autowired
-	private APHEntryDAO apheDao;
-	
-	private DumperHelper<APHotspot> dumpHelper;
 
 	@Override
 	public void updateMacVendors(String filename) throws ASException {
@@ -129,7 +118,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 
 		// Writes the new list
 		log.log(Level.INFO, "Writing " + list.size() + " new elements");
-		for( MacVendor obj : list ) {
+		for (MacVendor obj : list) {
 			obj.setKey(mvDao.createKey(obj.getMac()));
 			mvDao.create(obj);
 		}
@@ -144,37 +133,42 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		if (mac.length() < 8)
 			return "generic";
 
-		if( systemConfiguration.getAppleMacs().contains(mac.substring(0, 8)))
+		if (systemConfiguration.getAppleMacs().contains(mac.substring(0, 8)))
 			return "iOS";
 
 		return "Android";
 	}
-	
+
 	@Override
 	public List<MacVendor> macVendorFileParser(String filename, String outfile) throws ASException {
 
 		List<MacVendor> ret = CollectionFactory.createList();
-		
+
 		try {
 			BufferedReader br = null;
-			
+
 			// Opens the file according to the source
-			// The file is based on the one found at https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=manuf
-			
-			if( filename.toLowerCase().startsWith("http://") || filename.toLowerCase().startsWith("https://")) {
+			// The file is based on the one found at
+			// https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=manuf
+
+			if (filename.toLowerCase().startsWith("http://") || filename.toLowerCase().startsWith("https://")) {
 				URL url = new URL(filename);
-			    byte[] bContents = null;
-			    int count = 5;
-			    while(( bContents == null || bContents.length == 0 ) && count > 0 ) {
-			    	if( count < 5 ) try {Thread.sleep(500);}catch(Exception e1){}
-			    	bContents = IOUtils.toByteArray(url.openStream());
-			    	count--;
-			    }
-			    br = new BufferedReader(new StringReader(new String(bContents)));
-			    
+				byte[] bContents = null;
+				int count = 5;
+				while ((bContents == null || bContents.length == 0) && count > 0) {
+					if (count < 5)
+						try {
+							Thread.sleep(500);
+						} catch (Exception e1) {
+						}
+					bContents = IOUtils.toByteArray(url.openStream());
+					count--;
+				}
+				br = new BufferedReader(new StringReader(new String(bContents)));
+
 			} else {
 				File f = new File(filename);
-				if( f.exists() && f.canRead()) {
+				if (f.exists() && f.canRead()) {
 					br = new BufferedReader(new FileReader(f));
 				}
 			}
@@ -182,97 +176,107 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			// Prepares the output
 			File out = null;
 			FileOutputStream fos = null;
-			if( StringUtils.hasText(outfile)) {
+			if (StringUtils.hasText(outfile)) {
 				out = new File(outfile);
 				fos = new FileOutputStream(out);
 			}
-			
+
 			// Scans the file
-			for(String line; (line = br.readLine()) != null; ) {
+			for (String line; (line = br.readLine()) != null;) {
 				try {
 					MacVendor element = parseMacVendorElement(line);
-					if( element != null ) {
-						
+					if (element != null) {
+
 						ret.add(element);
-						
-						if( fos != null )
-							fos.write(
-									("\"" + element.getMac() + "\"," 
-									+ "\"" + element.getCode() + "\"," 
-									+ "\"" + element.getComments() + "\"\n").getBytes());
-						else 
+
+						if (fos != null)
+							fos.write(("\"" + element.getMac() + "\"," + "\"" + element.getCode() + "\"," + "\""
+									+ element.getComments() + "\"\n").getBytes());
+						else
 							System.out.println(element.toString());
 					}
-				} catch( Exception e ) {
+				} catch (Exception e) {
 					log.log(Level.SEVERE, e.getMessage(), e);
 				}
 			}
-			
+
 			// Closes open resources
 			br.close();
-			if( fos != null ) fos.close();
+			if (fos != null)
+				fos.close();
 
 			// Returns the result
 			return ret;
-			
-		} catch( Exception e ) {
+
+		} catch (Exception e) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
 	}
 
 	private MacVendor parseMacVendorElement(String buffer) {
-		
+
 		// Initial validations
-		if( buffer == null ) return null;
+		if (buffer == null)
+			return null;
 		String myBuffer = buffer.trim();
-		if( !StringUtils.hasText(myBuffer)) return null;
-		if( myBuffer.startsWith("#")) return null;
-		if( myBuffer.startsWith(";")) return null;
-		if( myBuffer.startsWith("\n")) return null;
-		if( myBuffer.startsWith("\r")) return null;
+		if (!StringUtils.hasText(myBuffer))
+			return null;
+		if (myBuffer.startsWith("#"))
+			return null;
+		if (myBuffer.startsWith(";"))
+			return null;
+		if (myBuffer.startsWith("\n"))
+			return null;
+		if (myBuffer.startsWith("\r"))
+			return null;
 
 		// Defines the required fields
 		String mac = "";
 		String code = "";
 		String comments = "";
-		
+
 		// Starts to Separate the contents in the format:
 		// MAC \t Code \b # Comments
-		
+
 		// Starts trying to get comments
 		String[] parts = myBuffer.split("#");
-		if( parts.length > 1 ) comments = parts[1].trim().replaceAll("\t", " ");
-		
+		if (parts.length > 1)
+			comments = parts[1].trim().replaceAll("\t", " ");
+
 		// Now divides mac from code
 		parts = parts[0].split("\t");
-		if( parts.length < 2) return null;
-		
+		if (parts.length < 2)
+			return null;
+
 		mac = parts[0].trim();
 		code = parts[1].trim();
-		
+
 		// Final validation
-		if( mac.contains("/")) return null;
-		if( !StringUtils.hasText(code)) return null;
+		if (mac.contains("/"))
+			return null;
+		if (!StringUtils.hasText(code))
+			return null;
 
 		mac = mac.toLowerCase();
 		mac = mac.replace("-", ":");
-		
+
 		// Prints the result
 		MacVendor res = new MacVendor(mac, code, comments);
-		
+
 		return res;
 	}
-		
+
 	@Override
-	public void updateDeviceData(String identifier, String description, boolean enableAlerts, List<String> alertMails) throws ASException {
+	public void updateDeviceData(String identifier, String description, boolean enableAlerts, List<String> alertMails)
+			throws ASException {
 
 		APDevice device = null;
 		boolean forUpdate = true;
 
 		try {
 			device = dao.get(identifier, true);
-		} catch( ASException e ) {
-			if( e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE ) {
+		} catch (ASException e) {
+			if (e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE) {
 				device = new APDevice();
 				device.setHostname(identifier);
 				device.setKey(dao.createKey(identifier));
@@ -282,15 +286,15 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		device.setDescription(description);
 		device.setReportable(enableAlerts);
 		device.setStatus(StatusAware.STATUS_ENABLED);
-		if( enableAlerts ) {
-			if( device.getReportMailList() == null )
+		if (enableAlerts) {
+			if (device.getReportMailList() == null)
 				device.setReportMailList(new ArrayList<String>());
 			device.getReportMailList().clear();
 			device.getReportMailList().addAll(alertMails);
 			device.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
 		}
 
-		if( forUpdate )
+		if (forUpdate)
 			dao.update(device);
 		else
 			dao.create(device);
@@ -298,8 +302,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	}
 
 	/**
-	 * Sanitizes the mail list according to the antenna mail list plus the
-	 * system configuration general mail list
+	 * Sanitizes the mail list according to the antenna mail list plus the system
+	 * configuration general mail list
 	 * 
 	 * @param device
 	 *            The device to sanitize the mail list for
@@ -308,15 +312,15 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	private List<String> sanitizeMailList(APDevice device) {
 
 		List<String> reportableUsers = CollectionFactory.createList();
-		for( String mail : device.getReportMailList()) {
+		for (String mail : device.getReportMailList()) {
 			String sMail = mail.trim().toLowerCase();
-			if(!reportableUsers.contains(sMail))
+			if (!reportableUsers.contains(sMail))
 				reportableUsers.add(sMail);
 		}
-		
-		for( String mail : systemConfiguration.getApdReportMailList()) {
+
+		for (String mail : systemConfiguration.getApdReportMailList()) {
 			String sMail = mail.trim().toLowerCase();
-			if(!reportableUsers.contains(sMail)) 
+			if (!reportableUsers.contains(sMail))
 				reportableUsers.add(sMail);
 		}
 
@@ -326,36 +330,37 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	@Override
 	public void reportDownDevices() throws ASException {
 
-		Date limitDate = new Date(new Date().getTime() - THIRTY_MINUTES);
+		Date limitDate = new Date(System.currentTimeMillis() - THIRTY_MINUTES);
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-		
+
 		List<APDevice> list = dao.getAll(true);
-		for( APDevice device : list ) {
+		for (APDevice device : list) {
 
 			// First, check is the device needs report
-			if( device.getLastRecordDate() != null && device.getLastRecordDate().before(limitDate)) {
-				if( device.getStatus() == null ) device.setStatus(StatusAware.STATUS_ENABLED);
-				if( device.getReportStatus() == null ) device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
-				if(device.getReportable() != null && device.getReportable()) {
-					if( device.getStatus().equals(StatusAware.STATUS_ENABLED) && device.getReportStatus().equals(APDevice.REPORT_STATUS_NOT_REPORTED)) {
+			if (device.getLastRecordDate() != null && device.getLastRecordDate().before(limitDate)) {
+				if (device.getStatus() == null)
+					device.setStatus(StatusAware.STATUS_ENABLED);
+				if (device.getReportStatus() == null)
+					device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
+				if (device.getReportable() != null && device.getReportable()) {
+					if (device.getStatus().equals(StatusAware.STATUS_ENABLED)
+							&& device.getReportStatus().equals(APDevice.REPORT_STATUS_NOT_REPORTED)) {
 
-						if( onReportTime(device)) {
-						
-							String mailText = "Hola!\n\n"
-									+ "La antena de " + device.getDescription() + " se apagó desde las " 
-									+ timeFormat.format(device.getLastRecordDate()) + " hrs. Les pedimos su apoyo para volver a conectarla.\n\n" 
-									+ "Muchas gracias.\n\n"
-									+ " Atte. \n" 
-									+ "El equipo de Getin";
+						if (onReportTime(device)) {
+
+							String mailText = "Hola!\n\n" + "La antena de " + device.getDescription()
+									+ " se apagó desde las " + timeFormat.format(device.getLastRecordDate())
+									+ " hrs. Les pedimos su apoyo para volver a conectarla.\n\n" + "Muchas gracias.\n\n"
+									+ " Atte. \n" + "El equipo de Getin";
 							String mailTitle = "La antena de " + device.getDescription() + " se encuentra apagada";
 
 							List<String> reportableUsers = sanitizeMailList(device);
-							for( String mail : reportableUsers) {
+							for (String mail : reportableUsers) {
 								User fake = new User();
 								fake.setEmail(mail);
 								try {
 									mailHelper.sendMessage(fake, mailTitle, mailText);
-								} catch( Exception e ) {
+								} catch (Exception e) {
 									// If mail server rejected the message, keep going
 									log.log(Level.SEVERE, e.getMessage(), e);
 								}
@@ -367,31 +372,32 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 						}
 					}
 				}
-			} 
+			}
 
 			// Now, checks if needs to report a back to life message
 			else {
-				if(device.getReportable() != null && device.getReportable()) {
-					if( device.getStatus() == null ) device.setStatus(StatusAware.STATUS_ENABLED);
-					if( device.getReportStatus() == null ) device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
-					if( device.getStatus().equals(StatusAware.STATUS_ENABLED) && device.getReportStatus().equals(APDevice.REPORT_STATUS_REPORTED)) {
+				if (device.getReportable() != null && device.getReportable()) {
+					if (device.getStatus() == null)
+						device.setStatus(StatusAware.STATUS_ENABLED);
+					if (device.getReportStatus() == null)
+						device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
+					if (device.getStatus().equals(StatusAware.STATUS_ENABLED)
+							&& device.getReportStatus().equals(APDevice.REPORT_STATUS_REPORTED)) {
 
-						if( onReportTime(device)) {
-							String mailText = "Hola!\n\n"
-									+ "La antena de " + device.getDescription() + " volvió a conectarse a las " 
-									+ timeFormat.format(device.getLastRecordDate()) + " hrs. \n"
-									+ "Gracias por su apoyo en mantener la antena encendida.\n\n" 
-									+ " Atte. \n" 
-									+ "El equipo de Getin";
+						if (onReportTime(device)) {
+							String mailText = "Hola!\n\n" + "La antena de " + device.getDescription()
+									+ " volvió a conectarse a las " + timeFormat.format(device.getLastRecordDate())
+									+ " hrs. \n" + "Gracias por su apoyo en mantener la antena encendida.\n\n"
+									+ " Atte. \n" + "El equipo de Getin";
 							String mailTitle = "La antena de " + device.getDescription() + " volvió a conectarse!!!";
 
 							List<String> reportableUsers = sanitizeMailList(device);
-							for( String mail : reportableUsers) {
+							for (String mail : reportableUsers) {
 								User fake = new User();
 								fake.setEmail(mail);
 								try {
 									mailHelper.sendMessage(fake, mailTitle, mailText);
-								} catch( Exception e ) {
+								} catch (Exception e) {
 									// If mail server rejected the message, keep going
 									log.log(Level.SEVERE, e.getMessage(), e);
 								}
@@ -405,7 +411,6 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 				}
 			}
 
-
 		}
 	}
 
@@ -417,120 +422,128 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			Date to;
 			Date now = sdfTime.parse(sdfTime.format(new Date()));
 			Calendar cal = Calendar.getInstance();
-			
+
 			cal.setTime(new Date());
 			int dof = cal.get(Calendar.DAY_OF_WEEK);
-			switch( dof ) {
+			switch (dof) {
 			case Calendar.SUNDAY:
-				if(device.getVisitsOnSun()) {
+				if (device.getVisitsOnSun()) {
 					from = sdfTime.parse(device.getVisitStartSun());
 					from = new Date(from.getTime() + 1800000);
 					to = sdfTime.parse(device.getVisitEndSun());
 					to = new Date(to.getTime() - 1800000);
-					if(to.before(from)) to = new Date(to.getTime() + 86400000);
-					if( from.before(now) && to.after(now))
+					if (to.before(from))
+						to = new Date(to.getTime() + 86400000);
+					if (from.before(now) && to.after(now))
 						doReport = true;
 				}
 				break;
 			case Calendar.MONDAY:
-				if(device.getVisitsOnMon()) {
+				if (device.getVisitsOnMon()) {
 					from = sdfTime.parse(device.getVisitStartMon());
 					from = new Date(from.getTime() + 1800000);
 					to = sdfTime.parse(device.getVisitEndMon());
 					to = new Date(to.getTime() - 1800000);
-					if(to.before(from)) to = new Date(to.getTime() + 86400000);
-					if( from.before(now) && to.after(now))
+					if (to.before(from))
+						to = new Date(to.getTime() + 86400000);
+					if (from.before(now) && to.after(now))
 						doReport = true;
 				}
 				break;
 			case Calendar.TUESDAY:
-				if(device.getVisitsOnTue()) {
+				if (device.getVisitsOnTue()) {
 					from = sdfTime.parse(device.getVisitStartTue());
 					from = new Date(from.getTime() + 1800000);
 					to = sdfTime.parse(device.getVisitEndTue());
 					to = new Date(to.getTime() - 1800000);
-					if(to.before(from)) to = new Date(to.getTime() + 86400000);
-					if( from.before(now) && to.after(now))
+					if (to.before(from))
+						to = new Date(to.getTime() + 86400000);
+					if (from.before(now) && to.after(now))
 						doReport = true;
 				}
 				break;
 			case Calendar.WEDNESDAY:
-				if(device.getVisitsOnWed()) {
+				if (device.getVisitsOnWed()) {
 					from = sdfTime.parse(device.getVisitStartWed());
 					from = new Date(from.getTime() + 1800000);
 					to = sdfTime.parse(device.getVisitEndWed());
 					to = new Date(to.getTime() - 1800000);
-					if(to.before(from)) to = new Date(to.getTime() + 86400000);
-					if( from.before(now) && to.after(now))
+					if (to.before(from))
+						to = new Date(to.getTime() + 86400000);
+					if (from.before(now) && to.after(now))
 						doReport = true;
 				}
 				break;
 			case Calendar.THURSDAY:
-				if(device.getVisitsOnThu()) {
+				if (device.getVisitsOnThu()) {
 					from = sdfTime.parse(device.getVisitStartThu());
 					from = new Date(from.getTime() + 1800000);
 					to = sdfTime.parse(device.getVisitEndThu());
 					to = new Date(to.getTime() - 1800000);
-					if(to.before(from)) to = new Date(to.getTime() + 86400000);
-					if( from.before(now) && to.after(now))
+					if (to.before(from))
+						to = new Date(to.getTime() + 86400000);
+					if (from.before(now) && to.after(now))
 						doReport = true;
 				}
 				break;
 			case Calendar.FRIDAY:
-				if(device.getVisitsOnFri()) {
+				if (device.getVisitsOnFri()) {
 					from = sdfTime.parse(device.getVisitStartFri());
 					from = new Date(from.getTime() + 1800000);
 					to = sdfTime.parse(device.getVisitEndFri());
 					to = new Date(to.getTime() - 1800000);
-					if(to.before(from)) to = new Date(to.getTime() + 86400000);
-					if( from.before(now) && to.after(now))
+					if (to.before(from))
+						to = new Date(to.getTime() + 86400000);
+					if (from.before(now) && to.after(now))
 						doReport = true;
 				}
 				break;
 			case Calendar.SATURDAY:
-				if(device.getVisitsOnSat()) {
+				if (device.getVisitsOnSat()) {
 					from = sdfTime.parse(device.getVisitStartSat());
 					from = new Date(from.getTime() + 1800000);
 					to = sdfTime.parse(device.getVisitEndSat());
 					to = new Date(to.getTime() - 1800000);
-					if(to.before(from)) to = new Date(to.getTime() + 86400000);
-					if( from.before(now) && to.after(now))
+					if (to.before(from))
+						to = new Date(to.getTime() + 86400000);
+					if (from.before(now) && to.after(now))
 						doReport = true;
 				}
 				break;
 			}
-		} catch( Exception e ) {}
-		
+		} catch (Exception e) {
+		}
+
 		return doReport;
 	}
-	
-	public void calculateUptimeFromDump(String baseDir, Date fromDate, Date toDate, List<String> apdevices) throws ASException {
+
+	@Override
+	public void calculateUptime(Date fromDate, Date toDate, List<String> apdevices) throws ASException {
 
 		Map<String, APUptime> cache = CollectionFactory.createMap();
+		DumperHelper<APHEntry> dumpHelper;
+		boolean predefinedAPDevicesList = true;
 
 		// Populates the apdevices list if empty
-		if(CollectionUtils.isEmpty(apdevices)) {
+		if (CollectionUtils.isEmpty(apdevices)) {
+			predefinedAPDevicesList = false;
 			apdevices = CollectionFactory.createList();
 			List<APDevice> list = dao.getAll(true);
-			for( APDevice obj : list ) {
+			for (APDevice obj : list) {
 				apdevices.add(obj.getHostname());
 			}
 		}
 
 		// Prepares the basic records
+		log.log(Level.INFO, "Preparing APUptime cache");
 		Date date = new Date(fromDate.getTime());
-		while( date.before(toDate)) {
-			for( String hostname : apdevices ) {
+		Date xtoDate = new Date(fromDate.getTime());
+		while (date.before(toDate)) {
+			for (String hostname : apdevices) {
 				APUptime apu = null;
-				try {
-					apu = apuDao.getUsingHostnameAndDate(hostname, date);
-				} catch( ASException e ) {
-					if( ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE == e.getErrorCode()) {
-						apu = new APUptime(hostname, date);
-						apu.setKey(apuDao.createKey(hostname, date));
-						apuDao.create(apu);
-					}
-				}
+				apu = new APUptime(hostname, date);
+				apu.setKey(apuDao.createKey(hostname, date));
+				apuDao.createOrUpdate(apu);
 
 				cache.put(apu.getKey().getName(), apu);
 			}
@@ -538,33 +551,63 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		}
 
 		// Gets the input data
-		long totals = 0;
-		dumpHelper = new DumperHelperImpl<APHotspot>(baseDir, APHotspot.class);
-		Iterator<APHotspot> i = dumpHelper.iterator(fromDate, toDate);
-		while( i.hasNext() ) {
-			APHotspot aph = i.next();
-			if( aph != null ) {
-				if( totals % 1000 == 0 ) 
-					log.log(Level.INFO, "Processing for date " + aph.getCreationDateTime());
+		date = new Date(fromDate.getTime());
+		while (date.before(toDate)) {
+			xtoDate = new Date(date.getTime() + 86400000);
+			dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
+			List<String> hostnames;
+			if (!predefinedAPDevicesList) {
+				hostnames = dumpHelper.getMultipleNameOptions(date);
+				dumpHelper.startPrefetch();
+				dumpHelper.iterator(date, xtoDate);
+			} else {
+				hostnames = apdevices;
+			}
 
-				if( apdevices.contains(aph.getHostname())) {
-					Key apuKey = apuDao.createKey(aph.getHostname(), aph.getCreationDateTime());
-					APUptime apu = cache.get(apuKey.getName());
-					String key = APUptime.getRecordKey(aph.getCreationDateTime());
-					if( apu != null && apu.getRecord() != null ) {
-						Integer val = apu.getRecord().get(key);
-						if( val.equals(0)) {
-							apu.getRecord().put(key, 1);
+			for (String hostname : hostnames) {
+				log.log(Level.INFO, "Processing for hostname " + hostname + " for date " + date);
+				dumpHelper.setFilter(hostname);
+				Iterator<APHEntry> i = dumpHelper.iterator(date, xtoDate);
+				while (i.hasNext()) {
+					APHEntry aphe = i.next();
+					if (aphe != null) {
+						if (apdevices.contains(aphe.getHostname())) {
+							Key apuKey = apuDao.createKey(aphe.getHostname(), date);
+							APUptime apu = cache.get(apuKey.getName());
+							if (apu == null || apu.getRecord() == null)
+								continue;
+							Iterator<String> slots = aphe.getRssi().keySet().iterator();
+							while (slots.hasNext()) {
+								try {// FIXME time zones would be broken
+									String slot = slots.next();
+									Date vDate = aphHelper.slotToDate(aphe, Integer.valueOf(slot),
+											TimeZone.getTimeZone("Mexico/General"));
+									if ((vDate.after(date) || vDate.equals(date))
+											&& (vDate.before(xtoDate) || vDate.equals(xtoDate))) {
+										String key = APUptime.getRecordKey(vDate);
+										Integer val = apu.getRecord().get(key);
+										if (val.equals(0)) {
+											apu.getRecord().put(key, 1);
+										}
+									}
+								} catch (Exception e) {
+								}
+							}
 						}
 					}
 				}
+
 			}
-			totals++;
+
+			date.setTime(date.getTime() + ONE_DAY);
+
+			log.log(Level.INFO, "Disposing APHEntry Cache...");
+			dumpHelper.dispose();
 		}
 
 		// Write to the database
 		Iterator<String> x = cache.keySet().iterator();
-		while(x.hasNext()) {
+		while (x.hasNext()) {
 			String key = x.next();
 			APUptime apu = cache.get(key);
 			apuDao.update(apu);
@@ -572,8 +615,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	}
 
 	/**
-	 * Sets properties of an entity object based in the attributes received in
-	 * JSON representation
+	 * Sets properties of an entity object based in the attributes received in JSON
+	 * representation
 	 * 
 	 * @param jsonObj
 	 *            The JSON representation which contains the input data
@@ -584,35 +627,36 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	 */
 	public void setPropertiesFromDBObject(DBObject dbo, Object obj) {
 		Key objKey = new Key(dbo.get("_id").toString());
-		if( obj instanceof ModelKey) ((ModelKey)obj).setKey(objKey);
+		if (obj instanceof ModelKey)
+			((ModelKey) obj).setKey(objKey);
 
-		for (Iterator<String> it = dbo.keySet().iterator(); it.hasNext(); ) {
+		for (Iterator<String> it = dbo.keySet().iterator(); it.hasNext();) {
 			try {
 				String key = it.next();
-				if(!key.equals("_id")) {
+				if (!key.equals("_id")) {
 					Object fieldValue = dbo.get(key);
-					if( fieldValue instanceof DBObject ) {
+					if (fieldValue instanceof DBObject) {
 						Object data = PropertyUtils.getProperty(obj, key);
-						setPropertiesFromDBObject((DBObject)fieldValue, data);
+						setPropertiesFromDBObject((DBObject) fieldValue, data);
 					} else {
 						if (PropertyUtils.getPropertyType(obj, key) == Text.class) {
 							Text text = new Text(fieldValue.toString());
 							PropertyUtils.setProperty(obj, key, text);
-						} else if (PropertyUtils.getPropertyType(obj, key) == Email.class){
-							Email mail = new Email(((String)safeString(fieldValue)).toLowerCase());
+						} else if (PropertyUtils.getPropertyType(obj, key) == Email.class) {
+							Email mail = new Email(((String) safeString(fieldValue)).toLowerCase());
 							PropertyUtils.setProperty(obj, key, mail);
 						} else if (PropertyUtils.getPropertyType(obj, key) == Date.class) {
 							PropertyUtils.setProperty(obj, key, fieldValue);
 						} else if (PropertyUtils.getPropertyType(obj, key) == Key.class) {
-							String[] parts = ((String)fieldValue).split("\"");
+							String[] parts = ((String) fieldValue).split("\"");
 							Class<?> c = Class.forName("mobi.allshoppings.model." + parts[0].split("\\(")[0]);
 							Key data = new KeyHelperGaeImpl().obtainKey(c, parts[1]);
 							PropertyUtils.setProperty(obj, key, data);
 						} else if (PropertyUtils.getPropertyType(obj, key) == Blob.class) {
-							Blob data = new Blob(Base64.decode((String)fieldValue));
+							Blob data = new Blob(Base64.decode((String) fieldValue));
 							PropertyUtils.setProperty(obj, key, data);
 						} else if (fieldValue instanceof JSONArray) {
-							JSONArray array = (JSONArray)fieldValue;
+							JSONArray array = (JSONArray) fieldValue;
 							Collection<String> col = new ArrayList<String>();
 							for (int idx = 0; idx < array.length(); idx++) {
 								String value = array.getString(idx);
@@ -633,12 +677,12 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 
 	public Object safeString(Object from) {
 		try {
-			if( from instanceof String ) {
-				return new String(((String)from).getBytes());
+			if (from instanceof String) {
+				return new String(((String) from).getBytes());
 			} else {
 				return from;
 			}
-		} catch( Exception e ) {
+		} catch (Exception e) {
 			log.log(Level.INFO, e.getMessage(), e);
 			return from;
 		}
@@ -648,71 +692,70 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		List<APDevice> list = dao.getAll(true);
 		Date tenMinutes = new Date(new Date().getTime() - TEN_MINUTES);
 		Date oneDay = new Date(new Date().getTime() - ONE_DAY);
-		
-		for( APDevice apdevice : list ) {
-			if (null != apdevice.getStatus() && StatusAware.STATUS_ENABLED == apdevice.getStatus() 
+
+		for (APDevice apdevice : list) {
+			if (null != apdevice.getStatus() && StatusAware.STATUS_ENABLED == apdevice.getStatus()
 					&& apdevice.getReportable() != null && apdevice.getReportable() == true
 					&& apdevice.getLastRecordDate() != null && apdevice.getLastRecordDate().before(tenMinutes)
 					&& apdevice.getLastRecordDate().after(oneDay)) {
 
 				try {
 					restartAPDevice(apdevice);
-				} catch( Exception e ) {
+				} catch (Exception e) {
 					log.log(Level.WARNING, e.getMessage(), e);
 				}
 			}
 		}
 	}
-	
+
 	public void restartAPDevice(String identifier) throws ASException {
 		APDevice apdevice = dao.get(identifier, true);
 		restartAPDevice(apdevice);
 	}
-	
+
 	public void restartAPDevice(APDevice apdevice) throws ASException {
 		StringBuffer stdout = new StringBuffer();
 		StringBuffer stderr = new StringBuffer();
-		@SuppressWarnings("unused")
-		int exitStatus = 0;
 
-		String[] command = new String[] {
-				"reboot"
-		};
+		String[] command = new String[] { "reboot" };
 
-		APDeviceSSHSession session = new APDeviceSSHSession(apdevice, systemConfiguration);
+		APDeviceSSHSession session = new APDeviceSSHSession(apdevice,
+				systemConfiguration);
 		try {
 			session.connect();
-			for(String cmd : command ) {
+			for (String cmd : command) {
 				try {
-					exitStatus = session.executeCommandOnSSHSession(session.getApdSession(), cmd, stdout, stderr);
-				} catch( Exception e ) {}
+					session.executeCommandOnSSHSession(session.getApdSession(),
+							cmd, stdout, stderr);
+				} catch (Exception e) {
+				}
 			}
-			
+
 		} finally {
 			session.disconnect();
 		}
 	}
-	
+
 	public void updateAPDeviceStatus(String identifier) throws ASException {
 		APDevice apdevice = dao.get(identifier, true);
 		StringBuffer stdout = new StringBuffer();
 		StringBuffer stderr = new StringBuffer();
 		int exitStatus = 0;
 
-		String[] command = new String[] {
-				"wget http://aragorn.getin.mx/sysinfo.sh -O /tmp/sysinfo.sh",
-				"chmod 775 /tmp/sysinfo.sh",
-				"sh /tmp/sysinfo.sh",
-				"rm -f /tmp/sysinfo.sh"
-		};
+		String[] command = new String[] { "wget "
+				+systemConfiguration.getDevicesSysInfoURL() +" -O /tmp/sysinfo.sh",
+				"chmod 775 /tmp/sysinfo.sh", "sh /tmp/sysinfo.sh",
+				"rm -f /tmp/sysinfo.sh" };
 
-		APDeviceSSHSession session = new APDeviceSSHSession(apdevice, systemConfiguration);
+		APDeviceSSHSession session = new APDeviceSSHSession(apdevice,
+				systemConfiguration);
 		try {
 			session.connect();
-			for(String cmd : command ) {
+			for (String cmd : command) {
 				try {
 					exitStatus = session.executeCommandOnSSHSession(session.getApdSession(), cmd, stdout, stderr);
-				} catch( Exception e ) {}
+				} catch (Exception e) {
+				}
 			}
 		} finally {
 			session.disconnect();
@@ -729,25 +772,22 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		APDevice apdevice = dao.get(identifier, true);
 		StringBuffer stdout = new StringBuffer();
 		StringBuffer stderr = new StringBuffer();
-		@SuppressWarnings("unused")
 		int exitStatus = 0;
 
-		String[] command = new String[] {
-				"wget http://aragorn.getin.mx/antennainfo.sh -O /tmp/antennainfo.sh",
-				"chmod 775 /tmp/antennainfo.sh",
-				"sh /tmp/antennainfo.sh",
-				"rm -f /tmp/antennainfo.sh"
-		};
+		String[] command = new String[] { "wget http://aragorn.getin.mx/antennainfo.sh -O /tmp/antennainfo.sh",
+				"chmod 775 /tmp/antennainfo.sh", "sh /tmp/antennainfo.sh", "rm -f /tmp/antennainfo.sh" };
 
 		APDeviceSSHSession session = new APDeviceSSHSession(apdevice, systemConfiguration);
 		try {
 			session.connect();
-			for(String cmd : command ) {
+			for (String cmd : command) {
 				try {
-					exitStatus = session.executeCommandOnSSHSession(session.getApdSession(), cmd, stdout, stderr);
-				} catch( Exception e ) {}
+					session.executeCommandOnSSHSession(session.getApdSession(),
+								cmd, stdout, stderr);
+				} catch (Exception e) {
+				}
 			}
-			
+
 			JSONObject json = new JSONObject(stdout.toString());
 			apdevice.setMode(json.getString("mode"));
 			apdevice.setModel(json.getString("model"));
@@ -757,13 +797,13 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			apdevice.setWanIp(json.getString("wanIp"));
 			apdevice.setPublicIp(json.getString("publicIp"));
 			apdevice.setLastInfoUpdate(new Date());
-			
+
 			try {
 				apdevice = geoIp(apdevice);
-			} catch( Exception e ) {
+			} catch (Exception e) {
 				log.log(Level.WARNING, e.getMessage(), e);
 			}
-			
+
 			dao.update(apdevice);
 
 		} finally {
@@ -795,17 +835,16 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			apd.setCity(resp.getString("city"));
 			apd.setLat(resp.getDouble("latitude"));
 			apd.setLon(resp.getDouble("longitude"));
-			
+
 			in.close();
 
 			return apd;
 
-		} catch( Exception e ) {
+		} catch (Exception e) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
 	}
-	
-	
+
 	/**
 	 * Gets a file content from an APDevice
 	 * 
@@ -838,12 +877,14 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			session.connect();
 			StringBuffer stdout = new StringBuffer();
 			StringBuffer stderr = new StringBuffer();
-			int exitStatus = session.executeCommandOnSSHSession(session.getApdSession(), "cat " + fileName , stdout, stderr);
-			if( exitStatus != 0 ) throw new FileNotFoundException();
+			int exitStatus = session.executeCommandOnSSHSession(session.getApdSession(), "cat " + fileName, stdout,
+					stderr);
+			if (exitStatus != 0)
+				throw new FileNotFoundException();
 			return stdout.toString().getBytes();
-		} catch( ASException e ) {
+		} catch (ASException e) {
 			throw e;
-		} catch( JSchException e ) {
+		} catch (JSchException e) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		} catch (FileNotFoundException e) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
@@ -856,35 +897,45 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 
 	/**
 	 * Executes a command in an APDevice
-	 * @param identifier The APDevice Identifier
-	 * @param command The command to execute
-	 * @param stdout The command standard output results
+	 * 
+	 * @param identifier
+	 *            The APDevice Identifier
+	 * @param command
+	 *            The command to execute
+	 * @param stdout
+	 *            The command standard output results
 	 * @return
 	 * @throws ASException
 	 */
-	public int executeCommandOnAPDevice(String identifier, String command, StringBuffer stdout, StringBuffer stderr) throws ASException {
+	public int executeCommandOnAPDevice(String identifier, String command, StringBuffer stdout, StringBuffer stderr)
+			throws ASException {
 		APDevice apdevice = dao.get(identifier);
 		return executeCommandOnAPDevice(apdevice, command, stdout, stderr);
 	}
 
 	/**
 	 * Executes a command in an APDevice
-	 * @param identifier The APDevice Identifier
-	 * @param command The command to execute
-	 * @param stdout The command standard output results
+	 * 
+	 * @param identifier
+	 *            The APDevice Identifier
+	 * @param command
+	 *            The command to execute
+	 * @param stdout
+	 *            The command standard output results
 	 * @return
 	 * @throws ASException
 	 */
-	public int executeCommandOnAPDevice(APDevice apdevice, String command, StringBuffer stdout, StringBuffer stderr) throws ASException {
+	public int executeCommandOnAPDevice(APDevice apdevice, String command, StringBuffer stdout, StringBuffer stderr)
+			throws ASException {
 		APDeviceSSHSession session = new APDeviceSSHSession(apdevice, systemConfiguration);
 
 		try {
 			session.connect();
 			session.executeCommandOnSSHSession(session.getApdSession(), command, stdout, stderr);
 			return 0;
-		} catch( ASException e ) {
+		} catch (ASException e) {
 			throw e;
-		} catch( JSchException e ) {
+		} catch (JSchException e) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		} catch (IOException e) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
@@ -905,39 +956,39 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		APDevice apd = dao.get(hostname, true);
 		List<APDAssignation> list = apdaDao.getUsingHostnameAndDate(hostname, new Date());
 
-		if( null == apd.getStatus() ) 
+		if (null == apd.getStatus())
 			apd.setStatus(StatusAware.STATUS_ENABLED);
 
-		if( null == apd.getReportStatus() )
+		if (null == apd.getReportStatus())
 			apd.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
 
 		int index = 0;
 		boolean done = false;
-		
-		while(!done) {
 
-			if( list.size() > index ) {
+		while (!done) {
+
+			if (list.size() > index) {
 
 				// APDevice is assigned
 				APDAssignation apda = list.get(index);
 				try {
-					if( apda.getEntityKind().equals(EntityKind.KIND_SHOPPING)) {
+					if (apda.getEntityKind().equals(EntityKind.KIND_SHOPPING)) {
 						Shopping shopping = shoppingDao.get(apda.getEntityId());
 						apd.setDescription(shopping.getName());
-					} else if( apda.getEntityKind().equals(EntityKind.KIND_STORE)) {
+					} else if (apda.getEntityKind().equals(EntityKind.KIND_STORE)) {
 						Store store = storeDao.get(apda.getEntityId());
 						apd.setDescription(store.getName());
-					} else if( apda.getEntityKind().equals(EntityKind.KIND_INNER_ZONE)) {
+					} else if (apda.getEntityKind().equals(EntityKind.KIND_INNER_ZONE)) {
 						InnerZone zone = zoneDao.get(apda.getEntityId());
 						apd.setDescription(zone.getName());
 					}
 					apd.setStatus(StatusAware.STATUS_ENABLED);
 					apd.setReportable(true);
-					if( apd.getReportMailList() == null )
+					if (apd.getReportMailList() == null)
 						apd.setReportMailList(new ArrayList<String>());
 					done = true;
-				} catch( ASException e ) {
-					if( e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE) {
+				} catch (ASException e) {
+					if (e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE) {
 						apdaDao.delete(apda);
 					}
 					index++;
@@ -948,7 +999,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 				// APDevice is no longer assigned
 				apd.setDescription(null);
 				apd.setReportable(false);
-				if( apd.getReportMailList() == null ) {
+				if (apd.getReportMailList() == null) {
 					apd.setReportMailList(new ArrayList<String>());
 				} else {
 					apd.getReportMailList().clear();
@@ -965,150 +1016,17 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	public void unassignUsingAPDevice(String hostname) throws ASException {
 		List<APDAssignation> list = apdaDao.getUsingHostnameAndDate(hostname, new Date());
 
-		for( APDAssignation apda : list ) {
+		for (APDAssignation apda : list) {
 			try {
 				apda.setToDate(sdf.parse(sdf.format(new Date())));
 				apdaDao.update(apda);
-			} catch( Exception e ) {}
+			} catch (Exception e) {
+			}
 		}
 
 		try {
 			updateAssignationsUsingAPDevice(hostname);
-		} catch( Exception e ) {}
-	}
-
-	@Override
-	public void importRecordsFromFileSystem(String dir, String backupDir, Date fakeDeviationStartDate) throws ASException {
-	
-		File inputDir = new File(dir);
-		File outputDir = new File(backupDir);
-		
-		Map<String, APDevice> apdevices = CollectionFactory.createMap();
-		
-		long firstUnixTime = 0;
-		long deviationOffset = 0;
-		
-		// Validates input directory
-		if(!inputDir.exists() || !inputDir.isDirectory())
-			throw ASExceptionHelper.invalidArgumentsException("input dir is not a directory");
-		
-		// Validates output directory
-		if(outputDir.exists()) {
-			if(!outputDir.isDirectory())
-				throw ASExceptionHelper.invalidArgumentsException("output dir is not a directory");
-		} else {
-			boolean res = outputDir.mkdirs();
-			if(!res)
-				throw ASExceptionHelper.defaultException("Cannot create output directory", null);
+		} catch (Exception e) {
 		}
-		
-		// Gets the first unixtime needed
-		if( null != fakeDeviationStartDate )
-			firstUnixTime = (long)(fakeDeviationStartDate.getTime() / 1000);		
-		
-		// Get directory contents and start iteration
-		List<File> contents = new ArrayList<File>(Arrays.asList(inputDir.listFiles()));
-		Collections.sort(contents);
-		for( File file : contents ) {
-			// Just use .dat files
-			if( file.getName().endsWith(".dat")) {
-				
-				long fileUnixTime = Long.parseLong(file.getName().split(".dat")[0]);
-				// Charge file offset
-				if( firstUnixTime > 0 && deviationOffset == 0 ) 
-					deviationOffset = firstUnixTime - fileUnixTime;
-				
-				try {
-					String jsonText = getFileContents(file);
-					JSONObject json = new JSONObject(jsonText);
-
-					// Do main process
-
-					String hostname = json.getString("hostname");
-
-					JSONArray data = json.getJSONArray("data");
-
-					log.log(Level.INFO, "Reporting " + data.length() + " AP Members from " + hostname);
-					log.log(Level.FINEST, json.toString());
-
-					for( int i = 0; i < data.length(); i++ ) {
-
-						try {
-							JSONObject ele = (JSONObject)data.get(i);
-
-							APHotspot aphotspot = new APHotspot();
-							aphotspot.setHostname(hostname);
-							aphotspot.setFirstSeen(new Date((ele.getLong("firstSeen") + deviationOffset) * 1000));
-							aphotspot.setLastSeen(new Date((ele.getLong("lastSeen") + deviationOffset) * 1000));
-							aphotspot.setMac(ele.getString("mac").toLowerCase());
-							aphotspot.setSignalDB(ele.getInt("signalDB"));
-							aphotspot.setCount(ele.getInt("count"));
-							aphotspot.setKey(aphDao.createKey());
-							
-							// Just for offset setting... modify the creation date time
-							aphotspot.setCreationDateTime(new Date((fileUnixTime + deviationOffset) * 1000));
-
-							if(!aphotspot.getMac().startsWith("broadcast")) {
-								aphDao.create(aphotspot);
-
-								// Updates APHEntries
-								try {
-									aphHelper.setUseCache(false);
-									APHEntry aphe = aphHelper.setFramedRSSI(aphotspot);
-									
-									APDevice apd = apdevices.get(aphe.getHostname());
-									if( apd == null ) {
-										apd = dao.get(aphe.getHostname());
-										apdevices.put(aphe.getHostname(), apd);
-									}
-									
-									aphHelper.artificiateRSSI(aphe, apd);
-									if( StringUtils.hasText(aphe.getIdentifier())) {
-										apheDao.update(aphe);
-									} else {
-										aphe.setKey(apheDao.createKey(aphe));
-										apheDao.create(aphe);
-									}
-								} catch( Exception e ) {
-									log.log(Level.SEVERE, "Error updating APHEntries", e);
-								}
-							}
-							
-						} catch( Exception e ) {
-							log.log(Level.SEVERE, e.getMessage(), e);
-						}
-					}
-					
-				} catch( Exception e ) {
-					log.log(Level.SEVERE, e.getMessage(), e);
-				}
-				
-				// Backups the file
-				try {
-					Files.move(file, new File(outputDir.getAbsoluteFile() + File.separator + file.getName()));
-				} catch( Exception e ) {
-					throw ASExceptionHelper.defaultException(e.getMessage(), e);
-				}
-			}
-		}
-	}
-	
-	
-	private String getFileContents(File inputFile) throws Exception {
-		BufferedReader br = new BufferedReader(new FileReader(inputFile));
-		try {
-		    StringBuilder sb = new StringBuilder();
-		    String line = br.readLine();
-
-		    while (line != null) {
-		        sb.append(line);
-		        sb.append(System.lineSeparator());
-		        line = br.readLine();
-		    }
-		    return(sb.toString());
-		} finally {
-		    br.close();
-		}
-
 	}
 }

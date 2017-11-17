@@ -9,14 +9,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.jdo.PersistenceManager;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 
 import mobi.allshoppings.dao.spi.GenericDAOJDO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.interfaces.ModelKey;
-import mobi.allshoppings.tx.PersistenceProvider;
-import mobi.allshoppings.tx.TransactionType;
-import mobi.allshoppings.tx.spi.PersistenceProviderJDOImpl;
 
 public class PersistentCacheJDOImpl <V extends ModelKey> {
 
@@ -24,7 +22,7 @@ public class PersistentCacheJDOImpl <V extends ModelKey> {
 	
 	private static final int DEFAULT_LIMIT = 1000;
 	private static final int DEFAULT_PAGE_SIZE = 100;
-	
+
 	private Map<String,V> map;
 	private Map<String,Long> lastUsed;
 	private int inMemLimit;
@@ -148,8 +146,6 @@ public class PersistentCacheJDOImpl <V extends ModelKey> {
 
 		List<String> toRemove = CollectionFactory.createList();
 		Iterator<String> inMemLimits = lastUsed.keySet().iterator();
-		PersistenceProvider pp = new PersistenceProviderJDOImpl(TransactionType.SIMPLE);
-		((PersistenceManager)pp.get()).currentTransaction().begin();
 
 		while(inMemLimits.hasNext()) {
 			String key = inMemLimits.next();
@@ -157,18 +153,15 @@ public class PersistentCacheJDOImpl <V extends ModelKey> {
 				if( map.containsKey(key)) {
 					V value = map.get(key);
 					try {
-						dao.createOrUpdate(pp, value, true);
+						dao.createOrUpdate(value);
 						keys.put(key, lastPage);
 						toRemove.add(key);
-					} catch( ASException e ) {
+					} catch( Exception e ) {
 						log.log(Level.WARNING, e.getMessage(), e);
 					}
 				}
 			}
 		}
-
-		((PersistenceManager)pp.get()).currentTransaction().commit();
-		((PersistenceManager)pp.get()).close();
 
 		for(String key : toRemove ) {
 			map.remove(key);
@@ -179,6 +172,23 @@ public class PersistentCacheJDOImpl <V extends ModelKey> {
 		log.log(Level.FINE, "Page " + lastPage + " stored in " + (end-start) + "ms with " + map.size() + " records in mem");
 		
 		stores++;
+	}
+	
+	public void cloneObject(V from, V to ) {
+		try {
+			@SuppressWarnings("unchecked")
+			Map<String, Object> properties = PropertyUtils.describe(from);
+			Iterator<String> it = properties.keySet().iterator();
+			while( it.hasNext()) {
+				String property = it.next();
+				if(!property.startsWith("jdo")) {
+					Object fieldValue = properties.get(properties);
+					BeanUtils.setProperty(to, property, fieldValue);
+				}
+			}
+		} catch( Exception e ) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+		}
 	}
 	
 	public void loadPage(int pageNumber) throws NoSuchAlgorithmException, IOException {
@@ -228,32 +238,25 @@ public class PersistentCacheJDOImpl <V extends ModelKey> {
 	}
 
 	public void dispose() {
-		PersistenceProvider pp = new PersistenceProviderJDOImpl(TransactionType.SIMPLE);
-		((PersistenceManager)pp.get()).currentTransaction().begin();
-		
 		int count = 0;
 		Iterator<String> i = map.keySet().iterator();
 		while(i.hasNext()) {
 			String key = i.next();
 			V obj = map.get(key);
 			try {
-				dao.createOrUpdate(pp, obj, true);
-				count++;
+				dao.createOrUpdate(obj);
 				if( count % pageSize == 0 ) {
 					log.log(Level.WARNING, "Flushing " + count + " of " + map.size() + "...");
-					((PersistenceManager)pp.get()).flush();
 				}
-			} catch( ASException e ) {
+				count++;
+			} catch( Exception e ) {
 				log.log(Level.WARNING, e.getMessage(), e);
 			}
 		}
-		
-		((PersistenceManager)pp.get()).currentTransaction().commit();
-		((PersistenceManager)pp.get()).close();
-		
+
 		clear();
 		System.gc();
-		
+
 	}
 
 	/**

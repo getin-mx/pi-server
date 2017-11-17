@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.util.StringUtils;
+
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -159,12 +161,14 @@ public class ProcessSSHSession {
 	 */
 	public void connect() throws ASException {
 		try {
-
+			boolean passRequired = !StringUtils.hasText(systemConfig.getProcessKey()); 
+			if(!passRequired)
+				jsch.addIdentity(systemConfig.getProcessKey(),
+						systemConfig.getProcessPass());
 			session = jsch.getSession(systemConfig.getProcessUser(), 
 					systemConfig.getProcessHost(), PASSTHROUGHPORT);
-			session.setPassword(systemConfig.getProcessPass());
+			if(passRequired) session.setPassword(systemConfig.getProcessPass());
 			session.setConfig("StrictHostKeyChecking", "no");
-
 			log.log(Level.INFO, "Establishing Connection to APDevice VPN host " + systemConfig.getProcessHost() + "...");
 			session.connect(40000);
 			log.log(Level.INFO, "Connection established to APDevice VPN host " + systemConfig.getProcessHost());

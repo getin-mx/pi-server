@@ -17,8 +17,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import mobi.allshoppings.bdb.bz.BDBTimelineDataBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
+import mobi.allshoppings.bdb.bz.BDBTimelineDataBzService;
 import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.exception.ASException;
@@ -98,6 +98,8 @@ implements BDBTimelineDataBzService {
 			if(!CollectionUtils.isEmpty(orderList)) {
 				for( String order : orderList ) {
 					try {
+						if(order.contains("ios") || order.contains("android"))
+							continue;
 						DashboardIndicatorAlias alias = diAliasDao.getUsingFilters(entityId, entityKind, elementId, order);
 						aliasMap.put(order, alias.getElementSubName());
 					} catch( ASException e ) {

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -32,7 +33,7 @@ public class APHEntry implements ModelKey, Serializable, Identificable, Replicab
 
 	@Persistent(defaultFetchGroup = "true")
 	private Map<String, Integer> rssi;
-	@Persistent(defaultFetchGroup = "true")
+	@NotPersistent
 	private Map<String, Integer> artificialRssi;
 
 	private Integer dataCount;
@@ -41,10 +42,15 @@ public class APHEntry implements ModelKey, Serializable, Identificable, Replicab
 
 	private Date lastUpdate;
 	private Date creationDateTime;
+	@NotPersistent
+	private byte shiftDay;
+	
+	public static final byte PREVIOUS = -1;
+	public static final byte NEXT = 1;
+	public static final byte NO_SHIFT = 0;
 
 	public APHEntry() {
 		super();
-//		this.rssi = new Integer[4320];
 		this.rssi = CollectionFactory.createMap();
 		this.artificialRssi = CollectionFactory.createMap();
 		this.dataCount = 0;
@@ -56,7 +62,6 @@ public class APHEntry implements ModelKey, Serializable, Identificable, Replicab
 		this.hostname = hostname;
 		this.mac = mac;
 		this.date = date;
-//		this.rssi = new Integer[4320];
 		this.rssi = CollectionFactory.createMap();
 		this.artificialRssi = CollectionFactory.createMap();
 		this.dataCount = 0;
@@ -286,15 +291,18 @@ public class APHEntry implements ModelKey, Serializable, Identificable, Replicab
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "APHEntry [key=" + key + ", hostname=" + hostname + ", mac=" + mac + ", date=" + date
-				+ ", devicePlatform=" + devicePlatform + ", rssi=" + rssi + ", artificialRssi=" + artificialRssi
-				+ ", dataCount=" + dataCount + ", minRssi=" + minRssi + ", maxRssi=" + maxRssi + ", lastUpdate="
-				+ lastUpdate + ", creationDateTime=" + creationDateTime + "]";
+		return "APHEntry [key=" + key + ", hostname=" + hostname + ", mac=" + mac + ", date=" + date + ", dataCount="
+				+ dataCount + ", minRssi=" + minRssi + ", maxRssi=" + maxRssi + "]";
+	}
+	
+	public void setShiftDay(byte shift) {
+		this.shiftDay = shift;
+	}
+	
+	public byte getShiftDay() {
+		return this.shiftDay;
 	}
 
 }

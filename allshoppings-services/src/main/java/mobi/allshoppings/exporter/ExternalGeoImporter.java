@@ -24,7 +24,7 @@ import mobi.allshoppings.dao.ExternalGeoDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dao.spi.DAOJDOPersistentManagerFactory;
 import mobi.allshoppings.dump.DumperHelper;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.geocoding.GeoCodingHelper;
@@ -37,12 +37,13 @@ import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.PersistentCacheFSImpl;
-import mobi.allshoppings.tools.PersistentCacheJDOImpl;
 import mobi.allshoppings.tx.PersistenceProvider;
 
 public class ExternalGeoImporter {
 
 	private static final Logger log = Logger.getLogger(ExternalGeoImporter.class.getName());
+	
+	private static final int DAY_IN_MILLIS = 86400000;
 
 	@Autowired
 	private ExternalGeoDAO dao;
@@ -54,20 +55,24 @@ public class ExternalGeoImporter {
 	private StoreDAO storeDao;
 	
 	@Autowired
+	private ExternalGeoDAO externalGeoDao;
+	
+	@Autowired
 	private SystemConfiguration systemConfiguration;
 	
 	private DumperHelper<DeviceLocationHistory> dump;
 
-	public void importFromGpsRecords(List<String> entityId, Integer entityKind, String baseDir) throws ASException {
+	public void importFromGpsRecords(List<String> entityId, Integer entityKind) throws ASException {
 
 		SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdfPeriod = new SimpleDateFormat("yyyy-MM");
+		SimpleDateFormat mordorSdf = new SimpleDateFormat("MMM d, yyyy h:mm:ss a");
 		
 		String period = sdfPeriod.format(new Date());
 		
 		// Connections cache
-		PersistentCacheJDOImpl<ExternalGeo> cache = new PersistentCacheJDOImpl<ExternalGeo>(
+		PersistentCacheFSImpl<ExternalGeo> cache = new PersistentCacheFSImpl<ExternalGeo>(
 				ExternalGeo.class, systemConfiguration.getCacheMaxInMemElements(),
 				systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
 
@@ -149,19 +154,19 @@ public class ExternalGeoImporter {
 			pm.close();
 
 			// Now obtains the physical data information for the dump
-			dump = new DumperHelperImpl<DeviceLocationHistory>(baseDir, DeviceLocationHistory.class);
+			dump = new DumpFactory<DeviceLocationHistory>().build(null, DeviceLocationHistory.class);
 
 			count = 0;
 			long processed = 0;
 
 			// Loops only with the selected date range
-			Date workDate = sdf.parse("2016-01-01");
-			Date workFrom = sdf.parse("2016-01-01");
-			Date workTo = sdf.parse("2017-02-01");
-			Date toDate = sdf.parse("2017-02-01");
+			Date workDate = sdf.parse(systemConfiguration.getExternalGeoFromDate());
+			Date workFrom = sdf.parse(systemConfiguration.getExternalGeoFromDate());
+			Date workTo = sdf.parse(systemConfiguration.getExternalGeoToDate());
+			Date toDate = sdf.parse(systemConfiguration.getExternalGeoToDate());
 			while(workDate.before(toDate) || workDate.equals(toDate)) {
 				workFrom = new Date(workDate.getTime());
-				workTo = new Date(workFrom.getTime() + 86400000 /* 24 hours */);
+				workTo = new Date(workFrom.getTime() + DAY_IN_MILLIS);
 
 				Iterator<JSONObject> it = dump.jsonIterator(workFrom, workTo);
 
@@ -171,12 +176,15 @@ public class ExternalGeoImporter {
 						count++;
 						JSONObject json = it.next();
 						// Filter for only use matched devices
-						if( json != null && json.has("deviceUUID") && devices.containsKey(json.getString("deviceUUID"))) {
+						if( json != null && json.has("deviceUUID") &&
+								devices.containsKey(json.getString("deviceUUID"))) {
 
 							String uuid = json.getString("deviceUUID");
-							@SuppressWarnings("deprecation")
-							Date d = new Date(json.getString("lastUpdate"));
-							int hour = Integer.valueOf(sdfHour.format(d));
+							//@SuppressWarnings("deprecation")
+							//Date d = new Date(json.getString("lastUpdate"));
+							
+							int hour = Integer.valueOf(sdfHour.format(mordorSdf.parse(
+									json.getString("lastUpdate"))));
 
 							Map<Integer, HashSet<String>> devices2 = devices.get(uuid);
 							Iterator<Integer> itx = devices2.keySet().iterator();
@@ -186,10 +194,15 @@ public class ExternalGeoImporter {
 								for( String id : ids ) {
 									try {
 										Integer myType = dao.getType(type, hour);
+										period = sdfPeriod.format(
+												mordorSdf.parse(json.getString("lastUpdate")));
 										String key = dao.getHash(new Float(json.getDouble("lat")), 
 												new Float(json.getDouble("lon")), period, id, entityKind, myType);
 
-										ExternalGeo val = cache.get(key);
+										ExternalGeo val = null;
+										try {
+											cache.get(key);
+										} catch( Exception e ){}
 										if( val == null ) {
 											GeoPoint gp = geocoder.decodeGeohash(geocoder.encodeGeohash(json.getDouble("lat"), json.getDouble("lon")).substring(0,7));
 											val = new ExternalGeo();
@@ -230,18 +243,31 @@ public class ExternalGeoImporter {
 				// Iterates to next day
 				Calendar cal = Calendar.getInstance();
 				do {
-					workDate = new Date(workDate.getTime() + 86400000 /* 24 hours */);
+					workDate = new Date(workDate.getTime() + DAY_IN_MILLIS);
 					cal.setTime(workDate);
 				} while((cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY 
 						|| cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY));
 			}
 
+			
+			log.log(Level.INFO, "Writing " + cache.size() + " records in the database...");
+			count = 0;
 			Iterator<ExternalGeo> it = cache.iterator();
 			while(it.hasNext()) {
 				ExternalGeo obj = it.next();
-				String key = obj.getIdentifier();
-				obj.setUserCount(cacheDevices.containsKey(key) ? cacheDevices.get(key).size() : 0);
-				cache.put(key, obj);
+				if( obj != null ) {
+					String key = obj.getIdentifier();
+					obj.setUserCount(cacheDevices.containsKey(key) ? cacheDevices.get(key).size() : 0);
+					try {
+						if(!externalGeoDao.get(key).equals(obj)) externalGeoDao.update(obj);
+					} catch(ASException e) {
+						externalGeoDao.create(obj);
+					}
+					count ++;
+					if( count % 1000 == 0 ) {
+						log.log(Level.INFO, "Writing record " + count + " of " + cache.size() + " in Database...");
+					}
+				}
 			}
 			
 			log.log(Level.INFO, "Disposing cache with " + cache.size() + " elements...");
@@ -251,6 +277,7 @@ public class ExternalGeoImporter {
 			log.log(Level.INFO, "Disposing Device cache with " + cacheDevices.size() + " elements...");
 			cacheDevices.dispose();
 			cacheDevices.clear();
+			dump.dispose();
 			
 			log.log(Level.INFO, count + " records processed with " + processed + " results...");
 			log.log(Level.INFO, "Process finished!");

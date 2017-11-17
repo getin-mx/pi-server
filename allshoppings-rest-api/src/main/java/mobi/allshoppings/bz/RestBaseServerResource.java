@@ -1068,7 +1068,7 @@ public abstract class RestBaseServerResource extends ServerResource {
 	
 	public long markStart(String text) {
 		logger.log(Level.INFO, "Request " + getRequestURI() + " begins...");
-		return new Date().getTime();
+		return System.currentTimeMillis();
 	}
 	
 	public long markEnd(long start) {
@@ -1076,7 +1076,7 @@ public abstract class RestBaseServerResource extends ServerResource {
 	}
 	
 	public long markEnd(String text, long start) {
-		long end = new Date().getTime();
+		long end = System.currentTimeMillis();
 		long time = end - start;
 		logger.log(Level.INFO, "Request " + getRequestURI() + " ended in " + time + "ms.");
 		return end;

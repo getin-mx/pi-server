@@ -7,6 +7,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -46,6 +48,7 @@ public class MailHelperImpl implements MailHelper {
 			if( systemConfiguration.getSmtpEncription().equals("tls"))
 				props.put("mail.smtp.starttls.enable", "true");
 			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.ssl.trust", systemConfiguration.getSmtpServer());
 
 			props.setProperty("mail.smtp.port", String.valueOf(systemConfiguration.getSmtpPort()));
 			props.setProperty("mail.smtp.host", systemConfiguration.getSmtpServer());
@@ -96,4 +99,59 @@ public class MailHelperImpl implements MailHelper {
 		sendMessage(user, subject, text);
 
 	}
+	
+	@Override
+	public void sendMessageWithAttachMents(User user, String subject, String message,
+			String attachmentPath, String attachmentName) throws ASException {
+		try {
+			Properties props = System.getProperties();
+			if( systemConfiguration.getSmtpEncription().equals("tls"))
+				props.put("mail.smtp.starttls.enable", "true");
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.ssl.trust", systemConfiguration.getSmtpServer());
+
+			props.setProperty("mail.smtp.port",
+					String.valueOf(systemConfiguration.getSmtpPort()));
+			props.setProperty("mail.smtp.host", systemConfiguration.getSmtpServer());
+			props.setProperty("mail.smtp.user", systemConfiguration.getSmtpUser());
+
+			Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+				protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+					return new javax.mail.PasswordAuthentication(
+							systemConfiguration.getSmtpUser(),
+							systemConfiguration.getSmtpPassword());
+				}
+			});
+
+			Message msg = new MimeMessage(session);
+			msg.setFrom(new InternetAddress(systemConfiguration.getMailFrom(),
+					systemConfiguration.getMailFromName()));
+			msg.setReplyTo(new Address[] {new InternetAddress(
+					systemConfiguration.getReplyTo(),
+					systemConfiguration.getMailFromName())});
+			msg.addRecipient(Message.RecipientType.TO,
+					new InternetAddress(user.getEmail(), user.getEmail()));
+			msg.setSubject(subject);
+
+			Multipart mp = new MimeMultipart();
+
+			MimeBodyPart htmlPart = new MimeBodyPart();
+			htmlPart.setContent(message, "text/html");
+			mp.addBodyPart(htmlPart);
+			
+			MimeBodyPart attachment = new MimeBodyPart();
+			attachment.setDataHandler(new DataHandler(
+					new FileDataSource(attachmentPath)));
+			attachment.setFileName(attachmentName);
+			mp.addBodyPart(attachment);
+			
+			msg.setContent(mp);
+			Transport.send(msg);
+
+		} catch (MessagingException | UnsupportedEncodingException e) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		}
+	}
+	
 }

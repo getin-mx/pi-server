@@ -3,10 +3,10 @@ package mobi.allshoppings.apdevice.impl;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -18,18 +18,16 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.jdo.PersistenceManager;
-
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import mobi.allshoppings.apdevice.APDVisitHelper;
 import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.DeviceInfoDAO;
-import mobi.allshoppings.dao.ExternalAPHotspotDAO;
 import mobi.allshoppings.dump.DumperHelper;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDevice;
@@ -39,20 +37,20 @@ import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.ExternalAPHotspot;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.tools.CollectionFactory;
-import mobi.allshoppings.tools.PersistentCacheJDOImpl;
-import mobi.allshoppings.tx.PersistenceProvider;
-import mobi.allshoppings.tx.TransactionType;
-import mobi.allshoppings.tx.spi.PersistenceProviderJDOImpl;
+import mobi.allshoppings.tools.PersistentCacheFSImpl;
 
 public class APHHelperImpl implements APHHelper {
 
 	private static final Logger log = Logger.getLogger(APHHelperImpl.class.getName());
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static final DecimalFormat df = new DecimalFormat("00");
-	private static final long ONE_HOUR = 3600000;
+	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+	private static final long HOUR_IN_MILLIS = 3600000;
+	private static final long DAY_IN_MILLIS = 86400000;
+	private static final Calendar CALENDAR = Calendar.getInstance();
+	private static final Pattern VALID_MAC_ADDRESS_REGEX =
+			Pattern.compile("^([0-9A-Fa-f]{2}[\\.:-]){5}([0-9A-Fa-f]{2})$");
 	
-	private PersistentCacheJDOImpl<APHEntry> cache;
+	private PersistentCacheFSImpl<APHEntry> cache;
 
 	@Autowired
 	private APHEntryDAO apheDao;
@@ -61,21 +59,22 @@ public class APHHelperImpl implements APHHelper {
 	@Autowired
 	private DeviceInfoDAO diDao;
 	@Autowired
-	private ExternalAPHotspotDAO eaphDao;
-	@Autowired
 	private SystemConfiguration systemConfiguration;
 	
-	private DumperHelper<APHotspot> dumpHelper;
 	private boolean cacheBuilt = false;
 	private boolean scanInDevices = true;
 	private boolean useCache = true;
-	private TimeZone tz;
-	
+	private TimeZone gmt;
+
+	private final Map<String, Integer> AUXILIAR_INTERPOLATION_MAP =
+			CollectionFactory.createMap();
+
 	/**
 	 * Standard Constructor
 	 */
 	public APHHelperImpl() {
-		tz = TimeZone.getDefault();
+		gmt = TimeZone.getTimeZone("GMT");
+		sdf.setTimeZone(gmt);
 	}
 	
 	/**
@@ -89,8 +88,7 @@ public class APHHelperImpl implements APHHelper {
 	 */
 	@Override
 	public String getHash(String hostname, String mac, String date) {
-		APHEntry obj = new APHEntry(hostname, mac, date);
-		return obj.getMac() + ":" + obj.getHostname() + ":" + obj.getDate();
+		return mac + ":" + hostname + ":" + date;
 	}
 
 	/**
@@ -316,9 +314,13 @@ public class APHHelperImpl implements APHHelper {
 	@Override
 	public APHEntry setFramedRSSI(APHEntry aphe, Date forDate, Integer rssi) {
 		if( rssi == null || rssi.equals(0)) return aphe;
-		long offset = tz.getOffset(forDate.getTime());
-		long secondsOfDay = (long)(((forDate.getTime() + offset ) % 86400000) / 1000);
-		int frame = (int)Math.round((secondsOfDay / 20));
+		CALENDAR.clear();
+		CALENDAR.setTime(forDate);
+		CALENDAR.setTimeZone(gmt);
+		int secondsOfDay = CALENDAR.get(Calendar.SECOND)
+				+CALENDAR.get(Calendar.MINUTE) *60
+				+CALENDAR.get(Calendar.HOUR_OF_DAY) *60 *60;
+		int frame = secondsOfDay /20;
 		aphe.getRssi().put(String.valueOf(frame), rssi);
 		aphe.setDataCount(aphe.getRssi().size());
 		if( null == aphe.getMinRssi() || rssi < aphe.getMinRssi() )
@@ -358,13 +360,32 @@ public class APHHelperImpl implements APHHelper {
 	 *            The APHotspot from which the RSSI will be taken from
 	 * @return The modified APHEntry
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public APHEntry setFramedRSSI(JSONObject aph) {
 		try {
-			String date = sdf.format(new Date(aph.getString("creationDateTime")));
-			APHEntry aphe = getFromCache(aph.getString("hostname"), aph.getString("mac"), date);
-			return putInCache(setFramedRSSI(aphe, new Date(aph.getString("creationDateTime")), aph.getInt("signalDB")));
+			CALENDAR.clear();
+			CALENDAR.setTimeInMillis(aph.getLong("creationDateTime"));
+			String date = sdf.format(CALENDAR.getTimeInMillis());
+			APHEntry aphe = getFromCache(aph.getString("hostname"),
+					aph.getString("mac"), date);
+			return putInCache(setFramedRSSI(aphe, CALENDAR.getTime(),
+					aph.getInt("signalDB")));
+		} catch( Exception e ) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+		}
+		return null;
+	}
+	
+	@Override
+	public APHEntry setFramedRSSI(JSONObject aph, Date forceDate) {
+		try {
+			CALENDAR.clear();
+			CALENDAR.setTime(forceDate);
+			String date = sdf.format(CALENDAR.getTimeInMillis());
+			APHEntry aphe = getFromCache(aph.getString("hostname"),
+					aph.getString("mac"), date);
+			return putInCache(setFramedRSSI(aphe, CALENDAR.getTime(),
+					aph.getInt("signalDB")));
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -409,19 +430,38 @@ public class APHHelperImpl implements APHHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public void buildCache(Date fromDate, Date toDate, Map<String, APDevice> apdevices) throws ASException {
-		
+	public void buildCache(Date fromDate, Date toDate, List<String> hostnames) throws ASException {
 		cache.clear();
-		List<String> apdKeys = CollectionFactory.createList();
-		apdKeys.addAll(apdevices.keySet());
-		List<APHEntry> list = apheDao.getUsingHostnameAndDates(apdKeys, fromDate, toDate, null, true);
-		for( APHEntry obj : list ) 
-			try {
-				cache.put(getHash(obj), obj);
-			} catch( Exception e ) {
-				log.log(Level.WARNING, e.getMessage(), e);
+
+		if( hostnames.size() == 1 ) {
+			for( String key : hostnames ) { 
+				DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
+				apheDumper.setFilter(key);
+				Iterator<APHEntry> i = apheDumper.iterator(fromDate, toDate);
+				while(i.hasNext()) {
+					APHEntry obj = i.next();
+					try {
+						cache.put(getHash(obj), obj);
+					} catch( Exception e ) {
+						log.log(Level.WARNING, e.getMessage(), e);
+					}
+				}
+				apheDumper.dispose();
 			}
-				
+		} else {
+			DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
+			Iterator<APHEntry> i = apheDumper.iterator(fromDate, toDate);
+			while(i.hasNext()) {
+				APHEntry obj = i.next();
+				try {
+					cache.put(getHash(obj), obj);
+				} catch( Exception e ) {
+					log.log(Level.WARNING, e.getMessage(), e);
+				}
+			}
+			apheDumper.dispose();
+		}
+
 		cacheBuilt = true;
 	}
 	
@@ -461,7 +501,7 @@ public class APHHelperImpl implements APHHelper {
 	public void artificiateRSSI(Map<String, APDevice> apdevices, Date fromDate, Date toDate) throws ASException {
 		
 		Date d1 = new Date(fromDate.getTime());
-		Date d2 = new Date(d1.getTime() + 86400000);
+		Date d2 = new Date(d1.getTime() + DAY_IN_MILLIS);
 		while( d1.before(toDate)) {
 			Iterator<String> i = apdevices.keySet().iterator();
 			while(i.hasNext()) {
@@ -486,57 +526,49 @@ public class APHHelperImpl implements APHHelper {
 	 * 
 	 * @param obj
 	 *            The APHEntry object to analyze
+	 * @param apd - The Device asociated to the APHEntry
+	 * @return List - The time slots for all reported and artificial RSSI
 	 * @throws ASException
 	 */
 	@Override
-	public void artificiateRSSI(APHEntry obj, APDevice apd) throws ASException {
-		
+	public List<Integer> artificiateRSSI(APHEntry obj, APDevice apd) throws ASException {
 		// Obtains the APDevice definition for reference
-		int maxDistance = 0;
+		int maxDistance = 30 *MINUTE_TO_TWENTY_SECONDS_SLOT;
 
-		if( null != apd ) {
-			maxDistance = (int)(apd.getVisitGapThreshold() != null ? apd.getVisitGapThreshold() * 3 : 30);
-		} else {
-			maxDistance = 30;
-		}
+		if( null != apd && apd.getVisitGapThreshold() != null)
+			maxDistance = apd.getVisitGapThreshold().intValue() * MINUTE_TO_TWENTY_SECONDS_SLOT;
 
 		// Clears all Artificial generated RSSI
 		obj.getArtificialRssi().clear();
-		List<Integer> elements = timeslotToList(obj.getRssi());
+		List<Integer> resSlots = timeslotToList(obj.getRssi());
 		
-		for( int i = 0; i < elements.size() - 1; i++ ) {
-			
-			int distance = elements.get(i+1) - elements.get(i) - 1;
-
-			// No distance between elements
+		for( int i = 0; i < resSlots.size() - 1; i++ ) {
+			int distance = resSlots.get(i+1) - resSlots.get(i) - 1;
 			if( distance == 0 ) {
-				String key = String.valueOf(elements.get(i));
+				// No distance between elements
+				String key = String.valueOf(resSlots.get(i));
 				obj.getArtificialRssi().put(key, obj.getRssi().get(key));
-			} 
-			
-			// Distance between Ranges
-			else if( distance < maxDistance ) {
-				
-				int initial = elements.get(i);
+			} else if( distance < maxDistance ) {
+				// Distance between Ranges
+				int initial = resSlots.get(i);
 				int initialValue = obj.getRssi().get(String.valueOf(initial));
-				int last = elements.get(i+1);
+				int last = resSlots.get(i+1);
 				int lastValue = obj.getRssi().get(String.valueOf(last));
 				obj.getArtificialRssi().put(String.valueOf(initial), initialValue);
 				obj.getArtificialRssi().put(String.valueOf(last), lastValue);
-				
-				obj.getArtificialRssi().putAll(interpolate(initial, initialValue, last, lastValue));
-				
+				AUXILIAR_INTERPOLATION_MAP.clear();
+				interpolate(initial, initialValue, last, lastValue);
+				obj.getArtificialRssi().putAll(AUXILIAR_INTERPOLATION_MAP);
 			}
-			
 		}
 		
 		// copies the last key
-		if( elements.size() > 0 ) {
-			String key = String.valueOf(elements.get(elements.size() -1));
+		if( resSlots.size() > 0 ) {
+			String key = String.valueOf(resSlots.get(resSlots.size() -1));
 			obj.getArtificialRssi().put(key, obj.getRssi().get(key));
 		}
 		
-		
+		return resSlots;
 	}
 
 	/**
@@ -552,51 +584,33 @@ public class APHHelperImpl implements APHHelper {
 	 *            Last Value
 	 * @return a Map with the interpolated intermediate values
 	 */
-	public Map<String, Integer> interpolate( int initial, int initialValue, int last, int lastValue ) {
-		Map<String, Integer> ret = CollectionFactory.createMap();
+	public void interpolate(int initial, int initialValue, int last, int lastValue ) {
 		int distance = last - initial - 1;
-		
-		if( distance > 0 ) {
-
+		if(distance <= 0) return;
+		if( distance % 2 != 0 ) {
 			// odd distance
-			if( distance % 2 != 0 ) {
-				
-				int ele = (int)(initial + (((distance - 1) / 2) + 1));
-				int value = (int)((initialValue + lastValue) / 2);
-				ret.put(String.valueOf(ele), value);
-
-				ret.putAll(interpolate(initial, initialValue, ele, value));
-				ret.putAll(interpolate(ele, value, last, lastValue));
-				
+			int ele = (int)(initial + (((distance - 1) / 2) + 1));
+			int value = (int)((initialValue + lastValue) / 2);
+			AUXILIAR_INTERPOLATION_MAP.put(String.valueOf(ele), value);
+			interpolate(initial, initialValue, ele, value);
+			interpolate(ele, value, last, lastValue);
+		} else {
 			// even distance
-			} else {
-				int ele = (int)(initial + (distance / 2));
-				int value = (int)((initialValue + lastValue) / 2);
-				ret.put(String.valueOf(ele), value);
-				ret.put(String.valueOf(ele+1), value);
+			int ele = (int)(initial + (distance / 2));
+			int value = (int)((initialValue + lastValue) / 2);
+			AUXILIAR_INTERPOLATION_MAP.put(String.valueOf(ele), value);
+			AUXILIAR_INTERPOLATION_MAP.put(String.valueOf(ele+1), value);
 
-				ret.putAll(interpolate(initial, initialValue, ele, value));
-				ret.putAll(interpolate(ele+1, value, last, lastValue));
+			interpolate(initial, initialValue, ele, value);
+			interpolate(ele+1, value, last, lastValue);
 
-			}
 		}
-		
-		return ret;
 	}
 	
 	@Override
 	public boolean isValidMacAddress(String mac) {
 
-		// Basic validations
-		if(mac.equals("00:00:00:00:00:00") || mac.toLowerCase().equals("ff:ff:ff:ff:ff:ff"))
-			return false;
-		
-		if(mac.contains(" "))
-			return false;
-
-		// Regex validation
-		Pattern p = Pattern.compile("^([0-9A-Fa-f]{2}[\\.:-]){5}([0-9A-Fa-f]{2})$");
-		Matcher m = p.matcher(mac);
+		Matcher m = VALID_MAC_ADDRESS_REGEX.matcher(mac);
 		return m.find();
 	}
 
@@ -614,62 +628,89 @@ public class APHHelperImpl implements APHHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public void generateAPHEntriesFromDump(String baseDir, Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException {
+	public void generateAPHEntriesFromDump(Date fromDate, Date toDate,
+			List<String> hostnames, boolean buildCache,
+			Map<String, List<APHEntry>> prevDayMem, boolean lastDate, boolean forceDate)
+					throws ASException {
+
+		DumperHelper<APHotspot> dumpHelper;
 
 		if( cache == null )
-			cache = new PersistentCacheJDOImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
+			cache = new PersistentCacheFSImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
 					systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
 		cache.clear();
-		
+
 		// Pre build cache
 		if( buildCache ) {
 			log.log(Level.INFO, "Building Cache");
-			buildCache(fromDate, new Date(toDate.getTime() - 86400000), apdevices);
+			buildCache(fromDate, new Date(toDate.getTime() - DAY_IN_MILLIS), null);
+		} else {
+			setCacheBuilt(true);
 		}
-		
+
 		// Gets the input data
 		long totals = 0;
 		log.log(Level.INFO, "Processing Dump Records");
-		dumpHelper = new DumperHelperImpl<APHotspot>(baseDir, APHotspot.class);
-		Iterator<String> i = dumpHelper.stringIterator(fromDate, toDate);
-		while( i.hasNext() ) {
-			String s = i.next();
-			JSONObject json = new JSONObject(s);
-			if( totals % 1000 == 0 ) 
-				log.log(Level.INFO, "Processing for date " + json.getString("creationDateTime") + " with " + cache.size() + " records so far (" + cache.getHits() + "/" + cache.getMisses() + "/" + cache.getStores() + "/" + cache.getLoads() + ")...");
+		dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
 
-			if(isValidMacAddress(json.getString("mac")))
-				if( apdevices.containsKey(json.getString("hostname"))) 
-					setFramedRSSI(json);
-
-			totals++;
+		List<String> options;
+		if( hostnames == null || hostnames.size() == 0 ) {
+			options = dumpHelper.getMultipleNameOptions(fromDate);
+		} else if( hostnames.size() == 1 ) {
+			options = CollectionFactory.createList();
+			options.add(hostnames.get(0));
+		} else {
+			options = CollectionFactory.createList();
+			options.addAll(hostnames);
 		}
 
-		// Write to the database, only if it was not written yet!
-		if(!( cache instanceof PersistentCacheJDOImpl )) {
+		DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(
+				null, APHEntry.class); 
+		
+		for( String hostname : options ) {
+
+			log.log(Level.INFO, "Processing " + hostname + " for date " + fromDate
+					+ "...");
+
+			dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
+			dumpHelper.setFilter(hostname);
+			Date xdate = new Date(toDate.getTime() -1);
+			Iterator<String> i = dumpHelper.stringIterator(fromDate, xdate);
+			JSONObject json;
+			while( i.hasNext() ) {
+				json = new JSONObject(i.next());
+				totals++;
+				if(isValidMacAddress(json.getString("mac"))) {
+					if(forceDate) setFramedRSSI(json);
+					else setFramedRSSI(json, fromDate);
+				} if( totals % 10000 == 0 ) log.log(Level.INFO, "Processing for date "
+						+ new Date(json.getLong("creationDateTime")) + " with "
+								+ cache.size() + " records so far (" + cache.getHits()
+								+ "/" + cache.getMisses() + "/" + cache.getStores() 
+								+ "/" + cache.getLoads() + ")...");
+			}
+
+			log.log(Level.INFO, "Disposing APHotspot dumper");
+			dumpHelper.dispose();
+
+			// Write to the database, only if it was not written yet!
 			log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
-			PersistenceProvider pp = new PersistenceProviderJDOImpl(TransactionType.SIMPLE);
-			int counter = 0;
 			Iterator<APHEntry> x = cache.iterator();
-			((PersistenceManager)pp.get()).currentTransaction().begin();
 			while(x.hasNext()) {
 				APHEntry aphe = x.next();
-//				artificiateRSSI(aphe, apdevices.get(aphe.getHostname()));
-				if( aphe.getDataCount() > 2 ) {
-					aphe.setKey(apheDao.createKey(aphe));
-					apheDao.createOrUpdate(pp, aphe, true);
-					counter++;
-					if( counter > 10000 )
-						((PersistenceManager)pp.get()).flush();
-				}
+				aphe.setKey(apheDao.createKey(aphe));
+				apheDumper.dump(aphe);
 			}
-			((PersistenceManager)pp.get()).currentTransaction().commit();
-			((PersistenceManager)pp.get()).close();
+			
+			log.log(Level.INFO, "Disposing cache");
+			cache.dispose();
+			
+			apheDumper.flush();
 		}
 		
-		log.log(Level.INFO, "Disposing cache");
-		cache.dispose();
-		
+		log.log(Level.INFO, "Disposing APHE dumper");
+		apheDumper.dispose();
+
 		log.log(Level.INFO, "Process Ended");
 
 	}
@@ -685,61 +726,84 @@ public class APHHelperImpl implements APHHelper {
 	 *            Devices to match
 	 */
 	@Override
-	public void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, Map<String, APDevice> apdevices, boolean buildCache) throws ASException {
+	public void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, List<String> hostnames, boolean buildCache) throws ASException {
+
+		DumperHelper<ExternalAPHotspot> dumpHelper;
 
 		if( cache == null )
-			cache = new PersistentCacheJDOImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
+			cache = new PersistentCacheFSImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
 					systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
 
 		// Pre build cache
 		if( buildCache ) {
 			log.log(Level.INFO, "Building Cache");
-			buildCache(fromDate, new Date(toDate.getTime() - 86400000), apdevices);
+			buildCache(fromDate, new Date(toDate.getTime() - DAY_IN_MILLIS), null);
+		} else {
+			setCacheBuilt(true);
 		}
 		
 		// Gets the input data
 		long totals = 0;
-		log.log(Level.INFO, "Processing External AP Records from " + fromDate + " to " + toDate);
-		List<ExternalAPHotspot> list = eaphDao.getUsingHostnameAndDates((String)null, fromDate, toDate);
-		for( ExternalAPHotspot obj : list ) {
-			if( totals % 1000 == 0 ) 
-				log.log(Level.INFO, "Processing records " + totals + " of " + list.size());
-			
-			totals++;
-			
-			if( obj.getLastSeen() == null )
-				obj.setLastSeen(new Date(obj.getFirstSeen().getTime() + ONE_HOUR));
-			
-			if(isValidMacAddress(obj.getMac()))
-				if( apdevices.containsKey(obj.getHostname())) 
-					setFramedRSSI(obj);
-		}
-		
+		log.log(Level.INFO, "Processing Dump Records");
+		dumpHelper = new DumpFactory<ExternalAPHotspot>().build(null, ExternalAPHotspot.class);
 
-		// Write to the database, only if it was not written yet!
-		if(!( cache instanceof PersistentCacheJDOImpl )) {
+		List<String> options;
+		if( hostnames == null || hostnames.size() == 0 ) {
+			options = dumpHelper.getMultipleNameOptions(fromDate);
+		} else if( hostnames.size() == 1 ) {
+			options = CollectionFactory.createList();
+			options.add(hostnames.get(0));
+		} else {
+			options = CollectionFactory.createList();
+			options.addAll(hostnames);
+		}
+
+		DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class); 
+
+		for( String hostname : options ) {
+
+			log.log(Level.INFO, "Processing " + hostname + " for date " + fromDate
+					+ "...");
+
+			dumpHelper = new DumpFactory<ExternalAPHotspot>().build(null, ExternalAPHotspot.class);
+			dumpHelper.setFilter(hostname);
+			Date xdate = new Date(toDate.getTime() - HOUR_IN_MILLIS);
+			Iterator<ExternalAPHotspot> i = dumpHelper.iterator(fromDate, xdate);
+			while( i.hasNext() ) {
+				ExternalAPHotspot obj = i.next();
+				if( totals % 1000 == 0 ) 
+					log.log(Level.INFO, "Processing for date " + obj.getCreationDateTime() + " with " + cache.size() + " records so far (" + cache.getHits() + "/" + cache.getMisses() + "/" + cache.getStores() + "/" + cache.getLoads() + ")...");
+
+				if( obj.getLastSeen() == null )
+					obj.setLastSeen(new Date(obj.getFirstSeen().getTime() + HOUR_IN_MILLIS));
+
+				if(isValidMacAddress(obj.getMac()))
+					setFramedRSSI(obj);
+
+				totals++;
+			}
+
+			log.log(Level.INFO, "Disposing ExternalAPHotspot dumper");
+			dumpHelper.dispose();
+
+			// Write to the database, only if it was not written yet!
 			log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
-			PersistenceProvider pp = new PersistenceProviderJDOImpl(TransactionType.SIMPLE);
-			int counter = 0;
 			Iterator<APHEntry> x = cache.iterator();
-			((PersistenceManager)pp.get()).currentTransaction().begin();
 			while(x.hasNext()) {
 				APHEntry aphe = x.next();
-//				artificiateRSSI(aphe, apdevices.get(aphe.getHostname()));
-				if( aphe.getDataCount() > 2 ) {
+				//if( aphe.getDataCount() > 2 ) {
 					aphe.setKey(apheDao.createKey(aphe));
-					apheDao.createOrUpdate(pp, aphe, true);
-					counter++;
-					if( counter > 10000 )
-						((PersistenceManager)pp.get()).flush();
-				}
+					apheDumper.dump(aphe);
+				//}
 			}
-			((PersistenceManager)pp.get()).currentTransaction().commit();
-			((PersistenceManager)pp.get()).close();
+			log.log(Level.INFO, "Disposing cache");
+			cache.dispose();
+
+			apheDumper.flush();
 		}
 		
-		log.log(Level.INFO, "Disposing cache");
-		cache.dispose();
+		log.log(Level.INFO, "Disposing APHE dumper");
+		apheDumper.dispose();
 
 		log.log(Level.INFO, "Process Ended");
 
@@ -809,28 +873,15 @@ public class APHHelperImpl implements APHHelper {
 	}
 	
 	/**
-	 * Converts a timeslot offset to a String time
+	 * Converts a timeslot offset to seconds offset
 	 * 
 	 * @param t
 	 *            The timeslot offset
-	 * @return a Fully formed String representing the time
+	 * @return The seconds offset
 	 */
 	@Override
-	public String slotToTime(int t) {
-		long val = t * 20;
-		int hour = (int) (val / 3600);
-		val = val % 3600;
-		int min = (int) (val / 60);
-		int sec = (int)(val % 60);
-		
-		StringBuffer sb = new StringBuffer();
-		sb.append(df.format(hour))
-			.append(":")
-			.append(df.format(min))
-			.append(":")
-			.append(df.format(sec));
-		
-		return sb.toString();
+	public int slotToSeconds(int t) {
+		return (t * 20);
 	}
 		
 	/**
@@ -844,8 +895,28 @@ public class APHHelperImpl implements APHHelper {
 	 * @throws ParseException
 	 */
 	@Override
-	public Date slotToDate(String date, int t) throws ParseException {
-		String f = date + " " + slotToTime(t);
-		return sdf2.parse(f);
+	public Date slotToDate(APHEntry source, int t, TimeZone tz)
+			throws ParseException {
+		CALENDAR.clear();
+		CALENDAR.setTimeZone(gmt);
+		sdf2.setTimeZone(tz);
+		CALENDAR.setTime(sdf2.parse(source.getDate()));
+		if(t < 0) {
+			t += APDVisitHelper.SLOT_NUMBER_IN_DAY;
+			CALENDAR.add(Calendar.DATE, -1);
+			source.setShiftDay(APHEntry.PREVIOUS);
+		} else if(t >= APDVisitHelper.SLOT_NUMBER_IN_DAY) {
+			t -= APDVisitHelper.SLOT_NUMBER_IN_DAY;
+			CALENDAR.add(Calendar.DATE, 1);
+			source.setShiftDay(APHEntry.NEXT);
+		} else source.setShiftDay(APHEntry.NO_SHIFT);
+		CALENDAR.add(Calendar.SECOND, slotToSeconds(t));
+		return CALENDAR.getTime();
+	}
+
+	@Override
+	public void generateAPDVAnalysis(Date forDate, String entityId, Integer entityKind) throws ASException {
+		// TODO Auto-generated method stub
+		
 	}
 }

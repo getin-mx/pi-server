@@ -13,6 +13,9 @@ import mobi.allshoppings.model.Store;
 
 public interface APDVisitHelper {
 
+	public static final int DAY_IN_MILLIS = 86400000;
+	public static final int SLOT_NUMBER_IN_DAY = DAY_IN_MILLIS /1000 /20;
+	
 	void generateAPDVisits(List<String> brandIds, List<String> storeIds, Date fromDate, Date toDate,
 			boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards)
 			throws ASException;
@@ -21,17 +24,16 @@ public interface APDVisitHelper {
 			boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards) throws ASException;
 
 	List<APDVisit> aphEntryToVisits(APHEntry entry, Map<String, APDevice> apdCache,
-			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, List<String> employeeListMacs)
-			throws ASException;
+			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,
+			List<String> employeeListMacs, Store store) throws ASException;
 
-	List<APDVisit> aphEntryToVisits(List<APHEntry> entries,
-			Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache,
-			List<String> blackListMacs, List<String> employeeListMacs) throws ASException;
+	List<APDVisit> aphEntryToVisits(List<APHEntry> entries, Map<String, APDevice> apdCache,
+			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,
+			List<String> employeeListMacs, Store store) throws ASException;
 
-	void fakeVisitsWith(String storeId, String fakeWithStoreId, Date fromDate,
-			Date toDate) throws ASException;
+	void fakeVisitsWith(String storeId, String fakeWithStoreId, Date fromDate, Date toDate) throws ASException;
 	
-	List<APDVisit> fakeVisitsWith(Store store, Date copyFromDate, Date copyToDate,
+	void fakeVisitsWith(Store store, Date copyFromDate, Date copyToDate,
 			Date insertFromDate) throws ASException;
 	
 }

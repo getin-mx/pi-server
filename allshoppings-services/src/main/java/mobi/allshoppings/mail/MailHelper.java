@@ -8,5 +8,8 @@ import mobi.allshoppings.model.User;
 public interface MailHelper {
 
 	void sendMessage(User user, String subject, String message ) throws ASException;
-	void sendMessage(User user, String subject, String template, Map<String, Object> replaceValues) throws ASException;
+	void sendMessage(User user, String subject, String template,
+			Map<String, Object> replaceValues) throws ASException;
+	void sendMessageWithAttachMents(User user, String subject, String message,
+			String attachmentPath, String attachmentName) throws ASException;
 }

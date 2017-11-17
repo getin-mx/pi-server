@@ -84,11 +84,14 @@
 		<property name="smtpServer" value="smtp.gmail.com" />
 		<property name="smtpPort" value="587" />
 		<property name="smtpUser" value="contacto@getin.mx" />
-		<property name="smtpPassword" value="Getin123456789" />
+		<property name="smtpPassword" value="Getin2017$4321" />
 		<property name="smtpEncription" value="tls" />
-		<property name="solrUrl" value="http://aragorn.getin.mx:8983/solr/allshoppings" />
+		<property name="solrUrl" value="http://anakin.getin.mx:8983/solr/allshoppings" />
 		<property name="getinSqlUrl" value="jdbc:mysql://getinold.allshoppings.mobi:3306/getin?user=api&amp;password=VZ52sBPTeg33rq7w" />
 		<property name="defaultDumpDirectory" value="/usr/local/allshoppings/dump/" />
+		<property name="externalGeoFromDate" value="2017-08-01" />
+        <property name="externalGeoToDate" value="2017-10-01" />
+
 		<property name="floorMapTracking">
 			<list>
 				<value>modatelas_tacubaya_pb</value>
@@ -119,10 +122,13 @@
 		<property name="apdeviceUser" value="root" />
 		<property name="apdevicePass" value="xcal#bury5443" />
 
-		<property name="processHost" value="gandalf.getin.mx" />
+		<property name="devicesSysInfoURL" value="http://anakin.getin.mx/sysinfo.sh" />
+
+		<property name="processHost" value="localhost" />
 		<property name="processUser" value="getin" />
-		<property name="processPass" value="#zxcvasdf7890" />
+		<property name="processPass" value="lkjh1234zxcv$" />
 		<property name="processRunTimeLimit" value="14400000" />
+		<property name="processKey" value="/usr/local/allshoppings/resources/.s/solo" />
 
 		<property name="resourcesDir" value="/usr/local/allshoppings/resources" />
 		<property name="excelTemplate" value="template-2017-02.xlsm" />
@@ -131,6 +137,27 @@
 		<property name="cachePageSize" value="1000" />
 		<property name="cacheTempDir" value="/usr/local/allshoppings/dump" />
 		<property name="forceAlgorithm" value="markI" />
+
+		<property name="CFMInstances" value="15" />
+		<property name="awsAccessKey" value="AKIAAUUHP33G7PYRV2TB" />
+		<property name="awsSecretKey" value="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" />
+		<property name="s3Endpoint" value="http://shire.getin.mx:8773/services/Walrus/" />
+		<property name="xs3User" value="admin" />
+		<property name="xs3Password" value="admin01" />
+		<!--property name="xs3Endpoint" value="http://localhost:8085/xs3" /-->
+		<property name="xs3Endpoint" value="http://korriban.getin.mx:8085/xs3" />
+		<property name="maxUploadQueue" value="500" />
+		<property name="s3Buckets">
+			<map>
+				<entry><key><value>default</value></key><value>dump</value></entry>
+				<entry><key><value>APHEntry</value></key><value>aphentry</value></entry>
+				<entry><key><value>APDVisit</value></key><value>apdvisit</value></entry>
+				<entry><key><value>ExternalAPHotspot</value></key><value>external-aphotspot</value></entry>
+				<entry><key><value>APHotspot</value></key><value>aphotspot</value></entry>
+				<entry><key><value>DeviceLocationHistory</value></key><value>device-location-history</value></entry>
+				<entry><key><value>DeviceWifiLocationHistory</value></key><value>device-wifi-location-history</value></entry>
+			</map>
+		</property>
 
 		<property name="appleMacs">
 			<list>

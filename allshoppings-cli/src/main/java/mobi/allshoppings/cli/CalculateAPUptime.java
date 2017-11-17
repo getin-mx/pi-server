@@ -24,7 +24,6 @@ public class CalculateAPUptime extends AbstractCLI {
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
 		else parser = base;
-		parser.accepts( "outDir", "Output Directory (for example, /tmp/dump)").withRequiredArg().ofType( String.class );
 		parser.accepts( "fromDate", "Date From" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "toDate", "Date To" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "hostname", "APHostname").withRequiredArg().ofType( String.class );
@@ -48,7 +47,6 @@ public class CalculateAPUptime extends AbstractCLI {
 			Date fromDate = null;
 			Date toDate = null;
 			String hostname = null;
-			String sOutDir = null;
 			
 			try {
 				if( options.has("fromDate")) sFromDate = (String)options.valueOf("fromDate");
@@ -69,19 +67,17 @@ public class CalculateAPUptime extends AbstractCLI {
 				if( options.has("hostname")) {
 					hostname = (String)options.valueOf("hostname");
 				}
-				
-				if( options.has("outDir")) sOutDir = (String)options.valueOf("outDir");
-				else usage(parser);
-				
+								
 			} catch( Exception e ) {
 				e.printStackTrace();
 				usage(parser);
 			}
 
-			log.log(Level.INFO, "Calculating AP Uptime");
+			log.log(Level.INFO, "Calculating AP Uptime ...");
 			List<String> apdevices = CollectionFactory.createList();
 			if(StringUtils.hasText(hostname)) apdevices.add(hostname);
-			helper.calculateUptimeFromDump(sOutDir, fromDate, toDate, apdevices);
+			helper.calculateUptime(fromDate, toDate, apdevices);
+			log.log(Level.INFO, "Process Ended!");
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

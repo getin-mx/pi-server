@@ -94,6 +94,7 @@ public class SystemConfiguration implements Serializable {
 	private String processHost;
 	private String processUser;
 	private String processPass;
+	private String processKey;
 	private String externalActivityTriggerURL;
 	private long processRunTimeLimit;
 	private List<String> apdReportMailList;
@@ -107,6 +108,18 @@ public class SystemConfiguration implements Serializable {
 	private int cacheMaxInMemElements;
 	private int cachePageSize;
 	private String cacheTempDir;
+	private int CFMInstances;
+	private String awsAccessKey;
+	private String awsSecretKey;
+	private String s3Endpoint;
+	private int maxUploadQueue;
+	private Map<String, String> s3Buckets;
+	private String xs3User;
+	private String xs3Password;
+	private String xs3Endpoint;
+	private String externalGeoFromDate;
+	private String externalGeoToDate;
+	private String devicesSysInfoURL;
 	
 	public String getDefaultLevel() {
 		return defaultLevel;
@@ -908,6 +921,110 @@ public class SystemConfiguration implements Serializable {
 
 	public void setForceAlgorithm(String forceAlgorithm) {
 		this.forceAlgorithm = forceAlgorithm;
+	}
+
+	public int getCFMInstances() {
+		return CFMInstances;
+	}
+
+	public void setCFMInstances(int cFMInstances) {
+		CFMInstances = cFMInstances;
+	}
+
+	public String getAwsAccessKey() {
+		return awsAccessKey;
+	}
+
+	public void setAwsAccessKey(String awsAccessKey) {
+		this.awsAccessKey = awsAccessKey;
+	}
+
+	public String getAwsSecretKey() {
+		return awsSecretKey;
+	}
+
+	public void setAwsSecretKey(String awsSecretKey) {
+		this.awsSecretKey = awsSecretKey;
+	}
+
+	public String getS3Endpoint() {
+		return s3Endpoint;
+	}
+
+	public void setS3Endpoint(String s3Endpoint) {
+		this.s3Endpoint = s3Endpoint;
+	}
+
+	public Map<String, String> getS3Buckets() {
+		return s3Buckets;
+	}
+
+	public void setS3Buckets(Map<String, String> s3Buckets) {
+		this.s3Buckets = s3Buckets;
+	}
+
+	public int getMaxUploadQueue() {
+		return maxUploadQueue;
+	}
+
+	public void setMaxUploadQueue(int maxUploadQueue) {
+		this.maxUploadQueue = maxUploadQueue;
+	}
+
+	public String getXs3User() {
+		return xs3User;
+	}
+
+	public void setXs3User(String xs3User) {
+		this.xs3User = xs3User;
+	}
+
+	public String getXs3Password() {
+		return xs3Password;
+	}
+
+	public void setXs3Password(String xs3Password) {
+		this.xs3Password = xs3Password;
+	}
+
+	public String getXs3Endpoint() {
+		return xs3Endpoint;
+	}
+
+	public void setXs3Endpoint(String xs3Endpoint) {
+		this.xs3Endpoint = xs3Endpoint;
+	}
+
+	public String getExternalGeoFromDate() {
+		return externalGeoFromDate;
+	}
+
+	public void setExternalGeoFromDate(String externalGeoFromDate) {
+		this.externalGeoFromDate = externalGeoFromDate;
+	}
+
+	public String getExternalGeoToDate() {
+		return externalGeoToDate;
+	}
+
+	public void setExternalGeoToDate(String externalGeoToDate) {
+		this.externalGeoToDate = externalGeoToDate;
+	}
+	
+	public String getProcessKey() {
+		return processKey;
+	}
+
+	public void setProcessKey(String processKey) {
+		this.processKey = processKey;
+	}
+	
+	public String getDevicesSysInfoURL() {
+		return devicesSysInfoURL;
+	}
+
+	public void setDevicesSysInfoURL(String devicesSysInfoURL) {
+		this.devicesSysInfoURL = devicesSysInfoURL;
 	}
 
 }

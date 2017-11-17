@@ -18,6 +18,7 @@ public class InitAppServlet extends HttpServlet {
 
 		try {
 			// Warm up request;
+			BasicDataBuilder.buildBasicData();
 			BasicDataBuilder.warmUp();
 		} catch( Throwable t ) {
 		} finally {

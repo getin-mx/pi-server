@@ -1,9 +1,12 @@
 package mobi.allshoppings.bdb.tools;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -19,12 +22,17 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
+import mobi.allshoppings.bdb.dashboard.bz.spi.BrandExportServlet;
 import mobi.allshoppings.dao.BrandDAO;
 import mobi.allshoppings.dao.StoreDAO;
+import mobi.allshoppings.dao.UserDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.exporter.impl.ExcelExportHelperImpl;
+import mobi.allshoppings.mail.MailHelper;
 import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.User;
 
 public class XSSFDashboardExport {
 
@@ -32,6 +40,10 @@ public class XSSFDashboardExport {
 	private BrandDAO brandDao;
 	@Autowired
 	private StoreDAO storeDao;
+	@Autowired
+	private UserDAO userDao;
+	@Autowired
+	private MailHelper mailHelper;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
@@ -43,6 +55,8 @@ public class XSSFDashboardExport {
 		
 		// Get the Store
 		Store store = !StringUtils.hasText(storeId) ? null : storeDao.get(storeId, true);
+		
+		User user = userDao.getByAuthToken(authToken);
 
 		// Data Acquisition ---------------------------------------------------------------------------------------------
 		// Table --------------------------------------------------------------------------------------------------------
@@ -273,7 +287,20 @@ public class XSSFDashboardExport {
 			}
 			
 			wb.write(bos);
+			
+			File tmp = File.createTempFile(StringUtils.hasText(brandId) ?
+					brandId : storeId, ".xlsx");
+			FileOutputStream fos = new FileOutputStream(tmp);
+			wb.write(fos);
+			fos.flush();
+			fos.close();
+			
 			bos.close();
+			
+			ExcelExportHelperImpl.sendReportMail(mailHelper,
+					user, tmp, Logger.getLogger(
+							BrandExportServlet.class
+							.getSimpleName()));
 			
 			return bos.toByteArray();
 			

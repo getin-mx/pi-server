@@ -19,7 +19,7 @@ import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.spi.CheckinDAOJDOImpl;
 import mobi.allshoppings.dao.spi.ShoppingDAOJDOImpl;
 import mobi.allshoppings.dump.DumperHelper;
-import mobi.allshoppings.dump.impl.DumperHelperImpl;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.geocoding.GeoCodingHelper;
@@ -31,6 +31,7 @@ import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.tools.CollectionFactory;
+import mobi.allshoppings.tools.GsonFactory;
 
 
 public class CheckinUpdaterService {
@@ -43,15 +44,15 @@ public class CheckinUpdaterService {
 	private ShoppingDAO shoppingDao = new ShoppingDAOJDOImpl();
 	private GeoCodingHelper geocoder = new GeoCodingHelperGMapsImpl();
 	private CheckinDAO checkinDao = new CheckinDAOJDOImpl();
-	protected Gson gson = new Gson();
+	protected Gson gson = GsonFactory.getInstance();
 	
-	public void updateCheckins(String baseDir, Date fromDate, Date toDate) throws ASException, IOException {
+	public void updateCheckins(Date fromDate, Date toDate) throws ASException, IOException {
 
-		DumperHelper<DeviceLocationHistory> dumper = new DumperHelperImpl<DeviceLocationHistory>(baseDir, DeviceLocationHistory.class);
+		DumperHelper<DeviceLocationHistory> dumper = new DumpFactory<DeviceLocationHistory>().build(null, DeviceLocationHistory.class);
 		Map<String, List<InterestingPoint>> interestingPointsMap = getInterestingPointMap(shoppingDao, geocoder, null); 
 
 		long totals = 0;
-		long initTime = new Date().getTime();
+		long initTime = System.currentTimeMillis();
 
 		DeviceLocationHistory obj = null;
 		InterestingPoint nearest = null;
@@ -151,7 +152,9 @@ public class CheckinUpdaterService {
 			}
 		}
 
-		long endTime = new Date().getTime();
+		dumper.dispose();
+		
+		long endTime = System.currentTimeMillis();
 		log.log(Level.INFO, totals + " elements calculated in " + (endTime - initTime) + "ms for this process");
 
 	}

@@ -59,7 +59,7 @@ public class APDeviceStatusBzServiceJSONImpl extends RestBaseServerResource impl
 			Map<String, String> additionalFields = CollectionFactory.createMap();
 
 			// retrieve all brands
-			long millisPre = new Date().getTime();
+			long millisPre = System.currentTimeMillis();
 			if( q != null && !q.trim().equals("")) {
 				list = apdDao
 						.getUsingIndex(APDevice.class.getName(), q, null,
@@ -68,7 +68,7 @@ public class APDeviceStatusBzServiceJSONImpl extends RestBaseServerResource impl
 				list = apdDao.getUsingRange(range);
 				Collections.sort(list, new APDeviceComparator());
 			}
-			long diff = new Date().getTime() - millisPre;
+			long diff = System.currentTimeMillis() - millisPre;
 
 			// Logs the result
 			log.info("Number of Access Point Devices found [" + list.size() + "] in " + diff + " millis");
