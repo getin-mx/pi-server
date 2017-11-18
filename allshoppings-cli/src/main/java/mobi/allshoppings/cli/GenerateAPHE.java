@@ -14,10 +14,8 @@ import org.springframework.util.StringUtils;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import mobi.allshoppings.apdevice.APHHelper;
-import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.tools.CollectionFactory;
 
