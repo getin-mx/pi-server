@@ -100,11 +100,6 @@ public class GenerateAPHE extends AbstractCLI {
 				for(String chn : hn){
 					hostnames.add(chn);
 				}
-			} if(hostnames.isEmpty()) {
-				APDAssignationDAO apdaDao = (APDAssignationDAO) getApplicationContext()
-						.getBean("apdassignation.dao.ref");
-				for(APDAssignation apda : apdaDao.getAll())
-					hostnames.add(apda.getHostname());
 			}
 			
 			helper.setScanInDevices(false);
