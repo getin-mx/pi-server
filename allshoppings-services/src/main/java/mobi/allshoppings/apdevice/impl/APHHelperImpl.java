@@ -681,8 +681,8 @@ public class APHHelperImpl implements APHHelper {
 				json = new JSONObject(i.next());
 				totals++;
 				if(isValidMacAddress(json.getString("mac"))) {
-					if(forceDate) setFramedRSSI(json);
-					else setFramedRSSI(json, fromDate);
+					if(forceDate) setFramedRSSI(json, fromDate);
+					else setFramedRSSI(json);
 				} if( totals % 10000 == 0 ) log.log(Level.INFO, "Processing for date "
 						+ new Date(json.getLong("creationDateTime")) + " with "
 								+ cache.size() + " records so far (" + cache.getHits()

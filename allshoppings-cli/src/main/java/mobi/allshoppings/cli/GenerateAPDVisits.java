@@ -23,19 +23,29 @@ public class GenerateAPDVisits extends AbstractCLI {
 	private static final Logger log = Logger.getLogger(GenerateAPDVisits.class.getName());
 	public static final int TWENTY_FOUR_HOURS = 86400000;
 	public static final int TWELVE_HOURS = TWENTY_FOUR_HOURS /2;
+	private static final String FROM_DATE_PARAM = "fromDate";
+	private static final String TO_DATE_PARAM = "toDate";
+	private static final String BRAND_IDS_PARAM = "brandIds";
+	private static final String STORE_IDS_PARAM = "storeIds";
+	private static final String SHOPPING_IDS_PARAM = "shoppingIds";
+	private static final String ONLY_EMPLOYEES_PARAM = "onlyEmployees";
+	private static final String ONLY_DASHBOARDS_PARAM = "onlyDashboards";
+	private static final String UPDATE_DASHBOARDS_PARAM = "updateDashboards";
+	//be aware: otography is important!
+	private static final String DELETE_PREVIOUS_RECORDS_PARAM = "deletePreviousRecords";
 	
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
 		else parser = base;
-		parser.accepts( "fromDate", "Date From" ).withRequiredArg().ofType( String.class );
-		parser.accepts( "toDate", "Date To" ).withRequiredArg().ofType( String.class );
-		parser.accepts( "brandIds", "List of comma separated brands").withRequiredArg().ofType( String.class );
-		parser.accepts( "storeIds", "List of comma separated stores (superseeds brandIds)").withRequiredArg().ofType( String.class );
-		parser.accepts( "shoppingIds", "List of comma separated shoppings (superseeds brandIds and storeIds)").withRequiredArg().ofType( String.class );
-		parser.accepts( "onlyEmployees", "Only process employees").withRequiredArg().ofType( Boolean.class );
-		parser.accepts( "onlyDashboards", "Only process dashboards with preexisting APDVisit data").withRequiredArg().ofType( Boolean.class );
-		parser.accepts( "updateDashboards", "Update dashboards with preexisting APDVisit data").withRequiredArg().ofType( Boolean.class );
-		parser.accepts( "deletePreviousRecords", "Delete previus dashboards")
+		parser.accepts(FROM_DATE_PARAM, "Date From" ).withRequiredArg().ofType( String.class );
+		parser.accepts(TO_DATE_PARAM, "Date To" ).withRequiredArg().ofType( String.class );
+		parser.accepts(BRAND_IDS_PARAM, "List of comma separated brands").withRequiredArg().ofType( String.class );
+		parser.accepts(STORE_IDS_PARAM, "List of comma separated stores (superseeds brandIds)").withRequiredArg().ofType( String.class );
+		parser.accepts(SHOPPING_IDS_PARAM, "List of comma separated shoppings (superseeds brandIds and storeIds)").withRequiredArg().ofType( String.class );
+		parser.accepts(ONLY_EMPLOYEES_PARAM, "Only process employees").withRequiredArg().ofType( Boolean.class );
+		parser.accepts(ONLY_DASHBOARDS_PARAM, "Only process dashboards with preexisting APDVisit data").withRequiredArg().ofType( Boolean.class );
+		parser.accepts(UPDATE_DASHBOARDS_PARAM, "Update dashboards with preexisting APDVisit data").withRequiredArg().ofType( Boolean.class );
+		parser.accepts(DELETE_PREVIOUS_RECORDS_PARAM, "Delete previus dashboards")
 				.withRequiredArg().ofType( Boolean.class );
 		return parser;
 	}
@@ -69,8 +79,10 @@ public class GenerateAPDVisits extends AbstractCLI {
 			List<String> shoppings = CollectionFactory.createList();
 			
 			try {
-				if( options.has("fromDate")) sFromDate = (String)options.valueOf("fromDate");
-				if( options.has("toDate")) sToDate = (String)options.valueOf("toDate");
+				if( options.has(FROM_DATE_PARAM)) sFromDate =
+						(String)options.valueOf(FROM_DATE_PARAM);
+				if( options.has(TO_DATE_PARAM)) sToDate =
+						(String)options.valueOf(TO_DATE_PARAM);
 				
 				fromDate = StringUtils.hasText(sFromDate) ? sdf.parse(sFromDate) :
 					sdf.parse(sdf.format(
@@ -83,8 +95,8 @@ public class GenerateAPDVisits extends AbstractCLI {
 					toDate = new Date(fromDate.getTime() + TWENTY_FOUR_HOURS);
 				}
 
-				if(options.has("brandIds")) {
-					brandIds = (String)options.valueOf("brandIds");
+				if(options.has(BRAND_IDS_PARAM)) {
+					brandIds = (String)options.valueOf(BRAND_IDS_PARAM);
 					String tmp[] = brandIds.split(",");
 					for( String s : tmp ) {
 						if(!brands.contains(s.trim()))
@@ -92,8 +104,8 @@ public class GenerateAPDVisits extends AbstractCLI {
 					}
 				}
 
-				if(options.has("storeIds")) {
-					storeIds = (String)options.valueOf("storeIds");
+				if(options.has(STORE_IDS_PARAM)) {
+					storeIds = (String)options.valueOf(STORE_IDS_PARAM);
 					String tmp[] = storeIds.split(",");
 					for( String s : tmp ) {
 						if(!stores.contains(s.trim()))
@@ -101,8 +113,8 @@ public class GenerateAPDVisits extends AbstractCLI {
 					}
 				}
 
-				if(options.has("shoppingIds")) {
-					shoppingIds = (String)options.valueOf("shoppingIds");
+				if(options.has(SHOPPING_IDS_PARAM)) {
+					shoppingIds = (String)options.valueOf(SHOPPING_IDS_PARAM);
 					String tmp[] = shoppingIds.split(",");
 					for( String s : tmp ) {
 						if(!shoppings.contains(s.trim()))
@@ -110,20 +122,21 @@ public class GenerateAPDVisits extends AbstractCLI {
 					}
 				}
 				
-				if(options.has("onlyEmployees")) {
-					onlyEmployees = (Boolean)options.valueOf("onlyEmployees");
+				if(options.has(ONLY_EMPLOYEES_PARAM)) {
+					onlyEmployees = (Boolean)options.valueOf(ONLY_EMPLOYEES_PARAM);
 				}
 
-				if(options.has("onlyDashboards")) {
-					onlyDashboards = (Boolean)options.valueOf("onlyDashboards");
+				if(options.has(ONLY_DASHBOARDS_PARAM)) {
+					onlyDashboards = (Boolean)options.valueOf(ONLY_DASHBOARDS_PARAM);
 				}
 				
-				if(options.has("updateDashboards")) {
-					updateDashboards = (Boolean)options.valueOf("updateDashboards");
+				if(options.has(UPDATE_DASHBOARDS_PARAM)) {
+					updateDashboards = (Boolean)options.valueOf(UPDATE_DASHBOARDS_PARAM);
 				}
 				
-				if(options.has("deletePreviousRecors")) {
-					deletePreviousRecors = (Boolean)options.valueOf("deletePreviousRecors");
+				if(options.has(DELETE_PREVIOUS_RECORDS_PARAM)) {
+					deletePreviousRecors =
+							(Boolean)options.valueOf(DELETE_PREVIOUS_RECORDS_PARAM);
 				}
 
 			} catch( Exception e ) {

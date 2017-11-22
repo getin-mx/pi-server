@@ -49,8 +49,10 @@ public class ExportHelperImpl implements ExportHelper {
 	@Override
 	public void export(Date fromDate, Date toDate, String outfile) throws ASException {
 		
-		List<ExportUnit> list = dao.getUsingStatusAndRange(StatusHelper.statusActive(), null, null);
+		List<ExportUnit> list = dao.getUsingStatusAndRange(StatusHelper.statusActive(),
+				null, null);
 		for( ExportUnit unit : list ) {
+			if(unit.getTargetUser().equals("test_mx")) continue;
 			try {
 				export(unit, fromDate, toDate, outfile);
 			} catch( ASException e ) {

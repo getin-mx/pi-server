@@ -10,6 +10,7 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.tools.Range;
 
+@Deprecated
 public interface APHEntryDAO extends GenericDAO<APHEntry> {
 
 	Key createKey(APHEntry obj) throws ASException;
