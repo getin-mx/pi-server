@@ -3,6 +3,7 @@ package mobi.allshoppings.bdb.bz.spi;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -14,6 +15,8 @@ import com.inodes.util.CollectionFactory;
 
 import mobi.allshoppings.bdb.bz.BDBCrudBzService;
 import mobi.allshoppings.dao.APDVisitDAO;
+import mobi.allshoppings.dump.DumperHelper;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDVisit;
@@ -84,12 +87,22 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 			// retrieve all elements
 			long millisPre = new Date().getTime();
 			Date fromDate = sdf.parse(date);
-			Date toDate = new Date(fromDate.getTime() + ONE_DAY);
+			Date toDate = new Date(fromDate.getTime() + ONE_DAY - 1);
 			
-			list = dao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, fromDate, toDate, checkinType, range, order,
-					attributes, false);
+			//list = dao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, fromDate, toDate, checkinType, range, order, attributes, false);
 			
-			long diff = new Date().getTime() - millisPre;
+			
+			DumperHelper<APDVisit> dumper = new DumpFactory<APDVisit>().build(null, APDVisit.class);
+			dumper.setFilter(entityId);
+			
+			Iterator<APDVisit> visits = dumper.iterator(fromDate, toDate);
+			
+
+			while (visits.hasNext())
+			    list.add(visits.next());
+			
+					
+			long diff = System.currentTimeMillis() - millisPre;
 			
 			// Logs the result
 			log.info("Number of elements found [" + list.size() + "] in " + diff + " millis");
