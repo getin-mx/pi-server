@@ -117,11 +117,14 @@ public class UserDAOJDOImpl extends GenericDAOJDO<User> implements UserDAO {
 				}
 			}
 			
-			obj.preStore();
+ 			obj.preStore();
+ 		 	boolean doc = pm.getDetachAllOnCommit();
+ 		 	pm.setDetachAllOnCommit(false);
 			pm.makePersistent(obj);
 			pm.currentTransaction().commit();
 			obj.getLastUpdate();
 			pm.flush();
+		 	pm.setDetachAllOnCommit(doc);
 			cacheHelper.put(getCacheKey(clazz, keyHelper.obtainIdentifierFromKey(obj.getKey())), obj);
 			cacheHelper.put(obj.getSecuritySettings().getAuthToken(), obj);
 			

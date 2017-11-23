@@ -3,17 +3,18 @@ package mobi.allshoppings.bdb.bz.spi;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inodes.util.CollectionFactory;
 
 import mobi.allshoppings.bdb.bz.BDBCrudBzService;
-import mobi.allshoppings.dao.APDVisitDAO;
+import mobi.allshoppings.dump.DumperHelper;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDVisit;
@@ -25,8 +26,6 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 	private static final long ONE_DAY = 86400000;
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
-	@Autowired
-	private APDVisitDAO dao;
 	
 	@Override
 	public String[] getListFields() {
@@ -45,13 +44,11 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 
 	@Override
 	public void config() {
-		setMyDao(dao);
 		setMyClazz(APDVisit.class);
 	}
 
 	@Override
 	public void setKey(APDVisit obj, JSONObject seed) throws ASException {
-		obj.setKey(dao.createKey(obj));
 	}
 	
 	public String list() {
@@ -84,12 +81,27 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 			// retrieve all elements
 			long millisPre = new Date().getTime();
 			Date fromDate = sdf.parse(date);
-			Date toDate = new Date(fromDate.getTime() + ONE_DAY);
+			Date toDate = new Date(fromDate.getTime() + ONE_DAY - 1);
 			
-			list = dao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, fromDate, toDate, checkinType, range, order,
-					attributes, false);
+			//list = dao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, fromDate, toDate, checkinType, range, order, attributes, false);
 			
-			long diff = new Date().getTime() - millisPre;
+			
+			DumperHelper<APDVisit> dumper = new DumpFactory<APDVisit>().build(null, APDVisit.class);
+			dumper.setFilter(entityId);			
+			Iterator<APDVisit> visits = dumper.iterator(fromDate, toDate);
+			
+			
+			while (visits.hasNext()) {
+				APDVisit visit = visits.next();
+				if(visit.getCheckinType() == 2) {
+					list.add(visit);	
+				}
+					
+			}
+
+			
+					
+			long diff = System.currentTimeMillis() - millisPre;
 			
 			// Logs the result
 			log.info("Number of elements found [" + list.size() + "] in " + diff + " millis");
