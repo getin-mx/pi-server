@@ -9,12 +9,10 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inodes.util.CollectionFactory;
 
 import mobi.allshoppings.bdb.bz.BDBCrudBzService;
-import mobi.allshoppings.dao.APDVisitDAO;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
@@ -28,8 +26,6 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 	private static final long ONE_DAY = 86400000;
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
-	@Autowired
-	private APDVisitDAO dao;
 	
 	@Override
 	public String[] getListFields() {
@@ -48,13 +44,11 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 
 	@Override
 	public void config() {
-		setMyDao(dao);
 		setMyClazz(APDVisit.class);
 	}
 
 	@Override
 	public void setKey(APDVisit obj, JSONObject seed) throws ASException {
-		obj.setKey(dao.createKey(obj));
 	}
 	
 	public String list() {
@@ -93,13 +87,18 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 			
 			
 			DumperHelper<APDVisit> dumper = new DumpFactory<APDVisit>().build(null, APDVisit.class);
-			dumper.setFilter(entityId);
-			
+			dumper.setFilter(entityId);			
 			Iterator<APDVisit> visits = dumper.iterator(fromDate, toDate);
 			
+			
+			while (visits.hasNext()) {
+				APDVisit visit = visits.next();
+				if(visit.getCheckinType() == 2) {
+					list.add(visit);	
+				}
+					
+			}
 
-			while (visits.hasNext())
-			    list.add(visits.next());
 			
 					
 			long diff = System.currentTimeMillis() - millisPre;
