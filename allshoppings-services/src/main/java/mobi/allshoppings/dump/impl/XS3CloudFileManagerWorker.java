@@ -175,7 +175,9 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 								downloaded.put(file, sum);//TODO sum is NULL always
 								forPrefecth.remove(file);
 								sem.release();
+								try {
 								manager.notify();
+								} catch( IllegalMonitorStateException e1) {}
 
 							} else {
 								sem.acquire();
@@ -184,6 +186,7 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 								sem.release();
 							}
 						} catch( Exception e ) {
+							e.printStackTrace();
 							if( e instanceof XS3Exception &&
 									((XS3Exception)e).getErrorCode() !=
 									XS3ExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE )
