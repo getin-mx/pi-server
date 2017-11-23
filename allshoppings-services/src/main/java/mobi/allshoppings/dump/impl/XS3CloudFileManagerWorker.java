@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,15 +14,14 @@ import org.springframework.util.StringUtils;
 import mx.getin.xs3.client.XS3Client;
 import mx.getin.xs3.client.XS3ExceptionHelper;
 import mx.getin.xs3.client.model.XS3Exception;
-import mx.getin.xs3.client.model.XS3Object;
 
 public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 
 	private static final Logger log = Logger.getLogger(XS3CloudFileManagerWorker.class.getName());
 	
-	private Map<String, Date> forPrefecth;
-	private Map<String, Date> forUpload;
-	private Map<String, XS3Object> downloaded;
+	private ConcurrentMap<String, Date> forPrefecth;
+	private ConcurrentMap<String, Date> forUpload;
+	private List<String> downloaded;
 	private List<String> notFound;
 	private String tmpPath;
 	private ConcurrentLinkedQueue<String> controlQueue;
@@ -29,8 +29,10 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 	private boolean doneSignal;
 	private XS3CloudFileManager manager;
 	
-	public XS3CloudFileManagerWorker(Map<String, Date> forPrefecth, Map<String, Date> forUpload, Map<String, XS3Object> downloaded, List<String> notFound,
-			String tmpPath, String bucket, XS3Client client, ConcurrentLinkedQueue<String> controlQueue, Semaphore sem,
+	public XS3CloudFileManagerWorker(ConcurrentMap<String, Date> forPrefecth,
+			ConcurrentMap<String, Date> forUpload,
+			List<String> downloaded, List<String> notFound, String tmpPath,
+			String bucket, XS3Client client, ConcurrentLinkedQueue<String> controlQueue, Semaphore sem,
 			XS3CloudFileManager manager) {
 		super();
 		this.forPrefecth = forPrefecth;
@@ -53,21 +55,21 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 	/**
 	 * @param forPrefecth the forPrefecth to set
 	 */
-	public void setForPrefecth(Map<String, Date> forPrefecth) {
+	public void setForPrefecth(ConcurrentMap<String, Date> forPrefecth) {
 		this.forPrefecth = forPrefecth;
 	}
 
 	/**
 	 * @return the downloaded
 	 */
-	public Map<String, XS3Object> getDownloaded() {
+	public List<String> getDownloaded() {
 		return downloaded;
 	}
 
 	/**
 	 * @param downloaded the downloaded to set
 	 */
-	public void setDownloaded(Map<String, XS3Object> downloaded) {
+	public void setDownloaded(List<String> downloaded) {
 		this.downloaded = downloaded;
 	}
 
@@ -144,7 +146,7 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 					sem.acquire();
 					if( action == XS3CloudFileManager.ACTION_DOWNLOAD) {
 						if(!forPrefecth.containsKey(file) ||
-								downloaded.containsKey(file)) { 
+								downloaded.contains(file)) { 
 							go = false;
 						}
 					} else if( action == XS3CloudFileManager.ACTION_UPLOAD) {
@@ -162,7 +164,6 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 				if( go ) {
 					if( action == XS3CloudFileManager.ACTION_DOWNLOAD) {
 						log.log(Level.INFO, "Getting file " + file);
-						XS3Object sum = null;
 						try {
 							if(StringUtils.hasText(file)) {
 								try {
@@ -172,9 +173,9 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 								}
 								
 								sem.acquire();
-								downloaded.put(file, sum);//TODO sum is NULL always
-								forPrefecth.remove(file);
+								downloaded.add(file);
 								sem.release();
+								forPrefecth.remove(file);
 
 							} else {
 								sem.acquire();

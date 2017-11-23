@@ -9,10 +9,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,11 +35,11 @@ public class XS3CloudFileManager implements CloudFileManager {
     private static final int BUFFER_SIZE = 1024 * 4;
 	private static final Logger log = Logger.getLogger(XS3CloudFileManager.class.getName());
 
-	private Map<String, Date> forUpdate;
-	private Map<String, Date> forUpload;
-	private Map<String, Date> forPrefecth;
-	private Map<String, XS3Object> downloaded;
-	private Map<String, Date> forDisposal;
+	private ConcurrentMap<String, Date> forUpdate;
+	private ConcurrentMap<String, Date> forUpload;
+	private ConcurrentMap<String, Date> forPrefecth;
+	private List<String> downloaded;
+	private ConcurrentMap<String, Date> forDisposal;
 	private List<String> notFound;
 	private String bucket;
 	private String tmpPath;
@@ -59,11 +60,11 @@ public class XS3CloudFileManager implements CloudFileManager {
 		this.systemConfiguration = systemConfiguration;
 		instances = systemConfiguration.getCFMInstances();
 		
-		forUpdate = CollectionFactory.createMap();
-		forUpload = CollectionFactory.createMap();
-		forPrefecth = CollectionFactory.createMap();
-		forDisposal = CollectionFactory.createMap();
-		downloaded = CollectionFactory.createMap();
+		forUpdate = new ConcurrentHashMap<>();
+		forUpload = new ConcurrentHashMap<>();
+		forPrefecth = new ConcurrentHashMap<>();
+		forDisposal = new ConcurrentHashMap<>();
+		downloaded = CollectionFactory.createList();
 		notFound = CollectionFactory.createList();
 		sem = new Semaphore(1);
 		
@@ -100,9 +101,9 @@ public class XS3CloudFileManager implements CloudFileManager {
 		forPrefecth.put(file, new Date());
 		try {
 			if( controlQueue != null ) {
-				sem.acquire();
+				//sem.acquire();
 				controlQueue.offer(ACTION_DOWNLOAD +"::" + file);
-				sem.release();
+				//sem.release();
 			}
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
@@ -167,16 +168,16 @@ public class XS3CloudFileManager implements CloudFileManager {
 				String key = i.next();
 				// Check if it was already started
 				if( workers != null && workers.size() > 0 ) {
-					sem.acquire();
+					//sem.acquire();
 					forUpload.put(key, new Date());
 					controlQueue.offer(ACTION_UPLOAD +"::" + key);
 					forUpdate.remove(key);
-					sem.release();
+					//sem.release();
 				} else {
 					upload(key, key);
-					sem.acquire();
 					forDisposal.put(key, new Date());
 					forUpdate.remove(key);
+					sem.acquire();
 					downloaded.remove(key);
 					sem.release();
 				}
@@ -231,7 +232,7 @@ public class XS3CloudFileManager implements CloudFileManager {
 						sem.release();
 						return false;
 					} else {
-						if( downloaded.containsKey(sanitizeFileName(fileName))) {
+						if( downloaded.contains(sanitizeFileName(fileName))) {
 							sem.release();
 							return true;
 						} else {
@@ -241,7 +242,7 @@ public class XS3CloudFileManager implements CloudFileManager {
 											fileName.substring(0, fileName.lastIndexOf(File.separator))));
 									if( l.size() > 0 ) {
 										download(sanitizeFileName(fileName), sanitizeFileName(fileName));
-										downloaded.put(sanitizeFileName(fileName), l.get(0));
+										downloaded.add(sanitizeFileName(fileName));
 									} else {
 										sem.release();
 										return false;
@@ -432,14 +433,13 @@ public class XS3CloudFileManager implements CloudFileManager {
 	public void deleteLocal(String fileName) throws Exception {
 		File file = new File(tmpPath + fileName);
 		log.log(Level.FINE, "Deleting local copy " + file.getAbsolutePath());
-		long start = new Date().getTime();
-		if( file.exists())
-			file.delete();
+		long start = System.currentTimeMillis();
+		if( file.exists()) file.delete();
 		
-		sem.acquire();
 		forPrefecth.remove(file);
 		forDisposal.remove(fileName);
 		forUpdate.remove(fileName);
+		sem.acquire();
 		downloaded.remove(fileName);
 		sem.release();
 		
