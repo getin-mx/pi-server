@@ -801,7 +801,7 @@ public class GetinDump extends AbstractCLI {
 				brand = brandDao.get("aditivo_franquicias_mx", true);
 			} catch( Exception e ) {
 				brand = new Brand();
-				brand.setName("Aditivo Franquicias");
+				brand.setName("Aditivo Franquicias Edmond");
 				brand.setCountry("Mexico");
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "aditivo_franquicias_mx"));
 				brandDao.create(brand);
@@ -851,7 +851,7 @@ public class GetinDump extends AbstractCLI {
 				brand = brandDao.get("aditivofranquicias2_mx", true);
 			} catch( Exception e ) {
 				brand = new Brand();
-				brand.setName("Aditivo Franquicias 2");
+				brand.setName("Aditivo Franquicias Celia");
 				brand.setCountry("Mexico");
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "aditivofranquicias2_mx"));
 				brandDao.create(brand);
@@ -1439,10 +1439,10 @@ public class GetinDump extends AbstractCLI {
 //			stores.add(new StoreAdapter("727", "Aditivo Franquicia Plaza Central", "franquicias_edmond_bcprint_mx",null, 0));
 //			stores.add(new StoreAdapter("728", "Aditivo Franquicia Cuernavaca", "franquicias_edmond_bcprint_mx",null, 0));
 			
-			stores.add(new StoreAdapter("729", "Aditivo Franquicia Tlahuac", "aditivo_franquicias_mx",null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("730", "Aditivo Franquicia Xochimilco", "aditivo_franquicias_mx",null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("731", "Aditivo Franquicia Plaza Central", "aditivo_franquicias_mx",null, GetinDump.MALL));
-			stores.add(new StoreAdapter("732", "Aditivo Franquicia Cuernavaca", "aditivo_franquicias_mx",null, GetinDump.MALL));
+			stores.add(new StoreAdapter("729", "Aditivo Franquicias Edmond Tlahuac", "aditivo_franquicias_mx",null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("730", "Aditivo Franquicias Edmond Xochimilco", "aditivo_franquicias_mx",null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("731", "Aditivo Franquicias Edmond Plaza Central", "aditivo_franquicias_mx",null, GetinDump.MALL));
+			stores.add(new StoreAdapter("732", "Aditivo Franquicias Edmond Cuernavaca", "aditivo_franquicias_mx",null, GetinDump.MALL));
 			
 			stores.add(new StoreAdapter("733", "Sally Beauty Plaza Insurgentes", "sallybeauty_mx",null, GetinDump.MALL));
 			
@@ -1479,11 +1479,11 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("756", "Squalo Veracruz", "squalo_mx", null, GetinDump.MALL));
 			
-			stores.add(new StoreAdapter("757", "Aditivo Franquicias 2 Miramontes", "aditivofranquicias2_mx",null, GetinDump.MALL));
-			stores.add(new StoreAdapter("758", "Aditivo Franquicias 2 Izazaga", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("759", "Aditivo Franquicias 2 Coacalco", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("760", "Aditivo Franquicias 2 La Villa", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("761", "Aditivo Franquicias 2 Tehuacán", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("757", "Aditivo Franquicias Celia Miramontes", "aditivofranquicias2_mx",null, GetinDump.MALL));
+			stores.add(new StoreAdapter("758", "Aditivo Franquicias Celia Izazaga", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("759", "Aditivo Franquicias Celia Coacalco", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("760", "Aditivo Franquicias Celia La Villa", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("761", "Aditivo Franquicias Celia Tehuacán", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
 			
 			stores.add(new StoreAdapter("762", "Prada Esfera", "prada_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("763", "Prada Victoria", "prada_mx", null, GetinDump.MALL));
@@ -1560,6 +1560,15 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("814", "Universo de Fragancias Vallejo", "universodefragancias_mx", null, GetinDump.MALL));
 			
+			stores.add(new StoreAdapter("815", "Aditivo Franquicias Edmond Xalapa Centro", "aditivo_franquicias_mx",null, GetinDump.MALL));
+			
+			stores.add(new StoreAdapter("816", "Aditivo Franquicias Edmond Xalapa2", "aditivo_franquicias_mx",null, GetinDump.MALL));
+
+			stores.add(new StoreAdapter("817","Juguetron Galerías Serdán", "juguetron_mx", null, GetinDump.MALL));
+			
+			stores.add(new StoreAdapter("818","Juguetron Parque Puebla", "juguetron_mx", null, GetinDump.MALL));
+			
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				log.log(Level.INFO, "Processing store" + obj.getName());
@@ -1583,7 +1592,7 @@ public class GetinDump extends AbstractCLI {
 					store.setKey(obj.getShoppingId() == null ? storeDao.createKey()
 							: storeDao.createKey(obj.getShoppingId(), obj.getBrandId()));
 					storeDao.create(store);
-					log.log(Level.INFO, "Se ha creado la tienta "+obj.getName());
+					log.log(Level.INFO, "Se ha creado la tienda "+obj.getName());
 				}
 			} 	
 
