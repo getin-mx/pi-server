@@ -50,6 +50,10 @@ public class XS3CloudFileManager implements CloudFileManager {
 	
 	private XS3Client client;
 	
+	public static final byte ACTION_NOP = 0;
+	public static final byte ACTION_DOWNLOAD = 1;
+	public static final byte ACTION_UPLOAD = 2;
+	
 	public XS3CloudFileManager(String localPath, SystemConfiguration systemConfiguration) {
 
 		this.systemConfiguration = systemConfiguration;
@@ -97,7 +101,7 @@ public class XS3CloudFileManager implements CloudFileManager {
 		try {
 			if( controlQueue != null ) {
 				sem.acquire();
-				controlQueue.offer("download::" + file);
+				controlQueue.offer(ACTION_DOWNLOAD +"::" + file);
 				sem.release();
 			}
 		} catch( Exception e ) {
@@ -142,8 +146,9 @@ public class XS3CloudFileManager implements CloudFileManager {
 		
 		// Start the actual workers
 		for( int i = 0; i < instances; i++ ) {
-			XS3CloudFileManagerWorker w = new XS3CloudFileManagerWorker(forPrefecth, forUpload, downloaded, notFound,
-					tmpPath, bucket, client, controlQueue, sem, this);
+			XS3CloudFileManagerWorker w = new XS3CloudFileManagerWorker(forPrefecth,
+					forUpload, downloaded, notFound, tmpPath, bucket, client,
+					controlQueue, sem, this);
 			w.setName("S3 Worker " + i);
 			w.start();
 			workers.add(w);
@@ -164,7 +169,7 @@ public class XS3CloudFileManager implements CloudFileManager {
 				if( workers != null && workers.size() > 0 ) {
 					sem.acquire();
 					forUpload.put(key, new Date());
-					controlQueue.offer("upload::" + key);
+					controlQueue.offer(ACTION_UPLOAD +"::" + key);
 					forUpdate.remove(key);
 					sem.release();
 				} else {
@@ -215,48 +220,45 @@ public class XS3CloudFileManager implements CloudFileManager {
 	@Override
 	public boolean checkLocalCopyIntegrity(String fileName, boolean wait) throws ASException {
 		try {
-
-			if( workers != null && workers.size() > 0 ) {
-
-				boolean hasFile = false;
-				int waited = 0;
-				do {
+			if(workers != null && workers.size() > 0) {
+				//boolean hasFile = false;
+				
+				while(true) {
 					sem.acquire();
 					if( notFound.contains(sanitizeFileName(fileName))) {
 						sem.release();
 						return false;
-					} else {
-						if( downloaded.containsKey(sanitizeFileName(fileName))) {
-							sem.release();
-							return true;
-						} else {
-							if( waited >= 15 ) {
-								try {
-									List<XS3Object> l = client.getObjectListing(bucket, sanitizeFileName(fileName));
-									if( l.size() > 0 ) {
-										download(sanitizeFileName(fileName), sanitizeFileName(fileName));
-										downloaded.put(sanitizeFileName(fileName), l.get(0));
-									} else {
-										sem.release();
-										return false;
-									}
-								} catch( Exception e ) {
-									return false;
-								} finally {
-									sem.release();
-								}
-							} else {
-								log.log(Level.INFO, "Waiting for file " + fileName);
-								sem.release();
-								Thread.sleep(1000);
-								waited++;
-							}
-						}
+					} else if( downloaded.containsKey(sanitizeFileName(fileName))) {
+						sem.release();
+						return true;
 					}
-					
-				} while( wait );
+					sem.release();
+				}
+				/* else {
+					if( waited >= 15 ) {
+						try {
+							List<XS3Object> l = client.getObjectListing(bucket, sanitizeFileName(fileName));
+							if( l.size() > 0 ) {
+								download(sanitizeFileName(fileName), sanitizeFileName(fileName));
+								downloaded.put(sanitizeFileName(fileName), l.get(0));
+							} else {
+								sem.release();
+								return false;
+							}
+						} catch( Exception e ) {
+							return false;
+						} finally {
+							sem.release();
+						}
+					} else {
+						log.log(Level.INFO, "Waiting for file " + fileName);
+						sem.release();
+						Thread.sleep(1000);
+						waited++;
+					}
+				}*/
 				
-				return hasFile;
+				//return hasFile;
 				
 			} else {
 
@@ -399,11 +401,12 @@ public class XS3CloudFileManager implements CloudFileManager {
 			connect();
 
 		File file = new File(tmpPath + fileName);
-		log.log(Level.FINE, "Downloading object " + objectKey + " into " + file.getAbsolutePath());
+		log.log(Level.FINE, "Downloading object " + objectKey + " into "
+				+ file.getAbsolutePath());
 		long start = System.currentTimeMillis();
 
 		boolean done = false;
-		int retriesLeft = 15;
+		int retriesLeft = 4;
 		
 		while(!done) {
 			try {
@@ -411,6 +414,7 @@ public class XS3CloudFileManager implements CloudFileManager {
 				done = true;
 			} catch( Exception e ) {
 				if( retriesLeft <= 0 ) {
+					notFound.add(sanitizeFileName(fileName));
 					log.log(Level.WARNING, "Failed download for " + fileName + "...");
 					throw e;
 				}

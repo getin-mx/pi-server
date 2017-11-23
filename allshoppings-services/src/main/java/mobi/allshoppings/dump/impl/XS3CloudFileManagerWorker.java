@@ -24,13 +24,11 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 	private Map<String, XS3Object> downloaded;
 	private List<String> notFound;
 	private String tmpPath;
-	//private String bucket;
-	//private XS3Client client;
 	private ConcurrentLinkedQueue<String> controlQueue;
 	private Semaphore sem;
 	private boolean doneSignal;
 	private XS3CloudFileManager manager;
-
+	
 	public XS3CloudFileManagerWorker(Map<String, Date> forPrefecth, Map<String, Date> forUpload, Map<String, XS3Object> downloaded, List<String> notFound,
 			String tmpPath, String bucket, XS3Client client, ConcurrentLinkedQueue<String> controlQueue, Semaphore sem,
 			XS3CloudFileManager manager) {
@@ -40,8 +38,6 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 		this.downloaded = downloaded;
 		this.notFound = notFound;
 		this.tmpPath = tmpPath;
-		//this.bucket = bucket;
-		//this.client = client;
 		this.controlQueue = controlQueue;
 		this.sem = sem;
 		this.manager = manager;
@@ -130,7 +126,7 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 		doneSignal = false;
 
 		String file = null;
-		String action = null;
+		int action = XS3CloudFileManager.ACTION_NOP;
 		
 		// Main loop
 		while(!doneSignal) {
@@ -142,18 +138,16 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 				try {
 
 					String[] parts = fileConstruct.split("::");
-					action = parts[0];
+					action = Integer.parseInt(parts[0]);
 					file = parts[1];
 
 					sem.acquire();
-					if( action.equals("download")) {
-						if(!forPrefecth.containsKey(file)) { 
+					if( action == XS3CloudFileManager.ACTION_DOWNLOAD) {
+						if(!forPrefecth.containsKey(file) ||
+								downloaded.containsKey(file)) { 
 							go = false;
 						}
-						if(downloaded.containsKey(file)) {
-							go = false;
-						}
-					} else if( action.equals("upload")) {
+					} else if( action == XS3CloudFileManager.ACTION_UPLOAD) {
 						if(!forUpload.containsKey(file)) { 
 							go = false;
 						}
@@ -165,38 +159,21 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 					log.log(Level.SEVERE, e.getMessage(), e);
 					go = false;
 				}
-				
-				
 				if( go ) {
-					
-					if( action.equals("download")) {
-
+					if( action == XS3CloudFileManager.ACTION_DOWNLOAD) {
 						log.log(Level.INFO, "Getting file " + file);
-
 						XS3Object sum = null;
 						try {
-							/*List<XS3Object> list = client.getObjectListing(bucket, file);
-							Iterator<XS3Object> i = list.iterator();
-							while(i.hasNext()) {
-								XS3Object obj = i.next();
-								if(obj.toString().equals(file))
-									sum = obj;
-							}*/
-
-							//if( sum != null ) {
 							if(StringUtils.hasText(file)) {
+								sem.acquire();
 								try {
-									//manager.download(sum.toString(), file);
 									manager.download(file, file);
 								} catch( Exception e2 ) {
-									//manager.registerFileForPrefetch(sum.toString());
 									manager.registerFileForPrefetch(file);
 								}
 
-								sem.acquire();
-								//downloaded.put(sum.toString(), sum);
+								//sem.acquire();
 								downloaded.put(file, sum);//TODO sum is NULL always
-								//forPrefecth.remove(sum.toString());
 								forPrefecth.remove(file);
 								sem.release();
 
@@ -206,7 +183,6 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 									notFound.add(file);
 								sem.release();
 							}
-						//} catch( XS3Exception e ) {
 						} catch( Exception e ) {
 							if( e instanceof XS3Exception &&
 									((XS3Exception)e).getErrorCode() !=
@@ -220,11 +196,8 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 									sem.release();
 								} catch( Exception e1) {}
 							}
-						/*} catch( Exception e ) {
-							log.log(Level.SEVERE, e.getMessage(), e);
-						}*/
 						}
-					} else if( action.equals("upload")) {
+					} else if( action == XS3CloudFileManager.ACTION_UPLOAD) {
 						
 						try {
 
