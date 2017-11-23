@@ -165,17 +165,17 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 						XS3Object sum = null;
 						try {
 							if(StringUtils.hasText(file)) {
-								sem.acquire();
 								try {
 									manager.download(file, file);
 								} catch( Exception e2 ) {
 									manager.registerFileForPrefetch(file);
 								}
-
-								//sem.acquire();
+								
+								sem.acquire();
 								downloaded.put(file, sum);//TODO sum is NULL always
 								forPrefecth.remove(file);
 								sem.release();
+								manager.notify();
 
 							} else {
 								sem.acquire();

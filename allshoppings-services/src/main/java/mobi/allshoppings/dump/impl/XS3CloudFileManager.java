@@ -220,45 +220,49 @@ public class XS3CloudFileManager implements CloudFileManager {
 	@Override
 	public boolean checkLocalCopyIntegrity(String fileName, boolean wait) throws ASException {
 		try {
-			if(workers != null && workers.size() > 0) {
-				//boolean hasFile = false;
-				
-				while(true) {
+
+			if( workers != null && workers.size() > 0 ) {
+
+				boolean hasFile = false;
+				int waited = 0;
+				do {
 					sem.acquire();
 					if( notFound.contains(sanitizeFileName(fileName))) {
 						sem.release();
 						return false;
-					} else if( downloaded.containsKey(sanitizeFileName(fileName))) {
-						sem.release();
-						return true;
-					}
-					sem.release();
-				}
-				/* else {
-					if( waited >= 15 ) {
-						try {
-							List<XS3Object> l = client.getObjectListing(bucket, sanitizeFileName(fileName));
-							if( l.size() > 0 ) {
-								download(sanitizeFileName(fileName), sanitizeFileName(fileName));
-								downloaded.put(sanitizeFileName(fileName), l.get(0));
-							} else {
-								sem.release();
-								return false;
-							}
-						} catch( Exception e ) {
-							return false;
-						} finally {
-							sem.release();
-						}
 					} else {
-						log.log(Level.INFO, "Waiting for file " + fileName);
-						sem.release();
-						Thread.sleep(1000);
-						waited++;
+						if( downloaded.containsKey(sanitizeFileName(fileName))) {
+							sem.release();
+							return true;
+						} else {
+							if( waited >= 15 ) {
+								try {
+									List<XS3Object> l = client.getObjectListing(bucket, sanitizeFileName(
+											fileName.substring(0, fileName.lastIndexOf(File.separator))));
+									if( l.size() > 0 ) {
+										download(sanitizeFileName(fileName), sanitizeFileName(fileName));
+										downloaded.put(sanitizeFileName(fileName), l.get(0));
+									} else {
+										sem.release();
+										return false;
+									}
+								} catch( Exception e ) {
+									return false;
+								} finally {
+									sem.release();
+								}
+							} else {
+								log.log(Level.INFO, "Waiting for file " + fileName);
+								sem.release();
+								Thread.sleep(1000);
+								waited++;
+							}
+						}
 					}
-				}*/
+					
+				} while( wait );
 				
-				//return hasFile;
+				return hasFile;
 				
 			} else {
 
@@ -401,8 +405,7 @@ public class XS3CloudFileManager implements CloudFileManager {
 			connect();
 
 		File file = new File(tmpPath + fileName);
-		log.log(Level.FINE, "Downloading object " + objectKey + " into "
-				+ file.getAbsolutePath());
+		log.log(Level.FINE, "Downloading object " + objectKey + " into " + file.getAbsolutePath());
 		long start = System.currentTimeMillis();
 
 		boolean done = false;
@@ -414,7 +417,6 @@ public class XS3CloudFileManager implements CloudFileManager {
 				done = true;
 			} catch( Exception e ) {
 				if( retriesLeft <= 0 ) {
-					notFound.add(sanitizeFileName(fileName));
 					log.log(Level.WARNING, "Failed download for " + fileName + "...");
 					throw e;
 				}
