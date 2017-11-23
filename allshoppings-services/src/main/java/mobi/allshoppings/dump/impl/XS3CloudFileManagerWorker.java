@@ -175,7 +175,6 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 								downloaded.put(file, sum);//TODO sum is NULL always
 								forPrefecth.remove(file);
 								sem.release();
-								manager.notify();
 
 							} else {
 								sem.acquire();

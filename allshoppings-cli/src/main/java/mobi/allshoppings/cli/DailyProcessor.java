@@ -146,8 +146,8 @@ public class DailyProcessor extends AbstractCLI {
 					if(uniformPerc <= 0) throw ASExceptionHelper.defaultException(
 							"Cannot guess a uniform percentage for all servers",
 							null);
-					
 				}
+				
 			} 
 			
 		}
