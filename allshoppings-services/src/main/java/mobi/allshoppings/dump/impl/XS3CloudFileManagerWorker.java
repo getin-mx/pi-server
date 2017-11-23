@@ -183,6 +183,7 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 								sem.release();
 							}
 						} catch( Exception e ) {
+							e.printStackTrace();
 							if( e instanceof XS3Exception &&
 									((XS3Exception)e).getErrorCode() !=
 									XS3ExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE )
