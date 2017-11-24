@@ -392,8 +392,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 												"apd_permanence", "apd_occupation" ),
 										curDate, curDate);
 							}
-							mapper.createAPDVisitPerformanceDashboardForDay(curDate,
-									Arrays.asList(new String[] { entityId }), entityKind, objs);
+							
+							if( objs.size() > 0 ) {
+								mapper.createAPDVisitPerformanceDashboardForDay(curDate,
+										Arrays.asList(new String[] { entityId }), entityKind, objs);
+							}
 						}
 					} catch( Exception e ) {
 						log.log(Level.SEVERE, e.getMessage(), e);
