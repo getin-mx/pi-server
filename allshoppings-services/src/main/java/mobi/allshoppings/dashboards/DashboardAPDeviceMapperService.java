@@ -1254,6 +1254,7 @@ public class DashboardAPDeviceMapperService {
 		obj.setVoucherType(null);
 		obj.setPeriodType(periodType);
 
+		// FIXME key creates collitions
 		obj.setKey(dao.createKey(obj));
 
 		return obj;

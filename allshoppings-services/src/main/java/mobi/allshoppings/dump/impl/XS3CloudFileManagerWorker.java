@@ -21,6 +21,7 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 	
 	private ConcurrentMap<String, Date> forPrefecth;
 	private ConcurrentMap<String, Date> forUpload;
+	// TODO those lists should be a (concurrent) set
 	private List<String> downloaded;
 	private List<String> notFound;
 	private String tmpPath;
