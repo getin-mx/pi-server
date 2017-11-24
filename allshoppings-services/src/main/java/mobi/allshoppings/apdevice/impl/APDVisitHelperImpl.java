@@ -231,9 +231,13 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		Date curDate = new Date(fromDate.getTime());
 		Date limitDate = new Date(fromDate.getTime() + DAY_IN_MILLIS);
+		
+		double progress = 0;
 		while( curDate.before(toDate) || (fromDate.equals(toDate) &&
 				curDate.equals(toDate))) {
 
+			log.log(Level.INFO, "Progress: " +String.format("%2d", progress));
+			
 			try {
 				log.log(Level.INFO, "entityIds are: " + entities);
 				
@@ -411,6 +415,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			limitDate = new Date(curDate.getTime() + DAY_IN_MILLIS);
 			
 			apdvDumper.flush();
+			
+			progress = ((toDate.getTime() -curDate.getTime()) *100)
+					/(toDate.getTime() -fromDate.getTime());
 			
 		}
 		

@@ -16,8 +16,10 @@ import com.inodes.util.CollectionFactory;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.DailyProcessConfiguration;
 
 /**
@@ -165,6 +167,13 @@ public class DailyProcessor extends AbstractCLI {
 		if(generateAPHE) LOG.log(Level.INFO, "Each server will generate their "
 				+ "corresponding APHEntries first");
 		// TODO separate antennas
+		APDAssignationDAO apdaDao = (APDAssignationDAO)getApplicationContext()
+				.getBean("apdassignation.dao.ref");
+		List<APDAssignation> allAssigs = apdaDao.getAll();
+		for(i = 0; i < conf.getServerList().length; i++) {
+			// TODO beware of data loss
+			int anntenaNum = (int) (allAssigs.size() *netLoads.get(i));
+		}
 		// TODO ssh command
 	}//main
 	
