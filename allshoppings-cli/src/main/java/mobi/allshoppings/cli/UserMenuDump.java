@@ -3,6 +3,10 @@ package mobi.allshoppings.cli;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -26,6 +30,28 @@ public class UserMenuDump extends AbstractCLI {
 
 	public static void setApplicationContext(ApplicationContext ctx) {
 		context = ctx;
+	}
+	
+	private static final char HEXES[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+	
+	private static String encodeString(String input) {
+		 String output = "";
+		try {
+			Mac mac = Mac.getInstance("HmacSHA256");
+			byte keyBytes[] = "MSIR33L264H1VVXSINHR".getBytes(); 
+			SecretKey key = new SecretKeySpec(keyBytes, "HmacSHA256");
+			mac.init(key);
+			mac.update(input.getBytes());
+			byte macBytes[] = mac.doFinal();
+
+			StringBuilder hexString = new StringBuilder(macBytes.length * 2);
+			for (byte b : macBytes) {
+				hexString.append(HEXES[((b & 0xF0) >> 4)]).append(HEXES[(b & 0x0F)]);
+			}
+			output = hexString.toString();
+		} catch (Exception e) {
+		}
+		return output;
 	}
 
 	public static OptionParser buildOptionParser(OptionParser base) {
@@ -1257,7 +1283,7 @@ public class UserMenuDump extends AbstractCLI {
 			     droc.getSecuritySettings().setShoppings(new ArrayList<String>()); 
 			     droc.getSecuritySettings().getShoppings().add("mundoe"); 
 			     droc.getSecuritySettings().getShoppings().add("plazaaragon");
-			     droc.getSecuritySettings().setPassword("F86C872FBDDE97CFDCEEE0E4ACD17F1FCFAFCCF2CE7B22B6FEE17A47B1321EA4"); 
+			     droc.getSecuritySettings().setPassword(encodeString("admin01")); 
 			     droc.setKey((Key)keyHelper.obtainKey(User.class, "droc_mx")); 
 			     userDao.create(droc); 
 			}
