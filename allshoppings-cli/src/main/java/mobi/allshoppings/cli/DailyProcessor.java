@@ -16,8 +16,10 @@ import com.inodes.util.CollectionFactory;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.DailyProcessConfiguration;
 
 /**
@@ -56,6 +58,7 @@ public class DailyProcessor extends AbstractCLI {
 	private static final String DEFAULT_CONF_FILE = Paths.get("usr", "local",
 			"allshoppings", "etc", "dailyConf.json").toString();
 	public static final int TWENTY_FOUR_HOURS = 86400000;
+	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 	
 	// static methods
 	
@@ -102,17 +105,19 @@ public class DailyProcessor extends AbstractCLI {
 		DailyProcessConfiguration conf;
 		Gson gson = new Gson();
 		JsonReader reader = null;
+		String confFile = null;
 		if(!fallback) {
 			try {
-				reader = new JsonReader(new FileReader(
-						options.valueOf(SERVERS_CONF_PARAM).toString()));
+				confFile = options.valueOf(SERVERS_CONF_PARAM).toString();
+				reader = new JsonReader(new FileReader(confFile));
 			} catch(IOException e) {
 				LOG.log(Level.WARNING, "Could not open given configuration file ", e);
 				fallback = true;
 			}
 		} if(fallback) {
 			try {
-				reader = new JsonReader(new FileReader(DEFAULT_CONF_FILE));
+				confFile = DEFAULT_CONF_FILE;
+				reader = new JsonReader(new FileReader(confFile));
 			} catch(IOException e) {
 				throw ASExceptionHelper.notFoundException(e.getMessage());
 			}
@@ -126,7 +131,8 @@ public class DailyProcessor extends AbstractCLI {
 		List<Float> netLoads = CollectionFactory.createList();
 		float totalLoad = 0;
 		float uniformPerc = -1;
-		for(int i = 0; i < conf.getServerList().length; i++) {
+		int i;
+		for(i = 0; i < conf.getServerList().length; i++) {
 			if(i < conf.getServersLoad().length) {
 				float f = conf.getServersLoad()[i];
 				if(f < 0 || f > 1) throw ASExceptionHelper.defaultException("Server "
@@ -146,33 +152,44 @@ public class DailyProcessor extends AbstractCLI {
 					if(uniformPerc <= 0) throw ASExceptionHelper.defaultException(
 							"Cannot guess a uniform percentage for all servers",
 							null);
-					
 				}
+				netLoads.add(uniformPerc);
 			} 
 			
 		}
-		LOG.log(Level.INFO, "Distributing daily process on servers and loads: "
-				+ " using conf. File " + " for dates ");
+		LOG.log(Level.INFO, "Distributing daily process on servers and loads: ");
+		for(i = 0; i < conf.getServerList().length; i++) {
+			LOG.log(Level.INFO, conf.getServerList()[i] +" with load of "
+					+(netLoads.get(i) *100) +"%");
+		}
+		LOG.log(Level.INFO, "Using conf. File " +confFile  + " for dates "
+				+SDF.format(fromDate) + " - " +SDF.format(toDate));
 		if(generateAPHE) LOG.log(Level.INFO, "Each server will generate their "
 				+ "corresponding APHEntries first");
 		// TODO separate antennas
+		APDAssignationDAO apdaDao = (APDAssignationDAO)getApplicationContext()
+				.getBean("apdassignation.dao.ref");
+		List<APDAssignation> allAssigs = apdaDao.getAll();
+		for(i = 0; i < conf.getServerList().length; i++) {
+			// TODO beware of data loss
+			int anntenaNum = (int) (allAssigs.size() *netLoads.get(i));
+		}
 		// TODO ssh command
 	}//main
 	
 	// helper static methods
 	
 	private static Date retrieveDate(OptionSet options, String param) throws ASException {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = null;
 		if(options.has(param)) {
 			try {
-				date = sdf.parse(options.valueOf(param).toString());
+				date = SDF.parse(options.valueOf(param).toString());
 			} catch(ParseException e) {
 				throw ASExceptionHelper.invalidArgumentsException(param);
 			}
 		} if(date == null) {
 			try {
-				date = sdf.parse(sdf.format(new Date(
+				date = SDF.parse(SDF.format(new Date(
 						System.currentTimeMillis() -TWENTY_FOUR_HOURS)));
 			} catch(ParseException e) {
 				throw ASExceptionHelper.invalidArgumentsException(param);
