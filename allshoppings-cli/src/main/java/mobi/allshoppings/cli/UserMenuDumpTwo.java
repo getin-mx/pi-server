@@ -396,7 +396,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				julius.getSecuritySettings().getShoppings().add("mundoe");
 				julius.getSecuritySettings().getShoppings().add("plazaaragon");
 				julius.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword(encodeString("admin01"));
 				julius.setKey((Key) keyHelper.obtainKey(User.class, "julius"));
 				userDao.create(julius);
 			}
@@ -426,7 +426,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				eross.getSecuritySettings().getShoppings().add("mundoe");
 				eross.getSecuritySettings().getShoppings().add("plazaaragon");
 				eross.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword(encodeString("admin01"));
 				eross.setKey((Key) keyHelper.obtainKey(User.class, "eross"));
 				userDao.create(eross);
 			}
@@ -456,7 +456,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				fdiaz.getSecuritySettings().getShoppings().add("mundoe");
 				fdiaz.getSecuritySettings().getShoppings().add("plazaaragon");
 				fdiaz.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword(encodeString("admin01"));
 				fdiaz.setKey((Key) keyHelper.obtainKey(User.class, "fdiaz"));
 				userDao.create(fdiaz);
 			}
@@ -1559,6 +1559,35 @@ public class UserMenuDumpTwo extends AbstractCLI {
 								.setStores(Arrays.asList("d0f83d5d-e451-45ee-ad41-e2b4da086f2f"));
 						userMMonroy.setKey((Key) keyHelper.obtainKey(User.class, "mmonroy@sportium.com.mx"));
 						userDao.create(userMMonroy);
+					}
+					
+					User mtSport = null;
+					try {
+					  mtSport = userDao.get("mt_sport_mx", true);
+					  userDao.delete("mt_sport_mx");
+					  throw new Exception();
+					} catch( Exception e ) {
+					  mtSport = new User();
+					  mtSport.setFirstname("MT Sport");
+					  mtSport.setLastname("Mexico");
+					  mtSport.setEmail("mtsport@allshoppings.mobi");
+					  mtSport.getSecuritySettings().setRole(Role.BRAND);
+					  mtSport.getSecuritySettings().setPassword(encodeString("MTSport01"));
+					  mtSport.setKey((Key)keyHelper.obtainKey(User.class, "mt_sport_mx"));
+					  userDao.create(mtSport);
+					}
+
+					try {
+					  um = userMenuDao.get("mt_sport_mx", true);
+					  userMenuDao.delete("mt_sport_mx");
+					  throw new Exception();
+					} catch( Exception e ) {
+					  um = new UserMenu();
+					  um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+					  um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+					  um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+					  um.setKey(userMenuDao.createKey("mt_sport_mx"));
+					  userMenuDao.create(um);
 					}
 			//
 

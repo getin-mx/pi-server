@@ -450,6 +450,15 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 			}
 			try {
+				brand = brandDao.get("sunglasshut_ar", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Sunglass Hut Argentina");
+				brand.setCountry("Argentina");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "sunglasshut_ar"));
+				brandDao.create(brand);
+			}
+			try {
 				brand = brandDao.get("sbarro_mx", true);
 			} catch( Exception e ) {
 				brand = new Brand();
@@ -1204,7 +1213,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("542","Opticas Devlyn Salamanca", "devlyn_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("543","Opticas Devlyn Galerias Marina", "devlyn_mx", null, GetinDump.MALL));
 
-			stores.add(new StoreAdapter("544","Sally Beauty Rio Churubusco", "sallybeauty_mx",null, GetinDump.MALL));
+			stores.add(new StoreAdapter("544","Sally Beauty Portal Churubusco", "sallybeauty_mx",null, GetinDump.MALL));
 
 			stores.add(new StoreAdapter("545","GAP Perisur", "liverpoolboutiques_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("546","Chico's Santa Fe", "liverpoolboutiques_mx",null, GetinDump.MALL));
@@ -1568,6 +1577,10 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("818","Juguetron Parque Puebla", "juguetron_mx", null, GetinDump.MALL));
 			
+			stores.add(new StoreAdapter("819","Sally Beauty Zentralia Churubusco", "sallybeauty_mx", null, GetinDump.MALL));
+
+			stores.add(new StoreAdapter("820", "Sunglass Hut Nordelta", "sunglasshut_ar", null, GetinDump.MALL));
+
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {

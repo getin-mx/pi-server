@@ -19,14 +19,18 @@ import com.google.gson.Gson;
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
+import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.dao.APDVisitDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
+import mobi.allshoppings.dump.DumperHelper;
+import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHEntry;
+import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -44,12 +48,13 @@ implements BDBDashboardBzService {
 		
 	@Autowired
 	private APHHelper aphHelper;
-
-	@Autowired
-	private APHEntryDAO dao;
 	
 	@Autowired
 	private APDVisitDAO apdvDao;
+
+
+	@Autowired
+	private APDAssignationDAO dao;
 	
 	@Autowired
 	private APDeviceDAO apdDao;
@@ -89,22 +94,25 @@ implements BDBDashboardBzService {
 				toHour = aphHelper.stringToOffsetTime(toStringHour); 
 			} catch( Exception e ) {}
 			
-			List<APHEntry> entries = CollectionFactory.createList();
-			if (StringUtils.hasText(identifier)) {
-				APHEntry obj = dao.get(identifier);
-				entries.add(aphHelper.getFromCache(obj.getHostname(), obj.getMac(), obj.getDate()));
-			} else {
-				String[] hostnames = hostnameList.split(",");
-				for (String hostname : hostnames) {
-					entries.add(aphHelper.getFromCache(hostname, mac, fromStringDate));
-				}
-			}
-
-			for(APHEntry entry : entries ) {
-				APDevice apd = apdDao.get(entry.getHostname());
-				aphHelper.artificiateRSSI(entry, apd);
-			}
 			
+			
+//			APHEntry, filter->hostname
+//			ADevice, filter->hostname
+//			APDVisit, filter->entityId, APDAssignation (host to entityId)
+//			
+//			String[] hostnames = hostnameList.split(",");
+//			for (String hostname : hostnames) {
+//				entries.add(aphHelper.getFromCache(hostname, mac, fromStringDate));
+//			}
+//
+//
+//			for(APHEntry entry : entries ) {
+//				APDevice apd = apdDao.get(entry.getHostname());
+//				aphHelper.artificiateRSSI(entry, apd);
+//			}
+			
+			List<APHEntry> entries = CollectionFactory.createList();
+
 			List<APDVisit> visits = CollectionFactory.createList();
 			Map<Long, Integer> values = CollectionFactory.createMap();
 			
@@ -194,7 +202,7 @@ implements BDBDashboardBzService {
 				series.put(serie);
 				
 				if(!original)
-					visits.addAll(apdvDao.getUsingAPHE(entry.getIdentifier(), false));
+				 visits.addAll(apdvDao.getUsingAPHE(entry.getIdentifier(), false));
 				
 			}
 			
