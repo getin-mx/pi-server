@@ -30,7 +30,9 @@ import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
+import mobi.allshoppings.tx.PersistenceProvider;
 
+@Deprecated
 public class APDVisitDAOFSImpl extends GenericDAOFS<APDVisit> implements APDVisitDAO {
 
 	private static final Logger log = Logger.getLogger(APDVisitDAOFSImpl.class.getName());
@@ -479,6 +481,18 @@ public class APDVisitDAOFSImpl extends GenericDAOFS<APDVisit> implements APDVisi
 			pm.close();
 		}
 
+	}
+
+	@Override
+	public void update(List<APDVisit> obj) throws ASException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(PersistenceProvider pp, List<APDVisit> obj, boolean performPreStore) throws ASException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

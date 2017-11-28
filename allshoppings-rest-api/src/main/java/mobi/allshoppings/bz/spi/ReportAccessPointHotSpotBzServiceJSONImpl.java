@@ -36,12 +36,8 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 	private APDeviceDAO apdDao;
 	@Autowired
 	private APHotspotDAO dao;
-//	@Autowired
-//	private APDeviceTriggerEntryDAO triggerDao;
 	@Autowired
 	private APHHelper aphHelper;
-	/*@Autowired
-	private APHEntryDAO apheDao;*/
 
 	@Override
 	public String post(final JsonRepresentation entity) {
@@ -55,7 +51,6 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 
 			log.log(Level.INFO, "Reporting " + data.length() + " AP Members from "
 					+ hostname);
-			//log.log(Level.FINEST, obj.toString());
 
 			// Sets the device last data
 			APDevice device = null;
@@ -95,19 +90,6 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 					if(aphHelper.isValidMacAddress(aphotspot.getMac()) && 
 							aphotspot.getSignalDB() < 0) {
 						dao.create(aphotspot);
-						/*DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>()
-								.build(null, APHotspot.class);
-						dumper.append(aphotspot);
-						dumper.flush();
-						dumper.dispose();*/
-						// Updates APHEntries 
-						/*try {
-							aphHelper.setUseCache(false);
-							APHEntry aphe = aphHelper.setFramedRSSI(aphotspot);
-							apheDao.createOrUpdate(aphe);
-						} catch( Exception e ) {
-							log.log(Level.SEVERE, "Error updating APHEntries", e);
-						}// */
 					}
 					
 				} catch( Exception e ) {

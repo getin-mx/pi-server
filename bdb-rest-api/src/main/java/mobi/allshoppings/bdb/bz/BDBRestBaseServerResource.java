@@ -2,6 +2,8 @@ package mobi.allshoppings.bdb.bz;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,6 +29,9 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.restlet.Context;
+import org.restlet.Request;
+import org.restlet.Response;
 import org.restlet.data.Form;
 import org.restlet.data.Reference;
 import org.restlet.engine.util.Base64;
@@ -84,6 +89,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	protected static final String DEFAULT_LEVEL = "all";
 	protected static final String FIELDS = "fields";
 	protected static final Set<String> EMPTY_SET = new HashSet<String>();
+	protected static final List<String> KNOWN_HOSTS;
 	
 	@Autowired
 	private UserDAO dao;
@@ -96,6 +102,28 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	@Autowired
 	protected TrackerHelper trackerHelper;
 
+	static {
+		KNOWN_HOSTS = CollectionFactory.createList();
+		KNOWN_HOSTS.add("0.0.0.0");
+		KNOWN_HOSTS.add("127.0.0.1");
+	}
+	
+	
+	@Override
+	public void init(Context arg0, Request arg1, Response arg2) {
+		super.init(arg0, arg1, arg2);
+		try {
+			KNOWN_HOSTS.add(InetAddress.getByName(
+					systemConfiguration.getFrontendAddress()).getHostAddress());
+		} catch(UnknownHostException e) {
+			logger.log(Level.SEVERE, "Bad frontend address. The server will "
+					+ "start, but it shouldn't!");
+			/*logger.log(Level.SEVERE, "Bad frontend address. By hardcoded security "
+					+ "policy the server will just won't start");*/
+			//throw ASExceptionHelper.forbiddenException();
+		}
+	}
+	
 	/**
 	 * Returns a generic OK response
 	 * 
@@ -455,6 +483,15 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 		if (!StringUtils.hasText(authToken)) {
 			throw ASExceptionHelper.authTokenMissingException();
 		}
+		
+		String clientAddress = getClientInfo().getAddress();
+		if(!KNOWN_HOSTS.contains(clientAddress)) {
+			logger.log(Level.SEVERE, "Somebody tried to access the server from an "
+					+ "unknown origin! The attacker address is: "
+					+clientAddress);
+			throw ASExceptionHelper.forbiddenException();
+		}
+		
 		User authUser = null;
 		
 		try {
@@ -477,8 +514,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 					authUser.getSecuritySettings().setAuthTokenValidity(null);
 					dao.updateWithoutChangingMail(authUser);
 					cacheHelper.put(authToken, authUser);
-				} catch (Exception e) {
-				}
+				} catch (Exception e) {}
 				//  ...then send a specific error to the client
 				throw ASExceptionHelper.tokenExpiredException();
 			}
@@ -862,7 +898,6 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 			}
 		} catch (IllegalAccessException | InvocationTargetException
 				| NoSuchMethodException e1) {
-			// TODO Auto-generated catch block
 			logger.log(Level.INFO, "Error setting properties from JSON", e1);
 		}
 	}
@@ -1110,7 +1145,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	 */
 	public long markStart(String text) {
 		logger.log(Level.INFO, "Request " + getRequestURI() + " begins...");
-		return new Date().getTime();
+		return System.currentTimeMillis();
 	}
 	
 	/**

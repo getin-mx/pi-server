@@ -10,9 +10,11 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
+import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.dao.ProcessDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.Process;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.interfaces.StatusAware;
@@ -24,6 +26,8 @@ public class ProcessUtilsImpl implements ProcessUtils {
 	
 	@Autowired
 	private ProcessDAO dao;
+	@Autowired
+	private APDAssignationDAO apdAssigDao;
 	
 	@Autowired
 	private SystemConfiguration systemConfiguration;
@@ -42,16 +46,33 @@ public class ProcessUtilsImpl implements ProcessUtils {
 		JSONObject json = new JSONObject(process.getData());
 		StringBuffer sb = new StringBuffer();
 		
+		if(process.getGenerateAPHE()) {
+			String strAssigs = "";
+			for(APDAssignation assig : apdAssigDao.getUsingEntityIdAndEntityKind(
+					process.getEntityId(), process.getEntityKind())) {
+				strAssigs += assig.getHostname() +",";
+			}
+			sb.append("/usr/local/allshoppings/bin/aspi2 GenerateAPHE ")
+			.append("--datastore /usr/local/allshoppings/etc/datastore.nocache.properties ")
+			.append("--hostname ")
+			.append(strAssigs)
+			.append(" --fromDate ")
+			.append(json.getString("fromDate"))
+			.append(" --toDate ")
+			.append(json.getString("toDate"))
+			.append(";");
+		}
+		
 		if( process.getProcessType().equals(Process.PROCESS_TYPE_GENERATE_VISITS)) {
-			sb.append("/usr/local/allshoppings/bin/aspi2 GenerateAPDVisits "
-					+ "--datastore /usr/local/allshoppings/etc/datastore.nocache.properties "
-					+ "--updateDashboards true --onlyDashboards false "
-					+ "--deletePreviousRecords true --storeIds ")
+			sb.append("/usr/local/allshoppings/bin/aspi2 GenerateAPDVisits ")
+			.append("--datastore /usr/local/allshoppings/etc/datastore.nocache.properties ")
+			.append("--updateDashboards true --onlyDashboards false ")
+			.append("--deletePreviousRecords true --storeIds ")
 			.append(process.getEntityId())
 			.append(" --fromDate ")
 			.append(json.getString("fromDate"))
 			.append(" --toDate ")
-			.append(json.getString("toDate"));			
+			.append(json.getString("toDate"));
 		}
 		
 		return sb.toString();
@@ -68,7 +89,7 @@ public class ProcessUtilsImpl implements ProcessUtils {
 	@Override
 	public void startProcess(String identifier, boolean wait) throws ASException {
 		
-		Process p = dao.get(identifier, true);
+		final Process p = dao.get(identifier, true);
 		if(!p.getStatus().equals(StatusAware.STATUS_PREPARED))
 			throw ASExceptionHelper.defaultException("Invalid status for process " + p.getIdentifier(), new Exception());
 		
@@ -81,8 +102,6 @@ public class ProcessUtilsImpl implements ProcessUtils {
 		
 		dao.update(p);
 		
-		final Process fProcess = p;
-		
 		Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -92,20 +111,20 @@ public class ProcessUtilsImpl implements ProcessUtils {
 
 				try {
 					
-					int errorCode = executeProcess(new String[] { fProcess.getCmdLine() }, stdout, stderr);
+					int errorCode = executeProcess(new String[] { p.getCmdLine() }, stdout, stderr);
 					
-					fProcess.setEndDateTime(new Date());
-					fProcess.setStatus(errorCode == 0 ? StatusAware.STATUS_SUCCEEDED : StatusAware.STATUS_ERROR);
+					p.setEndDateTime(new Date());
+					p.setStatus(errorCode == 0 ? StatusAware.STATUS_SUCCEEDED : StatusAware.STATUS_ERROR);
 					
-					fProcess.setLog(stdout.toString() + stderr.toString());
+					p.setLog(stdout.toString() + stderr.toString());
 					// This is a control to avoid memcached overflow... the
 					// contents of this field are just logs, so they are not
 					// SOOOO important
-					if( fProcess.getLog().length() > 786432 )
-						fProcess.setLog(fProcess.getLog().substring(0, 786432));
+					if(p.getLog().length() > 786432 )
+						p.setLog(p.getLog().substring(0, 786432));
 					
 					try {
-						dao.update(fProcess);
+						dao.update(p);
 					} catch( Exception e1 ) {
 						log.log(Level.SEVERE, e1.getMessage(), e1);
 					}
@@ -114,13 +133,13 @@ public class ProcessUtilsImpl implements ProcessUtils {
 
 					log.log(Level.SEVERE, e.getMessage(), e);
 					
-					fProcess.setEndDateTime(new Date());
-					fProcess.setStatus(StatusAware.STATUS_ERROR);
+					p.setEndDateTime(new Date());
+					p.setStatus(StatusAware.STATUS_ERROR);
 
-					fProcess.setLog(stdout.toString() + stderr.toString());
+					p.setLog(stdout.toString() + stderr.toString());
 
 					try {
-						dao.update(fProcess);
+						dao.update(p);
 					} catch( Exception e1 ) {
 						log.log(Level.SEVERE, e1.getMessage(), e1);
 					}

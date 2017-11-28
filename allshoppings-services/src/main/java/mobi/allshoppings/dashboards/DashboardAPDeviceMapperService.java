@@ -307,7 +307,8 @@ public class DashboardAPDeviceMapperService {
 				List<WifiSpot> wifiSpotList = wifiSpotDao.getUsingFloorMapId(floorMap.getIdentifier());
 				Store store = storeDao.get(floorMap.getShoppingId(), true);
 				Shopping shopping = null;
-				try { shopping = shoppingDao.get(floorMap.getShoppingId(), true); } catch( Exception e ) {}
+				try { shopping = shoppingDao.get(floorMap.getShoppingId(), true); }
+				catch( Exception e ) {}
 				List<String> devices = CollectionFactory.createList();
 
 				for( WifiSpot ws : wifiSpotList ) {
@@ -740,8 +741,8 @@ public class DashboardAPDeviceMapperService {
 				Date dateTo = new Date(dateFrom.getTime() + TWENTY_FOUR_HOURS);
 				DumperHelper<APDVisit> visitDumper = new DumpFactory<APDVisit>()
 						.build(null, APDVisit.class);
-				visitDumper.setFilter(entityId);//FIXME neta es este el filtro?
-				list = CollectionFactory.createList();//FIXME las fechas checan?
+				visitDumper.setFilter(entityId);
+				list = CollectionFactory.createList();
 				Iterator<APDVisit> i = visitDumper.iterator(dateFrom, dateTo);
 				while(i.hasNext()) list.add(i.next());
 				visitDumper.dispose();
@@ -977,28 +978,13 @@ public class DashboardAPDeviceMapperService {
 		List<DashboardIndicatorAlias> aliases = createAliasList(indicatorsSet);
 		saveIndicatorAliasSet(aliases);
 
+		dao.createOrUpdate(null, CollectionFactory.createList(indicatorsSet.values()),
+				true);
 		/*Iterator<String> x = indicatorsSet.keySet().iterator();
 		while(x.hasNext()) {
 			String key = x.next();
-
-			try {
-				dao.delete(key);
-			} catch( Exception e ) {}
+			dao.createOrUpdate(null, indicatorsSet.get(key), true);
 		}*/
-		
-		/*List<DashboardIndicatorData> values = CollectionFactory.createList();
-		values.addAll(indicatorsSet.values());*/
-		
-		Iterator<String> x = indicatorsSet.keySet().iterator();
-		while(x.hasNext()) {
-			String key = x.next();
-			try {
-				dao.createOrUpdate(null, indicatorsSet.get(key), true);
-			} catch(Exception e) {
-				dao.delete(key);
-				dao.create(null, indicatorsSet.get(key), true);
-			}
-		}
 	}
 
 	public List<DashboardIndicatorAlias> createAliasList(Map<String, DashboardIndicatorData> indicatorsSet) throws ASException {

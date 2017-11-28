@@ -20,6 +20,7 @@ import mobi.allshoppings.tools.CollectionFactory;
 public class CalculateAPUptime extends AbstractCLI {
 
 	private static final Logger log = Logger.getLogger(CalculateAPUptime.class.getName());
+	private static final long DAY_IN_MILLIS = 86400000;
 	
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
@@ -52,17 +53,12 @@ public class CalculateAPUptime extends AbstractCLI {
 				if( options.has("fromDate")) sFromDate = (String)options.valueOf("fromDate");
 				if( options.has("toDate")) sToDate = (String)options.valueOf("toDate");
 				
-				if( StringUtils.hasText(sFromDate)) {
-					fromDate = sdf.parse(sFromDate);
-				} else {
-					fromDate = sdf.parse(sdf.format(new Date(new Date().getTime() - 86400000 /* 24 hours */)));
-				}
+				fromDate = StringUtils.hasText(sFromDate) ? sdf.parse(sFromDate) :
+					sdf.parse(sdf.format(new Date(
+							System.currentTimeMillis() - DAY_IN_MILLIS)));
 				
-				if( StringUtils.hasText(sToDate)) {
-					toDate = sdf.parse(sToDate);
-				} else {
-					toDate = new Date(fromDate.getTime() + 86400000 /* 24 hours */);
-				}
+				toDate = StringUtils.hasText(sToDate) ? sdf.parse(sToDate) :
+					new Date(fromDate.getTime() +DAY_IN_MILLIS);
 				
 				if( options.has("hostname")) {
 					hostname = (String)options.valueOf("hostname");

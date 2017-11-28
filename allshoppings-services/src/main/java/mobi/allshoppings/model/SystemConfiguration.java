@@ -120,6 +120,7 @@ public class SystemConfiguration implements Serializable {
 	private String externalGeoFromDate;
 	private String externalGeoToDate;
 	private String devicesSysInfoURL;
+	private String frontendAddress;
 	
 	public String getDefaultLevel() {
 		return defaultLevel;
@@ -1025,6 +1026,14 @@ public class SystemConfiguration implements Serializable {
 
 	public void setDevicesSysInfoURL(String devicesSysInfoURL) {
 		this.devicesSysInfoURL = devicesSysInfoURL;
+	}
+	
+	public String getFrontendAddress() {
+		return frontendAddress;
+	}
+
+	public void setFrontendAddress(String frontendAddress) {
+		this.frontendAddress = frontendAddress;
 	}
 
 }

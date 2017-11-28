@@ -448,6 +448,54 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 			if( pp == null ) pm.close();
 		}	
 	}
+	
+	@Override
+	public void update(List<T> obj) throws ASException {
+		update(null, obj, true);
+	}
+
+	@Override
+	public void update(PersistenceProvider pp, List<T> obj, boolean performPreStore) throws ASException {
+		if(obj == null){
+			throw ASExceptionHelper.notAcceptedException();
+		}
+		PersistenceManager pm;
+		if( pp == null ) {
+			pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+		} else {
+			pm = pp.get();
+		}
+
+		try {
+			if( pp == null && !pm.currentTransaction().isActive()) pm.currentTransaction().begin();
+
+			for(T o : obj) {
+				if(doesEntityExist(pm, clazz, o.getKey()) == false){
+					throw ASExceptionHelper.notFoundException();
+				}
+
+				if( performPreStore )
+					o.preStore();
+			}
+			
+			pm.makePersistentAll(obj);
+
+			if (pp == null)
+				pm.currentTransaction().commit();
+
+			if( cacheHelper != null )
+				for(T o : obj )
+					cacheHelper.put(getCacheKey(clazz, keyHelper.obtainIdentifierFromKey(o.getKey())), o);
+			
+		}catch(Exception e){
+			if(pp == null && pm.currentTransaction().isActive()){
+				pm.currentTransaction().rollback();
+			}
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		}finally{
+			if( pp == null ) pm.close();
+		}
+	}
 
 	/**
 	 * Creates or Updates an entity on the datastore, no matters if the entity

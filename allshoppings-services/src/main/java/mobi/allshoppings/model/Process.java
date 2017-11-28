@@ -47,6 +47,16 @@ public class Process implements ModelKey, Serializable, Identificable, StatusAwa
 	private String server;
 	private String cmdLine;
 	
+	private Boolean generateAPHE;
+	
+	public Boolean getGenerateAPHE() {
+		return generateAPHE;
+	}
+
+	public void setGenerateAPHE(Boolean generateAPHE) {
+		this.generateAPHE = generateAPHE;
+	}
+
 	@NotPersistent
 	private boolean doIndexNow = true;
 	

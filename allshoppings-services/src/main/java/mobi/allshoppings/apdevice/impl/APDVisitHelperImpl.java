@@ -232,15 +232,14 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Date curDate = new Date(fromDate.getTime());
 		Date limitDate = new Date(fromDate.getTime() + DAY_IN_MILLIS);
 		
-		double progress = 0;
+		int in;
 		while( curDate.before(toDate) || (fromDate.equals(toDate) &&
 				curDate.equals(toDate))) {
 
-			log.log(Level.INFO, "Progress: " +String.format("%2d", progress));
-			
 			try {
 				log.log(Level.INFO, "entityIds are: " + entities);
 				
+				in = 0;
 				for( String entityId : entities.keySet() ) {
 
 					Integer entityKind = entities.get(entityId);
@@ -253,6 +252,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					} else if ( entityKind.equals(EntityKind.KIND_INNER_ZONE)) {
 						InnerZone iz = innerzoneDao.get(entityId);
 						name = iz.getName();
+						store = storeDao.get(iz.getEntityId());
 					}
 					
 					log.log(Level.INFO, "Processing " + name + " for " + curDate
@@ -397,7 +397,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 										curDate, curDate);
 							}
 							
-							if( objs.size() > 0 ) {
+							if( objs.size() > 0 || onlyDashboards) {
 								mapper.createAPDVisitPerformanceDashboardForDay(curDate,
 										Arrays.asList(new String[] { entityId }), entityKind, objs);
 							}
@@ -405,6 +405,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					} catch( Exception e ) {
 						log.log(Level.SEVERE, e.getMessage(), e);
 					}
+					
+					log.log(Level.INFO, "Progress: " +String.format("%.2f",
+							((++in *100d) /entities.size())
+									*((curDate.getTime() -fromDate.getTime() +1d)
+											/(toDate.getTime() -fromDate.getTime())))
+							+"%");
 
 				} 
 			} catch( Exception e1 ) {
@@ -415,9 +421,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			limitDate = new Date(curDate.getTime() + DAY_IN_MILLIS);
 			
 			apdvDumper.flush();
-			
-			progress = ((toDate.getTime() -curDate.getTime()) *100)
-					/(toDate.getTime() -fromDate.getTime());
 			
 		}
 		
@@ -839,8 +842,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 		log.log(Level.FINE, "TOTAL Blacklist Entries: " + macs.size() + " macs");
 
-		// TODO add hardcoded mac addresses
-		
 		//--- End black list --------------
 		return macs;
 	}
@@ -1558,15 +1559,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		// Validate Minimum time for visit  
 		if( time < device.getVisitTimeThreshold()) {// TODO change name for getVisitMin
-			/*visit.setCheckinType(APDVisit.CHECKIN_PEASANT);
-			return isPeasantValid(visit, device, isEmployee);*/
 			return false;
 		}
 
 		// Validate Maximum time for visit  
 		if( time > device.getVisitMaxThreshold()) {
-			/*visit.setCheckinType(APDVisit.CHECKIN_PEASANT);
-			return isPeasantValid(visit, device, isEmployee);*/
 			return false;
 		}
 
@@ -1600,9 +1597,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		switch(WORK_CALENDAR.get(Calendar.DAY_OF_WEEK)) {
 		case Calendar.SUNDAY :
 			if(!device.getVisitsOnSun()) {
-				return false;//TODO transform into peasantss
-				/*visit.setCheckinType(APDVisit.CHECKIN_PEASANT);
-				return isPeasantValid(visit, device, isEmployee);*/
+				return false;//TODO transform into peasants
 			}
 			ts = Integer.valueOf(device.getVisitStartSun().substring(0,2)
 					+device.getVisitStartSun().substring(3));
@@ -1611,9 +1606,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			break;
 		case Calendar.MONDAY :
 			if(!device.getVisitsOnMon()) {
-				return false; //TODO
-				/*visit.setCheckinType(APDVisit.CHECKIN_PEASANT);
-				return isPeasantValid(visit, device, isEmployee);*/
+				return false;
 			}
 			ts = Integer.valueOf(device.getVisitStartMon().substring(0, 2)
 					+device.getVisitStartMon().substring(3));
@@ -1655,9 +1648,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			break;
 		case Calendar.FRIDAY :
 			if(!device.getVisitsOnFri()) {
-				return false; //TODO remove
-				/*visit.setCheckinType(APDVisit.CHECKIN_PEASANT);
-				return isPeasantValid(visit, device, isEmployee);*/
+				return false;
 			}
 			ts = Integer.valueOf(device.getVisitStartFri().substring(0, 2)
 					+device.getVisitStartFri().substring(3));
@@ -1666,9 +1657,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			break;
 		case Calendar.SATURDAY :
 			if(!device.getVisitsOnSat()) {
-				return false; // TODO remove
-				/*visit.setCheckinType(APDVisit.CHECKIN_PEASANT);
-				return isPeasantValid(visit, device, isEmployee);*/
+				return false;
 			}
 			ts = Integer.valueOf(device.getVisitStartSat().substring(0, 2)
 					+device.getVisitStartSat().substring(3));
@@ -1679,13 +1668,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 		if( ts > te ) {
 			if(ts <= t || t <= te) return true;
-			/*visit.setCheckinType(APDVisit.CHECKIN_PEASANT); //TODO
-			return isPeasantValid(visit, device, isEmployee);*/
 			return false;
 		} if(te >= t && t >= ts) return true;
-		/*visit.setCheckinType(APDVisit.CHECKIN_PEASANT); //TODO
-		return isPeasantValid(visit, device, isEmployee);*/
-		return false; // TODO
+		return false;
 	}
 
 
@@ -1733,13 +1718,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Long time = (visit.getCheckinFinished().getTime()
 				-visit.getCheckinStarted().getTime()) / 60000;
 		
-		visit.setDuration(time);
-
-		// FIXME rules for peasants?
-		/*int t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
-		int ts = Integer.valueOf(tf2.format(tf.parse(device.getPassStart())));
-		int te = Integer.valueOf(tf2.format(tf.parse(device.getPassEnd())));*/
-		
+		visit.setDuration(time);		
 		return time <= 60 *60;
 	}
 
@@ -1959,8 +1938,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		for(APDAssignation asig : assigs) {
 			DumperHelper<APHEntry> dumper = new DumpFactory<APHEntry>()
 					.build(null, APHEntry.class);
-			/*DumperHelper<APHEntry> loader = new DumpFactory<APHEntry>()
-					.build(null, APHEntry.class);*/
 			dumper.setFilter(asig.getHostname());
 			Date currentDate = new Date(copyFromDate.getTime());
 			Date currentCopyD = new Date(insertFromDate.getTime());
@@ -1971,7 +1948,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				while(originIt.hasNext()) {
 					APHEntry origin = originIt.next();
 					origin.setDate(sdf.format(currentCopyD));
-					//loader.dump(origin);
 				}
 				dumper.flush();
 				dumper.dispose();

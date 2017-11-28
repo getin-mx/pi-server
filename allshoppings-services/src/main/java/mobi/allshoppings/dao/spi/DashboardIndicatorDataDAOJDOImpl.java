@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
@@ -45,7 +46,8 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 
 	@Override
 	public Key createKey(DashboardIndicatorData obj) throws ASException {
-		return keyHelper.obtainKey(DashboardIndicatorData.class, String.valueOf(obj.hashCode()));
+		return keyHelper.obtainKey(DashboardIndicatorData.class,
+				String.valueOf(obj.hashCode()) +"-" +UUID.randomUUID());
 	}
 
 	@Override
