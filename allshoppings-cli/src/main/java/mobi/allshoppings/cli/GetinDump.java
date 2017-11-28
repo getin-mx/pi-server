@@ -1213,7 +1213,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("542","Opticas Devlyn Salamanca", "devlyn_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("543","Opticas Devlyn Galerias Marina", "devlyn_mx", null, GetinDump.MALL));
 
-			stores.add(new StoreAdapter("544","Sally Beauty Rio Churubusco", "sallybeauty_mx",null, GetinDump.MALL));
+			stores.add(new StoreAdapter("544","Sally Beauty Portal Churubusco", "sallybeauty_mx",null, GetinDump.MALL));
 
 			stores.add(new StoreAdapter("545","GAP Perisur", "liverpoolboutiques_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("546","Chico's Santa Fe", "liverpoolboutiques_mx",null, GetinDump.MALL));
@@ -1579,7 +1579,7 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("819","Sally Beauty Zentralia Churubusco", "sallybeauty_mx", null, GetinDump.MALL));
 
-			stores.add(new StoreAdapter("820", "Sunglass Hut Argentina", "sunglasshut_ar", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("820", "Sunglass Hut Nordelta", "sunglasshut_ar", null, GetinDump.MALL));
 
 			
 			Store store;

@@ -31,14 +31,14 @@ public class UserMenuDump extends AbstractCLI {
 	public static void setApplicationContext(ApplicationContext ctx) {
 		context = ctx;
 	}
-	
+
 	private static final char HEXES[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-	
+
 	private static String encodeString(String input) {
 		 String output = "";
 		try {
 			Mac mac = Mac.getInstance("HmacSHA256");
-			byte keyBytes[] = "MSIR33L264H1VVXSINHR".getBytes(); 
+			byte keyBytes[] = "MSIR33L264H1VVXSINHR".getBytes();
 			SecretKey key = new SecretKeySpec(keyBytes, "HmacSHA256");
 			mac.init(key);
 			mac.update(input.getBytes());
@@ -159,77 +159,77 @@ public class UserMenuDump extends AbstractCLI {
 				userMenuDao.create(um);
 			}
 
-			User ignacio = null; 
-		      try { 
-		        ignacio = userDao.get("ignacio@getin.mx", true); 
-		      } catch( Exception e ) { 
-		        ignacio = new User(); 
-		        ignacio.setFirstname("Ignacio"); 
-		        ignacio.setLastname(""); 
-		        ignacio.setEmail("ignacio@getin.mx"); 
-		        ignacio.getSecuritySettings().setRole(Role.ADMIN); 
-		        ignacio.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
-		        ignacio.setKey((Key)keyHelper.obtainKey(User.class, "ignacio@getin.mx")); 
-		        userDao.create(ignacio); 
-		      } 
-		 
-		      try { 
-		        um = userMenuDao.get("ignacio@getin.mx", true); 
-		        userMenuDao.delete("ignacio@getin.mx"); 
-		        throw new Exception(); 
-		      } catch( Exception e ) { 
-		        um = new UserMenu(); 
-		        um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas")); 
-		        um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico")); 
-		        um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura")); 
-		        um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados")); 
-		        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-		        um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas")); 
-		        um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados")); 
-		        um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios")); 
-		        um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets")); 
-		        um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos")); 
-		        um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue")); 
-		        um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos")); 
-		        um.setKey(userMenuDao.createKey("ignacio@getin.mx")); 
-		        userMenuDao.create(um); 
-		      } 
-		       
-		      User fernando = null; 
-		      try { 
-		        fernando = userDao.get("fernando@getin.mx", true); 
-		      } catch( Exception e ) { 
-		        fernando = new User(); 
-		        fernando.setFirstname("Fernando"); 
-		        fernando.setLastname(""); 
-		        fernando.setEmail("fernando@getin.mx"); 
-		        fernando.getSecuritySettings().setRole(Role.ADMIN); 
-		        fernando.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA"); 
-		        fernando.setKey((Key)keyHelper.obtainKey(User.class, "fernando@getin.mx")); 
-		        userDao.create(fernando); 
-		      } 
-		 
-		      try { 
-		        um = userMenuDao.get("fernando@getin.mx", true); 
-		        userMenuDao.delete("fernando@getin.mx"); 
-		        throw new Exception(); 
-		      } catch( Exception e ) { 
-		        um = new UserMenu(); 
-		        um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas")); 
-		        um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico")); 
-		        um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura")); 
-		        um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados")); 
-		        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-		        um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas")); 
-		        um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados")); 
-		        um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios")); 
-		        um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets")); 
-		        um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos")); 
-		        um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue")); 
-		        um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos")); 
-		        um.setKey(userMenuDao.createKey("fernando@getin.mx")); 
-		        userMenuDao.create(um); 
-		      } 
+			User ignacio = null;
+		      try {
+		        ignacio = userDao.get("ignacio@getin.mx", true);
+		      } catch( Exception e ) {
+		        ignacio = new User();
+		        ignacio.setFirstname("Ignacio");
+		        ignacio.setLastname("");
+		        ignacio.setEmail("ignacio@getin.mx");
+		        ignacio.getSecuritySettings().setRole(Role.ADMIN);
+		        ignacio.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+		        ignacio.setKey((Key)keyHelper.obtainKey(User.class, "ignacio@getin.mx"));
+		        userDao.create(ignacio);
+		      }
+
+		      try {
+		        um = userMenuDao.get("ignacio@getin.mx", true);
+		        userMenuDao.delete("ignacio@getin.mx");
+		        throw new Exception();
+		      } catch( Exception e ) {
+		        um = new UserMenu();
+		        um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
+		        um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+		        um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+		        um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
+		        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+		        um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
+		        um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
+		        um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
+		        um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+		        um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
+		        um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+		        um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
+		        um.setKey(userMenuDao.createKey("ignacio@getin.mx"));
+		        userMenuDao.create(um);
+		      }
+
+		      User fernando = null;
+		      try {
+		        fernando = userDao.get("fernando@getin.mx", true);
+		      } catch( Exception e ) {
+		        fernando = new User();
+		        fernando.setFirstname("Fernando");
+		        fernando.setLastname("");
+		        fernando.setEmail("fernando@getin.mx");
+		        fernando.getSecuritySettings().setRole(Role.ADMIN);
+		        fernando.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+		        fernando.setKey((Key)keyHelper.obtainKey(User.class, "fernando@getin.mx"));
+		        userDao.create(fernando);
+		      }
+
+		      try {
+		        um = userMenuDao.get("fernando@getin.mx", true);
+		        userMenuDao.delete("fernando@getin.mx");
+		        throw new Exception();
+		      } catch( Exception e ) {
+		        um = new UserMenu();
+		        um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
+		        um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+		        um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+		        um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
+		        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+		        um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
+		        um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
+		        um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
+		        um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+		        um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
+		        um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+		        um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
+		        um.setKey(userMenuDao.createKey("fernando@getin.mx"));
+		        userMenuDao.create(um);
+		      }
 
 			User luis2 = null;
 			try {
@@ -266,7 +266,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("luis.vazquez@getin.mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User anilu = null;
 			try {
 				anilu = userDao.get("anilu@getin.mx", true);
@@ -302,7 +302,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("anilu@getin.mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User azucena = null;
 			try {
 				azucena = userDao.get("azucena@getin.mx", true);
@@ -600,7 +600,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("volaris_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User ecobutik = null;
 			try {
 				ecobutik = userDao.get("ecobutik_mx", true);
@@ -624,7 +624,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("ecobutik_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User canallaBistro = null;
 			try {
 				canallaBistro = userDao.get("canalla_bistro_mx", true);
@@ -648,7 +648,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("canalla_bistro_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User bestbuy = null;
 			try {
 				bestbuy = userDao.get("bestbuy_mx", true);
@@ -698,7 +698,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("clubcasablanca_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			try {
 				um = userMenuDao.get("sportium_mx", true);
 				userMenuDao.delete("sportium_mx");
@@ -823,7 +823,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("delicafe_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User montedepiedad = null;
 			try {
 				montedepiedad = userDao.get("montedepiedad_mx", true);
@@ -927,7 +927,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("friedman_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User botanicus = null;
 			try {
 				botanicus = userDao.get("botanicus_mx", true);
@@ -953,7 +953,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("botanicus_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User gameplanet = null;
 			try {
 				gameplanet = userDao.get("gameplanet_mx", true);
@@ -978,7 +978,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("gameplanet_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User converse = null;
 			try {
 				converse = userDao.get("converse_mx", true);
@@ -1003,7 +1003,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("converse_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User prada = null;
 			try {
 				prada = userDao.get("prada_mx", true);
@@ -1030,7 +1030,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("prada_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User sunglasshut = null;
 			try {
 				sunglasshut = userDao.get("sunglasshut_mx", true);
@@ -1055,7 +1055,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("sunglasshut_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User squalo = null;
 			try {
 				squalo = userDao.get("squalo_mx", true);
@@ -1080,7 +1080,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("squalo_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User areasmexico = null;
 			try {
 				areasmexico = userDao.get("areasmexico_mx", true);
@@ -1268,24 +1268,24 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("demo4_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User droc = null;
 			try {
 				droc = userDao.get("droc_mx", true);
 				userDao.delete(droc);
 				throw new Exception();
 			} catch( Exception e ) {
-				 droc = new User(); 
-			     droc.setFirstname("DRoc"); 
-			     droc.setLastname("Mexico"); 
-			     droc.setEmail("droc@allshoppings.mobi"); 
-			     droc.getSecuritySettings().setRole(Role.BRAND); 
-			     droc.getSecuritySettings().setShoppings(new ArrayList<String>()); 
-			     droc.getSecuritySettings().getShoppings().add("mundoe"); 
+				 droc = new User();
+			     droc.setFirstname("DRoc");
+			     droc.setLastname("Mexico");
+			     droc.setEmail("droc@allshoppings.mobi");
+			     droc.getSecuritySettings().setRole(Role.BRAND);
+			     droc.getSecuritySettings().setShoppings(new ArrayList<String>());
+			     droc.getSecuritySettings().getShoppings().add("mundoe");
 			     droc.getSecuritySettings().getShoppings().add("plazaaragon");
-			     droc.getSecuritySettings().setPassword(encodeString("admin01")); 
-			     droc.setKey((Key)keyHelper.obtainKey(User.class, "droc_mx")); 
-			     userDao.create(droc); 
+			     droc.getSecuritySettings().setPassword(encodeString("admin01"));
+			     droc.setKey((Key)keyHelper.obtainKey(User.class, "droc_mx"));
+			     userDao.create(droc);
 			}
 
 			try {
@@ -1293,11 +1293,11 @@ public class UserMenuDump extends AbstractCLI {
 				userMenuDao.delete("droc_mx");
 				throw new Exception();
 			} catch( Exception e ) {
-				um = new UserMenu(); 
-		        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC")); 
-		        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map")); 
-		        um.setKey(userMenuDao.createKey("droc_mx")); 
-		        userMenuDao.create(um); 
+				um = new UserMenu();
+		        um.getEntries().add(new UserMenuEntry("index.shoppingvisits", "fa-area-chart", "Tráfico en CC"));
+		        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+		        um.setKey(userMenuDao.createKey("droc_mx"));
+		        userMenuDao.create(um);
 			}
 
 			User walmart = null;
@@ -1329,7 +1329,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("walmart_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User lacomer = null;
 			try {
 				lacomer = userDao.get("lacomer_mx", true);
@@ -1363,7 +1363,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("lacomer_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User superdemo = null;
 			try {
 				superdemo = userDao.get("superdemo_mx", true);
@@ -1447,8 +1447,8 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("chilimbalam_mx"));
 				userMenuDao.create(um);
 			}
-			
-			
+
+
 			User capadeozono = null;
 			try {
 				capadeozono = userDao.get("capadeozono_mx", true);
@@ -1601,7 +1601,7 @@ public class UserMenuDump extends AbstractCLI {
 //				um.setKey(userMenuDao.createKey("latabernadelleon_mx"));
 //				userMenuDao.create(um);*/
 //			}
-			
+
 			User marketintelligence = null;
 			try {
 				marketintelligence = userDao.get("marketintelligence_mx", true);
@@ -1676,7 +1676,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("saboreateycafe_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User getin = null;
 			try {
 				getin = userDao.get("getin_mx", true);
@@ -1701,7 +1701,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("getin_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User annik = null;
 			try {
 				annik = userDao.get("annik_mx", true);
@@ -1727,7 +1727,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("annik_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User atelier = null;
 			try {
 				atelier = userDao.get("atelier_mx", true);
@@ -2086,7 +2086,7 @@ public class UserMenuDump extends AbstractCLI {
 						"3612e18d-7ae2-4d59-9b0a-181149559941", "b36443b2-932c-4344-ada4-0fe254ce626b",
 						"8a4d093b-4ef5-42af-8e71-d4c9746ab751", "32350a8b-eea0-4881-965a-d142d27df4a1",
 						"50506876-8e69-4b91-9084-c3dd63c95b68", "3731dfc8-3308-4c0f-b462-5100a29e25cc",
-						"6c6a6156-38c3-4167-be09-42d9890510ed", "5d9789e3-f7e5-41e4-8fb3-9d028c485772", 
+						"6c6a6156-38c3-4167-be09-42d9890510ed", "5d9789e3-f7e5-41e4-8fb3-9d028c485772",
 						"fbf07796-137b-426e-8454-236e18a168c0"));
 				us1.setKey((Key)keyHelper.obtainKey(User.class, "nezrin.saker@demodazl.com"));
 				userDao.create(us1);
@@ -2307,7 +2307,7 @@ public class UserMenuDump extends AbstractCLI {
 				userMenuDao.create(um);
 			}
 
-			
+
 			try {
 				tanyamoss = userDao.get("trini@tanyamoss.com", true);
 			} catch( Exception e ) {
@@ -2333,7 +2333,7 @@ public class UserMenuDump extends AbstractCLI {
 				userMenuDao.create(um);
 			}
 
-			
+
 			try {
 				um = userMenuDao.get("pakmail_mx", true);
 				userMenuDao.delete("pakmail_mx");
@@ -2591,8 +2591,8 @@ public class UserMenuDump extends AbstractCLI {
 				userMenuDao.create(um);
 			}
 
-			
-			
+
+
 			User beepquest = null;
 			try {
 				beepquest = userDao.get("beepquest_mx", true);
@@ -2620,7 +2620,7 @@ public class UserMenuDump extends AbstractCLI {
 				skyalert.setKey((Key)keyHelper.obtainKey(User.class, "skyalert_mx"));
 				userDao.create(skyalert);
 			}
-			
+
 			User calibrator = null;
 			try {
 				calibrator = userDao.get("getin-apdevice-calibrator", true);
@@ -2634,7 +2634,7 @@ public class UserMenuDump extends AbstractCLI {
 				calibrator.setKey((Key)keyHelper.obtainKey(User.class, "getin-apdevice-calibrator"));
 				userDao.create(calibrator);
 			}
-			
+
 			User cafeBalcarceAr = null;
 			try {
 				cafeBalcarceAr = userDao.get("cafe_balcarce_ar", true);
@@ -2659,7 +2659,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("cafe_balcarce_ar"));
 				userMenuDao.create(um);
 			}
-			
+
 			User carolinaHerreraIl = null;
 			try {
 				carolinaHerreraIl = userDao.get("carolina_herrera_il", true);
@@ -2684,7 +2684,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("carolina_herrera_il"));
 				userMenuDao.create(um);
 			}
-			
+
 			User dentalia = null;
 			try {
 				dentalia = userDao.get("dentalia_mx", true);
@@ -2709,7 +2709,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("dentalia_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User farmaciassimilares = null;
 			try {
 				farmaciassimilares = userDao.get("farmacias_similares_mx", true);
@@ -2734,7 +2734,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("farmacias_similares_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User modaHolding = null;
 			try {
 				modaHolding = userDao.get("moda_holding_mx", true);
@@ -2759,7 +2759,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("moda_holding_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			User sbarro = null;
 			try {
 				sbarro = userDao.get("sbarro_mx", true);
@@ -2784,32 +2784,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("sbarro_mx"));
 				userMenuDao.create(um);
 			}
-			
-			User mtsport = null;
-			try {
-				mtsport = userDao.get("mt_sport_mx", true);
-			} catch( Exception e ) {
-				mtsport = new User();
-				mtsport.setFirstname("MT Sport");
-				mtsport.setLastname("Mexico");
-				mtsport.setEmail("mtsport@allshoppings.mobi");
-				mtsport.getSecuritySettings().setRole(Role.BRAND);
-				mtsport.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				mtsport.setKey((Key)keyHelper.obtainKey(User.class, "mt_sport_mx"));
-				userDao.create(mtsport);
-			}
 
-			try {
-				um = userMenuDao.get("mt_sport_mx", true);
-				userMenuDao.delete("mt_sport_mx");
-				throw new Exception();
-			} catch( Exception e ) {
-				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				um.setKey(userMenuDao.createKey("mt_sport_mx"));
-				userMenuDao.create(um);
-			}
-			
 
 			// Fullsand --------------------------------------------------------------------
 			User user = null;
@@ -2841,7 +2816,7 @@ public class UserMenuDump extends AbstractCLI {
 			}
 
 			// Chomarc --------------------------------------------------------------------
-			
+
 			User chomarc = null;
 			try {
 				chomarc = userDao.get("chomarc_mx", true);
@@ -2866,7 +2841,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("chomarc_mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			try {
 				um = userMenuDao.get("adassist@grupochomarc.com.mx", true);
 				userMenuDao.delete("adassist@grupochomarc.com.mx");
@@ -3073,7 +3048,7 @@ public class UserMenuDump extends AbstractCLI {
 			}
 
 			// Sportium --------------------------------------------------------------------
-			
+
 			//Lomas Verdes
 			try {
 				um = userMenuDao.get("lomasverdes@sportium", true);
@@ -3336,7 +3311,7 @@ public class UserMenuDump extends AbstractCLI {
 				userDao.create(user);
 			}
 			// End Sportium --------------------------------------------------------------------
-			
+
 			// Custom Sportium --------------------------------------------------------------------
 
 			//Coyoacan
@@ -3803,7 +3778,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "zonapuebla@outletdeportes_mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("cymfelipesuper@gmail.com", true);
 				userMenuDao.delete("cymfelipesuper@gmail.com");
@@ -3841,7 +3816,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "cymfelipesuper@gmail.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("cymalanrojas@gmail.com", true);
 				userMenuDao.delete("cymalanrojas@gmail.com");
@@ -3879,7 +3854,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "cymalanrojas@gmail.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("mariel.zamudio@outletdeportes.mx", true);
 				userMenuDao.delete("mariel.zamudio@outletdeportes.mx");
@@ -3920,7 +3895,7 @@ public class UserMenuDump extends AbstractCLI {
 			}
 
 			// End Custom Outlet --------------------------------------------------------------------
-			
+
 			// Custom Fullsand  --------------------------------------------------------------------
 			// rgalaz
 			try {
@@ -4143,7 +4118,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "playa2@98coastav_mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("enriqueg@98coastav.mx", true);
 				userMenuDao.delete("enriqueg@98coastav.mx");
@@ -4174,7 +4149,7 @@ public class UserMenuDump extends AbstractCLI {
 			}
 
 			// End 98 Coast av  --------------------------------------------------------------------
-			
+
 			// Custom Grupo Pavel  --------------------------------------------------------------------
 			try {
 				um = userMenuDao.get("aaguilar@pavel.com.mx", true);
@@ -4229,7 +4204,7 @@ public class UserMenuDump extends AbstractCLI {
 			}
 
 			// End Custom Grupo Pavel  --------------------------------------------------------------------
-			
+
 			// Farmacias YZA  --------------------------------------------------------------------
 
 			try {
@@ -4254,16 +4229,16 @@ public class UserMenuDump extends AbstractCLI {
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
 						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				user.getSecuritySettings().setStores(Arrays.asList("5a7ebef0-fd9f-4948-8514-046858211228", 
-		                "fb7eb0d0-fb1f-4c13-b32d-2b61d7735fad", "4556e3e5-9b68-42db-b9f3-7e1b1f13f485", 
-		                "d972339b-d7ca-4485-900f-5247e4f93f64", "ed2acf8d-dde1-4953-9800-fa5eef2af236", 
-		                "a3d27d3f-6594-49d6-8ad9-951cdbe4c297", "b14d5fbf-c84e-4b5c-884a-2eca72523f43", 
+				user.getSecuritySettings().setStores(Arrays.asList("5a7ebef0-fd9f-4948-8514-046858211228",
+		                "fb7eb0d0-fb1f-4c13-b32d-2b61d7735fad", "4556e3e5-9b68-42db-b9f3-7e1b1f13f485",
+		                "d972339b-d7ca-4485-900f-5247e4f93f64", "ed2acf8d-dde1-4953-9800-fa5eef2af236",
+		                "a3d27d3f-6594-49d6-8ad9-951cdbe4c297", "b14d5fbf-c84e-4b5c-884a-2eca72523f43",
 		                "a0692bbd-1e2b-44e5-9f95-b03af314aa2e", "52ded1e4-aa25-4cd0-b812-90d55dbdc1ab",
 		                "00bff0d2-436f-4fd3-92b6-77539007f19a"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "juan.almanza@yza.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("alberto.perez@yza.mx", true);
 				userMenuDao.delete("alberto.perez@yza.mx");
@@ -4286,10 +4261,10 @@ public class UserMenuDump extends AbstractCLI {
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
 						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
-				user.getSecuritySettings().setStores(Arrays.asList("5a7ebef0-fd9f-4948-8514-046858211228", 
-		                "fb7eb0d0-fb1f-4c13-b32d-2b61d7735fad", "4556e3e5-9b68-42db-b9f3-7e1b1f13f485", 
-		                "d972339b-d7ca-4485-900f-5247e4f93f64", "ed2acf8d-dde1-4953-9800-fa5eef2af236", 
-		                "a3d27d3f-6594-49d6-8ad9-951cdbe4c297", "b14d5fbf-c84e-4b5c-884a-2eca72523f43", 
+				user.getSecuritySettings().setStores(Arrays.asList("5a7ebef0-fd9f-4948-8514-046858211228",
+		                "fb7eb0d0-fb1f-4c13-b32d-2b61d7735fad", "4556e3e5-9b68-42db-b9f3-7e1b1f13f485",
+		                "d972339b-d7ca-4485-900f-5247e4f93f64", "ed2acf8d-dde1-4953-9800-fa5eef2af236",
+		                "a3d27d3f-6594-49d6-8ad9-951cdbe4c297", "b14d5fbf-c84e-4b5c-884a-2eca72523f43",
 		                "a0692bbd-1e2b-44e5-9f95-b03af314aa2e", "52ded1e4-aa25-4cd0-b812-90d55dbdc1ab",
 		                "00bff0d2-436f-4fd3-92b6-77539007f19a"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "alberto.perez@yza.mx"));
@@ -4297,10 +4272,10 @@ public class UserMenuDump extends AbstractCLI {
 			}
 
 			// End Farmacias YZA  --------------------------------------------------------------------
-			
-			
+
+
 			// Prada  --------------------------------------------------------------------
-			
+
 				// 	Complete access ------------------------------------------------------
 
 			try {
@@ -4341,13 +4316,13 @@ public class UserMenuDump extends AbstractCLI {
 								"4f9302f7-c155-46c7-b780-17834270a7f7", "bd39ba69-eb84-4679-b3e2-0f9276eb76b7",
 								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
 								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
-								"1479933115741", "1479926604340", 
+								"1479933115741", "1479926604340",
 								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c", "4db491d4-3205-40ae-b048-f5b75ac35040",
 								"4523b563-2e0d-4fe2-8321-9e53740854b2", "9ce30430-d923-481f-9b32-caa5139972fe"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "bprada@prada.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("gcastellanos@pradastores.mx", true);
 				userMenuDao.delete("gcastellanos@pradastores.mx");
@@ -4386,13 +4361,13 @@ public class UserMenuDump extends AbstractCLI {
 								"4f9302f7-c155-46c7-b780-17834270a7f7", "bd39ba69-eb84-4679-b3e2-0f9276eb76b7",
 								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
 								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
-								"1479933115741", "1479926604340", 
+								"1479933115741", "1479926604340",
 								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c", "4db491d4-3205-40ae-b048-f5b75ac35040",
 								"4523b563-2e0d-4fe2-8321-9e53740854b2", "9ce30430-d923-481f-9b32-caa5139972fe"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "gcastellanos@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("maguirre@prada.mx", true);
 				userMenuDao.delete("maguirre@prada.mx");
@@ -4430,13 +4405,13 @@ public class UserMenuDump extends AbstractCLI {
 								"4f9302f7-c155-46c7-b780-17834270a7f7", "bd39ba69-eb84-4679-b3e2-0f9276eb76b7",
 								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
 								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
-								"1479933115741", "1479926604340", 
+								"1479933115741", "1479926604340",
 								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c", "4db491d4-3205-40ae-b048-f5b75ac35040",
 								"4523b563-2e0d-4fe2-8321-9e53740854b2", "9ce30430-d923-481f-9b32-caa5139972fe"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "maguirre@prada.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("dperez@prada.mx", true);
 				userMenuDao.delete("dperez@prada.mx");
@@ -4473,13 +4448,13 @@ public class UserMenuDump extends AbstractCLI {
 								"4f9302f7-c155-46c7-b780-17834270a7f7", "bd39ba69-eb84-4679-b3e2-0f9276eb76b7",
 								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
 								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
-								"1479933115741", "1479926604340", 
+								"1479933115741", "1479926604340",
 								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c", "4db491d4-3205-40ae-b048-f5b75ac35040",
 								"4523b563-2e0d-4fe2-8321-9e53740854b2", "9ce30430-d923-481f-9b32-caa5139972fe"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "dperez@prada.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("truiz@prada.mx", true);
 				userMenuDao.delete("truiz@prada.mx");
@@ -4516,13 +4491,13 @@ public class UserMenuDump extends AbstractCLI {
 								"4f9302f7-c155-46c7-b780-17834270a7f7", "bd39ba69-eb84-4679-b3e2-0f9276eb76b7",
 								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
 								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
-								"1479933115741", "1479926604340", 
+								"1479933115741", "1479926604340",
 								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c", "4db491d4-3205-40ae-b048-f5b75ac35040",
 								"4523b563-2e0d-4fe2-8321-9e53740854b2", "9ce30430-d923-481f-9b32-caa5139972fe"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "truiz@prada.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("cbarajas@prada.mx", true);
 				userMenuDao.delete("cbarajas@prada.mx");
@@ -4559,12 +4534,12 @@ public class UserMenuDump extends AbstractCLI {
 								"4f9302f7-c155-46c7-b780-17834270a7f7", "bd39ba69-eb84-4679-b3e2-0f9276eb76b7",
 								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
 								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
-								"1479933115741", "1479926604340", 
+								"1479933115741", "1479926604340",
 								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "cbarajas@prada.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("agutierrez@prada.mx", true);
 				userMenuDao.delete("agutierrez@prada.mx");
@@ -4601,17 +4576,17 @@ public class UserMenuDump extends AbstractCLI {
 								"4f9302f7-c155-46c7-b780-17834270a7f7", "bd39ba69-eb84-4679-b3e2-0f9276eb76b7",
 								"a062c268-877d-47e4-80aa-894da6ec93cc", "1479926604326",
 								"49272db7-dee7-4230-bbfb-d9bdcc296f59", "4568bab3-27eb-4d49-84cd-3fa594acd3df",
-								"1479933115741", "1479926604340", 
+								"1479933115741", "1479926604340",
 								"b072f5cf-2f5e-4a28-9be4-5525b5c6f83c", "4db491d4-3205-40ae-b048-f5b75ac35040",
 								"4523b563-2e0d-4fe2-8321-9e53740854b2", "9ce30430-d923-481f-9b32-caa5139972fe"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "agutierrez@prada.mx"));
 				userDao.create(user);
 			}
-			
+
 				// End complete access --------------------------------------------------
-			
+
 				// Zona Norte -----------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("santafe@pradastores.mx", true);
 				userMenuDao.delete("santafe@pradastores.mx");
@@ -4638,7 +4613,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "santafe@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("atizapan@pradastores.mx", true);
 				userMenuDao.delete("atizapan@pradastores.mx");
@@ -4651,7 +4626,7 @@ public class UserMenuDump extends AbstractCLI {
 			}
 
 			try {
-				user = userDao.get("atizapan@pradastores.mx", true);				
+				user = userDao.get("atizapan@pradastores.mx", true);
 			} catch (Exception e) {
 				user = new User();
 				user.setFirstname("Prada Galerias Atizapan");
@@ -4665,7 +4640,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "atizapan@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("interlomas@pradastores.mx", true);
 				userMenuDao.delete("interlomas@pradastores.mx");
@@ -4692,7 +4667,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "interlomas@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("pviavallejo@pradastores.mx", true);
 				userMenuDao.delete("pviavallejo@pradastores.mx");
@@ -4719,7 +4694,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "pviavallejo@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("gtoluca@pradastores.mx", true);
 				userMenuDao.delete("gtoluca@pradastores.mx");
@@ -4746,7 +4721,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "gtoluca@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("guadalajara@pradastores.mx", true);
 				userMenuDao.delete("guadalajara@pradastores.mx");
@@ -4773,7 +4748,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "guadalajara@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("granplaza@pradastores.mx", true);
 				userMenuDao.delete("granplaza@pradastores.mx");
@@ -4800,7 +4775,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "granplaza@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("pmayor@pradastores.mx", true);
 				userMenuDao.delete("pmayor@pradastores.mx");
@@ -4827,11 +4802,11 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "pmayor@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 				// End Zona Norte -----------------------------------------------------------
-			
+
 				// Zona Sur -------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("fcanela@pradastores.mx", true);
 				userMenuDao.delete("fcanela@pradastores.mx");
@@ -4861,7 +4836,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "fcanela@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("perisur@pradastores.mx", true);
 				userMenuDao.delete("perisur@pradastores.mx");
@@ -4888,7 +4863,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "perisur@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("insurgentes@pradastores.mx", true);
 				userMenuDao.delete("insurgentes@pradastores.mx");
@@ -4915,7 +4890,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "insurgentes@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("coyoacan@pradastores.mx", true);
 				userMenuDao.delete("coyoacan@pradastores.mx");
@@ -4942,7 +4917,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "coyoacan@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("galeriascoapa@pradastores.mx", true);
 				userMenuDao.delete("galeriascoapa@pradastores.mx");
@@ -4969,7 +4944,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "galeriascoapa@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("pdelta@pradastores.mx", true);
 				userMenuDao.delete("pdelta@pradastores.mx");
@@ -4996,7 +4971,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "pdelta@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("tabasco@pradastores.mx", true);
 				userMenuDao.delete("tabasco@pradastores.mx");
@@ -5023,7 +4998,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "tabasco@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("altabrisa@pradastores.mx", true);
 				userMenuDao.delete("altabrisa@pradastores.mx");
@@ -5050,7 +5025,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "altabrisa@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("merida@pradastores.mx", true);
 				userMenuDao.delete("merida@pradastores.mx");
@@ -5077,7 +5052,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "merida@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("pcancun@pradastores.mx", true);
 				userMenuDao.delete("pcancun@pradastores.mx");
@@ -5104,11 +5079,11 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "pcancun@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 				// End Zona Sur -------------------------------------------------------------
-			
+
 				// Zona Centro -------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("crua@pradastores.mx", true);
 				userMenuDao.delete("crua@pradastores.mx");
@@ -5139,7 +5114,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "crua@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("satelite@pradastores.mx", true);
 				userMenuDao.delete("satelite@pradastores.mx");
@@ -5166,7 +5141,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "satelite@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("ptoreo@pradastores.mx", true);
 				userMenuDao.delete("ptoreo@pradastores.mx");
@@ -5193,7 +5168,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "ptoreo@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("gserdan@pradastores.mx", true);
 				userMenuDao.delete("gserdan@pradastores.mx");
@@ -5220,7 +5195,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "gserdan@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("fashiondrive@pradastores.mx", true);
 				userMenuDao.delete("fashiondrive@pradastores.mx");
@@ -5247,7 +5222,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "fashiondrive@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("polanco@pradastores.mx", true);
 				userMenuDao.delete("polanco@pradastores.mx");
@@ -5274,7 +5249,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "polanco@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("xalapa@pradastores.mx", true);
 				userMenuDao.delete("xalapa@pradastores.mx");
@@ -5301,7 +5276,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "xalapa@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("puebla@pradastores.mx", true);
 				userMenuDao.delete("puebla@pradastores.mx");
@@ -5328,7 +5303,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "puebla@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("monterrey@pradastores.mx", true);
 				userMenuDao.delete("monterrey@pradastores.mx");
@@ -5355,11 +5330,11 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "monterrey@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 				// End Zona Centro -------------------------------------------------------------
-			
+
 				// Outlets -------------------------------------------------------------
-				
+
 			try {
 				um = userMenuDao.get("jcruz@pradastores.mx", true);
 				userMenuDao.delete("jcruz@pradastores.mx");
@@ -5388,7 +5363,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "jcruz@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("puntanorte@pradastores.mx", true);
 				userMenuDao.delete("puntanorte@pradastores.mx");
@@ -5415,7 +5390,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "puntanorte@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("galerias@pradastores.mx", true);
 				userMenuDao.delete("galerias@pradastores.mx");
@@ -5442,7 +5417,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "galerias@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("miramontes@pradastores.mx", true);
 				userMenuDao.delete("miramontes@pradastores.mx");
@@ -5469,7 +5444,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "miramontes@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("outletpuebla@pradastores.mx", true);
 				userMenuDao.delete("outletpuebla@pradastores.mx");
@@ -5496,7 +5471,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "outletpuebla@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("omulza@pradastores.mx", true);
 				userMenuDao.delete("omulza@pradastores.mx");
@@ -5523,9 +5498,9 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "omulza@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 				// End Outlets -------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("esfera@pradastores.mx", true);
 				userMenuDao.delete("esfera@pradastores.mx");
@@ -5578,12 +5553,12 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "pvictoria@pradastores.mx"));
 				userDao.create(user);
 			}
-			
+
 
 			// End Prada  --------------------------------------------------------------------
-			
+
 			// Pakmail  --------------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("atenas@pakmail.com.mx", true);
 				userMenuDao.delete("atenas@pakmail.com.mx");
@@ -5610,7 +5585,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "atenas@pakmail.com.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("coyuya@pakmail.com.mx", true);
 				userMenuDao.delete("coyuya@pakmail.com.mx");
@@ -5637,7 +5612,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "coyuya@pakmail.com.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("echegaray@pakmail.com.mx", true);
 				userMenuDao.delete("echegaray@pakmail.com.mx");
@@ -5664,7 +5639,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "echegaray@pakmail.com.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("felixcuevas@pakmail.com.mx", true);
 				userMenuDao.delete("felixcuevas@pakmail.com.mx");
@@ -5691,7 +5666,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "felixcuevas@pakmail.com.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("lomasestrella@pakmail.com.mx", true);
 				userMenuDao.delete("lomasestrella@pakmail.com.mx");
@@ -5718,7 +5693,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "lomasestrella@pakmail.com.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("marianootero@pakmail.com.mx", true);
 				userMenuDao.delete("marianootero@pakmail.com.mx");
@@ -5745,7 +5720,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "marianootero@pakmail.com.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("metepec@pakmail.com.mx", true);
 				userMenuDao.delete("metepec@pakmail.com.mx");
@@ -5772,7 +5747,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "metepec@pakmail.com.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("palosolo@pakmail.com.mx", true);
 				userMenuDao.delete("palosolo@pakmail.com.mx");
@@ -5799,7 +5774,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "palosolo@pakmail.com.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("roma@pakmail.com.mx", true);
 				userMenuDao.delete("roma@pakmail.com.mx");
@@ -5826,7 +5801,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "roma@pakmail.com.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("sanjeronimo@pakmail.com.mx", true);
 				userMenuDao.delete("sanjeronimo@pakmail.com.mx");
@@ -5853,7 +5828,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "sanjeronimo@pakmail.com.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("sanmateoatenco@pakmail.com.mx", true);
 				userMenuDao.delete("sanmateoatenco@pakmail.com.mx");
@@ -5880,7 +5855,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "sanmateoatenco@pakmail.com.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("valladolid@pakmail.com.mx", true);
 				userMenuDao.delete("valladolid@pakmail.com.mx");
@@ -5907,11 +5882,11 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "valladolid@pakmail.com.mx"));
 				userDao.create(user);
 			}
-			
+
 			// End Pakmail  --------------------------------------------------------------------
-			
+
 			// Opticas Devlyn  --------------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("ycastor@devlyn.com.mx", true);
 				userMenuDao.delete("ycastor@devlyn.com.mx");
@@ -5939,8 +5914,8 @@ public class UserMenuDump extends AbstractCLI {
 								"af50c63a-144a-4fce-b816-478351fdd27e", "4234966c-8d24-4179-b255-1f095123034f"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "ycastor@devlyn.com.mx"));
 				userDao.create(user);
-			}	
-			
+			}
+
 			try {
 				um = userMenuDao.get("vmendivil@devlyn.com.mx", true);
 				userMenuDao.delete("vmendivil@devlyn.com.mx");
@@ -5969,7 +5944,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "vmendivil@devlyn.com.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("devlyn.andrew@devlyn.com.mx", true);
 				userMenuDao.delete("devlyn.andrew@devlyn.com.mx");
@@ -5998,11 +5973,11 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "devlyn.andrew@devlyn.com.mx"));
 				userDao.create(user);
 			}
-			
+
 			// End Opticas Devlyn  --------------------------------------------------------------------
-			
+
 			// Tanya Moss  --------------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("aeropuerto_terminal_2@tanyamoss.com", true);
 				userMenuDao.delete("aeropuerto_terminal_2@tanyamoss.com");
@@ -6029,7 +6004,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "aeropuerto_terminal_2@tanyamoss.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("aeropuerto_guadalajara@tanyamoss.com", true);
 				userMenuDao.delete("aeropuerto_guadalajara@tanyamoss.com");
@@ -6056,7 +6031,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "aeropuerto_guadalajara@tanyamoss.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("altavista@tanyamoss.com", true);
 				userMenuDao.delete("altavista@tanyamoss.com");
@@ -6083,7 +6058,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "altavista@tanyamoss.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("andares@tanyamoss.com", true);
 				userMenuDao.delete("andares@tanyamoss.com");
@@ -6110,7 +6085,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "andares@tanyamoss.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("angelopolis@tanyamoss.com", true);
 				userMenuDao.delete("angelopolis@tanyamoss.com");
@@ -6137,7 +6112,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "angelopolis@tanyamoss.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("interlomas@tanyamoss.com", true);
 				userMenuDao.delete("interlomas@tanyamoss.com");
@@ -6164,7 +6139,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "interlomas@tanyamoss.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("isla_coyoacan@tanyamoss.com", true);
 				userMenuDao.delete("isla_coyoacan@tanyamoss.com");
@@ -6191,7 +6166,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "isla_coyoacan@tanyamoss.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("oasis_coyoacan@tanyamoss.com", true);
 				userMenuDao.delete("oasis_coyoacan@tanyamoss.com");
@@ -6218,7 +6193,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "oasis_coyoacan@tanyamoss.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("pabellon_polanco@tanyamoss.com", true);
 				userMenuDao.delete("pabellon_polanco@tanyamoss.com");
@@ -6245,7 +6220,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "pabellon_polanco@tanyamoss.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("palacio_polanco@tanyamoss.com", true);
 				userMenuDao.delete("palacio_polanco@tanyamoss.com");
@@ -6271,8 +6246,8 @@ public class UserMenuDump extends AbstractCLI {
 						.setStores(Arrays.asList("324e7d47-d156-4f77-992a-adb26318b8a8"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "palacio_polanco@tanyamoss.com"));
 				userDao.create(user);
-			}	
-			
+			}
+
 			try {
 				um = userMenuDao.get("parque_delta@tanyamoss.com", true);
 				userMenuDao.delete("parque_delta@tanyamoss.com");
@@ -6298,8 +6273,8 @@ public class UserMenuDump extends AbstractCLI {
 						.setStores(Arrays.asList("1493049398625"));
 				user.setKey((Key) keyHelper.obtainKey(User.class, "parque_delta@tanyamoss.com"));
 				userDao.create(user);
-			}	
-			
+			}
+
 			try {
 				um = userMenuDao.get("parque_duraznos@tanyamoss.com", true);
 				userMenuDao.delete("parque_duraznos@tanyamoss.com");
@@ -6326,7 +6301,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "parque_duraznos@tanyamoss.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("plaza_carso@tanyamoss.com", true);
 				userMenuDao.delete("plaza_carso@tanyamoss.com");
@@ -6353,7 +6328,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "plaza_carso@tanyamoss.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("santa_fe@tanyamoss.com", true);
 				userMenuDao.delete("santa_fe@tanyamoss.com");
@@ -6380,7 +6355,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "santa_fe@tanyamoss.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("santa_teresa@tanyamoss.com", true);
 				userMenuDao.delete("santa_teresa@tanyamoss.com");
@@ -6407,7 +6382,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "santa_teresa@tanyamoss.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("toreo_parque_central@tanyamoss.com", true);
 				userMenuDao.delete("toreo_parque_central@tanyamoss.com");
@@ -6434,11 +6409,11 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "toreo_parque_central@tanyamoss.com"));
 				userDao.create(user);
 			}
-			
+
 			// End Tanya Moss  --------------------------------------------------------------------
-			
+
 			// Aditivo  --------------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("juan@aditivo.mx", true);
 				userMenuDao.delete("juan@aditivo.mx");
@@ -6482,7 +6457,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "juan@aditivo.mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("ricardol@aditivo.mx", true);
 				userMenuDao.delete("ricardol@aditivo.mx");
@@ -6520,11 +6495,11 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "ricardol@aditivo.mx"));
 				userDao.create(user);
 			}
-			
+
 			// End Aditivo  --------------------------------------------------------------------
-			
+
 			// Modatelas  --------------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("locales_modatelas_mx", true);
 				userMenuDao.delete("locales_modatelas_mx");
@@ -6568,7 +6543,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "locales_modatelas_mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("foraneas_modatelas_mx", true);
 				userMenuDao.delete("foraneas_modatelas_mx");
@@ -6594,7 +6569,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.getSecuritySettings()
 						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
 				user.getSecuritySettings()
-						.setStores(Arrays.asList("9658cd89-f277-4946-bfcb-9330b2c886c2", 
+						.setStores(Arrays.asList("9658cd89-f277-4946-bfcb-9330b2c886c2",
 								"a118c701-143d-4ebc-a40f-ea3277949e10", "44e14c13-54cb-4592-a84c-538399074698",
 								"9e08742a-b37a-4d7d-9427-c0c585e89fce", "7dadd279-08cc-4a51-86cd-d85df6abf6c3",
 								"2b2b88d1-afbc-4da0-be04-1ba057c07e95", "4bb5fd5f-e161-4461-8c9c-84e8172f5466",
@@ -6611,7 +6586,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "foraneas_modatelas_mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("hugo_rodriguez", true);
 				userMenuDao.delete("hugo_rodriguez");
@@ -6644,7 +6619,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "hugo_rodriguez"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("hector_rodriguez", true);
 				userMenuDao.delete("hector_rodriguez");
@@ -6676,7 +6651,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "hector_rodriguez"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("alejandro_saucedo", true);
 				userMenuDao.delete("alejandro_saucedo");
@@ -6705,7 +6680,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "alejandro_saucedo"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("jorge_velazquez", true);
 				userMenuDao.delete("jorge_velazquez");
@@ -6732,7 +6707,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "jorge_velazquez"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("gustavo_sandoval", true);
 				userMenuDao.delete("gustavo_sandoval");
@@ -6759,7 +6734,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "gustavo_sandoval"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("daniel_gonzalez", true);
 				userMenuDao.delete("daniel_gonzalez");
@@ -6790,7 +6765,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "daniel_gonzalez"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("francisco_badillo", true);
 				userMenuDao.delete("francisco_badillo");
@@ -6822,7 +6797,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "francisco_badillo"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("adan_hernandez", true);
 				userMenuDao.delete("adan_hernandez");
@@ -6853,11 +6828,11 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "adan_hernandez"));
 				userDao.create(user);
 			}
-			
+
 			// End Modatelas  --------------------------------------------------------------------
-			
+
 			// Mobo  --------------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("mobo_mx", true);
 				userMenuDao.delete("mobo_mx");
@@ -6890,7 +6865,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "mobo_mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("mtorre@mobo.mx", true);
 				userMenuDao.delete("mtorre@mobo.mx");
@@ -6906,9 +6881,9 @@ public class UserMenuDump extends AbstractCLI {
 				user = userDao.get("mtorre@mobo.mx", true);
 				userDao.delete(user);
 			} catch (Exception e) {
-				
+
 			}
-			
+
 			try {
 				um = userMenuDao.get("ugodinez@mobo.mx", true);
 				userMenuDao.delete("ugodinez@mobo.mx");
@@ -6924,13 +6899,13 @@ public class UserMenuDump extends AbstractCLI {
 				user = userDao.get("ugodinez@mobo.mx", true);
 				userDao.delete(user);
 			} catch (Exception e) {
-				
+
 			}
-			
+
 			// End Mobo  --------------------------------------------------------------------
-			
+
 			// GamePlanet  --------------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("rodolfo.urbina@gameplanet.com", true);
 				userMenuDao.delete("rodolfo.urbina@gameplanet.com");
@@ -6958,7 +6933,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "rodolfo.urbina@gameplanet.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("marcopolo@gameplanet.com", true);
 				userMenuDao.delete("marcopolo@gameplanet.com");
@@ -6986,7 +6961,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "marcopolo@gameplanet.com"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("alberto.vacas@gameplanet.com", true);
 				userMenuDao.delete("alberto.vacas@gameplanet.com");
@@ -7014,11 +6989,11 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "alberto.vacas@gameplanet.com"));
 				userDao.create(user);
 			}
-			
+
 			// End GamePlanet  --------------------------------------------------------------------
-			
+
 			// Squalo  --------------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("jogomez@squalo.com", true);
 				userMenuDao.delete("jogomez@squalo.com");
@@ -7057,10 +7032,10 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "jogomez@squalo.com"));
 				userDao.create(user);
 			}
-			
+
 			// End Squalo  --------------------------------------------------------------------
-			
-			
+
+
 			try {
 				um = userMenuDao.get("modaholding_mx", true);
 				userMenuDao.delete("modaholding_mx");
@@ -7089,9 +7064,9 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "modaholding_mx"));
 				userDao.create(user);
 			}
-			
+
 			// Aditivo Franquicias Michan  --------------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("franquiciasmichan_mx", true);
 				userMenuDao.delete("franquiciasmichan_mx");
@@ -7120,11 +7095,11 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "franquiciasmichan_mx"));
 				userDao.create(user);
 			}
-			
+
 			// End Aditivo Franquicias Michan  --------------------------------------------------------------------
-			
+
 			// Aditivo Franquicias  --------------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("daniel@aditivofranquicias_mx", true);
 				userMenuDao.delete("daniel@aditivofranquicias_mx");
@@ -7153,7 +7128,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "daniel@aditivofranquicias_mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("aditivo_franquicias_mx", true);
 				userMenuDao.delete("aditivo_franquicias_mx");
@@ -7179,11 +7154,11 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "aditivo_franquicias_mx"));
 				userDao.create(user);
 			}
-			
+
 			// End Aditivo Franquicias  --------------------------------------------------------------------
-			
+
 			// Aditivo Franquicias 2  --------------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("aditivofranquicias2_mx", true);
 				userMenuDao.delete("aditivofranquicias2_mx");
@@ -7208,7 +7183,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "aditivofranquicias2_mx"));
 				userDao.create(user);
 			}
-			
+
 			try {
 				um = userMenuDao.get("ricardo@aditivo.mx", true);
 				userMenuDao.delete("ricardo@aditivo.mx");
@@ -7237,9 +7212,9 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "ricardo@aditivo.mx"));
 				userDao.create(user);
 			}
-			
+
 			// End Aditivo Franquicias 2 --------------------------------------------------------------------
-			
+
 			try {
 				um = userMenuDao.get("angel@yogome.com", true);
 				userMenuDao.delete("angel@yogome.com");
@@ -7268,7 +7243,7 @@ public class UserMenuDump extends AbstractCLI {
 				user.setKey((Key) keyHelper.obtainKey(User.class, "angel@yogome.com"));
 				userDao.create(user);
 			}
-			
+
 			User userChilimbalam = null;
  			try {
  				userChilimbalam = userDao.get("ariel@chilimbalam.com.mx", true);
@@ -7281,10 +7256,10 @@ public class UserMenuDump extends AbstractCLI {
  				userChilimbalam.getSecuritySettings().setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
  				userChilimbalam.setKey((Key)keyHelper.obtainKey(User.class, "ariel@chilimbalam.com.mx"));
  				userDao.create(userChilimbalam);
- 				
+
  			}
- 			
- 			
+
+
  			userChilimbalam = null;
  			try {
  				userChilimbalam = userDao.get("hmorales@chilimbalam.com.mx", true);
@@ -7298,7 +7273,7 @@ public class UserMenuDump extends AbstractCLI {
  				userChilimbalam.setKey((Key)keyHelper.obtainKey(User.class, "hmorales@chilimbalam.com.mx"));
  				userDao.create(userChilimbalam);
  			}
- 			
+
  			userChilimbalam = null;
  			try {
  				userChilimbalam = userDao.get("arocha@chilimbalam.com.mx", true);
@@ -7312,8 +7287,8 @@ public class UserMenuDump extends AbstractCLI {
  				userChilimbalam.setKey((Key)keyHelper.obtainKey(User.class, "arocha@chilimbalam.com.mx"));
  				userDao.create(userChilimbalam);
  			}
- 
- 			
+
+
  			try {
  				um = userMenuDao.get("ariel@chilimbalam.com.mx", true);
  				userMenuDao.delete("ariel@chilimbalam.com.mx");
@@ -7335,7 +7310,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("hmorales@chilimbalam.com.mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			try {
 				um = userMenuDao.get("arocha@chilimbalam.com.mx", true);
 				userMenuDao.delete("arocha@chilimbalam.com.mx");
@@ -7346,7 +7321,7 @@ public class UserMenuDump extends AbstractCLI {
 				um.setKey(userMenuDao.createKey("arocha@chilimbalam.com.mx"));
 				userMenuDao.create(um);
 			}
-			
+
 			UserMenuDumpTwo.createMissingUsers();
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

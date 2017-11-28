@@ -1563,7 +1563,9 @@ public class UserMenuDumpTwo extends AbstractCLI {
 					
 					User mtSport = null;
 					try {
-					  mtSport = userDao.get("mtsport_mx", true);
+					  mtSport = userDao.get("mt_sport_mx", true);
+					  userDao.delete("mt_sport_mx");
+					  throw new Exception();
 					} catch( Exception e ) {
 					  mtSport = new User();
 					  mtSport.setFirstname("MT Sport");
@@ -1571,20 +1573,20 @@ public class UserMenuDumpTwo extends AbstractCLI {
 					  mtSport.setEmail("mtsport@allshoppings.mobi");
 					  mtSport.getSecuritySettings().setRole(Role.BRAND);
 					  mtSport.getSecuritySettings().setPassword(encodeString("MTSport01"));
-					  mtSport.setKey((Key)keyHelper.obtainKey(User.class, "mtsport_mx"));
+					  mtSport.setKey((Key)keyHelper.obtainKey(User.class, "mt_sport_mx"));
 					  userDao.create(mtSport);
 					}
 
 					try {
-					  um = userMenuDao.get("mtsport_mx", true);
-					  userMenuDao.delete("mtsport_mx");
+					  um = userMenuDao.get("mt_sport_mx", true);
+					  userMenuDao.delete("mt_sport_mx");
 					  throw new Exception();
 					} catch( Exception e ) {
 					  um = new UserMenu();
 					  um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 					  um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 					  um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
-					  um.setKey(userMenuDao.createKey("mtsport_mx"));
+					  um.setKey(userMenuDao.createKey("mt_sport_mx"));
 					  userMenuDao.create(um);
 					}
 			//
