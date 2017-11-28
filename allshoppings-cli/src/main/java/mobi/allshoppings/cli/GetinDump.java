@@ -450,6 +450,15 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 			}
 			try {
+				brand = brandDao.get("sunglasshut_ar", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Sunglass Hut Argentina");
+				brand.setCountry("Argentina");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "sunglasshut_ar"));
+				brandDao.create(brand);
+			}
+			try {
 				brand = brandDao.get("sbarro_mx", true);
 			} catch( Exception e ) {
 				brand = new Brand();
@@ -1568,6 +1577,10 @@ public class GetinDump extends AbstractCLI {
 			
 			stores.add(new StoreAdapter("818","Juguetron Parque Puebla", "juguetron_mx", null, GetinDump.MALL));
 			
+			stores.add(new StoreAdapter("819","Sally Beauty Zentralia Churubusco", "sallybeauty_mx", null, GetinDump.MALL));
+
+			stores.add(new StoreAdapter("820", "Sunglass Hut Argentina", "sunglasshut_ar", null, GetinDump.MALL));
+
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {

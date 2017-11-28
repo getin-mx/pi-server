@@ -1560,6 +1560,33 @@ public class UserMenuDumpTwo extends AbstractCLI {
 						userMMonroy.setKey((Key) keyHelper.obtainKey(User.class, "mmonroy@sportium.com.mx"));
 						userDao.create(userMMonroy);
 					}
+					
+					User mtSport = null;
+					try {
+					  mtSport = userDao.get("mtsport_mx", true);
+					} catch( Exception e ) {
+					  mtSport = new User();
+					  mtSport.setFirstname("MT Sport");
+					  mtSport.setLastname("Mexico");
+					  mtSport.setEmail("mtsport@allshoppings.mobi");
+					  mtSport.getSecuritySettings().setRole(Role.BRAND);
+					  mtSport.getSecuritySettings().setPassword(encodeString("MTSport01"));
+					  mtSport.setKey((Key)keyHelper.obtainKey(User.class, "mtsport_mx"));
+					  userDao.create(mtSport);
+					}
+
+					try {
+					  um = userMenuDao.get("mtsport_mx", true);
+					  userMenuDao.delete("mtsport_mx");
+					  throw new Exception();
+					} catch( Exception e ) {
+					  um = new UserMenu();
+					  um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+					  um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+					  um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+					  um.setKey(userMenuDao.createKey("mtsport_mx"));
+					  userMenuDao.create(um);
+					}
 			//
 
 			// End

@@ -48,6 +48,10 @@ implements BDBDashboardBzService {
 		
 	@Autowired
 	private APHHelper aphHelper;
+	
+	@Autowired
+	private APDVisitDAO apdvDao;
+
 
 	@Autowired
 	private APDAssignationDAO dao;
@@ -92,9 +96,9 @@ implements BDBDashboardBzService {
 			
 			
 			
-			APHEntry, filter->hostname
-			ADevice, filter->hostname
-			APDVisit, filter->entityId, APDAssignation (host to entityId)
+//			APHEntry, filter->hostname
+//			ADevice, filter->hostname
+//			APDVisit, filter->entityId, APDAssignation (host to entityId)
 //			
 //			String[] hostnames = hostnameList.split(",");
 //			for (String hostname : hostnames) {
@@ -198,7 +202,7 @@ implements BDBDashboardBzService {
 				series.put(serie);
 				
 				if(!original)
-				// visits.addAll(apdvDao.getUsingAPHE(entry.getIdentifier(), false));
+				 visits.addAll(apdvDao.getUsingAPHE(entry.getIdentifier(), false));
 				
 			}
 			
