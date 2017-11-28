@@ -75,9 +75,8 @@ public class GenerateAPHE extends AbstractCLI {
 					sdf.parse(sdf.format(new Date(System.currentTimeMillis()
 							-TWENTY_FOUR_HOURS)));
 				if(StringUtils.hasText(sToDate)) {
-					toDate = sdf.parse(sToDate);// FIXME if legacy date
-					TimeZone lTz = TimeZone.getTimeZone("Mexico/General");
-					toDate.setTime(toDate.getTime() -lTz.getOffset(toDate.getTime()));
+					toDate = sdf.parse(sToDate);
+					toDate.setTime(toDate.getTime() +TWELVE_HOURS);
 				} else toDate =  new Date(fromDate.getTime() +TWENTY_FOUR_HOURS);
 				
 				if( options.has(HOSTNAME_PARAM)) {
@@ -103,7 +102,7 @@ public class GenerateAPHE extends AbstractCLI {
 			helper.setScanInDevices(false);
 			helper.setUseCache(true);
 
-			Date ffromDate = new Date(fromDate.getTime()/* -TWELVE_HOURS*/);
+			Date ffromDate = new Date(fromDate.getTime());
 			Date ftoDate = new Date(fromDate.getTime());
 			
 			Map<String, List<APHEntry>> dayMem = CollectionFactory.createMap();

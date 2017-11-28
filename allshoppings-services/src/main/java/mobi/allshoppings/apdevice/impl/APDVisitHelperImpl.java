@@ -476,6 +476,13 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		while(i.hasNext()) {
 			APHEntry aphe = i.next();
+			try {
+				if(sdf.parse(aphe.getDate()).before(sdf.parse(forStringDate)))
+					continue;
+			} catch(ParseException e) {
+				log.log(Level.WARNING, "An APHE with an unparseable date was detected!");
+				continue;
+			}
 			APHEntry mapped = map.get(aphe.getMac());
 			if( mapped == null ) {
 				mapped = new APHEntry();

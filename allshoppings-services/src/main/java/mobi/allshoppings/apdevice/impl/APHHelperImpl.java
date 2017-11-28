@@ -636,8 +636,10 @@ public class APHHelperImpl implements APHHelper {
 		DumperHelper<APHotspot> dumpHelper;
 
 		if( cache == null )
-			cache = new PersistentCacheFSImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
-					systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
+			cache = new PersistentCacheFSImpl<APHEntry>(APHEntry.class,
+					systemConfiguration.getCacheMaxInMemElements(),
+					systemConfiguration.getCachePageSize(),
+					systemConfiguration.getCacheTempDir());
 		cache.clear();
 
 		// Pre build cache
