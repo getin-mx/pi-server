@@ -1576,8 +1576,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 		// Employees doesn't generate visits
 		if( isEmployee ) {
-			/*visit.setCheckinType(APDVisit.CHECKIN_EMPLOYEE);
-			return isPeasantValid(visit, device, isEmployee);*/
 			return false;
 		}
 		

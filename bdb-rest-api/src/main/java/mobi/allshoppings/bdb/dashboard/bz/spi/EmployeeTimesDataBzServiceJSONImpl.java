@@ -44,6 +44,14 @@ implements BDBDashboardBzService {
 	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
 	private static final SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd");
 
+	private static final String ENTITY_ID_PARAM = "entityId";
+	private static final String ENTITY_KIND_PARAM = "entityKind";
+	private static final String EMPLOYEE_ID_PARAM = "employeeId";
+	private static final String FROM_STRING_DATE_PARAM = "fromStringDate";
+	private static final String TO_STRING_DATE_PARAM = "toStringDate";
+	
+	private static final long DAY_IN_MILLIS = 86400000;
+	
 	@Autowired
 	private StoreDAO storeDao;
 	@Autowired
@@ -64,16 +72,17 @@ implements BDBDashboardBzService {
 			// obtain the id and validates the auth token
 			User user = getUserFromToken();
 
-			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
-			String employeeId = obtainStringValue("employeeId", null);
-			String fromStringDate = obtainStringValue("fromStringDate", null);
-			String toStringDate = obtainStringValue("toStringDate", null);
+			String entityId = obtainStringValue(ENTITY_ID_PARAM, null);
+			Integer entityKind = obtainIntegerValue(ENTITY_KIND_PARAM, null);
+			String employeeId = obtainStringValue(EMPLOYEE_ID_PARAM, null);
+			String fromStringDate = obtainStringValue(FROM_STRING_DATE_PARAM, null);
+			String toStringDate = obtainStringValue(TO_STRING_DATE_PARAM, null);
 
 			// Get all the stores that matches the brand
 			Map<String, Store> storeMap = CollectionFactory.createMap();
 			if( entityKind.equals(EntityKind.KIND_BRAND)) {
-				List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), null); 
+				List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId,
+						Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), null); 
 				for( Store store : tmpStores ) {
 					if( isValidForUser(user, store))
 						storeMap.put(store.getIdentifier(), store);
@@ -89,9 +98,7 @@ implements BDBDashboardBzService {
 			Map<String, APDMAEmployee> employeeMap = CollectionFactory.createMap();
 			if( entityKind.equals(EntityKind.KIND_BRAND)) {
 				List<APDMAEmployee> tmpList = apdmaeDao.getUsingEntityIdAndRange(entityId, entityKind, null, null, null, false);
-				for( APDMAEmployee obj : tmpList ) {
-					employeeMap.put(obj.getMac(), obj);
-				}
+				for( APDMAEmployee obj : tmpList ) employeeMap.put(obj.getMac(), obj);
 				Iterator<Store> i = storeMap.values().iterator();
 				while(i.hasNext()) {
 					Store store = i.next();
@@ -110,7 +117,7 @@ implements BDBDashboardBzService {
 
 			Date fromDate = sdf.parse(fromStringDate);
 			Date toDate = sdf.parse(toStringDate);
-			toDate = new Date(toDate.getTime() + 86400000);
+			toDate = new Date(toDate.getTime() +DAY_IN_MILLIS);
 			
 			EmployeeLogTableRep table = new EmployeeLogTableRep();
 			List<EmployeeLog> emps = employeeLogDao.getUsingEntityIdAndEntityKindAndDate(employeeId, storeList, EntityKind.KIND_STORE, fromDate, toDate, null, "checkinStarted,employeeId", null, false);
