@@ -45,7 +45,7 @@ public class ConvertEmployeeLog extends AbstractCLI {
 	private static final String FROM_DATE_PARAM = "fromDate";
 	private static final String TO_DATE_PARAM = "toDate";
 	private static final String ENTITY_IDS_PARAM = "entityIds";
-	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-mm-dd");
+	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if (base == null)
@@ -106,8 +106,6 @@ public class ConvertEmployeeLog extends AbstractCLI {
 				List<APDMAEmployee> list = apdmaeDao.getAll(true);
 				Map<String, APDMAEmployee> cache = CollectionFactory.createMap();
 				for( APDMAEmployee obj : list ) cache.put(obj.getMac(), obj);
-				DumperHelper<APDVisit> visitDumper = new DumpFactory<APDVisit>()
-						.build(null, APDVisit.class);
 				
 				// Prepares local variables
 				long count = 0;
@@ -122,20 +120,25 @@ public class ConvertEmployeeLog extends AbstractCLI {
 				
 				try {
 					long total = 0;
-					while(curDate.compareTo(toDate) <= 0) {
-						if(requiresEntities)
+					while(curDate.compareTo(toDate) < 0) {
+						if(requiresEntities) {
+							DumperHelper<APDVisit> visitDumper =
+									new DumpFactory<APDVisit>().build(null, APDVisit.class);
 							entities = visitDumper.getMultipleNameOptions(curDate);
+						}
+						Date nextDate = new Date(curDate.getTime() +TWENTY_FOUR_HOURS -1);
 						for(String entityId : entities) {
+							DumperHelper<APDVisit> visitDumper =
+									new DumpFactory<APDVisit>().build(null, APDVisit.class);
 							visitDumper.setFilter(entityId);
-							Date nextDate = new Date(curDate.getTime()
-									+TWENTY_FOUR_HOURS -1);
 							Iterator<APDVisit> visits = visitDumper.iterator(curDate,
 									nextDate);
 							while(visits.hasNext()) {
 								APDVisit apdv = visits.next();
+								total++;
 								if(apdv.getCheckinType() != APDVisit.CHECKIN_EMPLOYEE)
 									continue;
-								total++;
+								count++;
 								EmployeeLog obj = new EmployeeLog();
 								obj.setApheSource(apdv.getApheSource());
 								obj.setCheckinFinished(apdv.getCheckinFinished());
@@ -155,7 +158,6 @@ public class ConvertEmployeeLog extends AbstractCLI {
 
 									processed ++;
 									obj = null;
-									count++;
 								}
 
 								if( count % batchSize == 0 )
@@ -165,6 +167,7 @@ public class ConvertEmployeeLog extends AbstractCLI {
 							}//while there are more visits
 							visitDumper.dispose();
 						}//for every given entity
+						curDate.setTime(nextDate.getTime() +1);
 					}//for every given date
 					
 					long finalTime = System.currentTimeMillis();
