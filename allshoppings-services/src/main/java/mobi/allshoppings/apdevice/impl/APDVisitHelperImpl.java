@@ -1564,30 +1564,20 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Long time = (visit.getCheckinFinished().getTime() 
 			-visit.getCheckinStarted().getTime()) / 60000;
 		
-		// Validate Minimum time for visit  
-		if( time < device.getVisitTimeThreshold()) {// TODO change name for getVisitMin
-			return false;
-		}
+		// Validate Minimum time for visit  // TODO change name for getVisitMin
+		if( time < device.getVisitTimeThreshold()) return false;
 
 		// Validate Maximum time for visit  
-		if( time > device.getVisitMaxThreshold()) {
-			return false;
-		}
+		if( time > device.getVisitMaxThreshold()) return false;
 
 		// Employees doesn't generate visits
-		if( isEmployee ) {
-			return false;
-		}
+		if( isEmployee ) return false;
 		
 		// Total segments percentage check 
 		if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
 				&& null != visit.getTotalSegments() && visit.getTotalSegments() > 0 &&
 				visit.getInRangeSegments() * 100 / visit.getTotalSegments() <
-				VISIT_PERCENTAGE) {
-			/*visit.setCheckinType(APDVisit.CHECKIN_PEASANT);
-			return isPeasantValid(visit, device, isEmployee);*/
-			return false;
-		}// TODO param
+				VISIT_PERCENTAGE) return false; // TODO param
 		
 		visit.setDuration(time);
 		
@@ -1601,69 +1591,49 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		WORK_CALENDAR.setTime(visit.getCheckinStarted());
 		switch(WORK_CALENDAR.get(Calendar.DAY_OF_WEEK)) {
 		case Calendar.SUNDAY :
-			if(!device.getVisitsOnSun()) {
-				return false;//TODO transform into peasants
-			}
+			if(!device.getVisitsOnSun()) return false; //TODO transform into peasants
 			ts = Integer.valueOf(device.getVisitStartSun().substring(0,2)
 					+device.getVisitStartSun().substring(3));
 			te = Integer.valueOf(device.getVisitEndSun().substring(0, 2)
 					+device.getVisitEndSun().substring(3));
 			break;
 		case Calendar.MONDAY :
-			if(!device.getVisitsOnMon()) {
-				return false;
-			}
+			if(!device.getVisitsOnMon()) return false;
 			ts = Integer.valueOf(device.getVisitStartMon().substring(0, 2)
 					+device.getVisitStartMon().substring(3));
 			te = Integer.valueOf(device.getVisitEndMon().substring(0, 2)
 					+device.getVisitEndMon().substring(3));
 			break;
 		case Calendar.TUESDAY :
-			if(!device.getVisitsOnTue()) {
-				return false; //TODO
-				/*visit.setCheckinType(APDVisit.CHECKIN_PEASANT);
-				return isPeasantValid(visit, device, isEmployee);*/
-			}
+			if(!device.getVisitsOnTue()) return false;
 			ts = Integer.valueOf(device.getVisitStartTue().substring(0, 2)
 					+device.getVisitStartTue().substring(3));
 			te = Integer.valueOf(device.getVisitEndTue().substring(0, 2)
 					+device.getVisitEndTue().substring(3));
 			break;
 		case Calendar.WEDNESDAY :
-			if(!device.getVisitsOnWed()) {
-				return false; //TODO
-				/*visit.setCheckinType(APDVisit.CHECKIN_PEASANT);
-				return isPeasantValid(visit, device, isEmployee);*/
-			}
+			if(!device.getVisitsOnWed()) return false;
 			ts = Integer.valueOf(device.getVisitStartWed().substring(0, 2)
 					+device.getVisitStartWed().substring(3));
 			te = Integer.valueOf(device.getVisitEndWed().substring(0, 2)
 					+device.getVisitEndWed().substring(3));
 			break;
 		case Calendar.THURSDAY :
-			if(!device.getVisitsOnThu()) {
-				return false; // TODO remove
-				/*visit.setCheckinType(APDVisit.CHECKIN_PEASANT);
-				return isPeasantValid(visit, device, isEmployee);*/
-			}
+			if(!device.getVisitsOnThu()) return false;
 			ts = Integer.valueOf(device.getVisitStartThu().substring(0, 2)
 					+device.getVisitStartThu().substring(3));
 			te = Integer.valueOf(device.getVisitEndThu().substring(0, 2)
 					+device.getVisitEndThu().substring(3));
 			break;
 		case Calendar.FRIDAY :
-			if(!device.getVisitsOnFri()) {
-				return false;
-			}
+			if(!device.getVisitsOnFri()) return false;
 			ts = Integer.valueOf(device.getVisitStartFri().substring(0, 2)
 					+device.getVisitStartFri().substring(3));
 			te = Integer.valueOf(device.getVisitEndFri().substring(0, 2)
 					+device.getVisitEndFri().substring(3));
 			break;
 		case Calendar.SATURDAY :
-			if(!device.getVisitsOnSat()) {
-				return false;
-			}
+			if(!device.getVisitsOnSat()) return false;
 			ts = Integer.valueOf(device.getVisitStartSat().substring(0, 2)
 					+device.getVisitStartSat().substring(3));
 			te = Integer.valueOf(device.getVisitEndSat().substring(0, 2)
@@ -1671,11 +1641,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			break;
 		}
 
-		if( ts > te ) {
-			if(ts <= t || t <= te) return true;
-			return false;
-		} if(te >= t && t >= ts) return true;
-		return false;
+		if( ts > te ) return ts <= t || t < te;
+		return te > t && t >= ts;
 	}
 
 
