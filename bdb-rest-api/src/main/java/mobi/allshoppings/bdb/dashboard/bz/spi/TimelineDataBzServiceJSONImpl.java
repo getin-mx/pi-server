@@ -32,9 +32,7 @@ import mobi.allshoppings.tools.CollectionFactory;
 /**
  *
  */
-public class TimelineDataBzServiceJSONImpl
-extends BDBRestBaseServerResource
-implements BDBTimelineDataBzService {
+public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource implements BDBTimelineDataBzService {
 
 	private static final Logger log = Logger.getLogger(TimelineDataBzServiceJSONImpl.class.getName());
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -137,6 +135,7 @@ implements BDBTimelineDataBzService {
 			for(DashboardIndicatorData obj : list) {
 				if( isValidForUser(user, obj)) {
 					Date objDate = calculateDateFrame(DateUtils.truncate(obj.getDate(), Calendar.DATE), periodType);
+					if (!(objDate.compareTo(fromDate) >= 0 && objDate.compareTo(toDate) <= 0)) continue;
 					String key = obj.getElementSubName();
 					String orderKey = obj.getElementSubId();
 					if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
