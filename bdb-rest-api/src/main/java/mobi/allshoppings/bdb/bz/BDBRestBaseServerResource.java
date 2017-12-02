@@ -106,6 +106,10 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 		KNOWN_HOSTS = CollectionFactory.createList();
 		KNOWN_HOSTS.add("0.0.0.0");
 		KNOWN_HOSTS.add("127.0.0.1");
+		KNOWN_HOSTS.add("0:0:0:0:0:0:0:1");
+		KNOWN_HOSTS.add("0:0:0:0:0:0:0:0");
+		KNOWN_HOSTS.add("::1");
+		KNOWN_HOSTS.add("::");
 	}
 	
 	

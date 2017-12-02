@@ -177,7 +177,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 				stDao.create(obj);
 			}
 			
-			mapper.createStoreTicketDataForDates(date, date, storeId);
+			mapper.createStoreTicketDataForDates(date, date, storeId, true);
 
 			return generateJSONOkResponse().toString();
 

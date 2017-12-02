@@ -517,11 +517,10 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			List<String> apdevices) throws ASException {
 
 		Map<String, APUptime> cache = CollectionFactory.createMap();
-		boolean predefinedAPDevicesList = true;
+		boolean predefinedAPDevicesList = !CollectionUtils.isEmpty(apdevices);
 
 		// Populates the apdevices list if empty
-		if (CollectionUtils.isEmpty(apdevices)) {
-			predefinedAPDevicesList = false;
+		if (!predefinedAPDevicesList) {
 			apdevices = CollectionFactory.createList();
 			List<APDevice> list = dao.getAll(true);
 			for (APDevice obj : list) {
@@ -529,11 +528,12 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			}
 		}
 
-		// Prepares the basic records
-		log.log(Level.INFO, "Preparing APUptime cache");
+		// Gets the input data
 		Date date = new Date(fromDate.getTime());
-		Date xtoDate = new Date(fromDate.getTime());
 		while (date.before(toDate)) {
+			log.log(Level.INFO, "Processing UPTimes for day: " +date);
+			Date xtoDate = new Date(date.getTime() + ONE_DAY);
+			log.log(Level.INFO, "Preparing APUptime cache");
 			for (String hostname : apdevices) {
 				APUptime apu = null;
 				apu = new APUptime(hostname, date);
@@ -542,13 +542,6 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 
 				cache.put(apu.getKey().getName(), apu);
 			}
-			date = new Date(date.getTime() +ONE_DAY);
-		}
-
-		// Gets the input data
-		date = new Date(fromDate.getTime());
-		while (date.before(toDate)) {
-			xtoDate = new Date(date.getTime() + ONE_DAY);
 			DumperHelper<APHotspot>dumpHelper = new DumpFactory<APHotspot>()
 					.build(null, APHotspot.class);
 			List<String> hostnames = predefinedAPDevicesList ? apdevices
@@ -557,6 +550,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			for (String hostname : hostnames) {
 				log.log(Level.INFO, "Processing for hostname " + hostname +
 						" for date " + date);
+				dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
 				dumpHelper.setFilter(hostname);
 				Iterator<APHotspot> i = dumpHelper.iterator(date, xtoDate);
 				while (i.hasNext()) {
@@ -576,22 +570,14 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 					}
 				}
 				dumpHelper.dispose();
-
 			}
+			log.log(Level.INFO, "Writing " +cache.size() +" to database ...");
+
+			apuDao.update(null, CollectionFactory.createList(cache.values()), true);
+			cache.clear();
 
 			date.setTime(date.getTime() + ONE_DAY);
 		}
-		log.log(Level.INFO, "Writing " +cache.size() +" to database ...");
-
-		apuDao.update(null, CollectionFactory.createList(cache.values()), true);
-		
-		/*/ Write to the database
-		Iterator<String> x = cache.keySet().iterator();
-		while (x.hasNext()) {
-			String key = x.next();
-			APUptime apu = cache.get(key);
-			apuDao.update(apu);
-		}*/
 	}
 
 	/**

@@ -87,7 +87,10 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 			String voucherType, Integer dayOfWeek, Integer timeZone, String order, 
 			String country, String province, String city)
 			throws ASException {
-		return getUsingFilters(Arrays.asList(entityId), entityKind, elementId, elementSubId, shoppingId,
+		List<String> entityIds;
+		if(entityId == null) entityIds = CollectionFactory.createList();
+		else entityIds = Arrays.asList(entityId);
+		return getUsingFilters(entityIds, entityKind, elementId, elementSubId, shoppingId,
 				StringUtils.hasText(subentityId) ? Arrays.asList(subentityId) : null, periodType, fromStringDate,
 				toStringDate, movieId, voucherType, dayOfWeek, timeZone, order, country, province, city);
 	}

@@ -354,7 +354,7 @@ public class DashboardAPDeviceMapperService {
 									// heatmap ----------------------------------------------------------------------------------------------
 									// ------------------------------------------------------------------------------------------------------
 									obj = buildBasicDashboardIndicatorData(
-											"heatmap_data", "Heat Map Data", wifiSpot.getIdentifier(),
+											"	", "Heat Map Data", wifiSpot.getIdentifier(),
 											wifiSpot.getIdentifier(), hotspot.getCreationDateTime(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getIdentifier(),
 											store, shopping, floorMap.getFloor(),
@@ -749,6 +749,9 @@ public class DashboardAPDeviceMapperService {
 			} else list = data;
 			Calendar init = Calendar.getInstance();
 			Calendar finish = Calendar.getInstance();
+			TimeZone mxTz = TimeZone.getTimeZone("Mexico/General");
+			init.setTimeZone(mxTz);
+			finish.setTimeZone(mxTz);
 			log.log(Level.INFO, list.size() + " records to process... ");
 			for(APDVisit v : list ) {
 
@@ -767,7 +770,6 @@ public class DashboardAPDeviceMapperService {
 							store = storeDao.get(String.valueOf(v.getEntityId()), true);
 							if( store == null ) return;
 							storeCache.put(String.valueOf(v.getEntityId()), store);
-							tz = TimeZone.getTimeZone(store.getTimezone());
 						}
 						tz = TimeZone.getTimeZone(store.getTimezone());
 						entityId = store.getBrandId();
@@ -785,10 +787,7 @@ public class DashboardAPDeviceMapperService {
 						subentityId = entityId;
 						tz = getTimezoneForEntity(entityId, EntityKind.KIND_INNER_ZONE);
 					}
-					TimeZone mxTz = TimeZone.getTimeZone("Mexico/General");
-					init.setTimeZone(mxTz);
 					CALENDAR.setTimeZone(tz);
-					finish.setTimeZone(mxTz);
 					
 					if( store != null || shopping != null || zone != null ) {
 						DashboardIndicatorData obj;
@@ -935,12 +934,12 @@ public class DashboardAPDeviceMapperService {
 			// Looks for ticket
 			if( null != entityKind ) {
 				if( entityKind.equals(EntityKind.KIND_BRAND)) {
-					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId);
+					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, false);
 					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId);
 					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId);
 				}
 				if( entityKind.equals(EntityKind.KIND_STORE)) {
-					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), entityId);
+					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, false);
 					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), entityId);
 					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), entityId);
 				}
@@ -1014,7 +1013,8 @@ public class DashboardAPDeviceMapperService {
 	}
 	
 	
-	public void createStoreTicketDataForDates(String fromDate, String toDate, String storeId) throws ASException,ParseException{
+	public void createStoreTicketDataForDates(String fromDate, String toDate, String storeId,
+			boolean deletePreviousRecords) throws ASException, ParseException{
 		
 		log.log(Level.INFO, "Starting to create store tickets Dashboard for Day " + fromDate + " to: " + toDate +"..." );
 		long startTime = System.currentTimeMillis();
@@ -1027,6 +1027,13 @@ public class DashboardAPDeviceMapperService {
 			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
+				
+				if(deletePreviousRecords) {
+					for(DashboardIndicatorData did : dao.getUsingFilters(null, null, "apd_visitor",
+							"visitor_total_tickets", null, storeId, null, fromDate, toDate, null, null, null, null,
+							null, null, null, null))
+						dao.delete(did);
+				}
 				
 				for( StoreTicket ticket: tickets){
 					

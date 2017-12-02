@@ -39,8 +39,7 @@ public class GenerateAPHE extends AbstractCLI {
 				.ofType( String.class );
 		parser.accepts(HOSTNAME_PARAM, "APHostname").withRequiredArg()
 				.ofType( String.class );
-		parser.accepts(FORCE_DATE_PARAM, "Set to true to ignore APHotspot date and use "
-				+ "the source directories. Default is false");
+		parser.accepts(FORCE_DATE_PARAM, "Date to force the output APHE").withRequiredArg().ofType(String.class);
 		return parser;
 	}
 
@@ -62,14 +61,16 @@ public class GenerateAPHE extends AbstractCLI {
 			String sToDate = null;
 			Date fromDate = null;
 			Date toDate = null;
+			String sForceDate = null;
 			String hostname = null;
-			Boolean forceDate = false;
+			Date forceDate = null;
 			
 			try {
 				if( options.has(FROM_DATE_PARAM)) sFromDate =
 						(String)options.valueOf(FROM_DATE_PARAM);
 				if( options.has(TO_DATE_PARAM)) sToDate =
 						(String)options.valueOf(TO_DATE_PARAM);
+				if(options.has(FORCE_DATE_PARAM)) sForceDate = options.valueOf(FORCE_DATE_PARAM).toString();
 				
 				fromDate = StringUtils.hasText(sFromDate) ? sdf.parse(sFromDate) :
 					sdf.parse(sdf.format(new Date(System.currentTimeMillis()
@@ -81,9 +82,7 @@ public class GenerateAPHE extends AbstractCLI {
 				
 				if( options.has(HOSTNAME_PARAM)) {
 					hostname = (String)options.valueOf(HOSTNAME_PARAM);
-				}
-				forceDate = options.has(FORCE_DATE_PARAM) &&
-						(Boolean)options.valueOf(FORCE_DATE_PARAM);
+				} if(StringUtils.hasText(sForceDate)) forceDate = sdf.parse(sForceDate);
 				
 			} catch( Exception e ) {
 				e.printStackTrace();

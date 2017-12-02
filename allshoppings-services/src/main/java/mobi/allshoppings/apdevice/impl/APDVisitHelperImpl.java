@@ -441,7 +441,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		TimeZone tz = TimeZone.getTimeZone(timezone);
 		
-		int lowerLimit = 0, higherLimit = SLOT_NUMBER_IN_DAY;
+		int lowerLimit, higherLimit;
 		
 		START_CALENDAR.clear();
 		END_CALENDAR.clear();
@@ -465,12 +465,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		END_CALENDAR.set(year, month, day, Integer.parseInt(
 				calibration.getMonitorEnd().substring(0, 2)),
 				Integer.parseInt(calibration.getMonitorEnd().substring(3, 5)));
-		lowerLimit = (START_CALENDAR.get(Calendar.SECOND)
-				+START_CALENDAR.get(Calendar.MINUTE) *60
+		lowerLimit = (START_CALENDAR.get(Calendar.MINUTE) *60
 				+START_CALENDAR.get(Calendar.HOUR_OF_DAY) *60 *60) /20;
-		higherLimit = (END_CALENDAR.get(Calendar.SECOND)
-				+END_CALENDAR.get(Calendar.MINUTE) *60
+		higherLimit = (END_CALENDAR.get(Calendar.MINUTE) *60
 				+END_CALENDAR.get(Calendar.HOUR_OF_DAY) *60 *60) /20;
+		if(higherLimit == 0) higherLimit = SLOT_NUMBER_IN_DAY;
 			
 		timezoneSlotsOffset /= MILLIS_TO_TWENTY_SECONDS_SLOT;
 		
@@ -1639,9 +1638,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			te = Integer.valueOf(device.getVisitEndSat().substring(0, 2)
 					+device.getVisitEndSat().substring(3));
 			break;
-		}
+		} if(te == 0) te = 2400;
 
-		if( ts > te ) return ts <= t || t < te;
+		if( ts > te ) te += 2400;
 		return te > t && t >= ts;
 	}
 
