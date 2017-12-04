@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import mobi.allshoppings.apdevice.APDVisitHelper;
 import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.apdevice.APHHelper;
+import com.inodes.datanucleus.model.Key;
+
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dump.DumperHelper;
@@ -36,6 +38,8 @@ import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.ExternalAPHotspot;
 import mobi.allshoppings.model.SystemConfiguration;
+import mobi.allshoppings.model.tools.KeyHelper;
+import mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.PersistentCacheFSImpl;
 
@@ -65,6 +69,8 @@ public class APHHelperImpl implements APHHelper {
 	private boolean scanInDevices = true;
 	private boolean useCache = true;
 	private TimeZone gmt;
+	protected KeyHelper keyHelper = new KeyHelperGaeImpl();
+	
 
 	private final Map<String, Integer> AUXILIAR_INTERPOLATION_MAP =
 			CollectionFactory.createMap();
@@ -178,6 +184,40 @@ public class APHHelperImpl implements APHHelper {
 				ret = new APHEntry(hostname, mac, date);
 				try {
 					ret.setKey(apheDao.createKey(ret));
+					if( scanInDevices ) {
+						List<DeviceInfo> di = diDao.getUsingMAC(mac);
+						if( di.size() > 0 ) {
+							ret.setDevicePlatform(di.get(0).getDevicePlatform());
+						} else {
+							throw ASExceptionHelper.notFoundException();
+						}
+					} else {
+						throw ASExceptionHelper.notFoundException();
+					}
+				} catch( ASException e1 ) {
+					ret.setDevicePlatform(apdHelper.getDevicePlatform(mac, null));
+				}
+			}
+		}
+		return ret;
+	}
+	
+	
+	public APHEntry getFromCacheDumper(String hostname, String mac, String date) throws NoSuchAlgorithmException, FileNotFoundException, IOException {
+		String hash = getHash(hostname, mac, date);
+		if( cache == null ) useCache = false;
+		APHEntry ret = useCache ? cache.get(hash) : null;
+		if( null == ret ) {
+			try {
+				if( cacheBuilt == true && useCache ) 
+					throw ASExceptionHelper.notFoundException();
+				
+				ret = apheDao.get(hash, true);
+			} catch( ASException e ) {
+				ret = new APHEntry(hostname, mac, date);
+				try {
+					String hashKey = ret.getMac() + ":" + ret.getHostname() + ":" + ret.getDate();
+					ret.setKey((Key) keyHelper.obtainKey(APHEntry.class, hashKey));
 					if( scanInDevices ) {
 						List<DeviceInfo> di = diDao.getUsingMAC(mac);
 						if( di.size() > 0 ) {

@@ -1,6 +1,7 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
+import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
@@ -45,13 +46,35 @@ implements BDBDashboardBzService {
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static final SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+//	private List<APDVisit> getAPDVisitFromAPHE(String identifier) {
+//			
+//		List<APDVisit> visits = CollectionFactory.createList();
+//
+//		DumperHelper<APDVisit> dumper = new DumpFactory<APDVisit>().build(null, APDVisit.class);
+//		dumper.setFilter(hostname);
+//		Iterator<APHEntry> dumperEntries = dumper.iterator(aphEntryStringDate, aphEntryStringDate);
+//		
+//		List<APHEntry> entries = CollectionFactory.createList();
+//		
+//		while (dumperEntries.hasNext()) {
+//			APHEntry entry = dumperEntries.next();
+//			entries.add(entry);	
+//		}
+//				return null;
+//	}
+	
+//	private APHEntry getSingleAPHE(String identifier, String aphEntryStringDate){
+		
+//		DumperHelper<APHEntry> dumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
+//		dumper.setFilter(hostname);
+//		Iterator<APHEntry> dumperEntries = dumper.iterator(aphEntryStringDate, aphEntryStringDate);
+//		
+	
+//	}
 		
 	@Autowired
 	private APHHelper aphHelper;
-	
-	@Autowired
-	private APDVisitDAO apdvDao;
-
 
 	@Autowired
 	private APDAssignationDAO dao;
@@ -95,26 +118,59 @@ implements BDBDashboardBzService {
 			} catch( Exception e ) {}
 			
 			
+			String[] idArray = identifier.split(":");
+			String hostname = idArray[6];
+			String aphEntryDate = idArray[7];
+			Date aphEntryStringDate = (Date) sdf.parse(aphEntryDate);
 			
 //			APHEntry, filter->hostname
 //			ADevice, filter->hostname
 //			APDVisit, filter->entityId, APDAssignation (host to entityId)
 //			
-//			String[] hostnames = hostnameList.split(",");
+//			
 //			for (String hostname : hostnames) {
 //				entries.add(aphHelper.getFromCache(hostname, mac, fromStringDate));
 //			}
-//
-//
-//			for(APHEntry entry : entries ) {
-//				APDevice apd = apdDao.get(entry.getHostname());
-//				aphHelper.artificiateRSSI(entry, apd);
-//			}
-			
+
+
 			List<APHEntry> entries = CollectionFactory.createList();
 
+			
+			DumperHelper<APHEntry> dumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
+			dumper.setFilter(hostname);
+			Iterator<APHEntry> dumperEntries = dumper.iterator(aphEntryStringDate, aphEntryStringDate);
+			
+			
+
+			while (dumperEntries.hasNext()) {
+				APHEntry entry = dumperEntries.next();
+				entries.add(entry);	
+			}
+			
+			
+
+//			
+//			
+//			List<APHEntry> entries = CollectionFactory.createList();
+//			if (StringUtils.hasText(identifier)) {
+//				APHEntry obj = dao.get(identifier);
+//				entries.add(aphHelper.getFromCache(obj.getHostname(), obj.getMac(), obj.getDate()));
+//			} else {
+//				String[] hostnames = hostnameList.split(",");
+//				for (String hostname : hostnames) {
+//					entries.add(aphHelper.getFromCache(hostname, mac, fromStringDate));
+//				}
+//			}
+
+			for(APHEntry entry : entries ) {
+				APDevice apd = apdDao.get(entry.getHostname());
+				aphHelper.artificiateRSSI(entry, apd);
+			}
+			
+			
 			List<APDVisit> visits = CollectionFactory.createList();
 			Map<Long, Integer> values = CollectionFactory.createMap();
+			
 			
 			JSONArray series = new JSONArray();
 
@@ -201,8 +257,8 @@ implements BDBDashboardBzService {
 				serie.put("yAxis", 1);
 				series.put(serie);
 				
-				if(!original)
-				 visits.addAll(apdvDao.getUsingAPHE(entry.getIdentifier(), false));
+				//if(!original)
+				// visits.addAll(apdvDao.getUsingAPHE(entry.getIdentifier(), false));
 				
 			}
 			

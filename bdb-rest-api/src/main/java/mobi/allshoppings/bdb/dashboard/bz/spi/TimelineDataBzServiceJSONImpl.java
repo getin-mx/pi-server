@@ -147,6 +147,7 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 								valArray[i] = new Double(0.0);
 							}
 						}
+						log.info(objDate.toString());
 						int position = dateMap.get(objDate);
 						valArray[position] += obj.getDoubleValue();
 						resultMap.put(key, valArray);
