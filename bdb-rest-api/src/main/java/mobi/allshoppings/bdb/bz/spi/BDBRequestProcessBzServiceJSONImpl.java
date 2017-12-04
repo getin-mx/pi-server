@@ -57,6 +57,7 @@ public class BDBRequestProcessBzServiceJSONImpl extends BDBRestBaseServerResourc
 			final Integer entityKind = obj.getInt("entityKind");
 			final String fromDate = obj.getString("fromDate");
 			final String toDate = obj.getString("toDate");
+			final Boolean processAPHE = obj.getBoolean("processAPHE");
 			String brandId = null;
 			
 			Process p = new Process();
@@ -67,6 +68,7 @@ public class BDBRequestProcessBzServiceJSONImpl extends BDBRestBaseServerResourc
 			p.setUserId(user.getIdentifier());
 			p.setStatus(StatusAware.STATUS_PREPARED);
 			p.setProcessType(Process.PROCESS_TYPE_GENERATE_VISITS);
+			p.setGenerateAPHE(processAPHE);
 			
 			String name = entityId;
 			if( p.getEntityKind().equals(EntityKind.KIND_SHOPPING)) {

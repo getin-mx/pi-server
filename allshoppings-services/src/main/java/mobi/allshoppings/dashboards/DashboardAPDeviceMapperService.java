@@ -307,7 +307,8 @@ public class DashboardAPDeviceMapperService {
 				List<WifiSpot> wifiSpotList = wifiSpotDao.getUsingFloorMapId(floorMap.getIdentifier());
 				Store store = storeDao.get(floorMap.getShoppingId(), true);
 				Shopping shopping = null;
-				try { shopping = shoppingDao.get(floorMap.getShoppingId(), true); } catch( Exception e ) {}
+				try { shopping = shoppingDao.get(floorMap.getShoppingId(), true); }
+				catch( Exception e ) {}
 				List<String> devices = CollectionFactory.createList();
 
 				for( WifiSpot ws : wifiSpotList ) {
@@ -353,7 +354,7 @@ public class DashboardAPDeviceMapperService {
 									// heatmap ----------------------------------------------------------------------------------------------
 									// ------------------------------------------------------------------------------------------------------
 									obj = buildBasicDashboardIndicatorData(
-											"heatmap_data", "Heat Map Data", wifiSpot.getIdentifier(),
+											"	", "Heat Map Data", wifiSpot.getIdentifier(),
 											wifiSpot.getIdentifier(), hotspot.getCreationDateTime(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getIdentifier(),
 											store, shopping, floorMap.getFloor(),
@@ -740,12 +741,17 @@ public class DashboardAPDeviceMapperService {
 				Date dateTo = new Date(dateFrom.getTime() + TWENTY_FOUR_HOURS);
 				DumperHelper<APDVisit> visitDumper = new DumpFactory<APDVisit>()
 						.build(null, APDVisit.class);
-				visitDumper.setFilter(entityId);//FIXME neta es este el filtro?
-				list = CollectionFactory.createList();//FIXME las fechas checan?
+				visitDumper.setFilter(entityId);
+				list = CollectionFactory.createList();
 				Iterator<APDVisit> i = visitDumper.iterator(dateFrom, dateTo);
 				while(i.hasNext()) list.add(i.next());
 				visitDumper.dispose();
 			} else list = data;
+			Calendar init = Calendar.getInstance();
+			Calendar finish = Calendar.getInstance();
+			TimeZone mxTz = TimeZone.getTimeZone("Mexico/General");
+			init.setTimeZone(mxTz);
+			finish.setTimeZone(mxTz);
 			log.log(Level.INFO, list.size() + " records to process... ");
 			for(APDVisit v : list ) {
 
@@ -764,7 +770,6 @@ public class DashboardAPDeviceMapperService {
 							store = storeDao.get(String.valueOf(v.getEntityId()), true);
 							if( store == null ) return;
 							storeCache.put(String.valueOf(v.getEntityId()), store);
-							tz = TimeZone.getTimeZone(store.getTimezone());
 						}
 						tz = TimeZone.getTimeZone(store.getTimezone());
 						entityId = store.getBrandId();
@@ -837,13 +842,12 @@ public class DashboardAPDeviceMapperService {
 
 							// occupation_total_peasents -------------------------------------------------------------------------------
 							// ------------------------------------------------------------------------------------------------------
-							Calendar init = Calendar.getInstance();
 							init.setTime(v.getCheckinStarted());
-							Calendar finish = Calendar.getInstance();
 							finish.setTime(v.getCheckinFinished());
+							int day = init.get(Calendar.DAY_OF_MONTH);
 							while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) &&
-									init.get(Calendar.HOUR_OF_DAY) < 23) {
-								obj = buildBasicDashboardIndicatorData(
+									day == init.get(Calendar.DAY_OF_MONTH)) {
+								obj	 = buildBasicDashboardIndicatorData(
 										"apd_occupation", "Ocupacion", "occupation_hourly_peasants",
 										"Paseantes", init.getTime(),
 										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
@@ -855,7 +859,7 @@ public class DashboardAPDeviceMapperService {
 								obj.setDoubleValue(obj.getDoubleValue() + 1);
 								indicatorsSet.put(obj.getKey().getName(), obj);
 								
-								init.set(Calendar.HOUR_OF_DAY, init.get(Calendar.HOUR_OF_DAY) + 1);
+								init.add(Calendar.HOUR_OF_DAY, 1);
 								
 							}
 
@@ -895,12 +899,11 @@ public class DashboardAPDeviceMapperService {
 							// occupation_total_visits ---------------------------------------------------------------------------------
 							// ------------------------------------------------------------------------------------------------------
 							
-							Calendar init = Calendar.getInstance();
 							init.setTime(v.getCheckinStarted());
-							Calendar finish = Calendar.getInstance();
 							finish.setTime(v.getCheckinFinished());
+							int day = init.get(Calendar.DAY_OF_MONTH);
 							while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) &&
-									init.get(Calendar.HOUR_OF_DAY) < 23) {
+									day == init.get(Calendar.DAY_OF_MONTH)) {
 								obj = buildBasicDashboardIndicatorData(
 										"apd_occupation", "Ocupacion", "occupation_hourly_visits", 
 										"Visitas", init.getTime(),
@@ -913,7 +916,7 @@ public class DashboardAPDeviceMapperService {
 								obj.setDoubleValue(obj.getDoubleValue() + 1);
 								indicatorsSet.put(obj.getKey().getName(), obj);
 								
-								init.set(Calendar.HOUR_OF_DAY, init.get(Calendar.HOUR_OF_DAY) + 1);
+								init.add(Calendar.HOUR_OF_DAY, 1);
 									
 							}
 						}
@@ -931,12 +934,12 @@ public class DashboardAPDeviceMapperService {
 			// Looks for ticket
 			if( null != entityKind ) {
 				if( entityKind.equals(EntityKind.KIND_BRAND)) {
-					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId);
+					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, false);
 					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId);
 					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId);
 				}
 				if( entityKind.equals(EntityKind.KIND_STORE)) {
-					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), entityId);
+					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, false);
 					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), entityId);
 					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), entityId);
 				}
@@ -977,28 +980,7 @@ public class DashboardAPDeviceMapperService {
 		List<DashboardIndicatorAlias> aliases = createAliasList(indicatorsSet);
 		saveIndicatorAliasSet(aliases);
 
-		/*Iterator<String> x = indicatorsSet.keySet().iterator();
-		while(x.hasNext()) {
-			String key = x.next();
-
-			try {
-				dao.delete(key);
-			} catch( Exception e ) {}
-		}*/
-		
-		/*List<DashboardIndicatorData> values = CollectionFactory.createList();
-		values.addAll(indicatorsSet.values());*/
-		
-		Iterator<String> x = indicatorsSet.keySet().iterator();
-		while(x.hasNext()) {
-			String key = x.next();
-			try {
-				dao.createOrUpdate(null, indicatorsSet.get(key), true);
-			} catch(Exception e) {
-				dao.delete(key);
-				dao.create(null, indicatorsSet.get(key), true);
-			}
-		}
+		dao.createOrUpdate(null, CollectionFactory.createList(indicatorsSet.values()), true);
 	}
 
 	public List<DashboardIndicatorAlias> createAliasList(Map<String, DashboardIndicatorData> indicatorsSet) throws ASException {
@@ -1031,7 +1013,8 @@ public class DashboardAPDeviceMapperService {
 	}
 	
 	
-	public void createStoreTicketDataForDates(String fromDate, String toDate, String storeId) throws ASException,ParseException{
+	public void createStoreTicketDataForDates(String fromDate, String toDate, String storeId,
+			boolean deletePreviousRecords) throws ASException, ParseException{
 		
 		log.log(Level.INFO, "Starting to create store tickets Dashboard for Day " + fromDate + " to: " + toDate +"..." );
 		long startTime = System.currentTimeMillis();
@@ -1044,6 +1027,13 @@ public class DashboardAPDeviceMapperService {
 			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
+				
+				if(deletePreviousRecords) {
+					for(DashboardIndicatorData did : dao.getUsingFilters(null, null, "apd_visitor",
+							"visitor_total_tickets", null, storeId, null, fromDate, toDate, null, null, null, null,
+							null, null, null, null))
+						dao.delete(did);
+				}
 				
 				for( StoreTicket ticket: tickets){
 					

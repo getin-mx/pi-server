@@ -483,7 +483,7 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 	 */
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		final int prime = 7919;
 		int result = 1;
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result
@@ -507,6 +507,32 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 				+ ((timeZone == null) ? 0 : timeZone.hashCode());
 		result = prime * result
 				+ ((voucherType == null) ? 0 : voucherType.hashCode());
+		result = prime * result
+				+ ((key == null) ? 0 : key.hashCode());
+		result = prime * result
+				+ ((screenName == null) ? 0 : screenName.hashCode());
+		result = prime * result
+				+ ((elementName == null) ? 0 : elementName.hashCode());
+		result = prime * result
+				+ ((elementSubName == null) ? 0 : elementSubName.hashCode());
+		result = prime * result
+				+ ((shoppingName == null) ? 0 : shoppingName.hashCode());
+		result = prime * result
+				+ ((subentityName == null) ? 0 : subentityName.hashCode());
+		result = prime * result
+				+ ((dayOfWeek == null) ? 0 : dayOfWeek.hashCode());
+		result = prime * result
+				+ ((timeZone == null) ? 0 : timeZone.hashCode());
+		result = prime * result
+				+ ((stringValue == null) ? 0 : stringValue.hashCode());
+		result = prime * result
+				+ ((doubleValue == null) ? 0 : doubleValue.hashCode());
+		result = prime * result
+				+ ((recordCount == null) ? 0 : recordCount.hashCode());
+		result = prime * result
+				+ ((creationDateTime == null) ? 0 : creationDateTime.hashCode());
+		result = prime * result
+				+ ((lastUpdate == null) ? 0 : lastUpdate.hashCode());
 		return result;
 	}
 

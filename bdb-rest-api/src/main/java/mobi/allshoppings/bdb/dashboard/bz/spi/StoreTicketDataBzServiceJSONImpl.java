@@ -46,9 +46,8 @@ import mobi.allshoppings.tools.Range;
 /**
  *
  */
-public class StoreTicketDataBzServiceJSONImpl
-extends BDBRestBaseServerResource
-implements BDBDashboardBzService, BDBPostBzService {
+public class StoreTicketDataBzServiceJSONImpl extends BDBRestBaseServerResource implements
+		BDBDashboardBzService, BDBPostBzService {
 
 	private static final Logger log = Logger.getLogger(StoreTicketDataBzServiceJSONImpl.class.getName());
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -87,7 +86,8 @@ implements BDBDashboardBzService, BDBPostBzService {
 			String fromDate = obtainStringValue("fromDate", null);
 			String toDate = obtainStringValue("toDate", null);
 
-			List<StoreTicket> list = dao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null, "date", false);
+			List<StoreTicket> list = dao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null,
+					"date", false);
 			Map<String, StoreTicket> tmp = CollectionFactory.createMap();
 			for( StoreTicket obj : list )
 				tmp.put(obj.getDate(), obj);
@@ -190,7 +190,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 					i++;
 					curDate = new Date(curDate.getTime() + ONE_DAY);
 				}
-				mapper.createStoreTicketDataForDates(fromDate, toDate, storeId);
+				mapper.createStoreTicketDataForDates(fromDate, toDate, storeId, true);
 
 				return generateJSONOkResponse().toString();
 			}
@@ -302,7 +302,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 							dao.create(obj);
 						}
 					}
-					mapper.createStoreTicketDataForDates(fromDate, toDate, store.getIdentifier());
+					mapper.createStoreTicketDataForDates(fromDate, toDate, store.getIdentifier(), true);
 				}
 			}
 			

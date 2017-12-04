@@ -421,6 +421,10 @@ public class APHHelperImpl implements APHHelper {
 		try {
 			CALENDAR.clear();
 			CALENDAR.setTime(forceDate);
+			Calendar mins = Calendar.getInstance();
+			mins.setTimeInMillis(aph.getLong("creationDateTime"));//FIXME doesn't work
+			CALENDAR.add(Calendar.SECOND, mins.get(Calendar.HOUR) *60 *60 +mins.get(Calendar.MINUTE) *60
+					+mins.get(Calendar.SECOND));
 			String date = sdf.format(CALENDAR.getTimeInMillis());
 			APHEntry aphe = getFromCache(aph.getString("hostname"),
 					aph.getString("mac"), date);
@@ -670,14 +674,16 @@ public class APHHelperImpl implements APHHelper {
 	@Override
 	public void generateAPHEntriesFromDump(Date fromDate, Date toDate,
 			List<String> hostnames, boolean buildCache,
-			Map<String, List<APHEntry>> prevDayMem, boolean lastDate, boolean forceDate)
+			Map<String, List<APHEntry>> prevDayMem, boolean lastDate, Date forceDate)
 					throws ASException {
 
 		DumperHelper<APHotspot> dumpHelper;
 
 		if( cache == null )
-			cache = new PersistentCacheFSImpl<APHEntry>(APHEntry.class, systemConfiguration.getCacheMaxInMemElements(),
-					systemConfiguration.getCachePageSize(), systemConfiguration.getCacheTempDir());
+			cache = new PersistentCacheFSImpl<APHEntry>(APHEntry.class,
+					systemConfiguration.getCacheMaxInMemElements(),
+					systemConfiguration.getCachePageSize(),
+					systemConfiguration.getCacheTempDir());
 		cache.clear();
 
 		// Pre build cache
@@ -721,7 +727,7 @@ public class APHHelperImpl implements APHHelper {
 				json = new JSONObject(i.next());
 				totals++;
 				if(isValidMacAddress(json.getString("mac"))) {
-					if(forceDate) setFramedRSSI(json, fromDate);
+					if(forceDate != null) setFramedRSSI(json, forceDate);
 					else setFramedRSSI(json);
 				} if( totals % 10000 == 0 ) log.log(Level.INFO, "Processing for date "
 						+ new Date(json.getLong("creationDateTime")) + " with "

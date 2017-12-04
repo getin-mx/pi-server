@@ -53,6 +53,8 @@ public interface GenericDAO<T extends ModelKey> {
 	void createOrUpdate(PersistenceProvider pp, List<T> obj, boolean performPreStore) throws ASException;
 	void update(T obj) throws ASException;
 	void update(PersistenceProvider pp, T obj, boolean performPreStore) throws ASException;
+	void update(List<T> obj) throws ASException;
+	void update(PersistenceProvider pp, List<T> obj, boolean performPreStore) throws ASException;
 	void delete(T obj) throws ASException;
 	void delete(PersistenceProvider pp, T obj) throws ASException;
 	void delete(String identifier) throws ASException;

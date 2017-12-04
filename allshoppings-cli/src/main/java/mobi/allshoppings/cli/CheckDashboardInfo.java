@@ -161,7 +161,9 @@ public class CheckDashboardInfo extends AbstractCLI {
 						log.log(Level.INFO, "Checking Tickets for " + store.getName() + " in " + sdf.format(curDate) + " (" + ticketsCount + " vs " + ticketsCountDI + ")");
 					} else {
 						log.log(Level.WARNING, "--------- Error in Tickets for " + store.getName() + " in " + sdf.format(curDate) + " (" + ticketsCount + " vs " + ticketsCountDI + ")...");
-						mapper.createStoreTicketDataForDates(sdf.format(curDate), sdf.format(new Date(curDate.getTime() + 86400000)), store.getIdentifier());
+						mapper.createStoreTicketDataForDates(sdf.format(curDate),
+								sdf.format(new Date(curDate.getTime() + TWENTY_FOUR_HOURS)),
+								store.getIdentifier(), false);
 					}
 					
 				}

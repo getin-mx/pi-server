@@ -2,6 +2,8 @@ package mobi.allshoppings.bz;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +27,9 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.restlet.Context;
+import org.restlet.Request;
+import org.restlet.Response;
 import org.restlet.data.Form;
 import org.restlet.data.Reference;
 import org.restlet.engine.util.Base64;
@@ -87,6 +92,7 @@ public abstract class RestBaseServerResource extends ServerResource {
 	protected static final String POINTS_UPDATE = "pointsUpdate";
 	
 	protected static final String ADMIN_USER = "admin";
+	protected static final List<String> KNOWN_HOSTS;
 
 	@Autowired
 	private UserDAO dao;
@@ -100,6 +106,28 @@ public abstract class RestBaseServerResource extends ServerResource {
 	private FavoriteDAO favoriteDao;
 	@Autowired
 	protected TrackerHelper trackerHelper;
+	
+	static {
+		KNOWN_HOSTS = CollectionFactory.createList();
+		KNOWN_HOSTS.add("0.0.0.0");
+		KNOWN_HOSTS.add("127.0.0.1");
+		KNOWN_HOSTS.add("0:0:0:0:0:0:0:1");
+		KNOWN_HOSTS.add("0:0:0:0:0:0:0:0");
+		KNOWN_HOSTS.add("::1");
+		KNOWN_HOSTS.add("::");
+	}
+	
+	@Override
+	public void init(Context arg0, Request arg1, Response arg2) {
+		super.init(arg0, arg1, arg2);
+		try {
+			KNOWN_HOSTS.add(InetAddress.getByName(
+					systemConfiguration.getFrontendAddress()).getHostAddress());
+		} catch(UnknownHostException e) {
+			logger.log(Level.SEVERE, "Bad frontend address. The server will "
+					+ "start, but it shouldn't!");
+		}
+	}
 	
 	public JSONObject generateJSONOkResponse() {
 		JSONObject response = null;
@@ -406,6 +434,15 @@ public abstract class RestBaseServerResource extends ServerResource {
 		if (authToken == null) {
 			throw ASExceptionHelper.authTokenMissingException();
 		}
+		
+		String clientAddress = getClientInfo().getAddress();
+		if(!KNOWN_HOSTS.contains(clientAddress)) {
+			logger.log(Level.SEVERE, "Somebody tried to access the server from an "
+					+ "unknown origin! The attacker address is: "
+					+clientAddress);
+			throw ASExceptionHelper.forbiddenException();
+		}
+		
 		User authUser = null;
 		
 		try {
@@ -930,6 +967,7 @@ public abstract class RestBaseServerResource extends ServerResource {
 			}
 		}catch(Exception e){
 			//TODO pcosta ver excepcion
+			// FIXME khe?
 		}
 		return objects;
 	}

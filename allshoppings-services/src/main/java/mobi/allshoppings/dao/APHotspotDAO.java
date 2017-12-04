@@ -8,7 +8,6 @@ import com.inodes.datanucleus.model.Key;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.APHotspot;
 
-@Deprecated
 public interface APHotspotDAO extends GenericDAO<APHotspot> {
 
 	Key createKey() throws ASException;
