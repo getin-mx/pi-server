@@ -78,7 +78,7 @@ public class GenerateAPHE extends AbstractCLI {
 				if(StringUtils.hasText(sToDate)) {
 					toDate = sdf.parse(sToDate);
 					toDate.setTime(toDate.getTime() +TWELVE_HOURS);
-				} else toDate =  new Date(fromDate.getTime() +TWENTY_FOUR_HOURS);
+				} else toDate =  new Date(fromDate.getTime() +TWENTY_FOUR_HOURS +TWELVE_HOURS);
 				
 				if( options.has(HOSTNAME_PARAM)) {
 					hostname = (String)options.valueOf(HOSTNAME_PARAM);
