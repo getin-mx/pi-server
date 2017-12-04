@@ -137,6 +137,9 @@ implements BDBTimelineDataBzService {
 			for(DashboardIndicatorData obj : list) {
 				if( isValidForUser(user, obj)) {
 					Date objDate = calculateDateFrame(DateUtils.truncate(obj.getDate(), Calendar.DATE), periodType);
+					if (!(objDate.compareTo(fromDate) >= 0 && objDate.compareTo(toDate) <= 0)) {
+						continue;
+					}
 					String key = obj.getElementSubName();
 					String orderKey = obj.getElementSubId();
 					if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
@@ -148,6 +151,7 @@ implements BDBTimelineDataBzService {
 								valArray[i] = new Double(0.0);
 							}
 						}
+						log.info(objDate.toString());
 						int position = dateMap.get(objDate);
 						valArray[position] += obj.getDoubleValue();
 						resultMap.put(key, valArray);

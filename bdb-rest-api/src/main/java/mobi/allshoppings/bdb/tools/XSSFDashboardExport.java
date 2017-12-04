@@ -71,8 +71,8 @@ public class XSSFDashboardExport {
 		// Daily Visits -------------------------------------------------------------------------------------------------
 		String dailyUrl = baseUrl + "dashboard/timelineData?authToken=" + authToken + "&entityId=" + brandId + "&entityKind=1"
 				+ (StringUtils.hasText(storeId) ? "&subentityId=" + storeId : "")
-				+ "&elementId=apd_visitor&subIdOrder=visitor_total_peasents,visitor_total_visits,visitor_total_peasents_ios,"
-				+ "visitor_total_peasents_android,visitor_total_visits_ios,visitor_total_visits_android,visitor_total_tickets,visitor_total_items,visitor_total_revenue"
+				+ "&elementId=apd_visitor&subIdOrder=visitor_total_peasents,visitor_total_visits,"
+				+ "visitor_total_tickets,visitor_total_items,visitor_total_revenue"
 				+ "&fromStringDate=" + sdf.format(dateFrom) + "&toStringDate=" + sdf.format(dateTo)
 				+ "&eraseBlanks=false";
 		String dailyString = get(dailyUrl);
@@ -83,8 +83,7 @@ public class XSSFDashboardExport {
 		// Hourly Visits -------------------------------------------------------------------------------------------------
 		String trafHourUrl = baseUrl + "dashboard/timelineHour?authToken=" + authToken + "&entityId=" + brandId + "&entityKind=1"
 				+ (StringUtils.hasText(storeId) ? "&subentityId=" + storeId : "")
-				+ "&elementId=apd_permanence&subIdOrder=permanence_hourly_peasents,permanence_hourly_visits,"
-				+ "permanence_hourly_peasents_ios,permanence_hourly_peasents_android,permanence_hourly_visits_ios,permanence_hourly_visits_android"
+				+ "&elementId=apd_permanence&subIdOrder=permanence_hourly_peasents,permanence_hourly_visits"
 				+ "&fromStringDate=" + sdf.format(dateFrom) + "&toStringDate=" + sdf.format(dateTo)
 				+ "&average=true&toMinutes=true&eraseBlanks=true";
 		String trafHourString = get(trafHourUrl);
@@ -95,8 +94,7 @@ public class XSSFDashboardExport {
 		// Daily Permanence -------------------------------------------------------------------------------------------------
 		String permHourUrl = baseUrl + "dashboard/timelineHour?authToken=" + authToken + "&entityId=" + brandId + "&entityKind=1"
 				+ (StringUtils.hasText(storeId) ? "&subentityId=" + storeId : "")
-				+ "&elementId=apd_visitor&subIdOrder=visitor_total_peasents,visitor_total_visits,visitor_total_peasents_ios,"
-				+ "visitor_total_peasents_android,visitor_total_visits_ios,visitor_total_visits_android"
+				+ "&elementId=apd_visitor&subIdOrder=visitor_total_peasents,visitor_total_visits"
 				+ "&fromStringDate=" + sdf.format(dateFrom) + "&toStringDate=" + sdf.format(dateTo)
 				+ "&eraseBlanks=true";
 		String permHourString = get(permHourUrl);
