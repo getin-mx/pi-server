@@ -231,11 +231,16 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		Date curDate = new Date(fromDate.getTime());
 		Date limitDate = new Date(fromDate.getTime() + DAY_IN_MILLIS);
+		String sFromDate = sdf.format(fromDate);
+		Date toZonedDate = new Date(toDate.getTime());
+		boolean overtime = false;
+		boolean lastDate;
 		
 		int in;
-		while( curDate.before(toDate) || (fromDate.equals(toDate) &&
-				curDate.equals(toDate))) {
+		while( curDate.before(toZonedDate) || (fromDate.equals(toZonedDate) && curDate.equals(toZonedDate))) {
 
+			lastDate = curDate.getTime() +DAY_IN_MILLIS > toZonedDate.getTime();
+			
 			try {
 				log.log(Level.INFO, "entityIds are: " + entities);
 				
@@ -258,6 +263,14 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					log.log(Level.INFO, "Processing " + name + " for " + curDate
 							+ "...");
 
+					TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
+					int offset = tz.getOffset(curDate.getTime()) * -1;
+					if(offset > 0 && toZonedDate.getTime() < toDate.getTime() +offset) {
+						toZonedDate.setTime(toDate.getTime() +offset);
+						overtime = true;
+						lastDate = curDate.getTime() +DAY_IN_MILLIS > toZonedDate.getTime();
+					}
+					
 					try {
 						List<APDVisit> objs = CollectionFactory.createList();
 						List<String> keys = CollectionFactory.createList();
@@ -285,17 +298,14 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 												apdDao.get(assigs.get(0).getHostname(), true));
 
 									// Get APHE records
-									log.log(Level.INFO, "Fetching APHEntries for "
-											+ name + " and " + forDate + " using "
+									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + forDate + " using "
 											+ assigs.get(0).getHostname() + "...");
-									dumpHelper = new DumpFactory<APHEntry>().build(null,
-											APHEntry.class);
+									dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
 									dumpHelper.setFilter(assigs.get(0).getHostname());
 									
-									Iterator<APHEntry> i = integrateAPHE(dumpHelper,
-											apdCache.get(assigs.get(0).getHostname()),
-											entityId, entityKind, forDate,
-											store.getTimezone()).iterator();
+									Iterator<APHEntry> i = integrateAPHE(dumpHelper, apdCache.get(
+											assigs.get(0).getHostname()), entityId, entityKind, forDate,
+											tz, sFromDate).iterator();
 									dumpHelper.dispose();
 
 									while( i.hasNext() ) {
@@ -306,7 +316,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 											List<APDVisit> visitList = aphEntryToVisits(entry,
 													apdCache, assignmentsCache,
 													blackListMacs, employeeListMacs,
-													store);
+													tz);
 											for(APDVisit visit : visitList ) {
 												if(!onlyEmployees ||
 														visit.getCheckinType().equals(
@@ -360,7 +370,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 										List<APHEntry> e = cache.get(key);
 										List<APDVisit> visitList = aphEntryToVisits(e,
 												apdCache, assignmentsCache, blackListMacs,
-												employeeListMacs, store);
+												employeeListMacs, tz);
 										for(APDVisit visit : visitList ) {
 											if(!onlyEmployees || visit.getCheckinType().equals(
 													APDVisit.CHECKIN_EMPLOYEE))
@@ -389,12 +399,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								}
 							}
 
-							if(deletePreviousRecords) {
-								didDao.useTimedZone();
+							if(deletePreviousRecords && !(overtime && lastDate)) {
 								didDao.deleteUsingSubentityIdAndElementIdAndDate(
 										entityId, Arrays.asList("apd_visitor",
 												"apd_permanence", "apd_occupation" ),
-										curDate, curDate);
+										curDate, curDate, GMT);
 							}
 							
 							if( objs.size() > 0 || onlyDashboards) {
@@ -430,7 +439,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	
 	private List<APHEntry> integrateAPHE(DumperHelper<APHEntry> dumpHelper,
 			APDevice calibration, String entityId, Integer entityKind,
-			String forStringDate, String timezone) {
+			String forStringDate, TimeZone tz, String begginingDate) {
 		
 		Map<String, APHEntry> map = CollectionFactory.createMap();
 		List<APHEntry> res = CollectionFactory.createList();
@@ -438,8 +447,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		int year = Integer.parseInt(forStringDate.substring(0,4));
 		int month = Integer.parseInt(forStringDate.substring(5,7)) -1;
 		int day = Integer.parseInt(forStringDate.substring(8));
-		
-		TimeZone tz = TimeZone.getTimeZone(timezone);
 		
 		int lowerLimit, higherLimit;
 		
@@ -455,9 +462,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		END_CALENDAR.add(Calendar.MILLISECOND, -1);
 
 		int timezoneSlotsOffset = tz.getOffset(START_CALENDAR.getTimeInMillis());
-			
-		Iterator<APHEntry> i = dumpHelper.iterator(START_CALENDAR.getTime(),
-					END_CALENDAR.getTime());
+		
+		Iterator<APHEntry> i = dumpHelper.iterator(START_CALENDAR.getTime(), END_CALENDAR.getTime());
 			
 		START_CALENDAR.set(year, month, day, Integer.parseInt(
 				calibration.getMonitorStart().substring(0, 2)),
@@ -470,18 +476,17 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		higherLimit = (END_CALENDAR.get(Calendar.MINUTE) *60
 				+END_CALENDAR.get(Calendar.HOUR_OF_DAY) *60 *60) /20;
 		if(higherLimit == 0) higherLimit = SLOT_NUMBER_IN_DAY;
-			
+		
+		WORK_CALENDAR.clear();
+		year = Integer.parseInt(begginingDate.substring(0,4));
+		month = Integer.parseInt(begginingDate.substring(5,7)) -1;
+		day = Integer.parseInt(begginingDate.substring(8));
+		WORK_CALENDAR.set(year, month, day);
+		
 		timezoneSlotsOffset /= MILLIS_TO_TWENTY_SECONDS_SLOT;
 		
 		while(i.hasNext()) {
 			APHEntry aphe = i.next();
-			try {
-				if(sdf.parse(aphe.getDate()).before(sdf.parse(forStringDate)))
-					continue;
-			} catch(ParseException e) {
-				log.log(Level.WARNING, "An APHE with an unparseable date was detected!");
-				continue;
-			}
 			APHEntry mapped = map.get(aphe.getMac());
 			if( mapped == null ) {
 				mapped = new APHEntry();
@@ -504,8 +509,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				int testSlot;
 				slot += timezoneSlotsOffset;
 				testSlot = slot;
-				if(testSlot < 0) testSlot += SLOT_NUMBER_IN_DAY;
-				else if(testSlot >= SLOT_NUMBER_IN_DAY) testSlot -= SLOT_NUMBER_IN_DAY;
+				if(testSlot < 0) {
+					if(WORK_CALENDAR.get(Calendar.DATE) >= Integer.parseInt(aphe.getDate().substring(8))) continue;
+					testSlot += SLOT_NUMBER_IN_DAY;
+				} else if(testSlot >= SLOT_NUMBER_IN_DAY) testSlot -= SLOT_NUMBER_IN_DAY;
 				if(lowerLimit > higherLimit ?
 						testSlot <= higherLimit || testSlot >= lowerLimit :
 							testSlot >= lowerLimit && testSlot <= higherLimit) {
@@ -621,6 +628,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		Date curDate = new Date(fromDate.getTime());
 		Date limitDate = new Date(fromDate.getTime() + DAY_IN_MILLIS);
+		Date toZonedDate = new Date(toDate.getTime());
 		while( curDate.before(toDate) || (fromDate.equals(toDate) && curDate.equals(toDate))) {
 
 			try {
@@ -636,8 +644,14 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						name = store.getName();
 					} else if ( entityKind.equals(EntityKind.KIND_INNER_ZONE)) {
 						InnerZone iz = innerzoneDao.get(entityId);
+						store = storeDao.get(iz.getEntityId());
 						name = iz.getName();
 					}
+					
+					TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
+					int offset = tz.getOffset(curDate.getTime()) * -1;
+					if(offset > 0 && toZonedDate.getTime() < toDate.getTime() +offset)
+						toZonedDate.setTime(toDate.getTime() +offset);
 					
 					log.log(Level.INFO, "Processing " + name + " for " + curDate + "...");
 
@@ -669,10 +683,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 										// Employee check
 										if(!onlyEmployees || employeeListMacs.contains(entry.getMac().toUpperCase())) {
 											List<APDVisit> visitList =
-													aphEntryToVisits(entry, apdCache,
-															assignmentsCache,
-															blackListMacs,
-															employeeListMacs, store);
+													aphEntryToVisits(entry, apdCache, assignmentsCache, blackListMacs,
+															employeeListMacs, tz);
 											for(APDVisit visit : visitList )
 												if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE)) {
 													objs.add(visit);
@@ -723,7 +735,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 										List<APHEntry> e = cache.get(key);
 										List<APDVisit> visitList = aphEntryToVisits(e, apdCache,
 												assignmentsCache,blackListMacs,employeeListMacs,
-												store);
+												tz);
 										for(APDVisit visit : visitList ) {
 											if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
 												objs.add(visit);
@@ -752,7 +764,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							}
 
 							didDao.deleteUsingSubentityIdAndElementIdAndDate(entityId,
-									Arrays.asList(new String[] { "apd_visitor", "apd_permanence", "apd_occupation" }), curDate, curDate);
+									Arrays.asList(new String[] { "apd_visitor", "apd_permanence", "apd_occupation" }),
+									curDate, curDate, GMT);
 							mapper.createAPDVisitPerformanceDashboardForDay(curDate,
 									Arrays.asList(new String[] { entityId }), entityKind, objs);
 						}
@@ -917,11 +930,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	@Override
 	public List<APDVisit> aphEntryToVisits(APHEntry entry, Map<String, APDevice> apdCache,
 			Map<String, APDAssignation> assignmentsCache,List<String> blackListMacs,
-			List<String> employeeListMacs, Store store) throws ASException {
+			List<String> employeeListMacs, TimeZone tz) throws ASException {
 		List<APHEntry> entries = CollectionFactory.createList();
 		entries.add(entry);
 		return aphEntryToVisits(entries, apdCache, assignmentsCache, blackListMacs,
-				employeeListMacs, store);
+				employeeListMacs, tz);
 	}	
 
 	/**
@@ -936,7 +949,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	@Override
 	public List<APDVisit> aphEntryToVisits(List<APHEntry> entries, Map<String, APDevice> apdCache,
 			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,
-			List<String> employeeListMacs, Store store) throws ASException {
+			List<String> employeeListMacs, TimeZone tz) throws ASException {
 
 		int COMMON = 0;
 		int MARKII = 1;
@@ -959,10 +972,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			switch(mode) {
 			case 1:
 				return aphEntryToVisitsMarkII(entries, apdCache, assignmentsCache,
-						blackListMacs, employeeListMacs, store);
+						blackListMacs, employeeListMacs, tz);
 			default:
 				return aphEntryToVisitsCommon(entries, apdCache, assignmentsCache,
-						blackListMacs, employeeListMacs, store);
+						blackListMacs, employeeListMacs, tz);
 			}
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
@@ -979,8 +992,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 */
 	private List<APDVisit> aphEntryToVisitsMarkII(List<APHEntry> entries,
 			Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache,
-			List<String> blackListMacs, List<String> employeeListMacs,
-			Store store) throws ASException {
+			List<String> blackListMacs, List<String> employeeListMacs, TimeZone tz) throws ASException {
 
 		// Validates entries
 		if( CollectionUtils.isEmpty(entries))
@@ -1072,8 +1084,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		APDVisit currentVisit = null;
 		APDVisit currentPeasant = null;
 		APHEntry curEntry = null;
-		
-		TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
 		
 		// Now iterate the slots on each entry
 		for(Integer slot : slots ) {
@@ -1300,7 +1310,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 */
 	private List<APDVisit> aphEntryToVisitsCommon(List<APHEntry> entries,
 			Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache,
-			List<String> blackListMacs, List<String> employeeListMacs, Store store) throws ASException {
+			List<String> blackListMacs, List<String> employeeListMacs, TimeZone tz) throws ASException {
 
 		// Validates entries
 		if( CollectionUtils.isEmpty(entries))
@@ -1380,8 +1390,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		APDVisit currentVisit = null;
 		APDVisit currentPeasant = null;
 		APHEntry curEntry = null;
-		
-		TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
 		
 		// Now iterate the slots on each entry
 		for(Integer slot : slots ) {

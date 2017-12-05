@@ -1,5 +1,6 @@
 package mobi.allshoppings.cli;
 
+import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -75,10 +76,9 @@ public class GenerateAPHE extends AbstractCLI {
 				fromDate = StringUtils.hasText(sFromDate) ? sdf.parse(sFromDate) :
 					sdf.parse(sdf.format(new Date(System.currentTimeMillis()
 							-TWENTY_FOUR_HOURS)));
-				if(StringUtils.hasText(sToDate)) {
-					toDate = sdf.parse(sToDate);
-					toDate.setTime(toDate.getTime() +TWELVE_HOURS);
-				} else toDate =  new Date(fromDate.getTime() +TWENTY_FOUR_HOURS +TWELVE_HOURS);
+				
+				toDate = StringUtils.hasText(sToDate) ? sdf.parse(sToDate) :
+					new Date(fromDate.getTime() +TWENTY_FOUR_HOURS +TWELVE_HOURS);
 				
 				if( options.has(HOSTNAME_PARAM)) {
 					hostname = (String)options.valueOf(HOSTNAME_PARAM);
@@ -90,6 +90,7 @@ public class GenerateAPHE extends AbstractCLI {
 			}
 
 			log.log(Level.INFO, "Generating APHEntries");
+			log.log(Level.INFO, "This process PID is: " +ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
 			List<String> hostnames = CollectionFactory.createList();
 			if(StringUtils.hasText(hostname)) {
 				String[] hn = hostname.split(",");

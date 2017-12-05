@@ -48,7 +48,17 @@ public class Process implements ModelKey, Serializable, Identificable, StatusAwa
 	private String cmdLine;
 	
 	private Boolean generateAPHE;
+	private int pid;
+	private float progress;
 	
+	public float getProgress() {
+		return progress;
+	}
+
+	public void setProgress(float progress) {
+		this.progress = progress;
+	}
+
 	public Boolean getGenerateAPHE() {
 		return generateAPHE;
 	}
@@ -303,6 +313,14 @@ public class Process implements ModelKey, Serializable, Identificable, StatusAwa
 	public void setCmdLine(String cmdLine) {
 		this.cmdLine = cmdLine;
 	}
+	
+	public int getPid() {
+		return pid;
+	}
+
+	public void setPid(int pid) {
+		this.pid = pid;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -357,7 +375,7 @@ public class Process implements ModelKey, Serializable, Identificable, StatusAwa
 				+ processType + ", status=" + status + ", name=" + name + ", userId=" + userId + ", creationDateTime="
 				+ creationDateTime + ", lastUpdate=" + lastUpdate + ", startDateTime=" + startDateTime
 				+ ", endDateTime=" + endDateTime + ", data=" + data + ", log=" + log + ", server=" + server
-				+ ", cmdLine=" + cmdLine + ", doIndexNow=" + doIndexNow + "]";
+				+ ", cmdLine=" + cmdLine + ", doIndexNow=" + doIndexNow +", pid=" +pid + "]";
 	}
 
 }

@@ -516,11 +516,7 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 
 			File dir = file.getParentFile();
 			if( !dir.exists() ) dir.mkdirs();
-			if( !file.exists() ) {
-				fos = new FileOutputStream(file, false);
-			} else {
-				fos = new FileOutputStream(file, true);
-			}
+			fos = file.exists() ? new FileOutputStream(file, true) : new FileOutputStream(file, false);
 
 			try {
 				fos.write(jsonRep.getBytes());

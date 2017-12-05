@@ -29,6 +29,7 @@ import mobi.allshoppings.tools.CollectionFactory;
 /**
  *
  */
+@Deprecated
 public class DashboardTimelineDataByProvinceBzServiceJSONImpl
 extends RestBaseServerResource
 implements DashboardTimelineDataByProvinceBzService {

@@ -3,6 +3,7 @@ package mobi.allshoppings.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import com.inodes.datanucleus.model.Key;
 
@@ -45,14 +46,6 @@ public interface DashboardIndicatorDataDAO extends GenericDAO<DashboardIndicator
 			throws ASException;
 
 	void deleteUsingSubentityIdAndElementIdAndDate(String subentityId,
-			List<String> elementId, Date fromDate, Date toDate)
+			List<String> elementId, Date fromDate, Date toDate, TimeZone tz)
 			throws ASException;
-	
-	/**
-	 * Prepares the DAO to use a time zoned date to string parser. This will only
-	 * take effect on the first call to any CRUD operation. Be aware that this method
-	 * is mean to be temporal, and not only it should dissapear when all time
-	 * zone constraints are fixed; but not all methods may use a time zoned parser.
-	 */
-	void useTimedZone();
 }

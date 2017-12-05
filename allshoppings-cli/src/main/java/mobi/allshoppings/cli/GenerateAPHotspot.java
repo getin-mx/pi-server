@@ -50,16 +50,13 @@ public class GenerateAPHotspot extends AbstractCLI {
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
 		else parser = base;
-		parser.accepts(DELETE_AFTER_DUMP_PARAM, "Do I have to "
-				+ "delete the entity from the DB after dump?")
+		parser.accepts(DELETE_AFTER_DUMP_PARAM, "Do I have to  delete the entity from the DB after dump?")
 				.withRequiredArg().ofType(Boolean.class);
-		parser.accepts(RENAME_COLLECTION, "Do I have to rename "
-				+ "the collection before run?").withOptionalArg()
+		parser.accepts(RENAME_COLLECTION, "Do I have to rename the collection before run?").withOptionalArg()
 				.ofType(Boolean.class);
-		parser.accepts(COLLECTIONS_PARAM, "Mongo table names "
-				+ "(sepparated by comma) to search for "
-				+ "APHotspots").withRequiredArg()
-				.ofType(String.class);
+		parser.accepts(COLLECTIONS_PARAM, "Mongo table names (sepparated by comma) to search for "
+				+ "APHotspots").withRequiredArg().ofType(String.class);
+		parser.accepts("debugHour").withOptionalArg().ofType(Integer.class);
 		return parser;
 	}
 	
@@ -67,6 +64,8 @@ public class GenerateAPHotspot extends AbstractCLI {
 		OptionSet options = parser.parse(args);
 		
 		DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
+		
+		Integer debugHour = options.has("debugHour") ? (Integer)options.valueOf("debugHour") : -1;
 		
 		// Creates JDO Connection
 		PersistenceManager pm;
@@ -110,12 +109,16 @@ public class GenerateAPHotspot extends AbstractCLI {
 			c.addOption(com.mongodb.Bytes.QUERYOPTION_NOTIMEOUT);
 			Iterator<DBObject> i = c.iterator();
 			Date expected;
-			try {
-				expected = backupSDF.parse(collection.substring(collection.length()
-						-backupFormat.length()));
-			} catch(ParseException e) {
-				LOG.log(Level.WARNING, "Invalid date in collection name: " +collection);
-				continue;
+			if(collection.startsWith("BK")) {
+				try {
+					expected = backupSDF.parse(collection.substring(collection.length()
+							-backupFormat.length()));
+				} catch(ParseException e) {
+					LOG.log(Level.WARNING, "Invalid date in collection name: " +collection);
+					continue;
+				}
+			} else {
+				expected = new Date();
 			} while(i.hasNext())  {
 				DBObject obj = i.next();
 				APHotspot hotspot = new APHotspot();
@@ -132,11 +135,15 @@ public class GenerateAPHotspot extends AbstractCLI {
 				cal.setTimeInMillis(((Date)obj.get("creationDateTime")).getTime());
 				hotspot.setCreationDateTime(cal.getTime());
 				hotspot.setKey(KeyFactory.stringToKey(obj.get("_id").toString()));
-				if(!hotspots.containsKey(cal.get(Calendar.HOUR_OF_DAY))) {
+				Integer hour = cal.get(Calendar.HOUR_OF_DAY);
+				if(debugHour > -1 && debugHour < 24) {
+					if(!debugHour.equals(hour)) break;
+				}
+				if(!hotspots.containsKey(hour)) {
 					List<APHotspot> list = CollectionFactory.createList();
 					list.add(hotspot);
-					hotspots.put(cal.get(Calendar.HOUR_OF_DAY), list);
-				} else hotspots.get(cal.get(Calendar.HOUR_OF_DAY)).add(hotspot);
+					hotspots.put(hour, list);
+				} else hotspots.get(hour).add(hotspot);
 				if(hotspots.size() %10000 == 0) LOG.log(Level.INFO, "Found "
 						+hotspots.size() +" APHotspost so far");
 				
