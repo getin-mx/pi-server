@@ -1,7 +1,6 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
-import java.util.Collection;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
@@ -14,7 +13,6 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 import com.google.gson.Gson;
 
@@ -22,9 +20,7 @@ import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.APDAssignationDAO;
-import mobi.allshoppings.dao.APDVisitDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
-import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
@@ -33,7 +29,6 @@ import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHEntry;
-import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -46,34 +41,7 @@ implements BDBDashboardBzService {
 
 	private static final Logger log = Logger.getLogger(APHEntryDataBzServiceJSONImpl.class.getName());
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static final SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
-//	private List<APDVisit> getAPDVisitFromAPHE(String identifier) {
-//			
-//		List<APDVisit> visits = CollectionFactory.createList();
-//
-//		DumperHelper<APDVisit> dumper = new DumpFactory<APDVisit>().build(null, APDVisit.class);
-//		dumper.setFilter(hostname);
-//		Iterator<APHEntry> dumperEntries = dumper.iterator(aphEntryStringDate, aphEntryStringDate);
-//		
-//		List<APHEntry> entries = CollectionFactory.createList();
-//		
-//		while (dumperEntries.hasNext()) {
-//			APHEntry entry = dumperEntries.next();
-//			entries.add(entry);	
-//		}
-//				return null;
-//	}
-	
-//	private APHEntry getSingleAPHE(String identifier, String aphEntryStringDate){
-		
-//		DumperHelper<APHEntry> dumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
-//		dumper.setFilter(hostname);
-//		Iterator<APHEntry> dumperEntries = dumper.iterator(aphEntryStringDate, aphEntryStringDate);
-//		
-	
-//	}
 		
 	@Autowired
 	private APHHelper aphHelper;
@@ -101,7 +69,6 @@ implements BDBDashboardBzService {
 	public String retrieve()
 	{
 		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-		sdf2.setTimeZone(TimeZone.getTimeZone("GMT"));
 		
 		long start = markStart();
 		try {
@@ -109,9 +76,6 @@ implements BDBDashboardBzService {
 			obtainUserIdentifier(true);
 
 			String identifier = obtainStringValue("identifier", null);
-			String hostnameList = obtainStringValue("hostnames", null);
-			String mac = obtainStringValue("mac", null);
-			String fromStringDate = obtainStringValue("fromStringDate", null);
 			Boolean original = obtainBooleanValue("original", false);
 			
 			String[] idArray = identifier.split(":");
@@ -145,17 +109,10 @@ implements BDBDashboardBzService {
 //			APHEntry, filter->hostname
 //			ADevice, filter->hostname
 //			APDVisit, filter->entityId, APDAssignation (host to entityId)
-//			
-//			
-//			for (String hostname : hostnames) {
-//				entries.add(aphHelper.getFromCache(hostname, mac, fromStringDate));
-//			}
 
 
-			this.visits = CollectionFactory.createList();
-			
+			this.visits = CollectionFactory.createList();	
 			this.allVisits = CollectionFactory.createList();
-			
 			this.entries = CollectionFactory.createList();
 			
 			
@@ -183,18 +140,6 @@ implements BDBDashboardBzService {
 				}
 			}
 
-//			
-//			
-//			List<APHEntry> entries = CollectionFactory.createList();
-//			if (StringUtils.hasText(identifier)) {
-//				APHEntry obj = dao.get(identifier);
-//				entries.add(aphHelper.getFromCache(obj.getHostname(), obj.getMac(), obj.getDate()));
-//			} else {
-//				String[] hostnames = hostnameList.split(",");
-//				for (String hostname : hostnames) {
-//					entries.add(aphHelper.getFromCache(hostname, mac, fromStringDate));
-//				}
-//			}
 
 			for(APHEntry entry : entries ) {
 				APDevice apd = apdDao.get(entry.getHostname());
@@ -299,8 +244,8 @@ implements BDBDashboardBzService {
 			if(!original) {
 				for(APDVisit visit : this.visits ) {
 					
-					long vstart = sdf2.parse(sdf3.format(visit.getCheckinStarted())).getTime();
-					long vend = sdf2.parse(sdf3.format(visit.getCheckinFinished())).getTime();
+					long vstart = visit.getCheckinStarted().getTime();
+					long vend = visit.getCheckinFinished().getTime();
 
 					JSONObject serie = new JSONObject();
 					JSONArray data = new JSONArray();
