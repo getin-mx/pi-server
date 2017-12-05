@@ -31,7 +31,7 @@ public class GenerateAPDVisits extends AbstractCLI {
 	private static final String ONLY_EMPLOYEES_PARAM = "onlyEmployees";
 	private static final String ONLY_DASHBOARDS_PARAM = "onlyDashboards";
 	private static final String UPDATE_DASHBOARDS_PARAM = "updateDashboards";
-	//be aware: otography is important!
+	//be aware: orthography is important!
 	private static final String DELETE_PREVIOUS_RECORDS_PARAM = "deletePreviousRecords";
 	
 	public static OptionParser buildOptionParser(OptionParser base) {
@@ -92,7 +92,7 @@ public class GenerateAPDVisits extends AbstractCLI {
 					toDate = sdf.parse(sToDate);
 					toDate.setTime(toDate.getTime() +TWELVE_HOURS);
 				} else {
-					toDate = new Date(fromDate.getTime() + TWENTY_FOUR_HOURS);
+					toDate = new Date(fromDate.getTime() + TWENTY_FOUR_HOURS +TWELVE_HOURS);
 				}
 
 				if(options.has(BRAND_IDS_PARAM)) {
