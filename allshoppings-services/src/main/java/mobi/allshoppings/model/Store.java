@@ -107,7 +107,7 @@ public class Store implements ModelKey, Serializable, IAdaptable, Identificable,
 		this.contactInfo = new ContactInfo();
 		this.acl = new ACL();
 		this.status = StatusAware.STATUS_ENABLED;
-		this.timezone = TimeZone.getDefault().toString();
+		this.timezone = "America/Mexico_City";
 		this.checkinAreaSize = 50;
 		this.fenceSize = 0;
     }
