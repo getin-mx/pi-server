@@ -29,10 +29,14 @@ public class APHEntry implements ModelKey, Serializable, Identificable, Replicab
 	private String hostname;
 	private String mac;
 	private String date;
-	private String devicePlatform;
+	
+	@Deprecated
+	@NotPersistent
+	private transient String devicePlatform;
 
 	@Persistent(defaultFetchGroup = "true")
 	private Map<String, Integer> rssi;
+	
 	@NotPersistent
 	private Map<String, Integer> artificialRssi;
 
@@ -42,8 +46,9 @@ public class APHEntry implements ModelKey, Serializable, Identificable, Replicab
 
 	private Date lastUpdate;
 	private Date creationDateTime;
+	
 	@NotPersistent
-	private byte shiftDay;
+	private transient byte shiftDay;
 	
 	public static final byte PREVIOUS = -1;
 	public static final byte NEXT = 1;

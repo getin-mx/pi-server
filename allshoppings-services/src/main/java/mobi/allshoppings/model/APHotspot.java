@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -28,8 +29,15 @@ public class APHotspot implements ModelKey, Serializable, Identificable, Replica
 	private String hostname;
 	private String mac;
 	private Integer count;
-	private Date firstSeen;
-	private Date lastSeen;
+	
+	@Deprecated
+	@NotPersistent
+	private  transient Date firstSeen;
+	
+	@Deprecated
+	@NotPersistent
+	private transient Date lastSeen;
+	
 	private Integer signalDB;
 	private Date lastUpdate;
 	private Date creationDateTime;

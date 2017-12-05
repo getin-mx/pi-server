@@ -3,6 +3,7 @@ package mobi.allshoppings.apdevice;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.APDAssignation;
@@ -25,11 +26,11 @@ public interface APDVisitHelper {
 
 	List<APDVisit> aphEntryToVisits(APHEntry entry, Map<String, APDevice> apdCache,
 			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,
-			List<String> employeeListMacs, Store store) throws ASException;
+			List<String> employeeListMacs, TimeZone tz) throws ASException;
 
 	List<APDVisit> aphEntryToVisits(List<APHEntry> entries, Map<String, APDevice> apdCache,
 			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,
-			List<String> employeeListMacs, Store store) throws ASException;
+			List<String> employeeListMacs, TimeZone tz) throws ASException;
 
 	void fakeVisitsWith(String storeId, String fakeWithStoreId, Date fromDate, Date toDate) throws ASException;
 	

@@ -111,7 +111,7 @@ public class ProcessUtilsImpl implements ProcessUtils {
 
 				try {
 					
-					int errorCode = executeProcess(new String[] { p.getCmdLine() }, stdout, stderr);
+					int errorCode = executeProcess(new String[] { p.getCmdLine() }, stdout, stderr, p);
 					
 					p.setEndDateTime(new Date());
 					p.setStatus(errorCode == 0 ? StatusAware.STATUS_SUCCEEDED : StatusAware.STATUS_ERROR);
@@ -167,13 +167,13 @@ public class ProcessUtilsImpl implements ProcessUtils {
 	 *            A buffer for the standard error on the server
 	 * @throws ASException
 	 */
-	private int executeProcess(String[] cmdLine, StringBuffer stdout, StringBuffer stderr) throws ASException {
+	private int executeProcess(String[] cmdLine, StringBuffer stdout, StringBuffer stderr, Process p) throws ASException {
 		ProcessSSHSession s = new ProcessSSHSession(systemConfiguration);
 		try {
 			int errorCode = 0;
 			s.connect();
 			for( String cmd : cmdLine ) {
-				errorCode = s.executeCommandOnSSHSession(s.getSession(), cmd, stdout, stderr);
+				errorCode = s.executeCommandOnSSHSession(s.getSession(), cmd, stdout, stderr, p);
 				if( errorCode != 0 )
 					return errorCode;
 			}

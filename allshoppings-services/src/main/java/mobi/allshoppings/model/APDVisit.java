@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -32,7 +33,11 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 	private String userId;
 	private String deviceUUID;
 	private String mac;
-	private String devicePlatform;
+	
+	@Deprecated
+	@NotPersistent
+	private  transient String devicePlatform;
+	
 	private String entityId;
 	private Integer entityKind;
 	private Date checkinStarted;

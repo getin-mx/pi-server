@@ -1,5 +1,6 @@
 package mobi.allshoppings.cli;
 
+import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -88,12 +89,8 @@ public class GenerateAPDVisits extends AbstractCLI {
 					sdf.parse(sdf.format(
 							new Date(System.currentTimeMillis() - TWENTY_FOUR_HOURS)));
 				
-				if( StringUtils.hasText(sToDate)) {
-					toDate = sdf.parse(sToDate);
-					toDate.setTime(toDate.getTime() +TWELVE_HOURS);
-				} else {
-					toDate = new Date(fromDate.getTime() + TWENTY_FOUR_HOURS +TWELVE_HOURS);
-				}
+				toDate = StringUtils.hasText(sToDate) ? sdf.parse(sToDate) :
+					new Date(fromDate.getTime() + TWENTY_FOUR_HOURS);
 
 				if(options.has(BRAND_IDS_PARAM)) {
 					brandIds = (String)options.valueOf(BRAND_IDS_PARAM);
@@ -145,6 +142,7 @@ public class GenerateAPDVisits extends AbstractCLI {
 			}
 
 			log.log(Level.INFO, "Generating APDVisits");
+			log.log(Level.INFO, "This process PID is: " +ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
 			
 			if( shoppings.isEmpty() )
 				helper.generateAPDVisits(brands, stores, fromDate, toDate, deletePreviousRecors, updateDashboards, onlyEmployees, onlyDashboards);

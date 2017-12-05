@@ -226,8 +226,8 @@ public class DashboardAPDeviceMapperService {
 								String forDate = sdf.format(location.getCreationDateTime());
 
 								// heatmap ----------------------------------------------------------------------------------------------
-								// ------------------------------------------------------------------------------------------------------
-								obj = buildBasicDashboardIndicatorData(
+								// FIXME unused?
+								/*obj = buildBasicDashboardIndicatorData(
 										"heatmap", "Heat Map", wifiSpot.getIdentifier(),
 										wifiSpot.getZoneName(), location.getCreationDateTime(),
 										DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
@@ -239,7 +239,7 @@ public class DashboardAPDeviceMapperService {
 
 								obj.setDoubleValue(obj.getDoubleValue() + 1);
 
-								indicatorsSet.put(obj.getKey().getName(), obj);
+								indicatorsSet.put(obj.getKey().getName(), obj);*/
 
 								// heatmap ----------------------------------------------------------------------------------------------
 								// ------------------------------------------------------------------------------------------------------
@@ -335,8 +335,8 @@ public class DashboardAPDeviceMapperService {
 									String forDate = sdf.format(hotspot.getCreationDateTime());
 									
 									// heatmap ----------------------------------------------------------------------------------------------
-									// ------------------------------------------------------------------------------------------------------
-									obj = buildBasicDashboardIndicatorData(
+									// FIXME unused
+									/*obj = buildBasicDashboardIndicatorData(
 											"heatmap", "Heat Map", wifiSpot.getIdentifier(),
 											wifiSpot.getZoneName(), hotspot.getCreationDateTime(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getIdentifier(),
@@ -349,7 +349,7 @@ public class DashboardAPDeviceMapperService {
 
 									obj.setDoubleValue(obj.getDoubleValue() + (100 - hotspot.getSignalDB()));
 
-									indicatorsSet.put(obj.getKey().getName(), obj);
+									indicatorsSet.put(obj.getKey().getName(), obj);*/
 
 									// heatmap ----------------------------------------------------------------------------------------------
 									// ------------------------------------------------------------------------------------------------------
@@ -462,8 +462,8 @@ public class DashboardAPDeviceMapperService {
 								String forDate = sdf.format(hotspot.getCreationDateTime());
 								
 								// heatmap ----------------------------------------------------------------------------------------------
-								// ------------------------------------------------------------------------------------------------------
-								if( EntityKind.KIND_SHOPPING == entityKind ) {
+								// FIXME unused
+								/*if( EntityKind.KIND_SHOPPING == entityKind ) {
 									obj = buildBasicDashboardIndicatorData(
 											"heatmap", "Heat Map", wifiSpot.getIdentifier(),
 											wifiSpot.getZoneName(), hotspot.getCreationDateTime(),
@@ -486,7 +486,7 @@ public class DashboardAPDeviceMapperService {
 
 								obj.setDoubleValue(obj.getDoubleValue() + (100 - hotspot.getSignalDB()));
 
-								indicatorsSet.put(obj.getKey().getName(), obj);
+								indicatorsSet.put(obj.getKey().getName(), obj);*/
 
 								// heatmap ----------------------------------------------------------------------------------------------
 								// ------------------------------------------------------------------------------------------------------
@@ -793,8 +793,8 @@ public class DashboardAPDeviceMapperService {
 						DashboardIndicatorData obj;
 
 						// visitor_total_records --------------------------------------------------------------------------------
-						// ------------------------------------------------------------------------------------------------------
-						obj = buildBasicDashboardIndicatorData(
+						// FIXME unused?
+						/*obj = buildBasicDashboardIndicatorData(
 								"apd_visitor", "Visitantes", "visitor_total_records",
 								"Total", v.getCheckinStarted(),
 								DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
@@ -803,7 +803,7 @@ public class DashboardAPDeviceMapperService {
 						if(indicatorsSet.containsKey(obj.getKey().getName())) 
 							obj = indicatorsSet.get(obj.getKey().getName());
 						obj.setDoubleValue(obj.getDoubleValue() + 1);
-						indicatorsSet.put(obj.getKey().getName(), obj);
+						indicatorsSet.put(obj.getKey().getName(), obj);*/
 
 						if( v.getCheckinType().equals(APDVisit.CHECKIN_PEASANT) ) {
 

@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -20,7 +21,11 @@ import mobi.allshoppings.model.interfaces.ModelKey;
 public class DashboardIndicatorData implements ModelKey, Serializable, Identificable {
 
 	public static final String PERIOD_TYPE_DAILY = "D";
+	
+	@Deprecated
 	public static final String PERIOD_TYPE_WEEKLY = "W";
+	
+	@Deprecated
 	public static final String PERIOD_TYPE_MONTHLY = "M";
 	
 	public static final Integer TIME_ZONE_ALL = 0;
@@ -42,17 +47,41 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 	public String elementSubName;
 	public String shoppingId;
 	public String shoppingName;
-	public String city;
-	public String province;
-	public String country;
+	
+	@Deprecated
+	@NotPersistent
+	public transient String city;
+	
+	@Deprecated
+	@NotPersistent
+	public transient String province;
+	
+	@Deprecated
+	@NotPersistent
+	public transient String country;
+	
 	public String subentityId;
 	public String subentityName;
-	public String periodType; // D: Daily, W: Weekly
+	
+	@Deprecated
+	@NotPersistent
+	public transient String periodType; // D: Daily, W: Weekly
+	
 	public Date date; 
 	public String stringDate; // yyyy-MM-dd
-	public String movieId;
-	public String movieName;
-	public String voucherType;
+	
+	@Deprecated
+	@NotPersistent
+	public transient String movieId;
+	
+	@Deprecated
+	@NotPersistent
+	public transient String movieName;
+	
+	@Deprecated
+	@NotPersistent
+	public transient String voucherType;
+	
 	public Integer dayOfWeek;
 	public Integer timeZone;
 	public String stringValue;

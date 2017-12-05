@@ -97,7 +97,8 @@ public class ProcessSSHSession {
 	 * @throws IOException
 	 * @throws JSchException
 	 */
-	public int executeCommandOnSSHSession(Session session, String command, StringBuffer stdout, StringBuffer stderr) throws IOException, JSchException {
+	public int executeCommandOnSSHSession(Session session, String command, StringBuffer stdout, StringBuffer stderr,
+			mobi.allshoppings.model.Process p) throws IOException, JSchException {
 		ChannelExec channel = (ChannelExec) session.openChannel("exec");
 
 		if( stdout == null ) stdout = new StringBuffer();
@@ -120,11 +121,31 @@ public class ProcessSSHSession {
 			byte[] tmp=new byte[1024];
 
 			// Writes the stdout channel
+			StringBuffer data = new StringBuffer();
+			String aux;
+			boolean state = true;
 			while(true){
 				while(in.available()>0){
 					int i=in.read(tmp, 0, 1024);
-					if(i<0)break;
-					stdout.append(new String(tmp, 0, i));
+					if(i < 0) break;
+					aux = new String(tmp, 0, i);
+					stdout.append(aux);
+					data.append(aux);
+					// TODO parametrizar cadenas hardcodeadas
+					if(state && data.toString().toLowerCase().contains("this process pid is: ")) {
+						aux = data.toString().toLowerCase();
+						aux = aux.substring(aux.indexOf("this process pid is: "), aux.length());
+						aux = aux.substring("this process pid is: ".length(), aux.indexOf('\n'));
+						p.setPid(Integer.parseInt(aux));//TODO update in database
+						data = new StringBuffer();
+						state = false;
+					} else if(!state && data.toString().toLowerCase().contains("progress: ")) {
+						aux = data.toString().toLowerCase();
+						aux = aux.substring(aux.lastIndexOf("progress: "), aux.length());
+						aux = aux.substring("progress: ".length(), aux.indexOf('%'));
+						p.setProgress(Float.parseFloat(aux)); // TODO update database
+						data = new StringBuffer();
+					}
 				}
 				while(err.available()>0){
 					int i=in.read(tmp, 0, 1024);
