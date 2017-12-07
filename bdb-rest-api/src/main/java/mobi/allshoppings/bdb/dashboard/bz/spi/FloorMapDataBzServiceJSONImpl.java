@@ -86,12 +86,12 @@ implements BDBDashboardBzService, BDBPostBzService {
 				options.put(FloorMapAdapter.OPTIONS_SHOPPINGDAO, shoppingDao);
 				options.put(FloorMapAdapter.OPTIONS_STOREDAO, storeDao);
 
-				long millisPre = new Date().getTime();
+				long millisPre = System.currentTimeMillis();
 				List<FloorMapAdapter> list = new GenericAdapterImpl<FloorMapAdapter>()
 						.adaptList(floormapDao.getUsingStatusAndShoppingId(
 								StatusAware.STATUS_ENABLED, shoppingId), null,
 								null, null, options);
-				long diff = new Date().getTime() - millisPre;
+				long diff = System.currentTimeMillis() - millisPre;
 
 				// Logs the result
 				log.info("Number of floor maps found [" + list.size() + "] in " + diff + " millis");

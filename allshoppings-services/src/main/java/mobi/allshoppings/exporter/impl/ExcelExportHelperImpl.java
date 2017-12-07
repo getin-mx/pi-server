@@ -138,6 +138,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			Map<String, DateAndHourEntry> dateAndHourMap = CollectionFactory.createMap();
 			Date initialDate = sdf.parse(fromDate);
 			Date finalDate = sdf.parse(toDate);
+			finalDate.setTime(finalDate.getTime() +DAY_IN_MILLIS);
 			Date curDate = new Date(initialDate.getTime());
 			String dateName = getStringDate(finalDate);
 			Calendar cal = Calendar.getInstance();

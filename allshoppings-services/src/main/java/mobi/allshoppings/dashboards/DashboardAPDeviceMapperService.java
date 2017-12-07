@@ -595,7 +595,8 @@ public class DashboardAPDeviceMapperService {
 					
 					List<APHEntry> aphes = CollectionFactory.createList();
 					for( String apDeviceId : apDeviceIds) {
-						try { aphes.add(apheDao.get(aphHelper.getHash(apDeviceId, mac, date ), true)); } catch( Exception e ) {}
+						try { aphes.add(apheDao.get(aphHelper.getHash(apDeviceId, mac, date ), true));
+						} catch( Exception e ) {}
 					}
 					
 					// Find the minimal slot time for this mac address.
@@ -735,14 +736,30 @@ public class DashboardAPDeviceMapperService {
 			// Looks for all visit records
 			Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
 			List<APDVisit> list;
+			Store store = null;
+			TimeZone tz = null;
+			String sLimitDate = null;
+			int offset;
 			if(data == null || data.size() == 0) {
 				// Prepares the Object Query
 				Date dateFrom = new Date(date.getTime());
 				Date dateTo = new Date(dateFrom.getTime() + TWENTY_FOUR_HOURS);
+				store = storeCache.get(entityId);
+				if( store == null ) {
+					store = storeDao.get(entityId, true);
+					if( store == null ) return;
+					storeCache.put(entityId, store);
+				}
+				tz = TimeZone.getTimeZone(store.getTimezone());
+				offset = tz.getOffset(dateFrom.getTime()) *-1;
+				if(offset > 0 && dateTo.getTime() < dateTo.getTime() +offset) {
+					dateTo.setTime(dateTo.getTime() +offset);
+				}
+				sLimitDate = dateSDF.format(dateFrom);
+				list = CollectionFactory.createList();
 				DumperHelper<APDVisit> visitDumper = new DumpFactory<APDVisit>()
 						.build(null, APDVisit.class);
 				visitDumper.setFilter(entityId);
-				list = CollectionFactory.createList();
 				Iterator<APDVisit> i = visitDumper.iterator(dateFrom, dateTo);
 				while(i.hasNext()) list.add(i.next());
 				visitDumper.dispose();
@@ -755,11 +772,11 @@ public class DashboardAPDeviceMapperService {
 			log.log(Level.INFO, list.size() + " records to process... ");
 			for(APDVisit v : list ) {
 
+				if(sLimitDate != null && !v.getForDate().equals(sLimitDate)) continue;
+				
 				try {
-					Store store = null;
 					Shopping shopping = null;
 					InnerZone zone = null;
-					TimeZone tz = null;
 					
 					if( entityKind == null ) entityKind = EntityKind.KIND_BRAND;
 					if( entityKind.equals(EntityKind.KIND_STORE)) entityKind = EntityKind.KIND_BRAND;
