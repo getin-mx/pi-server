@@ -1589,6 +1589,43 @@ public class UserMenuDumpTwo extends AbstractCLI {
 					  um.setKey(userMenuDao.createKey("mt_sport_mx"));
 					  userMenuDao.create(um);
 					}
+					
+					//bcorza
+					try {
+						  um = userMenuDao.get("brunocorza_mx", true);
+						  userMenuDao.delete("brunocorza_mx");
+						  throw new Exception();
+						} catch (Exception e) {
+						  um = new UserMenu();
+						  um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+						  um.setKey(userMenuDao.createKey("brunocorza_mx"));
+						  userMenuDao.create(um);
+						}
+
+
+						User brunoCorza = null;
+						try {
+						  userDao.delete("brunocorza_mx");
+						  throw new Exception();
+						} catch (Exception e) {
+						  log.log(Level.INFO, "Inserting bcorza...");
+						  brunoCorza = new User();
+						  brunoCorza.setFirstname("Bruno Corza");
+						  brunoCorza.setLastname("");
+						  brunoCorza.setEmail("admin@brunocorza.mx");
+						  brunoCorza.getSecuritySettings().setRole(Role.STORE);
+						  brunoCorza.getSecuritySettings()
+						      .setPassword(encodeString("Brunocorza01"));
+						  brunoCorza.getSecuritySettings()
+						      .setStores(Arrays.asList("5a3ebe6b-225a-416f-9559-50946576e1a5", "ahFhbGxzaG9wcGluZ3MtdGVzdHIpCxIFU3RvcmUiHmJydW5vY29yemFfbXhfZ3JhbmRwbGF6YXRvbHVjYQw", 
+	                                        "2c75e9d0-06ea-42cb-8fd6-aa23ae21c73f", "1970a175-55e8-41de-b02e-f49ccf55f353",
+	                                        "ahFhbGxzaG9wcGluZ3MtdGVzdHIqCxIFU3RvcmUiH2JydW5vY29yemFfbXhfZ2FsZXJpYXNtb250ZXJyZXkM",
+	                                        "2bd032ca-5346-48d6-b211-8fca31cd8533", "ahFhbGxzaG9wcGluZ3MtdGVzdHIsCxIFU3RvcmUiIWJydW5vY29yemFfbXhfZ2FsZXJpYXNpbnN1cmdlbnRlcww",
+	                                        "bc37fece-83a9-4848-bbf8-869580bfc50d"));
+						  brunoCorza.setKey((Key) keyHelper.obtainKey(User.class, "brunocorza_mx"));
+						  userDao.create(brunoCorza);
+						}
+				
 			//
 
 			// End
