@@ -415,6 +415,10 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		try {
 			Date from;
 			Date to;
+			
+			// FIXME too weird.
+			// Use isPeasantValid
+			// FIXME add 30 minute offset
 			Date now = sdfTime.parse(sdfTime.format(new Date()));
 			Calendar cal = Calendar.getInstance();
 
