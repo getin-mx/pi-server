@@ -12,11 +12,13 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +31,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import com.ibm.icu.util.Calendar;
 import com.inodes.datanucleus.model.Blob;
 import com.inodes.datanucleus.model.Email;
 import com.inodes.datanucleus.model.Key;
@@ -67,13 +68,16 @@ import mobi.allshoppings.model.tools.IndexHelper;
 import mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CollectionUtils;
+import mx.getin.Constants;
 
+/**
+ * Implements the APDevice Helper interface.
+ * @author Matias Hapanowicz
+ * @author <a href="mailto:ignacio@getin.mx" >Manuel "Nachintoch" Castillo</a>
+ * @version 3.1, december 2017
+ * @since Allshoppings
+ */
 public class APDeviceHelperImpl implements APDeviceHelper {
-
-	public static final long FIVE_MINUTES = 5 * 60 * 1000;
-	public static final long TEN_MINUTES = 10 * 60 * 1000;
-	public static final long THIRTY_MINUTES = 30 * 60 * 1000;
-	public static final long ONE_DAY = 24 * 60 * 60 * 1000;
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
@@ -325,196 +329,118 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	@Override
 	public void reportDownDevices() throws ASException {
 
-		Date limitDate = new Date(System.currentTimeMillis() - THIRTY_MINUTES);
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-
+		Calendar cal = Calendar.getInstance();
+		
 		List<APDevice> list = dao.getAll(true);
 		for (APDevice device : list) {
 
-			// First, check is the device needs report
-			if (device.getLastRecordDate() != null && device.getLastRecordDate().before(limitDate)) {
-				if (device.getStatus() == null)
-					device.setStatus(StatusAware.STATUS_ENABLED);
-				if (device.getReportStatus() == null)
-					device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
-				if (device.getReportable() != null && device.getReportable()) {
-					if (device.getStatus().equals(StatusAware.STATUS_ENABLED)
-							&& device.getReportStatus().equals(APDevice.REPORT_STATUS_NOT_REPORTED)) {
-
-						if (onReportTime(device)) {
-
-							String mailText = "Hola!\n\n" + "La antena de " + device.getDescription()
-									+ " se apagó desde las " + timeFormat.format(device.getLastRecordDate())
-									+ " hrs. Les pedimos su apoyo para volver a conectarla.\n\n" + "Muchas gracias.\n\n"
-									+ " Atte. \n" + "El equipo de Getin";
-							String mailTitle = "La antena de " + device.getDescription() + " se encuentra apagada";
-
-							List<String> reportableUsers = sanitizeMailList(device);
-							for (String mail : reportableUsers) {
-								User fake = new User();
-								fake.setEmail(mail);
-								try {
-									mailHelper.sendMessage(fake, mailTitle, mailText);
-								} catch (Exception e) {
-									// If mail server rejected the message, keep going
-									log.log(Level.SEVERE, e.getMessage(), e);
-								}
-							}
-
-							device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
-							dao.update(device);
-							indexHelper.indexObject(device);
-						}
-					}
-				}
-			}
-
-			// Now, checks if needs to report a back to life message
-			else {
-				if (device.getReportable() != null && device.getReportable()) {
-					if (device.getStatus() == null)
-						device.setStatus(StatusAware.STATUS_ENABLED);
-					if (device.getReportStatus() == null)
-						device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
-					if (device.getStatus().equals(StatusAware.STATUS_ENABLED)
-							&& device.getReportStatus().equals(APDevice.REPORT_STATUS_REPORTED)) {
-
-						if (onReportTime(device)) {
-							String mailText = "Hola!\n\n" + "La antena de " + device.getDescription()
-									+ " volvió a conectarse a las " + timeFormat.format(device.getLastRecordDate())
-									+ " hrs. \n" + "Gracias por su apoyo en mantener la antena encendida.\n\n"
-									+ " Atte. \n" + "El equipo de Getin";
-							String mailTitle = "La antena de " + device.getDescription() + " volvió a conectarse!!!";
-
-							List<String> reportableUsers = sanitizeMailList(device);
-							for (String mail : reportableUsers) {
-								User fake = new User();
-								fake.setEmail(mail);
-								try {
-									mailHelper.sendMessage(fake, mailTitle, mailText);
-								} catch (Exception e) {
-									// If mail server rejected the message, keep going
-									log.log(Level.SEVERE, e.getMessage(), e);
-								}
-							}
-
-							device.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
-							dao.update(device);
-							indexHelper.indexObject(device);
-						}
-					}
-				}
-			}
-
-		}
-	}
-
-	private boolean onReportTime(APDevice device) {
-		boolean doReport = false;
-
-		try {
-			Date from;
-			Date to;
+			if(device.getLastRecordDate() == null) continue;
 			
-			// FIXME too weird.
-			// Use isPeasantValid
-			// FIXME add 30 minute offset
-			Date now = sdfTime.parse(sdfTime.format(new Date()));
-			Calendar cal = Calendar.getInstance();
+			long diff = cal.getTimeInMillis() -device.getLastRecordDate().getTime();
+			diff /= 1000 *60;
+			
+			try {
+				// First, check is the device needs report
+				if (diff > Constants.APDEVICE_REPORT_INTERVAL_MINUTES) {
+					if (device.getReportable() == null || !device.getReportable()) continue;
+					if (!device.getStatus().equals(StatusAware.STATUS_ENABLED) || 
+							!device.getReportStatus().equals(APDevice.REPORT_STATUS_NOT_REPORTED)) continue;
+					if (!APDVisitHelperImpl.isVisitValid(null, device, false, cal, getTimeZone(device))) continue;
+					if (device.getStatus() == null) device.setStatus(StatusAware.STATUS_ENABLED);
+					if (device.getReportStatus() == null) device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
+					
+					String mailText = "Hola!\n\n" + "La antena de " + device.getDescription()
+							+ " se apagó desde las " + sdfTime.format(device.getLastRecordDate())
+							+ " hrs. Les pedimos su apoyo para volver a conectarla.\n\n" + "Muchas gracias.\n\n"
+							+ " Atte. \n" + "El equipo de Getin";
+					String mailTitle = "La antena de " + device.getDescription() + " se encuentra apagada";
 
-			cal.setTime(new Date());
-			int dof = cal.get(Calendar.DAY_OF_WEEK);
-			switch (dof) {
-			case Calendar.SUNDAY:
-				if (device.getVisitsOnSun()) {
-					from = sdfTime.parse(device.getVisitStartSun());
-					from = new Date(from.getTime() + 1800000);
-					to = sdfTime.parse(device.getVisitEndSun());
-					to = new Date(to.getTime() - 1800000);
-					if (to.before(from))
-						to = new Date(to.getTime() + 86400000);
-					if (from.before(now) && to.after(now))
-						doReport = true;
+					List<String> reportableUsers = sanitizeMailList(device);
+					for (String mail : reportableUsers) {
+						User fake = new User();
+						fake.setEmail(mail);
+						try {
+							//mailHelper.sendMessage(fake, mailTitle, mailText); //TODO restore
+						} catch (Exception e) {
+							// If mail server rejected the message, keep going
+							log.log(Level.SEVERE, e.getMessage(), e);
+						}
+					}
+
+					device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
+					dao.update(device);
+					indexHelper.indexObject(device);
+				} else if (device.getReportable() != null && device.getReportable()) {
+					if (!device.getStatus().equals(StatusAware.STATUS_ENABLED)
+							|| !device.getReportStatus().equals(APDevice.REPORT_STATUS_REPORTED)) continue;
+					if(!APDVisitHelperImpl.isVisitValid(null, device, false, cal, getTimeZone(device))) continue;
+					if (device.getStatus() == null) device.setStatus(StatusAware.STATUS_ENABLED);
+					if (device.getReportStatus() == null) device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
+					
+					String mailText = "Hola!\n\n" + "La antena de " + device.getDescription()
+							+ " volvió a conectarse a las " + sdfTime.format(device.getLastRecordDate())
+							+ " hrs. \n" + "Gracias por su apoyo en mantener la antena encendida.\n\n"
+							+ " Atte. \n" + "El equipo de Getin";
+					String mailTitle = "La antena de " + device.getDescription() + " volvió a conectarse!!!";
+
+					List<String> reportableUsers = sanitizeMailList(device);
+					for (String mail : reportableUsers) {
+						User fake = new User();
+						fake.setEmail(mail);
+						try {
+							//mailHelper.sendMessage(fake, mailTitle, mailText); //TODO restore
+						} catch (Exception e) {
+							// If mail server rejected the message, keep going
+							log.log(Level.SEVERE, e.getMessage(), e);
+						}
+					}
+
+					device.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
+					dao.update(device);
+					indexHelper.indexObject(device);
 				}
-				break;
-			case Calendar.MONDAY:
-				if (device.getVisitsOnMon()) {
-					from = sdfTime.parse(device.getVisitStartMon());
-					from = new Date(from.getTime() + 1800000);
-					to = sdfTime.parse(device.getVisitEndMon());
-					to = new Date(to.getTime() - 1800000);
-					if (to.before(from))
-						to = new Date(to.getTime() + 86400000);
-					if (from.before(now) && to.after(now))
-						doReport = true;
-				}
-				break;
-			case Calendar.TUESDAY:
-				if (device.getVisitsOnTue()) {
-					from = sdfTime.parse(device.getVisitStartTue());
-					from = new Date(from.getTime() + 1800000);
-					to = sdfTime.parse(device.getVisitEndTue());
-					to = new Date(to.getTime() - 1800000);
-					if (to.before(from))
-						to = new Date(to.getTime() + 86400000);
-					if (from.before(now) && to.after(now))
-						doReport = true;
-				}
-				break;
-			case Calendar.WEDNESDAY:
-				if (device.getVisitsOnWed()) {
-					from = sdfTime.parse(device.getVisitStartWed());
-					from = new Date(from.getTime() + 1800000);
-					to = sdfTime.parse(device.getVisitEndWed());
-					to = new Date(to.getTime() - 1800000);
-					if (to.before(from))
-						to = new Date(to.getTime() + 86400000);
-					if (from.before(now) && to.after(now))
-						doReport = true;
-				}
-				break;
-			case Calendar.THURSDAY:
-				if (device.getVisitsOnThu()) {
-					from = sdfTime.parse(device.getVisitStartThu());
-					from = new Date(from.getTime() + 1800000);
-					to = sdfTime.parse(device.getVisitEndThu());
-					to = new Date(to.getTime() - 1800000);
-					if (to.before(from))
-						to = new Date(to.getTime() + 86400000);
-					if (from.before(now) && to.after(now))
-						doReport = true;
-				}
-				break;
-			case Calendar.FRIDAY:
-				if (device.getVisitsOnFri()) {
-					from = sdfTime.parse(device.getVisitStartFri());
-					from = new Date(from.getTime() + 1800000);
-					to = sdfTime.parse(device.getVisitEndFri());
-					to = new Date(to.getTime() - 1800000);
-					if (to.before(from))
-						to = new Date(to.getTime() + 86400000);
-					if (from.before(now) && to.after(now))
-						doReport = true;
-				}
-				break;
-			case Calendar.SATURDAY:
-				if (device.getVisitsOnSat()) {
-					from = sdfTime.parse(device.getVisitStartSat());
-					from = new Date(from.getTime() + 1800000);
-					to = sdfTime.parse(device.getVisitEndSat());
-					to = new Date(to.getTime() - 1800000);
-					if (to.before(from))
-						to = new Date(to.getTime() + 86400000);
-					if (from.before(now) && to.after(now))
-						doReport = true;
-				}
-				break;
+			} catch(Exception e) {
+				log.log(Level.SEVERE, "Exception when reporting APDevice " +device, e);
 			}
-		} catch (Exception e) {
 		}
-
-		return doReport;
 	}
+	
+	/**
+	 * Queries for the adequated timezone for an APDevice. Timezones are stored in Stores and Shoppings; so assignation
+	 * must be queried.
+	 * @param device - The device which current timezone is desired to know.
+	 * @return TimeZone - The result timezone.
+	 * @since Mark III, december 2017
+	 */
+	private TimeZone getTimeZone(APDevice device) {
+		try {
+			APDAssignation apdAssig = apdaDao.getOneUsingHostnameAndDate(device.getHostname(),
+					device.getLastRecordDate());
+			Integer entityKind = apdAssig.getEntityKind();
+			while(true) {
+				switch(entityKind) {
+				case EntityKind.KIND_SHOPPING :
+					List<Shopping> shoppings = shoppingDao.getUsingIdList(CollectionFactory.createList(
+							new String[] {apdAssig.getEntityId()}));
+					if(shoppings.isEmpty()) throw new ASException();
+					return TimeZone.getTimeZone(shoppings.get(0).getTimezone());
+				case EntityKind.KIND_INNER_ZONE :
+					List<InnerZone> innerZones = zoneDao.getUsingIdList(CollectionFactory.createList(
+							new String[] {apdAssig.getEntityId()}));
+					if(innerZones.isEmpty()) throw new ASException();
+					entityKind = innerZones.get(0).getEntityKind();
+					continue;
+				default :
+					List<Store> stores = storeDao.getUsingIdList(CollectionFactory.createList(
+							new String[] {apdAssig.getEntityId()}));
+					if(stores.isEmpty()) throw new ASException();
+					return TimeZone.getTimeZone(stores.get(0).getTimezone());
+				}//gets the adequate timezone
+			}//innerzones must be query more than one time
+		} catch(ASException e) {
+			return TimeZone.getTimeZone("GMT");
+		}
+	}//getTimeZone
 
 	@Override
 	public void calculateUptime(Date fromDate, Date toDate,
@@ -536,7 +462,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		Date date = new Date(fromDate.getTime());
 		while (date.before(toDate)) {
 			log.log(Level.INFO, "Processing UPTimes for day: " +date);
-			Date xtoDate = new Date(date.getTime() + ONE_DAY);
+			Date xtoDate = new Date(date.getTime() + Constants.DAY_IN_MILLIS);
 			log.log(Level.INFO, "Preparing APUptime cache");
 			for (String hostname : apdevices) {
 				APUptime apu = null;
@@ -580,7 +506,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			apuDao.update(null, CollectionFactory.createList(cache.values()), true);
 			cache.clear();
 
-			date.setTime(date.getTime() + ONE_DAY);
+			date.setTime(date.getTime() + Constants.DAY_IN_MILLIS);
 		}
 	}
 
@@ -660,8 +586,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 
 	public void tryRestartAPDevices() throws ASException {
 		List<APDevice> list = dao.getAll(true);
-		Date tenMinutes = new Date(new Date().getTime() - TEN_MINUTES);
-		Date oneDay = new Date(new Date().getTime() - ONE_DAY);
+		Date tenMinutes = new Date(new Date().getTime() - Constants.TEN_MINUTES_IN_MILLIS);
+		Date oneDay = new Date(new Date().getTime() - Constants.DAY_IN_MILLIS);
 
 		for (APDevice apdevice : list) {
 			if (null != apdevice.getStatus() && StatusAware.STATUS_ENABLED == apdevice.getStatus()

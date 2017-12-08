@@ -29,6 +29,7 @@ public interface APDeviceHelper {
 	void unassignUsingAPDevice(String hostname) throws ASException;
 	
 	// Mac Addresses Utilites
+	@Deprecated
 	String getDevicePlatform(String mac, Map<String, MacVendor> cache);
 	void updateMacVendors(String filename) throws ASException;
 	List<MacVendor> macVendorFileParser(String filename, String outfile) throws ASException;

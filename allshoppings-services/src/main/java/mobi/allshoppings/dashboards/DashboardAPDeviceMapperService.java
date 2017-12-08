@@ -226,22 +226,6 @@ public class DashboardAPDeviceMapperService {
 								String forDate = sdf.format(location.getCreationDateTime());
 
 								// heatmap ----------------------------------------------------------------------------------------------
-								// FIXME unused?
-								/*obj = buildBasicDashboardIndicatorData(
-										"heatmap", "Heat Map", wifiSpot.getIdentifier(),
-										wifiSpot.getZoneName(), location.getCreationDateTime(),
-										DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-										null, shopping, floorMap.getFloor(), shopping.getIdentifier(),
-										EntityKind.KIND_SHOPPING, forDate);
-
-								if(indicatorsSet.containsKey(obj.getKey().getName())) 
-									obj = indicatorsSet.get(obj.getKey().getName());
-
-								obj.setDoubleValue(obj.getDoubleValue() + 1);
-
-								indicatorsSet.put(obj.getKey().getName(), obj);*/
-
-								// heatmap ----------------------------------------------------------------------------------------------
 								// ------------------------------------------------------------------------------------------------------
 								obj = buildBasicDashboardIndicatorData(
 										"heatmap_data", "Heat Map Data", wifiSpot.getIdentifier(),
@@ -334,23 +318,6 @@ public class DashboardAPDeviceMapperService {
 									DashboardIndicatorData obj;
 									String forDate = sdf.format(hotspot.getCreationDateTime());
 									
-									// heatmap ----------------------------------------------------------------------------------------------
-									// FIXME unused
-									/*obj = buildBasicDashboardIndicatorData(
-											"heatmap", "Heat Map", wifiSpot.getIdentifier(),
-											wifiSpot.getZoneName(), hotspot.getCreationDateTime(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getIdentifier(),
-											store, shopping, floorMap.getFloor(),
-											store.getIdentifier(),
-											EntityKind.KIND_SHOPPING, forDate);
-
-									if(indicatorsSet.containsKey(obj.getKey().getName())) 
-										obj = indicatorsSet.get(obj.getKey().getName());
-
-									obj.setDoubleValue(obj.getDoubleValue() + (100 - hotspot.getSignalDB()));
-
-									indicatorsSet.put(obj.getKey().getName(), obj);*/
-
 									// heatmap ----------------------------------------------------------------------------------------------
 									// ------------------------------------------------------------------------------------------------------
 									obj = buildBasicDashboardIndicatorData(
@@ -462,32 +429,6 @@ public class DashboardAPDeviceMapperService {
 								String forDate = sdf.format(hotspot.getCreationDateTime());
 								
 								// heatmap ----------------------------------------------------------------------------------------------
-								// FIXME unused
-								/*if( EntityKind.KIND_SHOPPING == entityKind ) {
-									obj = buildBasicDashboardIndicatorData(
-											"heatmap", "Heat Map", wifiSpot.getIdentifier(),
-											wifiSpot.getZoneName(), hotspot.getCreationDateTime(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
-											null, shopping, floorMap.getFloor(),
-											shopping.getIdentifier(),
-											EntityKind.KIND_SHOPPING, forDate);
-								} else {
-									obj = buildBasicDashboardIndicatorData(
-											"heatmap", "Heat Map", wifiSpot.getIdentifier(),
-											wifiSpot.getZoneName(), hotspot.getCreationDateTime(),
-											DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getIdentifier(),
-											store, shopping, floorMap.getFloor(),
-											store.getIdentifier(),
-											EntityKind.KIND_SHOPPING, forDate);
-								}
-
-								if(indicatorsSet.containsKey(obj.getKey().getName())) 
-									obj = indicatorsSet.get(obj.getKey().getName());
-
-								obj.setDoubleValue(obj.getDoubleValue() + (100 - hotspot.getSignalDB()));
-
-								indicatorsSet.put(obj.getKey().getName(), obj);*/
-
 								// heatmap ----------------------------------------------------------------------------------------------
 								// ------------------------------------------------------------------------------------------------------
 								if( EntityKind.KIND_SHOPPING == entityKind ) {
@@ -764,6 +705,7 @@ public class DashboardAPDeviceMapperService {
 				while(i.hasNext()) list.add(i.next());
 				visitDumper.dispose();
 			} else list = data;
+			if(list.size() == 0) return;
 			Calendar init = Calendar.getInstance();
 			Calendar finish = Calendar.getInstance();
 			TimeZone mxTz = TimeZone.getTimeZone("Mexico/General");
@@ -808,19 +750,6 @@ public class DashboardAPDeviceMapperService {
 					
 					if( store != null || shopping != null || zone != null ) {
 						DashboardIndicatorData obj;
-
-						// visitor_total_records --------------------------------------------------------------------------------
-						// FIXME unused?
-						/*obj = buildBasicDashboardIndicatorData(
-								"apd_visitor", "Visitantes", "visitor_total_records",
-								"Total", v.getCheckinStarted(),
-								DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId,
-								store, shopping, null, entityId, entityKind, v.getForDate());
-						
-						if(indicatorsSet.containsKey(obj.getKey().getName())) 
-							obj = indicatorsSet.get(obj.getKey().getName());
-						obj.setDoubleValue(obj.getDoubleValue() + 1);
-						indicatorsSet.put(obj.getKey().getName(), obj);*/
 
 						if( v.getCheckinType().equals(APDVisit.CHECKIN_PEASANT) ) {
 
@@ -1261,7 +1190,6 @@ public class DashboardAPDeviceMapperService {
 		obj.setVoucherType(null);
 		obj.setPeriodType(periodType);
 
-		// FIXME key creates collitions
 		obj.setKey(dao.createKey(obj));
 
 		return obj;

@@ -303,6 +303,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 											}
 										}
 									}
+									
+									if(objs.size() == 0) {
+										log.log(Level.INFO, "No data found for " +name +", skipping...");
+										continue;
+									}
 
 									log.log(Level.INFO, "Saving " + objs.size()
 											+ " APDVisits...");
@@ -672,6 +677,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 									dumpHelper.dispose();
 
+									if(objs.size() == 0) {
+										log.log(Level.INFO, "No data found for " +name +", skipping...");
+										continue;
+									}
+									
 									log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
 									for( APDVisit obj : objs ) {
 										apdvDumper.dump(obj);
@@ -1100,7 +1110,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							currentVisit.setCheckinFinished(
 									aphHelper.slotToDate(curEntry, lastSlot, tz));
 							addPermanenceCheck(currentVisit, currentPeasant, dev, tz);
-							if(isVisitValid(currentVisit, dev, isEmployee, tz))
+							if(isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz))
 								res.add(currentVisit);
 							currentVisit = null;
 						}
@@ -1157,7 +1167,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 										curEntry, finishSlot, tz));
 								addPermanenceCheck(currentVisit, currentPeasant, dev,
 										tz);
-								if(isVisitValid(currentVisit, dev, isEmployee, tz))
+								if(isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz))
 									res.add(currentVisit);
 								currentVisit = null;
 							}
@@ -1188,7 +1198,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							currentVisit.setCheckinFinished(aphHelper.slotToDate(
 									curEntry, finishSlot, tz));
 							addPermanenceCheck(currentVisit, currentPeasant, dev, tz);
-							if(isVisitValid(currentVisit, dev, isEmployee, tz))
+							if(isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz))
 								res.add(currentVisit);
 							currentVisit = null;
 						} if( currentPeasant != null ) {
@@ -1216,12 +1226,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						*APHHelper.MINUTE_TO_TWENTY_SECONDS_SLOT)) < finishSlot)
 					finishSlot = (int)(lastVisitSlot + (dev.getVisitDecay()
 							*APHHelper.MINUTE_TO_TWENTY_SECONDS_SLOT));
-				currentVisit.setCheckinFinished(aphHelper.slotToDate(
-						curEntry, finishSlot, tz));
-				addPermanenceCheck(currentVisit, currentPeasant,
-						apd.get(curEntry.getHostname()), tz);
-				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname()),
-						isEmployee, tz))
+				currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry, finishSlot, tz));
+				addPermanenceCheck(currentVisit, currentPeasant, apd.get(curEntry.getHostname()), tz);
+				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname()), isEmployee, WORK_CALENDAR, tz))
 					res.add(currentVisit);
 				currentVisit = null;
 			}
@@ -1398,7 +1405,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 											curEntry, lastSlot, tz));
 							addPermanenceCheck(currentVisit, currentPeasant, dev,
 									tz);
-							if(isVisitValid(currentVisit, dev, isEmployee, tz))
+							if(isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz))
 								ret.add(currentVisit);
 							currentVisit = null;
 						}
@@ -1448,8 +1455,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 											curEntry, (int) finishSlot, tz));
 									addPermanenceCheck(currentVisit, currentPeasant,
 											dev, tz);
-									if(isVisitValid(currentVisit, dev, isEmployee,
-											tz))
+									if(isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz))
 										ret.add(currentVisit);
 									currentVisit = null;
 								}
@@ -1464,7 +1470,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								currentVisit.setCheckinFinished(aphHelper.slotToDate(
 										curEntry, lastSlot, tz));
 								addPermanenceCheck(currentVisit, currentPeasant, dev, tz);
-								if(isVisitValid(currentVisit, dev, isEmployee, tz))
+								if(isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz))
 									ret.add(currentVisit);
 								currentVisit = null;
 							}
@@ -1494,8 +1500,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						curEntry, lastSlot, tz));
 				addPermanenceCheck(currentVisit, currentPeasant,
 						apd.get(curEntry.getHostname()), tz);
-				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname()),
-						isEmployee, tz))
+				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname()), isEmployee, WORK_CALENDAR, tz))
 					ret.add(currentVisit);
 				currentVisit = null;
 			}
@@ -1524,7 +1529,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				-visit.getCheckinStarted().getTime()) / 60000;
 		visit.setHidePermanence(time < device.getVisitCountThreshold());
 		try {
-			if (isVisitValid(visit, device, false, tz) && peasant != null &&
+			if (isVisitValid(visit, device, false, WORK_CALENDAR, tz) && peasant != null &&
 					(peasant.getCheckinStarted().before(visit.getCheckinStarted())
 					|| peasant.getCheckinStarted().equals(visit.getCheckinStarted())))
 				peasant.setHidePermanence(true);
@@ -1542,40 +1547,47 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @return true if valid, false if not
 	 * @throws ParseException
 	 */
-	private boolean isVisitValid(APDVisit visit, APDevice device,
-			boolean isEmployee, TimeZone tz) throws ParseException {
+	public static boolean isVisitValid(APDVisit visit, APDevice device, // TODO move to interface
+			boolean isEmployee, Calendar cal, TimeZone tz) throws ParseException {
 		
-		Long time = (visit.getCheckinFinished().getTime() 
-			-visit.getCheckinStarted().getTime()) / 60000;
-		
-		// Validate Minimum time for visit  // TODO change name for getVisitMin
-		if( time < device.getVisitTimeThreshold()) return false;
+		int t;
+		cal.clear();
+		if(visit != null) {
+			Long time = (visit.getCheckinFinished().getTime()  -visit.getCheckinStarted().getTime()) / 60000;
+			
+			// Validate Minimum time for visit  // TODO change name for getVisitMin
+			if( time < device.getVisitTimeThreshold()) return false;
 
-		// Validate Maximum time for visit  
-		if( time > device.getVisitMaxThreshold()) return false;
+			// Validate Maximum time for visit  
+			if( time > device.getVisitMaxThreshold()) return false;
 
-		// Employees doesn't generate visits
-		if( isEmployee ) return false;
-		
-		// Total segments percentage check 
-		if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
-				&& null != visit.getTotalSegments() && visit.getTotalSegments() > 0 &&
-				visit.getInRangeSegments() * 100 / visit.getTotalSegments() <
-				VISIT_PERCENTAGE) return false; // TODO param
-		
-		visit.setDuration(time);
+			// Employees doesn't generate visits
+			if( isEmployee ) return false;
+			
+			// Total segments percentage check 
+			if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
+					&& null != visit.getTotalSegments() && visit.getTotalSegments() > 0 &&
+					visit.getInRangeSegments() * 100 / visit.getTotalSegments() <
+					VISIT_PERCENTAGE) return false; // TODO param
+			
+			visit.setDuration(time);
+			
+			t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
+			cal.setTime(visit.getCheckinStarted());
+		} else {
+			long time = System.currentTimeMillis();
+			t = Integer.valueOf(tf2.format(time));
+			cal.setTimeInMillis(time);
+		}
 		
 		// Validate Monitor Hour & days  
 		
 		tf2.setTimeZone(tz);
-		int t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
 		int ts = 0;
 		int te = 0;
-		WORK_CALENDAR.clear();
-		WORK_CALENDAR.setTime(visit.getCheckinStarted());
-		switch(WORK_CALENDAR.get(Calendar.DAY_OF_WEEK)) {
+		switch(cal.get(Calendar.DAY_OF_WEEK)) {
 		case Calendar.SUNDAY :
-			if(!device.getVisitsOnSun()) return false; //TODO transform into peasants
+			if(!device.getVisitsOnSun()) return false;
 			ts = Integer.valueOf(device.getVisitStartSun().substring(0,2)
 					+device.getVisitStartSun().substring(3));
 			te = Integer.valueOf(device.getVisitEndSun().substring(0, 2)

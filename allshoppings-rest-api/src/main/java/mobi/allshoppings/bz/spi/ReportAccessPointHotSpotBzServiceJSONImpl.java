@@ -49,8 +49,7 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 
 			JSONArray data = obj.getJSONArray("data");
 
-			log.log(Level.INFO, "Reporting " + data.length() + " AP Members from "
-					+ hostname);
+			log.log(Level.INFO, "Reporting " + data.length() + " AP Members from " + hostname);
 
 			// Sets the device last data
 			APDevice device = null;
