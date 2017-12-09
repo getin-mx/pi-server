@@ -1226,12 +1226,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	}
 
 	public boolean isValidForUser(User user, Store store) {
-		if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
-			if( user.getSecuritySettings().getStores().contains(store.getIdentifier()))
-				return true;
-			else
-				return false;
-		} else 
-			return true;
+		return user.getSecuritySettings().getRole() == Role.STORE ? 
+				user.getSecuritySettings().getStores().contains(store.getIdentifier()) : true;
 	}
 }
