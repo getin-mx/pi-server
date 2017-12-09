@@ -1625,6 +1625,75 @@ public class UserMenuDumpTwo extends AbstractCLI {
 						  brunoCorza.setKey((Key) keyHelper.obtainKey(User.class, "brunocorza_mx"));
 						  userDao.create(brunoCorza);
 						}
+						
+						//bcorza
+						try {
+							  um = userMenuDao.get("brunocorza_mx", true);
+							  userMenuDao.delete("brunocorza_mx");
+							  throw new Exception();
+							} catch (Exception e) {
+							  um = new UserMenu();
+							  um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+							  um.setKey(userMenuDao.createKey("brunocorza_mx"));
+							  userMenuDao.create(um);
+							}
+						//faustino
+						try {
+							  um = userMenuDao.get("cymfaustinogarcia@gmail.com", true);
+							  userMenuDao.delete("cymfaustinogarcia@gmail.com");
+							  throw new Exception();
+							} catch (Exception e) {
+							  um = new UserMenu();
+							  um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+							  um.setKey(userMenuDao.createKey("cymfaustinogarcia@gmail.com"));
+							  userMenuDao.create(um);
+							}
+
+							try {
+							  user = userDao.get("cymfaustinogarcia@gmail.com", true);
+							} catch (Exception e) {
+							  user = new User();
+							  user.setFirstname("Faustino Garcia");
+							  user.setLastname("");
+							  user.setEmail("cymfaustinogarcia@gmail.com");
+							  user.getSecuritySettings().setRole(Role.STORE);
+							  user.getSecuritySettings()
+							      .setPassword(encodeString("OutletDeportes01"));
+							  user.getSecuritySettings()
+							      .setStores(Arrays.asList("23b16093-fbbf-4d9a-811b-6c82bd0eb940",
+							      "649c6de9-05aa-40de-bd39-7b1d37921658",
+							      "440dfccd-73b3-48a5-98c8-d893a01a085f",
+							      "01bf63e5-6b31-4bf9-beb6-2a9dcbb8a304",
+							      "0804ce51-a635-40be-8952-28cc25c946dd",
+							      "41e68dc9-254d-4803-82b7-c083eeaf28df",
+							      "958d7395-fb37-4b8b-a716-b2c1a9ffdb9f",
+							      "9263926c-88e3-435b-ad7e-1920abfb73a6",
+							      "9bbf47a2-5a32-4ae3-b217-858c7c1e2703",
+							      "5cad0cb3-196a-4f3f-b4f4-224f610f6467",
+							      "0e3c6328-31e4-4454-bda6-1dc18615b5c2",
+							      "247b4ead-822f-4713-9465-177666b2e31c",
+							      "791d303b-3f45-4037-a6f4-2ba9c1e15c75",
+							      "115e5c3c-7850-4e3e-82d1-16b15b5256a5",
+							      "3a361ad5-9748-4bfa-9a69-460fd8214e6e",
+							      "40b7b23d-f2b4-4f70-be05-a0ad51ce44ba",
+							      "fb111c5b-db32-4129-a09a-f15269f57285",
+							      "fefc2dd0-233e-42e6-9fb4-058545ea0926",
+							      "f718f26a-c6de-4149-9605-d737450b7bd9",
+							      "dcb748f6-a060-43da-9a13-aea9ca02245a",
+							      "b6b1a93f-0116-4d9a-ad40-9c6842eaa8c0",
+							      "b35dc502-9b07-4c26-8926-84d962926869",
+							      "c0d2ccb9-0ed4-45f8-8f4c-770ddb4495b4",
+							      "d37e8f77-b863-4f71-9117-45c0eaa121e2",
+							      "e43a9f92-7db7-46d1-8a74-3f629eea2b47"));
+							  user.setKey((Key) keyHelper.obtainKey(User.class, "cymfaustinogarcia@gmail.com"));
+							  userDao.create(user);
+							}
+
+
+							
+							
+						
+
 				
 			//
 
