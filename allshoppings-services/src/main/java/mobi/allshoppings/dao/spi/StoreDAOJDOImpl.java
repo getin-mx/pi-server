@@ -338,6 +338,7 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 	 */
 	@Override
 	public List<Store> getUsingIdsAndStatus(Collection<String> ids, List<Integer> status) throws ASException {
+		// TODO unused method, remove or fix to get by ID as in GenericDAO and filted with status
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		List<Store> ret = CollectionFactory.createList();
 		List<Key> findIn = CollectionFactory.createList();
@@ -373,9 +374,9 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 			Map<String, Object> parameters = CollectionFactory.createMap();
 			if( findIn.size() > 0 ) {
 				if( filter.length() > 0 ) filter.append(" && ");
-				filter.append("keysParam.contains(key)");
-				query.declareParameters("java.util.List keysParam");
-				parameters.put("keysParam", findIn);
+				filter.append("_id.contains(key)");
+				query.declareParameters("java.util.List _id");
+				parameters.put("_id", findIn);
 			}
 			
 			// Set Filters And Ranges

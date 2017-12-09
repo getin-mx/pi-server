@@ -32,9 +32,7 @@ import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.InnerZone;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
-import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
-import mobi.allshoppings.tools.Range;
 
 /**
  * Creates the totals table for the given stores. This is used in dashboard/apdvisits
@@ -86,10 +84,8 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 			DashboardTableRep table = new DashboardTableRep();
 			//List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), "name");
 			List<Store> tmpStores2 = CollectionFactory.createList();
-			for( Store store : storeDao.getUsingIdsAndStatus(CollectionFactory.createList(entityId.split(",")),
-					StatusHelper.statusActive())) {
-			 	if( isValidForUser(user, store) )
-					tmpStores2.add(store);
+			for( Store store : storeDao.getUsingIdList(CollectionFactory.createList(entityId.split(",")))) {
+			 	if( isValidForUser(user, store) ) tmpStores2.add(store);
 			}
 			Collections.sort(tmpStores2, new Comparator<Store>() {
 				@Override
