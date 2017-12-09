@@ -31,9 +31,9 @@ public final class Key implements Serializable, Comparable<Object> {
 	private Key parentKey;
 	private String kind;
 	private String appId;
-	private long id;
+	private Long id;
 	private String name;
-	private transient AppIdNamespace appIdNamespace;
+	private AppIdNamespace appIdNamespace;
 
 	/**
 	 * Constructor Groups
@@ -247,7 +247,7 @@ public final class Key implements Serializable, Comparable<Object> {
 	/**
 	 * @return The numeric ID
 	 */
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -395,7 +395,7 @@ public final class Key implements Serializable, Comparable<Object> {
 	 * 
 	 * @param id
 	 */
-	void setId(long id) {
+	void setId(Long id) {
 		if (name != null) {
 			throw new IllegalArgumentException("Cannot set id; key already has a name.");
 		} else {
