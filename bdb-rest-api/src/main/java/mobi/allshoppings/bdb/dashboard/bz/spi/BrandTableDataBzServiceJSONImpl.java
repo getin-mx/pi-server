@@ -4,9 +4,11 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,13 +34,16 @@ import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
+import mobi.allshoppings.tools.Range;
 
 /**
- *
+ * Creates the totals table for the given stores. This is used in dashboard/apdvisits
+ * @author Matias Hapanowicz
+ * @author <a href="mailto:ignacio@getin.mx" >Manuel "Nachintoch" Castillo</a>
+ * @version 2.0, december 2017
+ * @since Allshoppings
  */
-public class BrandTableDataBzServiceJSONImpl
-extends BDBRestBaseServerResource
-implements BDBDashboardBzService {
+public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource implements BDBDashboardBzService {
 
 	private static final Logger log = Logger.getLogger(BrandTableDataBzServiceJSONImpl.class.getName());
 
@@ -65,103 +70,103 @@ implements BDBDashboardBzService {
 			// obtain the id and validates the auth token
 			User user = getUserFromToken();
 
-			String entityId = obtainStringValue("entityId", null);
-			@SuppressWarnings("unused")
+			String entityId = obtainStringValue("storeIds", null);
+			
+			if(!StringUtils.hasText(entityId)) throw ASExceptionHelper.invalidArgumentsException();
+			
+			/*@SuppressWarnings("unused")
 			Integer entityKind = obtainIntegerValue("entityKind", null);
 			@SuppressWarnings("unused")
-			String subentityId = obtainStringValue("subentityId", null);
+			String subentityId = obtainStringValue("subentityId", null);*/
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
 			String format = obtainStringValue("format", "table");
 
 			// Initializes the table using the received information
 			DashboardTableRep table = new DashboardTableRep();
-			List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), "name");
+			//List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), "name");
 			List<Store> tmpStores2 = CollectionFactory.createList();
-			for( Store store : tmpStores ) {
+			for( Store store : storeDao.getUsingIdsAndStatus(CollectionFactory.createList(entityId.split(",")),
+					StatusHelper.statusActive())) {
 			 	if( isValidForUser(user, store) )
 					tmpStores2.add(store);
 			}
-			table.setStores(tmpStores2);
-			Collections.sort(table.getStores(), new Comparator<Store>() {
+			Collections.sort(tmpStores2, new Comparator<Store>() {
 				@Override
 				public int compare(Store o1, Store o2) {
 					return o1.getName().compareTo(o2.getName());
 				}
 			});
+			table.setStores(tmpStores2);
 			List<String> entityIds = initializeTableRecords(table, fromStringDate, toStringDate);
-			entityIds.add(entityId);
+			//entityIds.add(entityId); // FIXME o agregar todos... otra vez?
 
 			// Starts to Collect the data
-			List<DashboardIndicatorData> list;
-
+			
 			// peasents, visits, and tickets
-			list = dao.getUsingFilters(entityIds, null, Arrays.asList("apd_visitor"),
-					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets", "visitor_total_items", "visitor_total_revenue"), null,
-					null, null, fromStringDate, toStringDate, null, null, null, null, null, null,
-					null, null);
+			for(DashboardIndicatorData obj : dao.getUsingFilters(entityIds, null, Arrays.asList("apd_visitor"),
+					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets",
+							"visitor_total_items", "visitor_total_revenue"), null, null, null, fromStringDate,
+					toStringDate, null, null, null, null, null, null, null, null)) {
 
-			for(DashboardIndicatorData obj : list) {
-
-				DashboardRecordRep rec = obj.getEntityKind().equals(EntityKind.KIND_INNER_ZONE)
-						? table.findRecordWithEntityId(obj.getEntityId(), obj.getEntityKind())
+				DashboardRecordRep rec = obj.getEntityKind() == EntityKind.KIND_INNER_ZONE
+						? table.findRecordWithEntityId(obj.getEntityId(), EntityKind.KIND_INNER_ZONE)
 						: table.findRecordWithEntityId(obj.getSubentityId(), EntityKind.KIND_STORE);
 
 				DashboardRecordRep totals = table.getTotals();
 
-				if( null != rec ) {
-					if( obj.getElementSubId().equals("visitor_total_peasents"))
-						rec.setPeasants(rec.getPeasants() + obj.getDoubleValue().longValue());
-					else if( obj.getElementSubId().equals("visitor_total_visits")) {
-						rec.setVisitors(rec.getVisitors() + obj.getDoubleValue().longValue());
-						rec.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
-						totals.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
-					} else if( obj.getElementSubId().equals("visitor_total_tickets")) {
-						rec.setTickets(rec.getTickets() + obj.getDoubleValue().longValue());
-					} else if( obj.getElementSubId().equals("visitor_total_items")) {
-						rec.setItems(rec.getItems() + (int) obj.getDoubleValue().longValue());
-					}
-					else if( obj.getElementSubId().equals("visitor_total_revenue"))
-						rec.setRevenue(rec.getRevenue() + obj.getDoubleValue());
-
+				if(rec == null) continue;
+				switch(obj.getElementSubId()) {
+				case "visitor_total_peasents" :
+					rec.setPeasants(rec.getPeasants() + obj.getDoubleValue().longValue());
+					break;
+				case "visitor_total_visits" :
+					rec.setVisitors(rec.getVisitors() + obj.getDoubleValue().longValue());
+					rec.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
+					totals.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
+					break;
+				case "visitor_total_tickets" :
+					rec.setTickets(rec.getTickets() + obj.getDoubleValue().longValue());
+					break;
+				case "visitor_total_items" :
+					rec.setItems(rec.getItems() + (int) obj.getDoubleValue().longValue());
+					break;
+				case "visitor_total_revenue" :
+					rec.setRevenue(rec.getRevenue() + obj.getDoubleValue());
 				}
+					
 			}
 
 			// permanence
-			list = dao.getUsingFilters(entityIds,
+			for(DashboardIndicatorData obj : dao.getUsingFilters(entityIds,
 					null, Arrays.asList("apd_permanence"), Arrays.asList("permanence_hourly_visits"), null,
 					null, null, fromStringDate, toStringDate,
-					null, null, null, null, null, null, null, null);
-
-			{
-				for(DashboardIndicatorData obj : list) {
-					DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId(), null);
-					if( rec != null ) {
-						if( obj.getDoubleValue() != null ) rec.setPermanenceInMillis(rec.getPermanenceInMillis() + obj.getDoubleValue().longValue());
-						else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
-						if( obj.getRecordCount() != null ) rec.setPermancenceQty(rec.getPermancenceQty() + obj.getRecordCount());
-						else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
-					}
-				}
+					null, null, null, null, null, null, null, null)) {
+				DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId(), null);
+				if( rec == null ) continue;
+				if( obj.getDoubleValue() != null )
+					rec.setPermanenceInMillis(rec.getPermanenceInMillis() + obj.getDoubleValue().longValue());
+				else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
+				if( obj.getRecordCount() != null ) rec.setPermancenceQty(rec.getPermancenceQty() + obj.getRecordCount());
+				else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
 			}
 
 			// Creates the final JSON Array
+			Collection<DashboardRecordRep> values = table.records.values();
 			if( format.equals("json")) {
 
 				JSONObject resp = new JSONObject();
 				JSONArray data = new JSONArray();
-				for( DashboardRecordRep r : table.records ) {
-					data.put(r.toJSONObject());
-				}
+				for( DashboardRecordRep r : values ) data.put(r.toJSONObject());
 				resp.put("data", data);
-				resp.put("totals", table.toJSONTotals());
+				resp.put("totals", table.toJSONTotals(values));
 				return resp.toString();
 
 			} else {
 				JSONArray jsonArray = new JSONArray();
 				jsonArray.put(table.getJSONHeaders());
-				table.addJSONRecords(jsonArray);
-				jsonArray.put(table.getJSONTotals());
+				table.addJSONRecords(jsonArray, values);
+				jsonArray.put(table.getJSONTotals(values));
 
 				// Returns the final value
 				return jsonArray.toString();
@@ -227,53 +232,56 @@ implements BDBDashboardBzService {
 		List<String> ret = CollectionFactory.createList();
 
 		for (Store store : table.getStores()) {
-			table.getRecords().add(new DashboardRecordRep(table, 0, store.getIdentifier(), EntityKind.KIND_STORE,
-					store.getName(), fromStringDate, toStringDate));
+			table.getRecords().put(new DashboardRecordRepKey(EntityKind.KIND_STORE, store.getIdentifier()),
+					new DashboardRecordRep(table, 0, store.getIdentifier(), EntityKind.KIND_STORE, store.getName(),
+							fromStringDate, toStringDate));
+			
+			if(StringUtils.hasText(store.getIdentifier())) ret.add(store.getIdentifier());
 
-			List<InnerZone> zonesl1 = innerZoneDao.getUsingEntityIdAndRange(store.getIdentifier(),
-					EntityKind.KIND_STORE, null, "name", null, true);
-
-			for (InnerZone zonel1 : zonesl1) {
-				table.getRecords().add(new DashboardRecordRep(null, 1, zonel1.getIdentifier(), EntityKind.KIND_INNER_ZONE,
-						zonel1.getName(), fromStringDate, toStringDate));
+			for (InnerZone zonel1 : innerZoneDao.getUsingEntityIdAndRange(store.getIdentifier(),
+					EntityKind.KIND_STORE, null, "name", null, true)) {
+				DashboardRecordRep drr = new DashboardRecordRep(null, 1, zonel1.getIdentifier(), EntityKind.KIND_INNER_ZONE,
+						zonel1.getName(), fromStringDate, toStringDate);
+				table.getRecords().put(new DashboardRecordRepKey(EntityKind.KIND_INNER_ZONE, zonel1.getIdentifier()), drr);
+				
+				if(StringUtils.hasText(zonel1.getIdentifier())) ret.add(zonel1.getIdentifier());
 
 				List<InnerZone> zonesl2 = innerZoneDao.getUsingEntityIdAndRange(zonel1.getIdentifier(),
 						EntityKind.KIND_INNER_ZONE, null, "name", null, true);
-				if( zonesl2.size() > 0 ) table.getRecords().get(table.getRecords().size()-1).setHeader(true);
+				if( zonesl2.size() > 0 ) drr.setHeader(true);
 
 				for (InnerZone zonel2 : zonesl2) {
-					table.getRecords().add(new DashboardRecordRep(null, 2, zonel2.getIdentifier(), EntityKind.KIND_INNER_ZONE,
-							zonel2.getName(), fromStringDate, toStringDate));
+					table.getRecords().put(new DashboardRecordRepKey(EntityKind.KIND_INNER_ZONE, zonel2.getIdentifier()),
+							new DashboardRecordRep(null, 2, zonel2.getIdentifier(), EntityKind.KIND_INNER_ZONE,
+									zonel2.getName(), fromStringDate, toStringDate));
+					
+					if(StringUtils.hasText(zonel2.getIdentifier())) ret.add(zonel2.getIdentifier());
 				}
 			}
 		}
-
-		for( DashboardRecordRep rec : table.getRecords()) {
-			if( StringUtils.hasText(rec.getEntityId()))
-				ret.add(rec.getEntityId());
-		}
-
+		
 		return ret;
 
 	}
 
 	public class DashboardTableRep {
 		private List<Store> stores;
-		private List<DashboardRecordRep> records;
+		private Map<DashboardRecordRepKey, DashboardRecordRep> records;
 		private DashboardRecordRep totals;
 
 		public DashboardTableRep() {
 			stores = CollectionFactory.createList();
-			records = CollectionFactory.createList();
-			totals = new DashboardRecordRep(null, 0, null, null, "Totales", null, null);
+			records = CollectionFactory.createMap(Hashtable.class);
+			totals = new DashboardRecordRep(null, 0, null, 0, "Totales", null, null);
 		}
 
 		public DashboardRecordRep findRecordWithEntityId(String entityId, Integer entityKind) {
-			for(DashboardRecordRep rec : records ) {
+			return records.get(new DashboardRecordRepKey(entityKind, entityId));
+			/*for(DashboardRecordRep rec : records ) {
 				if( rec.getEntityId().equals(entityId) && (entityKind == null || rec.getEntityKind().equals(entityKind)))
 					return rec;
 			}
-			return null;
+			return null;*/
 		}
 
 		/**
@@ -293,7 +301,7 @@ implements BDBDashboardBzService {
 		/**
 		 * @return the records
 		 */
-		public List<DashboardRecordRep> getRecords() {
+		public Map<DashboardRecordRepKey, DashboardRecordRep> getRecords() {
 			return records;
 		}
 		/**
@@ -312,7 +320,7 @@ implements BDBDashboardBzService {
 		/**
 		 * @param records the records to set
 		 */
-		public void setRecords(List<DashboardRecordRep> records) {
+		public void setRecords(Map<DashboardRecordRepKey, DashboardRecordRep> records) {
 			this.records = records;
 		}
 		/**
@@ -344,9 +352,9 @@ implements BDBDashboardBzService {
 		 * @return
 		 * @throws ASException
 		 */
-		public JSONArray getJSONTotals() throws ASException {
+		public JSONArray getJSONTotals(Collection<DashboardRecordRep> records) throws ASException {
 
-			DashboardRecordRep totals = new DashboardRecordRep(null, 0, null, null, "Totales", null, null);
+			DashboardRecordRep totals = new DashboardRecordRep(null, 0, null, 0, "Totales", null, null);
 			List<Long> c = CollectionFactory.createList();
 
 			for( DashboardRecordRep rec : records ) {
@@ -394,7 +402,7 @@ implements BDBDashboardBzService {
 		 * @return
 		 * @throws ASException
 		 */
-		public JSONObject toJSONTotals() throws ASException {
+		public JSONObject toJSONTotals(Collection<DashboardRecordRep> records) throws ASException {
 
 			totals.setParent(null);
 			totals.setPeasants(0L);
@@ -405,15 +413,14 @@ implements BDBDashboardBzService {
 			totals.setPermancenceQty(0);
 
 			for( DashboardRecordRep rec : records ) {
-				if( rec.getLevel() == 0 ) {
-					totals.setPeasants(totals.getPeasants() + rec.getPeasants());
-					totals.setVisitors(totals.getVisitors() + rec.getVisitors());
-					totals.setTickets(totals.getTickets() + rec.getTickets());
-					totals.setItems(totals.getItems() + rec.getItems());
-					totals.setRevenue(totals.getRevenue() + rec.getRevenue());
-					totals.setPermanenceInMillis(totals.getPermanenceInMillis() + rec.getPermanenceInMillis());
-					totals.setPermancenceQty(totals.getPermancenceQty() + rec.getPermancenceQty());
-				}
+				if( rec.getLevel() != 0 ) continue;
+				totals.setPeasants(totals.getPeasants() + rec.getPeasants());
+				totals.setVisitors(totals.getVisitors() + rec.getVisitors());
+				totals.setTickets(totals.getTickets() + rec.getTickets());
+				totals.setItems(totals.getItems() + rec.getItems());
+				totals.setRevenue(totals.getRevenue() + rec.getRevenue());
+				totals.setPermanenceInMillis(totals.getPermanenceInMillis() + rec.getPermanenceInMillis());
+				totals.setPermancenceQty(totals.getPermancenceQty() + rec.getPermancenceQty());
 			}
 
 			return totals.toJSONObject();
@@ -426,37 +433,37 @@ implements BDBDashboardBzService {
 		 * @return
 		 * @throws ASException
 		 */
-		public JSONArray addJSONRecords(JSONArray array) throws ASException {
+		public JSONArray addJSONRecords(JSONArray array, Collection<DashboardRecordRep> records) throws ASException {
 
-			if( array == null)
-				array = new JSONArray();
+			if( array == null) array = new JSONArray();
 
-			for( DashboardRecordRep rec : records )
-				array.put(rec.toJSONArray());
+			for( DashboardRecordRep rec : records ) array.put(rec.toJSONArray());
 
 			return array;
 		}
+		
 	}
 
 	public class DashboardRecordRep {
 		private boolean header;
 		private int level;
 		private String entityId;
-		private Integer entityKind;
+		private int entityKind;
 		private String title;
-		private Long peasants;
-		private Long visitors;
+		private long peasants;
+		private long visitors;
 		private int items;
-		private Long tickets;
-		private Double revenue;
+		private long tickets;
+		private double revenue;
 		private Date higherDate;
 		private Date lowerDate;
-		private Long permanenceInMillis;
+		private long permanenceInMillis;
 		private int permancenceQty;
 		private Map<String, Long> datesCache;
 		private DashboardTableRep parent;
 
-		public DashboardRecordRep(DashboardTableRep parent, int level, String entityId, Integer entityKind, String title, String fromStringDate, String toStringDate) {
+		public DashboardRecordRep(DashboardTableRep parent, int level, String entityId, int entityKind, String title,
+				String fromStringDate, String toStringDate) {
 			super();
 
 			this.parent = parent;
@@ -471,7 +478,7 @@ implements BDBDashboardBzService {
 			tickets = 0l;
 			items = 0;
 			revenue = 0.0;
-			permanenceInMillis = 0l;
+			permanenceInMillis = 0;
 
 			try {
 				datesCache = CollectionFactory.createMap();
@@ -513,8 +520,7 @@ implements BDBDashboardBzService {
 			}
 
 			String tit = title;
-			for( int x = 0; x < level; x++ )
-				tit = "&nbsp;&nbsp;" + tit;
+			for( int x = 0; x < level; x++ ) tit = "&nbsp;&nbsp;" + tit;
 
 			row.put(h1 + tit + h2);
 			row.put(h1 + String.valueOf(peasants) + h2);
@@ -808,14 +814,14 @@ implements BDBDashboardBzService {
 		/**
 		 * @return the permanenceInMillis
 		 */
-		public Long getPermanenceInMillis() {
+		public long getPermanenceInMillis() {
 			return permanenceInMillis;
 		}
 
 		/**
 		 * @param permanenceInMillis the permanenceInMillis to set
 		 */
-		public void setPermanenceInMillis(Long permanenceInMillis) {
+		public void setPermanenceInMillis(long permanenceInMillis) {
 			this.permanenceInMillis = permanenceInMillis;
 		}
 
@@ -854,6 +860,69 @@ implements BDBDashboardBzService {
 		public void setItems(int items) {
 			this.items = items;
 		}
+		
+		@Override
+		public int hashCode() {
+			int prime = 7919;
+			int result = prime *this.entityKind;
+			result += this.entityId == null ? 0 : this.entityId.hashCode();
+			result += prime *this.level;
+			result += this.title == null ? 0 : this.title.hashCode();
+			result += prime *this.peasants;
+			result += prime *this.visitors;
+			result += prime *this.items;
+			result += prime *this.tickets;
+			result += (int) (prime *this.revenue);
+			result += this.higherDate == null ? 0 : this.higherDate.hashCode();
+			result += this.lowerDate == null ? 0 : this.lowerDate.hashCode();
+			result += prime *this.permanenceInMillis;
+			result += prime *this.permancenceQty;
+			return result;
+		}
+		
+		@Override
+		public boolean equals(Object o) {
+			if(this == o) return true;
+			if(o instanceof DashboardRecordRep && hashCode() == o.hashCode()) {
+				DashboardRecordRep drr = (DashboardRecordRep) o;
+				return drr.header == this.header && drr.level == this.level && drr.entityId.equals(this.entityId) &&
+						drr.entityKind == this.entityKind && drr.title.equals(this.title) && drr.peasants == this.peasants
+						&& drr.visitors == this.visitors && drr.items == this.items && drr.tickets == this.tickets &&
+						drr.revenue == this.revenue && drr.higherDate.equals(this.higherDate) &&
+						drr.lowerDate.equals(this.lowerDate) && drr.permanenceInMillis == this.permanenceInMillis &&
+						drr.permancenceQty == this.permancenceQty;
+			} return false;
+		}
 
+	}
+	
+	private final class DashboardRecordRepKey {
+		
+		private Integer entityKind;
+		private String entityId;
+		
+		private DashboardRecordRepKey(int eKind, String eId) {
+			entityKind = eKind;
+			entityId = eId;
+		}
+		
+		@Override
+		public int hashCode() {
+			int prime = 7919;
+			int result = prime *this.entityKind;
+			result += this.entityId == null ? 0 : this.entityId.hashCode();
+			return result;
+		}
+		
+		@Override
+		public boolean equals(Object o) {
+			if(this == o) return true;
+			if(o instanceof DashboardRecordRep && hashCode() == o.hashCode()) {
+				DashboardRecordRepKey drr = (DashboardRecordRepKey) o;
+				return drr.entityId.equals(this.entityId) &&
+						(drr.entityKind == null || drr.entityKind.equals(this.entityKind));
+			} return false;
+		}
+		
 	}
 }

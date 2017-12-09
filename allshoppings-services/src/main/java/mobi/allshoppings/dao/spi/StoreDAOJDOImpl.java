@@ -2,7 +2,6 @@ package mobi.allshoppings.dao.spi;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +25,6 @@ import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.UserSecurity;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CustomDatatableFilter;
-import mobi.allshoppings.tools.Range;
 import mobi.allshoppings.tx.PersistenceProvider;
 
 public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
@@ -324,8 +322,8 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 	 *            A range object to bound the query with. @see Range
 	 */
 	@Override
-	public List<Store> getUsingStatusAndRange(List<Integer> status, Range range) throws ASException {
-		return getUsingIdsAndStatusAndRange(null, status, range);
+	public List<Store> getUsingStatus(List<Integer> status) throws ASException {
+		return getUsingIdsAndStatus(null, status);
 	}
 	
 	/**
@@ -339,7 +337,7 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 	 *            A range object to bound the query with. @see Range
 	 */
 	@Override
-	public List<Store> getUsingIdsAndStatusAndRange(Collection<String> ids, List<Integer> status, Range range) throws ASException {
+	public List<Store> getUsingIdsAndStatus(Collection<String> ids, List<Integer> status) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		List<Store> ret = CollectionFactory.createList();
 		List<Key> findIn = CollectionFactory.createList();
@@ -347,14 +345,6 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 		if( ids != null && ids.size() == 0 ) return ret;
 		
 		try {
-			if( range != null ) {
-				Iterator<String> i = ids.iterator();
-				int count = 0;
-				while( i.hasNext() && count < range.getTo()) {
-					findIn.add((Key)keyHelper.obtainKey(Store.class, i.next()));
-				}
-			}
-			
 			if( ids != null && ids.size() > 0 ) {
 				for( String id : ids ) {
 					findIn.add((Key)keyHelper.obtainKey(Store.class, id));
