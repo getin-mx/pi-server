@@ -32,6 +32,7 @@ import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.InnerZone;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 
 /**
@@ -69,24 +70,21 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("storeIds", null);
+			List<String> brandId = Arrays.asList(obtainStringValue("brandId", null));
 			
-			if(!StringUtils.hasText(entityId)) throw ASExceptionHelper.invalidArgumentsException();
-			
-			/*@SuppressWarnings("unused")
-			Integer entityKind = obtainIntegerValue("entityKind", null);
-			@SuppressWarnings("unused")
-			String subentityId = obtainStringValue("subentityId", null);*/
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
 			String format = obtainStringValue("format", "table");
 
 			// Initializes the table using the received information
 			DashboardTableRep table = new DashboardTableRep();
-			//List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), "name");
 			List<Store> tmpStores2 = CollectionFactory.createList();
-			for( Store store : storeDao.getUsingIdList(CollectionFactory.createList(entityId.split(",")))) {
+			List<Store> stores = StringUtils.hasText(entityId) ?
+					storeDao.getUsingIdList(CollectionFactory.createList(entityId.split(","))) :
+						storeDao.getUsingBrandAndStatus(brandId.get(0), StatusHelper.statusActive(), null);
+			for( Store store : stores) {
 			 	if( isValidForUser(user, store) ) tmpStores2.add(store);
-			}
+			}// gets all stores to display
 			Collections.sort(tmpStores2, new Comparator<Store>() {
 				@Override
 				public int compare(Store o1, Store o2) {
@@ -95,15 +93,14 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 			});
 			table.setStores(tmpStores2);
 			List<String> entityIds = initializeTableRecords(table, fromStringDate, toStringDate);
-			//entityIds.add(entityId); // FIXME o agregar todos... otra vez?
 
 			// Starts to Collect the data
 			
 			// peasents, visits, and tickets
-			for(DashboardIndicatorData obj : dao.getUsingFilters(entityIds, null, Arrays.asList("apd_visitor"),
+			for(DashboardIndicatorData obj : dao.getUsingFilters(brandId, null, Arrays.asList("apd_visitor"),
 					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets",
-							"visitor_total_items", "visitor_total_revenue"), null, null, null, fromStringDate,
-					toStringDate, null, null, null, null, null, null, null, null)) {
+							"visitor_total_items", "visitor_total_revenue"), null, entityIds, null,
+					fromStringDate, toStringDate, null, null, null, null, null, null, null, null)) {
 
 				DashboardRecordRep rec = obj.getEntityKind() == EntityKind.KIND_INNER_ZONE
 						? table.findRecordWithEntityId(obj.getEntityId(), EntityKind.KIND_INNER_ZONE)
@@ -134,9 +131,8 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 			}
 
 			// permanence
-			for(DashboardIndicatorData obj : dao.getUsingFilters(entityIds,
-					null, Arrays.asList("apd_permanence"), Arrays.asList("permanence_hourly_visits"), null,
-					null, null, fromStringDate, toStringDate,
+			for(DashboardIndicatorData obj : dao.getUsingFilters(brandId, null, Arrays.asList("apd_permanence"),
+					Arrays.asList("permanence_hourly_visits"), null, entityIds, null, fromStringDate, toStringDate,
 					null, null, null, null, null, null, null, null)) {
 				DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId(), null);
 				if( rec == null ) continue;
@@ -273,11 +269,6 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 
 		public DashboardRecordRep findRecordWithEntityId(String entityId, Integer entityKind) {
 			return records.get(new DashboardRecordRepKey(entityKind, entityId));
-			/*for(DashboardRecordRep rec : records ) {
-				if( rec.getEntityId().equals(entityId) && (entityKind == null || rec.getEntityKind().equals(entityKind)))
-					return rec;
-			}
-			return null;*/
 		}
 
 		/**
@@ -897,23 +888,21 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 		private Integer entityKind;
 		private String entityId;
 		
-		private DashboardRecordRepKey(int eKind, String eId) {
+		private DashboardRecordRepKey(Integer eKind, String eId) {
 			entityKind = eKind;
 			entityId = eId;
 		}
 		
 		@Override
 		public int hashCode() {
-			int prime = 7919;
-			int result = prime *this.entityKind;
-			result += this.entityId == null ? 0 : this.entityId.hashCode();
-			return result;
+			// TODO add store names & other for better hash
+			return 7919 * (this.entityId == null ? 0 : this.entityId.hashCode());
 		}
 		
 		@Override
 		public boolean equals(Object o) {
 			if(this == o) return true;
-			if(o instanceof DashboardRecordRep && hashCode() == o.hashCode()) {
+			if(o instanceof DashboardRecordRepKey && hashCode() == o.hashCode()) {
 				DashboardRecordRepKey drr = (DashboardRecordRepKey) o;
 				return drr.entityId.equals(this.entityId) &&
 						(drr.entityKind == null || drr.entityKind.equals(this.entityKind));
