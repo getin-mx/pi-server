@@ -102,9 +102,9 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 							"visitor_total_items", "visitor_total_revenue"), null, entityIds, null,
 					fromStringDate, toStringDate, null, null, null, null, null, null, null, null)) {
 
-				DashboardRecordRep rec = obj.getEntityKind() == EntityKind.KIND_INNER_ZONE
-						? table.findRecordWithEntityId(obj.getEntityId(), EntityKind.KIND_INNER_ZONE)
-						: table.findRecordWithEntityId(obj.getSubentityId(), EntityKind.KIND_STORE);
+				DashboardRecordRep rec = obj.getEntityKind() == EntityKind.KIND_INNER_ZONE ?
+						table.findRecordWithEntityId(obj.getEntityId(), EntityKind.KIND_INNER_ZONE, obj.getSubentityName())
+						: table.findRecordWithEntityId(obj.getSubentityId(), EntityKind.KIND_STORE, obj.getSubentityName());
 
 				DashboardRecordRep totals = table.getTotals();
 
@@ -134,7 +134,7 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 			for(DashboardIndicatorData obj : dao.getUsingFilters(brandId, null, Arrays.asList("apd_permanence"),
 					Arrays.asList("permanence_hourly_visits"), null, entityIds, null, fromStringDate, toStringDate,
 					null, null, null, null, null, null, null, null)) {
-				DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId(), null);
+				DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId(), null, obj.getSubentityName());
 				if( rec == null ) continue;
 				if( obj.getDoubleValue() != null )
 					rec.setPermanenceInMillis(rec.getPermanenceInMillis() + obj.getDoubleValue().longValue());
@@ -224,7 +224,7 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 		List<String> ret = CollectionFactory.createList();
 
 		for (Store store : table.getStores()) {
-			table.getRecords().put(new DashboardRecordRepKey(EntityKind.KIND_STORE, store.getIdentifier()),
+			table.getRecords().put(new DashboardRecordRepKey(EntityKind.KIND_STORE, store.getIdentifier(), store.getName()),
 					new DashboardRecordRep(table, 0, store.getIdentifier(), EntityKind.KIND_STORE, store.getName(),
 							fromStringDate, toStringDate));
 			
@@ -234,7 +234,8 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 					EntityKind.KIND_STORE, null, "name", null, true)) {
 				DashboardRecordRep drr = new DashboardRecordRep(null, 1, zonel1.getIdentifier(), EntityKind.KIND_INNER_ZONE,
 						zonel1.getName(), fromStringDate, toStringDate);
-				table.getRecords().put(new DashboardRecordRepKey(EntityKind.KIND_INNER_ZONE, zonel1.getIdentifier()), drr);
+				table.getRecords().put(new DashboardRecordRepKey(EntityKind.KIND_INNER_ZONE, zonel1.getIdentifier(),
+						zonel1.getName()), drr);
 				
 				if(StringUtils.hasText(zonel1.getIdentifier())) ret.add(zonel1.getIdentifier());
 
@@ -243,9 +244,9 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 				if( zonesl2.size() > 0 ) drr.setHeader(true);
 
 				for (InnerZone zonel2 : zonesl2) {
-					table.getRecords().put(new DashboardRecordRepKey(EntityKind.KIND_INNER_ZONE, zonel2.getIdentifier()),
-							new DashboardRecordRep(null, 2, zonel2.getIdentifier(), EntityKind.KIND_INNER_ZONE,
-									zonel2.getName(), fromStringDate, toStringDate));
+					table.getRecords().put(new DashboardRecordRepKey(EntityKind.KIND_INNER_ZONE, zonel2.getIdentifier(),
+							zonel2.getName()), new DashboardRecordRep(null, 2, zonel2.getIdentifier(),
+									EntityKind.KIND_INNER_ZONE, zonel2.getName(), fromStringDate, toStringDate));
 					
 					if(StringUtils.hasText(zonel2.getIdentifier())) ret.add(zonel2.getIdentifier());
 				}
@@ -267,8 +268,8 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 			totals = new DashboardRecordRep(null, 0, null, 0, "Totales", null, null);
 		}
 
-		public DashboardRecordRep findRecordWithEntityId(String entityId, Integer entityKind) {
-			return records.get(new DashboardRecordRepKey(entityKind, entityId));
+		public DashboardRecordRep findRecordWithEntityId(String entityId, Integer entityKind, String entityName) {
+			return records.get(new DashboardRecordRepKey(entityKind, entityId, entityName));
 		}
 
 		/**
@@ -887,16 +888,20 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 		
 		private Integer entityKind;
 		private String entityId;
+		private String entityName;
 		
-		private DashboardRecordRepKey(Integer eKind, String eId) {
+		private DashboardRecordRepKey(Integer eKind, String eId, String entityName) {
 			entityKind = eKind;
 			entityId = eId;
+			this.entityName = entityName;
 		}
 		
 		@Override
 		public int hashCode() {
-			// TODO add store names & other for better hash
-			return 7919 * (this.entityId == null ? 0 : this.entityId.hashCode());
+			int prime = 7919;
+			int result = prime *(this.entityId == null ? 0 : this.entityId.hashCode());
+			result += prime *(this.entityName == null ? 0 : this.entityName.hashCode());
+			return result;
 		}
 		
 		@Override
@@ -904,7 +909,8 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 			if(this == o) return true;
 			if(o instanceof DashboardRecordRepKey && hashCode() == o.hashCode()) {
 				DashboardRecordRepKey drr = (DashboardRecordRepKey) o;
-				return drr.entityId.equals(this.entityId) &&
+				return ((drr.entityName == null && this.entityName == null) || (drr.entityName.equals(this.entityName))) &&
+						((drr.entityId == null && this.entityId == null) || (drr.entityId.equals(this.entityId))) &&
 						(drr.entityKind == null || drr.entityKind.equals(this.entityKind));
 			} return false;
 		}
