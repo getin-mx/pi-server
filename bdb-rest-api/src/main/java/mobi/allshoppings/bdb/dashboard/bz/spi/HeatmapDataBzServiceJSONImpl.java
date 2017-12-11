@@ -52,7 +52,7 @@ public class HeatmapDataBzServiceJSONImpl extends BDBRestBaseServerResource impl
 			String subentityId = obtainStringValue("floormapId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
-			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
+			//Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
 			//Integer timeZone = obtainIntegerValue("timezone", null);
 
 			if(!StringUtils.hasText(subentityId)) throw ASExceptionHelper.invalidArgumentsException("subentityId");
@@ -62,7 +62,7 @@ public class HeatmapDataBzServiceJSONImpl extends BDBRestBaseServerResource impl
 			
 			List<DashboardIndicatorData> list = dao.getUsingFilters(Arrays.asList(shoppingId), 0,
 					Arrays.asList("heatmap_data"), null, null, Arrays.asList(subentityId), null,
-					fromStringDate, toStringDate, null, null, dayOfWeek, null, null, null, null, null);
+					fromStringDate, toStringDate, null, null, null, null, null, null, null, null);
 
 			// Creates the total value indicator
 			double totalValue = 0D;
