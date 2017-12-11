@@ -76,6 +76,8 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 			String toStringDate = obtainStringValue("toStringDate", null);
 			String format = obtainStringValue("format", "table");
 
+			if(!StringUtils.hasText(entityId)) throw ASExceptionHelper.invalidArgumentsException("entityId");
+			
 			// Initializes the table using the received information
 			DashboardTableRep table = new DashboardTableRep();
 			List<Store> tmpStores2 = CollectionFactory.createList();

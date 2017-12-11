@@ -61,23 +61,26 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
 			String subentityId = obtainStringValue("subentityId", null);
-			String periodType = obtainStringValue("periodType", null);
+			//String periodType = obtainStringValue("periodType", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
-			String movieId = obtainStringValue("movieId", null);
-			String voucherType = obtainStringValue("voucherType", null);
-			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
-			Integer timezone = obtainIntegerValue("timezone", null);
-			String subIdOrder = obtainStringValue("subIdOrder", null);
-			String country = obtainStringValue("country", null);
-			String province = obtainStringValue("province", null);
-			String city = obtainStringValue("city", null);
+			//String movieId = obtainStringValue("movieId", null);
+			//String voucherType = obtainStringValue("voucherType", null);
+			//Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
+			//Integer timezone = obtainIntegerValue("timezone", null);
+			//String subIdOrder = obtainStringValue("subIdOrder", null);
+			//String country = obtainStringValue("country", null);
+			//String province = obtainStringValue("province", null);
+			//String city = obtainStringValue("city", null);
 			Boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
+			
+			if(!StringUtils.hasText(entityId)) throw ASExceptionHelper.invalidArgumentsException("entityId");
+			if(!StringUtils.hasText(subentityId)) throw ASExceptionHelper.invalidArgumentsException("subentityId");
 
-			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
-					entityKind, elementId, elementSubId, shoppingId,
-					subentityId, null /*periodType*/, fromStringDate, toStringDate,
-					movieId, voucherType, dayOfWeek, timezone, null, country, province, city);
+			List<DashboardIndicatorData> list = dao.getUsingFilters(Arrays.asList(entityId), entityKind,
+					Arrays.asList(elementId), elementSubId == null ? null : Arrays.asList(elementSubId), shoppingId,
+					CollectionFactory.createList(subentityId.split(",")), null, fromStringDate, toStringDate, null,
+					null, null, null, null, null, null, null);
 			
 			log.log(Level.INFO, list.size() + " dashboard elements found");
 
@@ -87,13 +90,13 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			
 			List<String> categories = CollectionFactory.createList();
 
-			// Creates the order list and alias map
+			/*/ Creates the order list and alias map
 			List<String> orderList = CollectionFactory.createList();
 			if(StringUtils.hasText(subIdOrder))
-				orderList.addAll(Arrays.asList(subIdOrder.split(",")));
+				orderList.addAll(Arrays.asList(subIdOrder.split(",")));*/
 
 			Map<String, String> aliasMap = CollectionFactory.createMap();
-			if(!CollectionUtils.isEmpty(orderList)) {
+			/*if(!CollectionUtils.isEmpty(orderList)) {
 				for( String order : orderList ) {
 					try {
 						DashboardIndicatorAlias alias = diAliasDao.getUsingFilters(entityId, entityKind, elementId, order);
@@ -102,15 +105,16 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 						log.log(Level.INFO, "Alias Not Found for subelementId " + order);
 					}
 				}
-			}
+			}*/
 
 			// Creates the Date Map
 			Map<Date, Integer> dateMap = CollectionFactory.createMap();
 			int dateMapPosition = 0;
 			while( thisDate.before(toDate) || thisDate.equals(toDate)) {
-				if( !dateMap.containsKey(calculateDateFrame(thisDate, periodType))) {
-					dateMap.put(calculateDateFrame(thisDate, periodType), dateMapPosition);
-					categories.add(getDateName(thisDate, periodType));
+				//if( !dateMap.containsKey(calculateDateFrame(thisDate, periodType))) {
+				if( !dateMap.containsKey(calculateDateFrame(thisDate, null))) {
+					dateMap.put(calculateDateFrame(thisDate, null), dateMapPosition);
+					categories.add(getDateName(thisDate, null));
 					dateMapPosition++;
 				}
 				thisDate = DateUtils.addDays(thisDate, 1);
@@ -118,7 +122,7 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			
 			// Creates the result map
 			Map<String, Double[]> resultMap = CollectionFactory.createMap();
-			if(!CollectionUtils.isEmpty(orderList)) {
+			/*if(!CollectionUtils.isEmpty(orderList)) {
 				for( String order : orderList ) {
 					String key = aliasMap.get(order);
 					Double[] valArray = resultMap.get(key);
@@ -130,15 +134,16 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 					}
 					resultMap.put(key, valArray);
 				}
-			}
+			}*/
 
 			for(DashboardIndicatorData obj : list) {
 				if( isValidForUser(user, obj)) {
-					Date objDate = calculateDateFrame(DateUtils.truncate(obj.getDate(), Calendar.DATE), periodType);
+					//Date objDate = calculateDateFrame(DateUtils.truncate(obj.getDate(), Calendar.DATE), periodType);
+					Date objDate = calculateDateFrame(DateUtils.truncate(obj.getDate(), Calendar.DATE), null);
 					if (!(objDate.compareTo(fromDate) >= 0 && objDate.compareTo(toDate) <= 0)) continue;
 					String key = obj.getElementSubName();
 					String orderKey = obj.getElementSubId();
-					if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
+					//if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
 						aliasMap.put(orderKey, key);
 						Double[] valArray = resultMap.get(key);
 						if( valArray == null ) {
@@ -150,7 +155,7 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 						int position = dateMap.get(objDate);
 						valArray[position] += obj.getDoubleValue();
 						resultMap.put(key, valArray);
-					}
+					//}
 				}
 			}
 
@@ -200,7 +205,7 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 
 			// Creates the final JSON Array
 			JSONArray jsonArray = new JSONArray();
-			if(!StringUtils.hasText(subIdOrder)) {
+			//if(!StringUtils.hasText(subIdOrder)) {
 				Iterator<String> i = resultMap.keySet().iterator();
 				while(i.hasNext()) {
 					String key = i.next();
@@ -210,7 +215,7 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 					jsonObj.put("data", resultMap.get(key) == null ? 0 : resultMap.get(key));
 					jsonArray.put(jsonObj);
 				}
-			} else {
+			/*} else {
 				for( String orderKey : orderList ) {
 					if(!orderKey.equals("visitor_total_revenue")){
 						String key = aliasMap.get(orderKey);
@@ -230,7 +235,7 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 					}
 					
 				}
-			}
+			}*/
 
 			// Returns the final value
 			JSONObject ret = new JSONObject();

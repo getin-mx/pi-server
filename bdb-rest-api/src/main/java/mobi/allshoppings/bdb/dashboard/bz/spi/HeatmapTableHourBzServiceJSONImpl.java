@@ -33,9 +33,7 @@ import mobi.allshoppings.tools.CollectionFactory;
 /**
  *
  */
-public class HeatmapTableHourBzServiceJSONImpl
-extends BDBRestBaseServerResource
-implements BDBHeatmapTableHourBzService {
+public class HeatmapTableHourBzServiceJSONImpl extends BDBRestBaseServerResource implements BDBHeatmapTableHourBzService {
 
 	private static final Logger log = Logger.getLogger(HeatmapTableHourBzServiceJSONImpl.class.getName());
 	
@@ -63,24 +61,26 @@ implements BDBHeatmapTableHourBzService {
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
 			String subentityId = obtainStringValue("subentityId", null);
-			String periodType = obtainStringValue("periodId", null);
+			//String periodType = obtainStringValue("periodId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
-			String movieId = obtainStringValue("movieId", null);
-			String voucherType = obtainStringValue("voucherType", null);
-			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
-			Integer timezone = obtainIntegerValue("timezone", null);
+			//String movieId = obtainStringValue("movieId", null);
+			//String voucherType = obtainStringValue("voucherType", null);
+			//Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
+			//Integer timezone = obtainIntegerValue("timezone", null);
 			Boolean average = obtainBooleanValue("average", false);
 			Boolean toMinutes = obtainBooleanValue("toMinutes", false);
 			Boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
 			
+			if(!StringUtils.hasText(entityId)) throw ASExceptionHelper.invalidArgumentsException("entityId");
+			if(!StringUtils.hasText(subentityId)) throw ASExceptionHelper.invalidArgumentsException("subentityId");
+			
 			List<String> lElementId = StringUtils.hasText(elementId) ? Arrays.asList(elementId.split(",")) : null;
 			List<String> lElementSubId = StringUtils.hasText(elementSubId) ? Arrays.asList(elementSubId.split(",")) : null;
 			
-			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
-					entityKind, lElementId, lElementSubId, shoppingId,
-					subentityId, periodType, fromStringDate, toStringDate,
-					movieId, voucherType, dayOfWeek, timezone, null, null, null, null);
+			List<DashboardIndicatorData> list = dao.getUsingFilters(Arrays.asList(entityId), entityKind, lElementId,
+					lElementSubId, shoppingId, CollectionFactory.createList(subentityId.split(",")), null,
+					fromStringDate, toStringDate, null, null, null, null, null, null, null, null);
 
 			// Gets dashboard configuration for this session
 			DashboardConfiguration config = new DashboardConfiguration(entityId, entityKind);

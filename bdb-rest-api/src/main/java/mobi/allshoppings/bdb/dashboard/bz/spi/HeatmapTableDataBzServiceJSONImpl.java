@@ -1,6 +1,7 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -55,19 +56,19 @@ implements BDBHeatmapTableDataBzService {
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
 			String subentityId = obtainStringValue("subentityId", null);
-			String periodType = obtainStringValue("periodId", null);
+			//String periodType = obtainStringValue("periodId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
-			String movieId = obtainStringValue("movieId", null);
-			String voucherType = obtainStringValue("voucherType", null);
-			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
-			Integer timezone = obtainIntegerValue("timezone", null);
+			//String movieId = obtainStringValue("movieId", null);
+			//String voucherType = obtainStringValue("voucherType", null);
+			//Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
+			//Integer timezone = obtainIntegerValue("timezone", null);
 			Integer top = obtainIntegerValue("top", null);
 			
-			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
-					entityKind, elementId, elementSubId, shoppingId,
-					subentityId, periodType, fromStringDate, toStringDate,
-					movieId, voucherType, dayOfWeek, timezone, null, null, null, null);
+			List<DashboardIndicatorData> list = dao.getUsingFilters(Arrays.asList(entityId), entityKind,
+					Arrays.asList(elementId), Arrays.asList(elementSubId), shoppingId,
+					CollectionFactory.createList(subentityId.split(",")), null, fromStringDate, toStringDate,
+					null, null, null, null, null, null, null, null);
 
 			Map<String, Map<Integer, Integer>> dataSet = CollectionFactory.createMap();
 			Map<String, Integer> toBeOrderedDataSet = CollectionFactory.createMap(); 

@@ -65,25 +65,28 @@ implements BDBTimelineHourBzService {
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
 			String subentityId = obtainStringValue("subentityId", null);
-			String periodType = obtainStringValue("periodId", null);
+			//String periodType = obtainStringValue("periodId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
-			String movieId = obtainStringValue("movieId", null);
-			String voucherType = obtainStringValue("voucherType", null);
-			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
-			Integer timezone = obtainIntegerValue("timezone", null);
-			String subIdOrder = obtainStringValue("subIdOrder", null);
-			String country = obtainStringValue("country", null);
-			String province = obtainStringValue("province", null);
-			String city = obtainStringValue("city", null);
+			//String movieId = obtainStringValue("movieId", null);
+			//String voucherType = obtainStringValue("voucherType", null);
+			//Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
+			//Integer timezone = obtainIntegerValue("timezone", null);
+			//String subIdOrder = obtainStringValue("subIdOrder", null);
+			//String country = obtainStringValue("country", null);
+			//String province = obtainStringValue("province", null);
+			//String city = obtainStringValue("city", null);
 			Boolean average = obtainBooleanValue("average", false);
 			Boolean toMinutes = obtainBooleanValue("toMinutes", false);
 			Boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
 
-			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
-					entityKind, elementId, elementSubId, shoppingId,
-					subentityId, periodType, fromStringDate, toStringDate,
-					movieId, voucherType, dayOfWeek, timezone, null, country, province, city);
+			if(!StringUtils.hasText(entityId)) throw ASExceptionHelper.invalidArgumentsException("entityId");
+			if(!StringUtils.hasText(subentityId)) throw ASExceptionHelper.invalidArgumentsException("subentityId");
+			
+			List<DashboardIndicatorData> list = dao.getUsingFilters(Arrays.asList(entityId), entityKind,
+					Arrays.asList(elementId), elementSubId == null ? null : Arrays.asList(elementSubId), shoppingId,
+					CollectionFactory.createList(subentityId.split(",")), null, fromStringDate, toStringDate, null,
+					null, null, null, null, null, null, null);
 
 			// Gets dashboard configuration for this session
 			DashboardConfiguration config = new DashboardConfiguration(entityId, entityKind);
@@ -93,13 +96,13 @@ implements BDBTimelineHourBzService {
 			
 			List<String> categories = CollectionFactory.createList();
 
-			// Creates the order list and alias map
+			/*/ Creates the order list and alias map
 			List<String> orderList = CollectionFactory.createList();
 			if(StringUtils.hasText(subIdOrder))
-				orderList.addAll(Arrays.asList(subIdOrder.split(",")));
+				orderList.addAll(Arrays.asList(subIdOrder.split(",")));*/
 
 			Map<String, String> aliasMap = CollectionFactory.createMap();
-			if(!CollectionUtils.isEmpty(orderList)) {
+			/*if(!CollectionUtils.isEmpty(orderList)) {
 				for( String order : orderList ) {
 					try {
 						DashboardIndicatorAlias alias = diAliasDao.getUsingFilters(entityId, entityKind, elementId, order);
@@ -108,7 +111,7 @@ implements BDBTimelineHourBzService {
 						log.log(Level.INFO, "Alias Not Found for subelementId " + order);
 					}
 				}
-			}
+			}*/
 
 			// Creates the Hour Map
 			Map<Integer, Integer> hourMap = CollectionFactory.createMap();
@@ -119,7 +122,7 @@ implements BDBTimelineHourBzService {
 			
 			// Creates the result map
 			Map<String, Long[]> resultMap = CollectionFactory.createMap();
-			if(!CollectionUtils.isEmpty(orderList)) {
+			/*if(!CollectionUtils.isEmpty(orderList)) {
 				for( String order : orderList ) {
 					String key = aliasMap.get(order);
 					Long[] valArray = resultMap.get(key);
@@ -131,11 +134,11 @@ implements BDBTimelineHourBzService {
 					}
 					resultMap.put(key, valArray);
 				}
-			}
+			}*/
 			
 			// Creates the counterMap
 			Map<String, Integer[]> counterMap = CollectionFactory.createMap();
-			if(!CollectionUtils.isEmpty(orderList)) {
+			/*if(!CollectionUtils.isEmpty(orderList)) {
 				for( String order : orderList ) {
 					String key = aliasMap.get(order);
 					Integer[] valArray = counterMap.get(key);
@@ -147,13 +150,13 @@ implements BDBTimelineHourBzService {
 					}
 					counterMap.put(key, valArray);
 				}
-			}
+			}*/
 			
 			for(DashboardIndicatorData obj : list) {
 				if( isValidForUser(user, obj)) {
 					String key = obj.getElementSubName();
 					String orderKey = obj.getElementSubId();
-					if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
+					//if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
 						aliasMap.put(orderKey, key);
 						Long[] valArray = resultMap.get(key);
 						if( valArray == null ) {
@@ -196,7 +199,7 @@ implements BDBTimelineHourBzService {
 								log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
 						}
 						resultMap.put(key, valArray);
-					}
+					//}
 				}
 			}
 
@@ -266,7 +269,7 @@ implements BDBTimelineHourBzService {
 			
 			// Creates the final JSON Array
 			JSONArray jsonArray = new JSONArray();
-			if(!StringUtils.hasText(subIdOrder)) {
+			//if(!StringUtils.hasText(subIdOrder)) {
 				Iterator<String> i = resultMap.keySet().iterator();
 				while(i.hasNext()) {
 					String key = i.next();
@@ -276,7 +279,7 @@ implements BDBTimelineHourBzService {
 					jsonObj.put("data", resultMap.get(key) == null ? 0 : resultMap.get(key));
 					jsonArray.put(jsonObj);
 				}
-			} else {
+			/*} else {
 				for( String orderKey : orderList ) {
 					String key = aliasMap.get(orderKey);
 					JSONObject jsonObj = new JSONObject();
@@ -285,7 +288,7 @@ implements BDBTimelineHourBzService {
 					jsonObj.put("data", resultMap.get(key) == null ? 0 : resultMap.get(key));
 					jsonArray.put(jsonObj);
 				}
-			}
+			}*/
 
 			// Returns the final value
 			JSONObject ret = new JSONObject();
