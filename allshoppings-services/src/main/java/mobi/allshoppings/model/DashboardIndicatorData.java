@@ -15,19 +15,11 @@ import com.inodes.datanucleus.model.Key;
 import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.model.interfaces.ModelKey;
 
-/**
- * Daily & hourly indicator to paint all tables in dashboard/apdvisits
- * @author Matias Hapanowicz
- * @author <a href="mailto:ignacio@getin.mx" >Manuel "Nachintoch" Castillo</a>
- * @version 2.0, december 2017
- * @since allshoppings
- */
 @SuppressWarnings("serial")
 @PersistenceCapable(detachable="true")
 @Cacheable("false")
 public class DashboardIndicatorData implements ModelKey, Serializable, Identificable {
 
-	@Deprecated
 	public static final String PERIOD_TYPE_DAILY = "D";
 	
 	@Deprecated
@@ -515,7 +507,7 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 		this.recordCount = recordCount;
 	}
 
-	/* (non-Javadoc) 		------------->		YOU DONT SAY
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override

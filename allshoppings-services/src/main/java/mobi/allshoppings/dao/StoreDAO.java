@@ -9,6 +9,7 @@ import com.inodes.datanucleus.model.Key;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
+import mobi.allshoppings.tools.Range;
 import mobi.allshoppings.tx.PersistenceProvider;
 
 public interface StoreDAO extends GenericDAO<Store> {
@@ -24,7 +25,7 @@ public interface StoreDAO extends GenericDAO<Store> {
 	List<Store> getStreetUsingBrandAndStatus(String brandId, List<Integer> status, String order) throws ASException;
 	Store getUsingExternalId(String externalId) throws ASException;
 	
-	List<Store> getUsingStatus(List<Integer> status) throws ASException;
-	List<Store> getUsingIdsAndStatus(Collection<String> ids, List<Integer> status) throws ASException;
+	List<Store> getUsingStatusAndRange(List<Integer> status, Range range) throws ASException;
+	List<Store> getUsingIdsAndStatusAndRange(Collection<String> ids, List<Integer> status, Range range) throws ASException;
 	List<String> getBrandIdsUsingIdList(PersistenceProvider pp, List<String> idList, boolean detachable) throws ASException;
 }

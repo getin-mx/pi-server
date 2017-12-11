@@ -1,7 +1,6 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,6 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
@@ -27,7 +25,9 @@ import mobi.allshoppings.tools.CollectionFactory;
 /**
  *
  */
-public class HeatmapDataBzServiceJSONImpl extends BDBRestBaseServerResource implements BDBDashboardBzService {
+public class HeatmapDataBzServiceJSONImpl
+extends BDBRestBaseServerResource
+implements BDBDashboardBzService {
 
 	private static final Logger log = Logger.getLogger(HeatmapDataBzServiceJSONImpl.class.getName());
 
@@ -52,17 +52,16 @@ public class HeatmapDataBzServiceJSONImpl extends BDBRestBaseServerResource impl
 			String subentityId = obtainStringValue("floormapId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
-			//Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
-			//Integer timeZone = obtainIntegerValue("timezone", null);
+			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
+			Integer timeZone = obtainIntegerValue("timezone", null);
 
-			if(!StringUtils.hasText(subentityId)) throw ASExceptionHelper.invalidArgumentsException("subentityId");
-			
 			FloorMap floorMap = floorMapDao.get(subentityId, true);
 			String shoppingId = floorMap.getShoppingId();
 			
-			List<DashboardIndicatorData> list = dao.getUsingFilters(Arrays.asList(shoppingId), 0,
-					Arrays.asList("heatmap_data"), null, null, Arrays.asList(subentityId), null,
-					fromStringDate, toStringDate, null, null, null, null, null, null, null, null);
+			List<DashboardIndicatorData> list = dao.getUsingFilters(shoppingId,
+					0, "heatmap_data", null, null,
+					subentityId, null, fromStringDate, toStringDate,
+					null, null, dayOfWeek, timeZone, null, null, null, null);
 
 			// Creates the total value indicator
 			double totalValue = 0D;

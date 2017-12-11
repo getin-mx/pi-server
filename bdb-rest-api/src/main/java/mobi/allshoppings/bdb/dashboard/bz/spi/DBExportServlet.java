@@ -70,9 +70,7 @@ public class DBExportServlet extends HttpServlet {
 				}
 			}
 			fromDate = req.getParameter(FROM_DATE_PARAM);
-			if(!StringUtils.hasText(FROM_DATE_PARAM)) throw ASExceptionHelper.invalidArgumentsException(FROM_DATE_PARAM);
 			toDate = req.getParameter(TO_DATE_PARAM);
-			if(!StringUtils.hasText(TO_DATE_PARAM)) throw ASExceptionHelper.invalidArgumentsException(TO_DATE_PARAM);
 			brandId = req.getParameter(BRAND_PARAM);
 			StringBuilder storesIds = new StringBuilder();
 			String aux;
