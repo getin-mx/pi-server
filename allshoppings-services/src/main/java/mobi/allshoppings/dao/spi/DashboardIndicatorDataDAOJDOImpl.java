@@ -212,6 +212,8 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 			
 			// Sets order as required
 			if( StringUtils.hasText(order)) query.setOrdering(order);
+			
+			query.addExtension("slave-ok", true);
 
 			@SuppressWarnings("unchecked")
 			List<DashboardIndicatorData> objs = parameters.size() > 0 ? (List<DashboardIndicatorData>)query.executeWithMap(parameters) : (List<DashboardIndicatorData>)query.execute();
