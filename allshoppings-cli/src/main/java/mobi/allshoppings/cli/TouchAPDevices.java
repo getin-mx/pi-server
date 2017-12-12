@@ -36,6 +36,7 @@ public class TouchAPDevices extends AbstractCLI {
 
 	public static void main(String args[]) throws ASException {
 		try {
+			// TODO change to APDReportDAO, add DAO to beans
 			APDeviceDAO apdeviceDao = (APDeviceDAO)getApplicationContext().getBean("apdevice.dao.ref");
 			ExternalAPHotspotDAO eaphDao = (ExternalAPHotspotDAO)getApplicationContext().getBean("externalaphotspot.dao.ref");
 			APDeviceHelper apdeviceHelper = (APDeviceHelper)getApplicationContext().getBean("apdevice.helper");

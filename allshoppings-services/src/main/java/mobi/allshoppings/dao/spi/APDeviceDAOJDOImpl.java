@@ -1,7 +1,5 @@
 package mobi.allshoppings.dao.spi;
 
-import java.util.logging.Logger;
-
 import com.inodes.datanucleus.model.Key;
 
 import mobi.allshoppings.dao.APDeviceDAO;
@@ -10,9 +8,6 @@ import mobi.allshoppings.model.APDevice;
 
 public class APDeviceDAOJDOImpl extends GenericDAOJDO<APDevice> implements APDeviceDAO {
 	
-	@SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(APDeviceDAOJDOImpl.class.getName());
-
 	public APDeviceDAOJDOImpl() {
 		super(APDevice.class);
 	}
