@@ -53,7 +53,7 @@ implements BDBDashboardBzService {
 			List<InnerZone> retList = CollectionFactory.createList();
 			long diff = 0;
 			
-			long millisPre = new Date().getTime();
+			long millisPre = System.currentTimeMillis();
 
 			String entityId = obtainStringValue("entityId", null);
 			Integer entityKind = obtainIntegerValue("entityKind", null);

@@ -2,7 +2,6 @@ package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,14 +55,14 @@ implements BDBDashboardBzService {
 			List<Brand> brandList = CollectionFactory.createList();
 			long diff = 0;
 			
-			long millisPre = new Date().getTime();
+			long millisPre = System.currentTimeMillis();
 
 			// Admin users
 			if( user.getSecuritySettings().getRole().equals(Role.ADMIN)) {
 
 				brandList = brandDao.getUsingLastUpdateStatusAndRange(null, null, false,
 						Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, "uName", null, false);
-				diff = new Date().getTime() - millisPre;
+				diff = System.currentTimeMillis() - millisPre;
 				log.info("Number of brands found [" + brandList.size() + "] in " + diff + " millis");
 
 			} else {
@@ -83,7 +82,7 @@ implements BDBDashboardBzService {
 				}
 			}
 
-			diff = new Date().getTime() - millisPre;
+			diff = System.currentTimeMillis() - millisPre;
 
 			// Logs the result
 			log.info("Number of brands sorted [" + brandList.size() + "] in " + diff + " millis");

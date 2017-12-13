@@ -2,7 +2,6 @@ package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,7 +52,7 @@ implements BDBDashboardBzService {
 			List<Store> storeList = CollectionFactory.createList();
 			long diff = 0;
 			
-			long millisPre = new Date().getTime();
+			long millisPre = System.currentTimeMillis();
 
 			String entityId = obtainStringValue("entityId", null);
 			Integer entityKind = obtainIntegerValue("entityKind", null);
@@ -90,7 +89,7 @@ implements BDBDashboardBzService {
 				storeList.addAll(tmpList);
 			}
 			
-			diff = new Date().getTime() - millisPre;
+			diff = System.currentTimeMillis() - millisPre;
 
 			// Logs the result
 			log.info("Number of stores found [" + storeList.size() + "] in " + diff + " millis");
