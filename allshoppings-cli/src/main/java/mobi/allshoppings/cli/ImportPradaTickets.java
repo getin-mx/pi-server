@@ -214,8 +214,8 @@ public class ImportPradaTickets extends AbstractCLI {
 								storeItemDao.create(si);
 							}	
 							mapper.createStoreTicketDataForDates(d, d, identifier, true);
-							mapper.createStoreRevenueDataForDates(d, d, identifier);
-							mapper.createStoreItemDataForDates(d, d, identifier);
+							mapper.createStoreRevenueDataForDates(d, d, identifier, true);
+							mapper.createStoreItemDataForDates(d, d, identifier, true);
 							count++;
 
 						} catch( ASException e ) {

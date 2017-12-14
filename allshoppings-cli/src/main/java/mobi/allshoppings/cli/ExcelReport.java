@@ -87,11 +87,9 @@ public class ExcelReport extends AbstractCLI {
 			}
 			arg = options.valueOf(BRANDS_PARAM);
 			if(arg != null) {
-				StoreDAO sDao = (StoreDAO)getApplicationContext()
-						.getBean("store.dao.ref");
+				StoreDAO sDao = (StoreDAO)getApplicationContext().getBean("store.dao.ref");
 				for(String id : arg.toString().split(",")) {
-					List<Store> aux = sDao.getUsingBrandAndStatus(id,
-							StatusHelper.statusActive(), null);
+					List<Store> aux = sDao.getUsingBrandAndStatus(id, StatusHelper.statusActive(), null);
 					for(Store s : aux) if(!storeIds.contains(s.getIdentifier()))
 						storeIds.add(s.getIdentifier());
 				}
@@ -106,7 +104,7 @@ public class ExcelReport extends AbstractCLI {
 					@Override
 					public void run() {
 						try {
-							helper.export(store, fromDate, toDate, 5, outDir, null);
+							helper.export(store, fromDate, toDate, 4, outDir, null);
 						} catch (ASException e) {
 							e.printStackTrace();
 						}

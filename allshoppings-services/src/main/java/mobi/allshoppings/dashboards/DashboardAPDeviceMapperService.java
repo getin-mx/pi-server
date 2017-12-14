@@ -881,13 +881,13 @@ public class DashboardAPDeviceMapperService {
 			if( null != entityKind ) {
 				if( entityKind.equals(EntityKind.KIND_BRAND)) {
 					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, false);
-					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId);
-					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId);
+					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, false);
+					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, false);
 				}
 				if( entityKind.equals(EntityKind.KIND_STORE)) {
 					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, false);
-					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), entityId);
-					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), entityId);
+					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, false);
+					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, false);
 				}
 			}
 			
@@ -966,8 +966,7 @@ public class DashboardAPDeviceMapperService {
 		long startTime = System.currentTimeMillis();
 		
 		try {
-			Map<String, DashboardIndicatorData> indicatorsSet =
-					CollectionFactory.createMap();
+			Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
 			List<StoreTicket> tickets =  stDao.getUsingStoreIdAndDatesAndRange(
 					storeId, fromDate, toDate, null, null, false);
 			
@@ -1038,7 +1037,8 @@ public class DashboardAPDeviceMapperService {
 		log.log(Level.INFO, "Finished to create store tickets Dashboard for Day " + fromDate + " to: " + toDate + " total time: "+ (endTime - startTime) + "ms");
 	}
 	
-	public void createStoreItemDataForDates(String fromDate,String toDate, String storeId) throws ASException,ParseException{
+	public void createStoreItemDataForDates(String fromDate,String toDate, String storeId, boolean deletePreviousRecords)
+			throws ASException, ParseException {
 		
 		log.log(Level.INFO, "Starting to create store items Dashboard for Day " + fromDate + " to: " + toDate +"..." );
 		long startTime = System.currentTimeMillis();
@@ -1047,9 +1047,15 @@ public class DashboardAPDeviceMapperService {
 			Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
 			List<StoreItem> items =  siDao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null, null, false);
 			
-			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
+				
+				if(deletePreviousRecords) {
+					for(DashboardIndicatorData did : dao.getUsingFilters(null, null, "apd_visitor",
+							"visitor_total_items", null, storeId, null, fromDate, toDate, null, null, null, null,
+							null, null, null, null))
+						dao.delete(did);
+				}
 				
 				for( StoreItem item: items){		
 					
@@ -1091,7 +1097,8 @@ public class DashboardAPDeviceMapperService {
 		log.log(Level.INFO, "Finished to create store itemss Dashboard for Day " + fromDate + " to: " + toDate + " total time: "+ (endTime - startTime) + "ms");
 	}
 
-	public void createStoreRevenueDataForDates(String fromDate,String toDate, String storeId) throws ASException,ParseException{
+	public void createStoreRevenueDataForDates(String fromDate,String toDate, String storeId,
+			boolean deletePreviousRecords) throws ASException,ParseException{
 		
 		log.log(Level.INFO, "Starting to create store revenue Dashboard for Day " + fromDate + " to: " + toDate +"..." );
 		long startTime = System.currentTimeMillis();
@@ -1103,6 +1110,13 @@ public class DashboardAPDeviceMapperService {
 			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
+				
+				if(deletePreviousRecords) {
+					for(DashboardIndicatorData did : dao.getUsingFilters(null, null, "apd_visitor",
+							"visitor_total_revenue", null, storeId, null, fromDate, toDate, null, null, null, null,
+							null, null, null, null))
+						dao.delete(did);
+				}
 				
 				for( StoreRevenue revenue: revenues){		
 					
