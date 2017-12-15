@@ -980,12 +980,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							break;
 						}
 					} if(invalid) continue;
-					rawSlots.addAll(aphHelper.artificiateRSSI(entry,
-							apdCache.get(entry.getHostname())));
+					rawSlots.addAll(aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname())));
 					// If the mac address is contained in the employee list,
 					// then activates the empoloyee flag
-					isEmployee = employeeListMacs.contains(entry.getMac()
-							.toUpperCase().trim());
+					isEmployee = employeeListMacs.contains(entry.getMac().toUpperCase().trim());
 				}
 			}
 			slots.addAll(rawSlots);
@@ -997,12 +995,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				for(String vendor : INVALID_VENDORS) {
 					if(mac.startsWith(vendor)) return res;
 				}
-				slots = aphHelper.artificiateRSSI(entries.get(0),
-						apdCache.get(entries.get(0).getHostname()));
+				slots = aphHelper.artificiateRSSI(entries.get(0), apdCache.get(entries.get(0).getHostname()));
 				// If the mac address is contained in the employee list,
 				// then activates the empoloyee flag
-				isEmployee = employeeListMacs.contains(entries.get(0).getMac()
-						.toUpperCase().trim());
+				isEmployee = employeeListMacs.contains(entries.get(0).getMac().toUpperCase().trim());
 			}
 		}
 		
@@ -1016,12 +1012,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		// Adds all the devices in the cache
 		Map<String, APDevice> apd = CollectionFactory.createMap();
 		if( apdCache == null || apdCache.size() == 0 ) {
-			for( APHEntry entry : entries ) {
-				apd.put(entry.getHostname(), apdDao.get(entry.getHostname(), true));
-			}
-		} else {
-			apd.putAll(apdCache);
-		}
+			for( APHEntry entry : entries ) apd.put(entry.getHostname(), apdDao.get(entry.getHostname(), true));
+		} else apd.putAll(apdCache);
 		
 		// Adds all the assignments in the cache
 		Map<String,APDAssignation> assignments = CollectionFactory.createMap();
@@ -1728,7 +1720,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		APDVisit peasant = new APDVisit();
 		peasant.setApheSource(source.getIdentifier());
-		peasant.setCheckinStarted(date);// FIXME is this ok?
+		peasant.setCheckinStarted(date);
 		peasant.setCheckinType(APDVisit.CHECKIN_PEASANT);
 		peasant.setEntityId(entityId);
 		peasant.setEntityKind(entityKind);
@@ -1748,162 +1740,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			peasant.setForDate(source.getDate());
 		}
 		peasant.setKey(apdvDao.createKey(peasant));
-		
+
 		return peasant;
-	}
-	
-	@Override
-	public void fakeVisitsWith(String storeId, String fakeWithStoreId, Date fromDate, Date toDate ) throws ASException {
-				
-		List<APDVisit> list1 = apdvDao.getUsingEntityIdAndEntityKindAndDate(storeId, EntityKind.KIND_STORE, fromDate, toDate, null, null, null, null, false);
-		List<APDVisit> list2 = apdvDao.getUsingEntityIdAndEntityKindAndDate(fakeWithStoreId, EntityKind.KIND_STORE, fromDate, toDate, null, null, null, null, false);
-		
-		List<APDVisit> lp = CollectionFactory.createList();
-		List<APDVisit> lv = CollectionFactory.createList();
-
-		SimpleDateFormat sdf = new SimpleDateFormat("HH");
-		
-		Map<Integer, Integer> l2p = CollectionFactory.createMap();
-		Map<Integer, Integer> l2v = CollectionFactory.createMap();
-		int l2pc = 0;
-		int l2vc = 0;
-		int l1pc = 0;
-		int l1vc = 0;
-		
-		for( APDVisit obj : list2 ) {
-			if(obj.getCheckinType().equals(APDVisit.CHECKIN_PEASANT)) {
-				l2pc++;
-				int key = Integer.parseInt(sdf.format(obj.getCheckinStarted()));
-				Integer val = l2p.get(key);
-				if( val == null ) val = 0;
-				val++;
-				l2p.put(key, val);
-			}
-			if(obj.getCheckinType().equals(APDVisit.CHECKIN_VISIT)) {
-				l2vc++;
-				int key = Integer.parseInt(sdf.format(obj.getCheckinStarted()));
-				Integer val = l2v.get(key);
-				if( val == null ) val = 0;
-				val++;
-				l2v.put(key, val);
-			}
-		}
-		
-		for( APDVisit obj : list1 ) {
-			if(obj.getCheckinType().equals(APDVisit.CHECKIN_PEASANT)) {
-				l1pc++;
-				lp.add(obj);
-			}
-			if(obj.getCheckinType().equals(APDVisit.CHECKIN_VISIT)) {
-				l1vc++;
-				lv.add(obj);
-			}
-		}
-
-		int idx = 0;
-		int x = 0;
-		for( int i = 11; i < 20; i++ ) {
-			int xl2p = l2p.get(i);
-			float perc = (xl2p * 100 / l2pc);
-			
-			int count = (int)(perc * l1pc / 100);
-			log.log(Level.INFO, count + " peasants for " + storeId + " and hour " + i);			
-			
-			x = 0;
-			while(x < count && idx < lp.size()) {
-				APDVisit obj = lp.get(idx);
-				idx++;
-				x++;
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(obj.getCheckinStarted());
-				cal.set(Calendar.HOUR_OF_DAY, i);
-				obj.setCheckinStarted(cal.getTime());
-				cal.setTime(obj.getCheckinFinished());
-				cal.set(Calendar.HOUR_OF_DAY, i);
-				obj.setCheckinFinished(cal.getTime());
-				if(obj.getCheckinFinished().before(obj.getCheckinStarted())) {
-					cal.setTime(obj.getCheckinFinished());
-					cal.set(Calendar.HOUR_OF_DAY, i+1);
-					obj.setCheckinFinished(cal.getTime());
-				}
-				apdvDao.update(obj);
-			}
-			
-		}
-
-	
-		idx = 0;
-		x = 0;
-		for( int i = 11; i < 20; i++ ) {
-			int xl2v = l2v.get(i);
-			float perc = (xl2v * 100 / l2vc);
-			
-			int count = (int)(perc * l1vc / 100);
-			log.log(Level.INFO, count + " visits for " + storeId + " and hour " + i);
-
-			x = 0;
-			while(x < count && idx < lv.size()) {
-				APDVisit obj = lv.get(idx);
-				idx++;
-				x++;
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(obj.getCheckinStarted());
-				cal.set(Calendar.HOUR_OF_DAY, i);
-				obj.setCheckinStarted(cal.getTime());
-				cal.setTime(obj.getCheckinFinished());
-				cal.set(Calendar.HOUR_OF_DAY, i);
-				obj.setCheckinFinished(cal.getTime());
-				if(obj.getCheckinFinished().before(obj.getCheckinStarted())) {
-					cal.setTime(obj.getCheckinFinished());
-					cal.set(Calendar.HOUR_OF_DAY, i+1);
-					obj.setCheckinFinished(cal.getTime());
-				}
-				apdvDao.update(obj);
-			}
-			
-		}
-
-	}
-	
-	@Override
-	public void fakeVisitsWith(Store store, Date copyFromDate,
-			Date copyToDate, Date insertFromDate) throws ASException {
-		
-		log.log(Level.INFO, "Processing for store " +store.getName());
-		
-		List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKind(
-				store.getIdentifier(), store.getStoreKind());
-		log.log(Level.INFO, "Starting visit faking process " +" for "
-				+store.getName() +"...");
-		for(APDAssignation asig : assigs) {
-			DumperHelper<APHEntry> dumper = new DumpFactory<APHEntry>()
-					.build(null, APHEntry.class);
-			dumper.setFilter(asig.getHostname());
-			Date currentDate = new Date(copyFromDate.getTime());
-			Date currentCopyD = new Date(insertFromDate.getTime());
-			while(currentDate.compareTo(copyToDate) < 0) {
-				Date toDate = new Date(currentDate.getTime() +DAY_IN_MILLIS);
-				if(toDate.compareTo(copyToDate) > 0) toDate = copyToDate;
-				Iterator<APHEntry> originIt = dumper.iterator(currentDate, toDate);
-				while(originIt.hasNext()) {
-					APHEntry origin = originIt.next();
-					origin.setDate(sdf.format(currentCopyD));
-				}
-				dumper.flush();
-				dumper.dispose();
-				currentCopyD.setTime(currentCopyD.getTime() +DAY_IN_MILLIS);
-				currentDate.setTime(currentDate.getTime() +DAY_IN_MILLIS);
-			}
-			/*Iterator<APHEntry> originals = dumper.iterator(insertFromDate,
-					new Date(currentCopyD.getTime() -DAY_IN_MILLIS));
-			while(originals.hasNext()) loader.dump(originals.next());*/
-			
-			//dumper.dispose();
-			//loader.dispose();
-			
-		}
-		log.log(Level.INFO, "Finished faking aphes " +" for "
-				+store.getName() +"...");
 	}
 	
 }

@@ -1211,10 +1211,6 @@ public class DashboardAPDeviceMapperService {
 		return CALENDAR.get(Calendar.HOUR_OF_DAY);
 	}
 
-	public String getDeviceType(String mac) {
-		return apdHelper.getDevicePlatform(mac, macVendorCache).toLowerCase();
-	}
-
 	public void buildCaches(boolean withMacVendor) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, ASException {
 
 		// Prepares Store cache
