@@ -1,7 +1,6 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,7 +76,7 @@ implements BDBDashboardBzService {
 				}
 			}
 			
-			diff = new Date().getTime() - millisPre;
+			diff = System.currentTimeMillis() - millisPre;
 
 			// Logs the result
 			log.info("Number of stores found [" + retList.size() + "] in " + diff + " millis");

@@ -273,12 +273,24 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								dumpHelper.setFilter(assigs.get(0).getHostname());
 								
 								Iterator<APHEntry> i = integrateAPHE(dumpHelper, apdCache.get(
-										assigs.get(0).getHostname()), entityId, entityKind, forDate,
-										tz, sFromDate, lastDate).iterator();
+										assigs.get(0).getHostname()), forDate, tz, sFromDate, lastDate,
+										START_CALENDAR, END_CALENDAR).iterator();
 								dumpHelper.dispose();
 
-								integrateAPDV(i, objs, onlyEmployees, employeeListMacs, apdCache,
-										assignmentsCache, blackListMacs, tz);
+								while( i.hasNext() ) {
+									APHEntry entry = i.next();
+									// Employee check
+									if(!onlyEmployees || employeeListMacs.contains(entry.getMac().toUpperCase())) {
+										List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,
+												blackListMacs, employeeListMacs, tz);
+										for(APDVisit visit : visitList ) {
+											if(!onlyEmployees ||
+													visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE)) {
+												objs.add(visit);
+											}
+										}
+									}
+								}
 							} else {
 								Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
 								List<String> hostnames = CollectionFactory.createList();
@@ -289,17 +301,15 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 										apdCache.put(assig.getHostname(), apdDao.get(assig.getHostname(), true));
 								}
 
-								log.log(Level.INFO, "Fetching APHEntries for " + name + " and "
-											+ curDate + "...");
-								log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and "
-											+ curDate + "...");
+								log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + curDate + "...");
+								log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and " + curDate + "...");
 								// Get APHE records
 								for( String hostname : hostnames ) {
 									dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
 									dumpHelper.setFilter(hostname);
 									
 									Iterator<APHEntry> i = integrateAPHE(dumpHelper, apdCache.get(hostname),
-											entityId, entityKind, forDate, tz, sFromDate, lastDate).iterator();
+											forDate, tz, sFromDate, lastDate, START_CALENDAR, END_CALENDAR).iterator();
 									dumpHelper.dispose();
 
 									while( i.hasNext() ) {
@@ -315,9 +325,13 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								Iterator<String> i = cache.keySet().iterator();
 								while(i.hasNext()) {
 									String key = i.next();
-									List<APHEntry> e = cache.get(key);
-									integrateAPDV(e.iterator(), objs, onlyEmployees, employeeListMacs,
-											apdCache, assignmentsCache, blackListMacs, tz);
+									List<APDVisit> visitList = aphEntryToVisits(cache.get(key), apdCache, assignmentsCache,
+											blackListMacs, employeeListMacs, tz);
+									for(APDVisit visit : visitList ) {
+										if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE)) {
+											objs.add(visit);
+										}
+									}
 								}
 							} if(objs.size() == 0) {
 								log.log(Level.INFO, "No data found for " +name +", skipping...");
@@ -370,38 +384,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	}//generateAPDVisit
 	
 	/**
-	 * Creates APDVisits from seeds APHEntries.
-	 * @param i - The seeds APHE iterator.
-	 * @param results - The results list.
-	 * @param onlyEmployees - If only employees should be processed.
-	 * @param employeeListMacs - List with the employees' MAC addresses.
-	 * @param apdCache - A map with the entity's APDevices; mapping hostname - device  
-	 * @param assignmentsCache - A map with the entity's assignements; mappging hostname - assignation
-	 * @param blackListMacs - A list with the black list MAC addresses.
-	 * @param tz - The local entity's timezone.
-	 * @throws ASException - If something goes wrong.
-	 * @since APDVisit Helper Impl 2.0, december 2017
-	 */
-	private void integrateAPDV(Iterator<APHEntry> i, List<APDVisit> results, boolean onlyEmployees,
-			List<String> employeeListMacs, Map<String, APDevice> apdCache,
-			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs, TimeZone tz)
-	throws ASException {
-		while( i.hasNext() ) {
-			APHEntry entry = i.next();
-			// Employee check
-			if(!onlyEmployees || employeeListMacs.contains(entry.getMac().toUpperCase())) {
-				List<APDVisit> visitList = aphEntryToVisits(entry, apdCache, assignmentsCache,
-						blackListMacs, employeeListMacs, tz);
-				for(APDVisit visit : visitList ) {
-					if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE)) {
-						results.add(visit);
-					}
-				}
-			}
-		}
-	}
-	
-	/**
 	 * Loads the APHE for the given antenna. Based on the specified local time, it discards any APHE
 	 * outside the monitoring schedule and any APHE with only two or less identical MAC address.
 	 * @param dumpHelper - The dump helper to load the APHE.
@@ -415,9 +397,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * loads APHE from the next date to prevent load missing data from the local timezone's prespective.
 	 * @return List&lt;APHE&gt; - The loaded APHE for the given date (may include next a date's extra).
 	 */
-	private List<APHEntry> integrateAPHE(DumperHelper<APHEntry> dumpHelper, APDevice calibration,
-			String entityId, Integer entityKind, String forStringDate, TimeZone tz,
-			String begginingDate, boolean lastDay) {
+	public static List<APHEntry> integrateAPHE(DumperHelper<APHEntry> dumpHelper, APDevice calibration,
+			String forStringDate, TimeZone tz, String begginingDate, boolean lastDay, Calendar startCal,
+			Calendar endCal) {//TODO move to interface
 		
 		Map<String, APHEntry> map = CollectionFactory.createMap();
 		List<APHEntry> res = CollectionFactory.createList();
@@ -428,38 +410,34 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		int lowerLimit, higherLimit;
 		
-		START_CALENDAR.clear();
-		END_CALENDAR.clear();
+		startCal.clear();
+		endCal.clear();
 		
-		START_CALENDAR.setTimeZone(GMT);
-		END_CALENDAR.setTimeZone(GMT);
+		startCal.setTimeZone(GMT);
+		endCal.setTimeZone(GMT);
 		
-		START_CALENDAR.set(year, month, day);
-		END_CALENDAR.set(year, month, day);
-		END_CALENDAR.add(Calendar.DATE, 1);
-		END_CALENDAR.add(Calendar.MILLISECOND, -1);
+		startCal.set(year, month, day);
+		endCal.set(year, month, day);
+		endCal.add(Calendar.DATE, 1);
+		endCal.add(Calendar.MILLISECOND, -1);
 
-		int timezoneSlotsOffset = tz.getOffset(START_CALENDAR.getTimeInMillis());
+		int timezoneSlotsOffset = tz.getOffset(startCal.getTimeInMillis());
 		
-		Iterator<APHEntry> i = dumpHelper.iterator(START_CALENDAR.getTime(), END_CALENDAR.getTime());
+		Iterator<APHEntry> i = dumpHelper.iterator(startCal.getTime(), endCal.getTime());
 			
-		START_CALENDAR.set(year, month, day, Integer.parseInt(
-				calibration.getMonitorStart().substring(0, 2)),
+		startCal.set(year, month, day, Integer.parseInt(calibration.getMonitorStart().substring(0, 2)),
 				Integer.parseInt(calibration.getMonitorStart().substring(3, 5)));
-		END_CALENDAR.set(year, month, day, Integer.parseInt(
-				calibration.getMonitorEnd().substring(0, 2)),
+		endCal.set(year, month, day, Integer.parseInt(calibration.getMonitorEnd().substring(0, 2)),
 				Integer.parseInt(calibration.getMonitorEnd().substring(3, 5)));
-		lowerLimit = (START_CALENDAR.get(Calendar.MINUTE) *60
-				+START_CALENDAR.get(Calendar.HOUR_OF_DAY) *60 *60) /20;
-		higherLimit = (END_CALENDAR.get(Calendar.MINUTE) *60
-				+END_CALENDAR.get(Calendar.HOUR_OF_DAY) *60 *60) /20;
+		lowerLimit = (startCal.get(Calendar.MINUTE) *60 +startCal.get(Calendar.HOUR_OF_DAY) *60 *60) /20;
+		higherLimit = (endCal.get(Calendar.MINUTE) *60 +endCal.get(Calendar.HOUR_OF_DAY) *60 *60) /20;
 		if(higherLimit == 0) higherLimit = SLOT_NUMBER_IN_DAY;
 		
-		WORK_CALENDAR.clear();
+		startCal.clear();
 		year = Integer.parseInt(begginingDate.substring(0,4));
 		month = Integer.parseInt(begginingDate.substring(5,7)) -1;
 		day = Integer.parseInt(begginingDate.substring(8));
-		WORK_CALENDAR.set(year, month, day);
+		startCal.set(year, month, day);
 		
 		timezoneSlotsOffset /= MILLIS_TO_TWENTY_SECONDS_SLOT;
 		
@@ -488,7 +466,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				slot += timezoneSlotsOffset;
 				testSlot = slot;
 				if(testSlot < 0) {
-					if(WORK_CALENDAR.get(Calendar.DATE) >= Integer.parseInt(aphe.getDate().substring(8))) continue;
+					if(startCal.get(Calendar.DATE) >= Integer.parseInt(aphe.getDate().substring(8))) continue;
 					testSlot += SLOT_NUMBER_IN_DAY;
 				} else if(lastDay) continue;
 				if(testSlot >= SLOT_NUMBER_IN_DAY) testSlot -= SLOT_NUMBER_IN_DAY;
@@ -974,9 +952,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @return A list with created visits
 	 * @throws ASException
 	 */
-	private List<APDVisit> aphEntryToVisitsMarkII(List<APHEntry> entries,
-			Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache,
-			List<String> blackListMacs, List<String> employeeListMacs, TimeZone tz) throws ASException {
+	private List<APDVisit> aphEntryToVisitsMarkII(List<APHEntry> entries, Map<String, APDevice> apdCache,
+			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,
+			List<String> employeeListMacs, TimeZone tz) throws ASException {
 
 		// Validates entries
 		if( CollectionUtils.isEmpty(entries))
@@ -1033,7 +1011,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		// if the device has been here for six hours or more, then it doesnt count.
 		// Every slot represents 20 s, so 6H = 6 *60 *60 s; then maximum number of
 		// slots is 6 *60 *60 /20 = 1080
-		if(slots.size() >= MAXIMUM_TIME_SLOTS) return res;
+		if(entries.size() == 1 && slots.size() >= MAXIMUM_TIME_SLOTS) return res;
 		
 		// Adds all the devices in the cache
 		Map<String, APDevice> apd = CollectionFactory.createMap();
@@ -1050,16 +1028,13 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		if( assignmentsCache == null || assignmentsCache.size() == 0 ) {
 			for( APHEntry entry : entries ) {
 				try {
-					assignments.put(entry.getHostname(),
-							apdaDao.getOneUsingHostnameAndDate(entry.getHostname(),
-									sdf.parse(entry.getDate())));
+					assignments.put(entry.getHostname(), apdaDao.getOneUsingHostnameAndDate(entry.getHostname(),
+							sdf.parse(entry.getDate())));
 				} catch( Exception e ) {
 					log.log(Level.SEVERE, "Error parsing date " + entry.getDate(), e);
 				}
 			}
-		} else {
-			assignments.putAll(assignmentsCache);
-		}
+		} else assignments.putAll(assignmentsCache);
 
 		// Defines temporary work variables
 		Integer lastSlot = null;

@@ -1,7 +1,6 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -16,15 +15,12 @@ import org.springframework.util.StringUtils;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBPostBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
-import mobi.allshoppings.dao.CinemaDAO;
 import mobi.allshoppings.dao.FloorMapDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dao.WifiSpotDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.Cinema;
-import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.FloorMap;
 import mobi.allshoppings.model.WifiSpot;
 import mobi.allshoppings.model.adapter.FloorMapAdapter;
@@ -36,14 +32,11 @@ import mobi.allshoppings.tools.CollectionFactory;
 /**
  *
  */
-public class FloorMapDataBzServiceJSONImpl
-extends BDBRestBaseServerResource
-implements BDBDashboardBzService, BDBPostBzService {
+public class FloorMapDataBzServiceJSONImpl extends BDBRestBaseServerResource implements BDBDashboardBzService,
+BDBPostBzService {
 
 	private static final Logger log = Logger.getLogger(FloorMapDataBzServiceJSONImpl.class.getName());
 
-	@Autowired
-	private CinemaDAO cinemaDao;
 	@Autowired
 	private FloorMapDAO floormapDao;
 	@Autowired
@@ -68,29 +61,20 @@ implements BDBDashboardBzService, BDBPostBzService {
 //			obtainUserIdentifier(true);
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			//Integer entityKind = obtainIntegerValue("entityKind", null);
 			String floorMapId = obtainStringValue("floorMapId", null);
 
 			if( !StringUtils.hasText(floorMapId)) {
-				String shoppingId = null;
-
-				if( entityKind == null || entityKind.equals(EntityKind.KIND_SHOPPING)) {
-					shoppingId = entityId;
-				} else {
-					Cinema cinema = cinemaDao.get(entityId, true);
-					shoppingId = cinema.getShoppingId();
-				}
-
+				
 				// inject adapter options
 				Map<String,Object> options = CollectionFactory.createMap();
 				options.put(FloorMapAdapter.OPTIONS_SHOPPINGDAO, shoppingDao);
 				options.put(FloorMapAdapter.OPTIONS_STOREDAO, storeDao);
 
 				long millisPre = System.currentTimeMillis();
-				List<FloorMapAdapter> list = new GenericAdapterImpl<FloorMapAdapter>()
-						.adaptList(floormapDao.getUsingStatusAndShoppingId(
-								StatusAware.STATUS_ENABLED, shoppingId), null,
-								null, null, options);
+				List<FloorMapAdapter> list = new GenericAdapterImpl<FloorMapAdapter>().adaptList(
+						floormapDao.getUsingStatusAndShoppingId(StatusAware.STATUS_ENABLED, entityId),
+						null, null, null, options);
 				long diff = System.currentTimeMillis() - millisPre;
 
 				// Logs the result

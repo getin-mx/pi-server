@@ -40,8 +40,7 @@ public class UpdateCheckins extends AbstractCLI {
 			Date toDate = null;
 			
 			try {
-				if( options.has("fromDate")) sFromDate =
-						(String)options.valueOf("fromDate");
+				if( options.has("fromDate")) sFromDate = (String)options.valueOf("fromDate");
 				if( options.has("toDate")) sToDate = (String)options.valueOf("toDate");
 				
 				if( StringUtils.hasText(sFromDate)) fromDate = sdf.parse(sFromDate);

@@ -45,9 +45,8 @@ import mobi.allshoppings.tools.Range;
 /**
  *
  */
-public class StoreItemDataBzServiceJSONImpl
-extends BDBRestBaseServerResource
-implements BDBDashboardBzService, BDBPostBzService {
+public class StoreItemDataBzServiceJSONImpl extends BDBRestBaseServerResource implements BDBDashboardBzService,
+BDBPostBzService {
 
 	private static final Logger log = Logger.getLogger(StoreItemDataBzServiceJSONImpl.class.getName());
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -183,7 +182,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 					i++;
 					curDate = new Date(curDate.getTime() + ONE_DAY);
 				}
-				mapper.createStoreItemDataForDates(fromDate, toDate, storeId);
+				mapper.createStoreItemDataForDates(fromDate, toDate, storeId, true);
 
 				return generateJSONOkResponse().toString();
 			}
@@ -295,7 +294,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 							dao.create(obj);
 						}
 					}
-					mapper.createStoreItemDataForDates(fromDate, toDate, store.getIdentifier());
+					mapper.createStoreItemDataForDates(fromDate, toDate, store.getIdentifier(), true);
 				}
 			}
 			

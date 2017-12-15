@@ -2,11 +2,6 @@ package mobi.allshoppings.dashboards;
 
 import java.sql.SQLException;
 import java.text.ParseException;
-//import java.sql.Connection;
-//import java.sql.DriverManager;
-//import java.sql.ResultSet;
-//import java.sql.SQLException;
-//import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -19,16 +14,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.time.DateUtils;
-//import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import com.google.gson.Gson;
+import com.inodes.datanucleus.model.Key;
 
 import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.apdevice.APHHelper;
+import mobi.allshoppings.apdevice.impl.APDVisitHelperImpl;
 import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
@@ -74,22 +70,19 @@ import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CollectionUtils;
 import mobi.allshoppings.tools.GsonFactory;
+import mx.getin.Constants;
 
 public class DashboardAPDeviceMapperService {
 
 	private static final Logger log = Logger.getLogger(DashboardAPDeviceMapperService.class.getName());
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
+	private static final SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT);
+	private static final TimeZone GMT = TimeZone.getTimeZone(Constants.GMT_TIMEZONE_ID);
 	
-	/**
-	 * Entity Kind to use
-	 */
-	public static final long TWENTY_FOUR_HOURS = 86400000;
-
-	private static final SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
+	private static final SimpleDateFormat dateSDF = new SimpleDateFormat(Constants.DATE_FORMAT);
 	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	private static final Gson gson = GsonFactory.getInstance();
-	private static final Calendar CALENDAR = Calendar.getInstance();
+	private final Calendar CALENDAR = Calendar.getInstance();
+	private final Calendar AUX_CALENDAR = Calendar.getInstance();
 
 	/**
 	 * DAOs 
@@ -154,12 +147,13 @@ public class DashboardAPDeviceMapperService {
 	}
 	
 	// General Driver ----------------------------------------------------------------------------------------------------------------------------------------
-	public void createDashboardDataForDays(String baseDir, Date fromDate, Date toDate, List<String> entityIds, List<Integer> phases) throws ASException {
+	public void createDashboardDataForDays(String baseDir, Date fromDate, Date toDate, List<String> entityIds,
+			List<Integer> phases, boolean deletePreviousRecords) throws ASException {
 		try {
 			buildCaches(true);
 
 			Date curDate = new Date(fromDate.getTime());
-			while( curDate.before(toDate) || curDate.equals(toDate)) {
+			while( curDate.before(toDate)) {
 				
 				if( CollectionUtils.isEmpty(phases) || phases.contains(PHASE_WIFI_HEATMAP))
 					createHeatmapDashboardForDay(baseDir, curDate);
@@ -171,12 +165,13 @@ public class DashboardAPDeviceMapperService {
 					createExternalAPDeviceHeatmapDashboardForDay(entityIds, curDate);
 
 				if( CollectionUtils.isEmpty(phases) || phases.contains(PHASE_FLOORMAP_TRACKING))
-					createFloorMapTrackingForDay(curDate, entityIds);
+					createFloorMapTrackingForDay(curDate, entityIds, deletePreviousRecords, dateSDF.format(fromDate),
+							curDate.getTime() +Constants.DAY_IN_MILLIS < toDate.getTime());
 
 				if( CollectionUtils.isEmpty(phases) || phases.contains(PHASE_APDVISIT))
 					createAPDVisitPerformanceDashboardForDay(curDate, entityIds, null, null);
 
-				curDate = new Date(curDate.getTime() + TWENTY_FOUR_HOURS);
+				curDate = new Date(curDate.getTime() + Constants.DAY_IN_MILLIS);
 
 			}
 
@@ -195,7 +190,7 @@ public class DashboardAPDeviceMapperService {
 	public void createHeatmapDashboardForDay(String baseDir, Date date) throws ASException {
 
 		log.log(Level.INFO, "Starting to create Heatmap Dashboard for Day " + date + "...");
-		long startTime = new Date().getTime();
+		long startTime = System.currentTimeMillis();
 
 		Date processDate = DateUtils.truncate(date, Calendar.DAY_OF_MONTH);
 		Date limitDate = DateUtils.addDays(processDate, 1);
@@ -204,7 +199,8 @@ public class DashboardAPDeviceMapperService {
 		log.log(Level.INFO, "LimitDate " + limitDate);
 
 		// All Wifi Data
-		DumperHelper<DeviceWifiLocationHistory> dumper = new DumpFactory<DeviceWifiLocationHistory>().build(baseDir, DeviceWifiLocationHistory.class);
+		DumperHelper<DeviceWifiLocationHistory> dumper = new DumpFactory<DeviceWifiLocationHistory>().build(baseDir,
+				DeviceWifiLocationHistory.class);
 		Iterator<DeviceWifiLocationHistory> i = dumper.iterator(processDate, limitDate);
 
 		Map<String, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
@@ -256,16 +252,16 @@ public class DashboardAPDeviceMapperService {
 			}
 		}
 
-		log.log(Level.INFO, "Starting Write Procedure for "
-		+indicatorsSet.hashCode() +" indicators...");
+		log.log(Level.INFO, "Starting Write Procedure for " +indicatorsSet.hashCode() +" indicators...");
 
 		// Finally, save all the information
 		saveIndicatorSet(indicatorsSet);
 
 		dumper.dispose();
 		
-		long endTime = new Date().getTime();
-		log.log(Level.INFO, "Finished to create Heatmap Dashboard for Day " + date + " in " + (endTime - startTime) + "ms");
+		long endTime = System.currentTimeMillis();
+		log.log(Level.INFO, "Finished to create Heatmap Dashboard for Day " + date + " in "
+					+ (endTime - startTime) + "ms");
 
 	}
 
@@ -363,7 +359,8 @@ public class DashboardAPDeviceMapperService {
 
 
 		long endTime = System.currentTimeMillis();
-		log.log(Level.INFO, "Finished to create APDevice Heatmap Dashboard for Day " + date + " in " + (endTime - startTime) + "ms");
+		log.log(Level.INFO, "Finished to create APDevice Heatmap Dashboard for Day " + date + " in "
+					+ (endTime - startTime) + "ms");
 
 	}
 
@@ -371,7 +368,7 @@ public class DashboardAPDeviceMapperService {
 	public void createExternalAPDeviceHeatmapDashboardForDay(List<String> entityIds, Date date) throws ASException {
 
 		log.log(Level.INFO, "Starting to create External APDevice Heatmap Dashboard for Day " + date + "...");
-		long startTime = new Date().getTime();
+		long startTime = System.currentTimeMillis();
 
 		Date processDate = DateUtils.truncate(date, Calendar.DAY_OF_MONTH);
 		Date limitDate = DateUtils.addDays(processDate, 1);
@@ -383,10 +380,8 @@ public class DashboardAPDeviceMapperService {
 
 		List<String> pList = CollectionFactory.createList();
 		
-		if( entityIds == null || entityIds.isEmpty())
-			pList.addAll(floorMapCache.keySet());
-		else
-			pList.addAll(entityIds);
+		if( entityIds == null || entityIds.isEmpty()) pList.addAll(floorMapCache.keySet());
+		else pList.addAll(entityIds);
 
 		for( String floorMapIdentifier : pList) {
 			try {
@@ -429,8 +424,6 @@ public class DashboardAPDeviceMapperService {
 								String forDate = sdf.format(hotspot.getCreationDateTime());
 								
 								// heatmap ----------------------------------------------------------------------------------------------
-								// heatmap ----------------------------------------------------------------------------------------------
-								// ------------------------------------------------------------------------------------------------------
 								if( EntityKind.KIND_SHOPPING == entityKind ) {
 									obj = buildBasicDashboardIndicatorData(
 											"heatmap_data", "Heat Map Data", wifiSpot.getIdentifier(),
@@ -469,37 +462,36 @@ public class DashboardAPDeviceMapperService {
 			}
 		}
 
-		log.log(Level.INFO, "Starting Write Procedure for "
-				+indicatorsSet.size() +"indicators...");
+		log.log(Level.INFO, "Starting Write Procedure for " +indicatorsSet.size() +"indicators...");
 
 		// Finally, save all the information
 		saveIndicatorSet(indicatorsSet);
 
-		long endTime = new Date().getTime();
-		log.log(Level.INFO, "Finished to create APDevice Heatmap Dashboard for Day " + date + " in " + (endTime - startTime) + "ms");
+		long endTime = System.currentTimeMillis();
+		log.log(Level.INFO, "Finished to create APDevice Heatmap Dashboard for Day " + date + " in "
+					+ (endTime - startTime) + "ms");
 
 	}
 
 
 	// Floor Map Tracking --------------------------------------------------------------------------------------------------------------------------------
-	public void createFloorMapTrackingForDay(Date date, List<String> entityIds) throws ASException {
+	public void createFloorMapTrackingForDay(Date date, List<String> entityIds, boolean deletePreviousRecords,
+			String begginingDate, boolean lastDay) throws ASException {
 
 		log.log(Level.INFO, "Starting to create Floor Map Tracking Dashboard for Day " + date + "...");
 		long startTime = System.currentTimeMillis();
 
-		Date processDate = new Date(date.getTime());
+		String processDate = dateSDF.format(date.getTime());
 		CALENDAR.setTime(date);
 		CALENDAR.add(Calendar.DATE, 1);
-		Date limitDate = CALENDAR.getTime();
+		String limitDate = dateSDF.format(CALENDAR.getTime());
 
 		log.log(Level.INFO, "ProcessDate " + processDate);
 		log.log(Level.INFO, "LimitDate " + limitDate);
 
 		List<String> pList = CollectionFactory.createList();
-		if( entityIds == null || entityIds.isEmpty())
-			pList.addAll(systemConfiguration.getFloorMapTracking());
-		else
-			pList.addAll(entityIds);
+		if( entityIds == null || entityIds.isEmpty()) pList.addAll(systemConfiguration.getFloorMapTracking());
+		else pList.addAll(entityIds);
 		
 		try {
 			for( String floorMapIdentifier : pList ) {
@@ -521,130 +513,134 @@ public class DashboardAPDeviceMapperService {
 					}
 				}
 
-				List<String> macs = apheDao.getMacsUsingHostnameAndDates(apDeviceIds, date, date);
-				log.log(Level.INFO, "recovered " + macs.size() + " macs");
-
-				long count = 0;
-				
-				for( String mac : macs ) {
-					
-					if( count % 100 == 0 )
-						log.log(Level.INFO, "Processing record " + count + " of " + macs.size() + "...");
-					
-					count++;
-//					if( count > 100 ) break;
-					
-					List<APHEntry> aphes = CollectionFactory.createList();
-					for( String apDeviceId : apDeviceIds) {
-						try { aphes.add(apheDao.get(aphHelper.getHash(apDeviceId, mac, date ), true));
-						} catch( Exception e ) {}
-					}
-					
-					// Find the minimal slot time for this mac address.
-					// It means, the first time that this mac was saw for any of the APDevices
-					int minimalSlot = 99999;
-					int maximalSlot = 0;
-					int maxDataCount = 0;
-					int maxVisitTimeThreshold = 0;
-					boolean valid = false;
-					for( APHEntry entry : aphes ) {
-						try {
-							List<Integer> arr = aphHelper.timeslotToList(entry.getArtificialRssi());
-							// Search for minimal slot
-							int myMinimalSlot = arr.get(0);
-							if( myMinimalSlot < minimalSlot )
-								minimalSlot = myMinimalSlot;
-
-							// Search for maximal slot
-							int myMaximalSlot = arr.get(arr.size() -1);
-							if( myMaximalSlot > maximalSlot )
-								maximalSlot = myMaximalSlot;
-
-							// Search for dataCount
-							if( entry.getDataCount() > maxDataCount )
-								maxDataCount = entry.getDataCount();
-							
-							// Search for max visit time threshold
-							APDevice apd = apDevices.get(entry.getHostname());
-							if( apd.getVisitMaxThreshold() > maxVisitTimeThreshold)
-								maxVisitTimeThreshold = apd.getVisitMaxThreshold().intValue();
-							
-							// Try basic rules
-							int distance = (int)((myMaximalSlot - myMinimalSlot) / 3);
-							if( entry.getMaxRssi() >= apd.getVisitPowerThreshold())
-								if( distance >= apd.getVisitTimeThreshold())
-									if( distance <= apd.getVisitMaxThreshold() )
-										valid = true;
-
-						} catch( Exception e ) {
-							// no element found
+				Map<String, List<APHEntry>> macEntries = CollectionFactory.createMap();
+				Map<Key, FloorMapJourney> journies = CollectionFactory.createMap();
+				for(String hostname : apDeviceIds) {
+					DumperHelper<APHEntry> dumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
+					dumper.setFilter(hostname);
+					for(APHEntry entry : APDVisitHelperImpl.integrateAPHE(dumper, apDevices.get(hostname),
+							processDate, getTimezoneForEntity(floorMapIdentifier, EntityKind.KIND_SHOPPING),
+							begginingDate, lastDay, CALENDAR, AUX_CALENDAR)) {
+						List<APHEntry> entryList = macEntries.get(entry.getMac());
+						if(entryList == null) {
+							entryList = CollectionFactory.createList();
+							macEntries.put(entry.getMac(), entryList);
 						}
+						entryList.add(entry);
 					}
+					dumper.dispose();
+					long count = 0;
+					for(String mac : macEntries.keySet()) {
+						
+						if(count % 1000 == 0 )
+							log.log(Level.INFO, "Processing record " + count + " of " + macEntries.size() + "...");
+						
+						count++;
+						List<APHEntry> aphes = macEntries.get(mac);
+						
+						// Find the minimal slot time for this mac address.
+						// It means, the first time that this mac was saw for any of the APDevices
+						int minimalSlot = Integer.MAX_VALUE;
+						int maximalSlot = 0;
+						int maxDataCount = 0;
+						int maxVisitTimeThreshold = 0;
+						boolean valid = false;
+						for( APHEntry entry : aphes ) {
+							try {
+								List<Integer> arr = aphHelper.artificiateRSSI(entry, apDevices.get(hostname));
+								// Search for minimal slot
+								int myMinimalSlot = arr.get(0);
+								if( myMinimalSlot < minimalSlot )
+									minimalSlot = myMinimalSlot;
 
-					// Discard if visit is too long
-					if( maxDataCount / 3 > maxVisitTimeThreshold)
-						valid = false;
-					
-					if( valid ) {
-						// Create the final journey
-						FloorMapJourney journey = new FloorMapJourney();
-						journey.setDate(dateSDF.format(date));
-						journey.setMac(mac);
-						journey.setFloorMapId(fm.getIdentifier());
-						journey.setKey(fmjDao.createKey(journey));
+								// Search for maximal slot
+								int myMaximalSlot = arr.get(arr.size() -1);
+								if( myMaximalSlot > maximalSlot )
+									maximalSlot = myMaximalSlot;
 
-						// Navigate through the time slots, from minimum to maximum slot
-						for( int i = minimalSlot; i <= maximalSlot; i++ ) {
+								// Search for dataCount
+								if( entry.getDataCount() > maxDataCount )
+									maxDataCount = entry.getDataCount();
+								
+								// Search for max visit time threshold
+								APDevice apd = apDevices.get(entry.getHostname());
+								if( apd.getVisitMaxThreshold() > maxVisitTimeThreshold)
+									maxVisitTimeThreshold = apd.getVisitMaxThreshold().intValue();
+								
+								// Try basic rules
+								int distance = (int)((myMaximalSlot - myMinimalSlot) / 3);
+								valid = entry.getMaxRssi() >= apd.getVisitPowerThreshold() &&
+										distance >= apd.getVisitTimeThreshold() && distance <= apd.getVisitMaxThreshold();
 
-							// And for each slot, try to find the closest APDevice
-							String position = null;
-							int signal = -999999;
+							} catch( Exception e ) {
+								// no element found
+							}
+						}
 
-							for( APHEntry entry : aphes ) {
-								Integer val = entry.getArtificialRssi().get(String.valueOf(i)); 
-								if( null != val && val > signal ) {
-									signal = val;
-									position = entry.getHostname();
+						// Discard if visit is too long
+						if( maxDataCount / 3 > maxVisitTimeThreshold)
+							valid = false;
+						
+						if( valid ) {
+							// Create the final journey
+							FloorMapJourney journey = new FloorMapJourney();
+							journey.setDate(dateSDF.format(date));
+							journey.setMac(mac);
+							journey.setFloorMapId(fm.getIdentifier());
+							journey.setKey(fmjDao.createKey(journey));
+
+							// Navigate through the time slots, from minimum to maximum slot
+							for( int i = minimalSlot; i <= maximalSlot; i++ ) {
+
+								// And for each slot, try to find the closest APDevice
+								String position = null;
+								int signal = Integer.MIN_VALUE;
+
+								for( APHEntry entry : aphes ) {
+									Integer val = entry.getArtificialRssi().get(String.valueOf(i)); 
+									if( null != val && val > signal ) {
+										signal = val;
+										position = entry.getHostname();
+									}
 								}
+
+								if( null != position && null != apMap.get(position) && null != journey.getWifiPoints() )
+									journey.getWifiPoints().put(String.valueOf(i), apMap.get(position).getIdentifier());
+
 							}
 
-							if( null != position && null != apMap.get(position) && null != journey.getWifiPoints() )
-								journey.getWifiPoints().put(String.valueOf(i), apMap.get(position).getIdentifier());
-
-						}
-
-						// Add word for patter porpouses
-						List<Integer> times = aphHelper.timeslotToList(journey.getWifiPoints());
-						for(Integer slot : times) {
-							String wifiSpotId = journey.getWifiPoints().get(String.valueOf(slot));
-							if( null != wifiSpotId ) {
+							// Add word for patter porpouses
+							for(Integer slot : aphHelper.timeslotToList(journey.getWifiPoints())) {
+								String wifiSpotId = journey.getWifiPoints().get(String.valueOf(slot));
+								if( null == wifiSpotId ) continue;
 								String chr = wifiSpotCache.get(wifiSpotId).getWordAlias();
 								if(journey.getWord().size() == 0 
 										|| !journey.getWord().get(journey.getWord().size() - 1).equals(chr))
 									journey.getWord().add(chr);
 							}
-						}
-						journey.setDataCount(journey.getWifiPoints().size());
-						journey.setWordLength(journey.getWord().size());
-						
-						// Creates the user journey
-						if( journey.getWordLength() > 1 ) {
-							try {
-								fmjDao.create(journey);
-							} catch( Exception e ) {
-								log.log(Level.WARNING, e.getMessage(), e);
+							journey.setDataCount(journey.getWifiPoints().size());
+							journey.setWordLength(journey.getWord().size());
+							
+							// Creates the user journey
+							if( journey.getWordLength() > 1 ) {
+								try {
+									journies.put(journey.getKey(), journey);
+								} catch( Exception e ) {
+									log.log(Level.WARNING, e.getMessage(), e);
+								}
 							}
-						}
+						} if(deletePreviousRecords) {
+							for(FloorMapJourney toDelte : fmjDao.getUsingFloorMapAndMacAndDate(floorMapIdentifier,
+									mac, processDate, limitDate, null, null))
+								fmjDao.delete(toDelte);
+						}//if must delete previous records 
 					}
-					
-				}
+				}//fetches all macs
+				
+				log.log(Level.INFO, "Witting database with " +journies.size() +" results...");
+				fmjDao.createOrUpdate(null, CollectionFactory.createList(journies.values()), true);
+								
 			}
-			
-			
-			/*log.log(Level.INFO, "Starting Write Procedure for "
-					+indicatorsSet.+" indicators...");*/
-			// FIXME not storing anything!
-
 			long endTime = System.currentTimeMillis();
 			log.log(Level.INFO, "Finished to create Floor Map Tracking Dashboard for Day " + date + " in "
 					+ (endTime - startTime) + "ms");
@@ -684,7 +680,7 @@ public class DashboardAPDeviceMapperService {
 			if(data == null || data.size() == 0) {
 				// Prepares the Object Query
 				Date dateFrom = new Date(date.getTime());
-				Date dateTo = new Date(dateFrom.getTime() + TWENTY_FOUR_HOURS);
+				Date dateTo = new Date(dateFrom.getTime() + Constants.DAY_IN_MILLIS);
 				store = storeCache.get(entityId);
 				if( store == null ) {
 					store = storeDao.get(entityId, true);
