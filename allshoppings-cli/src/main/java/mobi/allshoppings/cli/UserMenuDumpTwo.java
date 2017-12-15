@@ -1625,6 +1625,50 @@ public class UserMenuDumpTwo extends AbstractCLI {
 						  brunoCorza.setKey((Key) keyHelper.obtainKey(User.class, "brunocorza_mx"));
 						  userDao.create(brunoCorza);
 						}
+					
+						//bcorza sistemas
+						try {
+							  um = userMenuDao.get("sistemas_bruno_corza", true);
+							  userMenuDao.delete("sistemas_bruno_corza");
+							  throw new Exception();
+							} catch (Exception e) {
+							  um = new UserMenu();
+							  um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+							  um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+							  um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
+
+							  um.setKey(userMenuDao.createKey("sistemas_bruno_corza"));
+							  userMenuDao.create(um);
+							}
+
+
+							User sistemasBrunoCorza = null;
+							try {
+							  userDao.delete("sistemas_bruno_corza");
+							  throw new Exception();
+							} catch (Exception e) {
+							  log.log(Level.INFO, "Inserting bcorza sistemas...");
+							  sistemasBrunoCorza = new User();
+							  sistemasBrunoCorza.setFirstname("Bruno Corza - Sistemas");
+							  sistemasBrunoCorza.setLastname("");
+							  sistemasBrunoCorza.setEmail("admin@brunocorza.mx");
+							  sistemasBrunoCorza.getSecuritySettings().setRole(Role.STORE);
+							  sistemasBrunoCorza.getSecuritySettings()
+							      .setPassword(encodeString("Brunocorza01"));
+							  sistemasBrunoCorza.getSecuritySettings()
+							      .setStores(Arrays.asList("5a3ebe6b-225a-416f-9559-50946576e1a5", "ahFhbGxzaG9wcGluZ3MtdGVzdHIpCxIFU3RvcmUiHmJydW5vY29yemFfbXhfZ3JhbmRwbGF6YXRvbHVjYQw", 
+		                                        "2c75e9d0-06ea-42cb-8fd6-aa23ae21c73f", "1970a175-55e8-41de-b02e-f49ccf55f353",
+		                                        "ahFhbGxzaG9wcGluZ3MtdGVzdHIqCxIFU3RvcmUiH2JydW5vY29yemFfbXhfZ2FsZXJpYXNtb250ZXJyZXkM",
+		                                        "2bd032ca-5346-48d6-b211-8fca31cd8533", "ahFhbGxzaG9wcGluZ3MtdGVzdHIsCxIFU3RvcmUiIWJydW5vY29yemFfbXhfZ2FsZXJpYXNpbnN1cmdlbnRlcww",
+		                                        "bc37fece-83a9-4848-bbf8-869580bfc50d"));
+							  sistemasBrunoCorza.setKey((Key) keyHelper.obtainKey(User.class, "sistemas_bruno_corza"));
+							  userDao.create(sistemasBrunoCorza);
+							}
+							
+							
+						
+						
+						
 				
 			//
 

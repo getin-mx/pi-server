@@ -183,7 +183,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 					i++;
 					curDate = new Date(curDate.getTime() + ONE_DAY);
 				}
-				mapper.createStoreItemDataForDates(fromDate, toDate, storeId);
+				mapper.createStoreItemDataForDates(fromDate, toDate, storeId, false);
 
 				return generateJSONOkResponse().toString();
 			}
@@ -295,7 +295,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 							dao.create(obj);
 						}
 					}
-					mapper.createStoreItemDataForDates(fromDate, toDate, store.getIdentifier());
+					mapper.createStoreItemDataForDates(fromDate, toDate, store.getIdentifier(), false);
 				}
 			}
 			

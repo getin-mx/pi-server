@@ -145,7 +145,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 				i++;
 				curDate = new Date(curDate.getTime() + ONE_DAY);
 			}
-			mapper.createStoreRevenueDataForDates(fromDate, toDate, storeId);
+			mapper.createStoreRevenueDataForDates(fromDate, toDate, storeId, false);
 			
 			return generateJSONOkResponse().toString();
 			
