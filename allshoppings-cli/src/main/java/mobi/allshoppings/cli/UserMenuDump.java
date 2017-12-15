@@ -215,8 +215,9 @@ public class UserMenuDump extends AbstractCLI {
 		        throw new Exception();
 		      } catch( Exception e ) {
 		        um = new UserMenu();
-		        um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-		        um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-signal", "Antenas"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Dashboard"));
+				um.getEntries().add(new UserMenuEntry("index.apreport", "fa-table", "Reporte"));
 		        um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
 		        um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 		        um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
@@ -395,8 +396,9 @@ public class UserMenuDump extends AbstractCLI {
 				throw new Exception();
 			} catch( Exception e ) {
 				um = new UserMenu();
-				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-laptop", "Antenas"));
-				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-signal", "Antenas"));
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Dashboard"));
+				um.getEntries().add(new UserMenuEntry("index.apreport", "fa-table", "Reporte"));
 				um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
 				um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
 				um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));

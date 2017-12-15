@@ -1625,6 +1625,105 @@ public class UserMenuDumpTwo extends AbstractCLI {
 						  brunoCorza.setKey((Key) keyHelper.obtainKey(User.class, "brunocorza_mx"));
 						  userDao.create(brunoCorza);
 						}
+					
+							//bcorza sistemas
+							try {
+								  um = userMenuDao.get("sistemas_bruno_corza", true);
+								  userMenuDao.delete("sistemas_bruno_corza");
+								  throw new Exception();
+								} catch (Exception e) {
+								  um = new UserMenu();
+								  um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+								  um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+								  um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
+	
+								  um.setKey(userMenuDao.createKey("sistemas_bruno_corza"));
+								  userMenuDao.create(um);
+								}
+	
+	
+								User sistemasBrunoCorza = null;
+								try {
+								  userDao.delete("sistemas_bruno_corza");
+								  throw new Exception();
+								} catch (Exception e) {
+								  log.log(Level.INFO, "Inserting bcorza sistemas...");
+								  sistemasBrunoCorza = new User();
+								  sistemasBrunoCorza.setFirstname("Bruno Corza - Sistemas");
+								  sistemasBrunoCorza.setLastname("");
+								  sistemasBrunoCorza.setEmail("admin@brunocorza.mx");
+								  sistemasBrunoCorza.getSecuritySettings().setRole(Role.STORE);
+								  sistemasBrunoCorza.getSecuritySettings()
+								      .setPassword(encodeString("Brunocorza01"));
+								  sistemasBrunoCorza.getSecuritySettings()
+								      .setStores(Arrays.asList("5a3ebe6b-225a-416f-9559-50946576e1a5", "ahFhbGxzaG9wcGluZ3MtdGVzdHIpCxIFU3RvcmUiHmJydW5vY29yemFfbXhfZ3JhbmRwbGF6YXRvbHVjYQw", 
+			                                        "2c75e9d0-06ea-42cb-8fd6-aa23ae21c73f", "1970a175-55e8-41de-b02e-f49ccf55f353",
+			                                        "ahFhbGxzaG9wcGluZ3MtdGVzdHIqCxIFU3RvcmUiH2JydW5vY29yemFfbXhfZ2FsZXJpYXNtb250ZXJyZXkM",
+			                                        "2bd032ca-5346-48d6-b211-8fca31cd8533", "ahFhbGxzaG9wcGluZ3MtdGVzdHIsCxIFU3RvcmUiIWJydW5vY29yemFfbXhfZ2FsZXJpYXNpbnN1cmdlbnRlcww",
+			                                        "bc37fece-83a9-4848-bbf8-869580bfc50d"));
+								  sistemasBrunoCorza.setKey((Key) keyHelper.obtainKey(User.class, "sistemas_bruno_corza"));
+								  userDao.create(sistemasBrunoCorza);
+								}
+							 
+
+								//cymademaraburto
+								try {
+								    um = userMenuDao.get("cymademaraburto@gmail.com", true);
+								    userMenuDao.delete("cymademaraburto@gmail.com");
+								    throw new Exception();
+								  } catch (Exception e) {
+								    um = new UserMenu();
+								    um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+
+								    um.setKey(userMenuDao.createKey("cymademaraburto@gmail.com"));
+								    userMenuDao.create(um);
+								  }
+
+
+								  User cymAdemara = null;
+								  try {
+								    userDao.delete("cymademaraburto@gmail.com");
+								    throw new Exception();
+								  } catch (Exception e) {
+								    log.log(Level.INFO, "Inserting cymademaraburto@gmail.com...");
+								    cymAdemara = new User();
+								    cymAdemara.setFirstname("cymademaraburto");
+								    cymAdemara.setLastname("");
+								    cymAdemara.setEmail("cymademaraburto@gmail.com");
+								    cymAdemara.getSecuritySettings().setRole(Role.STORE);
+								    cymAdemara.getSecuritySettings()
+								        .setPassword(encodeString("Outletdeportes01"));
+								    cymAdemara.getSecuritySettings()
+								        .setStores(Arrays.asList(
+								        "23b16093-fbbf-4d9a-811b-6c82bd0eb940",
+								        "649c6de9-05aa-40de-bd39-7b1d37921658",
+								        "440dfccd-73b3-48a5-98c8-d893a01a085f",
+								        "01bf63e5-6b31-4bf9-beb6-2a9dcbb8a304",
+								        "0804ce51-a635-40be-8952-28cc25c946dd",
+								        "41e68dc9-254d-4803-82b7-c083eeaf28df",
+								        "958d7395-fb37-4b8b-a716-b2c1a9ffdb9f",
+								        "9263926c-88e3-435b-ad7e-1920abfb73a6",
+								        "9bbf47a2-5a32-4ae3-b217-858c7c1e2703",
+								        "5cad0cb3-196a-4f3f-b4f4-224f610f6467",
+								        "0e3c6328-31e4-4454-bda6-1dc18615b5c2",
+								        "247b4ead-822f-4713-9465-177666b2e31c",
+								        "791d303b-3f45-4037-a6f4-2ba9c1e15c75",
+								        "115e5c3c-7850-4e3e-82d1-16b15b5256a5",
+								        "3a361ad5-9748-4bfa-9a69-460fd8214e6e",
+								        "40b7b23d-f2b4-4f70-be05-a0ad51ce44ba",
+								        "fb111c5b-db32-4129-a09a-f15269f57285",
+								        "fefc2dd0-233e-42e6-9fb4-058545ea0926",
+								        "f718f26a-c6de-4149-9605-d737450b7bd9",
+								        "dcb748f6-a060-43da-9a13-aea9ca02245a",
+								        "b6b1a93f-0116-4d9a-ad40-9c6842eaa8c0",
+								        "b35dc502-9b07-4c26-8926-84d962926869",
+								        "c0d2ccb9-0ed4-45f8-8f4c-770ddb4495b4",
+								        "d37e8f77-b863-4f71-9117-45c0eaa121e2",
+								        "e43a9f92-7db7-46d1-8a74-3f629eea2b47"));
+								    cymAdemara.setKey((Key) keyHelper.obtainKey(User.class, "cymademaraburto@gmail.com"));
+								    userDao.create(cymAdemara);
+								  }
+						
 				
 			//
 
