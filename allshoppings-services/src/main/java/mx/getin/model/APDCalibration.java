@@ -1,4 +1,4 @@
-package mobi.allshoppings.model;
+package mx.getin.model;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -27,21 +27,21 @@ public class APDCalibration implements ModelKey, Serializable, Identificable, In
 	
 	private Date lastUpdate;
 	private Date creationDateTime;
-	private Long visitPowerThreshold;
-	private Long visitMaxThreshold;
-	private Long visitGapThreshold;
-	private Long visitCountThreshold;
-	private Long peasantPowerThreshold;
-	private Integer repeatThreshold;
-	private Long peasantDecay;
+	private long visitPowerThreshold;
+	private long visitMaxThreshold;
+	private long visitGapThreshold;
+	private long visitCountThreshold;
+	private long peasantPowerThreshold;
+	private int repeatThreshold;
+	private long peasantDecay;
 	
-	private Boolean visitsOnMon;
-    private Boolean visitsOnTue;
-    private Boolean visitsOnWed;
-    private Boolean visitsOnThu;
-    private Boolean visitsOnFri;
-    private Boolean visitsOnSat;
-    private Boolean visitsOnSun;
+	private boolean visitsOnMon;
+    private boolean visitsOnTue;
+    private boolean visitsOnWed;
+    private boolean visitsOnThu;
+    private boolean visitsOnFri;
+    private boolean visitsOnSat;
+    private boolean visitsOnSun;
     
     private String visitStartMon;
     private String visitEndMon;
@@ -66,25 +66,19 @@ public class APDCalibration implements ModelKey, Serializable, Identificable, In
 	
     public APDCalibration() {
 		this.creationDateTime = new Date();
+		visitsOnMon = visitsOnTue = visitsOnWed = visitsOnThu = visitsOnFri = visitsOnSat = visitsOnSun = true;
 		completeDefaults();
 	}
     
     public void completeDefaults() {
-    	if( visitGapThreshold == null) visitGapThreshold = 10L;
-		if( visitPowerThreshold == null) visitPowerThreshold = -60L;
-		if( visitMaxThreshold == null) visitMaxThreshold = 480L;
-		if( peasantPowerThreshold == null) peasantPowerThreshold = -80L;
-		if( visitCountThreshold == null) visitCountThreshold = 0L;
-		if( repeatThreshold == null ) repeatThreshold = 5;
-		if( peasantDecay == null ) peasantDecay = visitGapThreshold; 
+    	if( visitGapThreshold == 0) visitGapThreshold = 10;
+		if( visitPowerThreshold == 0) visitPowerThreshold = -60;
+		if( visitMaxThreshold == 0) visitMaxThreshold = 480;
+		if( peasantPowerThreshold == 0) peasantPowerThreshold = -80;
+		if( visitCountThreshold == 0) visitCountThreshold = 0;
+		if( repeatThreshold == 0) repeatThreshold = 5;
+		if( peasantDecay == 0) peasantDecay = visitGapThreshold; 
 	    
-		if( visitsOnMon == null) visitsOnMon = true;
-		if( visitsOnTue == null) visitsOnTue = true;
-		if( visitsOnWed == null) visitsOnWed = true;
-		if( visitsOnThu == null) visitsOnThu = true;
-		if( visitsOnFri == null) visitsOnFri = true;
-		if( visitsOnSat == null) visitsOnSat = true;
-		if( visitsOnSun == null) visitsOnSun = true;
 		if( visitStartMon == null) visitStartMon = "11:00";
 		if( visitEndMon == null) visitEndMon = "20:00";
 	    if( visitStartTue == null) visitStartTue = "11:00";
@@ -151,70 +145,70 @@ public class APDCalibration implements ModelKey, Serializable, Identificable, In
 	/**
 	 * @return the visitGapThreshold
 	 */
-	public Long getVisitGapThreshold() {
+	public long getVisitGapThreshold() {
 		return visitGapThreshold;
 	}
 
 	/**
 	 * @param visitGapThreshold the visitGapThreshold to set
 	 */
-	public void setVisitGapThreshold(Long visitGapThreshold) {
+	public void setVisitGapThreshold(long visitGapThreshold) {
 		this.visitGapThreshold = visitGapThreshold;
 	}
 
 	/**
 	 * @return the visitPowerThreshold
 	 */
-	public Long getVisitPowerThreshold() {
+	public long getVisitPowerThreshold() {
 		return visitPowerThreshold;
 	}
 
 	/**
 	 * @param visitPowerThreshold the visitPowerThreshold to set
 	 */
-	public void setVisitPowerThreshold(Long visitPowerThreshold) {
+	public void setVisitPowerThreshold(long visitPowerThreshold) {
 		this.visitPowerThreshold = visitPowerThreshold;
 	}
 
 	/**
 	 * @return the visitMaxThreshold
 	 */
-	public Long getVisitMaxThreshold() {
+	public long getVisitMaxThreshold() {
 		return visitMaxThreshold;
 	}
 
 	/**
 	 * @param visitMaxThreshold the visitMaxThreshold to set
 	 */
-	public void setVisitMaxThreshold(Long visitMaxThreshold) {
+	public void setVisitMaxThreshold(long visitMaxThreshold) {
 		this.visitMaxThreshold = visitMaxThreshold;
 	}
 
 	/**
 	 * @return the repeatThreshold
 	 */
-	public Integer getRepeatThreshold() {
+	public int getRepeatThreshold() {
 		return repeatThreshold;
 	}
 
 	/**
 	 * @param repeatThreshold the repeatThreshold to set
 	 */
-	public void setRepeatThreshold(Integer repeatThreshold) {
+	public void setRepeatThreshold(int repeatThreshold) {
 		this.repeatThreshold = repeatThreshold;
 	}
 	
 	/**
 	 * @return the peasentPowerThreshold
 	 */
-	public Long getPeasantPowerThreshold() {
+	public long getPeasantPowerThreshold() {
 		return peasantPowerThreshold;
 	}
 
 	/**
 	 * @param peasentPowerThreshold the peasentPowerThreshold to set
 	 */
-	public void setPeasentPowerThreshold(Long peasentPowerThreshold) {
+	public void setPeasentPowerThreshold(long peasentPowerThreshold) {
 		this.peasantPowerThreshold = peasentPowerThreshold;
 	}
 
@@ -445,133 +439,133 @@ public class APDCalibration implements ModelKey, Serializable, Identificable, In
 	/**
 	 * @return the visitCountThreshold
 	 */
-	public Long getVisitCountThreshold() {
+	public long getVisitCountThreshold() {
 		return visitCountThreshold;
 	}
 
 	/**
 	 * @param visitCountThreshold the visitCountThreshold to set
 	 */
-	public void setVisitCountThreshold(Long visitCountThreshold) {
+	public void setVisitCountThreshold(long visitCountThreshold) {
 		this.visitCountThreshold = visitCountThreshold;
 	}
 
 	/**
 	 * @return the visitsOnMon
 	 */
-	public Boolean getVisitsOnMon() {
+	public boolean getVisitsOnMon() {
 		return visitsOnMon;
 	}
 
 	/**
 	 * @param visitsOnMon the visitsOnMon to set
 	 */
-	public void setVisitsOnMon(Boolean visitsOnMon) {
+	public void setVisitsOnMon(boolean visitsOnMon) {
 		this.visitsOnMon = visitsOnMon;
 	}
 
 	/**
 	 * @return the visitsOnTue
 	 */
-	public Boolean getVisitsOnTue() {
+	public boolean getVisitsOnTue() {
 		return visitsOnTue;
 	}
 
 	/**
 	 * @param visitsOnTue the visitsOnTue to set
 	 */
-	public void setVisitsOnTue(Boolean visitsOnTue) {
+	public void setVisitsOnTue(boolean visitsOnTue) {
 		this.visitsOnTue = visitsOnTue;
 	}
 
 	/**
 	 * @return the visitsOnWed
 	 */
-	public Boolean getVisitsOnWed() {
+	public boolean getVisitsOnWed() {
 		return visitsOnWed;
 	}
 
 	/**
 	 * @param visitsOnWed the visitsOnWed to set
 	 */
-	public void setVisitsOnWed(Boolean visitsOnWed) {
+	public void setVisitsOnWed(boolean visitsOnWed) {
 		this.visitsOnWed = visitsOnWed;
 	}
 
 	/**
 	 * @return the visitsOnThu
 	 */
-	public Boolean getVisitsOnThu() {
+	public boolean getVisitsOnThu() {
 		return visitsOnThu;
 	}
 
 	/**
 	 * @param visitsOnThu the visitsOnThu to set
 	 */
-	public void setVisitsOnThu(Boolean visitsOnThu) {
+	public void setVisitsOnThu(boolean visitsOnThu) {
 		this.visitsOnThu = visitsOnThu;
 	}
 
 	/**
 	 * @return the visitsOnFri
 	 */
-	public Boolean getVisitsOnFri() {
+	public boolean getVisitsOnFri() {
 		return visitsOnFri;
 	}
 
 	/**
 	 * @param visitsOnFri the visitsOnFri to set
 	 */
-	public void setVisitsOnFri(Boolean visitsOnFri) {
+	public void setVisitsOnFri(boolean visitsOnFri) {
 		this.visitsOnFri = visitsOnFri;
 	}
 
 	/**
 	 * @return the visitsOnSat
 	 */
-	public Boolean getVisitsOnSat() {
+	public boolean getVisitsOnSat() {
 		return visitsOnSat;
 	}
 
 	/**
 	 * @param visitsOnSat the visitsOnSat to set
 	 */
-	public void setVisitsOnSat(Boolean visitsOnSat) {
+	public void setVisitsOnSat(boolean visitsOnSat) {
 		this.visitsOnSat = visitsOnSat;
 	}
 
 	/**
 	 * @return the visitsOnSun
 	 */
-	public Boolean getVisitsOnSun() {
+	public boolean getVisitsOnSun() {
 		return visitsOnSun;
 	}
 
 	/**
 	 * @param visitsOnSun the visitsOnSun to set
 	 */
-	public void setVisitsOnSun(Boolean visitsOnSun) {
+	public void setVisitsOnSun(boolean visitsOnSun) {
 		this.visitsOnSun = visitsOnSun;
 	}
 	
 	/**
 	 * @param peasantPowerThreshold the peasantPowerThreshold to set
 	 */
-	public void setPeasantPowerThreshold(Long peasantPowerThreshold) {
+	public void setPeasantPowerThreshold(long peasantPowerThreshold) {
 		this.peasantPowerThreshold = peasantPowerThreshold;
 	}
 	
 	/**
 	 * @return the peasantDecay
 	 */
-	public Long getPeasantDecay() {
+	public long getPeasantDecay() {
 		return peasantDecay;
 	}
 
 	/**
 	 * @param peasantDecay the peasantDecay to set
 	 */
-	public void setPeasantDecay(Long peasantDecay) {
+	public void setPeasantDecay(long peasantDecay) {
 		this.peasantDecay = peasantDecay;
 	}
 	

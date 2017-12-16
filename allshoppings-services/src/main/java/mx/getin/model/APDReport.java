@@ -1,4 +1,4 @@
-package mobi.allshoppings.model;
+package mx.getin.model;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,6 +11,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.inodes.datanucleus.model.Key;
 
+import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.model.interfaces.Indexable;
 import mobi.allshoppings.model.interfaces.ModelKey;
@@ -31,13 +32,13 @@ public class APDReport implements Identificable, Indexable, ModelKey, Serializab
 	private Date creationDateTime;
 	
 	// Status data
-	private Boolean reportable;
-	private Integer reportStatus;
+	private boolean reportable;
+	private int reportStatus;
 	@Persistent(defaultFetchGroup = "true")
 	private List<String> reportMailList;
-	private Integer status;
+	private byte status;
 	private Date lastRecordDate;
-	private Integer lastRecordCount;
+	private int lastRecordCount;
 	
 	@NotPersistent
 	private boolean doIndexNow = true;
@@ -63,12 +64,12 @@ public class APDReport implements Identificable, Indexable, ModelKey, Serializab
 	}
 	
 	@Override
-	public Integer getStatus() {
+	public byte getStatus() {
 		return status;
 	}
 
 	@Override
-	public void setStatus(Integer status) {
+	public void setStatus(byte status) {
 		this.status = status;
 	}
 
@@ -148,21 +149,21 @@ public class APDReport implements Identificable, Indexable, ModelKey, Serializab
 	/**
 	 * @param reportable the reportable to set
 	 */
-	public void setReportable(Boolean reportable) {
+	public void setReportable(boolean reportable) {
 		this.reportable = reportable;
 	}
 
 	/**
 	 * @return the reportStatus
 	 */
-	public Integer getReportStatus() {
+	public int getReportStatus() {
 		return reportStatus;
 	}
 
 	/**
 	 * @param reportStatus the reportStatus to set
 	 */
-	public void setReportStatus(Integer reportStatus) {
+	public void setReportStatus(int reportStatus) {
 		this.reportStatus = reportStatus;
 	}
 
@@ -183,14 +184,14 @@ public class APDReport implements Identificable, Indexable, ModelKey, Serializab
 	/**
 	 * @return the lastRecordCount
 	 */
-	public Integer getLastRecordCount() {
+	public int getLastRecordCount() {
 		return lastRecordCount;
 	}
 
 	/**
 	 * @param lastRecordCount the lastRecordCount to set
 	 */
-	public void setLastRecordCount(Integer lastRecordCount) {
+	public void setLastRecordCount(int lastRecordCount) {
 		this.lastRecordCount = lastRecordCount;
 	}
 	

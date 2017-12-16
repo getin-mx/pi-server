@@ -1,7 +1,6 @@
 package mobi.allshoppings.model;
 
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -12,34 +11,24 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.inodes.datanucleus.model.Key;
 
-import mobi.allshoppings.model.interfaces.Identificable;
-import mobi.allshoppings.model.interfaces.Indexable;
-import mobi.allshoppings.model.interfaces.ModelKey;
+import mx.getin.model.Entity;
 
 @SuppressWarnings("serial")
 @PersistenceCapable
-public class InnerZone implements ModelKey, Serializable, Identificable, Indexable {
+public class InnerZone extends Entity {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
     private Key key;
 
-    private String name;
     private String description;
     private String avatarId;
     
     private String entityId;
-    private Integer entityKind;
-	
-	private Date creationDateTime;
-	private Date lastUpdate;
- 
+    private byte entityKind;
+	 
 	@NotPersistent
 	private boolean doIndexNow = true;
-
-    public InnerZone() {
-    	this.creationDateTime = new Date();
-    }
 
     /**
 	 * @return the key
@@ -68,20 +57,6 @@ public class InnerZone implements ModelKey, Serializable, Identificable, Indexab
 	@Override
 	public void preStore() {
 		this.lastUpdate = new Date();
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	/**
@@ -129,44 +104,17 @@ public class InnerZone implements ModelKey, Serializable, Identificable, Indexab
 	/**
 	 * @return the entityKind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 
-	/**
-	 * @return the creationDateTime
-	 */
-	public Date getCreationDateTime() {
-		return creationDateTime;
-	}
-
-	/**
-	 * @param creationDateTime the creationDateTime to set
-	 */
-	public void setCreationDateTime(Date creationDateTime) {
-		this.creationDateTime = creationDateTime;
-	}
-
-	/**
-	 * @return the lastUpdate
-	 */
-	public Date getLastUpdate() {
-		return lastUpdate;
-	}
-
-	/**
-	 * @param lastUpdate the lastUpdate to set
-	 */
-	public void setLastUpdate(Date lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -176,7 +124,7 @@ public class InnerZone implements ModelKey, Serializable, Identificable, Indexab
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((entityId == null) ? 0 : entityId.hashCode());
-		result = prime * result + ((entityKind == null) ? 0 : entityKind.hashCode());
+		result = prime * result + entityKind;
 		result = prime * result + ((key == null) ? 0 : key.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
@@ -199,12 +147,9 @@ public class InnerZone implements ModelKey, Serializable, Identificable, Indexab
 				return false;
 		} else if (!entityId.equals(other.entityId))
 			return false;
-		if (entityKind == null) {
-			if (other.entityKind != null)
-				return false;
-		} else if (!entityKind.equals(other.entityKind))
+		if (entityKind != other.entityKind) {
 			return false;
-		if (key == null) {
+		} if (key == null) {
 			if (other.key != null)
 				return false;
 		} else if (!key.equals(other.key))

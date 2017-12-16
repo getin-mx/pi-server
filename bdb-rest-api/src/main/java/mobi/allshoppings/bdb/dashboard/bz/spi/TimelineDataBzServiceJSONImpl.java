@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,11 +18,9 @@ import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.bdb.bz.BDBTimelineDataBzService;
-import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.DashboardIndicatorAlias;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.tools.CollectionFactory;
@@ -39,8 +36,6 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 	
 	@Autowired
 	private DashboardIndicatorDataDAO dao;
-	@Autowired
-	private DashboardIndicatorAliasDAO diAliasDao;
 
 	/**
 	 * Obtains information about a user

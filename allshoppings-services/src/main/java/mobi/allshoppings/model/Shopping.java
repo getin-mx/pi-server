@@ -1,6 +1,5 @@
 package mobi.allshoppings.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,24 +17,21 @@ import org.springframework.util.StringUtils;
 import com.inodes.datanucleus.model.Key;
 
 import mobi.allshoppings.model.interfaces.ACLAware;
-import mobi.allshoppings.model.interfaces.Identificable;
-import mobi.allshoppings.model.interfaces.Indexable;
-import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.interfaces.Replicable;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.model.interfaces.ViewLocationAware;
 import mobi.allshoppings.model.tools.ACL;
 import mobi.allshoppings.model.tools.ViewLocation;
+import mx.getin.model.Entity;
 
 @SuppressWarnings("serial")
 @PersistenceCapable(detachable="true")
-public class Shopping implements ModelKey, Serializable, Identificable, Indexable, ViewLocationAware, ACLAware, StatusAware, Replicable {
+public class Shopping extends Entity implements ViewLocationAware, ACLAware, StatusAware, Replicable {
 
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
     private Key key;
 
-	private String name;
 	private String description;
 	private String avatarId;
 	private String frontImageId;
@@ -46,11 +42,9 @@ public class Shopping implements ModelKey, Serializable, Identificable, Indexabl
 	@Persistent(defaultFetchGroup = "true")
 	private List<String> videoId;
 	
-	private Date creationDateTime;
 	private Date statusModificationDateTime;
-	private Date lastUpdate;
-	private Integer fenceSize;
-	private Integer checkinAreaSize;
+	private int fenceSize;
+	private int checkinAreaSize;
 	private String timezone;
 	private String customCheckinMessage;
 	
@@ -77,25 +71,18 @@ public class Shopping implements ModelKey, Serializable, Identificable, Indexabl
 	@Embedded
 	private ACL acl;
 	
-	private Integer status;
+	private byte status;
 
 	private String source;
 	
 	// Search fields ... this is too ugly... Fuck you Google!!!!
-	@SuppressWarnings("unused")
-	private String uIdentifier;
-	@SuppressWarnings("unused")
-	private String uProvince;
-	@SuppressWarnings("unused")
-	private String uCountry;
-	@SuppressWarnings("unused")
-	private String uName;
-
+	
+	// don't worry Matias, I took care of them	- Nachintoch 
+	
 	@NotPersistent
 	private boolean doIndexNow = true;
 	
     public Shopping() {
-		this.creationDateTime = new Date();
 		this.contactInfo = new ContactInfo();
 		this.structureInfo = new StructureInfo();
 		this.address = new Address();
@@ -133,25 +120,7 @@ public class Shopping implements ModelKey, Serializable, Identificable, Indexabl
 	 */
 	@Override
 	public void preStore() {
-		uIdentifier = getIdentifier().toUpperCase();
-		uProvince = getAddress().getProvince() == null ? "" : getAddress().getProvince().toUpperCase();
-		uCountry = getAddress().getCountry() == null ? "" : getAddress().getCountry().toUpperCase();
-		uName = getName() == null ? "" : getName().toUpperCase();
 		this.lastUpdate = new Date();
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	/**
@@ -242,20 +211,6 @@ public class Shopping implements ModelKey, Serializable, Identificable, Indexabl
 	 */
 	public void setVideoId(List<String> videoId) {
 		this.videoId = videoId;
-	}
-
-	/**
-	 * @return the creationDateTime
-	 */
-	public Date getCreationDateTime() {
-		return creationDateTime;
-	}
-
-	/**
-	 * @param creationDateTime the creationDateTime to set
-	 */
-	public void setCreationDateTime(Date creationDateTime) {
-		this.creationDateTime = creationDateTime;
 	}
 
 	/**
@@ -414,20 +369,6 @@ public class Shopping implements ModelKey, Serializable, Identificable, Indexabl
 	}
 
 	/**
-	 * @return the lastUpdate
-	 */
-	public Date getLastUpdate() {
-		return lastUpdate;
-	}
-
-	/**
-	 * @param lastUpdate the lastUpdate to set
-	 */
-	public void setLastUpdate(Date lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
-
-	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -438,14 +379,14 @@ public class Shopping implements ModelKey, Serializable, Identificable, Indexabl
 	/**
 	 * @return the fenceSize
 	 */
-	public Integer getFenceSize() {
+	public int getFenceSize() {
 		return fenceSize;
 	}
 
 	/**
 	 * @param fenceSize the fenceSize to set
 	 */
-	public void setFenceSize(Integer fenceSize) {
+	public void setFenceSize(int fenceSize) {
 		this.fenceSize = fenceSize;
 	}
 
@@ -475,14 +416,14 @@ public class Shopping implements ModelKey, Serializable, Identificable, Indexabl
 	/**
 	 * @return the status
 	 */
-	public Integer getStatus() {
+	public byte getStatus() {
 		return status;
 	}
 
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(Integer status) {
+	public void setStatus(byte status) {
 		this.status = status;
 	}
 
@@ -503,14 +444,14 @@ public class Shopping implements ModelKey, Serializable, Identificable, Indexabl
 	/**
 	 * @return the checkinAreaSize
 	 */
-	public Integer getCheckinAreaSize() {
+	public int getCheckinAreaSize() {
 		return checkinAreaSize;
 	}
 
 	/**
 	 * @param checkinAreaSize the checkinAreaSize to set
 	 */
-	public void setCheckinAreaSize(Integer checkingAreaSize) {
+	public void setCheckinAreaSize(int checkingAreaSize) {
 		this.checkinAreaSize = checkingAreaSize;
 	}
 

@@ -7,6 +7,7 @@ import java.util.Map;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.MacVendor;
+import mx.getin.model.APDReport;
 
 public interface APDeviceHelper {
 
@@ -26,6 +27,7 @@ public interface APDeviceHelper {
 	void tryRestartAPDevices() throws ASException;
 	APDevice geoIp(APDevice apd) throws ASException;
 	void updateAssignationsUsingAPDevice(String hostname) throws ASException;
+	void updateAssignationsUsingAPDevice(APDevice dev, APDReport apdReport) throws ASException;
 	void unassignUsingAPDevice(String hostname) throws ASException;
 	
 	// Mac Addresses Utilites

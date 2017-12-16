@@ -94,7 +94,6 @@
 
 		<property name="floorMapTracking">
 			<list>
-				<value>modatelas_tacubaya_pb</value>
 				<value>volarisaicmnacional</value>
 				<value>bestbuysantafe</value>
 			</list>
@@ -103,7 +102,6 @@
 		<property name="apdReportMailList">
 			<list>
 				<value>matias@getin.mx</value>
-				<value>luis@getin.mx</value>
 				<value>luis.vazquez@getin.mx</value>
 				<value>anabell@getin.mx</value>
 				<value>francisco@getin.mx</value>
@@ -111,6 +109,7 @@
 				<value>anilu@getin.mx</value>
 				<value>eduardo@getin.mx</value>
 				<value>azucena@getin.mx</value>
+				<value>ignacio@getin.mx</value>
 			</list>
 		</property>
 		<property name="apdeviceJumpHost" value="vpn.getin.mx" />
@@ -959,6 +958,8 @@
 	<bean id="aphentry.dao.ref" class="mobi.allshoppings.dao.spi.APHEntryDAOJDOImpl" />
 	<bean id="apdassignation.dao.ref" class="mobi.allshoppings.dao.spi.APDAssignationDAOJDOImpl" />
 	<bean id="apdevice.dao.ref" class="mobi.allshoppings.dao.spi.APDeviceDAOJDOImpl" />
+	<bean id="apdcalibration.dao.ref" class="mx.getin.dao.spi.APDCalibrationDAOJDOImpl" />
+	<bean id="apdreport.dao.ref" class="mx.getin.dao.spi.APDReportDAOJDOImpl" />
 	<bean id="apdevicesignal.dao.ref" class="mobi.allshoppings.dao.spi.APDeviceSignalDAOJDOImpl" />
 	<bean id="apdvisit.dao.ref" class="mobi.allshoppings.dao.spi.APDVisitDAOJDOImpl" />
 	<bean id="apdevicetriggerentry.dao.ref" class="mobi.allshoppings.dao.spi.APDeviceTriggerEntryDAOJDOImpl" />

@@ -1,10 +1,11 @@
-package mobi.allshoppings.dao.spi;
+package mx.getin.dao.spi;
 
 import com.inodes.datanucleus.model.Key;
 
-import mobi.allshoppings.dao.APDCalibrationDAO;
+import mobi.allshoppings.dao.spi.GenericDAOJDO;
 import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.model.APDCalibration;
+import mx.getin.dao.APDCalibrationDAO;
+import mx.getin.model.APDCalibration;
 
 /**
  * APDCalibration implementation for JDO.

@@ -15,11 +15,14 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.SystemConfiguration;
-import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
+import mx.getin.dao.APDCalibrationDAO;
+import mx.getin.dao.APDReportDAO;
+import mx.getin.model.APDCalibration;
+import mx.getin.model.APDReport;
 
-
+@Deprecated
 public class TouchAPDevices extends AbstractCLI {
 
 	private static final Logger log = Logger.getLogger(TouchAPDevices.class.getName());
@@ -36,48 +39,51 @@ public class TouchAPDevices extends AbstractCLI {
 
 	public static void main(String args[]) throws ASException {
 		try {
-			// TODO change to APDReportDAO, add DAO to beans
+			APDReportDAO apdreportDao = (APDReportDAO)getApplicationContext().getBean("apdreport.dao.ref");
+			APDCalibrationDAO apdcalibration = (APDCalibrationDAO)
+					getApplicationContext().getBean("apdcalibration.dao.ref");
 			APDeviceDAO apdeviceDao = (APDeviceDAO)getApplicationContext().getBean("apdevice.dao.ref");
-			ExternalAPHotspotDAO eaphDao = (ExternalAPHotspotDAO)getApplicationContext().getBean("externalaphotspot.dao.ref");
+			ExternalAPHotspotDAO eaphDao = (ExternalAPHotspotDAO)
+					getApplicationContext().getBean("externalaphotspot.dao.ref");
 			APDeviceHelper apdeviceHelper = (APDeviceHelper)getApplicationContext().getBean("apdevice.helper");
-			SystemConfiguration systemConfiguration = (SystemConfiguration)getApplicationContext().getBean("system.configuration");
+			SystemConfiguration systemConfiguration = (SystemConfiguration)
+					getApplicationContext().getBean("system.configuration");
 
 			log.log(Level.INFO, "Touching apdevices....");
-			List<APDevice> list = apdeviceDao.getAll(true);
-			for( APDevice obj : list ) {
+			for( APDReport obj : apdreportDao.getAll(true)) {
 				log.log(Level.INFO, "Touching " + obj.getIdentifier() + "...");
-				obj = apdeviceDao.get(obj.getIdentifier(), true);
-				obj.completeDefaults();
-				if(StringUtils.hasText(obj.getDescription()))
-					obj.setDescription(obj.getDescription().replaceAll("_", " "));
-				else
-					obj.setDescription(null);
-				
-				if( null == obj.getStatus() ) 
-					obj.setStatus(StatusAware.STATUS_ENABLED);
-				
-				if( null == obj.getReportStatus() )
-					obj.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
-				
+				boolean modified = false;
+				List<String> mails;
 				if( obj.getReportMailList() == null ) {
-					List<String> mails = CollectionFactory.createList();
+					mails = CollectionFactory.createList();
 					obj.setReportMailList(mails);
+					modified = true;
 				} else {
-					List<String> mails = obj.getReportMailList(); 
+					mails = obj.getReportMailList();
+					int oSize = mails.size();
 					mails.removeAll(systemConfiguration.getApdReportMailList());
-					obj.setReportMailList(mails);
-					
-				}
-				
-				apdeviceDao.update(obj);
-				apdeviceHelper.updateAssignationsUsingAPDevice(obj.getHostname());
-			}
+					if(oSize != mails.size()) {
+						obj.setReportMailList(mails);
+						modified = true;
+					}//if any mail was removed
+				} if(modified) apdreportDao.update(obj);
+				APDevice dev = apdeviceDao.get(obj.getIdentifier(), true);
+				String description = dev.getDescription();
+				description = StringUtils.hasText(description) ? description.replaceAll("_", " ") : null;
+				if(!dev.getDescription().equals(description)) {
+					dev.setDescription(description);
+					apdeviceDao.update(dev);
+				}//if the description changes
+				apdeviceHelper.updateAssignationsUsingAPDevice(dev, obj);
+			}//for every device which reports
 			
 			
 			// External Antennas
 			List<String> externalHostnames = eaphDao.getExternalHostnames();
 			for( String hostname : externalHostnames ) {
 				APDevice obj = null;
+				APDReport rep = null;
+				APDCalibration cal = null;
 				try {
 					obj = apdeviceDao.get(hostname);
 				} catch( Exception e ) {
@@ -86,29 +92,40 @@ public class TouchAPDevices extends AbstractCLI {
 					obj.setExternal(true);
 					obj.setKey(apdeviceDao.createKey(hostname));
 					apdeviceDao.create(obj);
-				} 
+				} try {
+					rep = apdreportDao.get(hostname);
+				} catch(Exception e) {
+					rep = new APDReport();
+					rep.setHostname(hostname);
+					rep.setKey(apdreportDao.createKey(hostname));
+					apdreportDao.create(rep);
+				} try {
+					cal = apdcalibration.get(hostname);
+				} catch(Exception e) {
+					cal = new APDCalibration();
+					cal.setHostname(hostname);
+					cal.setKey(apdcalibration.createKey(hostname));
+					apdcalibration.create(cal);
+				}
 
 				log.log(Level.INFO, "Touching " + obj.getIdentifier() + "...");
 
-				obj.setVisitGapThreshold(180L);
-				if( null == obj.getStatus() ) 
-					obj.setStatus(StatusAware.STATUS_ENABLED);
-
-				if( null == obj.getReportStatus() )
-					obj.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
+				boolean modifiedCal = cal.getVisitGapThreshold() != 180;
+				cal.setVisitGapThreshold(180);
+				boolean modifiedRep = rep.getStatus() == null;
+				if(modifiedRep)  rep.setStatus(StatusAware.STATUS_ENABLED);
+				modifiedRep |= rep.getReportStatus() == null;
+				if( null == rep.getReportStatus() )
+					rep.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
 				
-				apdeviceDao.update(obj);
-				apdeviceHelper.updateAssignationsUsingAPDevice(obj.getHostname());
-
+				if(modifiedCal) apdcalibration.update(cal);
+				if(modifiedRep) apdreportDao.update(rep);
+				apdeviceHelper.updateAssignationsUsingAPDevice(obj, rep);
 			}
 			
-			list = apdeviceDao.getAll();
-			List<ModelKey> index = CollectionFactory.createList();
-			for( APDevice obj : list ) {
-				index.add(obj);
+			for( APDevice obj : apdeviceDao.getAll()) {
+				apdeviceDao.getIndexHelper().indexObject(obj);
 			}
-			apdeviceDao.getIndexHelper().indexObject(index);
-			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}

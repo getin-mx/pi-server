@@ -37,47 +37,15 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	private String mode;
 	private Date lastUpdate;
 	
-	@Deprecated
-	@NotPersistent
-	private transient String version;
-	
-	@Deprecated
-	@NotPersistent
-	private transient String tunnelIp;
-	
-	@Deprecated
-	@NotPersistent
-	private transient String lanIp;
-	
-	@Deprecated
-	@NotPersistent
-	private transient String wanIp;
-	
-	@Deprecated
-	@NotPersistent
-	private transient String publicIp;
-	
 	private Date lastInfoUpdate;
-	private Boolean external;
+	private boolean external;
 
 	// Geo location
-	@Deprecated
-	@NotPersistent
-	private transient String country;
-	
-	@Deprecated
-	@NotPersistent
-	private transient String province;
-	
-	@Deprecated
-	@NotPersistent
-	private transient String city;
-	
-	private Double lat;
-	private Double lon;
+	private double lat;
+	private double lon;
 	
 	// Parameters
-	private Long visitTimeThreshold;
+	private long visitTimeThreshold;
 	
 	private Date creationDateTime;
 	
@@ -85,16 +53,8 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	private boolean doIndexNow = true;
 
 	public APDevice() {
-		super();
 		this.creationDateTime = new Date();
 		this.external = false;
-		
-		completeDefaults();
-	}
-	
-	public void completeDefaults() {
-
-		if( visitTimeThreshold == null) visitTimeThreshold = 0L;
 	}
 	
 	/**
@@ -149,90 +109,42 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	/**
 	 * @return the visitTimeThreshold
 	 */
-	public Long getVisitTimeThreshold() {
+	public long getVisitTimeThreshold() {
 		return visitTimeThreshold;
 	}
 
 	/**
 	 * @param visitTimeThreshold the visitTimeThreshold to set
 	 */
-	public void setVisitTimeThreshold(Long visitTimeThreshold) {
+	public void setVisitTimeThreshold(long visitTimeThreshold) {
 		this.visitTimeThreshold = visitTimeThreshold;
-	}
-
-	/**
-	 * @return the country
-	 */
-	@Deprecated
-	public String getCountry() {
-		return country;
-	}
-
-	/**
-	 * @param country the country to set
-	 */
-	@Deprecated
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
-	/**
-	 * @return the province
-	 */
-	@Deprecated
-	public String getProvince() {
-		return province;
-	}
-
-	/**
-	 * @param province the province to set
-	 */
-	@Deprecated
-	public void setProvince(String province) {
-		this.province = province;
-	}
-
-	/**
-	 * @return the city
-	 */
-	@Deprecated
-	public String getCity() {
-		return city;
-	}
-
-	/**
-	 * @param city the city to set
-	 */
-	@Deprecated
-	public void setCity(String city) {
-		this.city = city;
 	}
 
 	/**
 	 * @return the lat
 	 */
-	public Double getLat() {
+	public double getLat() {
 		return lat;
 	}
 
 	/**
 	 * @param lat the lat to set
 	 */
-	public void setLat(Double lat) {
+	public void setLat(double lat) {
 		this.lat = lat;
 	}
 
 	/**
 	 * @return the lon
 	 */
-	public Double getLon() {
+	public double getLon() {
 		return lon;
 	}
 
 	/**
 	 * @param lon the lon to set
 	 */
-	public void setLon(Double lon) {
+	public void setLon(double lon) {
 		this.lon = lon;
 	}
 
@@ -310,86 +222,6 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	}
 
 	/**
-	 * @return the version
-	 */
-	@Deprecated
-	public String getVersion() {
-		return version;
-	}
-
-	/**
-	 * @param version the version to set
-	 */
-	@Deprecated
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	/**
-	 * @return the tunnelIp
-	 */
-	@Deprecated
-	public String getTunnelIp() {
-		return tunnelIp;
-	}
-
-	/**
-	 * @param tunnelIp the tunnelIp to set
-	 */
-	@Deprecated
-	public void setTunnelIp(String tunnelIp) {
-		this.tunnelIp = tunnelIp;
-	}
-
-	/**
-	 * @return the lanIp
-	 */
-	@Deprecated
-	public String getLanIp() {
-		return lanIp;
-	}
-
-	/**
-	 * @param lanIp the lanIp to set
-	 */
-	@Deprecated
-	public void setLanIp(String lanIp) {
-		this.lanIp = lanIp;
-	}
-
-	/**
-	 * @return the wanIp
-	 */
-	@Deprecated
-	public String getWanIp() {
-		return wanIp;
-	}
-
-	/**
-	 * @param wanIp the wanIp to set
-	 */
-	@Deprecated
-	public void setWanIp(String wanIp) {
-		this.wanIp = wanIp;
-	}
-
-	/**
-	 * @return the publicIp
-	 */
-	@Deprecated
-	public String getPublicIp() {
-		return publicIp;
-	}
-
-	/**
-	 * @param publicIp the publicIp to set
-	 */
-	@Deprecated
-	public void setPublicIp(String publicIp) {
-		this.publicIp = publicIp;
-	}
-
-	/**
 	 * @return the description
 	 */
 	public String getDescription() {
@@ -418,23 +250,16 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	}
 
 	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	/**
 	 * @return the external
 	 */
-	public Boolean getExternal() {
-		return null == external ? false : external;
+	public boolean getExternal() {
+		return external;
 	}
 
 	/**
 	 * @param external the external to set
 	 */
-	public void setExternal(Boolean external) {
+	public void setExternal(boolean external) {
 		this.external = external;
 	}	
 

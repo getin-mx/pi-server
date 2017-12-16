@@ -1,10 +1,11 @@
-package mobi.allshoppings.dao.spi;
+package mx.getin.dao.spi;
 
 import com.inodes.datanucleus.model.Key;
 
-import mobi.allshoppings.dao.APDReportDAO;
+import mobi.allshoppings.dao.spi.GenericDAOJDO;
 import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.model.APDReport;
+import mx.getin.dao.APDReportDAO;
+import mx.getin.model.APDReport;
 
 /**
  * APDReportDAO implementation for JDO.

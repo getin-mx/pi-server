@@ -27,13 +27,14 @@ import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.tools.CollectionFactory;
 
-
 /**
- *
+ * Returns data for the Hourly chart at the dashboard
+ * @author Matias Hapanowicz
+ * @author <a href="mailto:ignacio@getin.mx" >Manuel "Nachintoch" Castillo</a>
+ * @version 2.0, december 2017
+ * @since Allshoppings
  */
-public class TimelineHourBzServiceJSONImpl
-extends BDBRestBaseServerResource
-implements BDBTimelineHourBzService {
+public class TimelineHourBzServiceJSONImpl extends BDBRestBaseServerResource implements BDBTimelineHourBzService {
 
 	private static final Logger log = Logger.getLogger(TimelineHourBzServiceJSONImpl.class.getName());
 	@Autowired

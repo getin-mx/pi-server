@@ -42,6 +42,7 @@ import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APUptimeDAO;
+import mobi.allshoppings.dao.GenericDAO;
 import mobi.allshoppings.dao.InnerZoneDAO;
 import mobi.allshoppings.dao.MacVendorDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
@@ -69,6 +70,9 @@ import mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CollectionUtils;
 import mx.getin.Constants;
+import mx.getin.dao.APDReportDAO;
+import mx.getin.model.APDReport;
+import mx.getin.model.Entity;
 
 /**
  * Implements the APDevice Helper interface.
@@ -86,6 +90,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 
 	@Autowired
 	private APDeviceDAO dao;
+	@Autowired
+	private APDReportDAO reportDao;
 	@Autowired
 	private MailHelper mailHelper;
 	@Autowired
@@ -848,63 +854,80 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	 */
 	@Override
 	public void updateAssignationsUsingAPDevice(String hostname) throws ASException {
-		APDevice apd = dao.get(hostname, true);
-		List<APDAssignation> list = apdaDao.getUsingHostnameAndDate(hostname, new Date());
-
-		if (null == apd.getStatus())
-			apd.setStatus(StatusAware.STATUS_ENABLED);
-
-		if (null == apd.getReportStatus())
-			apd.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
-
-		int index = 0;
-		boolean done = false;
-
-		while (!done) {
-
-			if (list.size() > index) {
-
-				// APDevice is assigned
-				APDAssignation apda = list.get(index);
-				try {
-					if (apda.getEntityKind().equals(EntityKind.KIND_SHOPPING)) {
-						Shopping shopping = shoppingDao.get(apda.getEntityId());
-						apd.setDescription(shopping.getName());
-					} else if (apda.getEntityKind().equals(EntityKind.KIND_STORE)) {
-						Store store = storeDao.get(apda.getEntityId());
-						apd.setDescription(store.getName());
-					} else if (apda.getEntityKind().equals(EntityKind.KIND_INNER_ZONE)) {
-						InnerZone zone = zoneDao.get(apda.getEntityId());
-						apd.setDescription(zone.getName());
-					}
-					apd.setStatus(StatusAware.STATUS_ENABLED);
-					apd.setReportable(true);
-					if (apd.getReportMailList() == null)
-						apd.setReportMailList(new ArrayList<String>());
-					done = true;
-				} catch (ASException e) {
-					if (e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE) {
-						apdaDao.delete(apda);
-					}
-					index++;
-					done = false;
-				}
+		updateAssignationsUsingAPDevice(dao.get(hostname, true), reportDao.get(hostname, true));
+	}//updateAssignationsUsingAPDevice
+	
+	@Override
+	public void updateAssignationsUsingAPDevice(APDevice apd, APDReport apdReport) throws ASException {
+		boolean modifiedReport = false;
+		if (null == apdReport.getStatus()) {
+			apdReport.setStatus(StatusAware.STATUS_ENABLED);
+			modifiedReport = true;
+		} if (null == apdReport.getReportStatus()) {
+			apdReport.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
+			modifiedReport = true;
+		}
+		
+		List<APDAssignation> list = apdaDao.getUsingHostnameAndDate(apd.getHostname(), new Date());
+		if(list.isEmpty()) {
+			apd.setDescription(null);
+			apdReport.setReportable(false);
+			if (apdReport.getReportMailList() == null) {
+				apdReport.setReportMailList(new ArrayList<String>());
 			} else {
-
-				// APDevice is no longer assigned
-				apd.setDescription(null);
-				apd.setReportable(false);
-				if (apd.getReportMailList() == null) {
-					apd.setReportMailList(new ArrayList<String>());
-				} else {
-					apd.getReportMailList().clear();
-				}
-				done = true;
+				apdReport.getReportMailList().clear();
+			}
+			return;
+		}// APDevice is no longer assigned
+		boolean modifiedDev = false;
+		for(APDAssignation apda : list) {
+			// APDevice is assigned
+			GenericDAO<?> dao = null;
+			switch(apda.getEntityKind()) {
+			case EntityKind.KIND_SHOPPING :
+				dao = shoppingDao;
+				break;
+			case EntityKind.KIND_STORE :
+				dao = storeDao;
+				break;
+			case EntityKind.KIND_INNER_ZONE :
+				dao = zoneDao;
+			}
+			String newDesc = tryGetDescriptionFromEntity(dao, apda);
+			if(!newDesc.equals(apd.getDescription())) {
+				apd.setDescription(newDesc);
+				modifiedDev = true;
+				break;
 			}
 		}
-
-		dao.update(apd);
-		indexHelper.indexObject(apd);
+		if (apdReport.getReportMailList() == null) {
+			apdReport.setReportMailList(new ArrayList<String>());
+			modifiedReport = true;
+		}
+		modifiedReport |= apdReport.getStatus() != StatusAware.STATUS_ENABLED;
+		apdReport.setStatus(StatusAware.STATUS_ENABLED);
+		modifiedReport |= apdReport.getReportable(); 
+		apdReport.setReportable(true);
+		if(modifiedDev) {
+			dao.update(apd);
+			indexHelper.indexObject(apd);
+		} if(modifiedReport) {
+			reportDao.update(apdReport);
+			indexHelper.indexObject(apdReport);
+		}
+	}//updateAssignationUsingAPDevice
+	
+	private String tryGetDescriptionFromEntity(GenericDAO<?> dao, APDAssignation apda)
+			throws ASException {
+		try {
+			Entity entity = (Entity)dao.get(apda.getEntityId());
+			return entity.getName();
+		} catch(ASException e) {
+			if (e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE) {
+				apdaDao.delete(apda);
+			}
+		}
+		return null;
 	}
 
 	@Override
