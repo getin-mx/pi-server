@@ -1037,10 +1037,10 @@ public abstract class RestBaseServerResource extends ServerResource {
 	}
 	
 	public String getCachedJSONString(String identifier) {
-		return getCachedJSONString(identifier, 0, null, false);
+		return getCachedJSONString(identifier, (byte) 0, null, false);
 	}
 	
-	public String getCachedJSONString(String identifier, int kind, User user, boolean applyFavorite) {
+	public String getCachedJSONString(String identifier, byte kind, User user, boolean applyFavorite) {
 		String urlKey = getRequestURI();
 		String cachedJSON = (String)cacheHelper.get(urlKey);
 		if( null == cachedJSON ) return null;
@@ -1138,14 +1138,9 @@ public abstract class RestBaseServerResource extends ServerResource {
 		if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
 			if( user.getSecuritySettings().getStores().contains(data.getSubentityId()))
 				return true;
-			else
-				if (!CollectionUtils.isEmpty(user.getSecuritySettings().getShoppings())
-						&& user.getSecuritySettings().getShoppings().contains(data.getSubentityId()))
-					return true;
-				else
-					return false;
-		} else 
-			return true;
+			else return !CollectionUtils.isEmpty(user.getSecuritySettings().getShoppings())
+						&& user.getSecuritySettings().getShoppings().contains(data.getSubentityId());
+		} else return true;
 	}
 
 	public boolean isValidForUser(User user, Store store) {

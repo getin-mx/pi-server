@@ -12,6 +12,7 @@ import mobi.allshoppings.tools.Range;
 public interface InnerZoneDAO extends GenericDAO<InnerZone> {
 
 	Key createKey() throws ASException;
-	List<InnerZone> getUsingEntityIdAndRange(String entityId, Integer entityKind, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException;
+	List<InnerZone> getUsingEntityIdAndRange(String entityId, byte entityKind, Range range, String order,
+			Map<String, String> attributes, boolean detachable) throws ASException;
 	
 }

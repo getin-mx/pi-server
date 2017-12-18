@@ -7,15 +7,15 @@ import mobi.allshoppings.model.interfaces.StatusAware;
 
 public class StatusHelper {
 
-	public static List<Integer> statusActive() {
-		return Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED});
+	public static List<Byte> statusActive() {
+		return Arrays.asList(new Byte[] {StatusAware.STATUS_ENABLED});
 	}
 
-	public static List<Integer> statusNotDisabled() {
-		return Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED, StatusAware.STATUS_PENDING});
+	public static List<Byte> statusNotDisabled() {
+		return Arrays.asList(new Byte[] {StatusAware.STATUS_ENABLED, StatusAware.STATUS_PENDING});
 	}
 
-	public static List<Integer> statusNotificationVisible() {
-		return Arrays.asList(new Integer[] {StatusAware.STATUS_NEW, StatusAware.STATUS_VIEWED});
+	public static List<Byte> statusNotificationVisible() {
+		return Arrays.asList(new Byte[] {StatusAware.STATUS_NEW, StatusAware.STATUS_VIEWED});
 	}
 }

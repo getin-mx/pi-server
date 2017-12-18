@@ -38,12 +38,18 @@ public interface GenericDAO<T extends ModelKey> {
 	List<T> getAllAndOrder(String order, boolean detachable) throws ASException;
 	List<T> getAllAndOrder(PersistenceProvider pp, String order) throws ASException;
 	List<T> getAllAndOrder(PersistenceProvider pp, String order, boolean detachable) throws ASException;
-	List<T> getUsingStatusAndRange(List<Integer> status, Range range, String order) throws ASException;
-	List<T> getUsingStatusAndRange(List<Integer> status, Range range, String order, Map<String, String> aattributes, boolean detachable) throws ASException;
-	List<T> getUsingStatusAndRangeAndCountry(List<Integer> status, Range range, String country, String order, Map<String, String> aattributes, boolean detachable) throws ASException;
-	List<T> getUsingStatusAndRange(PersistenceProvider pp, List<Integer> status, Range range, String order) throws ASException;
-	List<T> getUsingStatusAndRange(PersistenceProvider pp, List<Integer> status, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException;
-	List<T> getUsingLastUpdateStatusAndRange(PersistenceProvider pp, Date lastUpdate, boolean afterLastUpdateDate, List<Integer> status, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException;
+	List<T> getUsingStatusAndRange(List<Byte> status, Range range, String order) throws ASException;
+	List<T> getUsingStatusAndRange(List<Byte> status, Range range, String order,
+			Map<String, String> attributes, boolean detachable) throws ASException;
+	List<T> getUsingStatusAndRangeAndCountry(List<Byte> status, Range range, String country,
+			String order, Map<String, String> aattributes, boolean detachable) throws ASException;
+	List<T> getUsingStatusAndRange(PersistenceProvider pp, List<Byte> status, Range range,
+			String order) throws ASException;
+	List<T> getUsingStatusAndRange(PersistenceProvider pp, List<Byte> status, Range range, String order,
+			Map<String, String> attributes, boolean detachable) throws ASException;
+	List<T> getUsingLastUpdateStatusAndRange(PersistenceProvider pp, Date lastUpdate,
+			boolean afterLastUpdateDate, List<Byte> status, Range range, String order,
+			Map<String, String> attributes, boolean detachable) throws ASException;
 
 	// Basic CRUD Operations
 	void create(T obj) throws ASException;
@@ -63,17 +69,21 @@ public interface GenericDAO<T extends ModelKey> {
 	void deleteAll(PersistenceProvider pp) throws ASException;
 
 	// Search Operations
-	List<T> getUsingIndex(String q, ViewLocation viewLocation, List<Integer> status, Range range, Map<String, String> additionalFields, String order, String lang) throws ASException;
-	List<T> getUsingIndex(String indexName, String q, ViewLocation viewLocation, List<Integer> status, Range range, Map<String, String> additionalFields, String order, String lang) throws ASException;
+	List<T> getUsingIndex(String q, ViewLocation viewLocation, List<Byte> status,
+			Range range, Map<String, String> additionalFields, String order, String lang) throws ASException;
+	List<T> getUsingIndex(String indexName, String q, ViewLocation viewLocation, List<Byte> status,
+			Range range, Map<String, String> additionalFields, String order, String lang) throws ASException;
 	IndexHelper getIndexHelper();
 	
 	// Datatable Operations
 	long count() throws ASException;
 	long count(UserInfo userInfo) throws ASException;
 	long count(String keyName, String keyValue, UserInfo userInfo) throws ASException;
-	long count(List<Integer> status) throws ASException;
-	List<T> getForTable(String[] columnSort, String sortDirection, String[] searchFields, String search, long first, long last, UserInfo userInfo) throws ASException;
-	List<T> getForTableWidthKey(String keyName, String keyValue, String[] columnSort, String sortType, String[] searchFields, String search, long first, long last, UserInfo userInfo) throws ASException;
+	long count(List<Byte> status) throws ASException;
+	List<T> getForTable(String[] columnSort, String sortDirection, String[] searchFields, String search,
+			long first, long last, UserInfo userInfo) throws ASException;
+	List<T> getForTableWidthKey(String keyName, String keyValue, String[] columnSort, String sortType,
+			String[] searchFields, String search, long first, long last, UserInfo userInfo) throws ASException;
 	
 	// Internal Operations
 	String toParameterList(List<String> parms);

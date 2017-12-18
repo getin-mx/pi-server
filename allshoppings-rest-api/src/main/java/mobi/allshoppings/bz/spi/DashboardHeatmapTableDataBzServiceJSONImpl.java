@@ -78,34 +78,35 @@ implements DashboardHeatmapTableDataBzService {
 			Map<Integer, Integer> data = null;
 			Integer value = null;
 			Map<Integer, Integer> totals = CollectionFactory.createMap();
-			totals.put(DashboardIndicatorData.TIME_ZONE_ALL, 0);
-			totals.put(DashboardIndicatorData.TIME_ZONE_MORNING, 0);
-			totals.put(DashboardIndicatorData.TIME_ZONE_NOON, 0);
-			totals.put(DashboardIndicatorData.TIME_ZONE_AFTERNOON, 0);
-			totals.put(DashboardIndicatorData.TIME_ZONE_NIGHT, 0);
+			totals.put(new Integer(DashboardIndicatorData.TIME_ZONE_ALL), 0);
+			totals.put(new Integer(DashboardIndicatorData.TIME_ZONE_MORNING), 0);
+			totals.put(new Integer(DashboardIndicatorData.TIME_ZONE_NOON), 0);
+			totals.put(new Integer(DashboardIndicatorData.TIME_ZONE_AFTERNOON), 0);
+			totals.put(new Integer(DashboardIndicatorData.TIME_ZONE_NIGHT), 0);
 			
 			for( DashboardIndicatorData obj : list ) {
 				if( isValidForUser(user, obj)) {
 					String key = obj.getElementSubName();
-					if(!obj.getTimeZone().equals(DashboardIndicatorData.TIME_ZONE_ALL) && StringUtils.hasText(key)) {
+					if(obj.getTimeZone() != DashboardIndicatorData.TIME_ZONE_ALL && StringUtils.hasText(key)) {
 						// Data for this timezone
 						data = dataSet.get(key);
 						if( data == null ) data = CollectionFactory.createMap();
 						value = data.get(obj.getTimeZone());
 						if( value == null ) value = 0;
 						value++;
-						data.put(obj.getTimeZone(), value);
+						data.put(new Integer(obj.getTimeZone()), value);
 
-						totals.put(obj.getTimeZone(), totals.get(obj.getTimeZone()) + 1);
+						totals.put(new Integer(obj.getTimeZone()), totals.get(obj.getTimeZone()) + 1);
 
 						// Data for total timezones
 						value = data.get(DashboardIndicatorData.TIME_ZONE_ALL);
 						if( value == null ) value = 0;
 						value++;
-						data.put(DashboardIndicatorData.TIME_ZONE_ALL, value);
+						data.put(new Integer(DashboardIndicatorData.TIME_ZONE_ALL), value);
 						dataSet.put(key, data);
 
-						totals.put(DashboardIndicatorData.TIME_ZONE_ALL, totals.get(DashboardIndicatorData.TIME_ZONE_ALL) + 1);
+						totals.put(new Integer(DashboardIndicatorData.TIME_ZONE_ALL),
+								totals.get(DashboardIndicatorData.TIME_ZONE_ALL) + 1);
 
 						toBeOrderedDataSet.put(key, value);
 					}
@@ -182,11 +183,16 @@ implements DashboardHeatmapTableDataBzService {
 				String key = xCategoriesMap.get(cat);
 				data = dataSet.get(key);
 				if( data == null ) data = CollectionFactory.createMap();
-				if( data.get(DashboardIndicatorData.TIME_ZONE_ALL) == null ) data.put(DashboardIndicatorData.TIME_ZONE_ALL, 0);
-				if( data.get(DashboardIndicatorData.TIME_ZONE_MORNING) == null ) data.put(DashboardIndicatorData.TIME_ZONE_MORNING, 0);
-				if( data.get(DashboardIndicatorData.TIME_ZONE_NOON) == null ) data.put(DashboardIndicatorData.TIME_ZONE_NOON, 0);
-				if( data.get(DashboardIndicatorData.TIME_ZONE_AFTERNOON) == null ) data.put(DashboardIndicatorData.TIME_ZONE_AFTERNOON, 0);
-				if( data.get(DashboardIndicatorData.TIME_ZONE_NIGHT) == null ) data.put(DashboardIndicatorData.TIME_ZONE_NIGHT, 0);
+				if( data.get(DashboardIndicatorData.TIME_ZONE_ALL) == null )
+					data.put(new Integer(DashboardIndicatorData.TIME_ZONE_ALL), 0);
+				if( data.get(DashboardIndicatorData.TIME_ZONE_MORNING) == null )
+					data.put(new Integer(DashboardIndicatorData.TIME_ZONE_MORNING), 0);
+				if( data.get(DashboardIndicatorData.TIME_ZONE_NOON) == null )
+					data.put(new Integer(DashboardIndicatorData.TIME_ZONE_NOON), 0);
+				if( data.get(DashboardIndicatorData.TIME_ZONE_AFTERNOON) == null )
+					data.put(new Integer(DashboardIndicatorData.TIME_ZONE_AFTERNOON), 0);
+				if( data.get(DashboardIndicatorData.TIME_ZONE_NIGHT) == null )
+					data.put(new Integer(DashboardIndicatorData.TIME_ZONE_NIGHT), 0);
 				
 				JSONArray element = new JSONArray();
 				for( int i = DashboardIndicatorData.TIME_ZONE_ALL; i <= DashboardIndicatorData.TIME_ZONE_NIGHT; i++ ) {

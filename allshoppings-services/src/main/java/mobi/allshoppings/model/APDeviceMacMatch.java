@@ -18,8 +18,8 @@ public class APDeviceMacMatch implements ModelKey, Serializable, Identificable {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final int TYPE_PEASANT = 0;
-	public static final int TYPE_VISIT = 1;
+	public static final byte TYPE_PEASANT = 0;
+	public static final byte TYPE_VISIT = 1;
 	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
@@ -29,8 +29,8 @@ public class APDeviceMacMatch implements ModelKey, Serializable, Identificable {
 	private String mac;
 	private String deviceUUID;
 	private String entityId;
-	private Integer entityKind;
-	private Integer type;
+	private byte entityKind;
+	private byte type;
 	
 	private Date creationDateTime;
 	private Date lastUpdate;
@@ -153,28 +153,28 @@ public class APDeviceMacMatch implements ModelKey, Serializable, Identificable {
 	/**
 	 * @return the entityKind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 
 	/**
 	 * @return the type
 	 */
-	public Integer getType() {
+	public byte getType() {
 		return type;
 	}
 
 	/**
 	 * @param type the type to set
 	 */
-	public void setType(Integer type) {
+	public void setType(byte type) {
 		this.type = type;
 	}
 

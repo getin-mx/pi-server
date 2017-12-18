@@ -17,14 +17,15 @@ public interface StoreDAO extends GenericDAO<Store> {
 	Key createKey(String brandId) throws ASException;
 	Key createKey() throws ASException;
 
-	List<Store> getUsingShoppingAndStatus(String shoppingId, List<Integer> status, String order) throws ASException;
-	List<Store> getUsingUserAndBrandAndStatus(User user, String brandId, List<Integer> status, String order) throws ASException;
-	List<Store> getUsingBrandAndStatus(String brandId, List<Integer> status, String order) throws ASException;
-	List<Store> getUsingBrandAndShoppingAndStatus(String brandId, String shoppingId, List<Integer> status, String order) throws ASException;
-	List<Store> getStreetUsingBrandAndStatus(String brandId, List<Integer> status, String order) throws ASException;
+	List<Store> getUsingShoppingAndStatus(String shoppingId, List<Byte> status, String order) throws ASException;
+	List<Store> getUsingUserAndBrandAndStatus(User user, String brandId, List<Byte> status, String order) throws ASException;
+	List<Store> getUsingBrandAndStatus(String brandId, List<Byte> status, String order) throws ASException;
+	List<Store> getUsingBrandAndShoppingAndStatus(String brandId, String shoppingId, List<Byte> status,
+			String order) throws ASException;
+	List<Store> getStreetUsingBrandAndStatus(String brandId, List<Byte> status, String order) throws ASException;
 	Store getUsingExternalId(String externalId) throws ASException;
 	
-	List<Store> getUsingStatus(List<Integer> status) throws ASException;
-	List<Store> getUsingIdsAndStatus(Collection<String> ids, List<Integer> status) throws ASException;
+	List<Store> getUsingStatus(List<Byte> status) throws ASException;
+	List<Store> getUsingIdsAndStatus(Collection<String> ids, List<Byte> status) throws ASException;
 	List<String> getBrandIdsUsingIdList(PersistenceProvider pp, List<String> idList, boolean detachable) throws ASException;
 }

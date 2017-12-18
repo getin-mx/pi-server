@@ -84,7 +84,8 @@ public class BrandListBzServiceJSONImpl extends RestBaseServerResource implement
 								StatusHelper.statusActive(), null, 
 								additionalFields, null, lang));
 			} else {
-				brands = new GenericAdapterImpl<BrandAdapter>().adaptList(dao.getUsingStatusAndRangeInCache(new Vector<Integer>(), range, user, 
+				brands = new GenericAdapterImpl<BrandAdapter>()
+						.adaptList(dao.getUsingStatusAndRangeInCache(new Vector<Byte>(), range, user, 
 						favoritesOnly ? UserEntityCache.TYPE_FAVORITES_ONLY :
 						favoritesFirst ? UserEntityCache.TYPE_FAVORITES_FIRST : UserEntityCache.TYPE_NORMAL_SORT));
 			}

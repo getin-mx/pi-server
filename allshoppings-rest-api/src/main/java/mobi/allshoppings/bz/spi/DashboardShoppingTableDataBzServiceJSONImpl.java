@@ -73,9 +73,6 @@ implements DashboardShoppingTableDataBzService {
 			String subentityId = obtainStringValue("subentityId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
-			String country = obtainStringValue("country", null);
-			String province = obtainStringValue("province", null);
-			String city = obtainStringValue("city", null);
 
 			// Initializes the table using the received information
 			DashboardTableRep table = new DashboardTableRep();
@@ -93,9 +90,9 @@ implements DashboardShoppingTableDataBzService {
 
 			// peasents, visits, and tickets
 			list = dao.getUsingFilters(entityIds, null, Arrays.asList("apd_visitor"),
-					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets"), null,
-					null, null, fromStringDate, toStringDate, null, null, null, null, null, country,
-					province, city);
+					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets"),
+					null, null, null, fromStringDate, toStringDate, null, null, null, null, null, null,
+					null, null);
 
 			for(DashboardIndicatorData obj : list) {
 
@@ -112,10 +109,9 @@ implements DashboardShoppingTableDataBzService {
 			}
 
 			// permanence
-			list = dao.getUsingFilters(entityIds,
-					null, Arrays.asList("apd_permanence"), Arrays.asList("permanence_hourly_visits"), null,
-					null, null, fromStringDate, toStringDate,
-					null, null, null, null, null, country, province, city);
+			list = dao.getUsingFilters(entityIds, null, Arrays.asList("apd_permanence"),
+					Arrays.asList("permanence_hourly_visits"), null, null, null, fromStringDate, toStringDate,
+					null, null, null, null, null, null, null, null);
 
 			{
 				Map<String, List<Long>> d = CollectionFactory.createMap();
@@ -130,7 +126,7 @@ implements DashboardShoppingTableDataBzService {
 				Iterator<String> i = d.keySet().iterator();
 				while( i.hasNext() ) {
 					String key = i.next();
-					DashboardRecordRep rec = table.findRecordWithEntityId(key, null);
+					DashboardRecordRep rec = table.findRecordWithEntityId(key, (byte)-1);
 					if( null != rec ) {
 
 						List<Long> c = d.get(key);
@@ -254,9 +250,9 @@ implements DashboardShoppingTableDataBzService {
 			records = CollectionFactory.createList();
 		}
 
-		public DashboardRecordRep findRecordWithEntityId(String entityId, Integer entityKind) {
+		public DashboardRecordRep findRecordWithEntityId(String entityId, byte entityKind) {
 			for(DashboardRecordRep rec : records ) {
-				if( rec.getEntityId().equals(entityId) && (entityKind == null || rec.getEntityKind().equals(entityKind))) 
+				if( rec.getEntityId().equals(entityId) && (entityKind == -1 || rec.getEntityKind() == entityKind)) 
 					return rec;
 			}
 			return null;
@@ -315,7 +311,7 @@ implements DashboardShoppingTableDataBzService {
 		 */
 		public JSONArray getJSONTotals() throws ASException {
 
-			DashboardRecordRep totals = new DashboardRecordRep(null, 0, null, null, "Totales", null, null);
+			DashboardRecordRep totals = new DashboardRecordRep(null, 0, null, (byte)-1, "Totales", null, null);
 			List<Long> c = CollectionFactory.createList();
 
 			for( DashboardRecordRep rec : records ) {
@@ -378,20 +374,19 @@ implements DashboardShoppingTableDataBzService {
 		private boolean header;
 		private int level;
 		private String entityId;
-		private Integer entityKind;
+		private byte entityKind;
 		private String title;
-		private Long peasants;
-		private Long visitors;
-		private Long tickets;
+		private long peasants;
+		private long visitors;
+		private long tickets;
 		private Date higherDate;
 		private Date lowerDate;
-		private Long permanenceInMillis;
+		private long permanenceInMillis;
 		private Map<String, Long> datesCache;
 		private DashboardTableRep parent;
 
-		public DashboardRecordRep(DashboardTableRep parent, int level, String entityId, Integer entityKind, String title, String fromStringDate, String toStringDate) {
-			super();
-
+		public DashboardRecordRep(DashboardTableRep parent, int level, String entityId, byte entityKind,
+				String title, String fromStringDate, String toStringDate) {
 			this.parent = parent;
 
 			this.entityId = entityId;
@@ -573,14 +568,14 @@ implements DashboardShoppingTableDataBzService {
 		/**
 		 * @return the entityKind
 		 */
-		public Integer getEntityKind() {
+		public byte getEntityKind() {
 			return entityKind;
 		}
 
 		/**
 		 * @param entityKind the entityKind to set
 		 */
-		public void setEntityKind(Integer entityKind) {
+		public void setEntityKind(byte entityKind) {
 			this.entityKind = entityKind;
 		}
 

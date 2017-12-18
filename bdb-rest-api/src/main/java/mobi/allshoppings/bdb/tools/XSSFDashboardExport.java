@@ -48,7 +48,8 @@ public class XSSFDashboardExport {
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
 	
-	public byte[] createXSSFBrandDashboardRepresentation(String authToken, String baseUrl, String brandId, String storeId, Date dateFrom, Date dateTo) throws ASException {
+	public byte[] createXSSFBrandDashboardRepresentation(String authToken, String baseUrl, String brandId,
+			String storeId, Date dateFrom, Date dateTo) throws ASException {
 		
 		// Get the Brand
 		Brand brand = brandDao.get(brandId, true);
@@ -61,8 +62,8 @@ public class XSSFDashboardExport {
 		// Data Acquisition ---------------------------------------------------------------------------------------------
 		// Table --------------------------------------------------------------------------------------------------------
 		String tableUrl = baseUrl + "dashboard/brandTableData?authToken=" + authToken + "&entityId=" + brandId
-				+ "&entityKind=1" + "&fromStringDate=" + sdf.format(dateFrom) + "&toStringDate=" + sdf.format(dateTo)
-				+ "&onlyExternalIds=true";
+				+ "&entityKind=1" + "&fromStringDate=" + sdf.format(dateFrom) + "&toStringDate="
+				+ sdf.format(dateTo) + "&onlyExternalIds=true";
 		String tableString = get(tableUrl);
 		JSONArray tableJson = new JSONArray(tableString);
 		
@@ -88,9 +89,7 @@ public class XSSFDashboardExport {
 				+ "&average=true&toMinutes=true&eraseBlanks=true";
 		String trafHourString = get(trafHourUrl);
 		JSONObject trafHourJson = new JSONObject(trafHourString);		
-		
-//		System.out.println(trafHourJson);
-		
+	
 		// Daily Permanence -------------------------------------------------------------------------------------------------
 		String permHourUrl = baseUrl + "dashboard/timelineHour?authToken=" + authToken + "&entityId=" + brandId + "&entityKind=1"
 				+ (StringUtils.hasText(storeId) ? "&subentityId=" + storeId : "")

@@ -15,13 +15,17 @@ import mobi.allshoppings.tx.PersistenceProvider;
 
 public interface BrandDAO extends GenericDAO<Brand> {
 
-	List<Brand> getByViewLocationAndStatus(ViewLocation vl, List<Integer> status, String order) throws ASException;
-	List<Brand> getByViewLocationAndStatus(ViewLocation vl, List<Integer> status, String order, boolean detachable) throws ASException;
-	List<Brand> getByViewLocationAndStatus(PersistenceProvider pp, ViewLocation vl, List<Integer> status, String order) throws ASException;
-	List<Brand> getByViewLocationAndStatus(PersistenceProvider pp, ViewLocation vl, List<Integer> status, String order, boolean detachable) throws ASException;
+	List<Brand> getByViewLocationAndStatus(ViewLocation vl, List<Byte> status, String order) throws ASException;
+	List<Brand> getByViewLocationAndStatus(ViewLocation vl, List<Byte> status, String order, boolean detachable) throws ASException;
+	List<Brand> getByViewLocationAndStatus(PersistenceProvider pp, ViewLocation vl, List<Byte> status,
+			String order) throws ASException;
+	List<Brand> getByViewLocationAndStatus(PersistenceProvider pp, ViewLocation vl, List<Byte> status,
+			String order, boolean detachable) throws ASException;
 
-	List<Brand> getUsingStatusAndRangeInCache(List<Integer> status, Range range, User user, int returnType) throws ASException;
-	List<Brand> getUsingIdsAndStatusAndRangeInCache(Collection<String> ids, List<Integer> status, Range range, User user, int returnType) throws ASException;
+	List<Brand> getUsingStatusAndRangeInCache(List<Byte> status, Range range, User user,
+			int returnType) throws ASException;
+	List<Brand> getUsingIdsAndStatusAndRangeInCache(Collection<String> ids, List<Byte> status,
+			Range range, User user, int returnType) throws ASException;
 
 	Key createKey(String brandName, String country) throws ASException;
 

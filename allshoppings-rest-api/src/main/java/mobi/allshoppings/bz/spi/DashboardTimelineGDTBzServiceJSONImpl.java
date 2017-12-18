@@ -57,16 +57,10 @@ implements DashboardTimelineGDTBzService {
 			String periodType = obtainStringValue("periodId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
-			String movieId = obtainStringValue("movieId", null);
-			String voucherType = obtainStringValue("voucherType", null);
-			String country = obtainStringValue("country", null);
-			String province = obtainStringValue("province", null);
-			String city = obtainStringValue("city", null);
 
-			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
-					entityKind, elementId, elementSubId, shoppingId,
-					subentityId, periodType, fromStringDate, toStringDate,
-					movieId, voucherType, null, null, null, country, province, city);
+			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId, entityKind, elementId,
+					elementSubId, shoppingId, subentityId, periodType, fromStringDate, toStringDate,
+					null, null, null, null, null, null, null, null);
 
 			List<String> categories = Arrays.asList(new String[] {"Dom","Lun","Mar","Mie","Jue","Vie","Sab"});
 
@@ -85,9 +79,10 @@ implements DashboardTimelineGDTBzService {
 			resultMap.put("4", new Integer[] {0,0,0,0,0,0,0});
 
 			for(DashboardIndicatorData obj : list) {
-				Integer[] vect = resultMap.get(obj.getTimeZone().toString());
+				String key = String.valueOf(obj.getTimeZone());
+				Integer[] vect = resultMap.get(key);
 				vect[obj.getDayOfWeek()-1] += obj.getDoubleValue().intValue();
-				resultMap.put(obj.getTimeZone().toString(), vect);
+				resultMap.put(key, vect);
 			}
 			
 			// Creates the final JSON Array

@@ -23,7 +23,7 @@ public class APDAssignation implements ModelKey, Serializable, Identificable {
 	private Key key;
 
 	private String entityId;
-	private Integer entityKind;
+	private byte entityKind;
 	private String hostname;
 	private Date fromDate;
 	private Date toDate;
@@ -79,14 +79,14 @@ public class APDAssignation implements ModelKey, Serializable, Identificable {
 	/**
 	 * @return the entityKind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 
@@ -168,7 +168,7 @@ public class APDAssignation implements ModelKey, Serializable, Identificable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((entityId == null) ? 0 : entityId.hashCode());
-		result = prime * result + ((entityKind == null) ? 0 : entityKind.hashCode());
+		result = prime * result + entityKind;
 		result = prime * result + ((fromDate == null) ? 0 : fromDate.hashCode());
 		result = prime * result + ((hostname == null) ? 0 : hostname.hashCode());
 		result = prime * result + ((toDate == null) ? 0 : toDate.hashCode());
@@ -192,10 +192,7 @@ public class APDAssignation implements ModelKey, Serializable, Identificable {
 				return false;
 		} else if (!entityId.equals(other.entityId))
 			return false;
-		if (entityKind == null) {
-			if (other.entityKind != null)
-				return false;
-		} else if (!entityKind.equals(other.entityKind))
+		if (entityKind != other.entityKind)
 			return false;
 		if (fromDate == null) {
 			if (other.fromDate != null)

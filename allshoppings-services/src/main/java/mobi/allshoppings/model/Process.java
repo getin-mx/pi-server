@@ -20,18 +20,18 @@ import mobi.allshoppings.model.interfaces.StatusAware;
 @PersistenceCapable(detachable="true")
 public class Process implements ModelKey, Serializable, Identificable, StatusAware, Indexable {
 
-	public final static int PROCESS_TYPE_GENERATE_VISITS = 0;
-	public final static int PROCESS_TYPE_SIMULATE_VISITS = 1;	
+	public final static byte PROCESS_TYPE_GENERATE_VISITS = 0;
+	public final static byte PROCESS_TYPE_SIMULATE_VISITS = 1;	
 	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
 	private Key key;
 
 	private String entityId;
-	private Integer entityKind;
+	private byte entityKind;
 	
-	private Integer processType;
-	private Integer status;
+	private byte processType;
+	private byte status;
 	
 	private String name;
 	private String userId;
@@ -106,28 +106,28 @@ public class Process implements ModelKey, Serializable, Identificable, StatusAwa
 	/**
 	 * @return the processType
 	 */
-	public Integer getProcessType() {
+	public byte getProcessType() {
 		return processType;
 	}
 
 	/**
 	 * @param processType the processType to set
 	 */
-	public void setProcessType(Integer processType) {
+	public void setProcessType(byte processType) {
 		this.processType = processType;
 	}
 
 	/**
 	 * @return the status
 	 */
-	public Integer getStatus() {
+	public byte getStatus() {
 		return status;
 	}
 
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(Integer status) {
+	public void setStatus(byte status) {
 		this.status = status;
 	}
 
@@ -275,14 +275,14 @@ public class Process implements ModelKey, Serializable, Identificable, StatusAwa
 	/**
 	 * @return the entityKind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 

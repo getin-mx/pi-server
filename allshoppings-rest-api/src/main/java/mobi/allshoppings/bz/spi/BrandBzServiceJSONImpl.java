@@ -95,7 +95,8 @@ public class BrandBzServiceJSONImpl extends RestBaseServerResource implements Br
 			// Obtains the brand entity
 			String level = obtainStringValue(LEVEL, systemConfiguration.getDefaultLevelOnBrandBzService());
 			brand = new GenericAdapterImpl<BrandAdapter>().adapt(obj);
-			Favorite favorite = favoriteDao.getUsingUserAndEntityAndKind(user, brand.getIdentifier(), EntityKind.KIND_BRAND, true);
+			Favorite favorite = favoriteDao.getUsingUserAndEntityAndKind(user, brand.getIdentifier(),
+					EntityKind.KIND_BRAND, true);
 			if( favorite != null ) brand.setFavorite(true);
 			brand.setPoints(user.getPoints());
 

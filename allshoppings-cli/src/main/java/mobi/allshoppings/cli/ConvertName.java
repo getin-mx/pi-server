@@ -44,7 +44,7 @@ public class ConvertName extends AbstractCLI {
 		if( base == null ) parser = new OptionParser();
 		else parser = base;
 		parser.accepts( "entityId", "Entity ID").withRequiredArg().ofType( String.class );
-		parser.accepts( "entityKind", "Entity Kind").withRequiredArg().ofType( Integer.class );
+		parser.accepts( "entityKind", "Entity Kind").withRequiredArg().ofType( Byte.class );
 		parser.accepts( "newName", "New Name").withRequiredArg().ofType( String.class );
 		return parser;
 	}
@@ -63,14 +63,14 @@ public class ConvertName extends AbstractCLI {
 			OptionSet options = parser.parse(args);
 
 			String entityId = null;
-			Integer entityKind = null;
+			byte entityKind = -1;
 			String newName = null;
 			
 			try {
 				if( options.has("entityId")) entityId = (String)options.valueOf("entityId");
 				else usage(parser);
 				
-				if( options.has("entityKind")) entityKind = (Integer)options.valueOf("entityKind");
+				if( options.has("entityKind")) entityKind = (Byte)options.valueOf("entityKind");
 				else usage(parser);
 
 				if( options.has("newName")) newName = (String)options.valueOf("newName");

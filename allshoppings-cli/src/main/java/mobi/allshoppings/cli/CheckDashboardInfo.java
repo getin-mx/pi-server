@@ -75,7 +75,7 @@ public class CheckDashboardInfo extends AbstractCLI {
 			Date fromDate = null;
 			Date toDate = null;
 			String sEntityIds[] = null;
-			Integer entityKind = EntityKind.KIND_STORE; // Store by default
+			byte entityKind = EntityKind.KIND_STORE; // Store by default
 			
 			try {
 				if( options.has("fromDate")) {
@@ -89,7 +89,7 @@ public class CheckDashboardInfo extends AbstractCLI {
 				}
 
 				if( options.has("entityKind")) {
-					entityKind = (Integer)options.valueOf("entityKind");
+					entityKind = (Byte)options.valueOf("entityKind");
 				}
 
 				if( options.has("entityIds")) {
@@ -110,9 +110,8 @@ public class CheckDashboardInfo extends AbstractCLI {
 			List<Store> stores = CollectionFactory.createList();
 			if( null != sEntityIds ) {
 				for( String eid : sEntityIds ) {
-					if( entityKind.equals(EntityKind.KIND_STORE)) {
-						stores.add(storeDao.get(eid, true));
-					} else if( entityKind.equals(EntityKind.KIND_BRAND)) {
+					if( entityKind == EntityKind.KIND_STORE) stores.add(storeDao.get(eid, true));
+					if( entityKind == EntityKind.KIND_BRAND) {
 						stores.addAll(storeDao.getUsingBrandAndStatus(eid, StatusHelper.statusActive(), "name"));
 					}
 				}
@@ -144,7 +143,8 @@ public class CheckDashboardInfo extends AbstractCLI {
 					}
 					
 					if( visitCountAPDV.equals(0L)) {
-						List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(store.getIdentifier(), EntityKind.KIND_STORE, curDate);
+						List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(
+								store.getIdentifier(), EntityKind.KIND_STORE, curDate);
 						log.log(Level.WARNING, "Checking Assignations for for " + store.getName() + " in " + sdf.format(curDate) + " and " + assigs.size() + " assignations...");
 						if(!assigs.isEmpty()) {
 							log.log(Level.WARNING, "--------- Rebuilding Visits count for " + store.getName() + " in " + sdf.format(curDate) + "...");

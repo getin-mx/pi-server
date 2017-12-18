@@ -28,7 +28,7 @@ public class EmployeeLog implements ModelKey, Serializable, Identificable {
 	private String deviceUUID;
 	private String mac;
 	private String entityId;
-	private Integer entityKind;
+	private byte entityKind;
 	private Date checkinStarted;
 	private Date checkinFinished;
 	private Date lastUpdate;
@@ -143,14 +143,14 @@ public class EmployeeLog implements ModelKey, Serializable, Identificable {
 	/**
 	 * @return the entityKind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 

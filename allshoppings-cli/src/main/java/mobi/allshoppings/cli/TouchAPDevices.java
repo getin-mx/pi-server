@@ -15,7 +15,6 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.SystemConfiguration;
-import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
 import mx.getin.dao.APDCalibrationDAO;
 import mx.getin.dao.APDReportDAO;
@@ -112,14 +111,7 @@ public class TouchAPDevices extends AbstractCLI {
 
 				boolean modifiedCal = cal.getVisitGapThreshold() != 180;
 				cal.setVisitGapThreshold(180);
-				boolean modifiedRep = rep.getStatus() == null;
-				if(modifiedRep)  rep.setStatus(StatusAware.STATUS_ENABLED);
-				modifiedRep |= rep.getReportStatus() == null;
-				if( null == rep.getReportStatus() )
-					rep.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
-				
 				if(modifiedCal) apdcalibration.update(cal);
-				if(modifiedRep) apdreportDao.update(rep);
 				apdeviceHelper.updateAssignationsUsingAPDevice(obj, rep);
 			}
 			

@@ -36,18 +36,18 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 	@Deprecated
 	public static final String PERIOD_TYPE_MONTHLY = "M";
 	
-	public static final Integer TIME_ZONE_ALL = 0;
-	public static final Integer TIME_ZONE_MORNING = 1;
-	public static final Integer TIME_ZONE_NOON = 2;
-	public static final Integer TIME_ZONE_AFTERNOON = 3;
-	public static final Integer TIME_ZONE_NIGHT = 4;
+	public static final byte TIME_ZONE_ALL = 0;
+	public static final byte TIME_ZONE_MORNING = 1;
+	public static final byte TIME_ZONE_NOON = 2;
+	public static final byte TIME_ZONE_AFTERNOON = 3;
+	public static final byte TIME_ZONE_NIGHT = 4;
 	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
     private Key key;
 
 	public String entityId;
-	public Integer entityKind;
+	public byte entityKind;
 	public String screenName;
 	public String elementId;
 	public String elementName;
@@ -90,17 +90,16 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 	@NotPersistent
 	public transient String voucherType;
 	
-	public Integer dayOfWeek;
-	public Integer timeZone;
+	public byte dayOfWeek;
+	public byte timeZone;
 	public String stringValue;
 	public Double doubleValue;
-	public Integer recordCount;
+	public int recordCount;
 	
 	public Date creationDateTime;
 	public Date lastUpdate;
 	
 	public DashboardIndicatorData() {
-		super();
 		this.creationDateTime = new Date();
 		this.doubleValue = 0D;
 		this.recordCount = 0;
@@ -168,14 +167,14 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 	/**
 	 * @return the entityKind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 
@@ -378,28 +377,28 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 	/**
 	 * @return the dayOfWeek
 	 */
-	public Integer getDayOfWeek() {
+	public byte getDayOfWeek() {
 		return dayOfWeek;
 	}
 
 	/**
 	 * @param dayOfWeek the dayOfWeek to set
 	 */
-	public void setDayOfWeek(Integer dayOfWeek) {
+	public void setDayOfWeek(byte dayOfWeek) {
 		this.dayOfWeek = dayOfWeek;
 	}
 
 	/**
 	 * @return the timeZone
 	 */
-	public Integer getTimeZone() {
+	public byte getTimeZone() {
 		return timeZone;
 	}
 
 	/**
 	 * @param timeZone the timeZone to set
 	 */
-	public void setTimeZone(Integer timeZone) {
+	public void setTimeZone(byte timeZone) {
 		this.timeZone = timeZone;
 	}
 
@@ -504,14 +503,14 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 	/**
 	 * @return the recordCount
 	 */
-	public Integer getRecordCount() {
+	public int getRecordCount() {
 		return recordCount;
 	}
 
 	/**
 	 * @param recordCount the recordCount to set
 	 */
-	public void setRecordCount(Integer recordCount) {
+	public void setRecordCount(int recordCount) {
 		this.recordCount = recordCount;
 	}
 
@@ -529,21 +528,14 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 				+ ((elementSubId == null) ? 0 : elementSubId.hashCode());
 		result = prime * result
 				+ ((entityId == null) ? 0 : entityId.hashCode());
-		result = prime * result
-				+ ((entityKind == null) ? 0 : entityKind.hashCode());
-		result = prime * result + ((movieId == null) ? 0 : movieId.hashCode());
-		result = prime * result
-				+ ((periodType == null) ? 0 : periodType.hashCode());
+		result = prime * result + entityKind;
 		result = prime * result
 				+ ((shoppingId == null) ? 0 : shoppingId.hashCode());
 		result = prime * result
 				+ ((stringDate == null) ? 0 : stringDate.hashCode());
 		result = prime * result
 				+ ((subentityId == null) ? 0 : subentityId.hashCode());
-		result = prime * result
-				+ ((timeZone == null) ? 0 : timeZone.hashCode());
-		result = prime * result
-				+ ((voucherType == null) ? 0 : voucherType.hashCode());
+		result = prime * result + timeZone;
 		result = prime * result
 				+ ((key == null) ? 0 : key.hashCode());
 		result = prime * result
@@ -556,16 +548,13 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 				+ ((shoppingName == null) ? 0 : shoppingName.hashCode());
 		result = prime * result
 				+ ((subentityName == null) ? 0 : subentityName.hashCode());
-		result = prime * result
-				+ ((dayOfWeek == null) ? 0 : dayOfWeek.hashCode());
-		result = prime * result
-				+ ((timeZone == null) ? 0 : timeZone.hashCode());
+		result = prime * result + dayOfWeek;
+		result = prime * result + timeZone;
 		result = prime * result
 				+ ((stringValue == null) ? 0 : stringValue.hashCode());
 		result = prime * result
 				+ ((doubleValue == null) ? 0 : doubleValue.hashCode());
-		result = prime * result
-				+ ((recordCount == null) ? 0 : recordCount.hashCode());
+		result = prime * result + recordCount;
 		result = prime * result
 				+ ((creationDateTime == null) ? 0 : creationDateTime.hashCode());
 		result = prime * result
@@ -605,20 +594,7 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 				return false;
 		} else if (!entityId.equals(other.entityId))
 			return false;
-		if (entityKind == null) {
-			if (other.entityKind != null)
-				return false;
-		} else if (!entityKind.equals(other.entityKind))
-			return false;
-		if (movieId == null) {
-			if (other.movieId != null)
-				return false;
-		} else if (!movieId.equals(other.movieId))
-			return false;
-		if (periodType == null) {
-			if (other.periodType != null)
-				return false;
-		} else if (!periodType.equals(other.periodType))
+		if (entityKind  != other.entityKind)
 			return false;
 		if (shoppingId == null) {
 			if (other.shoppingId != null)
@@ -635,15 +611,7 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 				return false;
 		} else if (!subentityId.equals(other.subentityId))
 			return false;
-		if (timeZone == null) {
-			if (other.timeZone != null)
-				return false;
-		} else if (!timeZone.equals(other.timeZone))
-			return false;
-		if (voucherType == null) {
-			if (other.voucherType != null)
-				return false;
-		} else if (!voucherType.equals(other.voucherType))
+		if (timeZone != other.timeZone)
 			return false;
 		return true;
 	}

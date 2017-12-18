@@ -62,8 +62,7 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 	 * @return A JSON representation of the selected fields for a user
 	 */
 	@Override
-	public String retrieve()
-	{
+	public String retrieve() {
 		long start = markStart();
 		try {
 			// obtain the id and validates the auth token
@@ -105,8 +104,10 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 					fromStringDate, toStringDate, null, null, null, null, null, null, null, null)) {
 
 				DashboardRecordRep rec = obj.getEntityKind() == EntityKind.KIND_INNER_ZONE ?
-						table.findRecordWithEntityId(obj.getEntityId(), EntityKind.KIND_INNER_ZONE, obj.getSubentityName())
-						: table.findRecordWithEntityId(obj.getSubentityId(), EntityKind.KIND_STORE, obj.getSubentityName());
+						table.findRecordWithEntityId(obj.getEntityId(), EntityKind.KIND_INNER_ZONE,
+								obj.getSubentityName())
+						: table.findRecordWithEntityId(obj.getSubentityId(), EntityKind.KIND_STORE, 
+								obj.getSubentityName());
 
 				DashboardRecordRep totals = table.getTotals();
 
@@ -136,7 +137,8 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 			for(DashboardIndicatorData obj : dao.getUsingFilters(brandId, null, Arrays.asList("apd_permanence"),
 					Arrays.asList("permanence_hourly_visits"), null, entityIds, null, fromStringDate, toStringDate,
 					null, null, null, null, null, null, null, null)) {
-				DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId(), null, obj.getSubentityName());
+				DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId(), (byte) -1,
+						obj.getSubentityName());
 				if( rec == null ) continue;
 				if( obj.getDoubleValue() != null )
 					rec.setPermanenceInMillis(rec.getPermanenceInMillis() + obj.getDoubleValue().longValue());
@@ -270,7 +272,7 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 			totals = new DashboardRecordRep(null, 0, null, 0, "Totales", null, null);
 		}
 
-		public DashboardRecordRep findRecordWithEntityId(String entityId, Integer entityKind, String entityName) {
+		public DashboardRecordRep findRecordWithEntityId(String entityId, byte entityKind, String entityName) {
 			return records.get(new DashboardRecordRepKey(entityKind, entityId, entityName));
 		}
 
@@ -888,11 +890,11 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 	
 	private final class DashboardRecordRepKey {
 		
-		private Integer entityKind;
+		private byte entityKind;
 		private String entityId;
 		private String entityName;
 		
-		private DashboardRecordRepKey(Integer eKind, String eId, String entityName) {
+		private DashboardRecordRepKey(byte eKind, String eId, String entityName) {
 			entityKind = eKind;
 			entityId = eId;
 			this.entityName = entityName;
@@ -913,7 +915,7 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 				DashboardRecordRepKey drr = (DashboardRecordRepKey) o;
 				return ((drr.entityName == null && this.entityName == null) || (drr.entityName.equals(this.entityName))) &&
 						((drr.entityId == null && this.entityId == null) || (drr.entityId.equals(this.entityId))) &&
-						(drr.entityKind == null || drr.entityKind.equals(this.entityKind));
+						(drr.entityKind == -1 || drr.entityKind == this.entityKind);
 			} return false;
 		}
 		

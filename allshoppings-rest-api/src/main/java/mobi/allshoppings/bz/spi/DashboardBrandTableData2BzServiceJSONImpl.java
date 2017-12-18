@@ -101,7 +101,7 @@ implements DashboardBrandTableDataBzService {
 
 			for(DashboardIndicatorData obj : list) {
 
-				DashboardRecordRep rec = obj.getEntityKind().equals(EntityKind.KIND_INNER_ZONE)
+				DashboardRecordRep rec = obj.getEntityKind() == EntityKind.KIND_INNER_ZONE
 						? table.findRecordWithEntityId(obj.getEntityId(), obj.getEntityKind())
 						: table.findRecordWithEntityId(obj.getSubentityId(), EntityKind.KIND_STORE);
 				if( null != rec ) {
@@ -128,14 +128,14 @@ implements DashboardBrandTableDataBzService {
 						List<Long> c = d.get(obj.getEntityId());
 						if( c == null ) c = CollectionFactory.createList();
 						c.add((long)(obj.getDoubleValue() / obj.getRecordCount()));
-						d.put(obj.getEntityKind().equals(EntityKind.KIND_INNER_ZONE) ? obj.getEntityId()
+						d.put(obj.getEntityKind() == EntityKind.KIND_INNER_ZONE ? obj.getEntityId()
 								: obj.getSubentityId(), c);
 					} catch( Exception e ){}
 
 				Iterator<String> i = d.keySet().iterator();
 				while( i.hasNext() ) {
 					String key = i.next();
-					DashboardRecordRep rec = table.findRecordWithEntityId(key, null);
+					DashboardRecordRep rec = table.findRecordWithEntityId(key, (byte)-1);
 					if( null != rec ) {
 
 						List<Long> c = d.get(key);
@@ -259,9 +259,9 @@ implements DashboardBrandTableDataBzService {
 			records = CollectionFactory.createList();
 		}
 
-		public DashboardRecordRep findRecordWithEntityId(String entityId, Integer entityKind) {
+		public DashboardRecordRep findRecordWithEntityId(String entityId, byte entityKind) {
 			for(DashboardRecordRep rec : records ) {
-				if( rec.getEntityId().equals(entityId) && (entityKind == null || rec.getEntityKind().equals(entityKind))) 
+				if( rec.getEntityId().equals(entityId) && (entityKind == -1 || rec.getEntityKind() == entityKind)) 
 					return rec;
 			}
 			return null;
@@ -321,7 +321,7 @@ implements DashboardBrandTableDataBzService {
 		 */
 		public JSONArray getJSONTotals() throws ASException {
 
-			DashboardRecordRep totals = new DashboardRecordRep(null, 0, null, null, "Totales", null, null);
+			DashboardRecordRep totals = new DashboardRecordRep(null, 0, null, (byte) -1, "Totales", null, null);
 			List<Long> c = CollectionFactory.createList();
 
 			for( DashboardRecordRep rec : records ) {
@@ -384,20 +384,19 @@ implements DashboardBrandTableDataBzService {
 		private boolean header;
 		private int level;
 		private String entityId;
-		private Integer entityKind;
+		private byte entityKind;
 		private String title;
-		private Long peasants;
-		private Long visitors;
-		private Long tickets;
+		private long peasants;
+		private long visitors;
+		private long tickets;
 		private Date higherDate;
 		private Date lowerDate;
-		private Long permanenceInMillis;
+		private long permanenceInMillis;
 		private Map<String, Long> datesCache;
 		private DashboardTableRep parent;
 
-		public DashboardRecordRep(DashboardTableRep parent, int level, String entityId, Integer entityKind, String title, String fromStringDate, String toStringDate) {
-			super();
-
+		public DashboardRecordRep(DashboardTableRep parent, int level, String entityId, byte entityKind,
+				String title, String fromStringDate, String toStringDate) {
 			this.parent = parent;
 
 			this.entityId = entityId;
@@ -579,14 +578,14 @@ implements DashboardBrandTableDataBzService {
 		/**
 		 * @return the entityKind
 		 */
-		public Integer getEntityKind() {
+		public byte getEntityKind() {
 			return entityKind;
 		}
 
 		/**
 		 * @param entityKind the entityKind to set
 		 */
-		public void setEntityKind(Integer entityKind) {
+		public void setEntityKind(byte entityKind) {
 			this.entityKind = entityKind;
 		}
 

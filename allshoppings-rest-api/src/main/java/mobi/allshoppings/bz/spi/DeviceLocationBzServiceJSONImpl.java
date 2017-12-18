@@ -62,6 +62,7 @@ implements DeviceLocationBzService {
 	private static final int updateLimit = 1000 * 60 * 1;
 	private static final SimpleDateFormat hourSDF = new SimpleDateFormat("HH");
 	
+	@Deprecated
 	private static final String CINEPOLIS_APP = "cinepolis_mx";
 	
 	@Autowired

@@ -235,7 +235,8 @@ public class CouponBzServiceJSONImpl extends RestBaseServerResource implements C
 			// Points updater
 			try {
 				DeviceInfo di = deviceInfoDao.get(ca.getDeviceUUID(), true);
-				if(!StringUtils.hasText(di.getAppId()) || systemConfiguration.getDefaultBehavioursApps().contains(di.getAppId())) {
+				if(!StringUtils.hasText(di.getAppId()) ||
+						systemConfiguration.getDefaultBehavioursApps().contains(di.getAppId())) {
 					points = pointsService.calculatePointsForAction(user.getIdentifier(), action,
 							EntityKind.KIND_CAMPAIGN_ACTIVITY, couponId, null);
 					pointsService.enqueue(user.getIdentifier(), action,

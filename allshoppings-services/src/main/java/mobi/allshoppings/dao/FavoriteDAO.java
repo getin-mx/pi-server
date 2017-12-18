@@ -12,8 +12,8 @@ import mobi.allshoppings.model.User;
 public interface FavoriteDAO extends GenericDAO<Favorite> {
 
 	Key createKey() throws ASException;
-	Favorite getUsingUserAndEntityAndKind(User user, String entityId, Integer entityKind, boolean detach) throws ASException;
-	List<String> getIdsUsingUserAndKind(User user, Integer entityKind) throws ASException;
+	Favorite getUsingUserAndEntityAndKind(User user, String entityId, byte entityKind, boolean detach) throws ASException;
+	List<String> getIdsUsingUserAndKind(User user, byte entityKind) throws ASException;
 	long getUserFavoriteCount(String userId) throws ASException;
-	long getEntityFavoriteCount(String entityId, Integer entityKind) throws ASException;
+	long getEntityFavoriteCount(String entityId, byte entityKind) throws ASException;
 }

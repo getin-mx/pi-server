@@ -61,7 +61,7 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 
 			List<String> entityIds = CollectionFactory.createList();
 			String entityId = null;
-			Integer entityKind = EntityKind.KIND_STORE;
+			byte entityKind = EntityKind.KIND_STORE;
 			
 			try {
 				if( options.has("entityIds")) {
@@ -73,9 +73,9 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 				}
 
 				if( options.has("entityKind")) 
-					entityKind = (Integer)options.valueOf("entityKind");
+					entityKind = (Byte)options.valueOf("entityKind");
 
-				if(StringUtils.hasText(entityId) && entityKind.equals(EntityKind.KIND_BRAND)) {
+				if(StringUtils.hasText(entityId) && entityKind == EntityKind.KIND_BRAND) {
 					List<String> orig = CollectionFactory.createList();
 					orig.addAll(entityIds);
 					entityIds.clear();
@@ -95,7 +95,7 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 
 			
 			log.log(Level.INFO, "Getting info from APDVisit...");
-			Map<String,Map<Integer,HashSet<String>>> cache = CollectionFactory.createMap();
+			Map<String,Map<Byte,HashSet<String>>> cache = CollectionFactory.createMap();
 			
 			PersistenceManager pm;
 			pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
@@ -170,13 +170,13 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 				if( dbo.containsField("entityId") && dbo.containsField("mac") && dbo.containsField("checkinType")) {
 					String identifier = (String)dbo.get("entityId");
 					String dmac = (String)dbo.get("mac");
-					Integer checkinType = (Integer)dbo.get("checkinType");
+					Byte checkinType = (Byte)dbo.get("checkinType");
 					
 					if( entityIds.isEmpty() || entityIds.contains(identifier)) {
 						if(dmac != null ) {
 							dmac = dmac.toLowerCase();
 							if(devices.containsKey(dmac)) {
-								Map<Integer, HashSet<String>> cache2 = cache.get(identifier);
+								Map<Byte, HashSet<String>> cache2 = cache.get(identifier);
 								if( cache2 == null ) cache2 = CollectionFactory.createMap();
 								HashSet<String> macs = cache2.get(checkinType);
 								if( macs == null ) macs = new HashSet<String>();
@@ -208,7 +208,7 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 			Iterator<String> it = cache.keySet().iterator();
 			while(it.hasNext()) {
 				String identifier = it.next();
-				Map<Integer,HashSet<String>> cache2 = cache.get(identifier);
+				Map<Byte,HashSet<String>> cache2 = cache.get(identifier);
 				HashSet<String> peasants = cache2.get(APDVisit.CHECKIN_PEASANT);
 				HashSet<String> visits = cache2.get(APDVisit.CHECKIN_VISIT);
 				HashSet<String> nPeasants = new HashSet<String>();
@@ -230,12 +230,13 @@ public class APDeviceMacMatchDump extends AbstractCLI {
 			it = cache.keySet().iterator();
 			while(it.hasNext()) {
 				String identifier = it.next();
-				Map<Integer,HashSet<String>> cache2 = cache.get(identifier);
+				Map<Byte,HashSet<String>> cache2 = cache.get(identifier);
 				HashSet<String> peasants = cache2.get(APDVisit.CHECKIN_PEASANT);
 				HashSet<String> visits = cache2.get(APDVisit.CHECKIN_VISIT);
 
 				if( peasants != null ) {
-					log.log(Level.INFO, "Generating Peasants Mac List for entity id " + identifier + " with " + peasants.size() + " elements ...");
+					log.log(Level.INFO, "Generating Peasants Mac List for entity id " + identifier
+							+ " with " + peasants.size() + " elements ...");
 					List<APDeviceMacMatch> list = CollectionFactory.createList();
 					for( String mac : peasants ) {
 						try {

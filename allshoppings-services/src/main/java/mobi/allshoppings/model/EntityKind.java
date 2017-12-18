@@ -5,31 +5,31 @@ import java.util.Map;
 
 public class EntityKind {
 
-	public static final int NONE = -2;
-	public static final int ALL = -1;
-	public static final int KIND_SHOPPING = 0;
-	public static final int KIND_BRAND = 1; 
-	public static final int KIND_OFFER = 2;
-	public static final int KIND_STORE = 3;
-	public static final int KIND_COMMENT = 4;
-	public static final int KIND_USER = 5;
-	public static final int KIND_FINANCIAL_ENTITY = 6;
-	public static final int KIND_AREA = 7;
-	public static final int KIND_SERVICE = 8;
-	public static final int KIND_OFFER_TYPE = 9;
-	public static final int KIND_NOTIFICATION_LOG = 10;
-	public static final int KIND_REWARD = 11;
-	public static final int KIND_OFFER_PROPOSAL = 12;
-	public static final int KIND_CAMPAIGN_ACTION = 13;
-	public static final int KIND_CHALLENGE = 14;
-	public static final int KIND_FLOOR_MAP = 15;
-	public static final int KIND_WIFI_SPOT = 16;
-	public static final int KIND_CAMPAIGN_ACTIVITY = 17;
-	public static final int KIND_GEO_ACTION_ZONE = 18;
-	public static final int KIND_PROCESS = 19;
-	public static final int KIND_INNER_ZONE = 20;
+	public static final byte NONE = -2;
+	public static final byte ALL = -1;
+	public static final byte KIND_SHOPPING = 0;
+	public static final byte KIND_BRAND = 1; 
+	public static final byte KIND_OFFER = 2;
+	public static final byte KIND_STORE = 3;
+	public static final byte KIND_COMMENT = 4;
+	public static final byte KIND_USER = 5;
+	public static final byte KIND_FINANCIAL_ENTITY = 6;
+	public static final byte KIND_AREA = 7;
+	public static final byte KIND_SERVICE = 8;
+	public static final byte KIND_OFFER_TYPE = 9;
+	public static final byte KIND_NOTIFICATION_LOG = 10;
+	public static final byte KIND_REWARD = 11;
+	public static final byte KIND_OFFER_PROPOSAL = 12;
+	public static final byte KIND_CAMPAIGN_ACTION = 13;
+	public static final byte KIND_CHALLENGE = 14;
+	public static final byte KIND_FLOOR_MAP = 15;
+	public static final byte KIND_WIFI_SPOT = 16;
+	public static final byte KIND_CAMPAIGN_ACTIVITY = 17;
+	public static final byte KIND_GEO_ACTION_ZONE = 18;
+	public static final byte KIND_PROCESS = 19;
+	public static final byte KIND_INNER_ZONE = 20;
 	
-	public static final Map<String, Integer> kindMap = new HashMap<String, Integer>();
+	public static final Map<String, Byte> kindMap = new HashMap<>();
 	
 	static {
 		kindMap.put("shopping", KIND_SHOPPING);
@@ -90,7 +90,7 @@ public class EntityKind {
 		kindMap.put("innerzones", KIND_INNER_ZONE);
 	}
 	
-	public static Class<?> getClassByKind(Integer entityKind) {
+	public static Class<?> getClassByKind(byte entityKind) {
 		switch(entityKind) {
 		case KIND_SHOPPING:
 			return Shopping.class;
@@ -139,20 +139,19 @@ public class EntityKind {
 		}
 	}
 	
-	public static Integer resolveByName(String name) {
-		if(name == null ) return null;
+	public static byte resolveByName(String name) {
+		if(name == null ) return -1;
 		String parts[] = name.toLowerCase().split("\\.");
 		return kindMap.get(parts[parts.length - 1]);
 	}
 	
-	public static Integer resolveByClass(Class<?> clazz) {
+	public static byte resolveByClass(Class<?> clazz) {
 		String clazzName = clazz.getSimpleName().toLowerCase();
 		return resolveByName(clazzName);
 	}
 	
-	public static boolean isKindValid(Integer entityKind) {
-		if( entityKind == null ) return false;
-		return kindToString(entityKind, false) == null ? false : true;
+	public static boolean isKindValid(byte entityKind) {
+		return kindToString(entityKind, false) != null;
 	}
 	
 	public static boolean isKindValidForGeo(Integer entityKind ) {
@@ -212,7 +211,7 @@ public class EntityKind {
 		return null;
 	}
 
-	public static String kindToString(Integer entityKind, boolean plural) {
+	public static String kindToString(byte entityKind, boolean plural) {
 		if( plural) {
 			switch( entityKind ) {
 			case EntityKind.KIND_SHOPPING:

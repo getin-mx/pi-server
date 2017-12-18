@@ -87,9 +87,8 @@ implements DashboardFloorMapDataBzService {
 
 				long millisPre = new Date().getTime();
 				List<FloorMapAdapter> list = new GenericAdapterImpl<FloorMapAdapter>()
-						.adaptList(floormapDao.getUsingStatusAndShoppingId(
-								StatusAware.STATUS_ENABLED, shoppingId), null,
-								null, null, options);
+						.adaptList(floormapDao.getUsingStatusAndShoppingId(StatusAware.STATUS_ENABLED,
+								shoppingId), null, null, null, options);
 				long diff = new Date().getTime() - millisPre;
 
 				// Logs the result

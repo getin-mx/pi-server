@@ -52,7 +52,8 @@ implements DashboardStoresFilterDataBzService {
 			Boolean onlyExternalIds = obtainBooleanValue("onlyExternalIds", false);
 
 			// Get all the stores that matches the brand
-			List<Store> stores = storeDao.getUsingBrandAndStatus(entityId, Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), "name"); 
+			List<Store> stores = storeDao.getUsingBrandAndStatus(entityId,
+					Arrays.asList(new Byte[] {StatusAware.STATUS_ENABLED}), "name"); 
 			
 			// Ordered Store List
 			List<String> storeNames = CollectionFactory.createList();

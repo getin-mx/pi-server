@@ -25,7 +25,7 @@ public class Favorite implements ModelKey, Serializable, Identificable, Replicab
 
     private String userId;
     private String entityId;
-    private Integer entityKind;
+    private byte entityKind;
 	private Date creationDateTime;
 	private Date statusModificationDateTime;
 	private Date lastUpdate;
@@ -94,14 +94,14 @@ public class Favorite implements ModelKey, Serializable, Identificable, Replicab
 	/**
 	 * @return the kind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the kind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 

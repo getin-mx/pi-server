@@ -20,8 +20,8 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final Integer REPORT_STATUS_REPORTED = 1;
-	public static final Integer REPORT_STATUS_NOT_REPORTED = 0;
+	public static final byte REPORT_STATUS_REPORTED = 1;
+	public static final byte REPORT_STATUS_NOT_REPORTED = 0;
 
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)

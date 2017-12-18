@@ -20,11 +20,11 @@ import mobi.allshoppings.model.interfaces.ModelKey;
 public class APDVisit implements ModelKey, Serializable, Identificable {
 
 	private static final long serialVersionUID = 1L;
-	public final static Integer CHECKIN_AUTO = 0;
-	public final static Integer CHECKIN_MANUAL = 1;
-	public final static Integer CHECKIN_VISIT = 2;
-	public final static Integer CHECKIN_PEASANT = 3;
-	public final static Integer CHECKIN_EMPLOYEE = 4;
+	public final static byte CHECKIN_AUTO = 0;
+	public final static byte CHECKIN_MANUAL = 1;
+	public final static byte CHECKIN_VISIT = 2;
+	public final static byte CHECKIN_PEASANT = 3;
+	public final static byte CHECKIN_EMPLOYEE = 4;
 	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
@@ -39,21 +39,21 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 	private  transient String devicePlatform;
 	
 	private String entityId;
-	private Integer entityKind;
+	private byte entityKind;
 	private Date checkinStarted;
 	private Date checkinFinished;
 	private Date lastUpdate;
 	private Date creationDateTime;
 	private Boolean verified;
-	private Integer checkinType;
+	private byte checkinType;
 	private Boolean hidePermanence;
 	private Boolean approved;
 	private String apheSource;
 	private String forDate;
-	private Long duration;
+	private long duration;
 	
-	private Integer totalSegments;
-	private Integer inRangeSegments;
+	private int totalSegments;
+	private int inRangeSegments;
 
 	public APDVisit() {
 		super();
@@ -164,14 +164,14 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 	/**
 	 * @return the entityKind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 
@@ -220,14 +220,14 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 	/**
 	 * @return the checkinType
 	 */
-	public Integer getCheckinType() {
+	public byte getCheckinType() {
 		return checkinType;
 	}
 
 	/**
 	 * @param checkinType the checkinType to set
 	 */
-	public void setCheckinType(Integer checkinType) {
+	public void setCheckinType(byte checkinType) {
 		this.checkinType = checkinType;
 	}
 	
@@ -358,15 +358,11 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 	}
 
 	public void addInRangeSegment() {
-		if( null == inRangeSegments ) inRangeSegments = 0;
-		if( null == totalSegments ) totalSegments = 0;
 		inRangeSegments++;
 		totalSegments++;
 	}
 
 	public void addOffRangeSegment() {
-		if( null == inRangeSegments ) inRangeSegments = 0;
-		if( null == totalSegments ) totalSegments = 0;
 		totalSegments++;
 	}
 	

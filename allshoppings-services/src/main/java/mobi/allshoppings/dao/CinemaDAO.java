@@ -10,6 +10,7 @@ import mobi.allshoppings.model.Cinema;
 import mobi.allshoppings.tools.Range;
 import mobi.allshoppings.tx.PersistenceProvider;
 
+@Deprecated
 public interface CinemaDAO extends GenericDAO<Cinema> {
 
 	Key createKey(String identifier) throws ASException;

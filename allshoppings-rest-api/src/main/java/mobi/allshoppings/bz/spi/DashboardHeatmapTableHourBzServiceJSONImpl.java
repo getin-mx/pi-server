@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +28,11 @@ import mobi.allshoppings.model.User;
 import mobi.allshoppings.tools.CollectionFactory;
 
 /**
- *
+ * Returns the indicators heatmap (not really a map)
+ * @author Matias Hapanowicz
+ * @author <a href="mailto:ignacio@getin.mx" >Manuel "Nachintoch" Castillo</a>
+ * @version 2.0, december 2017
+ * @since Allshoppings
  */
 public class DashboardHeatmapTableHourBzServiceJSONImpl extends RestBaseServerResource
 		implements DashboardHeatmapTableHourBzService {
@@ -59,11 +62,8 @@ public class DashboardHeatmapTableHourBzServiceJSONImpl extends RestBaseServerRe
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
 			String subentityId = obtainStringValue("subentityId", null);
-			String periodType = obtainStringValue("periodId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
-			String movieId = obtainStringValue("movieId", null);
-			String voucherType = obtainStringValue("voucherType", null);
 			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
 			Integer timezone = obtainIntegerValue("timezone", null);
 			Boolean average = obtainBooleanValue("average", false);
@@ -74,56 +74,23 @@ public class DashboardHeatmapTableHourBzServiceJSONImpl extends RestBaseServerRe
 			List<String> lElementSubId = StringUtils.hasText(elementSubId) ? Arrays.asList(elementSubId.split(","))
 					: null;
 
-			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId, entityKind, lElementId, lElementSubId,
-					shoppingId, subentityId, periodType, fromStringDate, toStringDate, movieId, voucherType, dayOfWeek,
-					timezone, null, null, null, null);
-
 			// Gets dashboard configuration for this session
 			DashboardConfiguration config = new DashboardConfiguration(entityId, entityKind);
 			try {
 				config = dcDao.getUsingEntityIdAndEntityKind(entityId, entityKind, true);
-			} catch (Exception e) {
-			}
+			} catch (Exception e) {}
 
 			// Data
-			Map<String, Map<Integer, Map<Integer, Long>>> yData = CollectionFactory.createMap();
-			Map<String, Map<Integer, Map<Integer, Long>>> yCounter = CollectionFactory.createMap();
+			Map<String, Map<Integer, Map<Byte, Long>>> yData = CollectionFactory.createMap();
+			Map<String, Map<Integer, Map<Byte, Long>>> yCounter = CollectionFactory.createMap();
 
 			// y Categories
 			List<String> yCategories = CollectionFactory.createList();
-			for (int i = 0; i < 24; i++) {
-				yCategories.add(i + ":00");
-			}
+			for (int i = 0; i < 24; i++) yCategories.add(i + ":00");
 
 			// Creates a collection with elementSubIds returned from the
 			// persisted objects
-			if (CollectionUtils.isEmpty(lElementSubId)) {
-				lElementSubId = CollectionFactory.createList();
-				for (DashboardIndicatorData obj : list) {
-					if (isValidForUser(user, obj)) {
-						if (!lElementSubId.contains(obj.getElementSubId()))
-							lElementSubId.add(obj.getElementSubId());
-					}
-				}
-			}
-			if (CollectionUtils.isEmpty(lElementSubId)) {
-				lElementSubId = Arrays.asList("default");
-			}
-
-			// Creates the initial data
-			for (String ele : lElementSubId) {
-				Map<Integer, Map<Integer, Long>> ySubData = CollectionFactory.createMap();
-				Map<Integer, Map<Integer, Long>> ySubCounter = CollectionFactory.createMap();
-
-				for (int i = 0; i < 24; i++) {
-					ySubData.put(i, new HashMap<Integer, Long>());
-					ySubCounter.put(i, new HashMap<Integer, Long>());
-				}
-
-				yData.put(ele, ySubData);
-				yCounter.put(ele, ySubCounter);
-			}
-
+			
 			// x Categories
 			List<String> xCategories = CollectionFactory.createList();
 			xCategories.add("Lunes");
@@ -135,42 +102,57 @@ public class DashboardHeatmapTableHourBzServiceJSONImpl extends RestBaseServerRe
 			xCategories.add("Domingo");
 
 			// Sets data
-			for (DashboardIndicatorData obj : list) {
+			for (DashboardIndicatorData obj : dao.getUsingFilters(entityId, entityKind, lElementId,
+					lElementSubId, shoppingId, subentityId, null, fromStringDate, toStringDate, null, null,
+					dayOfWeek, timezone, null, null, null, null)) {
 				if (isValidForUser(user, obj)) {
+					if (!lElementSubId.contains(obj.getElementSubId())) {
+						String ele = obj.getElementSubId();
+						lElementSubId.add(ele);
+						
+						Map<Integer, Map<Byte, Long>> ySubData = CollectionFactory.createMap();
+						Map<Integer, Map<Byte, Long>> ySubCounter = CollectionFactory.createMap();
+
+						for (int i = 0; i < 24; i++) {
+							ySubData.put(i, new HashMap<Byte, Long>());
+							ySubCounter.put(i, new HashMap<Byte, Long>());
+						}
+
+						yData.put(ele, ySubData);
+						yCounter.put(ele, ySubCounter);
+					}
 					// Position calc according to the timezone
-					int position = obj.getTimeZone();
+					byte position = obj.getTimeZone();
 					if (config.getTimezone().equals("-06:00")) {
-						position = position - 1;
-						if (position >= 24)
-							position = position - 24;
+						position--;
+						if (position >= 24) position = (byte)(position - 24);
 					}
 
-					Map<Integer, Long> xData = yData.get(obj.getElementSubId()).get(position);
+					Map<Byte, Long> xData = yData.get(obj.getElementSubId()).get(position);
 
 					// Sets the double value
 					try {
 						obj.setDayOfWeek(mapDayOfWeek(obj.getDayOfWeek()));
 						Long val = xData.get(obj.getDayOfWeek());
-						if (val == null)
-							val = 0L;
+						if (val == null) val = 0L;
 						val += obj.getDoubleValue().intValue();
 						xData.put(obj.getDayOfWeek(), val);
 
 						// Sets the record count
 						xData = yCounter.get(obj.getElementSubId()).get(position);
 						val = xData.get(obj.getDayOfWeek());
-						if (val == null)
-							val = 0L;
-						if (obj.getRecordCount() != null)
-							val += obj.getRecordCount();
-						else
-							log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
+						if (val == null) val = 0L;
+						val += obj.getRecordCount();
 						xData.put(obj.getDayOfWeek(), val);
 					} catch (Exception e) {
 						log.log(Level.WARNING, e.getMessage());
 						log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
 					}
 				}
+			}//for all those things
+			
+			if (CollectionUtils.isEmpty(lElementSubId)) {
+				lElementSubId = Arrays.asList("default");
 			}
 
 			// Checks Average
@@ -181,20 +163,16 @@ public class DashboardHeatmapTableHourBzServiceJSONImpl extends RestBaseServerRe
 					Iterator<Integer> i1 = yData.get(ele).keySet().iterator();
 					while (i1.hasNext()) {
 						Integer key1 = i1.next();
-						Map<Integer, Long> xData = yData.get(ele).get(key1);
-						Map<Integer, Long> xCounter = yCounter.get(ele).get(key1);
-						Iterator<Integer> i2 = xData.keySet().iterator();
+						Map<Byte, Long> xData = yData.get(ele).get(key1);
+						Map<Byte, Long> xCounter = yCounter.get(ele).get(key1);
+						Iterator<Byte> i2 = xData.keySet().iterator();
 						while (i2.hasNext()) {
-							Integer key2 = i2.next();
+							Byte key2 = i2.next();
 							Long val = xData.get(key2);
 							if (val != null) {
 								Long count = xCounter.get(key2);
 								if (count != null && count != 0) {
-									if (toMinutes) {
-										val = val / count / 60000;
-									} else {
-										val = val / count;
-									}
+									val /= toMinutes ? count / 60000 : count;
 									xData.put(key2, val);
 								}
 							}
@@ -215,13 +193,10 @@ public class DashboardHeatmapTableHourBzServiceJSONImpl extends RestBaseServerRe
 					String ele = ix.next();
 					List<String> newYCategories = CollectionFactory.createList();
 					for (int i = 0; i < 24; i++) {
-						Map<Integer, Long> xData = yData.get(ele).get(i);
-						if (xData.size() > 0)
-							newYCategories.add(i + ":00");
-						else
-							yData.get(ele).remove(i);
-					}
-					if (newYCategories.size() >= maxVal) {
+						Map<Byte, Long> xData = yData.get(ele).get(i);
+						if (xData.size() > 0) newYCategories.add(i + ":00");
+						else yData.get(ele).remove(i);
+					} if (newYCategories.size() >= maxVal) {
 						maxVal = newYCategories.size();
 						yCategories = newYCategories;
 						maxIdx = idx;
@@ -232,14 +207,11 @@ public class DashboardHeatmapTableHourBzServiceJSONImpl extends RestBaseServerRe
 
 			// Creates the yPositions map
 			Map<Integer, Integer> yPositions = CollectionFactory.createMap();
-			Set<Integer> keySet = yData.get(lElementSubId.get(maxIdx)).keySet();
 			List<Integer> keyList = CollectionFactory.createList();
-			keyList.addAll(keySet);
+			keyList.addAll(yData.get(lElementSubId.get(maxIdx)).keySet());
 			Collections.sort(keyList);
-			Iterator<Integer> i = keyList.iterator();
 			int count = 0;
-			while (i.hasNext()) {
-				Integer key = i.next();
+			for(Integer key : keyList) {
 				yPositions.put(key, count);
 				count++;
 			}
@@ -248,15 +220,11 @@ public class DashboardHeatmapTableHourBzServiceJSONImpl extends RestBaseServerRe
 			JSONObject ret = new JSONObject();
 
 			JSONArray xCategoriesJson = new JSONArray();
-			for (String cat : xCategories) {
-				xCategoriesJson.put(cat);
-			}
+			for (String cat : xCategories) xCategoriesJson.put(cat);
 			ret.put("xCategories", xCategoriesJson);
 
 			JSONArray yCategoriesJson = new JSONArray();
-			for (String cat : yCategories) {
-				yCategoriesJson.put(cat);
-			}
+			for (String cat : yCategories) yCategoriesJson.put(cat);
 			ret.put("yCategories", yCategoriesJson);
 
 			JSONArray dataJson = new JSONArray();
@@ -267,13 +235,11 @@ public class DashboardHeatmapTableHourBzServiceJSONImpl extends RestBaseServerRe
 				boolean hasAnyY = false;
 				for (int j = 0; j < lElementSubId.size(); j++) {
 					if (yData.get(lElementSubId.get(j)).get(y) != null) {
-						for (int x = 0; x <= 7; x++) {
-							Map<Integer, Long> xTmpData = yData.get(lElementSubId.get(j)).get(y);
+						for (byte x = 0; x <= 7; x++) {
+							Map<Byte, Long> xTmpData = yData.get(lElementSubId.get(j)).get(y);
 							if (xTmpData != null) {
 								Long tmpVal = xTmpData.get(x);
-								if (tmpVal != null && tmpVal != 0) {
-									hasAnyY = true;
-								}
+								if (tmpVal != null && tmpVal != 0) hasAnyY = true;
 							}
 						}
 					}
@@ -281,14 +247,14 @@ public class DashboardHeatmapTableHourBzServiceJSONImpl extends RestBaseServerRe
 
 				// If has any element fills the space
 				if (hasAnyY) {
-					for (int x = 0; x <= 7; x++) {
+					for (byte x = 0; x <= 7; x++) {
 						element = new JSONArray();
 						element.put(x);
 						element.put(yPositions.get(y));
 
 						boolean hasAnyX = false;
 						for (int j = 0; j < lElementSubId.size(); j++) {
-							Map<Integer, Long> xTmpData = yData.get(lElementSubId.get(j)).get(y);
+							Map<Byte, Long> xTmpData = yData.get(lElementSubId.get(j)).get(y);
 							if (xTmpData != null) {
 								Long tmpVal = xTmpData.get(x);
 								if (tmpVal != null) {
@@ -329,15 +295,8 @@ public class DashboardHeatmapTableHourBzServiceJSONImpl extends RestBaseServerRe
 		}
 	}
 
-	private int mapDayOfWeek(Integer dayOfWeek) {
-		int result = 0;
-		if (dayOfWeek != 1) {
-			result = dayOfWeek - 2;
-		} else {
-			result = 6;
-		}
-
-		return result;
+	private byte mapDayOfWeek(byte dayOfWeek) {
+		return (byte) (dayOfWeek != 1 ? dayOfWeek - 2 : 6);
 	}
 
 	@SuppressWarnings("rawtypes")

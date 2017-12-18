@@ -105,8 +105,7 @@ public class TimelineHourBzServiceJSONImpl extends BDBRestBaseServerResource imp
 				int position = obj.getTimeZone();
 				if( config.getTimezone().equals("-06:00")) {
 					position = position - 1;
-					if( position >= 24 )
-						position = position - 24;
+					if( position >= 24 ) position = position - 24;
 				}
 
 				if( average ) {
