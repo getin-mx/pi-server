@@ -1628,8 +1628,8 @@ public class UserMenuDumpTwo extends AbstractCLI {
 					
 							//bcorza sistemas
 							try {
-								  um = userMenuDao.get("sistemas_bruno_corza", true);
-								  userMenuDao.delete("sistemas_bruno_corza");
+								  um = userMenuDao.get("sistema_brunocorza_mx", true);
+								  userMenuDao.delete("sistema_brunocorza_mx");
 								  throw new Exception();
 								} catch (Exception e) {
 								  um = new UserMenu();
@@ -1637,14 +1637,14 @@ public class UserMenuDumpTwo extends AbstractCLI {
 								  um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 								  um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
 	
-								  um.setKey(userMenuDao.createKey("sistemas_bruno_corza"));
+								  um.setKey(userMenuDao.createKey("sistema_brunocorza_mx"));
 								  userMenuDao.create(um);
 								}
 	
 	
 								User sistemasBrunoCorza = null;
 								try {
-								  userDao.delete("sistemas_bruno_corza");
+								  userDao.delete("sistema_brunocorza_mx");
 								  throw new Exception();
 								} catch (Exception e) {
 								  log.log(Level.INFO, "Inserting bcorza sistemas...");
@@ -1661,7 +1661,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 			                                        "ahFhbGxzaG9wcGluZ3MtdGVzdHIqCxIFU3RvcmUiH2JydW5vY29yemFfbXhfZ2FsZXJpYXNtb250ZXJyZXkM",
 			                                        "2bd032ca-5346-48d6-b211-8fca31cd8533", "ahFhbGxzaG9wcGluZ3MtdGVzdHIsCxIFU3RvcmUiIWJydW5vY29yemFfbXhfZ2FsZXJpYXNpbnN1cmdlbnRlcww",
 			                                        "bc37fece-83a9-4848-bbf8-869580bfc50d"));
-								  sistemasBrunoCorza.setKey((Key) keyHelper.obtainKey(User.class, "sistemas_bruno_corza"));
+								  sistemasBrunoCorza.setKey((Key) keyHelper.obtainKey(User.class, "sistema_brunocorza_mx"));
 								  userDao.create(sistemasBrunoCorza);
 								}
 							 
