@@ -145,10 +145,10 @@ implements BDBDashboardBzService, BDBPostBzService {
 				i++;
 				curDate = new Date(curDate.getTime() + ONE_DAY);
 			}
-			mapper.createStoreRevenueDataForDates(fromDate, toDate, storeId, false);
-			
+			mapper.createStoreRevenueDataForDates(fromDate, toDate, storeId, true);
+
 			return generateJSONOkResponse().toString();
-			
+
 		} catch (ASException e) {
 			if( e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENEXPIRED_CODE || 
 					e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_AUTHTOKENMISSING_CODE) {

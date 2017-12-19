@@ -17,36 +17,34 @@ import mobi.allshoppings.apdevice.APDVisitHelper;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.tools.CollectionFactory;
-
+import mx.getin.Constants;
 
 public class GenerateAPDVisits extends AbstractCLI {
 
 	private static final Logger log = Logger.getLogger(GenerateAPDVisits.class.getName());
-	public static final int TWENTY_FOUR_HOURS = 86400000;
-	public static final int TWELVE_HOURS = TWENTY_FOUR_HOURS /2;
-	private static final String FROM_DATE_PARAM = "fromDate";
-	private static final String TO_DATE_PARAM = "toDate";
 	private static final String BRAND_IDS_PARAM = "brandIds";
 	private static final String STORE_IDS_PARAM = "storeIds";
 	private static final String SHOPPING_IDS_PARAM = "shoppingIds";
 	private static final String ONLY_EMPLOYEES_PARAM = "onlyEmployees";
 	private static final String ONLY_DASHBOARDS_PARAM = "onlyDashboards";
 	private static final String UPDATE_DASHBOARDS_PARAM = "updateDashboards";
-	//be aware: orthography is important!
-	private static final String DELETE_PREVIOUS_RECORDS_PARAM = "deletePreviousRecords";
 	
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
 		else parser = base;
-		parser.accepts(FROM_DATE_PARAM, "Date From" ).withRequiredArg().ofType( String.class );
-		parser.accepts(TO_DATE_PARAM, "Date To" ).withRequiredArg().ofType( String.class );
+		parser.accepts(Constants.FROM_DATE_PARAM, "Date From" ).withRequiredArg().ofType( String.class );
+		parser.accepts(Constants.TO_DATE_PARAM, "Date To" ).withRequiredArg().ofType( String.class );
 		parser.accepts(BRAND_IDS_PARAM, "List of comma separated brands").withRequiredArg().ofType( String.class );
-		parser.accepts(STORE_IDS_PARAM, "List of comma separated stores (superseeds brandIds)").withRequiredArg().ofType( String.class );
-		parser.accepts(SHOPPING_IDS_PARAM, "List of comma separated shoppings (superseeds brandIds and storeIds)").withRequiredArg().ofType( String.class );
+		parser.accepts(STORE_IDS_PARAM, "List of comma separated stores (superseeds brandIds)").withRequiredArg()
+				.ofType( String.class );
+		parser.accepts(SHOPPING_IDS_PARAM, "List of comma separated shoppings (superseeds brandIds and storeIds)")
+				.withRequiredArg().ofType( String.class );
 		parser.accepts(ONLY_EMPLOYEES_PARAM, "Only process employees").withRequiredArg().ofType( Boolean.class );
-		parser.accepts(ONLY_DASHBOARDS_PARAM, "Only process dashboards with preexisting APDVisit data").withRequiredArg().ofType( Boolean.class );
-		parser.accepts(UPDATE_DASHBOARDS_PARAM, "Update dashboards with preexisting APDVisit data").withRequiredArg().ofType( Boolean.class );
-		parser.accepts(DELETE_PREVIOUS_RECORDS_PARAM, "Delete previus dashboards")
+		parser.accepts(ONLY_DASHBOARDS_PARAM, "Only process dashboards with preexisting APDVisit data")
+				.withRequiredArg().ofType( Boolean.class );
+		parser.accepts(UPDATE_DASHBOARDS_PARAM, "Update dashboards with preexisting APDVisit data").withRequiredArg()
+				.ofType( Boolean.class );
+		parser.accepts(Constants.DELETE_PREVIOUS_RECORDS_PARAM, "Delete previus dashboards")
 				.withRequiredArg().ofType( Boolean.class );
 		return parser;
 	}
@@ -57,8 +55,8 @@ public class GenerateAPDVisits extends AbstractCLI {
 	
 	public static void main(String args[]) throws ASException {
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+			SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT);
+			sdf.setTimeZone(TimeZone.getTimeZone(Constants.GMT_TIMEZONE_ID));
 			APDVisitHelper helper = (APDVisitHelper)getApplicationContext().getBean("apdvisit.helper");
 
 			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
@@ -80,17 +78,14 @@ public class GenerateAPDVisits extends AbstractCLI {
 			List<String> shoppings = CollectionFactory.createList();
 			
 			try {
-				if( options.has(FROM_DATE_PARAM)) sFromDate =
-						(String)options.valueOf(FROM_DATE_PARAM);
-				if( options.has(TO_DATE_PARAM)) sToDate =
-						(String)options.valueOf(TO_DATE_PARAM);
+				if( options.has(Constants.FROM_DATE_PARAM)) sFromDate = (String)options.valueOf(Constants.FROM_DATE_PARAM);
+				if( options.has(Constants.TO_DATE_PARAM)) sToDate = (String)options.valueOf(Constants.TO_DATE_PARAM);
 				
 				fromDate = StringUtils.hasText(sFromDate) ? sdf.parse(sFromDate) :
-					sdf.parse(sdf.format(
-							new Date(System.currentTimeMillis() - TWENTY_FOUR_HOURS)));
+					sdf.parse(sdf.format(System.currentTimeMillis() - Constants.DAY_IN_MILLIS));
 				
 				toDate = StringUtils.hasText(sToDate) ? sdf.parse(sToDate) :
-					new Date(fromDate.getTime() + TWENTY_FOUR_HOURS);
+					new Date(fromDate.getTime() + Constants.DAY_IN_MILLIS);
 
 				if(options.has(BRAND_IDS_PARAM)) {
 					brandIds = (String)options.valueOf(BRAND_IDS_PARAM);
@@ -131,9 +126,8 @@ public class GenerateAPDVisits extends AbstractCLI {
 					updateDashboards = (Boolean)options.valueOf(UPDATE_DASHBOARDS_PARAM);
 				}
 				
-				if(options.has(DELETE_PREVIOUS_RECORDS_PARAM)) {
-					deletePreviousRecors =
-							(Boolean)options.valueOf(DELETE_PREVIOUS_RECORDS_PARAM);
+				if(options.has(Constants.DELETE_PREVIOUS_RECORDS_PARAM)) {
+					deletePreviousRecors = (Boolean)options.valueOf(Constants.DELETE_PREVIOUS_RECORDS_PARAM);
 				}
 
 			} catch( Exception e ) {
@@ -145,9 +139,11 @@ public class GenerateAPDVisits extends AbstractCLI {
 			log.log(Level.INFO, "This process PID is: " +ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
 			
 			if( shoppings.isEmpty() )
-				helper.generateAPDVisits(brands, stores, fromDate, toDate, deletePreviousRecors, updateDashboards, onlyEmployees, onlyDashboards);
+				helper.generateAPDVisits(brands, stores, fromDate, toDate, deletePreviousRecors, updateDashboards,
+						onlyEmployees, onlyDashboards);
 			else
-				helper.generateAPDVisits(shoppings, fromDate, toDate, deletePreviousRecors, updateDashboards, onlyEmployees, onlyDashboards);
+				helper.generateAPDVisits(shoppings, fromDate, toDate, deletePreviousRecors, updateDashboards,
+						onlyEmployees, onlyDashboards);
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

@@ -339,7 +339,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 			if (pp == null)
 				pm.currentTransaction().begin();
 
-			if (doesEntityExist(pm, clazz, obj.getKey()) == true) {
+			if (doesEntityExist(pm, clazz, obj.getKey())) {
 				log.info(clazz.getSimpleName() + " already exists");
 				throw ASExceptionHelper.alreadyExistsException();
 			}
@@ -2032,7 +2032,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 			Object obj = null;
 
 			if( pm == null ) {
-				if( cacheHelper != null ) obj = cacheHelper.get(getCacheKey(clazz, key.getName()));
+				if(cacheHelper != null) obj = cacheHelper.get(getCacheKey(clazz, key.getName()));
 			} else {
 				obj = pm.getObjectById(clazz,key);
 			}
@@ -2042,7 +2042,8 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 			}
 
 		}catch(JDOObjectNotFoundException e){
-			// its normal check a record and not found
+			// its normal; looks for a record, but cant find it
+			// someone needs a little help with his english, don't ya?
 			return false;
 		}catch(Exception e){
 			log.log(Level.SEVERE, "exception catched", e);

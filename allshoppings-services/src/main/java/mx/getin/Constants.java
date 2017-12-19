@@ -8,12 +8,24 @@ package mx.getin;
  */
 public final class Constants {
 
-	public static final long FIVE_MINUTES_IN_MILLIS = 5 * 60 * 1000;
-	public static final long TEN_MINUTES_IN_MILLIS = 10 * 60 * 1000;
-	public static final long THIRTY_MINUTES_IN_MILLIS = 30 * 60 * 1000;
-	public static final long DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
+	public static final int FIVE_MINUTES_IN_MILLIS = 5 * 60 * 1000;
+	public static final int TEN_MINUTES_IN_MILLIS = 10 * 60 * 1000;
+	public static final int THIRTY_MINUTES_IN_MILLIS = 30 * 60 * 1000;
+	public static final int TWELVE_HOURS_IN_MILLIS = 12 *60 *60 *1000;
+	public static final int DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
 	
 	public static final byte APDEVICE_REPORT_INTERVAL_MINUTES = 30;
+	
+	public static final String FROM_DATE_PARAM = "fromDate";
+	public static final String TO_DATE_PARAM = "toDate";
+	public static final String OUT_DIR_PARAM = "outDir";
+	
+	//be aware: orthography is important!
+	public static final String DELETE_PREVIOUS_RECORDS_PARAM = "deletePreviousRecords";
+	
+	public static final String DATE_FORMAT = "yyyy-MM-dd";
+	
+	public static final String GMT_TIMEZONE_ID = "GMT";
 	
 	private Constants() {}
 
