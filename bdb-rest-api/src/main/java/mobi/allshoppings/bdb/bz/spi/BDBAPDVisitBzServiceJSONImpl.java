@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.logging.Level;
 
 import org.json.JSONObject;
@@ -25,6 +26,9 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 
 	private static final long ONE_DAY = 86400000;
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	static {
+	    //sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+	}
 	
 	
 	@Override
@@ -81,7 +85,7 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 			// retrieve all elements
 			long millisPre = new Date().getTime();
 			Date fromDate = sdf.parse(date);
-			Date toDate = new Date(fromDate.getTime() + ONE_DAY - 1);
+			Date toDate = new Date(fromDate.getTime() + ONE_DAY);
 			
 			//list = dao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, fromDate, toDate, checkinType, range, order, attributes, false);
 			
