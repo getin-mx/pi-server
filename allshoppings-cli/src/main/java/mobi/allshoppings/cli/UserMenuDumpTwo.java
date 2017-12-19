@@ -1651,7 +1651,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 								  sistemasBrunoCorza = new User();
 								  sistemasBrunoCorza.setFirstname("Bruno Corza - Sistemas");
 								  sistemasBrunoCorza.setLastname("");
-								  sistemasBrunoCorza.setEmail("admin@brunocorza.mx");
+								  sistemasBrunoCorza.setEmail("sistemas@brunocorza.mx");
 								  sistemasBrunoCorza.getSecuritySettings().setRole(Role.STORE);
 								  sistemasBrunoCorza.getSecuritySettings()
 								      .setPassword(encodeString("Brunocorza01"));
