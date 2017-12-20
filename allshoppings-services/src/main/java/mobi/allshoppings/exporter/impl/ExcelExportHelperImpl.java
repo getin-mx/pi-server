@@ -189,9 +189,9 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			List<DashboardIndicatorData> list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND,
 					Arrays.asList("apd_visitor"),
 					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets"), null,
-					storeId, "D", parsedInitD, parsedFinalD, null, null, null, null, null, null, null, null);
+					storeId, null, parsedInitD, parsedFinalD, null, null, null, null, null, null, null, null);
 
-			log.log(Level.INFO, "Using " + list.size() + " elements...");
+			log.log(Level.INFO, "Using " + list.size() + " elements for apd_visitor tickets...");
 
 			Iterator<DashboardIndicatorData> i = list.iterator();
 			while (i.hasNext()) {
@@ -216,10 +216,10 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			// How iterates the Dashboard Indicator Data List for Traffic by
 			// Hour graph
 			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND, Arrays.asList("apd_visitor"),
-					Arrays.asList("visitor_total_peasents", "visitor_total_visits"), null, storeId, "D", parsedLimitD,
-					parsedFinalD, null, null, null, null, null, null, null, null);
+					Arrays.asList("visitor_total_peasents", "visitor_total_visits"), null, storeId, null,
+					parsedLimitD, parsedFinalD, null, null, null, null, null, null, null, null);
 
-			log.log(Level.INFO, "Using " + list.size() + " elements...");
+			log.log(Level.INFO, "Using " + list.size() + " elements for apd_visitor totals...");
 
 			i = list.iterator();
 			while (i.hasNext()) {
@@ -241,17 +241,16 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			// Now iterates the Dashboard Indicator Data List for Permanence
 			// Graph
 			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND, Arrays.asList("apd_permanence"),
-					Arrays.asList("permanence_hourly_peasents", "permanence_hourly_visits"), null, storeId, "D",
+					Arrays.asList("permanence_hourly_peasents", "permanence_hourly_visits"), null, storeId, null,
 					parsedLimitD, parsedFinalD, null, null, null, null, null, null, null, null);
 
-			log.log(Level.INFO, "Using " + list.size() + " elements...");
+			log.log(Level.INFO, "Using " + list.size() + " elements for apd_permanence...");
 
 			long totalVisitsPermanence = 0;
 			long totalVisitsCount = 0;
 			i = list.iterator();
 			while (i.hasNext()) {
 				DashboardIndicatorData obj = i.next();
-				System.out.println(obj.getStringDate());
 				PermanenceEntry e = permanenceMap.get(PermanenceEntry.calculateHour(obj.getTimeZone()));
 				if ("permanence_hourly_peasents".equals(obj.getElementSubId())) {
 					e.setPeasants(e.getPeasants() + obj.getDoubleValue().longValue());

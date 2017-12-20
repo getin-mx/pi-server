@@ -48,4 +48,8 @@ public interface DashboardIndicatorDataDAO extends GenericDAO<DashboardIndicator
 	void deleteUsingSubentityIdAndElementIdAndDate(String subentityId,
 			List<String> elementId, Date fromDate, Date toDate, TimeZone tz)
 			throws ASException;
+	
+	void deleteUsingSubentityIdAndElementIdAndDateAndTimezoneOffset(String subentityId, List<String> elementId,
+			Date fromDate, Date toDate, TimeZone referenceTz, byte didLocalTzOffset) throws ASException;
+	
 }

@@ -211,7 +211,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		int in;
 		while( curDate.before(toZonedDate) || (fromDate.equals(toZonedDate) && curDate.equals(toZonedDate))) {
 
-			lastDate = curDate.getTime() +DAY_IN_MILLIS > toZonedDate.getTime();
+			lastDate = curDate.getTime() +DAY_IN_MILLIS >= toZonedDate.getTime();
 			
 			try {
 				log.log(Level.INFO, "entityIds are: " + entities);
@@ -239,7 +239,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					if(!onlyDashboards && offset > 0 && toZonedDate.getTime() < toDate.getTime() +offset) {
 						toZonedDate.setTime(toDate.getTime() +offset);
 						overtime = true;
-						lastDate = curDate.getTime() +DAY_IN_MILLIS > toZonedDate.getTime();
+						lastDate = curDate.getTime() +DAY_IN_MILLIS >= toZonedDate.getTime();
 					}//adds an time limit offset to match local timezone
 					
 					try {
@@ -347,10 +347,19 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								} catch( Exception e ) {
 									throw ASExceptionHelper.defaultException(e.getMessage(), e);
 								}
-							} if(deletePreviousRecords && !(overtime && lastDate)) {
-								didDao.deleteUsingSubentityIdAndElementIdAndDate(entityId,
-										Arrays.asList("apd_visitor", "apd_permanence", "apd_occupation" ),
-										curDate, curDate, GMT);
+							} if(deletePreviousRecords) {
+								if(overtime && lastDate) {//both true -> just delete the offset timezones
+									byte offsetHours = (byte) (-offset /(1000 *60 *60));
+									Date delDate = offsetHours < 0 ? new Date(curDate.getTime() -DAY_IN_MILLIS) :
+										new Date(curDate.getTime());
+									didDao.deleteUsingSubentityIdAndElementIdAndDateAndTimezoneOffset(entityId,
+											Arrays.asList("apd_visitor", "apd_permanence", "apd_occupation" ),
+											delDate, delDate, GMT, offsetHours);
+								} else {//one was false -> delete the whole day (stills needs one more day) 
+									didDao.deleteUsingSubentityIdAndElementIdAndDate(entityId,
+											Arrays.asList("apd_visitor", "apd_permanence", "apd_occupation" ),
+											curDate, curDate, GMT);
+								}
 							} if( objs.size() > 0 || onlyDashboards) {
 								mapper.createAPDVisitPerformanceDashboardForDay(curDate,
 										Arrays.asList(new String[] { entityId }), entityKind, objs);
