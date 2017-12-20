@@ -1589,11 +1589,11 @@ public class GetinDump extends AbstractCLI {
 //			stores.add(new StoreAdapter("823", "Devlyn Pabellon Polanco Master", "devlyn_mx", null, GetinDump.MALL));
 //			stores.add(new StoreAdapter("824", "Devlyn Pabellon Polanco Esclava", "devlyn_mx", null, GetinDump.MALL));
 //			
-//			stores.add(new StoreAdapter("825", "Devlyn Chedraui Polanco", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("825", "Devlyn Chedraui Polanco", "devlyn_mx", null, GetinDump.MALL));
 //			stores.add(new StoreAdapter("826", "Devlyn Chedraui Polanco Master", "devlyn_mx", null, GetinDump.MALL));
 //			stores.add(new StoreAdapter("827", "Devlyn Chedraui Polanco Esclava", "devlyn_mx", null, GetinDump.MALL));
 //			
-//			stores.add(new StoreAdapter("828", "Devlyn Galerias Marina", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("828", "Devlyn Galerias Marina", "devlyn_mx", null, GetinDump.MALL));
 //			stores.add(new StoreAdapter("829", "Devlyn Galerias Marina Master", "devlyn_mx", null, GetinDump.MALL));
 //			stores.add(new StoreAdapter("830", "Devlyn Galerias Marina Esclava", "devlyn_mx", null, GetinDump.MALL));
 			
