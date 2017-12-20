@@ -65,9 +65,8 @@ public class ReportBeaconBzServiceJSONImpl extends RestBaseServerResource implem
 
 			// This is a quick and dirty implementation
 			// FIXME: Add subEntityId and subEntityKind
-			lockHelper.deviceMessageLock(bh.getDeviceUUID(),
-					DeviceMessageLock.SCOPE_PROMOTIONS, null, null,
-					systemConfiguration.getDefaultProximityLock(), null, null);
+			lockHelper.deviceMessageLock(bh.getDeviceUUID(), DeviceMessageLock.SCOPE_PROMOTIONS, null, null,
+					systemConfiguration.getDefaultProximityLock(), null, 0);
 			
 			// track action
 			trackerHelper.enqueue( (User)null, getRequestIP(),

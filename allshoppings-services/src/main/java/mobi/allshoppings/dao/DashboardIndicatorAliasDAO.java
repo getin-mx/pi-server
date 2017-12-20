@@ -9,5 +9,6 @@ import mobi.allshoppings.model.DashboardIndicatorAlias;
 public interface DashboardIndicatorAliasDAO extends GenericDAO<DashboardIndicatorAlias> {
 
 	Key createKey(DashboardIndicatorAlias obj) throws ASException;
-	DashboardIndicatorAlias getUsingFilters(String entityId, Integer entityKind, String elementId, String elementSubId) throws ASException;
+	DashboardIndicatorAlias getUsingFilters(String entityId, byte entityKind, String elementId,
+			String elementSubId) throws ASException;
 }

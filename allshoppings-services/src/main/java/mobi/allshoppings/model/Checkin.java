@@ -17,8 +17,8 @@ import mobi.allshoppings.model.interfaces.ModelKey;
 public class Checkin implements ModelKey, Serializable, Identificable {
 
 	private static final long serialVersionUID = 1L;
-	public final static Integer CHECKIN_AUTO = 0;
-	public final static Integer CHECKIN_MANUAL = 1;
+	public final static byte CHECKIN_AUTO = 0;
+	public final static byte CHECKIN_MANUAL = 1;
 	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
@@ -27,17 +27,16 @@ public class Checkin implements ModelKey, Serializable, Identificable {
 	private String userId;
 	private String deviceUUID;
 	private String entityId;
-	private Integer entityKind;
+	private byte entityKind;
 	private Date checkinStarted;
 	private Date checkinFinished;
 	private Date lastUpdate;
 	private Date creationDateTime;
-	private Boolean possibleFake;
-	private Boolean verified;
-	private Integer checkinType;
+	private boolean possibleFake;
+	private boolean verified;
+	private byte checkinType;
 
 	public Checkin() {
-		super();
 		this.creationDateTime = new Date();
 		possibleFake = false;
 		verified = false;
@@ -143,14 +142,14 @@ public class Checkin implements ModelKey, Serializable, Identificable {
 	/**
 	 * @return the entityKind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 
@@ -213,14 +212,14 @@ public class Checkin implements ModelKey, Serializable, Identificable {
 	/**
 	 * @return the checkinType
 	 */
-	public Integer getCheckinType() {
+	public byte getCheckinType() {
 		return checkinType;
 	}
 
 	/**
 	 * @param checkinType the checkinType to set
 	 */
-	public void setCheckinType(Integer checkinType) {
+	public void setCheckinType(byte checkinType) {
 		this.checkinType = checkinType;
 	}
 
@@ -242,8 +241,7 @@ public class Checkin implements ModelKey, Serializable, Identificable {
 				+ ((deviceUUID == null) ? 0 : deviceUUID.hashCode());
 		result = prime * result
 				+ ((entityId == null) ? 0 : entityId.hashCode());
-		result = prime * result
-				+ ((entityKind == null) ? 0 : entityKind.hashCode());
+		result = prime * result + entityKind;
 		result = prime * result + ((key == null) ? 0 : key.hashCode());
 		result = prime * result
 				+ ((lastUpdate == null) ? 0 : lastUpdate.hashCode());
@@ -286,13 +284,8 @@ public class Checkin implements ModelKey, Serializable, Identificable {
 		if (entityId == null) {
 			if (other.entityId != null)
 				return false;
-		} else if (!entityId.equals(other.entityId))
-			return false;
-		if (entityKind == null) {
-			if (other.entityKind != null)
-				return false;
-		} else if (!entityKind.equals(other.entityKind))
-			return false;
+		} else if (!entityId.equals(other.entityId)) return false;
+		if (entityKind != other.entityKind) return false;
 		if (key == null) {
 			if (other.key != null)
 				return false;

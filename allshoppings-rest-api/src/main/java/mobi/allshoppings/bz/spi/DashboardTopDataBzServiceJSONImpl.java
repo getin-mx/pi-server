@@ -48,7 +48,7 @@ implements DashboardTopDataBzService {
 			// obtainUserIdentifier();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String elementId = obtainStringValue("elementId", null);
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
@@ -58,10 +58,10 @@ implements DashboardTopDataBzService {
 			String toStringDate = obtainStringValue("toStringDate", null);
 			String movieId = obtainStringValue("movieId", null);
 			String voucherType = obtainStringValue("voucherType", null);
-			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
-			Integer timeZone = obtainIntegerValue("timezone", null);
+			byte dayOfWeek = obtainByteValue("dayOfWeek", (byte) -1);
+			byte timeZone = obtainByteValue("timezone", (byte) -1);
 			String groupBy = obtainStringValue("groupBy", null);
-			Integer top = obtainIntegerValue("top", null);
+			int top = obtainIntegerValue("top", -1);
 			Boolean desc = obtainBooleanValue("desc", false);
 
 			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
@@ -89,7 +89,7 @@ implements DashboardTopDataBzService {
 			// Order the dataset
 			sorted_map.putAll(resultMap);
 			int myCount = 0;
-			if( top != null && top > 0 ) {
+			if( top != -1 && top > 0 ) {
 				Map<String, Integer> temp = CollectionFactory.createMap();
 				Iterator<String> x = sorted_map.keySet().iterator();
 				while(x.hasNext() && myCount < top ) {
@@ -105,7 +105,7 @@ implements DashboardTopDataBzService {
 
 			// Creates the final JSON Array
 			JSONArray jsonArray = new JSONArray();
-			if( top == null ) top = myCount;
+			if( top == -1 ) top = myCount;
 			
 			Iterator<String> x = sorted_map.keySet().iterator();
 			myCount = 0;

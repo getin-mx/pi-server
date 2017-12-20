@@ -75,8 +75,8 @@ public class FavoritesBzServiceJSONImpl
     		
     		final String entityId = obtainStringValue(IDENTIFIER, null);
             if(!StringUtils.hasText(entityId)) throw ASExceptionHelper.invalidArgumentsException(IDENTIFIER);
-            final Integer entityKind = obtainIntegerValue(ENTITY_KIND, null);
-            if(null == entityKind) throw ASExceptionHelper.invalidArgumentsException(ENTITY_KIND);
+            final byte entityKind = obtainByteValue(ENTITY_KIND, (byte) -1);
+            if(-1 == entityKind) throw ASExceptionHelper.invalidArgumentsException(ENTITY_KIND);
             
             
             final Favorite favorite = dao.getUsingUserAndEntityAndKind(user, entityId, entityKind, true);
@@ -84,7 +84,7 @@ public class FavoritesBzServiceJSONImpl
             	dao.delete(favorite.getIdentifier());
 
             	uecService.rebuildUsingUserAndKind(user, favorite.getEntityKind());
-            	if(!favorite.getEntityKind().equals(EntityKind.KIND_OFFER))
+            	if(favorite.getEntityKind() != EntityKind.KIND_OFFER)
             		uecService.rebuildUsingUserAndKind(user, EntityKind.KIND_OFFER);
 
                 // Points updater
@@ -133,7 +133,7 @@ public class FavoritesBzServiceJSONImpl
             }
             
             //check that kind is between ranges
-            Integer entityKind = obj.getInt(ENTITY_KIND);
+            byte entityKind = (byte) obj.getInt(ENTITY_KIND);
             if( !EntityKind.isKindValid(entityKind) ) {
             	throw ASExceptionHelper.invalidArgumentsException(ENTITY_KIND);
             }
@@ -159,7 +159,7 @@ public class FavoritesBzServiceJSONImpl
             //checks for duplicates
             try {
 	            Favorite check = dao.getUsingUserAndEntityAndKind(user, 
-	            		obj.getString(ENTITY_ID), obj.getInt(ENTITY_KIND), true);
+	            		obj.getString(ENTITY_ID), (byte) obj.getInt(ENTITY_KIND), true);
 	            if( check != null ) {
 	            	throw ASExceptionHelper.alreadyExistsException();
 	            }
@@ -184,7 +184,7 @@ public class FavoritesBzServiceJSONImpl
 					favorite.getEntityKind(), favorite.getEntityId(), null);
 
            	uecService.rebuildUsingUserAndKind(user, favorite.getEntityKind());
-           	if(!favorite.getEntityKind().equals(EntityKind.KIND_OFFER))
+           	if(favorite.getEntityKind() != EntityKind.KIND_OFFER)
            		uecService.rebuildUsingUserAndKind(user, EntityKind.KIND_OFFER);
 		           
             // track action

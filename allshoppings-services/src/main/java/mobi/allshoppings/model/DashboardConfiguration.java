@@ -25,7 +25,7 @@ public class DashboardConfiguration implements ModelKey, Serializable, Identific
 	private Date lastUpdate;
 
 	private String entityId;
-	private Integer entityKind;
+	private byte entityKind;
 	private String visitsComments;
 	
 	private String timezone;
@@ -35,7 +35,7 @@ public class DashboardConfiguration implements ModelKey, Serializable, Identific
 		this.creationDateTime = new Date();
     }
 
-	public DashboardConfiguration(String entityId, Integer entityKind) {
+	public DashboardConfiguration(String entityId, byte entityKind) {
 		this();
 		this.entityId = entityId;
 		this.entityKind = entityKind;
@@ -115,14 +115,14 @@ public class DashboardConfiguration implements ModelKey, Serializable, Identific
 	/**
 	 * @return the entityKind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 

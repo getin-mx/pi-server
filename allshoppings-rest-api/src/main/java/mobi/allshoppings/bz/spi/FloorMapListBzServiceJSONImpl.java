@@ -60,7 +60,7 @@ public class FloorMapListBzServiceJSONImpl extends RestBaseServerResource implem
 			// retrieve all Floor Maps
 			long millisPre = new Date().getTime();
 			floorMaps = new GenericAdapterImpl<FloorMapAdapter>().adaptList(
-					dao.getUsingStatusAndUserAndRange(null, user, range),
+					dao.getUsingStatusAndUserAndRange((byte) -1, user, range),
 					user.getIdentifier(), null, null, options);
 			long diff = new Date().getTime() - millisPre;
 			

@@ -64,7 +64,7 @@ implements DeviceMessageLockBzService {
 			long millisPre = new Date().getTime();
 
 			// and the coupon list
-			list = dao.getUsingDeviceAndScopeAndCampaign(deviceUUID, null, null); 
+			list = dao.getUsingDeviceAndScopeAndCampaign(deviceUUID, (byte) -1, null); 
 			long diff = new Date().getTime() - millisPre;
 
 			// Logs the result

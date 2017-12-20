@@ -246,12 +246,26 @@ public abstract class RestBaseServerResource extends ServerResource {
 	 * @param defaultValue
 	 * @return
 	 */
-	public Integer obtainIntegerValue(String key, Integer defaultValue) {
+	public int obtainIntegerValue(String key, int defaultValue) {
 		String val = obtainStringValue(key, null);
 		try {
 			return StringUtils.hasText(val) ? Integer.valueOf(val) : defaultValue;
 		} catch( NumberFormatException e ) {
 			logger.finer("Cannot convert value " + val + " to integer!");
+			return defaultValue;
+		}
+	}
+	
+	/**
+	 * Returns the value of the given parameter from a URL request.
+	 * @param key - The name of the parameter which value is desired.
+	 * @param defaultValue - The default value of the parameter; to be used in case that it is undefined.
+	 * @return byte - The value of the parameter as a byte.
+	 */
+	public byte obtainByteValue(String key, byte defaultValue) {
+		try {
+			return Byte.valueOf(obtainStringValue(key, null));
+		} catch(Exception e) {
 			return defaultValue;
 		}
 	}

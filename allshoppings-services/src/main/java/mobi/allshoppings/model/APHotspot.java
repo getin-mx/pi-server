@@ -5,7 +5,6 @@ import java.util.Date;
 
 import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -28,23 +27,15 @@ public class APHotspot implements ModelKey, Serializable, Identificable, Replica
 
 	private String hostname;
 	private String mac;
-	private Integer count;
+	private int count;
 	
-	@Deprecated
-	@NotPersistent
-	private  transient Date firstSeen;
-	
-	@Deprecated
-	@NotPersistent
-	private transient Date lastSeen;
-	
-	private Integer signalDB;
+	private short signalDB;
 	private Date lastUpdate;
 	private Date creationDateTime;
 
 	public APHotspot() {
-		super();
 		this.creationDateTime = new Date();
+		this.lastUpdate = new Date();
 	}
 	
 	/**
@@ -144,44 +135,16 @@ public class APHotspot implements ModelKey, Serializable, Identificable, Replica
 	}
 
 	/**
-	 * @return the firstSeen
-	 */
-	public Date getFirstSeen() {
-		return firstSeen;
-	}
-
-	/**
-	 * @param firstSeen the firstSeen to set
-	 */
-	public void setFirstSeen(Date firstSeen) {
-		this.firstSeen = firstSeen;
-	}
-
-	/**
-	 * @return the lastSeen
-	 */
-	public Date getLastSeen() {
-		return lastSeen;
-	}
-
-	/**
-	 * @param lastSeen the lastSeen to set
-	 */
-	public void setLastSeen(Date lastSeen) {
-		this.lastSeen = lastSeen;
-	}
-
-	/**
 	 * @return the signal
 	 */
-	public Integer getSignalDB() {
+	public short getSignalDB() {
 		return signalDB;
 	}
 
 	/**
 	 * @param signal the signal to set
 	 */
-	public void setSignalDB(Integer signal) {
+	public void setSignalDB(short signal) {
 		this.signalDB = signal;
 	}
 
@@ -222,8 +185,7 @@ public class APHotspot implements ModelKey, Serializable, Identificable, Replica
 	@Override
 	public String toString() {
 		return "APHotspot [key=" + key + ", hostname=" + hostname + ", mac="
-				+ mac + ", count=" + count + ", firstSeen=" + firstSeen
-				+ ", lastSeen=" + lastSeen + ", signal=" + signalDB
+				+ mac + ", count=" + count + ", signal=" + signalDB
 				+ ", lastUpdate=" + lastUpdate + ", creationDateTime="
 				+ creationDateTime + "]";
 	}

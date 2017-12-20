@@ -56,7 +56,7 @@ public class DashboardTimelineHourBzServiceJSONImpl extends RestBaseServerResour
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String elementId = obtainStringValue("elementId", null);
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
@@ -118,7 +118,7 @@ public class DashboardTimelineHourBzServiceJSONImpl extends RestBaseServerResour
 
 			for (DashboardIndicatorData obj : dao.getUsingFilters(entityId, entityKind, elementId,
 					elementSubId, shoppingId, subentityId, null, fromStringDate, toStringDate, null,
-					null, null, null, null, null, null, null)) {
+					null, (byte) -1, (byte) -1, null, null, null, null)) {
 				if (isValidForUser(user, obj)) {
 					String key = obj.getElementSubName();
 					String orderKey = obj.getElementSubId();

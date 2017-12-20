@@ -49,7 +49,7 @@ implements DashboardTimelineGDTBzService {
 			// obtainUserIdentifier();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String elementId = obtainStringValue("elementId", null);
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
@@ -60,7 +60,7 @@ implements DashboardTimelineGDTBzService {
 
 			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId, entityKind, elementId,
 					elementSubId, shoppingId, subentityId, periodType, fromStringDate, toStringDate,
-					null, null, null, null, null, null, null, null);
+					null, null, (byte) -1, (byte) -1, null, null, null, null);
 
 			List<String> categories = Arrays.asList(new String[] {"Dom","Lun","Mar","Mie","Jue","Vie","Sab"});
 

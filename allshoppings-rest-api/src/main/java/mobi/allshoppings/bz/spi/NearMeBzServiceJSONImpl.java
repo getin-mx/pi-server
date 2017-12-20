@@ -73,8 +73,8 @@ public class NearMeBzServiceJSONImpl extends RestBaseServerResource implements N
 		try {
 			// validate authToken
 			User user = this.getUserFromToken();
-			Integer entityKind = EntityKind.resolveByName(this.obtainStringValue(ENTITY_KIND, null));
-			if( entityKind == null ) entityKind = EntityKind.ALL;
+			byte entityKind = EntityKind.resolveByName(this.obtainStringValue(ENTITY_KIND, null));
+			if( entityKind == -1 ) entityKind = EntityKind.ALL;
 
 			// get level, if not defined use default value
 			String level = this.obtainStringValue(LEVEL, BzFields.LEVEL_LIST);

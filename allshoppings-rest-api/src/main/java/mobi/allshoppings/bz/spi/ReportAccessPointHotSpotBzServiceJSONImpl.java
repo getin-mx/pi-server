@@ -1,6 +1,5 @@
 package mobi.allshoppings.bz.spi;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +19,10 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHotspot;
+import mx.getin.dao.APDCalibrationDAO;
+import mx.getin.dao.APDReportDAO;
+import mx.getin.model.APDCalibration;
+import mx.getin.model.APDReport;
 
 /**
  * Receives and stores data from antennas.
@@ -30,14 +33,16 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 	private static final Logger log = Logger.getLogger(
 			ReportAccessPointHotSpotBzServiceJSONImpl.class.getName());
 	
-	private final Calendar CALENDAR = Calendar.getInstance();
-
 	@Autowired
-	private APDeviceDAO apdDao;
+	private APDReportDAO apdrDao;
 	@Autowired
 	private APHotspotDAO dao;
 	@Autowired
 	private APHHelper aphHelper;
+	@Autowired
+	private APDeviceDAO apdDao;
+	@Autowired
+	private APDCalibrationDAO apdcDao;
 
 	@Override
 	public String post(final JsonRepresentation entity) {
@@ -52,23 +57,27 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 			log.log(Level.INFO, "Reporting " + data.length() + " AP Members from " + hostname);
 
 			// Sets the device last data
-			APDevice device = null;
+			APDReport report = null;
 			try {
-				device = apdDao.get(hostname, true);
-				device.completeDefaults();
-				device.setLastRecordDate(new Date());
-				device.setLastRecordCount(data.length());
-				apdDao.update(device);
+				report = apdrDao.get(hostname, true);
+				report.setLastRecordDate(new Date());
+				report.setLastRecordCount(data.length());
+				apdrDao.update(report);
 			} catch( ASException e ) {
 				if( e.getErrorCode() != ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE )
 					throw e;
-				
-				device = new APDevice();
+				APDevice device = new APDevice();
 				device.setHostname(hostname);
 				device.setKey(apdDao.createKey(hostname));
-				device.setLastRecordDate(new Date());
-				device.setLastRecordCount(data.length());
 				apdDao.create(device);
+				report = new APDReport();
+				report.setLastRecordDate(new Date());
+				report.setLastRecordCount(data.length());
+				report.setHostname(hostname);
+				report.setKey(apdrDao.createKey(hostname));
+				APDCalibration cal = new APDCalibration();
+				cal.setHostname(hostname);
+				cal.setKey(apdcDao.createKey(hostname));
 			}
 
 			for( int i = 0; i < data.length(); i++ ) {
@@ -78,11 +87,8 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 
 					APHotspot aphotspot = new APHotspot();
 					aphotspot.setHostname(hostname);
-					aphotspot.setFirstSeen(restoreDate(
-							ele.getLong("firstSeen") * 1000));
-					aphotspot.setLastSeen(restoreDate(ele.getLong("lastSeen") * 1000));
 					aphotspot.setMac(ele.getString("mac").toLowerCase());
-					aphotspot.setSignalDB(ele.getInt("signalDB"));
+					aphotspot.setSignalDB((short) ele.getInt("signalDB"));
 					aphotspot.setCount(ele.getInt("count"));
 					aphotspot.setKey(dao.createKey());
 
@@ -107,32 +113,6 @@ public class ReportAccessPointHotSpotBzServiceJSONImpl extends RestBaseServerRes
 			markEnd(start);
 		}
 
-	}
-	
-	private Date restoreDate(long time) {
-		CALENDAR.clear();
-		CALENDAR.setTimeInMillis(time);
-		Calendar now = Calendar.getInstance();
-		now.setTimeInMillis(System.currentTimeMillis());
-		int yearsDiff = Math.abs(CALENDAR.get(Calendar.YEAR)
-				-now.get(Calendar.YEAR));
-		int monthsDiff = Math.abs(CALENDAR.get(Calendar.MONTH)
-				-now.get(Calendar.MONTH));
-		int daysDiff = Math.abs(CALENDAR.get(Calendar.DATE)
-				-now.get(Calendar.DATE));
-		if(yearsDiff > 1 || (yearsDiff != 0 &&
-				(now.get(Calendar.MONTH) > 0 ||
-				now.get(Calendar.DATE) > 1
-				|| now.get(Calendar.HOUR_OF_DAY) > 2)))
-			CALENDAR.set(Calendar.YEAR, now.get(Calendar.YEAR));
-		if(monthsDiff > 1 || (monthsDiff != 0 &&
-				(now.get(Calendar.DATE) > 1 ||
-				now.get(Calendar.HOUR_OF_DAY) > 2)))
-			CALENDAR.set(Calendar.MONTH, now.get(Calendar.MONTH));
-		if(daysDiff > 1 || (daysDiff != 0 &&
-				now.get(Calendar.HOUR_OF_DAY) > 2))
-			CALENDAR.set(Calendar.DATE, now.get(Calendar.DATE));
-		return CALENDAR.getTime();
 	}
 	
 }

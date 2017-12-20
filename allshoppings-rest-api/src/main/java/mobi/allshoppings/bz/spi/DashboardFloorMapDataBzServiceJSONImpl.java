@@ -65,13 +65,13 @@ implements DashboardFloorMapDataBzService {
 			// obtainUserIdentifier();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String floorMapId = obtainStringValue("floorMapId", null);
 
 			if( !StringUtils.hasText(floorMapId)) {
 				String shoppingId = null;
 
-				if( entityKind == null || entityKind.equals(EntityKind.KIND_SHOPPING)) {
+				if( entityKind == -1 || entityKind == EntityKind.KIND_SHOPPING) {
 					shoppingId = entityId;
 				} else {
 					Cinema cinema = cinemaDao.get(entityId, true);

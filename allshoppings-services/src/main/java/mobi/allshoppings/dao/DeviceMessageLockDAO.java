@@ -16,5 +16,6 @@ public interface DeviceMessageLockDAO extends GenericDAO<DeviceMessageLock> {
 	boolean deviceHasActiveLocks(String deviceUUID, Date forDate) throws ASException;
 	boolean deviceHasActiveLocks(String deviceUUID, Date forDate, List<Integer> scope) throws ASException;
 	List<DeviceMessageLock> getDeviceActiveLocks(String deviceUUID, Date forDate) throws ASException;
-	List<DeviceMessageLock> getUsingDeviceAndScopeAndCampaign(String deviceUUID, Integer scope, String campaignActivityId) throws ASException;
+	List<DeviceMessageLock> getUsingDeviceAndScopeAndCampaign(String deviceUUID, byte scope,
+			String campaignActivityId) throws ASException;
 }

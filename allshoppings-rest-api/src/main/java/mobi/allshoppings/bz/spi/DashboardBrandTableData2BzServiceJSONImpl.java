@@ -68,10 +68,6 @@ implements DashboardBrandTableDataBzService {
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			@SuppressWarnings("unused")
-			Integer entityKind = obtainIntegerValue("entityKind", null);
-			@SuppressWarnings("unused")
-			String subentityId = obtainStringValue("subentityId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
 			String country = obtainStringValue("country", null);
@@ -94,9 +90,9 @@ implements DashboardBrandTableDataBzService {
 			List<DashboardIndicatorData> list;
 
 			// peasents, visits, and tickets
-			list = dao.getUsingFilters(entityIds, null, Arrays.asList("apd_visitor"),
+			list = dao.getUsingFilters(entityIds, (byte) -1, Arrays.asList("apd_visitor"),
 					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets"), null,
-					null, null, fromStringDate, toStringDate, null, null, null, null, null, country,
+					null, null, fromStringDate, toStringDate, null, null, (byte) -1, (byte) -1, null, country,
 					province, city);
 
 			for(DashboardIndicatorData obj : list) {
@@ -116,10 +112,9 @@ implements DashboardBrandTableDataBzService {
 			}
 
 			// permanence
-			list = dao.getUsingFilters(entityIds,
-					null, Arrays.asList("apd_permanence"), Arrays.asList("permanence_hourly_visits"), null,
-					null, null, fromStringDate, toStringDate,
-					null, null, null, null, null, country, province, city);
+			list = dao.getUsingFilters(entityIds, (byte) -1, Arrays.asList("apd_permanence"),
+					Arrays.asList("permanence_hourly_visits"), null, null, null, fromStringDate, toStringDate,
+					null, null, (byte) -1, (byte) -1, null, country, province, city);
 
 			{
 				Map<String, List<Long>> d = CollectionFactory.createMap();

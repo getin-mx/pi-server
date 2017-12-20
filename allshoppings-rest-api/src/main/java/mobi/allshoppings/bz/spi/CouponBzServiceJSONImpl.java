@@ -189,12 +189,11 @@ public class CouponBzServiceJSONImpl extends RestBaseServerResource implements C
 								ca.getRejectionMotives().add(motive);
 						} catch( Exception e ) {}
 					}
-					if( ca.getRejectionMotives().size() > 1 || !ca.getRejectionMotives().contains(new Integer(3))) {
+					if( ca.getRejectionMotives().size() > 1 || !ca.getRejectionMotives().contains(3)) {
 						// Add restraint for default time
-						lockHelper.deviceMessageLock(ca.getDeviceUUID(),
-								DeviceMessageLock.SCOPE_THIS_PROMOTION,
-								ca.getIdentifier(), new Date(),
-								systemConfiguration.getDefaultRejectionLock(), null, null);
+						lockHelper.deviceMessageLock(ca.getDeviceUUID(), DeviceMessageLock.SCOPE_THIS_PROMOTION,
+								ca.getIdentifier(), new Date(), systemConfiguration.getDefaultRejectionLock(),
+								null, 0);
 					}
 				}
 				break;
@@ -207,10 +206,9 @@ public class CouponBzServiceJSONImpl extends RestBaseServerResource implements C
 				}
 
 				// Add restraint for default time
-				lockHelper.deviceMessageLock(ca.getDeviceUUID(),
-						DeviceMessageLock.SCOPE_THIS_PROMOTION,
-						ca.getIdentifier(), new Date(),
-						systemConfiguration.getDefaultAcceptanceLock(), null, null);
+				lockHelper.deviceMessageLock(ca.getDeviceUUID(), DeviceMessageLock.SCOPE_THIS_PROMOTION,
+						ca.getIdentifier(), new Date(), systemConfiguration.getDefaultAcceptanceLock(),
+						null, 0);
 
 				ca.setRedeemStatus(status);
 				couponHelper.createCouponCode(ca, obj.toString());

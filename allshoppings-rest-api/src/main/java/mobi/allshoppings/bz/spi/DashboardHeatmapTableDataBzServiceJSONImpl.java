@@ -50,7 +50,7 @@ implements DashboardHeatmapTableDataBzService {
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String elementId = obtainStringValue("elementId", null);
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
@@ -60,9 +60,9 @@ implements DashboardHeatmapTableDataBzService {
 			String toStringDate = obtainStringValue("toStringDate", null);
 			String movieId = obtainStringValue("movieId", null);
 			String voucherType = obtainStringValue("voucherType", null);
-			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
-			Integer timezone = obtainIntegerValue("timezone", null);
-			Integer top = obtainIntegerValue("top", null);
+			byte dayOfWeek = obtainByteValue("dayOfWeek", (byte) -1);
+			byte timezone = obtainByteValue("timezone", (byte) -1);
+			int top = obtainIntegerValue("top", -1);
 			
 			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
 					entityKind, elementId, elementSubId, shoppingId,
@@ -115,7 +115,7 @@ implements DashboardHeatmapTableDataBzService {
 			
 			// Order the dataset
 			sorted_map.putAll(toBeOrderedDataSet);
-			if( top != null && top > 0 ) {
+			if( top != -1 && top > 0 ) {
 				Map<String, Map<Integer, Integer>> temp = CollectionFactory.createMap();
 				totals.clear();
 				Iterator<String> x = sorted_map.keySet().iterator();
@@ -211,7 +211,7 @@ implements DashboardHeatmapTableDataBzService {
 			}
 			ret.put("data", dataJson);
 
-			if( top != null && top > 0 ) {
+			if( top != -1 && top > 0 ) {
 				JSONArray orderedJson = new JSONArray();
 				Iterator<String> x = sorted_map.keySet().iterator();
 				int myCount = 0;

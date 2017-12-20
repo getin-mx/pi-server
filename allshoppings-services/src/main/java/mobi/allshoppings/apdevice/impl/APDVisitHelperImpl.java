@@ -60,10 +60,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	public static final String ALGORITHM_MARKII = "markII";
 	
 	private static final Logger log = Logger.getLogger(APDVisitHelperImpl.class.getName());
-	private static final SimpleDateFormat tf2 = new SimpleDateFormat("HHmm");
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
-	private static final int VISIT_PERCENTAGE = 25;
 	private static final List<String> BANNED = Arrays.asList("00:00:00:00:00:00");
 	private static final short MILLIS_TO_TWENTY_SECONDS_SLOT = 20000;
 	private static final short MAXIMUM_TIME_SLOTS = 6 *60 *60 /20;
@@ -1524,111 +1522,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 	}
 	
-	/**
-	 * Checks if a visit is valid according the device parameters
-	 * 
-	 * @param visit
-	 *            The visit to check
-	 * @param device
-	 *            The device that contains the parameters
-	 * @return true if valid, false if not
-	 * @throws ParseException
-	 */
-	public static boolean isVisitValid(APDVisit visit, APDevice device, // TODO move to interface
-			boolean isEmployee, Calendar cal, TimeZone tz) throws ParseException {
-		
-		int t;
-		cal.clear();
-		if(visit != null) {
-			Long time = (visit.getCheckinFinished().getTime()  -visit.getCheckinStarted().getTime()) / 60000;
-			
-			// Validate Minimum time for visit  // TODO change name for getVisitMin
-			if( time < device.getVisitTimeThreshold()) return false;
-
-			// Validate Maximum time for visit  
-			if( time > device.getVisitMaxThreshold()) return false;
-
-			// Employees doesn't generate visits
-			if( isEmployee ) return false;
-			
-			// Total segments percentage check 
-			if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
-					&& null != visit.getTotalSegments() && visit.getTotalSegments() > 0 &&
-					visit.getInRangeSegments() * 100 / visit.getTotalSegments() <
-					VISIT_PERCENTAGE) return false; // TODO param
-			
-			visit.setDuration(time);
-			
-			t = Integer.valueOf(tf2.format(visit.getCheckinStarted()));
-			cal.setTime(visit.getCheckinStarted());
-		} else {
-			long time = System.currentTimeMillis();
-			t = Integer.valueOf(tf2.format(time));
-			cal.setTimeInMillis(time);
-		}
-		
-		// Validate Monitor Hour & days  
-		
-		tf2.setTimeZone(tz);
-		int ts = 0;
-		int te = 0;
-		switch(cal.get(Calendar.DAY_OF_WEEK)) {
-		case Calendar.SUNDAY :
-			if(!device.getVisitsOnSun()) return false;
-			ts = Integer.valueOf(device.getVisitStartSun().substring(0,2)
-					+device.getVisitStartSun().substring(3));
-			te = Integer.valueOf(device.getVisitEndSun().substring(0, 2)
-					+device.getVisitEndSun().substring(3));
-			break;
-		case Calendar.MONDAY :
-			if(!device.getVisitsOnMon()) return false;
-			ts = Integer.valueOf(device.getVisitStartMon().substring(0, 2)
-					+device.getVisitStartMon().substring(3));
-			te = Integer.valueOf(device.getVisitEndMon().substring(0, 2)
-					+device.getVisitEndMon().substring(3));
-			break;
-		case Calendar.TUESDAY :
-			if(!device.getVisitsOnTue()) return false;
-			ts = Integer.valueOf(device.getVisitStartTue().substring(0, 2)
-					+device.getVisitStartTue().substring(3));
-			te = Integer.valueOf(device.getVisitEndTue().substring(0, 2)
-					+device.getVisitEndTue().substring(3));
-			break;
-		case Calendar.WEDNESDAY :
-			if(!device.getVisitsOnWed()) return false;
-			ts = Integer.valueOf(device.getVisitStartWed().substring(0, 2)
-					+device.getVisitStartWed().substring(3));
-			te = Integer.valueOf(device.getVisitEndWed().substring(0, 2)
-					+device.getVisitEndWed().substring(3));
-			break;
-		case Calendar.THURSDAY :
-			if(!device.getVisitsOnThu()) return false;
-			ts = Integer.valueOf(device.getVisitStartThu().substring(0, 2)
-					+device.getVisitStartThu().substring(3));
-			te = Integer.valueOf(device.getVisitEndThu().substring(0, 2)
-					+device.getVisitEndThu().substring(3));
-			break;
-		case Calendar.FRIDAY :
-			if(!device.getVisitsOnFri()) return false;
-			ts = Integer.valueOf(device.getVisitStartFri().substring(0, 2)
-					+device.getVisitStartFri().substring(3));
-			te = Integer.valueOf(device.getVisitEndFri().substring(0, 2)
-					+device.getVisitEndFri().substring(3));
-			break;
-		case Calendar.SATURDAY :
-			if(!device.getVisitsOnSat()) return false;
-			ts = Integer.valueOf(device.getVisitStartSat().substring(0, 2)
-					+device.getVisitStartSat().substring(3));
-			te = Integer.valueOf(device.getVisitEndSat().substring(0, 2)
-					+device.getVisitEndSat().substring(3));
-			break;
-		} if(te == 0) te = 2400;
-
-		if( ts > te ) te += 2400;
-		return te > t && t >= ts;
-	}
-
-
 	/**
 	 * Checks if a peasant is valid according the device parameters
 	 * 

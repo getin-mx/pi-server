@@ -18,8 +18,8 @@ public class APDeviceSignal implements ModelKey, Serializable, Identificable {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final Integer REPORT_STATUS_REPORTED = 1;
-	public static final Integer REPORT_STATUS_NOT_REPORTED = 0;
+	public static final byte REPORT_STATUS_REPORTED = 1;
+	public static final byte REPORT_STATUS_NOT_REPORTED = 0;
 
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
@@ -27,16 +27,15 @@ public class APDeviceSignal implements ModelKey, Serializable, Identificable {
 
 	private String hostname;
 	private String mac;
-	private Integer rssi;
-	private Integer distance;
+	private short rssi;
+	private int distance;
 	private String deviceUUID;
-	private Boolean insideStore;
+	private boolean insideStore;
 	
 	private Date creationDateTime;
 	private Date lastUpdate;
 
 	public APDeviceSignal() {
-		super();
 		this.creationDateTime = new Date();
 	}
 	
@@ -83,28 +82,28 @@ public class APDeviceSignal implements ModelKey, Serializable, Identificable {
 	/**
 	 * @return the rssi
 	 */
-	public Integer getRssi() {
+	public short getRssi() {
 		return rssi;
 	}
 
 	/**
 	 * @param rssi the rssi to set
 	 */
-	public void setRssi(Integer rssi) {
+	public void setRssi(short rssi) {
 		this.rssi = rssi;
 	}
 
 	/**
 	 * @return the distance
 	 */
-	public Integer getDistance() {
+	public int getDistance() {
 		return distance;
 	}
 
 	/**
 	 * @param distance the distance to set
 	 */
-	public void setDistance(Integer distance) {
+	public void setDistance(int distance) {
 		this.distance = distance;
 	}
 

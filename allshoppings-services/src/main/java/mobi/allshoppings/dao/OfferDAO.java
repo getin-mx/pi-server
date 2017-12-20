@@ -15,16 +15,20 @@ import mobi.allshoppings.tx.PersistenceProvider;
 
 public interface OfferDAO extends GenericDAO<Offer> {
 
-	List<Offer> getUsingStatusAndRangeInCache(List<Integer> status, Range range, User user, int returnType) throws ASException;
-	List<Offer> getUsingKindAndRangeInCache(String entityId, Integer entityKind, Range range, User user, int returnType) throws ASException;
+	List<Offer> getUsingStatusAndRangeInCache(List<Integer> status, Range range, User user,
+			int returnType) throws ASException;
+	List<Offer> getUsingKindAndRangeInCache(String entityId, byte entityKind, Range range, User user,
+			int returnType) throws ASException;
 
 	List<Offer> getActiveUsingBrandAndRange(String brandId, Range range) throws ASException;
 	List<Offer> getActiveUsingShoppingAndRange(String shoppingId, Range range) throws ASException;
 
 	List<Offer> getByViewLocationAndDate(ViewLocation vl, Date queryDate, String order) throws ASException;
 	List<Offer> getByViewLocationAndDate(ViewLocation vl, Date queryDate, String order, boolean detachable) throws ASException;
-	List<Offer> getByViewLocationAndDate(PersistenceProvider pp, ViewLocation vl, Date queryDate, String order) throws ASException;
-	List<Offer> getByViewLocationAndDate(PersistenceProvider pp, ViewLocation vl, Date queryDate, String order, boolean detachable) throws ASException;
+	List<Offer> getByViewLocationAndDate(PersistenceProvider pp, ViewLocation vl, Date queryDate,
+			String order) throws ASException;
+	List<Offer> getByViewLocationAndDate(PersistenceProvider pp, ViewLocation vl, Date queryDate,
+			String order, boolean detachable) throws ASException;
 
 	List<Offer> getToExpire(Range range) throws ASException;
 	long countToExpire() throws ASException;

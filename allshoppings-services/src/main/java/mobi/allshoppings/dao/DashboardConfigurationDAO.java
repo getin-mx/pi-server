@@ -8,7 +8,8 @@ import mobi.allshoppings.model.DashboardConfiguration;
 public interface DashboardConfigurationDAO extends GenericDAO<DashboardConfiguration> {
 
 	Key createKey(DashboardConfiguration seed) throws ASException;
-	String getIdentifierUsingEntityIdAndEntityKind(String entityId, Integer entityKind) throws ASException;
-	DashboardConfiguration getUsingEntityIdAndEntityKind(String entityId, Integer entityKind, boolean detachable) throws ASException;
+	String getIdentifierUsingEntityIdAndEntityKind(String entityId, byte entityKind) throws ASException;
+	DashboardConfiguration getUsingEntityIdAndEntityKind(String entityId, byte entityKind,
+			boolean detachable) throws ASException;
 	
 }

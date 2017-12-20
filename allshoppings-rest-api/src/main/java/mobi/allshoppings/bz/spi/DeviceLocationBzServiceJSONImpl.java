@@ -338,7 +338,8 @@ implements DeviceLocationBzService {
 						Integer presition = systemConfiguration.getDefaultGeoEntityPresition();
 
 						List<GeoEntity> geos = CollectionFactory.createList();
-						geos.addAll(geoDao.getByProximity(p, EntityKind.KIND_SHOPPING, presition, true, false, true));
+						geos.addAll(geoDao.getByProximity(p, EntityKind.KIND_SHOPPING, presition,
+								true, false, true));
 						geos.addAll(geoDao.getByProximity(p, EntityKind.KIND_STORE, presition, true, true, true));
 						List<LocationAwareAdapter> adaptedGeos = CollectionFactory.createList();
 						for( GeoEntity o : geos ) {
@@ -363,9 +364,12 @@ implements DeviceLocationBzService {
 							spot.setIdentifier(s.getIdentifier());
 							spot.setLat(s.getAddress().getLatitude());
 							spot.setLon(s.getAddress().getLongitude());
-							spot.setDistance(s.getFenceSize() != null ? s.getFenceSize() : systemConfiguration.getDefaultFenceSize());
-							spot.setCheckinDistance(s.getCheckinAreaSize() != null ? s.getCheckinAreaSize() : systemConfiguration.getDefaultCheckinAreaSize());
-							spot.setPointDistance(geocoder.calculateDistance(deviceLocation.getLat(), deviceLocation.getLon(), spot.getLat(), spot.getLon()));
+							spot.setDistance(s.getFenceSize() != 0 ? s.getFenceSize() :
+								systemConfiguration.getDefaultFenceSize());
+							spot.setCheckinDistance(s.getCheckinAreaSize() != 0 ? s.getCheckinAreaSize() :
+								systemConfiguration.getDefaultCheckinAreaSize());
+							spot.setPointDistance(geocoder.calculateDistance(deviceLocation.getLat(),
+									deviceLocation.getLon(), spot.getLat(), spot.getLon()));
 							spot.setEntityKind(EntityKind.KIND_SHOPPING);
 							adapter.getNearSpots().add(spot);
 						}
@@ -375,9 +379,12 @@ implements DeviceLocationBzService {
 							spot.setIdentifier(s.getIdentifier());
 							spot.setLat(s.getAddress().getLatitude());
 							spot.setLon(s.getAddress().getLongitude());
-							spot.setDistance(s.getFenceSize() != null ? s.getFenceSize() : systemConfiguration.getDefaultFenceSize());
-							spot.setCheckinDistance(s.getCheckinAreaSize() != null ? s.getCheckinAreaSize() : systemConfiguration.getDefaultCheckinAreaSize());
-							spot.setPointDistance(geocoder.calculateDistance(deviceLocation.getLat(), deviceLocation.getLon(), spot.getLat(), spot.getLon()));
+							spot.setDistance(s.getFenceSize() != null ? s.getFenceSize() :
+								systemConfiguration.getDefaultFenceSize());
+							spot.setCheckinDistance(s.getCheckinAreaSize() != 0 ? s.getCheckinAreaSize() :
+								systemConfiguration.getDefaultCheckinAreaSize());
+							spot.setPointDistance(geocoder.calculateDistance(deviceLocation.getLat(),
+									deviceLocation.getLon(), spot.getLat(), spot.getLon()));
 							spot.setEntityKind(EntityKind.KIND_STORE);
 							adapter.getNearSpots().add(spot);
 						}
@@ -478,7 +485,7 @@ implements DeviceLocationBzService {
 					obj.setLat(jsonObj.getDouble("lat"));
 					obj.setLon(jsonObj.getDouble("lon"));
 					obj.setDistance(jsonObj.getInt("distance"));
-					obj.setEntityKind(jsonObj.getInt("kind"));
+					obj.setEntityKind((byte) jsonObj.getInt("kind"));
 					try {
 						obj.setCheckinDistance(jsonObj.getInt("checkinDistance"));
 					} catch( Exception e ) {}
@@ -527,8 +534,10 @@ implements DeviceLocationBzService {
 				if( distance < 40 ) {
 					log.log(Level.WARNING, "device " + deviceId + " is beign locked!");
 					// FIXME: Add subEntityId and subEntityKind
-					lockHelper.deviceMessageLock(deviceId, DeviceMessageLock.SCOPE_GEO, null, new Date(), systemConfiguration.getDefaultProximityLock(), null, null);
-					lockHelper.deviceMessageLock(deviceId, DeviceMessageLock.SCOPE_GLOBAL, null, new Date(), systemConfiguration.getDefaultProximityLock(), null, null);
+					lockHelper.deviceMessageLock(deviceId, DeviceMessageLock.SCOPE_GEO, null, new Date(),
+							systemConfiguration.getDefaultProximityLock(), null, 0);
+					lockHelper.deviceMessageLock(deviceId, DeviceMessageLock.SCOPE_GLOBAL, null, new Date(),
+							systemConfiguration.getDefaultProximityLock(), null, 0);
 				}
 			}
 		}

@@ -68,9 +68,9 @@ public class HotspotServiceNullImpl implements HotspotService {
 		if( nearest != null ) {
 			if( nearest.getPointDistance() <= nearest.getCheckinDistance() ) {
 				try {
-					Checkin checkin = checkinDao.getUnfinishedCheckinByEntityAndKindAndType(adapter.getDeviceUUID(),
-							nearest.getIdentifier(), nearest.getEntityKind(), Checkin.CHECKIN_AUTO,
-							systemConfiguration.getCheckinCloseLimitMillis());
+					Checkin checkin = checkinDao.getUnfinishedCheckinByEntityAndKindAndType(
+							adapter.getDeviceUUID(), nearest.getIdentifier(), nearest.getEntityKind(),
+							Checkin.CHECKIN_AUTO, systemConfiguration.getCheckinCloseLimitMillis());
 
 					// If Checkin is Finished, and it meets the closeLimitMillis criteria,
 					// It means that I have to open it
@@ -78,7 +78,7 @@ public class HotspotServiceNullImpl implements HotspotService {
 						reopenClosedCheckin(checkin);
 					}
 
-					if( (new Date().getTime() - checkin.getCheckinStarted().getTime()) > FIVE_HOURS ) {
+					if( (System.currentTimeMillis() - checkin.getCheckinStarted().getTime()) > FIVE_HOURS ) {
 						throw ASExceptionHelper.forbiddenException();
 					}
 
@@ -87,7 +87,8 @@ public class HotspotServiceNullImpl implements HotspotService {
 						throw e;
 					} else {
 						// Registers the checkin
-						final Checkin checkin = buildCheckin(adapter.getUserId(), adapter.getDeviceUUID(), nearest.getIdentifier(), nearest.getEntityKind(), Checkin.CHECKIN_AUTO);
+						final Checkin checkin = buildCheckin(adapter.getUserId(), adapter.getDeviceUUID(),
+								nearest.getIdentifier(), nearest.getEntityKind(), Checkin.CHECKIN_AUTO);
 						txFactory.createWithTransactionableTask(new BaseTransactionableTask() {
 							@Override
 							public void run(PersistenceProvider pp) throws ASException {
@@ -100,7 +101,8 @@ public class HotspotServiceNullImpl implements HotspotService {
 				// If not... will try to close any pre-existent checkin
 			} else {
 				try {
-					final Checkin checkin = checkinDao.getUnfinishedCheckinByEntityAndKindAndType(adapter.getDeviceUUID(), null, null, null);
+					final Checkin checkin = checkinDao.getUnfinishedCheckinByEntityAndKindAndType(
+							adapter.getDeviceUUID(), null, (byte) -1, (byte) -1);
 					checkin.setCheckinFinished(new Date());
 
 					// If checkin is too short... it means this is possibly a fake one...
@@ -158,7 +160,8 @@ public class HotspotServiceNullImpl implements HotspotService {
 	 * @return A fully formed Checkin instance
 	 * @throws ASException
 	 */
-	public Checkin buildCheckin(String userId, String deviceUUID, String entityId, Integer entityKind, Integer checkinType) throws ASException {
+	public Checkin buildCheckin(String userId, String deviceUUID, String entityId, byte entityKind,
+			byte checkinType) throws ASException {
 
 		Checkin checkin = new Checkin();
 		checkin.setCheckinStarted(new Date());

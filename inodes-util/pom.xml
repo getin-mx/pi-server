@@ -29,8 +29,8 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
-			<version>1.4.5</version>
+			<version>1.4.7</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -49,14 +49,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.14</version>
-		</dependency>
-		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
-			<version>1.2.2</version>
+			<version>1.4.10</version>
 		</dependency>
 		<dependency>
 			<groupId>xpp3</groupId>
@@ -64,14 +59,14 @@
 			<version>1.1.4c</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-			<version>3.2.1</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-all</artifactId>
-			<version>5.7.0</version>
+			<version>5.15.1</version>
 		</dependency>
 	</dependencies>
 

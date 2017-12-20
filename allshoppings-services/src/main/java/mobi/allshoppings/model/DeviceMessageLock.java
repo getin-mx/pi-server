@@ -17,10 +17,10 @@ import mobi.allshoppings.model.interfaces.Replicable;
 @PersistenceCapable(detachable="true")
 public class DeviceMessageLock implements ModelKey, Serializable, Identificable, Replicable {
 
-	public static final Integer SCOPE_PROMOTIONS = 0; 
-	public static final Integer SCOPE_GLOBAL = 1;
-	public static final Integer SCOPE_THIS_PROMOTION = 2; 
-	public static final Integer SCOPE_GEO = 3;
+	public static final byte SCOPE_PROMOTIONS = 0; 
+	public static final byte SCOPE_GLOBAL = 1;
+	public static final byte SCOPE_THIS_PROMOTION = 2; 
+	public static final byte SCOPE_GEO = 3;
 	
 	private static final long serialVersionUID = 1L;
 
@@ -31,10 +31,10 @@ public class DeviceMessageLock implements ModelKey, Serializable, Identificable,
 	private String deviceId;
 	private String userId;
 	private String entityId;
-	private Integer entityKind;
+	private byte entityKind;
 	private String subEntityId;
-	private Integer subEntityKind;
-	private Integer scope;
+	private int subEntityKind;
+	private byte scope;
 	private String campaignActivityId; 
 	private Date fromDate;
 	private Date toDate;
@@ -173,28 +173,28 @@ public class DeviceMessageLock implements ModelKey, Serializable, Identificable,
 	/**
 	 * @return the entityKind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 
 	/**
 	 * @return the scope
 	 */
-	public Integer getScope() {
+	public byte getScope() {
 		return scope;
 	}
 
 	/**
 	 * @param scope the scope to set
 	 */
-	public void setScope(Integer scope) {
+	public void setScope(byte scope) {
 		this.scope = scope;
 	}
 
@@ -255,11 +255,10 @@ public class DeviceMessageLock implements ModelKey, Serializable, Identificable,
 				+ ((deviceId == null) ? 0 : deviceId.hashCode());
 		result = prime * result
 				+ ((entityId == null) ? 0 : entityId.hashCode());
-		result = prime * result
-				+ ((entityKind == null) ? 0 : entityKind.hashCode());
+		result = prime * result + entityKind;
 		result = prime * result
 				+ ((fromDate == null) ? 0 : fromDate.hashCode());
-		result = prime * result + ((scope == null) ? 0 : scope.hashCode());
+		result = prime * result + scope;
 		return result;
 	}
 
@@ -290,21 +289,12 @@ public class DeviceMessageLock implements ModelKey, Serializable, Identificable,
 				return false;
 		} else if (!entityId.equals(other.entityId))
 			return false;
-		if (entityKind == null) {
-			if (other.entityKind != null)
-				return false;
-		} else if (!entityKind.equals(other.entityKind))
-			return false;
+		if (entityKind != other.entityKind) return false;
 		if (fromDate == null) {
 			if (other.fromDate != null)
 				return false;
-		} else if (!fromDate.equals(other.fromDate))
-			return false;
-		if (scope == null) {
-			if (other.scope != null)
-				return false;
-		} else if (!scope.equals(other.scope))
-			return false;
+		} else if (!fromDate.equals(other.fromDate)) return false;
+		if (scope != other.scope) return false;
 		return true;
 	}
 

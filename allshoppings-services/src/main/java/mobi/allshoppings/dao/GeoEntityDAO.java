@@ -14,11 +14,12 @@ import mobi.allshoppings.tx.PersistenceProvider;
 public interface GeoEntityDAO extends GenericDAO<GeoEntity> {
 
 	Key createKey() throws ASException;
-	List<GeoEntity> getUsingEntityAndKind(String entityId, Integer entityKind) throws ASException;
-	List<GeoEntity> getUsingEntityAndKind(String entityId, Integer entityKind, boolean detachable) throws ASException;
-	List<GeoEntity> getUsingEntityAndKind(PersistenceProvider pp, String entityId, Integer entityKind, boolean detachable) throws ASException;
-	GeoEntity getUniqueUsingEntityAndKind(String entityId, Integer entityKind) throws ASException;
-	List<GeoEntity> getByProximity(GeoPoint geo, Integer entityKind, Integer presition, boolean includeAdjacents, boolean independentOnly, boolean detachable) throws ASException;
+	List<GeoEntity> getUsingEntityAndKind(String entityId, byte entityKind) throws ASException;
+	List<GeoEntity> getUsingEntityAndKind(String entityId, byte entityKind, boolean detachable) throws ASException;
+	List<GeoEntity> getUsingEntityAndKind(PersistenceProvider pp, String entityId, byte entityKind, boolean detachable) throws ASException;
+	GeoEntity getUniqueUsingEntityAndKind(String entityId, byte entityKind) throws ASException;
+	List<GeoEntity> getByProximity(GeoPoint geo, byte entityKind, Integer presition,
+			boolean includeAdjacents, boolean independentOnly, boolean detachable) throws ASException;
 
 	Shopping getNearestShopping(GeoPoint geo) throws ASException;
 	Shopping getNearestShopping(GeoPoint geo, boolean detachable) throws ASException;

@@ -17,7 +17,8 @@ public interface PushMessageHelper {
 	void sendBulkMessage(String appId, String title, String text, String action ) throws ASException;
 	void sendMessage(String appId, User user, String title, String text, String action) throws ASException;
 	void sendMessage(User user, String title, String message, String action, DeviceInfo device ) throws ASException;
-	void sendMessage(User user, String title, String text, String action, List<DeviceInfo> devices, boolean doEncode) throws ASException;
+	void sendMessage(User user, String title, String text, String action, List<DeviceInfo> devices,
+			boolean doEncode) throws ASException;
 	void sendMessage(String title, String message, String action, DeviceInfo device ) throws ASException;
 	
 	void requestLocationByDeviceList(List<DeviceInfo> devices) throws ASException;
@@ -33,8 +34,10 @@ public interface PushMessageHelper {
 	
 	// Utilities
 	String buildPushMessageReplyAddress(PushMessageLog log) throws ASException;
-	PushMessageLog buildPushMessageLog(DeviceInfo device, User user, Integer messageType, Key owner, JSONObject extras) throws ASException;
+	PushMessageLog buildPushMessageLog(DeviceInfo device, User user, int messageType, Key owner,
+			JSONObject extras) throws ASException;
 	
 	// Deprecated
-	void sendNotification(User user, String title, String avatarId, String message, String action, DeviceInfo device, String entityId, Integer entityKind) throws ASException;
+	void sendNotification(User user, String title, String avatarId, String message, String action,
+			DeviceInfo device, String entityId, byte entityKind) throws ASException;
 }

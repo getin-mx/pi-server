@@ -62,9 +62,7 @@ implements DashboardBrandTableDataBzService {
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
-			@SuppressWarnings("unused")
-			String subentityId = obtainStringValue("subentityId", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
 			Boolean onlyExternalIds = obtainBooleanValue("onlyExternalIds", false);
@@ -116,7 +114,7 @@ implements DashboardBrandTableDataBzService {
 				// peasents
 				list = dao.getUsingFilters(entityId, entityKind, Arrays.asList(new String[] {"apd_visitor"}),
 						"visitor_total_peasents", null, storeId, null, fromStringDate, toStringDate, null,
-						null, null, null, null, null, null, null);
+						null, (byte) -1, (byte) -1, null, null, null, null);
 				value = 0D;
 				for(DashboardIndicatorData obj : list)
 					value += obj.getDoubleValue();
@@ -127,10 +125,9 @@ implements DashboardBrandTableDataBzService {
 				totalsData.put("peasents", totalValue);
 				
 				// visits
-				list = dao.getUsingFilters(entityId,
-						entityKind, Arrays.asList(new String[] {"apd_visitor"}), "visitor_total_visits", null,
-						storeId, null, fromStringDate, toStringDate,
-						null, null, null, null, null, null, null, null);
+				list = dao.getUsingFilters(entityId, entityKind, Arrays.asList(new String[] {"apd_visitor"}),
+						"visitor_total_visits", null, storeId, null, fromStringDate, toStringDate, null, null,
+						(byte) -1, (byte) -1, null, null, null, null);
 				value = 0D;
 				Map<String, Double> datesCache = CollectionFactory.createMap();
 				Date d1 = sdf2.parse(fromStringDate);
@@ -186,7 +183,7 @@ implements DashboardBrandTableDataBzService {
 				// tickets
 				list = dao.getUsingFilters(entityId, entityKind, Arrays.asList(new String[] {"apd_visitor"}),
 						"visitor_total_tickets", null, storeId, null, fromStringDate, toStringDate, null,
-						null, null, null, null, null, null, null);
+						null, (byte) -1, (byte) -1, null, null, null, null);
 				value = 0D;
 				for(DashboardIndicatorData obj : list)
 					value += obj.getDoubleValue();
@@ -199,7 +196,7 @@ implements DashboardBrandTableDataBzService {
 				// revenue
 				list = dao.getUsingFilters(entityId, entityKind, Arrays.asList(new String[] {"apd_visitor"}),
 						"visitor_total_revenue", null, storeId, null, fromStringDate, toStringDate,
-						null, null, null, null, null, null, null, null);
+						null, null, (byte) -1, (byte) -1, null, null, null, null);
 				value = 0D;
 				for(DashboardIndicatorData obj : list)
 					value += obj.getDoubleValue();
@@ -224,7 +221,7 @@ implements DashboardBrandTableDataBzService {
 				// permanence
 				list = dao.getUsingFilters(entityId, entityKind, Arrays.asList(new String[] {"apd_permanence"}),
 						"permanence_hourly_visits", null, storeId, null, fromStringDate, toStringDate, null,
-						null, null, null, null, null, null, null);
+						null, (byte) -1, (byte) -1, null, null, null, null);
 				value = 0D;
 				count = 0;
 				for(DashboardIndicatorData obj : list) {

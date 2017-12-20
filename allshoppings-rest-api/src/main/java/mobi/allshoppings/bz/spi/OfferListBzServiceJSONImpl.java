@@ -60,7 +60,7 @@ public class OfferListBzServiceJSONImpl extends OfferRestServerResource implemen
 			// validate authToken
 			User user = this.getUserFromToken();
 			boolean forDay = this.obtainBooleanValue("forDay", false);
-			Integer entityKind = EntityKind.resolveByName(this.obtainStringValue(ENTITY_KIND, null));
+			byte entityKind = EntityKind.resolveByName(this.obtainStringValue(ENTITY_KIND, null));
 			String entityId = this.obtainStringValue(ENTITY_IDENTIFIER, null); 
 
 			// get level, if not defined use default value
@@ -80,9 +80,9 @@ public class OfferListBzServiceJSONImpl extends OfferRestServerResource implemen
 			// retrieve all offers
 			long millisPre = new Date().getTime();
 			if( StringUtils.hasText(entityId)) {
-				offers = new GenericAdapterImpl<OfferAdapter>().adaptList(dao.getUsingKindAndRangeInCache(entityId, 
-						entityKind, range, user,
-						UserEntityCache.TYPE_GEOPRIORITY));
+				offers = new GenericAdapterImpl<OfferAdapter>().adaptList(
+						dao.getUsingKindAndRangeInCache(entityId, entityKind, range, user,
+								UserEntityCache.TYPE_GEOPRIORITY));
 			} else {
 				if( q != null && !q.trim().equals("")) {
 					offers = new GenericAdapterImpl<OfferAdapter>().adaptList(
@@ -138,7 +138,7 @@ public class OfferListBzServiceJSONImpl extends OfferRestServerResource implemen
 		return returnValue.toString();
     }
 
-    public String retrieveByEntityAndKind(String entityId, Integer entityKind) {
+    public String retrieveByEntityAndKind(String entityId, byte entityKind) {
     	long start = markStart();
 		JSONObject returnValue = null;
 		try {

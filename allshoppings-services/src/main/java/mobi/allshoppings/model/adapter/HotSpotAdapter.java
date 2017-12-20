@@ -3,12 +3,12 @@ package mobi.allshoppings.model.adapter;
 public class HotSpotAdapter {
 
 	private String identifier;
-	private Integer entityKind;
+	private byte entityKind;
 	private Double lat;
 	private Double lon;
-	private Integer distance;
-	private Integer checkinDistance;
-	private Integer pointDistance;
+	private int distance;
+	private int checkinDistance;
+	private int pointDistance;
 	
 	/**
 	 * @return the lat
@@ -97,14 +97,14 @@ public class HotSpotAdapter {
 	/**
 	 * @return the kind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param kind the kind to set
 	 */
-	public void setEntityKind(Integer kind) {
+	public void setEntityKind(byte kind) {
 		this.entityKind = kind;
 	}
 
@@ -115,8 +115,7 @@ public class HotSpotAdapter {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((distance == null) ? 0 : distance.hashCode());
+		result = prime * result + distance;
 		result = prime * result + ((lat == null) ? 0 : lat.hashCode());
 		result = prime * result + ((lon == null) ? 0 : lon.hashCode());
 		return result;
@@ -134,10 +133,7 @@ public class HotSpotAdapter {
 		if (getClass() != obj.getClass())
 			return false;
 		HotSpotAdapter other = (HotSpotAdapter) obj;
-		if (distance == null) {
-			if (other.distance != null)
-				return false;
-		} else if (!distance.equals(other.distance))
+		if (distance != other.distance)
 			return false;
 		if (lat == null) {
 			if (other.lat != null)

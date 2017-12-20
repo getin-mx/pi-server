@@ -53,7 +53,7 @@ implements DashboardFunnelDataBzService {
 			// obtainUserIdentifier();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String elementId = obtainStringValue("elementId", null);
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
@@ -63,8 +63,8 @@ implements DashboardFunnelDataBzService {
 			String toStringDate = obtainStringValue("toStringDate", null);
 			String movieId = obtainStringValue("movieId", null);
 			String voucherType = obtainStringValue("voucherType", null);
-			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
-			Integer timeZone = obtainIntegerValue("timezone", null);
+			byte dayOfWeek = obtainByteValue("dayOfWeek", (byte) -1);
+			byte timeZone = obtainByteValue("timezone", (byte) -1);
 			String subIdOrder = obtainStringValue("subIdOrder", null);
 
 			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,

@@ -228,7 +228,8 @@ public class DeviceMessageLockDAOJDOImpl extends GenericDAOJDO<DeviceMessageLock
 	}
 
 	@Override
-	public List<DeviceMessageLock> getUsingDeviceAndScopeAndCampaign(String deviceUUID, Integer scope, String campaignActivityId) throws ASException {
+	public List<DeviceMessageLock> getUsingDeviceAndScopeAndCampaign(String deviceUUID, byte scope,
+			String campaignActivityId) throws ASException {
 
 		List<DeviceMessageLock> ret = CollectionFactory.createList();
 		
@@ -249,10 +250,10 @@ public class DeviceMessageLockDAOJDOImpl extends GenericDAOJDO<DeviceMessageLock
 			}
 
 			// Scope Parameter
-			if( scope != null ) {
+			if( scope != -1 ) {
 				declaredParams.add("Integer scopeParam");
 				filters.add("scope == scopeParam");
-				parameters.put("scopeParam", scope);
+				parameters.put("scopeParam", new Integer(scope));
 			}
 
 			// Campaign Activity Parameter

@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections4.Transformer;
 
 public class CollectionUtils {
 
@@ -20,7 +20,7 @@ public class CollectionUtils {
 	@SuppressWarnings({"rawtypes","unchecked"})
 	public static Collection<?> transform (Collection<?> original, Transformer transformer) {
 		Collection<?> transformedCollection = new ArrayList(original);
-		org.apache.commons.collections.CollectionUtils.transform(transformedCollection, transformer);
+		org.apache.commons.collections4.CollectionUtils.transform(transformedCollection, transformer);
 		return transformedCollection;
 	}
 

@@ -26,10 +26,14 @@ public class DumpHistory extends AbstractCLI {
 		else parser = base;
 		parser.accepts( "fromDate", "Date From" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "toDate", "Date To" ).withRequiredArg().ofType( String.class );
-		parser.accepts( "entity", "Entity to dump (for example, DeviceLocationHistory)").withRequiredArg().ofType( String.class );
-		parser.accepts( "collection", "DB Collection to dump (for example, DeviceLocationHistory)").withRequiredArg().ofType( String.class );
-		parser.accepts( "deleteAfterDump", "Do I have to delete the entity from the DB after dump?").withRequiredArg().ofType( Boolean.class );
-		parser.accepts( "renameCollection", "Do I have to rename the collection before run?").withRequiredArg().ofType( Boolean.class );
+		parser.accepts( "entity", "Entity to dump (for example, DeviceLocationHistory)")
+				.withRequiredArg().ofType( String.class );
+		parser.accepts( "collection", "DB Collection to dump (for example, DeviceLocationHistory)")
+				.withRequiredArg().ofType( String.class );
+		parser.accepts( "deleteAfterDump", "Do I have to delete the entity from the DB after dump?")
+				.withRequiredArg().ofType( Boolean.class );
+		parser.accepts( "renameCollection", "Do I have to rename the collection before run?")
+				.withRequiredArg().ofType( Boolean.class );
 		return parser;
 	}
 
@@ -50,8 +54,8 @@ public class DumpHistory extends AbstractCLI {
 
 			String sEntity = null;
 			String sCollection = null;
-			Boolean deleteAfterDump = true;
-			Boolean renameCollection = false;
+			boolean deleteAfterDump = true;
+			boolean renameCollection = false;
 			
 			Class<ModelKey> entity = null;
 			
@@ -59,9 +63,10 @@ public class DumpHistory extends AbstractCLI {
 				if( options.has("help")) usage(parser);
 				if( options.has("fromDate")) sFromDate = (String)options.valueOf("fromDate");
 				if( options.has("toDate")) sToDate = (String)options.valueOf("toDate");
-				if( options.has("deleteAfterDump")) deleteAfterDump = (Boolean)options.valueOf("deleteAfterDump");
-				if( options.has("usePlugins")) deleteAfterDump = (Boolean)options.valueOf("usePlugins");
-				if( options.has("renameCollection")) renameCollection = (Boolean)options.valueOf("renameCollection");
+				if( options.has("deleteAfterDump")) deleteAfterDump = (boolean)options.valueOf("deleteAfterDump");
+				if( options.has("usePlugins")) deleteAfterDump = (boolean)options.valueOf("usePlugins");
+				if( options.has("renameCollection")) renameCollection =
+						(boolean)options.valueOf("renameCollection");
 				
 				if( options.has("entity")) sEntity = (String)options.valueOf("entity");
 				else usage(parser);
@@ -82,11 +87,9 @@ public class DumpHistory extends AbstractCLI {
 
 			log.log(Level.INFO, "Starting dump for entity " + entity.getName()
 					+ " from " + fromDate + " to " + toDate);
-			DumperHelper<ModelKey> dumper = new DumpFactory<ModelKey>()
-					.build(null, entity);
+			DumperHelper<ModelKey> dumper = new DumpFactory<ModelKey>().build(null, entity);
 			
-			dumper.dumpModelKey(sCollection, fromDate, toDate, deleteAfterDump,
-					renameCollection);
+			dumper.dumpModelKey(sCollection, fromDate, toDate, deleteAfterDump, renameCollection);
 			
 			dumper.dispose();
 			

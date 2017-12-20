@@ -109,12 +109,12 @@ public class APDeviceSignalBzServiceJSONImpl extends RestBaseServerResource impl
 				try {
 					aph = aphDao.getLastUsingHostnameAndMac(hostname, mac);
 				} catch( ASException e ) {}
-				if( aph != null && aph.getLastSeen().after(markDate)) {
+				if( aph != null && aph.getCreationDateTime().after(markDate)) {
 					done = true;
 					timeout = false;
 				} else {
 					Thread.sleep(1000);
-					long time = new Date().getTime() - markDate.getTime();
+					long time = System.currentTimeMillis() - markDate.getTime();
 					if( time > 60000 ) {
 						done = true;
 						timeout = true;

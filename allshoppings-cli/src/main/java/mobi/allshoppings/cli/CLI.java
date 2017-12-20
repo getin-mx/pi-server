@@ -33,7 +33,7 @@ public class CLI {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public static void main(String args[]) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		System.setProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager");
 		System.setProperty("log4j.configurationFile", FileLoader.getResource("log4j2.xml", FileLoader.PRECEDENCE_SYSTEMPATH).getFile());

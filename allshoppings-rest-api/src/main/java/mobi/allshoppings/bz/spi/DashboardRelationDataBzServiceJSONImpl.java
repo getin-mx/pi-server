@@ -55,7 +55,7 @@ implements DashboardRelationDataBzService {
 			// obtainUserIdentifier();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String elementId = obtainStringValue("elementId", null);
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
@@ -65,16 +65,15 @@ implements DashboardRelationDataBzService {
 			String toStringDate = obtainStringValue("toStringDate", null);
 			String movieId = obtainStringValue("movieId", null);
 			String voucherType = obtainStringValue("voucherType", null);
-			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
-			Integer timeZone = obtainIntegerValue("timezone", null);
+			byte dayOfWeek = obtainByteValue("dayOfWeek", (byte) -1);
+			byte timeZone = obtainByteValue("timezone", (byte) -1);
 
 			String factor1 = obtainStringValue("factor1", null);
 			String factor2 = obtainStringValue("factor2", null);
 			String number = obtainStringValue("number", null);
 			
-			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
-					entityKind, elementId, elementSubId, shoppingId,
-					subentityId, periodType, fromStringDate, toStringDate,
+			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId, entityKind, elementId,
+					elementSubId, shoppingId, subentityId, periodType, fromStringDate, toStringDate,
 					movieId, voucherType, dayOfWeek, timeZone, null, null, null, null);
 
 			// Creates the order list and alias map

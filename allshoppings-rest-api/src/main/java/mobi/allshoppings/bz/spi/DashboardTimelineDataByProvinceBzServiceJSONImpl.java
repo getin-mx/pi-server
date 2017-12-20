@@ -54,7 +54,7 @@ implements DashboardTimelineDataByProvinceBzService {
 			// obtainUserIdentifier();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String elementId = obtainStringValue("elementId", null);
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
@@ -64,8 +64,8 @@ implements DashboardTimelineDataByProvinceBzService {
 			String toStringDate = obtainStringValue("toStringDate", null);
 			String movieId = obtainStringValue("movieId", null);
 			String voucherType = obtainStringValue("voucherType", null);
-			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
-			Integer timezone = obtainIntegerValue("timezone", null);
+			byte dayOfWeek = obtainByteValue("dayOfWeek", (byte) -1);
+			byte timezone = obtainByteValue("timezone", (byte) -1);
 			String country = obtainStringValue("country", null);
 			String province = obtainStringValue("province", null);
 			String city = obtainStringValue("city", null);

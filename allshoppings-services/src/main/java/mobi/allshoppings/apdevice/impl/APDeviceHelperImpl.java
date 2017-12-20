@@ -70,6 +70,7 @@ import mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CollectionUtils;
 import mx.getin.Constants;
+import mx.getin.dao.APDCalibrationDAO;
 import mx.getin.dao.APDReportDAO;
 import mx.getin.model.APDReport;
 import mx.getin.model.Entity;
@@ -92,6 +93,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	private APDeviceDAO dao;
 	@Autowired
 	private APDReportDAO reportDao;
+	@Autowired
+	private APDCalibrationDAO calibrationDao;
 	@Autowired
 	private MailHelper mailHelper;
 	@Autowired
@@ -272,11 +275,13 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	}
 
 	@Override
-	public void updateDeviceData(String identifier, String description, boolean enableAlerts, List<String> alertMails)
-			throws ASException {
+	public void updateDeviceData(String identifier, String description, boolean enableAlerts,
+			List<String> alertMails) throws ASException {
 
 		APDevice device = null;
-		boolean forUpdate = true;
+		APDReport report = null;
+		boolean forUpdateDev = true;
+		boolean forUpdateRep = true;
 
 		try {
 			device = dao.get(identifier, true);
@@ -285,24 +290,35 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 				device = new APDevice();
 				device.setHostname(identifier);
 				device.setKey(dao.createKey(identifier));
-				forUpdate = false;
+				forUpdateDev = false;
+			}
+		} try {
+			report = reportDao.get(identifier, true);
+		} catch(ASException e) {
+			if(e.getErrorCode() == ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE) {
+				report = new APDReport();
+				report.setHostname(identifier);
+				report.setKey(reportDao.createKey(identifier));
+				forUpdateRep = false;
 			}
 		}
+		
 		device.setDescription(description);
-		device.setReportable(enableAlerts);
-		device.setStatus(StatusAware.STATUS_ENABLED);
+		report.setReportable(enableAlerts);
+		
+		report.setStatus(StatusAware.STATUS_ENABLED);
 		if (enableAlerts) {
-			if (device.getReportMailList() == null)
-				device.setReportMailList(new ArrayList<String>());
-			device.getReportMailList().clear();
-			device.getReportMailList().addAll(alertMails);
-			device.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
+			if (report.getReportMailList() == null)
+				report.setReportMailList(new ArrayList<String>());
+			report.getReportMailList().clear();
+			report.getReportMailList().addAll(alertMails);
+			report.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
 		}
 
-		if (forUpdate)
-			dao.update(device);
-		else
-			dao.create(device);
+		if (forUpdateDev) dao.update(device);
+		else dao.create(device);
+		if(forUpdateRep) reportDao.update(report);
+		else reportDao.create(report);
 
 	}
 
@@ -314,7 +330,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	 *            The device to sanitize the mail list for
 	 * @return A fully formal mail address list adapted to the device
 	 */
-	private List<String> sanitizeMailList(APDevice device) {
+	private List<String> sanitizeMailList(APDReport device) {
 
 		List<String> reportableUsers = CollectionFactory.createList();
 		for (String mail : device.getReportMailList()) {
@@ -337,8 +353,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 
 		Calendar cal = Calendar.getInstance();
 		
-		List<APDevice> list = dao.getAll(true);
-		for (APDevice device : list) {
+		List<APDReport> list = reportDao.getAll(true);
+		for (APDReport device : list) {
 
 			if(device.getLastRecordDate() == null) continue;
 			
@@ -349,8 +365,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 				// First, check is the device needs report
 				if (diff > Constants.APDEVICE_REPORT_INTERVAL_MINUTES) {
 					if (device.getReportable() == null || !device.getReportable()) continue;
-					if (!device.getStatus().equals(StatusAware.STATUS_ENABLED) || 
-							!device.getReportStatus().equals(APDevice.REPORT_STATUS_NOT_REPORTED)) continue;
+					if (device.getStatus() != StatusAware.STATUS_ENABLED || 
+							device.getReportStatus() != APDevice.REPORT_STATUS_NOT_REPORTED) continue;
 					if (!APDVisitHelperImpl.isVisitValid(null, device, false, cal, getTimeZone(device))) continue;
 					if (device.getStatus() == null) device.setStatus(StatusAware.STATUS_ENABLED);
 					if (device.getReportStatus() == null) device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
@@ -418,11 +434,11 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	 * @return TimeZone - The result timezone.
 	 * @since Mark III, december 2017
 	 */
-	private TimeZone getTimeZone(APDevice device) {
+	private TimeZone getTimeZone(APDReport device) {
 		try {
 			APDAssignation apdAssig = apdaDao.getOneUsingHostnameAndDate(device.getHostname(),
 					device.getLastRecordDate());
-			Integer entityKind = apdAssig.getEntityKind();
+			byte entityKind = apdAssig.getEntityKind();
 			while(true) {
 				switch(entityKind) {
 				case EntityKind.KIND_SHOPPING :

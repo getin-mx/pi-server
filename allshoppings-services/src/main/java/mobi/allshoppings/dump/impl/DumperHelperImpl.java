@@ -189,14 +189,12 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	 * @see mobi.allshoppings.dump.DumperHelper#dumpModelKey(String, Date, Date, boolean)
 	 */
 	@Override
-	public void dumpModelKey(String collection, Date fromDate, Date toDate,
-			boolean deleteAfterDump, boolean moveCollectionBeforeDump)
-					throws ASException {
+	public void dumpModelKey(String collection, Date fromDate, Date toDate, boolean deleteAfterDump,
+			boolean moveCollectionBeforeDump) throws ASException {
 
 		// Special dumper for model key
 		if(clazz.equals(APDVisit.class)) {
-			dumpAPDVisit(collection, fromDate, toDate, deleteAfterDump,
-					moveCollectionBeforeDump);
+			dumpAPDVisit(collection, fromDate, toDate, deleteAfterDump, moveCollectionBeforeDump);
 			return;
 		}
 		

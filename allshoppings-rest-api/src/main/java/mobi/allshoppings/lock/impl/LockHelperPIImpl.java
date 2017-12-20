@@ -49,8 +49,8 @@ public class LockHelperPIImpl implements LockHelper {
 	}
 	
 	@Override
-	public void deviceMessageLock(String deviceId, Integer scope, String campaignActivityId,
-			Date fromDate, long duration, String subEntityId, Integer subEntityKind) throws ASException {
+	public void deviceMessageLock(String deviceId, byte scope, String campaignActivityId,
+			Date fromDate, long duration, String subEntityId, int subEntityKind) throws ASException {
 
 		DeviceMessageLock lock = new DeviceMessageLock();
 
@@ -60,7 +60,7 @@ public class LockHelperPIImpl implements LockHelper {
 		lock.setCampaignActivityId(campaignActivityId);
 		
 		// checks for scope
-		if( scope == null ) {
+		if( scope == -1 ) {
 			scope = DeviceMessageLock.SCOPE_GLOBAL;
 		}
 		
@@ -115,7 +115,7 @@ public class LockHelperPIImpl implements LockHelper {
 	}
 
 	@Override
-	public void clearLocks(String deviceId, Integer scope, String campaignActivityId) throws ASException {
+	public void clearLocks(String deviceId, byte scope, String campaignActivityId) throws ASException {
 		List<DeviceMessageLock> list = dao.getUsingDeviceAndScopeAndCampaign(deviceId, scope, campaignActivityId);
 		for( DeviceMessageLock lock : list ) {
 			dao.delete(lock);
