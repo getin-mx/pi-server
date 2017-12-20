@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.logging.Level;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.json.JSONObject;
 
 import com.inodes.util.CollectionFactory;
@@ -95,15 +97,22 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 			Iterator<APDVisit> visits = dumper.iterator(fromDate, toDate);
 			
 			
+			DateTime first = new DateTime(fromDate);
+			LocalDate firstDate = first.toLocalDate();
+			
 			while (visits.hasNext()) {
+
+				
 				APDVisit visit = visits.next();
-				if(visit.getCheckinType() == 2) {
+				DateTime comparable = new DateTime(visit.getCheckinStarted());
+				LocalDate comparableLocal = comparable.toLocalDate();
+
+				if(visit.getCheckinType() == 2 && firstDate.equals(comparableLocal)) {
 					list.add(visit);	
 				}
 					
 			}
-
-			
+	
 					
 			long diff = System.currentTimeMillis() - millisPre;
 			
