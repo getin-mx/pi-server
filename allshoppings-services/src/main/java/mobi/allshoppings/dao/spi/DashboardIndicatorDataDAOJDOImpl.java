@@ -238,7 +238,13 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 	public void deleteUsingSubentityIdAndElementIdAndDate(String subentityId,
 			List<String> elementId, Date fromDate, Date toDate, TimeZone tz)
 			throws ASException {
+		deleteUsingSubentityIdAndElementIdAndDateAndTimezoneOffset(subentityId, elementId, fromDate, toDate, tz,
+				Byte.MAX_VALUE);
+	}
 
+	@Override
+	public void deleteUsingSubentityIdAndElementIdAndDateAndTimezoneOffset(String subentityId, List<String> elementId,
+			Date fromDate, Date toDate, TimeZone tz, byte didLocalTzOffset) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 
 		if( elementId != null && elementId.size() == 1 && elementId.get(0) == null ) {
@@ -276,6 +282,17 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 						new BasicDBObject("stringDate", new BasicDBObject("$lte", toDateString))
 						)));
 			}
+			if(Math.abs(didLocalTzOffset) < 15) {
+				String whichHours;
+				if(didLocalTzOffset < 0) {
+					didLocalTzOffset += 24;
+					whichHours = "$gte";
+				} else {
+					didLocalTzOffset -= 24;
+					whichHours = "$lte";
+				}
+				parts.add(new BasicDBObject("timeZone", new BasicDBObject(whichHours, didLocalTzOffset)));
+			}
 			BasicDBObject query = new BasicDBObject("$and", parts);
 
 			db.getCollection("DashboardIndicatorData").remove(query);
@@ -287,7 +304,6 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		} finally {
 			pm.close();
-		}		
-
+		}
 	}
 }
