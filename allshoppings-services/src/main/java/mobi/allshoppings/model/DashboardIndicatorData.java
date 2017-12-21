@@ -514,7 +514,6 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 	public int hashCode() {
 		final int prime = 7919;
 		int result = 1;
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result
 				+ ((elementId == null) ? 0 : elementId.hashCode());
 		result = prime * result
@@ -523,9 +522,6 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 				+ ((entityId == null) ? 0 : entityId.hashCode());
 		result = prime * result
 				+ ((entityKind == null) ? 0 : entityKind.hashCode());
-		result = prime * result + ((movieId == null) ? 0 : movieId.hashCode());
-		result = prime * result
-				+ ((periodType == null) ? 0 : periodType.hashCode());
 		result = prime * result
 				+ ((shoppingId == null) ? 0 : shoppingId.hashCode());
 		result = prime * result
@@ -534,10 +530,6 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 				+ ((subentityId == null) ? 0 : subentityId.hashCode());
 		result = prime * result
 				+ ((timeZone == null) ? 0 : timeZone.hashCode());
-		result = prime * result
-				+ ((voucherType == null) ? 0 : voucherType.hashCode());
-		result = prime * result
-				+ ((key == null) ? 0 : key.hashCode());
 		result = prime * result
 				+ ((screenName == null) ? 0 : screenName.hashCode());
 		result = prime * result
@@ -552,16 +544,6 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 				+ ((dayOfWeek == null) ? 0 : dayOfWeek.hashCode());
 		result = prime * result
 				+ ((timeZone == null) ? 0 : timeZone.hashCode());
-		result = prime * result
-				+ ((stringValue == null) ? 0 : stringValue.hashCode());
-		result = prime * result
-				+ ((doubleValue == null) ? 0 : doubleValue.hashCode());
-		result = prime * result
-				+ ((recordCount == null) ? 0 : recordCount.hashCode());
-		result = prime * result
-				+ ((creationDateTime == null) ? 0 : creationDateTime.hashCode());
-		result = prime * result
-				+ ((lastUpdate == null) ? 0 : lastUpdate.hashCode());
 		return result;
 	}
 
@@ -577,11 +559,6 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 		if (getClass() != obj.getClass())
 			return false;
 		DashboardIndicatorData other = (DashboardIndicatorData) obj;
-		if (date == null) {
-			if (other.date != null)
-				return false;
-		} else if (!date.equals(other.date))
-			return false;
 		if (elementId == null) {
 			if (other.elementId != null)
 				return false;
@@ -602,16 +579,6 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 				return false;
 		} else if (!entityKind.equals(other.entityKind))
 			return false;
-		if (movieId == null) {
-			if (other.movieId != null)
-				return false;
-		} else if (!movieId.equals(other.movieId))
-			return false;
-		if (periodType == null) {
-			if (other.periodType != null)
-				return false;
-		} else if (!periodType.equals(other.periodType))
-			return false;
 		if (shoppingId == null) {
 			if (other.shoppingId != null)
 				return false;
@@ -631,11 +598,6 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 			if (other.timeZone != null)
 				return false;
 		} else if (!timeZone.equals(other.timeZone))
-			return false;
-		if (voucherType == null) {
-			if (other.voucherType != null)
-				return false;
-		} else if (!voucherType.equals(other.voucherType))
 			return false;
 		return true;
 	}
