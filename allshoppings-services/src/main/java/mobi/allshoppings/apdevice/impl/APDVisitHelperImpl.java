@@ -1625,32 +1625,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		if( isEmployee ) visit.setCheckinType(APDVisit.CHECKIN_EMPLOYEE);
 		
-		WORK_CALENDAR.clear();
-		WORK_CALENDAR.setTime(visit.getCheckinStarted());
-		switch(WORK_CALENDAR.get(Calendar.DAY_OF_WEEK)) {
-		case Calendar.SUNDAY :
-			if(!device.getVisitsOnSun()) return false;
-			else break;
-		case Calendar.MONDAY :
-			if(!device.getVisitsOnMon()) return false;
-			else break;
-		case Calendar.TUESDAY :
-			if(!device.getVisitsOnTue()) return false;
-			else break;
-		case Calendar.WEDNESDAY :
-			if(!device.getVisitsOnWed()) return false;
-			else break;
-		case Calendar.THURSDAY :
-			if(!device.getVisitsOnThu()) return false;
-			else break;
-		case Calendar.FRIDAY :
-			if(!device.getVisitsOnFri()) return false;
-			else break;
-		case Calendar.SATURDAY :
-			if(!device.getVisitsOnSat()) return false;
-			else break;
-		}
-		
 		Long time = (visit.getCheckinFinished().getTime()
 				-visit.getCheckinStarted().getTime()) / 60000;
 		
