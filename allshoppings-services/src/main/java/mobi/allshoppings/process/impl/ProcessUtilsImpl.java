@@ -52,8 +52,7 @@ public class ProcessUtilsImpl implements ProcessUtils {
 					process.getEntityId(), process.getEntityKind())) {
 				strAssigs += assig.getHostname() +",";
 			}
-			sb.append("/usr/local/allshoppings/bin/aspi2 GenerateAPHE ")
-			.append("--datastore /usr/local/allshoppings/etc/datastore.nocache.properties ")
+			sb.append("/usr/local/allshoppings/bin/reprocess-aphe ")
 			.append("--hostname ")
 			.append(strAssigs)
 			.append(" --fromDate ")
@@ -64,10 +63,8 @@ public class ProcessUtilsImpl implements ProcessUtils {
 		}
 		
 		if( process.getProcessType().equals(Process.PROCESS_TYPE_GENERATE_VISITS)) {
-			sb.append("/usr/local/allshoppings/bin/aspi2 GenerateAPDVisits ")
-			.append("--datastore /usr/local/allshoppings/etc/datastore.nocache.properties ")
-			.append("--updateDashboards true --onlyDashboards false ")
-			.append("--deletePreviousRecords true --storeIds ")
+			sb.append("/usr/local/allshoppings/bin/reprocess-visits ")
+			.append("--storeIds ")
 			.append(process.getEntityId())
 			.append(" --fromDate ")
 			.append(json.getString("fromDate"))

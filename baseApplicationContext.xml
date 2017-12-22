@@ -122,7 +122,7 @@
 
 		<property name="devicesSysInfoURL" value="http://anakin.getin.mx/sysinfo.sh" />
 
-		<property name="processHost" value="localhost" />
+		<property name="processHost" value="api.getin.mx" />
 		<property name="processUser" value="getin" />
 		<property name="processPass" value="lkjh1234zxcv$" />
 		<property name="processRunTimeLimit" value="14400000" />

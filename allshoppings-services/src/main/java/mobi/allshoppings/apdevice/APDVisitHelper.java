@@ -17,11 +17,12 @@ public interface APDVisitHelper {
 	public static final int SLOT_NUMBER_IN_DAY = DAY_IN_MILLIS /1000 /20;
 	
 	void generateAPDVisits(List<String> brandIds, List<String> storeIds, Date fromDate, Date toDate,
-			boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards)
-			throws ASException;
+			boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards,
+			boolean isDailyProcess) throws ASException;
 
 	void generateAPDVisits(List<String> shoppingIds, Date fromDate, Date toDate, boolean deletePreviousRecords,
-			boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards) throws ASException;
+			boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards, boolean isDailyProcess)
+					throws ASException;
 
 	List<APDVisit> aphEntryToVisits(APHEntry entry, Map<String, APDevice> apdCache,
 			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,

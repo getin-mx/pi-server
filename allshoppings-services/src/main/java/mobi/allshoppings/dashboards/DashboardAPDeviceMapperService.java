@@ -22,7 +22,6 @@ import org.springframework.util.StringUtils;
 import com.google.gson.Gson;
 import com.inodes.datanucleus.model.Key;
 
-import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.apdevice.impl.APDVisitHelperImpl;
 import mobi.allshoppings.dao.APDeviceDAO;
@@ -167,7 +166,8 @@ public class DashboardAPDeviceMapperService {
 							curDate.getTime() +Constants.DAY_IN_MILLIS < toDate.getTime());
 
 				if( CollectionUtils.isEmpty(phases) || phases.contains(PHASE_APDVISIT))
-					createAPDVisitPerformanceDashboardForDay(curDate, entityIds, null, null);
+					createAPDVisitPerformanceDashboardForDay(curDate, entityIds, null, null, !deletePreviousRecords,
+							false);
 
 				curDate = new Date(curDate.getTime() + Constants.DAY_IN_MILLIS);
 
@@ -620,8 +620,8 @@ public class DashboardAPDeviceMapperService {
 
 	// apd_visitor performance -------------------------------------------------------------------------------------------------------------------------
 
-	public void createAPDVisitPerformanceDashboardForDay(Date date, List<String> entityIds,
-			Integer entityKind, List<APDVisit> data) throws ASException {
+	public void createAPDVisitPerformanceDashboardForDay(Date date, List<String> entityIds, Integer entityKind,
+			List<APDVisit> data, boolean isDailyProcess, boolean lastDay) throws ASException {
 
 		log.log(Level.INFO, "Starting to create apd_visitor Performance Dashboard for Day " + date + "...");
 		long startTime = System.currentTimeMillis();
@@ -632,8 +632,7 @@ public class DashboardAPDeviceMapperService {
 		try {
 
 			String entityId = null;
-			if( !CollectionUtils.isEmpty( entityIds ))
-				entityId = entityIds.get(0);
+			if( !CollectionUtils.isEmpty( entityIds )) entityId = entityIds.get(0);
 			String shoppingId = null;
 			String subentityId = null;
 			
@@ -815,26 +814,26 @@ public class DashboardAPDeviceMapperService {
 				}
 
 			}
-			// Looks for ticket
-			if( null != entityKind ) {
+			log.log(Level.INFO, "Starting Write Procedure for " +indicatorsSet.size() +" visits...");
+
+			// save all the visits
+			saveIndicatorSet(indicatorsSet);
+			
+			// Looks for tickets, revenue & items
+			isDailyProcess = !isDailyProcess;
+			if( null != entityKind && !lastDay) {
 				if( entityKind.equals(EntityKind.KIND_BRAND)) {
-					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, false);
-					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, false);
-					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, false);
+					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, isDailyProcess);
+					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, isDailyProcess);
+					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, isDailyProcess);
 				}
 				if( entityKind.equals(EntityKind.KIND_STORE)) {
-					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, false);
-					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, false);
-					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, false);
+					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, isDailyProcess);
+					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, isDailyProcess);
+					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, isDailyProcess);
 				}
 			}
 			
-			log.log(Level.INFO, "Starting Write Procedure for " +indicatorsSet.size()
-					+" visits...");
-
-			// Finally, save all the information
-			saveIndicatorSet(indicatorsSet);
-
 			long endTime = System.currentTimeMillis();
 			log.log(Level.INFO, "Finished to create apd_visitor Performance Dashboard for Day " + date + " in "
 					+ (endTime - startTime) + "ms");
