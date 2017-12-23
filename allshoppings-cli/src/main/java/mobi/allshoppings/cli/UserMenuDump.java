@@ -68,7 +68,7 @@ public class UserMenuDump extends AbstractCLI {
 
 			log.log(Level.INFO, "Dumping Getin Users....");
 
-			UserMenu um = null;
+			/*UserMenu um = null;
 			try {
 				um = userMenuDao.get("admin", true);
 				userMenuDao.delete("admin");
@@ -1610,7 +1610,7 @@ public class UserMenuDump extends AbstractCLI {
 //				userMenuDao.create(um);*/
 //			}
 
-			User marketintelligence = null;
+			/*User marketintelligence = null;
 			try {
 				marketintelligence = userDao.get("marketintelligence_mx", true);
 			} catch( Exception e ) {
@@ -7328,9 +7328,22 @@ public class UserMenuDump extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.setKey(userMenuDao.createKey("arocha@chilimbalam.com.mx"));
 				userMenuDao.create(um);
-			}
+			}*/
+			UserMenu um = new UserMenu();
+			um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+			um.setKey(userMenuDao.createKey("juguetron_mx"));
+			userMenuDao.createOrUpdate(um);
+			User erick = null;
+			erick = new User();
+			erick.setFirstname("juguetron");
+			erick.setLastname("");
+			erick.getSecuritySettings().setRole(Role.BRAND);
+			erick.getSecuritySettings().setPassword(encodeString("Juguetron2017"));
+			erick.setKey((Key)keyHelper.obtainKey(User.class, "juguetron_mx"));
+			userDao.createOrUpdate(erick);
+			
 
-			UserMenuDumpTwo.createMissingUsers();
+			//UserMenuDumpTwo.createMissingUsers();
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
