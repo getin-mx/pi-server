@@ -135,7 +135,8 @@ public class GenerateAPDVisits extends AbstractCLI {
 					deletePreviousRecors = (Boolean)options.valueOf(Constants.DELETE_PREVIOUS_RECORDS_PARAM);
 				}
 				
-				isDailyProcess = options.has(DAILY_PROCESS_PARAM) && (Boolean)options.valueOf(DAILY_PROCESS_PARAM);
+				isDailyProcess = (options.has(DAILY_PROCESS_PARAM) && (Boolean)options.valueOf(DAILY_PROCESS_PARAM))
+						|| (sFromDate == null && sToDate == null);
 
 			} catch( Exception e ) {
 				e.printStackTrace();
