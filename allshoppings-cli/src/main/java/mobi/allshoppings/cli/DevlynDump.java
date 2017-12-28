@@ -23,7 +23,7 @@ import mobi.allshoppings.tools.CollectionFactory;
 public class DevlynDump extends AbstractCLI {
 
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	private static final String STORE_ENTITY = "1491370940990";
+	private static final String STORE_ENTITY = "515096f7-3fce-4806-a395-9c564542d28e";
 	private static final String ASSIGNATION_DATE = "2017-12-19";
 	
 	public static void setApplicationContext(ApplicationContext ctx) {
@@ -45,16 +45,8 @@ public class DevlynDump extends AbstractCLI {
 			APDeviceDAO apdeviceDao = (APDeviceDAO)getApplicationContext().getBean("apdevice.dao.ref");
 			
 			Map<String, String> aps = CollectionFactory.createMap();
-			aps.put("gihs-0210", "gihs-0210");
-			aps.put("gihs-0211", "gihs-0211");
-			aps.put("gihs-0212", "gihs-0212");
-			aps.put("gihs-0213", "gihs-0213");
-			aps.put("gihs-0214", "gihs-0214");
-			aps.put("gihs-0215", "gihs-0215");
-			aps.put("gihs-0216", "gihs-0216");
-			aps.put("gihs-0217", "gihs-0217");
-			aps.put("gihs-0218", "gihs-0218");
-			aps.put("gihs-0219", "gihs-0219");
+			aps.put("gihs-0897", "gihs-0897");
+			aps.put("gihs-0896", "gihs-0896");
 			
 			
 			List<InnerZone> list = innerZoneDao.getUsingEntityIdAndRange(STORE_ENTITY, EntityKind.KIND_STORE, null, null, null, true);
@@ -66,12 +58,8 @@ public class DevlynDump extends AbstractCLI {
 			InnerZone subZone;
 			Map<String, InnerZone> subNames;
 			
-			zone = findZone1(names, "Servicio Al Cliente", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0212"), aps);
-			zone = findZone1(names, "Home & Entertainment", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0213"), aps);
-			zone = findZone1(names, "Home & Entertainment 2", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0210", "gihs-0211"), aps);
-			zone = findZone1(names, "Apliances", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0214", "gihs-0216"), aps);
-			zone = findZone1(names, "Mobile", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0218"), aps);
-			zone = findZone1(names, "IT", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0215", "gihs-0217", "gihs-0219"), aps);
+			zone = findZone1(names, "Entrada", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0897"), aps);
+			zone = findZone1(names, "Gabinete", innerZoneDao, apdaDao, apdeviceDao, Arrays.asList("gihs-0896"), aps);
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
