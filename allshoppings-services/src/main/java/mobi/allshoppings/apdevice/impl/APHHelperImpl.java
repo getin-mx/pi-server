@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -724,16 +725,23 @@ public class APHHelperImpl implements APHHelper {
 			Iterator<String> i = dumpHelper.stringIterator(fromDate, xdate);
 			JSONObject json;
 			while( i.hasNext() ) {
-				json = new JSONObject(i.next());
-				totals++;
-				if(isValidMacAddress(json.getString("mac"))) {
-					if(forceDate != null) setFramedRSSI(json, forceDate);
-					else setFramedRSSI(json);
-				} if( totals % 10000 == 0 ) log.log(Level.INFO, "Processing for date "
-						+ new Date(json.getLong("creationDateTime")) + " with "
-								+ cache.size() + " records so far (" + cache.getHits()
-								+ "/" + cache.getMisses() + "/" + cache.getStores() 
-								+ "/" + cache.getLoads() + ")...");
+				try {
+					json = new JSONObject(i.next());
+					totals++;
+					if(isValidMacAddress(json.getString("mac"))) {
+						if(forceDate != null) setFramedRSSI(json, forceDate);
+						else setFramedRSSI(json);
+					} if( totals % 10000 == 0 ) log.log(Level.INFO, "Processing for date "
+							+ new Date(json.getLong("creationDateTime")) + " with "
+									+ cache.size() + " records so far (" + cache.getHits()
+									+ "/" + cache.getMisses() + "/" + cache.getStores() 
+									+ "/" + cache.getLoads() + ")...");
+				} catch(JSONException e) {
+					log.log(Level.WARNING, "There's an unparseable line at file in the APHotspots -> "
+							+sdf.format(fromDate) +" -> " +hostname +". Please, log into Korriban and run "
+							+ "the jq utility to fix the issue and re-run the APHEntry generation "
+							+ "for this hostspot only.");
+				}
 			}
 
 			log.log(Level.INFO, "Disposing APHotspot dumper");

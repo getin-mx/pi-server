@@ -9,7 +9,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import com.inodes.datanucleus.model.Key;

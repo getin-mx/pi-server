@@ -99,6 +99,33 @@
 						<target>1.7</target>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.0.0</version>
+			        <configuration>
+			          <aggregate>true</aggregate>
+			          <failsOnError>false</failsOnError>
+			          <additionalparam>-Xdoclint:none</additionalparam>
+			          <show>private</show>
+			          <author>true</author>
+			          <doctitle>Getin backend server software documentation</doctitle>
+			          <bottom> <![CDATA[Copyright &#169; 2015 &#x2013; {currentYear} <a href="http://www.getin.mx" >Getin.mx</a> ]]> </bottom>
+			          <footer>Getin IT - Research &amp; Development</footer>
+			          <header>Current version: Mark III, december 2017, stable.</header>
+			          <version>true</version>
+			          <windowtitle>Getin software documentation</windowtitle>
+			        </configuration>
+			        <executions>
+			        	<execution>
+			        		<id>aggregate</id>
+			        		<goals>
+			        			<goal>aggregate</goal>
+			        		</goals>
+			        		<phase>site</phase>
+			        	</execution>
+			        </executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

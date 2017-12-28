@@ -28,6 +28,7 @@ public class GenerateAPDVisits extends AbstractCLI {
 	private static final String ONLY_EMPLOYEES_PARAM = "onlyEmployees";
 	private static final String ONLY_DASHBOARDS_PARAM = "onlyDashboards";
 	private static final String UPDATE_DASHBOARDS_PARAM = "updateDashboards";
+	private static final String DAILY_PROCESS_PARAM = "isDailyProcess";
 	
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
@@ -46,6 +47,9 @@ public class GenerateAPDVisits extends AbstractCLI {
 				.ofType( Boolean.class );
 		parser.accepts(Constants.DELETE_PREVIOUS_RECORDS_PARAM, "Delete previus dashboards")
 				.withRequiredArg().ofType( Boolean.class );
+		parser.accepts(DAILY_PROCESS_PARAM, "Whether the process is for a never before processed date (true - "
+				+ "common daily process) or is a reprocess (false). Default is false (reprocess)")
+				.withRequiredArg().ofType(Boolean.class);
 		return parser;
 	}
 
@@ -66,6 +70,7 @@ public class GenerateAPDVisits extends AbstractCLI {
 			boolean onlyDashboards = false;
 			boolean updateDashboards = false;
 			boolean deletePreviousRecors = false;
+			boolean isDailyProcess = false;
 			String sFromDate = null;
 			String sToDate = null;
 			Date fromDate = null;
@@ -129,6 +134,9 @@ public class GenerateAPDVisits extends AbstractCLI {
 				if(options.has(Constants.DELETE_PREVIOUS_RECORDS_PARAM)) {
 					deletePreviousRecors = (Boolean)options.valueOf(Constants.DELETE_PREVIOUS_RECORDS_PARAM);
 				}
+				
+				isDailyProcess = (options.has(DAILY_PROCESS_PARAM) && (Boolean)options.valueOf(DAILY_PROCESS_PARAM))
+						|| (sFromDate == null && sToDate == null);
 
 			} catch( Exception e ) {
 				e.printStackTrace();
@@ -140,10 +148,10 @@ public class GenerateAPDVisits extends AbstractCLI {
 			
 			if( shoppings.isEmpty() )
 				helper.generateAPDVisits(brands, stores, fromDate, toDate, deletePreviousRecors, updateDashboards,
-						onlyEmployees, onlyDashboards);
+						onlyEmployees, onlyDashboards, isDailyProcess);
 			else
 				helper.generateAPDVisits(shoppings, fromDate, toDate, deletePreviousRecors, updateDashboards,
-						onlyEmployees, onlyDashboards);
+						onlyEmployees, onlyDashboards, isDailyProcess);
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

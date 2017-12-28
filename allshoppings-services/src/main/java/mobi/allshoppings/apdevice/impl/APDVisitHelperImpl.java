@@ -46,7 +46,6 @@ import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.InnerZone;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
-import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
@@ -153,10 +152,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 	@Autowired
 	private DashboardAPDeviceMapperService mapper;
-
-	@Autowired
-	private SystemConfiguration systemConfiguration;
-
+	
 	/**
 	 * Writes a list of APDVisits in the database
 	 * 
@@ -173,7 +169,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	@Override
 	public void generateAPDVisits(List<String> brandIds, List<String> storeIds, Date fromDate, Date toDate,
 			boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees,
-			boolean onlyDashboards) throws ASException {
+			boolean onlyDashboards, boolean isDailyProcess) throws ASException {
 
 		List<Store> stores = null;
 		Map<String, APDevice> apdCache = CollectionFactory.createMap();
@@ -362,7 +358,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								}
 							} if( objs.size() > 0 || onlyDashboards) {
 								mapper.createAPDVisitPerformanceDashboardForDay(curDate,
-										Arrays.asList(new String[] { entityId }), entityKind, objs);
+										Arrays.asList(new String[] { entityId }), entityKind, objs, isDailyProcess,
+										lastDate);
 							}
 						}
 					} catch( Exception e ) {
@@ -566,7 +563,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public void generateAPDVisits(List<String> shoppingIds, Date fromDate, Date toDate, boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards) throws ASException {
+	public void generateAPDVisits(List<String> shoppingIds, Date fromDate, Date toDate, boolean deletePreviousRecords,
+			boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards, boolean isDailyProcess)
+					throws ASException {
 
 		Map<String, APDevice> apdCache = CollectionFactory.createMap();
 		Map<String, APDAssignation> assignmentsCache = CollectionFactory.createMap();
@@ -589,10 +588,14 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		DumperHelper<APDVisit> apdvDumper = new DumpFactory<APDVisit>().build(null, APDVisit.class);
 		
 		Date curDate = new Date(fromDate.getTime());
-		Date limitDate = new Date(fromDate.getTime() + DAY_IN_MILLIS);
 		Date toZonedDate = new Date(toDate.getTime());
-		while( curDate.before(toDate) || (fromDate.equals(toDate) && curDate.equals(toDate))) {
+		boolean overtime = false;
+		boolean lastDate;
+		String sFromDate = sdf.format(fromDate);
+		while(curDate.before(toZonedDate) || (fromDate.equals(toZonedDate) && curDate.equals(toZonedDate))) {
 
+			lastDate = curDate.getTime() +DAY_IN_MILLIS >= toZonedDate.getTime();
+			
 			try {
 				log.log(Level.INFO, "entityIds are: " + entities);
 				
@@ -612,8 +615,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					
 					TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
 					int offset = tz.getOffset(curDate.getTime()) * -1;
-					if(offset > 0 && toZonedDate.getTime() < toDate.getTime() +offset)
+					if(!onlyDashboards && offset > 0 && toZonedDate.getTime() < toDate.getTime() +offset) {
 						toZonedDate.setTime(toDate.getTime() +offset);
+						overtime = true;
+						lastDate = curDate.getTime() +DAY_IN_MILLIS >= toZonedDate.getTime();
+					}//adds an time limit offset to match local timezone
 					
 					log.log(Level.INFO, "Processing " + name + " for " + curDate + "...");
 
@@ -625,6 +631,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							List<String> blackListMacs = getBlackListByStore(store);
 							List<String> employeeListMacs = getEmployeeListByStore(store);
 
+							String forDate = sdf.format(curDate);
 							List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, curDate);
 							if( !CollectionUtils.isEmpty(assigs)) {
 								if( assigs.size() == 1 ) {
@@ -632,16 +639,19 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									assignmentsCache.clear();
 									assignmentsCache.put(assigs.get(0).getHostname(), assigs.get(0));
 									if(!apdCache.containsKey(assigs.get(0).getHostname()))
-										apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(), true));
+										apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(),
+												true));
 
 									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + curDate + "...");
-									log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() + " and " + curDate + "...");
+									log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() +
+											" and " + curDate + "...");
 									dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
 									dumpHelper.setFilter(assigs.get(0).getHostname());
-									Iterator<APHEntry> i = dumpHelper.iterator(curDate, limitDate);
+									List<APHEntry> i = integrateAPHE(dumpHelper, apdCache.get(assigs.get(0).getHostname()),
+											forDate, tz, sFromDate, lastDate, START_CALENDAR, END_CALENDAR);
+									dumpHelper.dispose();
 
-									while( i.hasNext() ) {
-										APHEntry entry = i.next();
+									for(APHEntry entry : i) {
 										// Employee check
 										if(!onlyEmployees || employeeListMacs.contains(entry.getMac().toUpperCase())) {
 											List<APDVisit> visitList =
@@ -683,17 +693,17 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
 									for( String hostname : hostnames ) {
 										dumpHelper.setFilter(hostname);
-										Iterator<APHEntry> i = dumpHelper.iterator(curDate, limitDate);
+										List<APHEntry> i = integrateAPHE(dumpHelper, apdCache.get(hostname),
+												forDate, tz, sFromDate, lastDate, START_CALENDAR, END_CALENDAR);
+										dumpHelper.dispose();
 
-										while( i.hasNext() ) {
-											APHEntry entry = i.next();
+										for(APHEntry entry : i) {
 											if(!cache.containsKey(entry.getMac()))
 												cache.put(entry.getMac(), new ArrayList<APHEntry>());
 
 											cache.get(entry.getMac()).add(entry);
 										}
 									}
-									dumpHelper.dispose();
 
 									log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
 									Iterator<String> i = cache.keySet().iterator();
@@ -730,11 +740,24 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								}
 							}
 
-							didDao.deleteUsingSubentityIdAndElementIdAndDate(entityId,
-									Arrays.asList(new String[] { "apd_visitor", "apd_permanence", "apd_occupation" }),
-									curDate, curDate, GMT);
-							mapper.createAPDVisitPerformanceDashboardForDay(curDate,
-									Arrays.asList(new String[] { entityId }), entityKind, objs);
+							if(deletePreviousRecords) {
+								if(overtime && lastDate) {//both true -> just delete the offset timezones
+									byte offsetHours = (byte) (-offset /(1000 *60 *60));
+									Date delDate = offsetHours < 0 ? new Date(curDate.getTime() -DAY_IN_MILLIS) :
+										new Date(curDate.getTime());
+									didDao.deleteUsingSubentityIdAndElementIdAndDateAndTimezoneOffset(entityId,
+											Arrays.asList("apd_visitor", "apd_permanence", "apd_occupation" ),
+											delDate, delDate, GMT, offsetHours);
+								} else {//one was false -> delete the whole day (stills needs one more day) 
+									didDao.deleteUsingSubentityIdAndElementIdAndDate(entityId,
+											Arrays.asList("apd_visitor", "apd_permanence", "apd_occupation" ),
+											curDate, curDate, GMT);
+								}
+							} if( objs.size() > 0 || onlyDashboards) {
+								mapper.createAPDVisitPerformanceDashboardForDay(curDate,
+										Arrays.asList(new String[] { entityId }), entityKind, objs, isDailyProcess,
+										lastDate);
+							}
 						}
 					} catch( Exception e ) {
 						log.log(Level.SEVERE, e.getMessage(), e);
@@ -746,7 +769,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			}
 			
 			curDate = new Date(curDate.getTime() + DAY_IN_MILLIS);
-			limitDate = new Date(curDate.getTime() + DAY_IN_MILLIS);
 			
 			apdvDumper.flush();
 			
@@ -1252,245 +1274,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		return res;
 	}
 
-	/**
-	 * Converts an APHEntry to a visit list (Commons version)
-	 * 
-	 * @param entry
-	 *            The entry to convert
-	 * @return A list with created visits
-	 * @throws ASException
-	 */
-	private List<APDVisit> aphEntryToVisitsCommon(List<APHEntry> entries,
-			Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache,
-			List<String> blackListMacs, List<String> employeeListMacs, TimeZone tz) throws ASException {
-
-		// Validates entries
-		if( CollectionUtils.isEmpty(entries))
-			throw ASExceptionHelper.invalidArgumentsException();
-
-		// Work variables
-		List<APDVisit> ret = CollectionFactory.createList();
-		Boolean isEmployee = false;		
-
-		for(APHEntry entry : entries) {
-			aphHelper.artificiateRSSI(entry, apdCache.get(entry.getHostname()));
-		}
-
-		// Merges all the time slots
-		List<Integer> slots = CollectionFactory.createList();
-		if( entries.size() > 1 ) {
-			for( APHEntry entry : entries ) {
-				// Checks for BlackList
-				if(!blackListMacs.contains(entry.getMac().toUpperCase().trim())){
-					List<Integer> tmpSlots = aphHelper.timeslotToList(entry.getArtificialRssi());
-					for( Integer i : tmpSlots ) {
-						if(!slots.contains(i))
-							slots.add(i);
-					}
-					// If the mac address is contained in the employee list,
-					// then activates the empoloyee flag
-					if(employeeListMacs.contains(entry.getMac().toUpperCase().trim())){
-						isEmployee= true;
-					}
-				}
-			}
-			Collections.sort(slots);
-		} else {
-			// Checks for BlackList
-			if(!blackListMacs.contains(entries.get(0).getMac().toUpperCase().trim())){
-				slots = aphHelper.timeslotToList(entries.get(0).getArtificialRssi());
-				// If the mac address is contained in the employee list,
-				// then activates the empoloyee flag
-				if(employeeListMacs.contains(entries.get(0).getMac().toUpperCase().trim())){
-					isEmployee= true;
-				}
-			}
-		}
-		
-		if(slots.isEmpty())
-			return ret;
-		
-		// Adds all the devices in the cache
-		Map<String,APDevice> apd = CollectionFactory.createMap();
-		if( apdCache == null || apdCache.size() == 0 ) {
-			for( APHEntry entry : entries ) {
-				apd.put(entry.getHostname(), apdDao.get(entry.getHostname(), true));
-			}
-		} else {
-			apd.putAll(apdCache);
-		}
-		
-		// Adds all the assignments in the cache
-		Map<String,APDAssignation> assignments = CollectionFactory.createMap();
-		if( assignmentsCache == null || assignmentsCache.size() == 0 ) {
-			for( APHEntry entry : entries ) {
-				try {
-					assignments.put(entry.getHostname(),
-							apdaDao.getOneUsingHostnameAndDate(entry.getHostname(), sdf.parse(entry.getDate())));
-				} catch( Exception e ) {
-					log.log(Level.SEVERE, "Error parsing date " + entry.getDate(), e);
-				}
-			}
-		} else {
-			assignments.putAll(assignmentsCache);
-		}
-
-		// Defines temporary work variables
-		Integer lastSlot = null;
-		Integer lastVisitSlot = null;
-		Integer lastPeasantSlot = null;
-		APDVisit currentVisit = null;
-		APDVisit currentPeasant = null;
-		APHEntry curEntry = null;
-		
-		// Now iterate the slots on each entry
-		for(Integer slot : slots ) {
-			try {
-				
-				// Identifies the power and device
-				Integer value = null;
-				for( APHEntry entry : entries ) {
-					Integer tValue = entry.getArtificialRssi().get(String.valueOf(slot));
-					if( tValue != null && (value == null || tValue > value)) {
-						value = tValue;
-						curEntry = entry;
-					}
-				}
-
-				if( value != null ) {
-
-					Date curDate = aphHelper.slotToDate(
-							curEntry, slot, tz);
-					APDevice dev = apd.get(curEntry.getHostname());
-					dev.completeDefaults();
-					
-					// Closes open visits in case of slot continuity disruption
-					if( lastSlot != null && slot != (lastSlot + 1) &&
-							(slot - lastSlot) > (dev.getVisitGapThreshold() * 3)) {
-						if( currentVisit != null ) {
-							currentVisit.setCheckinFinished(
-									aphHelper.slotToDate(
-											curEntry, lastSlot, tz));
-							addPermanenceCheck(currentVisit, currentPeasant, dev,
-									tz);
-							if(isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz))
-								ret.add(currentVisit);
-							currentVisit = null;
-						}
-
-						if( currentPeasant != null ) {
-							currentPeasant.setCheckinFinished(aphHelper.slotToDate(
-									curEntry, lastSlot, tz));
-							if(isPeasantValid(currentPeasant, dev, isEmployee))
-								ret.add(currentPeasant);
-							currentPeasant = null;
-						}
-					}
-
-					
-					// If there is a peasant threshold
-					if( dev.getPeasantPowerThreshold() == null 
-							|| value >= dev.getPeasantPowerThreshold() ) {
-
-						// Add a new peasant if there is no peasant active
-						if( currentPeasant == null )
-							currentPeasant = createPeasant(curEntry, curDate, null,
-									assignments.get(curEntry.getHostname()));
-						lastPeasantSlot = slot;
-						// Checks for power for visit
-						if( value >= dev.getVisitPowerThreshold()) {
-							if( currentVisit == null )
-								currentVisit = createVisit(curEntry, curDate, null,
-										assignments.get(curEntry.getHostname()), isEmployee);
-							currentVisit.addInRangeSegment();
-							lastVisitSlot = slot;
-						} else {
-							// Closes the visit if it was too far for more time than specified in visit gap threshold
-							if( currentVisit != null ) {
-								currentVisit.addInRangeSegment();
-								// 30DB Tolerance ... it should be a parameter
-								if( value > (dev.getVisitPowerThreshold() - 30)) {
-									lastVisitSlot = slot;
-								} else if( slot - lastVisitSlot > dev.getVisitGapThreshold()
-										*APHHelper.MINUTE_TO_TWENTY_SECONDS_SLOT) {
-									long finishSlot = slot;
-									if(lastVisitSlot +(dev.getVisitDecay()
-											*APHHelper.MINUTE_TO_TWENTY_SECONDS_SLOT) <
-													finishSlot)
-										finishSlot = lastVisitSlot +(dev.getVisitDecay()
-												*APHHelper.MINUTE_TO_TWENTY_SECONDS_SLOT);
-									currentVisit.setCheckinFinished(aphHelper.slotToDate(
-											curEntry, (int) finishSlot, tz));
-									addPermanenceCheck(currentVisit, currentPeasant,
-											dev, tz);
-									if(isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz))
-										ret.add(currentVisit);
-									currentVisit = null;
-								}
-							}
-						}
-					} else if( lastPeasantSlot != null ) {
-						if( dev.getVisitGapThreshold() == null ) dev.setVisitGapThreshold(10L);
-						if((( slot - lastPeasantSlot ) * 3) > dev.getVisitGapThreshold()) {
-
-							// Closes open visits
-							if( currentVisit != null ) {
-								currentVisit.setCheckinFinished(aphHelper.slotToDate(
-										curEntry, lastSlot, tz));
-								addPermanenceCheck(currentVisit, currentPeasant, dev, tz);
-								if(isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz))
-									ret.add(currentVisit);
-								currentVisit = null;
-							}
-
-							if( currentPeasant != null ) {
-								currentPeasant.setCheckinFinished(aphHelper.slotToDate(
-										curEntry, lastSlot, tz));
-								if(isPeasantValid(currentPeasant, dev,isEmployee))
-									ret.add(currentPeasant);
-								currentPeasant = null;
-							}
-						}
-					}
-				}				
-				// Updates the last slot
-				lastSlot = slot;
-				
-			} catch( Exception e ) {
-				log.log(Level.SEVERE, e.getMessage(), e);
-			}
-		}
-
-		// Closes open visits in case of slot continuity disruption
-		try {
-			if( currentVisit != null ) {
-				currentVisit.setCheckinFinished(aphHelper.slotToDate(
-						curEntry, lastSlot, tz));
-				addPermanenceCheck(currentVisit, currentPeasant,
-						apd.get(curEntry.getHostname()), tz);
-				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname()), isEmployee, WORK_CALENDAR, tz))
-					ret.add(currentVisit);
-				currentVisit = null;
-			}
-		} catch( Exception e ) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-		}
-
-		try {
-			if( currentPeasant != null ) {
-				currentPeasant.setCheckinFinished(aphHelper.slotToDate(
-						curEntry, lastSlot, tz));
-				if(isPeasantValid(currentPeasant, apd.get(curEntry.getHostname()),isEmployee))
-					ret.add(currentPeasant);
-				currentPeasant = null;
-			}
-		} catch( Exception e ) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-		}
-
-		return ret;
-	}
-
 	private void addPermanenceCheck(APDVisit visit, APDVisit peasant, APDevice device,
 			TimeZone tz) {
 		long time = (long)(visit.getCheckinFinished().getTime()
@@ -1625,34 +1408,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		if( isEmployee ) visit.setCheckinType(APDVisit.CHECKIN_EMPLOYEE);
 		
-		WORK_CALENDAR.clear();
-		WORK_CALENDAR.setTime(visit.getCheckinStarted());
-		switch(WORK_CALENDAR.get(Calendar.DAY_OF_WEEK)) {
-		case Calendar.SUNDAY :
-			if(!device.getVisitsOnSun()) return false;
-			else break;
-		case Calendar.MONDAY :
-			if(!device.getVisitsOnMon()) return false;
-			else break;
-		case Calendar.TUESDAY :
-			if(!device.getVisitsOnTue()) return false;
-			else break;
-		case Calendar.WEDNESDAY :
-			if(!device.getVisitsOnWed()) return false;
-			else break;
-		case Calendar.THURSDAY :
-			if(!device.getVisitsOnThu()) return false;
-			else break;
-		case Calendar.FRIDAY :
-			if(!device.getVisitsOnFri()) return false;
-			else break;
-		case Calendar.SATURDAY :
-			if(!device.getVisitsOnSat()) return false;
-			else break;
-		}
-		
-		Long time = (visit.getCheckinFinished().getTime()
-				-visit.getCheckinStarted().getTime()) / 60000;
+		Long time = (visit.getCheckinFinished().getTime() -visit.getCheckinStarted().getTime()) / 60000;
 		
 		visit.setDuration(time);		
 		return time <= 60 *60;
