@@ -6,10 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,6 +36,7 @@ import com.inodes.datanucleus.model.Text;
 import com.jcraft.jsch.JSchException;
 import com.mongodb.DBObject;
 
+import mobi.allshoppings.apdevice.APDVisitHelper;
 import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.dao.APDeviceDAO;
@@ -72,6 +71,7 @@ import mobi.allshoppings.tools.CollectionUtils;
 import mx.getin.Constants;
 import mx.getin.dao.APDCalibrationDAO;
 import mx.getin.dao.APDReportDAO;
+import mx.getin.model.APDCalibration;
 import mx.getin.model.APDReport;
 import mx.getin.model.Entity;
 
@@ -367,15 +367,15 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 					if (device.getReportable() == null || !device.getReportable()) continue;
 					if (device.getStatus() != StatusAware.STATUS_ENABLED || 
 							device.getReportStatus() != APDevice.REPORT_STATUS_NOT_REPORTED) continue;
-					if (!APDVisitHelperImpl.isVisitValid(null, device, false, cal, getTimeZone(device))) continue;
-					if (device.getStatus() == null) device.setStatus(StatusAware.STATUS_ENABLED);
-					if (device.getReportStatus() == null) device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
+					APDCalibration calibration = calibrationDao.get(device.getHostname());
+					if (!APDVisitHelper.isVisitValid(null, calibration, false, cal, getTimeZone(device))) continue;
+					APDevice dev = dao.get(device.getHostname());
 					
-					String mailText = "Hola!\n\n" + "La antena de " + device.getDescription()
+					String mailText = "Hola!\n\n" + "La antena de " + dev.getDescription()
 							+ " se apagó desde las " + sdfTime.format(device.getLastRecordDate())
 							+ " hrs. Les pedimos su apoyo para volver a conectarla.\n\n" + "Muchas gracias.\n\n"
 							+ " Atte. \n" + "El equipo de Getin";
-					String mailTitle = "La antena de " + device.getDescription() + " se encuentra apagada";
+					String mailTitle = "La antena de " + dev.getDescription() + " se encuentra apagada";
 
 					List<String> reportableUsers = sanitizeMailList(device);
 					for (String mail : reportableUsers) {
@@ -390,20 +390,20 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 					}
 
 					device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
-					dao.update(device);
+					reportDao.update(device);
 					indexHelper.indexObject(device);
 				} else if (device.getReportable() != null && device.getReportable()) {
-					if (!device.getStatus().equals(StatusAware.STATUS_ENABLED)
-							|| !device.getReportStatus().equals(APDevice.REPORT_STATUS_REPORTED)) continue;
-					if(!APDVisitHelperImpl.isVisitValid(null, device, false, cal, getTimeZone(device))) continue;
-					if (device.getStatus() == null) device.setStatus(StatusAware.STATUS_ENABLED);
-					if (device.getReportStatus() == null) device.setReportStatus(APDevice.REPORT_STATUS_REPORTED);
+					if (device.getStatus() != StatusAware.STATUS_ENABLED
+							|| device.getReportStatus() != APDevice.REPORT_STATUS_REPORTED) continue;
+					APDCalibration calibration = calibrationDao.get(device.getHostname());
+					if(!APDVisitHelper.isVisitValid(null, calibration, false, cal, getTimeZone(device))) continue;
+					APDevice dev = dao.get(device.getHostname());
 					
-					String mailText = "Hola!\n\n" + "La antena de " + device.getDescription()
+					String mailText = "Hola!\n\n" + "La antena de " + dev.getDescription()
 							+ " volvió a conectarse a las " + sdfTime.format(device.getLastRecordDate())
 							+ " hrs. \n" + "Gracias por su apoyo en mantener la antena encendida.\n\n"
 							+ " Atte. \n" + "El equipo de Getin";
-					String mailTitle = "La antena de " + device.getDescription() + " volvió a conectarse!!!";
+					String mailTitle = "La antena de " + dev.getDescription() + " volvió a conectarse!!!";
 
 					List<String> reportableUsers = sanitizeMailList(device);
 					for (String mail : reportableUsers) {
@@ -418,7 +418,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 					}
 
 					device.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
-					dao.update(device);
+					reportDao.update(device);
 					indexHelper.indexObject(device);
 				}
 			} catch(Exception e) {
@@ -607,18 +607,17 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	}
 
 	public void tryRestartAPDevices() throws ASException {
-		List<APDevice> list = dao.getAll(true);
-		Date tenMinutes = new Date(new Date().getTime() - Constants.TEN_MINUTES_IN_MILLIS);
-		Date oneDay = new Date(new Date().getTime() - Constants.DAY_IN_MILLIS);
+		List<APDReport> list = reportDao.getAll(true);
+		Date tenMinutes = new Date(System.currentTimeMillis() - Constants.TEN_MINUTES_IN_MILLIS);
+		Date oneDay = new Date(System.currentTimeMillis() - Constants.DAY_IN_MILLIS);
 
-		for (APDevice apdevice : list) {
-			if (null != apdevice.getStatus() && StatusAware.STATUS_ENABLED == apdevice.getStatus()
-					&& apdevice.getReportable() != null && apdevice.getReportable() == true
+		for (APDReport apdevice : list) {
+			if (StatusAware.STATUS_ENABLED == apdevice.getStatus() && apdevice.getReportable() == true
 					&& apdevice.getLastRecordDate() != null && apdevice.getLastRecordDate().before(tenMinutes)
 					&& apdevice.getLastRecordDate().after(oneDay)) {
 
 				try {
-					restartAPDevice(apdevice);
+					restartAPDevice(apdevice.getHostname());
 				} catch (Exception e) {
 					log.log(Level.WARNING, e.getMessage(), e);
 				}
@@ -708,11 +707,6 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 			JSONObject json = new JSONObject(stdout.toString());
 			apdevice.setMode(json.getString("mode"));
 			apdevice.setModel(json.getString("model"));
-			apdevice.setVersion(json.getString("version"));
-			apdevice.setTunnelIp(json.getString("tunnelIp"));
-			apdevice.setLanIp(json.getString("lanIp"));
-			apdevice.setWanIp(json.getString("wanIp"));
-			apdevice.setPublicIp(json.getString("publicIp"));
 			apdevice.setLastInfoUpdate(new Date());
 
 			try {
@@ -736,10 +730,11 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	 * @return The completed APDevice
 	 */
 	@Override
+	@Deprecated
 	public APDevice geoIp(APDevice apd) throws ASException {
 		try {
 
-			URL url = new URL("http://freegeoip.net/json/" + apd.getPublicIp());
+			/*URL url = new URL("http://freegeoip.net/json/" + apd.getPublicIp());
 			URLConnection con = url.openConnection();
 			InputStream in = con.getInputStream();
 			String encoding = con.getContentEncoding();
@@ -755,7 +750,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 
 			in.close();
 
-			return apd;
+			return apd;*/
+			return null;
 
 		} catch (Exception e) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
@@ -876,13 +872,6 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 	@Override
 	public void updateAssignationsUsingAPDevice(APDevice apd, APDReport apdReport) throws ASException {
 		boolean modifiedReport = false;
-		if (null == apdReport.getStatus()) {
-			apdReport.setStatus(StatusAware.STATUS_ENABLED);
-			modifiedReport = true;
-		} if (null == apdReport.getReportStatus()) {
-			apdReport.setReportStatus(APDevice.REPORT_STATUS_NOT_REPORTED);
-			modifiedReport = true;
-		}
 		
 		List<APDAssignation> list = apdaDao.getUsingHostnameAndDate(apd.getHostname(), new Date());
 		if(list.isEmpty()) {

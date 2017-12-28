@@ -1,7 +1,5 @@
 package com.inodes.datanucleus.mapping;
 
-import org.datanucleus.store.rdbms.mapping.java.ObjectAsStringMapping;
-
 import com.inodes.datanucleus.model.Email;
 import com.inodes.datanucleus.model.Key;
 

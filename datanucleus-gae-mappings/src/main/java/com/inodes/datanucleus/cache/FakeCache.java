@@ -4,14 +4,21 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import org.datanucleus.cache.CacheUniqueKey;
 import org.datanucleus.cache.Level1Cache;
 import org.datanucleus.state.ObjectProvider;
-import org.datanucleus.util.SoftValueMap;
 
+/**
+ * Fake cache to use with datanucleus level 1 cache.
+ * @author Matias Hapanowicz
+ * @author <a href="mailto:ignacio@getin.mx" >Manuel "Nachintoch" Castillo</a>
+ * @version 2.0, december 2017
+ * @since Allshoppings
+ */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class FakeCache implements Level1Cache {
 
-	@SuppressWarnings("unchecked")
-	private Map<Object, ObjectProvider> softCache = new SoftValueMap();
+	private Map<Object, ObjectProvider> softCache = new ValueMap();
 
 	@Override
 	public int size() {
@@ -76,4 +83,14 @@ public class FakeCache implements Level1Cache {
 		return softCache.entrySet();
 	}
 
-}
+	@Override
+	public ObjectProvider getUnique(CacheUniqueKey arg0) {
+		return get(arg0);
+	}
+
+	@Override
+	public Object putUnique(CacheUniqueKey arg0, ObjectProvider arg1) {
+		return put(arg0, arg1);
+	}
+	
+}//Fake Cache

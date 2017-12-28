@@ -25,6 +25,7 @@ public interface APDeviceHelper {
 	void restartAPDevice(String identifier) throws ASException;
 	void restartAPDevice(APDevice apdevice) throws ASException;
 	void tryRestartAPDevices() throws ASException;
+	@Deprecated
 	APDevice geoIp(APDevice apd) throws ASException;
 	void updateAssignationsUsingAPDevice(String hostname) throws ASException;
 	void updateAssignationsUsingAPDevice(APDevice dev, APDReport apdReport) throws ASException;

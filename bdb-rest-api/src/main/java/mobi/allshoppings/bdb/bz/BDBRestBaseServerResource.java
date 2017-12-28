@@ -62,6 +62,12 @@ import mobi.allshoppings.tools.I18NUtils;
 import mobi.allshoppings.tools.Range;
 import mobi.allshoppings.tracker.TrackerHelper;
 
+/**
+ * Base server query handler. This class is aweken on frontend message arrival. Subinstances of this class
+ * can define specific behaviours for each URL. 
+ * @author ignacio
+ *
+ */
 public abstract class BDBRestBaseServerResource extends ServerResource {
 
 	protected static final Logger logger = Logger.getLogger(BDBRestBaseServerResource.class.getName()); 
@@ -263,7 +269,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	 * @param defaultValue
 	 * @return
 	 */
-	public Integer obtainIntegerValue(String key, Integer defaultValue) {
+	public int obtainIntegerValue(String key, int defaultValue) {
 		String val = obtainStringValue(key, null);
 		try {
 			return StringUtils.hasText(val) ? Integer.valueOf(val) : defaultValue;
@@ -271,7 +277,22 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 			logger.finer("Cannot convert value " + val + " to integer!");
 			return defaultValue;
 		}
-	}
+	}//obtainIntegerValue
+	
+	/**
+	 * Searches the key parameter on the URL's query; if it exists, its value is returned as a byte.
+	 * @param key - the name of the HTTP parameter.
+	 * @param defaultValue - A value to return if the URL doesn't contains the given key.
+	 * @return byte - The result value.
+	 */
+	public byte obtainByteValue(String key, byte defaultValue) {
+		String val = obtainStringValue(key, null);
+		try {
+			return StringUtils.hasText(val) ? Byte.valueOf(val) : defaultValue;
+		} catch(NumberFormatException e) {
+			return defaultValue;
+		}//tries to parse the parameter value as a byte
+	}//obtainByteValue
 	
 	/**
 	 * Searches the key parameter on the URL's query. If found returns the value

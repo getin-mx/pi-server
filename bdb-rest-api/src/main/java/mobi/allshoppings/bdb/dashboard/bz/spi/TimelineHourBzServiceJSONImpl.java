@@ -56,7 +56,7 @@ public class TimelineHourBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", null);
 			String elementId = obtainStringValue("elementId", null);
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
