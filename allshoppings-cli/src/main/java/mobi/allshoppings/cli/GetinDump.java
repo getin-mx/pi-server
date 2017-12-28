@@ -1413,6 +1413,26 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("832", "98 Coast Av. Culiacán", "98coastav_mx", null, GetinDump.MALL));
 
 
+
+			stores.add(new StoreAdapter("825", "Michel Domit Delta", "micheldomit_mx", null, GetinDump.MALL));
+
+			stores.add(new StoreAdapter("826", "Michel Domit Parque Puebla", "micheldomit_mx", null, GetinDump.MALL));
+			
+			stores.add(new StoreAdapter("827","Opticas Devlyn Cervantes Saavedra Gabinete", "devlyn_mx", null, 0));
+
+
+			//Devlyn Shoppingns!
+			stores.add(new StoreAdapter("828", "Devlyn Pabellon Polanco", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("829", "Devlyn Chedraui Polanco", "devlyn_mx", null, GetinDump.MALL));			
+			stores.add(new StoreAdapter("830", "Devlyn Galerias Marina", "devlyn_mx", null, GetinDump.MALL));
+			
+						
+			stores.add(new StoreAdapter("831", "Bruno Corza Parque Puebla", "brunocorza_mx", null, GetinDump.MALL));
+			
+			stores.add(new StoreAdapter("832", "98 Coast Av. Culiacán", "98coastav_mx", null, GetinDump.MALL));
+
+			
+			
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				log.log(Level.INFO, "Processing store" + obj.getName());

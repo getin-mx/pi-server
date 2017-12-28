@@ -1006,7 +1006,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						}
 						if( currentViewer != null ) {
 							currentViewer.setCheckinFinished(aphHelper.slotToDate(
-									curEntry, lastSlot, tz));
+									lastSlot, date));
 							if(isPeasantValid(currentViewer, dev, isEmployee,
 									assignments.get(curEntry.getHostname()).getEntityKind()))
 								res.add(currentViewer);
@@ -1103,7 +1103,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							currentPeasant = null;
 						}if( currentViewer != null ) {
 							currentViewer.setCheckinFinished(aphHelper.slotToDate(
-									curEntry, finishSlot, tz));
+									finishSlot, date));
 							if(isPeasantValid(currentViewer, dev, isEmployee,
 									assignments.get(curEntry.getHostname()).getEntityKind()))
 								res.add(currentViewer);
@@ -1152,11 +1152,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		try {
 			if( currentViewer != null ) {
 				currentViewer.setCheckinFinished(aphHelper.slotToDate(
-							curEntry, lastSlot, tz));
+							lastSlot, date));
 					if(isPeasantValid(currentViewer, apd.get(curEntry.getHostname()), isEmployee,
 							assignments.get(curEntry.getHostname()).getEntityKind()))
 						res.add(currentViewer);
-					currentViewer = null;
 			}
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
