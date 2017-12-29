@@ -25,7 +25,6 @@ import com.inodes.datanucleus.model.Key;
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.apdevice.impl.APDVisitHelperImpl;
 import mobi.allshoppings.dao.APDeviceDAO;
-import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.ExternalAPHotspotDAO;
@@ -101,8 +100,6 @@ public class DashboardAPDeviceMapperService {
 	@Autowired
 	private APHHelper aphHelper;
 	@Autowired
-	private APHEntryDAO apheDao;
-	@Autowired
 	private APDeviceDAO apdDao;
 	@Autowired
 	private FloorMapJourneyDAO fmjDao;
@@ -166,8 +163,15 @@ public class DashboardAPDeviceMapperService {
 							curDate.getTime() +Constants.DAY_IN_MILLIS < toDate.getTime());
 
 				if( CollectionUtils.isEmpty(phases) || phases.contains(PHASE_APDVISIT))
-					createAPDVisitPerformanceDashboardForDay(curDate, entityIds, null, null, !deletePreviousRecords,
-							false);
+					if( CollectionUtils.isEmpty(entityIds)) {
+						createAPDVisitPerformanceDashboardForDay(curDate, entityIds, null, null, !deletePreviousRecords,
+								false);
+					} else {
+						for( String entityId : entityIds ) {
+							createAPDVisitPerformanceDashboardForDay(curDate, Arrays.asList(entityId), null, null, !deletePreviousRecords,
+									false);
+						}
+					}
 
 				curDate = new Date(curDate.getTime() + Constants.DAY_IN_MILLIS);
 
