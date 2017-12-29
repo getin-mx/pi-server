@@ -63,19 +63,26 @@ import mobi.allshoppings.tools.Range;
 import mobi.allshoppings.tracker.TrackerHelper;
 
 /**
- * Base server query handler. This class is aweken on frontend message arrival. Subinstances of this class
- * can define specific behaviours for each URL. 
- * @author ignacio
- *
+ * <p>Base class to attend front-end requests. All other front-end services extend this class (or its equivalent
+ * RestBaseServerResource).</p>
+ * <p>This class implements some common methods &amp; utilities for all front-end services.</p> 
+ * @author Matias Hapanowicz
+ * @author <a href="mailto:ignacio@getin.mx" >Manuel "Nachintoch" Castillo</a>
+ * @version 1.5, december 2017
+ * @since Allshoppings
+ * @see mobi.allshoppings.bdb.bz.RestBaseServerResource
  */
 public abstract class BDBRestBaseServerResource extends ServerResource {
 
+	/**
+	 * Class' logger
+	 */
 	protected static final Logger logger = Logger.getLogger(BDBRestBaseServerResource.class.getName()); 
 
-	protected static final int OPERATION_READ = 0;
-	protected static final int OPERATION_WRITE = 1;
+	protected static final byte OPERATION_READ = 0;
+	protected static final byte OPERATION_WRITE = 1;
 	
-	protected List<String> INVALID_DEFAULT_FIELDS = CollectionFactory.createList();
+	protected final List<String> INVALID_DEFAULT_FIELDS = CollectionFactory.createList();
 	protected static final String[] EMPTY_STRING_ARRAY = new String[0];
 	protected static final List<String> INVALID_READ_FIELDS = Arrays.asList(new String[] {"key"});
 	protected static final List<String> INVALID_WRITE_FIELDS = Arrays.asList(new String[] {"key", "identifier", "creationDateTime", "lastUpdate", "password", "authToken"});
@@ -160,7 +167,8 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	 * @throws JSONException
 	 */
 	public void putSystemDateTime(JSONObject object) throws JSONException {
-		object.put("systemDateTime", DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(new Date()));
+		object.put("systemDateTime",
+				DateFormatUtils.ISO_8601_EXTENDED_DATETIME_TIME_ZONE_FORMAT.format(new Date()));
 	}
 	
 	/**
@@ -169,10 +177,8 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	 * @return A map with the request parameters
 	 */
 	public Map<String,String> getParameters() {
-		if( this.getRequest() == null ) return new HashMap<String, String>();
-		Reference url = this.getRequest().getResourceRef();
-		Form query = url.getQueryAsForm();
-		return query.getValuesMap();
+		return getRequest() == null ? new HashMap<String, String>():
+			getRequest().getResourceRef().getQueryAsForm().getValuesMap();
 	}
 
 	/**
@@ -200,24 +206,6 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 				checkMandatoryFields(obj.getJSONObject(parts[0]), new String[] {sb.toString()});
 			}
 		}
-	}
-	
-	/**
-	 * Checks if a user has permission to an entity
-	 * 
-	 * @param user
-	 *            The user to be checked
-	 * @param obj
-	 *            The object to be checked
-	 * @param clazz
-	 *            The object class, if the object is null (for example, creation
-	 *            of a new entity)
-	 * @param operation
-	 *            OPERATION_WRITE, OPERATION_READ
-	 * @return true if the user has permission for the object, false if not
-	 */
-	public boolean hasPermission(User user, Object obj, Class<?> clazz, int operation ) {
-		return true;
 	}
 	
 	/**
@@ -253,8 +241,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 			return identifierAttribute;
 		}
 
-		Map<String,String> parameters = this.getParameters();
-		String value = parameters.get(key);
+		String value = getParameters().get(key);
 		if (value == null || "null".equals(value)) {
 			return defaultValue;
 		}
@@ -277,22 +264,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 			logger.finer("Cannot convert value " + val + " to integer!");
 			return defaultValue;
 		}
-	}//obtainIntegerValue
-	
-	/**
-	 * Searches the key parameter on the URL's query; if it exists, its value is returned as a byte.
-	 * @param key - the name of the HTTP parameter.
-	 * @param defaultValue - A value to return if the URL doesn't contains the given key.
-	 * @return byte - The result value.
-	 */
-	public byte obtainByteValue(String key, byte defaultValue) {
-		String val = obtainStringValue(key, null);
-		try {
-			return StringUtils.hasText(val) ? Byte.valueOf(val) : defaultValue;
-		} catch(NumberFormatException e) {
-			return defaultValue;
-		}//tries to parse the parameter value as a byte
-	}//obtainByteValue
+	}
 	
 	/**
 	 * Searches the key parameter on the URL's query. If found returns the value
@@ -302,7 +274,25 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	 * @param defaultValue
 	 * @return
 	 */
-	public Double obtainDoubleValue(String key, Double defaultValue) {
+	public byte obtainByteValue(String key, byte defaultValue) {
+		String val = obtainStringValue(key, null);
+		try {b
+			return StringUtils.hasText(val) ? Byte.valueOf(val) : defaultValue;
+		} catch( NumberFormatException e ) {
+			logger.finer("Cannot convert value " + val + " to integer!");
+			return defaultValue;
+		}
+	}
+	
+	/**
+	 * Searches the key parameter on the URL's query. If found returns the value
+	 * otherwise the defaultValue
+	 *
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 */
+	public double obtainDoubleValue(String key, double defaultValue) {
 		String val = obtainStringValue(key, null);
 		try {
 			return StringUtils.hasText(val) ? Double.valueOf(val) : defaultValue;
@@ -338,13 +328,12 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	 * @return
 	 */
 	public Date obtainDateValue(String key, Date defaultValue) {
-		Map<String,String> parameters = this.getParameters();
-		String value = parameters.get(key);
+		String value = getParameters().get(key);
 		if (value == null) {
 			return defaultValue;
 		}
 
-		String pattern = DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.getPattern();
+		String pattern = DateFormatUtils.ISO_8601_EXTENDED_DATETIME_TIME_ZONE_FORMAT.getPattern();
 		Date date = null;
 		try {
 			date = DateUtils.parseDate((String)value, new String[] { pattern });
@@ -425,19 +414,17 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	 * @param defaultValue
 	 * @return
 	 */
-	public Boolean obtainBooleanValue(String key, Boolean defaultValue) {
-		Map<String,String> parameters = this.getParameters();
-		String value = parameters.get(key);
+	public boolean obtainBooleanValue(String key, boolean defaultValue) {
+		String value = getParameters().get(key);
 		if (value == null) {
 			return defaultValue;
 		}
-		Boolean booleanValue = defaultValue;
 		if (value.compareToIgnoreCase("true") == 0) {
 			return true;
 		} else 	if (value.compareToIgnoreCase("false") == 0) {
 			return false;
 		}
-		return booleanValue;
+		return defaultValue;
 	}
 	
 	/**
@@ -451,8 +438,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	 */
 	public List<Integer> obtainIntValues(String key, List<Integer> defaultValue) {
 		List<Integer> ret = CollectionFactory.createList();
-		Map<String,String> parameters = this.getParameters();
-		String value = parameters.get(key);
+		String value = getParameters().get(key);
 		if (value == null) {
 			return defaultValue;
 		}
@@ -469,31 +455,6 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	}
 	
 	/**
-	 * Searches the key parameter on the URL's query. If found returns the value
-	 * otherwise the defaultValue
-	 * 
-	 * @param key
-	 * @param defaultValue
-	 * @return
-	 */
-	public int obtainIntValue(String key, int defaultValue) {
-		Map<String,String> parameters = this.getParameters();
-		String value = parameters.get(key);
-		if (value == null) {
-			return defaultValue;
-		}
-		int intValue = defaultValue;
-		try {
-		     intValue = Integer.parseInt(value);
-		     if (intValue < 0) {
-		    	 intValue = defaultValue;
-		     }
-		} catch (NumberFormatException e) {
-		}
-		return intValue;
-	}
-
-	/**
 	 * Obtains a user based in its auth token
 	 * 
 	 * @return The user that has been found in the token
@@ -503,8 +464,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	 */
 	public User getUserFromToken() throws ASException {
 		// take the authToken form request
-		Map<String,String> parameters = this.getParameters();
-		String authToken = parameters.get("authToken");
+		String authToken = getParameters().get("authToken");
 		if (!StringUtils.hasText(authToken)) {
 			throw ASExceptionHelper.authTokenMissingException();
 		}
@@ -565,8 +525,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	 */
 	public String obtainLang() {
 		// take the authToken form request
-		Map<String,String> parameters = this.getParameters();
-		String lang = parameters.get("lang");
+		String lang = getParameters().get("lang");
 		if(!StringUtils.hasText(lang)) lang = systemConfiguration.getDefaultLang();
 		return lang;
 	}
@@ -590,8 +549,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	 */
 	public void invalidateToken() throws ASException {
 		// take the authToken form request
-		Map<String,String> parameters = this.getParameters();
-		String authToken = parameters.get("authToken");
+		String authToken = getParameters().get("authToken");
 		if (authToken == null) {
 			throw ASExceptionHelper.authTokenMissingException();
 		}
@@ -650,8 +608,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 		}
 		
 		// look on URL parameters
-		Map<String,String> parameters = this.getParameters();
-		String identifier = parameters.get(identifierName);
+		String identifier = getParameters().get(identifierName);
 		if (identifier == null || "".equals(identifier)) {
 			return null;
 		}
@@ -690,8 +647,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 			}
 
 			// look on URL parameters
-			Map<String,String> parameters = this.getParameters();
-			String identifier = parameters.get(USER_IDENTIFIER_KEY);
+			String identifier = getParameters().get(USER_IDENTIFIER_KEY);
 			if (identifier == null || "".equalsIgnoreCase(identifier) || "me".equalsIgnoreCase(identifier)) {
 				// If the client does not send the identifier attribute use the authUser.identifier
 				identifier = authUser.getIdentifier();
@@ -865,7 +821,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 									Email mail = new Email(((String)safeString(fieldValue)).toLowerCase());
 									PropertyUtils.setProperty(obj, key, mail);
 								} else if (PropertyUtils.getPropertyType(obj, key) == Date.class) {
-									String pattern = DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.getPattern();
+									String pattern = DateFormatUtils.ISO_8601_EXTENDED_DATETIME_TIME_ZONE_FORMAT.getPattern();
 									try {
 										Date date = DateUtils.parseDate((String)fieldValue, new String[] { pattern });
 										PropertyUtils.setProperty(obj, key, date);
@@ -986,7 +942,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 							} else if (fieldValue instanceof Text) {
 								fieldValue = ((Text)fieldValue).getValue();
 							} else if (fieldValue instanceof Date) {
-								fieldValue = DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(fieldValue);
+								fieldValue = DateFormatUtils.ISO_8601_EXTENDED_DATETIME_TIME_ZONE_FORMAT.format(fieldValue);
 							} else if (fieldValue instanceof Blob) {
 								fieldValue = Base64.encode(((Blob)fieldValue).getBytes(), true);
 							} else if (fieldValue instanceof MultiLang) {
@@ -1058,7 +1014,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 				}
 			}
 			jsonobj.put(data, objects);
-			jsonobj.put("systemDateTime", DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(new Date()));
+			jsonobj.put("systemDateTime", DateFormatUtils.ISO_8601_EXTENDED_DATETIME_TIME_ZONE_FORMAT.format(new Date()));
 		} catch (JSONException e) {
 		}
 		return jsonobj;
@@ -1247,7 +1203,12 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	}
 
 	public boolean isValidForUser(User user, Store store) {
-		return user.getSecuritySettings().getRole() == Role.STORE ? 
-				user.getSecuritySettings().getStores().contains(store.getIdentifier()) : true;
+		if( user.getSecuritySettings().getRole().equals(Role.STORE)) {
+			if( user.getSecuritySettings().getStores().contains(store.getIdentifier()))
+				return true;
+			else
+				return false;
+		} else 
+			return true;
 	}
 }

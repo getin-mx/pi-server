@@ -68,7 +68,7 @@
 
 		<!-- Spring and rest versions -->
 		<spring.version>5.0.2.RELEASE</spring.version>
-		<restlet.version>2.4-M1</restlet.version>
+		<restlet.version>3.0-M1</restlet.version>
 	</properties>
 
 	<dependencies>
