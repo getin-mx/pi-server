@@ -32,7 +32,7 @@ public class GetinDump extends AbstractCLI {
 
 	private static final Logger log = Logger.getLogger(GetinDump.class.getName());
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	
+
 	//storeKind's
 	private static final int FOOT_STREET = 1;
 	private static final int MALL = 2;
@@ -60,7 +60,7 @@ public class GetinDump extends AbstractCLI {
 			KeyHelper keyHelper = (KeyHelper)getApplicationContext().getBean("key.helper");
 			ExternalAPHotspotDAO eaphDao = (ExternalAPHotspotDAO)getApplicationContext().getBean("externalaphotspot.dao.ref");
 			APDAssignationDAO apdaDao = (APDAssignationDAO)getApplicationContext().getBean("apdassignation.dao.ref");
-			
+
 //			GeoCodingHelper geocoder = (GeoCodingHelper)getApplicationContext().getBean("geocoding.helper");
 
 			log.log(Level.INFO, "Dumping Getin Data....");
@@ -95,7 +95,7 @@ public class GetinDump extends AbstractCLI {
 			// sportium_mx
 			// --> blulagoon_mx
 			// --> colombia
-			
+
 			// Shoppings ----------------------------------------------------------------------------------------------------
 			Shopping shopping = null;
 			try {
@@ -283,7 +283,7 @@ public class GetinDump extends AbstractCLI {
 				shopping.setKey(shoppingDao.createKey("grandsanfrancisco"));
 				shoppingDao.create(shopping);
 			}
-			
+
 			try {
 				shopping = shoppingDao.get("wallmartdemo", true);
 			} catch( Exception e ) {
@@ -295,8 +295,8 @@ public class GetinDump extends AbstractCLI {
 				shopping.setKey(shoppingDao.createKey("wallmartdemo"));
 				shoppingDao.create(shopping);
 			}
-			
-			
+
+
 
 			// Brands ----------------------------------------------------------------------------------------------------
 			Brand brand;
@@ -310,7 +310,7 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 			}
 
-			
+
 			try {
 				brand = brandDao.get("blulagoon_mx", true);
 			} catch( Exception e ) {
@@ -411,7 +411,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "botanicus_mx"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("saavedra_mx", true);
 			} catch( Exception e ) {
@@ -584,7 +584,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "alansolorio_mx"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("pameladeharo_mx", true);
 			} catch( Exception e ) {
@@ -724,7 +724,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "converse_mx"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("ecobutik_mx", true);
 			} catch( Exception e ) {
@@ -734,7 +734,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "ecobutik_mx"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("canalla_bistro_mx", true);
 			} catch( Exception e ) {
@@ -744,7 +744,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "canalla_bistro_mx"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("cafe_balcarce_ar", true);
 			} catch( Exception e ) {
@@ -754,7 +754,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "cafe_balcarce_ar"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("carolina_herrera_il", true);
 			} catch( Exception e ) {
@@ -764,7 +764,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "carolina_herrera_il"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("dentalia_mx", true);
 			} catch( Exception e ) {
@@ -775,7 +775,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "dentalia_mx"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("farmacias_similares_mx", true);
 			} catch( Exception e ) {
@@ -785,7 +785,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "farmacias_similares_mx"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("moda_holding_mx", true);
 			} catch( Exception e ) {
@@ -795,7 +795,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "moda_holding_mx"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("capadeozono_mx", true);
 			} catch( Exception e ) {
@@ -805,7 +805,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "capadeozono_mx"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("aditivo_franquicias_mx", true);
 			} catch( Exception e ) {
@@ -815,7 +815,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "aditivo_franquicias_mx"));
 				brandDao.create(brand);
 			}
-			// error to aditivo franquicias. franquicias_edmond_bcprint_mx == aditivo_franquicias_mx	
+			// error to aditivo franquicias. franquicias_edmond_bcprint_mx == aditivo_franquicias_mx
 			try {
 				brand = brandDao.get("franquicias_edmond_bcprint_mx", true);
 			} catch( Exception e ) {
@@ -825,7 +825,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "franquicias_edmond_bcprint_mx"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("aditivo_franquicias_michan_mx", true);
 			} catch( Exception e ) {
@@ -835,7 +835,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "aditivo_franquicias_michan_mx"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("mt_sport_mx", true);
 			} catch( Exception e ) {
@@ -845,7 +845,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "mt_sport_mx"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("elgalpontacuara_ar", true);
 			} catch( Exception e ) {
@@ -855,7 +855,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "elgalpontacuara_ar"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("aditivofranquicias2_mx", true);
 			} catch( Exception e ) {
@@ -865,7 +865,7 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "aditivofranquicias2_mx"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("atelier_mx", true);
 			} catch( Exception e ) {
@@ -875,10 +875,10 @@ public class GetinDump extends AbstractCLI {
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "atelier_mx"));
 				brandDao.create(brand);
 			}
-			
+
 			try {
 				brand = brandDao.get("fraiche_mx", true);
-				brand.setStatus(StatusAware.STATUS_ENABLED); 
+				brand.setStatus(StatusAware.STATUS_ENABLED);
 		        brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
@@ -888,10 +888,10 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 				log.log(Level.INFO, "Se ha creado la marca "+brand.getName());
 			}
-			
+
 			try {
 				brand = brandDao.get("brunocorza_mx", true);
-				brand.setStatus(StatusAware.STATUS_ENABLED); 
+				brand.setStatus(StatusAware.STATUS_ENABLED);
 		        brandDao.update(brand);
 			} catch( Exception e ) {
 				brand = new Brand();
@@ -988,8 +988,8 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("314", "Outlet Deportes Correo Mayor 1", "outletdeportes_mx",null, GetinDump.FOOT_STREET));
 			// ID disponible
 			stores.add(new StoreAdapter("316","Sally Beauty Perisur", "sallybeauty_mx","perisur", GetinDump.MALL));
-			stores.add(new StoreAdapter("317","Sally Beauty Centro Coyoacan", "sallybeauty_mx","centrocoyoacan", GetinDump.MALL)); 
-			stores.add(new StoreAdapter("318","Sally Beauty Mega Coyoacan", "sallybeauty_mx",null, GetinDump.AUTO_SERVICE)); 
+			stores.add(new StoreAdapter("317","Sally Beauty Centro Coyoacan", "sallybeauty_mx","centrocoyoacan", GetinDump.MALL));
+			stores.add(new StoreAdapter("318","Sally Beauty Mega Coyoacan", "sallybeauty_mx",null, GetinDump.AUTO_SERVICE));
 			stores.add(new StoreAdapter("319","Sally Beauty Delta", "sallybeauty_mx","parquedelta", GetinDump.MALL));
 //			stores.add(new StoreAdapter("320","Sally Beauty Metepec", "sallybeauty_mx",null, 0));
 			stores.add(new StoreAdapter("321","Roku Condesa", "roku_mx",null, GetinDump.FOOT_STREET));
@@ -997,14 +997,14 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("323", "La Nueva Orizaba Central de Abastos", "saavedra_mx", null, 0));
 			stores.add(new StoreAdapter("324", "La Parroquia Central de Abastos", "saavedra_mx", null, 0));
 			stores.add(new StoreAdapter("325", "La Martina Cancún", "chomarc_mx",null, GetinDump.MALL));
-			stores.add(new StoreAdapter("326", "Adolfo Dominguez Los Cabos", "chomarc_mx",null, GetinDump.MALL)); 
+			stores.add(new StoreAdapter("326", "Adolfo Dominguez Los Cabos", "chomarc_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("327", "Adolfo Dominguez Mérida", "chomarc_mx",null, GetinDump.MALL));
-			stores.add(new StoreAdapter("328", "Adolfo Dominguez Outlet Veracuz", "chomarc_mx",null, GetinDump.MALL)); 
+			stores.add(new StoreAdapter("328", "Adolfo Dominguez Outlet Veracuz", "chomarc_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("329", "Adolfo Dominguez Xalapa", "chomarc_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("330", "Adolfo Dominguez Outlet Xalapa", "chomarc_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("331", "Adolfo Dominguez Coatzacoalcos", "chomarc_mx",null, GetinDump.MALL));
-			stores.add(new StoreAdapter("332", "Adolfo Dominguez Monterrey", "chomarc_mx",null, GetinDump.MALL)); 
-			stores.add(new StoreAdapter("333", "UNO de 50 Monterrey", "chomarc_mx",null, 0)); 
+			stores.add(new StoreAdapter("332", "Adolfo Dominguez Monterrey", "chomarc_mx",null, GetinDump.MALL));
+			stores.add(new StoreAdapter("333", "UNO de 50 Monterrey", "chomarc_mx",null, 0));
 			stores.add(new StoreAdapter("334", "Adolfo Dominguez Tabasco", "chomarc_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("335", "Adolfo Dominguez Veracruz", "chomarc_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("336", "Saboreaté Y Café Alameda", "saboreateycafe_mx",null, GetinDump.MALL));
@@ -1054,16 +1054,16 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("380", "Grupo Pavel Tumi", "grupopavel_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("381", "Grupo Pavel Inglot", "grupopavel_mx", null, GetinDump.MALL));
 			//stores.add(new StoreAdapter("382", "Modatelas Ermita", "modatelas_mx", null, 0));
-			//stores.add(new StoreAdapter("383", "Modatelas Coacalco II", "modatelas_mx", null, 0)); 
-			//stores.add(new StoreAdapter("384", "Modatelas Coacalco III", "modatelas_mx", null, 0)); 
+			//stores.add(new StoreAdapter("383", "Modatelas Coacalco II", "modatelas_mx", null, 0));
+			//stores.add(new StoreAdapter("384", "Modatelas Coacalco III", "modatelas_mx", null, 0));
 			stores.add(new StoreAdapter("385", "Modatelas Romero Rubio", "modatelas_mx", null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("386", "Modatelas Izcalli", "modatelas_mx", null, GetinDump.MALL)); 
-			stores.add(new StoreAdapter("387", "Modatelas Express Tepotzotlan", "modatelas_mx", null, GetinDump.FOOT_STREET)); 
-			stores.add(new StoreAdapter("388", "Modatelas Lago de Guadalupe", "modatelas_mx", null, GetinDump.MALL)); 
-			stores.add(new StoreAdapter("389", "Modatelas Atizapán", "modatelas_mx", null, GetinDump.FOOT_STREET)); 
-			stores.add(new StoreAdapter("390", "Modatelas Tultitlán", "modatelas_mx", null, GetinDump.MALL)); 
-			stores.add(new StoreAdapter("391", "Modatelas Patio Ayotla", "modatelas_mx", null, GetinDump.MALL)); 
-			stores.add(new StoreAdapter("392", "Modatelas Express Visitación", "modatelas_mx", null, GetinDump.MALL)); 
+			stores.add(new StoreAdapter("386", "Modatelas Izcalli", "modatelas_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("387", "Modatelas Express Tepotzotlan", "modatelas_mx", null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("388", "Modatelas Lago de Guadalupe", "modatelas_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("389", "Modatelas Atizapán", "modatelas_mx", null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("390", "Modatelas Tultitlán", "modatelas_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("391", "Modatelas Patio Ayotla", "modatelas_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("392", "Modatelas Express Visitación", "modatelas_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("393", "Modatelas Casas Alemán", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			// ID disponible
 			stores.add(new StoreAdapter("395", "Modatelas Chimalhuacán", "modatelas_mx", null, GetinDump.MALL));
@@ -1092,7 +1092,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("418", "Best Buy Central", "bestbuy_mx", "centrosantafe", GetinDump.MALL));
 			stores.add(new StoreAdapter("419", "Modatelas La Aurora", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("420", "Modatelas Las Maravillas", "modatelas_mx", null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("421", "FULLSAND ACA DIAMANTE", "fullsand_mx", null, GetinDump.MALL));			
+			stores.add(new StoreAdapter("421", "FULLSAND ACA DIAMANTE", "fullsand_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("433", "Monte de Piedad - 96", "montedepiedad_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("434", "Monte de Piedad - 61", "montedepiedad_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("435", "Monte de Piedad - 305", "montedepiedad_mx", null, GetinDump.FOOT_STREET));
@@ -1124,7 +1124,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("461", "Modatelas Tierra Blanca", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("462", "Modatelas Parral", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("463", "Modatelas Chihuahua IV", "modatelas_mx", null, GetinDump.MALL));
-			
+
 			// IDS disponibles
 			stores.add(new StoreAdapter("466", "FULLSAND LA QUINTA", "fullsand_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("467", "Volaris AICM Nacional", "volaris_mx", null, GetinDump.AIRPORT));
@@ -1134,15 +1134,15 @@ public class GetinDump extends AbstractCLI {
 
 			// IDs disponibles
 			stores.add(new StoreAdapter("475", "Outlet Deportes Isabel la Catolica II", "outletdeportes_mx",null, GetinDump.MALL));
-			stores.add(new StoreAdapter("476", "FULLSAND AMERICAS", "fullsand_mx", null, GetinDump.MALL));			
+			stores.add(new StoreAdapter("476", "FULLSAND AMERICAS", "fullsand_mx", null, GetinDump.MALL));
 
-			stores.add(new StoreAdapter("477", "Universo de Fragancias Naucalpan", "universodefragancias_mx", null, GetinDump.FOOT_STREET));			
-			stores.add(new StoreAdapter("478", "Aditivo Vidal Alcocer", "aditivo_mx", null, GetinDump.FOOT_STREET));			
-			stores.add(new StoreAdapter("479", "98 Coast Av. Oasis Coyoacán", "98coastav_mx", null, GetinDump.MALL));			
-			stores.add(new StoreAdapter("480", "98 Coast Av. Portal", "98coastav_mx", null, GetinDump.MALL));			
-			stores.add(new StoreAdapter("481", "BestBuy Santa Fe", "bestbuy_mx", "centrosantafe", GetinDump.MALL));			
-			stores.add(new StoreAdapter("482", "98 Coast Av. Playa 1", "98coastav_mx", null, GetinDump.MALL));			
-			stores.add(new StoreAdapter("483", "98 Coast Av. Playa 2", "98coastav_mx", null, GetinDump.MALL));			
+			stores.add(new StoreAdapter("477", "Universo de Fragancias Naucalpan", "universodefragancias_mx", null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("478", "Aditivo Vidal Alcocer", "aditivo_mx", null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("479", "98 Coast Av. Oasis Coyoacán", "98coastav_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("480", "98 Coast Av. Portal", "98coastav_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("481", "BestBuy Santa Fe", "bestbuy_mx", "centrosantafe", GetinDump.MALL));
+			stores.add(new StoreAdapter("482", "98 Coast Av. Playa 1", "98coastav_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("483", "98 Coast Av. Playa 2", "98coastav_mx", null, GetinDump.MALL));
 
 			stores.add(new StoreAdapter("484", "Flormar Atlantis", "flormar_co", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("485", "Flormar Jardin Plaza", "flormar_co", null, GetinDump.MALL));
@@ -1154,18 +1154,18 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("491", "Sunglass Hut Metromall", "sunglasshut_pa", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("492", "Grand Store Altaplaza", "grandstore_pa", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("493", "La Martina Multiplaza", "lamartina_pa", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("495", "Tanya Moss Plaza Carso", "tanyamoss_mx", "plazacarso", GetinDump.MALL));
 			stores.add(new StoreAdapter("496", "Tanya Moss Toreo Parque Central", "tanyamoss_mx", "toreoparquecentral", GetinDump.MALL));
 			stores.add(new StoreAdapter("497", "Tanya Moss Parque Delta", "tanyamoss_mx", "parquedelta", GetinDump.MALL));
 
-			stores.add(new StoreAdapter("498", "Aditivo Venustiano Carranza", "aditivo_mx", null, GetinDump.MALL));			
-			stores.add(new StoreAdapter("499", "Aditivo Chalco 2", "aditivo_mx", null, GetinDump.MALL));			
-			stores.add(new StoreAdapter("500", "Aditivo Los Reyes", "aditivo_franquicias_michan_mx", null, GetinDump.FOOT_STREET));			
-			stores.add(new StoreAdapter("501", "Aditivo El Rosario", "aditivo_mx", null, GetinDump.CETRAM));			
-			stores.add(new StoreAdapter("502", "Aditivo Plaza Aragon", "aditivo_mx", null, GetinDump.MALL));			
-			stores.add(new StoreAdapter("503", "Aditivo Arco Norte", "aditivo_mx", null, GetinDump.MALL));			
-			stores.add(new StoreAdapter("504", "Aditivo Neza 1", "aditivo_mx", null, GetinDump.MALL));			
+			stores.add(new StoreAdapter("498", "Aditivo Venustiano Carranza", "aditivo_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("499", "Aditivo Chalco 2", "aditivo_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("500", "Aditivo Los Reyes", "aditivo_franquicias_michan_mx", null, GetinDump.FOOT_STREET));
+			stores.add(new StoreAdapter("501", "Aditivo El Rosario", "aditivo_mx", null, GetinDump.CETRAM));
+			stores.add(new StoreAdapter("502", "Aditivo Plaza Aragon", "aditivo_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("503", "Aditivo Arco Norte", "aditivo_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("504", "Aditivo Neza 1", "aditivo_mx", null, GetinDump.MALL));
 
 //			stores.add(new StoreAdapter("505", "Pakmail Parque Lincoln", "pakmail_mx", null, 0));
 //			stores.add(new StoreAdapter("506", "Pakmail Plaza Polanco", "pakmail_mx", null, 0));
@@ -1198,7 +1198,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("531","Sally Beauty Paseo Acoxpa ", "sallybeauty_mx", null, GetinDump.MALL));
 //			stores.add(new StoreAdapter("532","Sally Beauty Galerías Coapa", "sallybeauty_mx", null, 0));
 //			stores.add(new StoreAdapter("533","Sally Beauty Oasis Coyoacán", "sallybeauty_mx", null, 0));
-			
+
 			stores.add(new StoreAdapter("534","Farmacias YZA Tolentino", "farmaciasyza_mx", null, GetinDump.FOOT_STREET));
 
 			stores.add(new StoreAdapter("535","Tony Moly Oasis Coyoacan", "tonymoly_mx", null, GetinDump.MALL));
@@ -1246,7 +1246,7 @@ public class GetinDump extends AbstractCLI {
 //			stores.add(new StoreAdapter("569", "Tanya Moss Isla Perisur", "tanyamoss_mx", null, 0));
 			stores.add(new StoreAdapter("570", "Tanya Moss Andares", "tanyamoss_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("571", "Tanya Moss Aeropuerto Guadalajara", "tanyamoss_mx", null, GetinDump.AIRPORT));
-			stores.add(new StoreAdapter("572", "Tanya Moss Angelopolis", "tanyamoss_mx", null, GetinDump.MALL));
+//			stores.add(new StoreAdapter("572", "Tanya Moss Angelopolis", "tanyamoss_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("573", "Tanya Moss Oasis Coyoacan", "tanyamoss_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("574", "Tanya Moss Aeropuerto CDMX Terminal 2", "tanyamoss_mx", null, GetinDump.AIRPORT));
 			stores.add(new StoreAdapter("575", "Tanya Moss Palacio de Hierro Polanco", "tanyamoss_mx", null, GetinDump.MALL));
@@ -1258,7 +1258,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("579", "Pakmail Valladolid", "pakmail_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("580", "Pakmail San Jeronimo", "pakmail_mx", null, GetinDump.FOOT_STREET));
 
-			
+
 			stores.add(new StoreAdapter("283", "Prada Perisur", "prada_mx", "perisur", GetinDump.MALL));
 			stores.add(new StoreAdapter("284", "Prada Satelite", "prada_mx", "plazasatelite", GetinDump.MALL));
 			stores.add(new StoreAdapter("290", "Prada Santa Fe", "prada_mx", "centrosantafe", GetinDump.MALL));
@@ -1270,7 +1270,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("427", "Prada Galerias Serdan", "prada_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("428", "Prada Parque Toreo", "prada_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("429", "Prada Plaza Mayor", "prada_mx", null, GetinDump.MALL));
-			stores.add(new StoreAdapter("430", "Prada Outlet Punta Norte", "prada_mx", null, GetinDump.MALL));  
+			stores.add(new StoreAdapter("430", "Prada Outlet Punta Norte", "prada_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("431", "Prada Outlet Galerias", "prada_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("432", "Prada Outlet Mulza", "prada_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("494", "Prada Cancun", "prada_mx", null, GetinDump.MALL));
@@ -1290,18 +1290,18 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("593", "Prada Parque Via Vallejo", "prada_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("594", "Prada Parque Delta", "prada_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("595", "Prada Fashion Drive", "prada_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("596","Pakmail Mariano Otero", "pakmail_mx", null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("597","Sally Beauty World Trade Center", "sallybeauty_mx", null, GetinDump.MALL));
 //			stores.add(new StoreAdapter("598","Sally Beauty Paseo Interlomas", "sallybeauty_mx", null, 0));
 			stores.add(new StoreAdapter("599","Sally Beauty Aragón", "sallybeauty_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("600","Ecobutik Centro Histórico", "ecobutik_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("601","Ecobutik San Angel", "ecobutik_mx", null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("602","Canalla Bistro", "canalla_bistro_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("603","Squalo Pabellon", "squalo_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("604","Squalo Laureles", "squalo_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("605","Squalo Oaxaca", "squalo_mx", null, GetinDump.MALL));
@@ -1320,16 +1320,16 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("618","Squalo Tlajomulco", "squalo_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("619","Squalo Playa 6", "squalo_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("620","Squalo Mazatlan 1", "squalo_mx", null, GetinDump.FOOT_STREET));
-			
+
 //			stores.add(new StoreAdapter("621","Prada Angelópolis", "prada_mx", null, 0));
 			stores.add(new StoreAdapter("622","Prada Galerías Valle Oriente", "prada_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("623","Castelar", "cafe_balcarce_ar", null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("624","Carolina Herrera", "carolina_herrera_il", null, GetinDump.MALL));
-			
+
 //			stores.add(new StoreAdapter("625","Botanicus El Rosario", "botanicus_mx", null, 0));
-			
+
 			stores.add(new StoreAdapter("626","Aditivo Vallejo", "aditivo_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("627","Aditivo Ecatepec", "aditivo_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("628","Aditivo Iztapalapa", "aditivo_mx", null, GetinDump.MALL));
@@ -1384,9 +1384,9 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("677","Aditivo Salamanca", "aditivo_mx", null, GetinDump.FOOT_STREET));
 //			stores.add(new StoreAdapter("678","Aditivo Alcaraz Circuito", "aditivo_mx", null, 0));
 			stores.add(new StoreAdapter("679","Aditivo Insurgentes", "aditivo_mx", null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("680","Saboreaté Y Café Merida", "saboreateycafe_mx", null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("681","Mobo República del Salvador", "mobo_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("682","Mobo Paseo Interlomas", "mobo_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("683","Mobo Palmas 330", "mobo_mx", null, 0));
@@ -1394,13 +1394,13 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("685","Mobo Aragon 2", "mobo_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("686","Mobo Meave piso 1", "mobo_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("687","Mobo Meave piso 2", "mobo_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("688","Dentalia Garden", "dentalia_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("689","Dentalia Pabellón Bosques", "dentalia_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("690","Dentalia Samara", "dentalia_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("691","Mobo Town Center Nicolás Romero", "mobo_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("692","Farmacias Similares Ermita 4", "farmacias_similares_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("693","Farmacias Similares Zaragoza 1", "farmacias_similares_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("694","Farmacias Similares Eje Central 2", "farmacias_similares_mx", null, GetinDump.FOOT_STREET));
@@ -1411,14 +1411,14 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("699","Farmacias Similares Polanco 1", "farmacias_similares_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("700","Farmacias Similares Apatlaco 1", "farmacias_similares_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("701","Farmacias Similares Aragón 2", "farmacias_similares_mx", null, GetinDump.FOOT_STREET));
-			
+
 			// ID disponible
 			stores.add(new StoreAdapter("703", "Mobo Aeropuerto Terminal 1", "mobo_mx",null, GetinDump.AIRPORT));
 			stores.add(new StoreAdapter("704", "Mobo Aeropuerto T2 Llegadas", "mobo_mx",null, GetinDump.AIRPORT));
-			
+
 			stores.add(new StoreAdapter("705","Aditivo Puebla Centro", "aditivo_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("706","Aditivo Tlalnepantla", "aditivo_mx", null, GetinDump.CETRAM));
-			
+
 			stores.add(new StoreAdapter("707","Moda Holding Dorothy Gaynor Santa Fe II", "moda_holding_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("708","*Moda Holding Dorothy Gaynor Santa Fe I", "moda_holding_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("709","Moda Holding Dorothy Gaynor Madero", "moda_holding_mx", null, GetinDump.FOOT_STREET));
@@ -1426,57 +1426,57 @@ public class GetinDump extends AbstractCLI {
 //			stores.add(new StoreAdapter("711","Moda Holding Dorothy Gaynor Santa Fe I", "moda_holding_mx", null, 0));
 			stores.add(new StoreAdapter("712","Moda Holding Zingara Santa Fe I", "moda_holding_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("713","Moda Holding Zingara  Santa Fe II", "moda_holding_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("714", "Outlet Deportes 16 de Septiembre", "outletdeportes_mx",null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("715", "Aditivo Cortázar", "aditivo_mx",null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("716", "Sbarro Perisur", "sbarro_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("717", "Sbarro Galerias Coapa", "sbarro_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("718", "Sbarro Acoxpa", "sbarro_mx",null, GetinDump.MALL));
 //			stores.add(new StoreAdapter("719", "Sbarro Oasis", "sbarro_mx",null, 0));
 			stores.add(new StoreAdapter("720", "Sbarro Coyoacán", "sbarro_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("721", "Sbarro Universidad", "sbarro_mx",null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("722", "Mobo Palmas Puente", "mobo_mx",null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("723", "Capa de Ozono Santa Fe 1", "capadeozono_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("724", "Capa de Ozono Santa Fe 2", "capadeozono_mx",null, GetinDump.MALL));
-			
+
 //			stores.add(new StoreAdapter("725", "Aditivo Franquicia Xochimilco", "franquicias_edmond_bcprint_mx",null, 0));
 //			stores.add(new StoreAdapter("726", "Aditivo Franquicia Tlahuac", "franquicias_edmond_bcprint_mx",null, 0));
 //			stores.add(new StoreAdapter("727", "Aditivo Franquicia Plaza Central", "franquicias_edmond_bcprint_mx",null, 0));
 //			stores.add(new StoreAdapter("728", "Aditivo Franquicia Cuernavaca", "franquicias_edmond_bcprint_mx",null, 0));
-			
+
 			stores.add(new StoreAdapter("729", "Aditivo Franquicias Edmond Tlahuac", "aditivo_franquicias_mx",null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("730", "Aditivo Franquicias Edmond Xochimilco", "aditivo_franquicias_mx",null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("731", "Aditivo Franquicias Edmond Plaza Central", "aditivo_franquicias_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("732", "Aditivo Franquicias Edmond Cuernavaca", "aditivo_franquicias_mx",null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("733", "Sally Beauty Galerias Insurgentes", "sallybeauty_mx",null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("734", "Sportium Santa Fe II", "getin_mx",null, 0));
 //			stores.add(new StoreAdapter("735", "Sportium Patio Santa Fe", "sportium_mx",null, 0));
-			
+
 			stores.add(new StoreAdapter("736", "Outlet Deportes Motolinea", "outletdeportes_mx",null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("737", "Adolfo Dominguez Cancun", "chomarc_mx",null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("738", "MT Sport S5 Centro Sur Puebla", "mt_sport_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("739", "MT Sport S1 Atlixco", "mt_sport_mx",null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("740", "El Galpón de Tacuara", "elgalpontacuara_ar",null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("741", "Outlet Deportes Venustiano Carranza", "outletdeportes_mx",null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("742","Mobo Meave", "mobo_mx", null, 0));
-			
+
 			stores.add(new StoreAdapter("743", "Outlet Deportes Punta Norte", "outletdeportes_mx",null, GetinDump.MALL));
-			
+
 			// ID disponible
 			stores.add(new StoreAdapter("745", "El Galpón de Tacuara Espacio abierto", "elgalpontacuara_ar",null, GetinDump.FOOT_STREET));
-			stores.add(new StoreAdapter("746", "El Galpón de Tacuara Cafetería", "elgalpontacuara_ar",null, GetinDump.FOOT_STREET)); 
-			
+			stores.add(new StoreAdapter("746", "El Galpón de Tacuara Cafetería", "elgalpontacuara_ar",null, GetinDump.FOOT_STREET));
+
 			stores.add(new StoreAdapter("747", "Chilim Balam Parque Lindavista", "chilimbalam_mx", "parquelindavista", GetinDump.MALL));
 			stores.add(new StoreAdapter("748", "Chilim Balam Forum Buenavista", "chilimbalam_mx", "forumbuenavista", GetinDump.MALL));
 			stores.add(new StoreAdapter("749", "Chilim Balam Cosmopol", "chilimbalam_mx", null, GetinDump.MALL));
@@ -1485,24 +1485,24 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("752", "Chilim Balam Galerias Serdan", "chilimbalam_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("753", "Chilim Balam Galerías Cuernavaca", "chilimbalam_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("754", "Chilim Balam Galerías Pachuca", "chilimbalam_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("756", "Squalo Veracruz", "squalo_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("757", "Aditivo Franquicias Celia Miramontes", "aditivofranquicias2_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("758", "Aditivo Franquicias Celia Izazaga", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("759", "Aditivo Franquicias Celia Coacalco", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("760", "Aditivo Franquicias Celia La Villa", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("761", "Aditivo Franquicias Celia Tehuacán", "aditivofranquicias2_mx",null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("762", "Prada Esfera", "prada_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("763", "Prada Victoria", "prada_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("764", "Adolfo Dominguez Antara", "chomarc_mx",null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("765", "Atelier Polanco", "atelier_mx",null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("766", "Atelier Pedregal", "atelier_mx",null, GetinDump.MALL));
 			stores.add(new StoreAdapter("767", "Atelier Roma", "atelier_mx",null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("768", "Modatelas Ixtlahuaca", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("769", "Modatelas Tonala", "modatelas_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("770", "Modatelas Zumpango III", "modatelas_mx", null, GetinDump.MALL));
@@ -1512,7 +1512,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("774", "Modatelas Poza Rica II", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("775", "Modatelas San Juan Del Rio", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("776", "Modatelas Ixmiquilpan", "modatelas_mx", null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("777", "Fraiche Chihuahua", "fraiche_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("778", "Fraiche Heroes de Tecamac", "fraiche_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("779", "Fraiche Nezahualcoyotl", "fraiche_mx", null, GetinDump.FOOT_STREET));
@@ -1520,43 +1520,43 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("781", "Fraiche Guanajuato", "fraiche_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("782", "Fraiche Viaducto Piedad", "fraiche_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("783", "Fraiche Av. Canal Miramontes", "fraiche_mx", null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("784", "Pakmail Mixcoac", "pakmail_mx", null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("785","Botanicus Polanco 2", "botanicus_mx", null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("786","Aditivo Poza Rica", "aditivo_mx", null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("787","Botanicus Forum Cuernavaca", "botanicus_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("788","Sally Beauty Plaza Bosques", "sallybeauty_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("789","Aditivo Plaza Fiesta Izcali", "aditivo_mx", null, 0));
-			
+
 			stores.add(new StoreAdapter("790","MT Sport S3 Orizaba Plaza Valle", "mt_sport_mx", null, 0));
 			stores.add(new StoreAdapter("791","MT Sport S6 Orizaba Centro", "mt_sport_mx", null, 0));
 			stores.add(new StoreAdapter("792","MT Sport S7 Apizaco", "mt_sport_mx", null, 0));
-			
+
 			stores.add(new StoreAdapter("793","Bruno Corza Galerías Insurgentes", "brunocorza_mx", null, 0));
 			stores.add(new StoreAdapter("794","Bruno Corza Polanco", "brunocorza_mx", null, 0));
 			stores.add(new StoreAdapter("795","Bruno Corza Mundo E", "brunocorza_mx", null, 0));
 			stores.add(new StoreAdapter("796","Bruno Corza Cosmopol", "brunocorza_mx", null, 0));
 			stores.add(new StoreAdapter("797","Bruno Corza Angelópolis", "brunocorza_mx", null, 0));
-			
+
 			stores.add(new StoreAdapter("798","MT Sport S11 Puebla Centro 1", "mt_sport_mx", null, 0));
-			
+
 			stores.add(new StoreAdapter("799","Opticas Devlyn Cervantes Saavedra Exhibición", "devlyn_mx", null, 0));
-			
+
 			stores.add(new StoreAdapter("800","Juguetron Santa Fe", "juguetron_mx", null, GetinDump.MALL));
-			stores.add(new StoreAdapter("801","Juguetron Puebla", "juguetron_mx", null, GetinDump.FOOT_STREET));
+//			stores.add(new StoreAdapter("801","Juguetron Puebla", "juguetron_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("802","Juguetron Guadalajara", "juguetron_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("803", "Vicky Form Vallejo I", "vickyform_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("804", "Vicky Form Tlalnepantla I", "vickyform_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("805", "Vicky Form Taxqueña", "vickyform_mx", null, GetinDump.FOOT_STREET));
 
 			stores.add(new StoreAdapter("806","Sally Beauty Patio La Raza", "sallybeauty_mx",null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("807", "Grupo Pavel Johnston & Murphy Plaza Carso", "grupopavel_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("808", "Grupo Pavel Johnston & Murphy Antara", "grupopavel_mx", null, GetinDump.MALL));
 
@@ -1564,58 +1564,82 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("810", "Modatelas San Martin Texmelucan", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("811", "Modatelas Coatepec", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("812", "Modatelas Palenque - Chiapas", "modatelas_mx", null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("813", "MT Sport S12 Puebla Centro 2", "mt_sport_mx",null, GetinDump.FOOT_STREET));
-			
+
 			stores.add(new StoreAdapter("814", "Universo de Fragancias Vallejo", "universodefragancias_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("815", "Aditivo Franquicias Edmond Xalapa Centro", "aditivo_franquicias_mx",null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("816", "Aditivo Franquicias Edmond Xalapa2", "aditivo_franquicias_mx",null, GetinDump.MALL));
 
 			stores.add(new StoreAdapter("817","Juguetron Galerías Serdán", "juguetron_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("818","Juguetron Parque Puebla", "juguetron_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("819","Sally Beauty Zentralia Churubusco", "sallybeauty_mx", null, GetinDump.MALL));
 
 			stores.add(new StoreAdapter("820", "Sunglass Hut Nordelta", "sunglasshut_ar", null, GetinDump.MALL));
 
 			stores.add(new StoreAdapter("821", "98 Coast Av. Mazatlan", "98coastav_mx", null, GetinDump.MALL));
-			
 
 			stores.add(new StoreAdapter("822","Michel Domit Perisur", "micheldomit_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("823","Michel Domit Santa Fe", "micheldomit_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("824","Michel Domit Tezontle", "micheldomit_mx", null, GetinDump.MALL));
 
 			stores.add(new StoreAdapter("825", "Michel Domit Delta", "micheldomit_mx", null, GetinDump.MALL));
 
 			stores.add(new StoreAdapter("826", "Michel Domit Parque Puebla", "micheldomit_mx", null, GetinDump.MALL));
-			
+
 			stores.add(new StoreAdapter("827","Opticas Devlyn Cervantes Saavedra Gabinete", "devlyn_mx", null, 0));
-
-
-			stores.add(new StoreAdapter("822","Michel Domit Perisur", "micheldomit_mx", null, GetinDump.MALL));
-			
-			stores.add(new StoreAdapter("823","Michel Domit Santa Fe", "micheldomit_mx", null, GetinDump.MALL));
-			
-			stores.add(new StoreAdapter("824","Michel Domit Tezontle", "micheldomit_mx", null, GetinDump.MALL));
-
-			stores.add(new StoreAdapter("825", "Michel Domit Delta", "micheldomit_mx", null, GetinDump.MALL));
-
-			stores.add(new StoreAdapter("826", "Michel Domit Parque Puebla", "micheldomit_mx", null, GetinDump.MALL));
-			
-			stores.add(new StoreAdapter("827","Opticas Devlyn Cervantes Saavedra Gabinete", "devlyn_mx", null, 0));
-
-
 
 			//Devlyn Shoppingns!
 			stores.add(new StoreAdapter("828", "Devlyn Pabellon Polanco", "devlyn_mx", null, GetinDump.MALL));
-			stores.add(new StoreAdapter("829", "Devlyn Chedraui Polanco", "devlyn_mx", null, GetinDump.MALL));			
+			stores.add(new StoreAdapter("829", "Devlyn Chedraui Polanco", "devlyn_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("830", "Devlyn Galerias Marina", "devlyn_mx", null, GetinDump.MALL));
+
+			stores.add(new StoreAdapter("831", "Bruno Corza Parque Puebla", "brunocorza_mx", null, GetinDump.MALL));
+
+			stores.add(new StoreAdapter("832", "98 Coast Av. Culiacán", "98coastav_mx", null, GetinDump.MALL));
 			
+			//
+			stores.add(new StoreAdapter("836", "Ópticas Devlyn Veracruz Arista Centro", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("837", "Ópticas Devlyn Veracruz Plaza Cristal", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("838", "Ópticas Devlyn Optimart Huixquilucan Centro", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("839", "Ópticas Devlyn Chedraui Polanco", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("840", "Ópticas Devlyn Oah Sor Miyana", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("841", "Ópticas Devlyn Galerias Marina", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("842", "Ópticas Devlyn Oah Che Veracruz Americas A. Cort.", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("843", "Ópticas Devlyn Ver. Com Mex Las Palmas", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("844", "Ópticas Devlyn Oah Che El Dorado Boca Del Rio", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("845", "Ópticas Devlyn Ver. Com Mex Las Palmas", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("846", "Ópticas Devlyn Ver. Sears Plaza Las Americas", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("847", "Ópticas Devlyn Oah Che Veracruz Floresta S. Miron", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("848", "Ópticas Devlyn Ver. Soriana Boca Del Rio", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("849", "Ópticas Devlyn El Dorado Veracruz", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("850", "Ópticas Devlyn Sears Aluminio", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("851", "Ópticas Devlyn Veracruz Sears Centro", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("852", "Ópticas Devlyn Coppel Veracruz Hidalgo", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("853", "Ópticas Devlyn Coppel Veracruz Allende", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("854", "Ópticas Devlyn Coppel Veracruz Mocambo", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("855", "Ópticas Devlyn Veracruz Plaza Mocambo", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("856", "Ópticas Devlyn Coppel Veracruz Diaz Miron", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("857", "Ópticas Devlyn Oah Che Veracruz Centro S. Miron", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("858", "Ópticas Devlyn Oah Che Veracruz Brisas R. Cuervo", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("859", "Ópticas Devlyn Oah Che Veracruz Centro S. Miron", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("860", "Ópticas Devlyn Coppel Veracruz Los Pinos", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("861", "Ópticas Devlyn Oah Che Veracruz Norte Matamoros", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("862", "Ópticas Devlyn Magnocentro Interlomas", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("863", "Ópticas Devlyn Pabellon Bosques", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("864", "Ópticas Devlyn Sears Santa Fe 3800", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("865", "Ópticas Devlyn El Rosario Town Center", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("866", "Ópticas Devlyn Wal Mart Azcapotzalco", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("867", "Ópticas Devlyn Coppel Pocitos Veracruz", "devlyn_mx", null, GetinDump.MALL));
+			stores.add(new StoreAdapter("868", "Ópticas Devlyn Oah Che Coyol Eje 1 Sur Poniente", "devlyn_mx", null, GetinDump.MALL));
+
+
 			Store store;
 			for(StoreAdapter obj : stores ) {
 				log.log(Level.INFO, "Processing store" + obj.getName());
@@ -1641,7 +1665,7 @@ public class GetinDump extends AbstractCLI {
 					storeDao.create(store);
 					log.log(Level.INFO, "Se ha creado la tienda "+obj.getName());
 				}
-			} 	
+			}
 
 			// Assing antennas for droc
 			List<String> externalDevices = eaphDao.getExternalHostnames();
@@ -1683,7 +1707,7 @@ public class GetinDump extends AbstractCLI {
 			}else {
 				this.storeKind = FOOT_STREET;
 			}
-				
+
 		}
 		/**
 		 * @return the externalKey
@@ -1733,23 +1757,23 @@ public class GetinDump extends AbstractCLI {
 		public void setShoppingId(String shoppingId) {
 			this.shoppingId = shoppingId;
 		}
-		
+
 		/**
-		 * 
+		 *
 		 * @return the integer value corresponding to the storeKind type
 		 */
 		public int getStoreKind() {
 			return storeKind;
 		}
-		
+
 		/**
-		 * 
+		 *
 		 * @param storeKind the integer value corresponding to the storeKind type
 		 */
 		public void setStoreKind(int storeKind) {
 			this.storeKind = storeKind;
 		}
-		
-		
+
+
 	}
 }
