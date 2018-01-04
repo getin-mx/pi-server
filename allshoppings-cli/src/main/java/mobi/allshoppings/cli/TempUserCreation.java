@@ -1,6 +1,5 @@
 package mobi.allshoppings.cli;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.crypto.Mac;
@@ -85,7 +84,7 @@ public class TempUserCreation extends AbstractCLI {
 			    juanUser.setEmail("juan@aditivo.mx");
 			    juanUser.getSecuritySettings().setRole(Role.STORE);
 			    juanUser.getSecuritySettings()
-			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+			        .setPassword(encodeString("Aditivo2017"));
 			    juanUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "92ec9131-dbf2-4a42-a3ef-1d68170de391",
@@ -134,7 +133,7 @@ public class TempUserCreation extends AbstractCLI {
 			    carlosUser.setEmail("carlos@aditivo.mx");
 			    carlosUser.getSecuritySettings().setRole(Role.STORE);
 			    carlosUser.getSecuritySettings()
-			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+			        .setPassword(encodeString("Aditivo2017"));
 			    carlosUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "2810ac0e-480b-4374-8130-134862088a86",
@@ -161,7 +160,7 @@ public class TempUserCreation extends AbstractCLI {
 			    hectorUser.setEmail("hector@aditivo.mx");
 			    hectorUser.getSecuritySettings().setRole(Role.STORE);
 			    hectorUser.getSecuritySettings()
-			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+			        .setPassword(encodeString("Aditivo2017"));
 			    hectorUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "32543b75-32b2-4b41-9e03-f876a9e88d18",
@@ -199,7 +198,7 @@ public class TempUserCreation extends AbstractCLI {
 			    carloscUser.setEmail("carlosc@aditivo.mx");
 			    carloscUser.getSecuritySettings().setRole(Role.STORE);
 			    carloscUser.getSecuritySettings()
-			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+			        .setPassword(encodeString("Aditivo2017"));
 			    carloscUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "b251d67f-b441-42d2-b69d-6a84c036e123",
@@ -224,7 +223,7 @@ public class TempUserCreation extends AbstractCLI {
 			    albertoUser.setEmail("alberto@aditivo.mx");
 			    albertoUser.getSecuritySettings().setRole(Role.STORE);
 			    albertoUser.getSecuritySettings()
-			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+			        .setPassword(encodeString("Aditivo2017"));
 			    albertoUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "92ec9131-dbf2-4a42-a3ef-1d68170de391",
@@ -251,7 +250,7 @@ public class TempUserCreation extends AbstractCLI {
 			    anegeloUser.setEmail("angelo@aditivo.mx");
 			    anegeloUser.getSecuritySettings().setRole(Role.STORE);
 			    anegeloUser.getSecuritySettings()
-			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+			        .setPassword(encodeString("Aditivo2017"));
 			    anegeloUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "98abde27-4dcc-4d5b-ac16-d43eac63b94b",
@@ -278,7 +277,7 @@ public class TempUserCreation extends AbstractCLI {
 			    ricardoUser.setEmail("ricardol@aditivo.mx");
 			    ricardoUser.getSecuritySettings().setRole(Role.STORE);
 			    ricardoUser.getSecuritySettings()
-			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+			        .setPassword(encodeString("Aditivo2017"));
 			    ricardoUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 	        		"0221582e-c2fd-49d0-98ed-4635cd5e22db",
@@ -317,7 +316,7 @@ public class TempUserCreation extends AbstractCLI {
 			    miguelUser.setEmail("miguel@aditivo.mx");
 			    miguelUser.getSecuritySettings().setRole(Role.STORE);
 			    miguelUser.getSecuritySettings()
-			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+			        .setPassword(encodeString("Aditivo2017"));
 			    miguelUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "0221582e-c2fd-49d0-98ed-4635cd5e22db",
@@ -344,7 +343,7 @@ public class TempUserCreation extends AbstractCLI {
 			    joseUser.setEmail("joser@aditivo.mx");
 			    joseUser.getSecuritySettings().setRole(Role.STORE);
 			    joseUser.getSecuritySettings()
-			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+			        .setPassword(encodeString("Aditivo2017"));
 			    joseUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 	        		"77bfffb3-48a9-43b6-b1ec-51d526e96da8",
@@ -370,7 +369,7 @@ public class TempUserCreation extends AbstractCLI {
 			    ignacioUser.setEmail("ignacio@aditivo.mx");
 			    ignacioUser.getSecuritySettings().setRole(Role.STORE);
 			    ignacioUser.getSecuritySettings()
-			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+			        .setPassword(encodeString("Aditivo2017"));
 			    ignacioUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "9a14f70c-52eb-4756-8fb3-b48ee8b86094",
@@ -397,7 +396,7 @@ public class TempUserCreation extends AbstractCLI {
 			    aaronUser.setEmail("aaron@aditivo.mx");
 			    aaronUser.getSecuritySettings().setRole(Role.STORE);
 			    aaronUser.getSecuritySettings()
-			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+			        .setPassword(encodeString("Aditivo2017"));
 			    aaronUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "4d768d73-b9a9-44a0-bbbe-dc00a04f52ec",
@@ -431,7 +430,7 @@ public class TempUserCreation extends AbstractCLI {
 			    isaiasUser.setEmail("isaias@aditivo.mx");
 			    isaiasUser.getSecuritySettings().setRole(Role.STORE);
 			    isaiasUser.getSecuritySettings()
-			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+			        .setPassword(encodeString("Aditivo2017"));
 			    isaiasUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "07c6552d-c3fe-445b-aac4-e1d2c234d2ca",
@@ -445,7 +444,6 @@ public class TempUserCreation extends AbstractCLI {
 			    isaiasUser.setKey((Key) keyHelper.obtainKey(User.class, "isaias@aditivo.mx"));
 			    userDao.create(isaiasUser);
 			  }
-			  
 			  
 			  UserMenu umBalcarce = null;
 			  try {
@@ -600,9 +598,6 @@ public class TempUserCreation extends AbstractCLI {
 				    um.setKey(userMenuDao.createKey("demo5_mx"));
 				    userMenuDao.create(um);
 				  }
-
-
-			  
 		} catch (Exception e) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}

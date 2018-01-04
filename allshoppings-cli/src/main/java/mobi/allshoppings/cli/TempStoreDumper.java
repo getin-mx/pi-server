@@ -1,7 +1,6 @@
 package mobi.allshoppings.cli;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Level;
@@ -12,7 +11,6 @@ import com.inodes.datanucleus.model.Key;
 import com.inodes.util.CollectionFactory;
 
 import joptsimple.OptionParser;
-import mobi.allshoppings.cli.TempStoreDumper.StoreAdapter;
 import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.dao.BrandDAO;
 import mobi.allshoppings.dao.ExternalAPHotspotDAO;
@@ -20,12 +18,8 @@ import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.Brand;
-import mobi.allshoppings.model.EntityKind;
-import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
-import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.model.tools.KeyHelper;
 
 public class TempStoreDumper extends AbstractCLI {
