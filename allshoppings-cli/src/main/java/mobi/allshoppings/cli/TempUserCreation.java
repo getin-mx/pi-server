@@ -1,0 +1,455 @@
+package mobi.allshoppings.cli;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+
+import com.inodes.datanucleus.model.Key;
+
+import joptsimple.OptionParser;
+import mobi.allshoppings.dao.UserDAO;
+import mobi.allshoppings.dao.UserMenuDAO;
+import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.UserMenu;
+import mobi.allshoppings.model.UserMenuEntry;
+import mobi.allshoppings.model.UserSecurity.Role;
+import mobi.allshoppings.model.tools.KeyHelper;
+
+public class TempUserCreation extends AbstractCLI {
+
+	private static final Logger log = Logger.getLogger(UserMenuDump.class.getName());
+
+	public static void setApplicationContext(ApplicationContext ctx) {
+		context = ctx;
+	}
+	
+	private static final char HEXES[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+	
+	private static String encodeString(String input) {
+		 String output = "";
+		try {
+			Mac mac = Mac.getInstance("HmacSHA256");
+			byte keyBytes[] = "MSIR33L264H1VVXSINHR".getBytes(); 
+			SecretKey key = new SecretKeySpec(keyBytes, "HmacSHA256");
+			mac.init(key);
+			mac.update(input.getBytes());
+			byte macBytes[] = mac.doFinal();
+
+			StringBuilder hexString = new StringBuilder(macBytes.length * 2);
+			for (byte b : macBytes) {
+				hexString.append(HEXES[((b & 0xF0) >> 4)]).append(HEXES[(b & 0x0F)]);
+			}
+			output = hexString.toString();
+		} catch (Exception e) {
+		}
+		return output;
+	}
+
+	public static OptionParser buildOptionParser(OptionParser base) {
+		if (base == null)
+			parser = new OptionParser();
+		else
+			parser = base;
+		return parser;
+	}
+
+	public static void main(String[] args) throws ASException {
+		createMissingUsers();
+	}
+
+	public static void createMissingUsers() throws ASException {
+		try {
+			UserMenuDAO userMenuDao = (UserMenuDAO) getApplicationContext().getBean("usermenu.dao.ref");
+			UserDAO userDao = (UserDAO) getApplicationContext().getBean("user.dao.ref");
+			KeyHelper keyHelper = (KeyHelper) getApplicationContext().getBean("key.helper");
+			
+
+			  User juanUser = null;
+			  try {
+			    userDao.delete("juan@aditivo.mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    log.log(Level.INFO, "Inserting juan@aditivo.mx...");
+			    juanUser = new User();
+			    juanUser.setFirstname("Juan");
+			    juanUser.setLastname("");
+			    juanUser.setEmail("juan@aditivo.mx");
+			    juanUser.getSecuritySettings().setRole(Role.STORE);
+			    juanUser.getSecuritySettings()
+			        .setPassword(encodeString("Aditivo2017"));
+			    juanUser.getSecuritySettings()
+			        .setStores(Arrays.asList(
+			        "92ec9131-dbf2-4a42-a3ef-1d68170de391",
+			        "2810ac0e-480b-4374-8130-134862088a86",
+			        "32543b75-32b2-4b41-9e03-f876a9e88d18",
+			        "98abde27-4dcc-4d5b-ac16-d43eac63b94b",
+			        "2b06d29f-204e-4a38-ac87-b77cb7d39578",
+			        "49264559-dddb-42c5-b1bf-1a52a0eb659f",
+			        "71352b76-f76e-421b-b114-72f071633b61",
+			        "129f18c1-c531-4488-9125-6d4e4ccf6d4d",
+			        "3338e021-59c4-4482-9603-fac42d656c7b",
+			        "4dbf03a7-f321-4109-abd0-58780310f09c",
+			        "1fac0105-51f2-4a5f-ac3f-eaf4b6d311ed",
+			        "54d1aba3-3e2c-4de4-8065-c55a50109dbc",
+			        "78416e3d-2274-4a24-9186-3616588f6197",
+			        "13b66935-ec48-4fea-acc9-9e99f025a63b",
+			        "4fe543ea-610e-444b-bde3-e0cf12092ae6",
+			        "349b85b9-a083-4e65-9740-f3d59278f635",
+			        "674626e2-4537-44ba-a6a9-58632ec9f5ce",
+			        "95744605-8649-4091-bdfe-5426ad0b6b3e",
+			        "9beaf247-e674-47a2-9d4c-c550bb1aa7cc",
+			        "b251d67f-b441-42d2-b69d-6a84c036e123",
+			        "b087d73e-ccb5-4457-8b09-e85ba72de7e7",
+			        "efb69866-6bc0-44e3-8dc2-f436dfc82773",
+			        "f1c0b0d9-b2b4-4d63-a553-cec5653a79c3",
+			        "f7b002fd-5c0c-4e2f-9879-0e98bda6cd5d",
+			        "dd77a5a2-6523-4325-b65c-1e3e3554028d",
+			        "ffc0b360-00d5-4e8f-8bef-f0472df6cb5f",
+			        "fcc7aa01-7b2d-4773-ba65-acc2dd7e592c"
+			        ));
+			    juanUser.setKey((Key) keyHelper.obtainKey(User.class, "juan@aditivo.mx"));
+			    userDao.create(juanUser);
+			  }
+			
+			  
+			  
+			  User carlosUser = null;
+			  try {
+			    userDao.delete("carlos@aditivo.mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    log.log(Level.INFO, "Inserting carlos@aditivo.mx...");
+			    carlosUser = new User();
+			    carlosUser.setFirstname("Carlos");
+			    carlosUser.setLastname("");
+			    carlosUser.setEmail("carlos@aditivo.mx");
+			    carlosUser.getSecuritySettings().setRole(Role.STORE);
+			    carlosUser.getSecuritySettings()
+			        .setPassword(encodeString("Aditivo2017"));
+			    carlosUser.getSecuritySettings()
+			        .setStores(Arrays.asList(
+			        "2810ac0e-480b-4374-8130-134862088a86",
+			        "49264559-dddb-42c5-b1bf-1a52a0eb659f",
+			        "4dbf03a7-f321-4109-abd0-58780310f09c",
+			        "1fac0105-51f2-4a5f-ac3f-eaf4b6d311ed",
+			        "349b85b9-a083-4e65-9740-f3d59278f635",
+			        "ffc0b360-00d5-4e8f-8bef-f0472df6cb5f"
+			        ));
+			    carlosUser.setKey((Key) keyHelper.obtainKey(User.class, "carlos@aditivo.mx"));
+			    userDao.create(carlosUser);
+			  }
+			  
+			  
+			  User hectorUser = null;
+			  try {
+			    userDao.delete("hector@aditivo.mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    log.log(Level.INFO, "Inserting hector@aditivo.mx...");
+			    hectorUser = new User();
+			    hectorUser.setFirstname("Hector");
+			    hectorUser.setLastname("");
+			    hectorUser.setEmail("hector@aditivo.mx");
+			    hectorUser.getSecuritySettings().setRole(Role.STORE);
+			    hectorUser.getSecuritySettings()
+			        .setPassword(encodeString("Aditivo2017"));
+			    hectorUser.getSecuritySettings()
+			        .setStores(Arrays.asList(
+			        "32543b75-32b2-4b41-9e03-f876a9e88d18",
+			        "71352b76-f76e-421b-b114-72f071633b61",
+			        "4fe543ea-610e-444b-bde3-e0cf12092ae6",
+			        "b087d73e-ccb5-4457-8b09-e85ba72de7e7",
+			        "f1c0b0d9-b2b4-4d63-a553-cec5653a79c3"
+			        ));
+			    hectorUser.setKey((Key) keyHelper.obtainKey(User.class, "hector@aditivo.mx"));
+			    userDao.create(hectorUser);
+			  }
+			  
+			  UserMenu um = null;
+			  try {
+			    um = userMenuDao.get("carlosc@aditivo.mx", true);
+			    userMenuDao.delete("carlosc@aditivo.mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				
+				um.setKey(userMenuDao.createKey("carlosc@aditivo.mx"));
+				userMenuDao.create(um);
+			  }
+			  
+			  User carloscUser = null;
+			  try {
+			    userDao.delete("carlosc@aditivo.mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    log.log(Level.INFO, "Inserting carlosc@aditivo.mx...");
+			    carloscUser = new User();
+			    carloscUser.setFirstname("Carlos C");
+			    carloscUser.setLastname("");
+			    carloscUser.setEmail("carlosc@aditivo.mx");
+			    carloscUser.getSecuritySettings().setRole(Role.STORE);
+			    carloscUser.getSecuritySettings()
+			        .setPassword(encodeString("Aditivo2017"));
+			    carloscUser.getSecuritySettings()
+			        .setStores(Arrays.asList(
+			        "b251d67f-b441-42d2-b69d-6a84c036e123",
+			        "efb69866-6bc0-44e3-8dc2-f436dfc82773",
+			        "f7b002fd-5c0c-4e2f-9879-0e98bda6cd5d"
+			        ));
+			    carloscUser.setKey((Key) keyHelper.obtainKey(User.class, "carlosc@aditivo.mx"));
+			    userDao.create(carloscUser);
+			  }
+			  
+			  
+			  
+			  User albertoUser = null;
+			  try {
+			    userDao.delete("alberto@aditivo.mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    log.log(Level.INFO, "Inserting alberto@aditivo.mx...");
+			    albertoUser = new User();
+			    albertoUser.setFirstname("Alberto");
+			    albertoUser.setLastname("");
+			    albertoUser.setEmail("alberto@aditivo.mx");
+			    albertoUser.getSecuritySettings().setRole(Role.STORE);
+			    albertoUser.getSecuritySettings()
+			        .setPassword(encodeString("Aditivo2017"));
+			    albertoUser.getSecuritySettings()
+			        .setStores(Arrays.asList(
+			        "92ec9131-dbf2-4a42-a3ef-1d68170de391",
+			        "2b06d29f-204e-4a38-ac87-b77cb7d39578",
+			        "13b66935-ec48-4fea-acc9-9e99f025a63b",
+			        "674626e2-4537-44ba-a6a9-58632ec9f5ce",
+			        "95744605-8649-4091-bdfe-5426ad0b6b3e",
+			        "fcc7aa01-7b2d-4773-ba65-acc2dd7e592c"
+			        ));
+			    albertoUser.setKey((Key) keyHelper.obtainKey(User.class, "alberto@aditivo.mx"));
+			    userDao.create(albertoUser);
+			  }
+			  
+			  
+			  User anegeloUser = null;
+			  try {
+			    userDao.delete("angelo@aditivo.mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    log.log(Level.INFO, "Inserting angelo@aditivo.mx...");
+			    anegeloUser = new User();
+			    anegeloUser.setFirstname("Angelo");
+			    anegeloUser.setLastname("");
+			    anegeloUser.setEmail("angelo@aditivo.mx");
+			    anegeloUser.getSecuritySettings().setRole(Role.STORE);
+			    anegeloUser.getSecuritySettings()
+			        .setPassword(encodeString("Aditivo2017"));
+			    anegeloUser.getSecuritySettings()
+			        .setStores(Arrays.asList(
+			        "98abde27-4dcc-4d5b-ac16-d43eac63b94b",
+			        "129f18c1-c531-4488-9125-6d4e4ccf6d4d",
+			        "3338e021-59c4-4482-9603-fac42d656c7b",
+			        "78416e3d-2274-4a24-9186-3616588f6197",
+			        "9beaf247-e674-47a2-9d4c-c550bb1aa7cc",
+			        "dd77a5a2-6523-4325-b65c-1e3e3554028d"
+			        ));
+			    anegeloUser.setKey((Key) keyHelper.obtainKey(User.class, "angelo@aditivo.mx"));
+			    userDao.create(anegeloUser);
+			  }
+
+			  
+			  User ricardoUser = null;
+			  try {
+			    userDao.delete("ricardol@aditivo.mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    log.log(Level.INFO, "Inserting ricardol@aditivo.mx...");
+			    ricardoUser = new User();
+			    ricardoUser.setFirstname("Ricardo");
+			    ricardoUser.setLastname("");
+			    ricardoUser.setEmail("ricardol@aditivo.mx");
+			    ricardoUser.getSecuritySettings().setRole(Role.STORE);
+			    ricardoUser.getSecuritySettings()
+			        .setPassword(encodeString("Aditivo2017"));
+			    ricardoUser.getSecuritySettings()
+			        .setStores(Arrays.asList(
+	        		"0221582e-c2fd-49d0-98ed-4635cd5e22db",
+			        "5d8fa91b-b783-46ef-b615-c6aba8dec1fd",
+			        "06b26796-bbda-49ad-b0b8-e24bc8cbeef6",
+			        "4d217df4-d2ad-44e6-81eb-ac10a9c040ec",
+			        "4d1d6d54-0cc1-4ba5-a40f-ed61284149c9",
+			        "e41ddf46-b7fe-4d56-b52d-05a6cee7adf0",
+			        "77bfffb3-48a9-43b6-b1ec-51d526e96da8",
+	        		"11a2f4a2-75e3-4ee2-be94-391e02739d28",
+	        		"2fc001ca-b8c4-4a5c-b7e2-c732c9f98ce0",
+	        		"f04111dd-c59d-419c-bf6f-36ebecbcbd0d",
+	        		"bde9a482-df2e-410e-9a51-06a90d2294d0",
+	        		"da761750-c568-4e8b-9965-ee588c3d1d9a",
+	        		"9a14f70c-52eb-4756-8fb3-b48ee8b86094",
+			        "5da4f3c0-fe1f-47cb-9b7b-5fc4242240ce",
+			        "2a90e8ab-fe34-4a3f-8bd4-0480ce4f40f8",
+			        "3bd9d22b-65d9-44af-805f-87a77af5f691",
+			        "625f5d03-6726-4bb2-894e-60749397dba6",
+			        "b6d96f4a-d9f7-4537-87ae-c6b3f4b3c5e5"
+			        ));
+			    ricardoUser.setKey((Key) keyHelper.obtainKey(User.class, "ricardol@aditivo.mx"));
+			    userDao.create(ricardoUser);
+			  }
+			  
+			  
+			  User miguelUser = null;
+			  try {
+			    userDao.delete("miguel@aditivo.mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    log.log(Level.INFO, "Inserting miguel@aditivo.mx...");
+			    miguelUser = new User();
+			    miguelUser.setFirstname("Miguel");
+			    miguelUser.setLastname("");
+			    miguelUser.setEmail("miguel@aditivo.mx");
+			    miguelUser.getSecuritySettings().setRole(Role.STORE);
+			    miguelUser.getSecuritySettings()
+			        .setPassword(encodeString("Aditivo2017"));
+			    miguelUser.getSecuritySettings()
+			        .setStores(Arrays.asList(
+			        "0221582e-c2fd-49d0-98ed-4635cd5e22db",
+			        "5d8fa91b-b783-46ef-b615-c6aba8dec1fd",
+			        "06b26796-bbda-49ad-b0b8-e24bc8cbeef6",
+			        "4d217df4-d2ad-44e6-81eb-ac10a9c040ec",
+			        "4d1d6d54-0cc1-4ba5-a40f-ed61284149c9",
+			        "e41ddf46-b7fe-4d56-b52d-05a6cee7adf0"
+			        ));
+			    miguelUser.setKey((Key) keyHelper.obtainKey(User.class, "miguel@aditivo.mx"));
+			    userDao.create(miguelUser);
+			  }
+			  
+			  
+			  User joseUser = null;
+			  try {
+			    userDao.delete("joser@aditivo.mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    log.log(Level.INFO, "Inserting joser@aditivo.mx...");
+			    joseUser = new User();
+			    joseUser.setFirstname("Ricardo");
+			    joseUser.setLastname("");
+			    joseUser.setEmail("joser@aditivo.mx");
+			    joseUser.getSecuritySettings().setRole(Role.STORE);
+			    joseUser.getSecuritySettings()
+			        .setPassword(encodeString("Aditivo2017"));
+			    joseUser.getSecuritySettings()
+			        .setStores(Arrays.asList(
+	        		"77bfffb3-48a9-43b6-b1ec-51d526e96da8",
+	        		"11a2f4a2-75e3-4ee2-be94-391e02739d28",
+	        		"2fc001ca-b8c4-4a5c-b7e2-c732c9f98ce0",
+	        		"f04111dd-c59d-419c-bf6f-36ebecbcbd0d",
+	        		"bde9a482-df2e-410e-9a51-06a90d2294d0",
+	        		"da761750-c568-4e8b-9965-ee588c3d1d9a"
+			        ));
+			    joseUser.setKey((Key) keyHelper.obtainKey(User.class, "joser@aditivo.mx"));
+			    userDao.create(joseUser);
+			  }
+			  
+			  User ignacioUser = null;
+			  try {
+			    userDao.delete("ignacio@aditivo.mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    log.log(Level.INFO, "Inserting ignacio@aditivo.mx...");
+			    ignacioUser = new User();
+			    ignacioUser.setFirstname("Ignacio");
+			    ignacioUser.setLastname("");
+			    ignacioUser.setEmail("ignacio@aditivo.mx");
+			    ignacioUser.getSecuritySettings().setRole(Role.STORE);
+			    ignacioUser.getSecuritySettings()
+			        .setPassword(encodeString("Aditivo2017"));
+			    ignacioUser.getSecuritySettings()
+			        .setStores(Arrays.asList(
+			        "9a14f70c-52eb-4756-8fb3-b48ee8b86094",
+			        "5da4f3c0-fe1f-47cb-9b7b-5fc4242240ce",
+			        "2a90e8ab-fe34-4a3f-8bd4-0480ce4f40f8",
+			        "3bd9d22b-65d9-44af-805f-87a77af5f691",
+			        "625f5d03-6726-4bb2-894e-60749397dba6",
+			        "b6d96f4a-d9f7-4537-87ae-c6b3f4b3c5e5"
+			        ));
+			    ignacioUser.setKey((Key) keyHelper.obtainKey(User.class, "ignacio@aditivo.mx"));
+			    userDao.create(ignacioUser);
+			  }
+			  
+			  
+			  User aaronUser = null;
+			  try {
+			    userDao.delete("aaron@aditivo.mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    log.log(Level.INFO, "Inserting aaron@aditivo.mx...");
+			    aaronUser = new User();
+			    aaronUser.setFirstname("Aaron");
+			    aaronUser.setLastname("");
+			    aaronUser.setEmail("aaron@aditivo.mx");
+			    aaronUser.getSecuritySettings().setRole(Role.STORE);
+			    aaronUser.getSecuritySettings()
+			        .setPassword(encodeString("Aditivo2017"));
+			    aaronUser.getSecuritySettings()
+			        .setStores(Arrays.asList(
+			        "4d768d73-b9a9-44a0-bbbe-dc00a04f52ec",
+			        "23178716-9ef5-4b57-b88e-ea85d080c0f7",
+			        "3928b1d6-2fb7-4a62-a081-9e5a23e78e91",
+			        "07c6552d-c3fe-445b-aac4-e1d2c234d2ca",
+			        "8cac6f24-fc71-4e4a-b556-5bfe06191f3f",
+			        "6ad6e636-f5ec-4d8f-a499-c85055e03f4e",
+			        "1b509e3a-068e-4062-9781-d04c175db304",
+			        "61374a58-a679-4532-811a-aa3340bcc47e",
+			        "d2112ef6-7cfa-49a4-94de-a127e45ff1c1",
+			        "f33140b3-3ecd-4d70-bfcc-159f47ac9058",
+			        "fbbc3da9-1403-4206-8b22-e1aed2b0ec40",
+			        "ce91457a-f7dc-49d0-93ff-79259e553769"
+			        ));
+			    aaronUser.setKey((Key) keyHelper.obtainKey(User.class, "aaron@aditivo.mx"));
+			    userDao.create(aaronUser);
+			  }
+
+			  
+			  
+			  User isaiasUser = null;
+			  try {
+			    userDao.delete("isaias@aditivo.mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    log.log(Level.INFO, "Inserting isaias@aditivo.mx...");
+			    isaiasUser = new User();
+			    isaiasUser.setFirstname("Isaias");
+			    isaiasUser.setLastname("");
+			    isaiasUser.setEmail("isaias@aditivo.mx");
+			    isaiasUser.getSecuritySettings().setRole(Role.STORE);
+			    isaiasUser.getSecuritySettings()
+			        .setPassword(encodeString("Aditivo2017"));
+			    isaiasUser.getSecuritySettings()
+			        .setStores(Arrays.asList(
+			        "07c6552d-c3fe-445b-aac4-e1d2c234d2ca",
+			        "1b509e3a-068e-4062-9781-d04c175db304",
+			        "61374a58-a679-4532-811a-aa3340bcc47e",
+			        "d2112ef6-7cfa-49a4-94de-a127e45ff1c1",
+			        "f33140b3-3ecd-4d70-bfcc-159f47ac9058",
+			        "fbbc3da9-1403-4206-8b22-e1aed2b0ec40",
+			        "ce91457a-f7dc-49d0-93ff-79259e553769"
+			        ));
+			    isaiasUser.setKey((Key) keyHelper.obtainKey(User.class, "isaias@aditivo.mx"));
+			    userDao.create(isaiasUser);
+			  }
+			  
+			  
+		} catch (Exception e) {
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		}
+		System.exit(0);
+	}
+}

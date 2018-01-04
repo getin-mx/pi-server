@@ -27,7 +27,7 @@ import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.model.tools.KeyHelper;
 
-
+@Deprecated
 public class GetinDump extends AbstractCLI {
 
 	private static final Logger log = Logger.getLogger(GetinDump.class.getName());
@@ -1610,11 +1610,11 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("838", "Ópticas Devlyn Optimart Huixquilucan Centro", "devlyn_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("839", "Ópticas Devlyn Chedraui Polanco", "devlyn_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("840", "Ópticas Devlyn Oah Sor Miyana", "devlyn_mx", null, GetinDump.MALL));
-			stores.add(new StoreAdapter("841", "Ópticas Devlyn Galerias Marina", "devlyn_mx", null, GetinDump.MALL));
+//			stores.add(new StoreAdapter("841", "Ópticas Devlyn Galerias Marina", "devlyn_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("842", "Ópticas Devlyn Oah Che Veracruz Americas A. Cort.", "devlyn_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("843", "Ópticas Devlyn Ver. Com Mex Las Palmas", "devlyn_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("844", "Ópticas Devlyn Oah Che El Dorado Boca Del Rio", "devlyn_mx", null, GetinDump.MALL));
-			stores.add(new StoreAdapter("845", "Ópticas Devlyn Ver. Com Mex Las Palmas", "devlyn_mx", null, GetinDump.MALL));
+//			stores.add(new StoreAdapter("845", "Ópticas Devlyn Ver. Com Mex Las Palmas", "devlyn_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("846", "Ópticas Devlyn Ver. Sears Plaza Las Americas", "devlyn_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("847", "Ópticas Devlyn Oah Che Veracruz Floresta S. Miron", "devlyn_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("848", "Ópticas Devlyn Ver. Soriana Boca Del Rio", "devlyn_mx", null, GetinDump.MALL));
