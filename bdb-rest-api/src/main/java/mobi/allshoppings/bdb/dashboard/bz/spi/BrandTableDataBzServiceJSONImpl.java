@@ -348,7 +348,6 @@ implements BDBDashboardBzService {
 		public JSONArray getJSONTotals() throws ASException {
 
 			DashboardRecordRep totals = new DashboardRecordRep(null, 0, null, null, "Totales", null, null);
-			
 			for( DashboardRecordRep rec : records ) {
 				if( rec.getLevel() == 0 ) {
 					totals.setPeasants(totals.getPeasants() + rec.getPeasants());
