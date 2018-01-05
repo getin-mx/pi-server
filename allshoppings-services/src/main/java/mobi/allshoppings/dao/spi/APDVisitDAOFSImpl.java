@@ -495,4 +495,10 @@ public class APDVisitDAOFSImpl extends GenericDAOFS<APDVisit> implements APDVisi
 		
 	}
 
+	@Override
+	public List<APDVisit> indexFallback(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
