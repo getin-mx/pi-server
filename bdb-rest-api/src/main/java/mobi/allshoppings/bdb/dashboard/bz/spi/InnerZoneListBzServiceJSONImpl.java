@@ -21,13 +21,13 @@ import mobi.allshoppings.model.adapter.NameAndIdAdapter;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 
-
 /**
- *
+ * Returns the inner zones for the given entity.
+ * @author < a href="mailto:ignacio@getin.mx" >Manuel "Nachintoch" Castillo</a>
+ * @version 1.1, january 2018
+ * @since Allshoppings
  */
-public class InnerZoneListBzServiceJSONImpl
-extends BDBRestBaseServerResource
-implements BDBDashboardBzService {
+public class InnerZoneListBzServiceJSONImpl extends BDBRestBaseServerResource implements BDBDashboardBzService {
 
 	private static final Logger log = Logger.getLogger(InnerZoneListBzServiceJSONImpl.class.getName());
 

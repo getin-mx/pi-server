@@ -50,8 +50,18 @@ import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 
+/**
+ * This class is responsible for building visits from APHEntries.
+ * @author <a href="mailto:ignacio@getin.mx" >Manuel "Nachintoch" Castillo</a>
+ * @author Matias Hapanowics
+ * @version 1.5, january 2018
+ * @since Allshoppings
+ */
 public class APDVisitHelperImpl implements APDVisitHelper {
 
+	/**
+	 * Auxiliary calendars for visit & peasant generation.
+	 */
 	private final Calendar START_CALENDAR = Calendar.getInstance();
 	private final Calendar END_CALENDAR = Calendar.getInstance();
 	private final Calendar WORK_CALENDAR = Calendar.getInstance();
@@ -62,7 +72,16 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	private static final SimpleDateFormat tf2 = new SimpleDateFormat("HHmm");
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
+	
+	/**
+	 * Minimun required percentage to consider a peasant as a visit. At least, 25% of the total
+	 * time he was in range must be in range for visit (not just one slot in range).
+	 */
 	private static final byte VISIT_PERCENTAGE = 25;
+	
+	/**
+	 * Container list for banned MAC addresses.
+	 */
 	private static final List<String> BANNED = Arrays.asList("00:00:00:00:00:00");
 	private static final short MILLIS_TO_TWENTY_SECONDS_SLOT = 20000;
 	private static final short MAXIMUM_TIME_SLOTS = 6 *60 *60 /20;

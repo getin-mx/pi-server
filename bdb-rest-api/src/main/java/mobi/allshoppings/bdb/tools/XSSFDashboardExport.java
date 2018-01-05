@@ -15,6 +15,8 @@ import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.json.JSONArray;
@@ -47,6 +49,10 @@ public class XSSFDashboardExport {
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+	
+	private static final byte NUMBER_FORMAT = 0;
+	private static final byte MONEY_FORMAT = 1;
+	private static final byte DEFAULT_FORMAT = 2;
 	
 	public byte[] createXSSFBrandDashboardRepresentation(String authToken, String baseUrl, String brandId, String storeId, Date dateFrom, Date dateTo) throws ASException {
 		
@@ -96,7 +102,7 @@ public class XSSFDashboardExport {
 				+ (StringUtils.hasText(storeId) ? "&subentityId=" + storeId : "")
 				+ "&elementId=apd_visitor&subIdOrder=visitor_total_peasents,visitor_total_visits"
 				+ "&fromStringDate=" + sdf.format(dateFrom) + "&toStringDate=" + sdf.format(dateTo)
-				+ "&eraseBlanks=true";
+				+ "&eraseBlanks=true&average=true&toMinutes=true";
 		String permHourString = get(permHourUrl);
 		JSONObject permHourJson = new JSONObject(permHourString);		
 		
@@ -130,6 +136,12 @@ public class XSSFDashboardExport {
 			HSSFSheet sheet = wb.createSheet("General");
 			int rowId = 0;
 			
+			CreationHelper helper = wb.getCreationHelper();
+			CellStyle numberS = wb.createCellStyle();
+			numberS.setDataFormat(helper.createDataFormat().getFormat("#,###"));
+			CellStyle moneyF = wb.createCellStyle();
+			moneyF.setDataFormat((short)8);
+			
 			HSSFRow row = sheet.createRow(rowId++);
 			HSSFCell cell = row.createCell(0);
 			cell.setCellValue("Reporte de Cadena " + brand.getName() + (store != null ? " - " + store.getName() : "")
@@ -144,10 +156,57 @@ public class XSSFDashboardExport {
 				row = sheet.createRow(rowId++);
 				for( int x = 0; x < jsonRow.length(); x++ ) {
 					cell = row.createCell(x);
-					cell.setCellValue(jsonRow.getString(x));
+					String sValue = jsonRow.getString(x);
+					byte format = DEFAULT_FORMAT;
+					double dValue = 0;
 					if( i == 0 || i == (tableJson.length() -1)) {
 						cell.setCellStyle(bold);
+					} if(i != 0){
+						switch(x) {
+						case 1 : // paseantes
+						case 2 : // visitantes
+						case 3 : // tickets
+						case 4: // items
+							if(i == (tableJson.length() -1)) {
+								CellStyle combined = wb.createCellStyle();
+								combined.cloneStyleFrom(bold);
+								combined.setDataFormat(numberS.getDataFormat());
+								cell.setCellStyle(combined);
+							} else {
+								cell.setCellStyle(numberS);
+							}
+							dValue = jsonRow.getDouble(x);
+							format = NUMBER_FORMAT;
+							break;
+						case 5: // revenue
+							if(i == (tableJson.length() -1)) {
+								CellStyle combined = wb.createCellStyle();
+								combined.cloneStyleFrom(bold);
+								combined.setDataFormat(moneyF.getDataFormat());
+								cell.setCellStyle(combined);
+							} else {
+								cell.setCellStyle(moneyF);
+							}
+							dValue = jsonRow.getDouble(x);
+							format = MONEY_FORMAT;
+							break;
+						/*case 10: // permanencia "promedio"
+							sValue = String.valueOf(
+									Math.round(Long.valueOf(sValue.substring(0, sValue.indexOf(" "))) /60000d));
+							break;*/
+						}
 					}
+					switch(format) {
+					case NUMBER_FORMAT :
+					case MONEY_FORMAT :
+						cell.setCellValue(dValue);
+						break;
+					case DEFAULT_FORMAT :
+					default :
+						cell.setCellValue(helper.createRichTextString(sValue));
+						break;
+					}
+					
 				}
 			}
 			
@@ -189,6 +248,8 @@ public class XSSFDashboardExport {
 				for( int x = 0; x < series.length(); x++) {
 					if(series.getJSONObject(x).has("name")) {
 						cell = row.createCell(x+1);
+						// TODO set format
+						cell.setCellStyle(x +1 == series.length() ? moneyF : numberS);
 						cell.setCellValue(series.getJSONObject(x).getJSONArray("data").getDouble(i));
 					}
 				}
@@ -232,6 +293,8 @@ public class XSSFDashboardExport {
 				for( int x = 0; x < series.length(); x++) {
 					if(series.getJSONObject(x).has("name")) {
 						cell = row.createCell(x+1);
+						// TODO check format
+						cell.setCellStyle(numberS);
 						cell.setCellValue(series.getJSONObject(x).getJSONArray("data").getInt(i));
 					}
 				}
