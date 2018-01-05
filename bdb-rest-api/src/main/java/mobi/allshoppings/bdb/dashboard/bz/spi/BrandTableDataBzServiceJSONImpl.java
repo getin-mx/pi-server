@@ -540,7 +540,10 @@ implements BDBDashboardBzService {
 			row.put(h1 + calculateHigherDay() + h2);
 			row.put(h1 + calculateLowerDay() + h2);
 
-			row.put(h1 + String.valueOf(Math.round(permanenceInMillis /permancenceQty / 60000)) + " mins"  + h2);
+			if(permancenceQty != 0)
+				row.put(h1 + String.valueOf(Math.round(permanenceInMillis /permancenceQty / 60000)) + " mins"  + h2);
+			else
+				row.put(h1 +df.format(0) +" mins" +h2);
 
 			return row;
 		}
