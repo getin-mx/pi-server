@@ -66,6 +66,7 @@ public interface GenericDAO<T extends ModelKey> {
 	List<T> getUsingIndex(String q, ViewLocation viewLocation, List<Integer> status, Range range, Map<String, String> additionalFields, String order, String lang) throws ASException;
 	List<T> getUsingIndex(String indexName, String q, ViewLocation viewLocation, List<Integer> status, Range range, Map<String, String> additionalFields, String order, String lang) throws ASException;
 	IndexHelper getIndexHelper();
+	List<T> indexFallback(String id);
 	
 	// Datatable Operations
 	long count() throws ASException;
