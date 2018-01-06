@@ -72,6 +72,12 @@
   	<bean id="dashboard.storerevenuedata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.StoreRevenueDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.brandtabledata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.BrandTableDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
   	<bean id="dashboard.generaldata.rest.resource" class="mobi.allshoppings.bdb.dashboard.bz.spi.GeneralDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype" />
+    <bean id="dashboard.storerevenuebyhourdata.rest.resource"
+      class="mx.getin.bdb.dashboard.bz.spi.StoreRevenueByHourDataBzServiceJSONImpl"
+      parent="base.rest.resource" scope="prototype" />
+    <bean id="dashboard.storeitembyhourdata.rest.resource"
+      class="mx.getin.bdb.dashboard.bz.spi.StoreItemByHourDataBzServiceJSONImpl"
+      parent="base.rest.resource" scope="prototype" />
 
 	<!-- Business Service validation beans -->
 	<bean id="user.bz.validator" class="mobi.allshoppings.bdb.bz.validation.BDBUserBzValidation" scope="singleton" />

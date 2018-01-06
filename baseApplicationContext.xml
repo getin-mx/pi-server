@@ -668,163 +668,6 @@
 		</property>
 		<property name="mark2APDevices">
 			<list>
-				<value>gihs-0328</value>
-				<value>gihs-0329</value>
-				<value>gihs-0331</value>
-				<value>gihs-0326</value>
-				<value>gihs-0327</value>
-				<value>gihs-0334</value>
-				<value>gihs-0352</value>
-				<value>gihs-0338</value>
-				<value>gihs-0207</value>
-				<value>gihs-0333</value>
-				<value>gihs-0306</value>
-				<value>gihs-0307</value>
-				<value>gihs-0308</value>
-				<value>gihs-0309</value>
-				<value>gihs-0310</value>
-				<value>gihs-0311</value>
-				<value>gihs-0312</value>
-				<value>gihs-0313</value>
-				<value>gihs-0314</value>
-				<value>gihs-0315</value>
-				<value>gihs-0316</value>
-				<value>gihs-0317</value>
-				<value>gihs-0318</value>
-				<value>gihs-0319</value>
-				<value>gihs-0320</value>
-				<value>gihs-0321</value>
-				<value>gihs-0322</value>
-				<value>gihs-0323</value>
-				<value>gihs-0324</value>
-				<value>ashs-0105</value>
-				<value>ashs-0104</value>
-				<value>ashs-0103</value>
-				<value>ashs-0102</value>
-				<value>ashs-0098</value>
-				<value>ashs-0119</value>
-				<value>ashs-0118</value>
-				<value>gihs-0266</value>
-				<value>gihs-0238</value>
-				<value>gihs-0240</value>
-				<value>gihs-0239</value>
-				<value>gihs-0236</value>
-				<value>gihs-0258</value>
-				<value>gihs-0237</value>
-				<value>gihs-0254</value>
-				<value>gihs-0255</value>
-				<value>gihs-0256</value>
-				<value>gihs-0260</value>
-				<value>gihs-0259</value>
-				<value>gihs-0270</value>
-				<value>gihs-0267</value>
-				<value>gihs-0268</value>
-				<value>gihs-0272</value>
-				<value>gihs-0273</value>
-				<value>gihs-0287</value>
-				<value>gihs-0275</value>
-				<value>gihs-0285</value>
-				<value>gihs-0271</value>
-				<value>gihs-0261</value>
-				<value>gihs-0262</value>
-				<value>gihs-0263</value>
-				<value>gihs-0264</value>
-				<value>gihs-0265</value>
-				<value>gihs-0257</value>
-				<value>gihs-0299</value>
-				<value>gihs-0300</value>
-				<value>gihs-0301</value>
-				<value>gihs-0302</value>
-				<value>gihs-0303</value>
-				<value>gihs-0304</value>
-				<value>gihs-0305</value>
-				<value>gihs-0213</value>
-				<value>gihs-0215</value>
-				<value>gihs-0217</value>
-				<value>gihs-0210</value>
-				<value>gihs-0214</value>
-				<value>gihs-0218</value>
-				<value>gihs-0211</value>
-				<value>gihs-0212</value>
-				<value>gihs-0216</value>
-				<value>gihs-0219</value>
-				<value>ashs-0113</value>
-				<value>gihs-0337</value>
-				<value>gihs-0352</value>
-				<value>gihs-0334</value>
-				<value>gihs-0338</value>
-				<value>gihs-0353</value>
-				<value>gihs-0348</value>
-				<value>gihs-0354</value>
-				<value>gihs-0341</value>
-				<value>gihs-0339</value>
-				<value>gihs-0340</value>
-				<value>gihs-0347</value>
-				<value>gihs-0330</value>
-				<value>ashs-0034</value>
-				<value>gihs-0253</value>
-				<value>gihs-0145</value>
-				<value>gihs-0330</value>
-				<value>gihs-0143</value>
-				<value>gihs-0144</value>
-				<value>gihs-0156</value>
-				<value>gihs-0155</value>
-				<value>gihs-0141</value>
-				<value>gihs-0146</value>
-				<value>gihs-0148</value>
-				<value>gihs-0152</value>
-				<value>gihs-0153</value>
-				<value>ashs-0115</value>
-				<value>gihs-0182</value>
-				<value>gihs-0175</value>
-				<value>gihs-0174</value>
-				<value>gihs-0184</value>
-				<value>gihs-0185</value>
-				<value>gihs-0188</value>
-				<value>gihs-0189</value>
-				<value>gihs-0136</value>
-				<value>gihs-0154</value>
-				<value>gihs-0176</value>
-				<value>gihs-0183</value>
-				<value>gihs-0186</value>
-				<value>gihs-0187</value>
-				<value>gihs-0288</value>
-				<value>gihs-0289</value>
-				<value>gihs-0290</value>
-				<value>gihs-0291</value>
-				<value>gihs-0292</value>
-				<value>gihs-0293</value>
-				<value>gihs-0294</value>
-				<value>gihs-0295</value>
-				<value>gihs-0296</value>
-				<value>gihs-0297</value>
-				<value>gihs-0138</value>
-				<value>gihs-0298</value>
-				<value>gihs-0247</value>
-				<value>gihs-0250</value>
-				<value>gihs-0150</value>
-				<value>gihs-0353</value>
-				<value>gihs-0160</value>
-				<value>gihs-0220</value>
-				<value>gihs-0222</value>
-				<value>gihs-0223</value>
-				<value>gihs-0224</value>
-				<value>gihs-0225</value>
-				<value>gihs-0227</value>
-				<value>gihs-0228</value>
-				<value>gihs-0233</value>
-				<value>gihs-0181</value>
-				<value>gihs-0232</value>
-				<value>gihs-0198</value>
-				<value>gihs-0199</value>
-				<value>gihs-0229</value>
-				<value>gihs-0231</value>
-				<value>gihs-0157</value>
-				<value>gihs-0206</value>
-				<value>gihs-0221</value>
-				<value>gihs-0224</value>
-				<value>gihs-0230</value>
-				<value>gihs-0248</value>
 			</list>
 		</property>
 		<property name="defaultBehavioursApps">
@@ -928,9 +771,12 @@
 	<bean id="friend.dao.ref" class="mobi.allshoppings.dao.spi.FriendDAOJDOImpl" />
 
 	<bean id="storeitem.dao.ref" class="mobi.allshoppings.dao.spi.StoreItemDAOJDOImpl" />
+	<bean id="storeitembyhour.dao.ref" class="mx.getin.dao.spi.StoreItemByHourDAOJDOImpl" />
 	<bean id="storeticket.dao.ref" class="mobi.allshoppings.dao.spi.StoreTicketDAOJDOImpl" />
 	<bean id="storeticketbyhour.dao.ref" class="mobi.allshoppings.dao.spi.StoreTicketByHourDAOJDOImpl" />
 	<bean id="storerevenue.dao.ref" class="mobi.allshoppings.dao.spi.StoreRevenueDAOJDOImpl" />
+	<bean id="storerevenuebyhour.dao.ref" class="mx.getin.dao.spi.StoreRevenueByHourDAOJDOImpl" />
+
 	<bean id="userentitycache.dao.ref" class="mobi.allshoppings.dao.spi.UserEntityCacheDAOJDOImpl" />
 	<bean id="systemstatus.dao.ref" class="mobi.allshoppings.dao.spi.SystemStatusDAOJDOImpl" />
 	<bean id="offer.dao.ref" class="mobi.allshoppings.dao.spi.OfferDAOJDOImpl" />

@@ -56,7 +56,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 
 	private T objectExample;
 
-	Class<T> clazz;
+	protected Class<T> clazz;
 	Logger log;
 
 	/**
