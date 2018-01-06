@@ -37,12 +37,13 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.Image;
 import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.Range;
 import mx.getin.model.interfaces.StoreDataByHourEntity;
 import mx.getin.model.interfaces.StoreDataEntity;
 
-public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRestBaseServerResource
+public abstract class StoreEntityData<T extends ModelKey> extends BDBRestBaseServerResource
 		implements BDBDashboardBzService, BDBPostBzService {
 
 	@Autowired

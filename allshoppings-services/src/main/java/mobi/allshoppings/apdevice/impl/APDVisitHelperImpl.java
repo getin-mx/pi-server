@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -1026,7 +1025,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					lastPeasantSlot = slot;
 					// Checks for power for visit
 					if(value >= dev.getViewerPowerThreshold() && value >= dev.getViewerPowerThreshold() + dev.getOffsetViewer()) {
-						currentViewer = createViewer(curEntry, curDate, null, assignments.get(curEntry.getHostname()));
+						currentViewer = createViewer(curEntry, curDate, null,
+								assignments.get(curEntry.getHostname()), date);
 						lastViewerSlot = slot;
 					}
 					if( value >= dev.getVisitPowerThreshold() ) {
@@ -1428,8 +1428,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @return A new fully formed visit
 	 * @throws ASException
 	 */
-	private APDVisit createViewer(APHEntry source, Date date, DeviceInfo device, APDAssignation assign)
-			throws ASException {
+	private APDVisit createViewer(APHEntry source, Date date, DeviceInfo device, APDAssignation assign,
+			String forDate) throws ASException {
 		
 		String entityId = assign.getEntityId();
 		Integer entityKind = assign.getEntityKind();
@@ -1446,16 +1446,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		viewer.setVerified(false);
 		viewer.setDeviceUUID(device == null ? null : device.getDeviceUUID());
 		viewer.setUserId(null);
-		try {
-			WORK_CALENDAR.setTime(sdf.parse(source.getDate()));
-			if(source.getShiftDay() == APHEntry.NEXT)
-				WORK_CALENDAR.add(Calendar.DATE, 1);
-			else if(source.getShiftDay() == APHEntry.PREVIOUS)
-				WORK_CALENDAR.add(Calendar.DATE, -1);
-			viewer.setForDate(sdf.format(WORK_CALENDAR.getTime()));
-		} catch(ParseException e) {
-			viewer.setForDate(source.getDate());
-		}
+		viewer.setForDate(forDate);
 		viewer.setKey(apdvDao.createKey(viewer));
 
 		return viewer;

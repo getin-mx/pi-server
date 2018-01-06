@@ -21,13 +21,6 @@ public class StoreItemDataBzServiceJSONImpl extends StoreEntityData<StoreItem> {
 	@Autowired
 	private StoreItemDAO dao;
 	
-	@Override
-	protected List<StoreItem> daoGetUsingStoreIdAndDatesAndRange(String storeId, String fromDate,
-			String toDate, String toHour, boolean order) throws ASException {
-		return dao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null,
-				order ? "date" : null, false);
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected StoreItem daoGetUsingStoreIdAndDate(String storeId, String date, String hour) throws ASException {
@@ -49,6 +42,13 @@ public class StoreItemDataBzServiceJSONImpl extends StoreEntityData<StoreItem> {
 		obj.setQty(qty);
 		obj.setKey(dao.createKey());
 		dao.create(obj);
+	}
+
+	@Override
+	protected List<StoreItem> daoGetUsingStoreIdAndDatesAndRange(String storeId, String fromDate,
+			String toDate, String toHour, boolean order) throws ASException {
+		return dao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null,
+				order ? "date" : null, false);
 	}
 
 }

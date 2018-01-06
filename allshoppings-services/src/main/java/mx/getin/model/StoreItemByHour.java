@@ -1,5 +1,7 @@
 package mx.getin.model;
 
+import java.util.Date;
+
 import javax.jdo.annotations.PersistenceCapable;
 
 import com.inodes.datanucleus.model.Key;
@@ -28,10 +30,6 @@ public class StoreItemByHour extends StoreItem implements StoreDataByHourEntity 
 		super();
 	}
 	
-	/*
-	 * Gets the Store Item By Hour ID
-	 * @return String - this entity key
-	 *
 	public String getIdentifier() {
 		return this.getKey() != null ? this.getKey().getName() : "";
 	}//getIdentifier
@@ -40,6 +38,7 @@ public class StoreItemByHour extends StoreItem implements StoreDataByHourEntity 
 	 * Gets the Store Item By Hour Key
 	 * @return Key - the key of the entity
 	 *
+	 */
 	public Key getKey() {
 		return key;
 	}//getKey
@@ -48,9 +47,31 @@ public class StoreItemByHour extends StoreItem implements StoreDataByHourEntity 
 	 * Sets the Store Item By Hour BD key
 	 * @param key - the key to set
 	 *
+	 */
 	public void setKey(Key key) {
 		this.key = key;
-	}//setKey	*/
+	}//setKey
+
+	@Override
+	public void preStore() {
+		this.lastUpdate = new Date();
+	}//preStore
+
+	/**
+	 * Gets the Store Item By Hour's brand.
+	 * @return String - the brandId
+	 */
+	public String getBrandId() {
+		return brandId;
+	}//getBrandId
+
+	/**
+	 * Sets the Store Item By Hour brand
+	 * @param brandId - the brandId to set
+	 */
+	public void setBrandId(String brandId) {
+		this.brandId = brandId;
+	}//setBrandId
 
 	/**
 	 * Gets the Store ITem By Hour's hour
@@ -67,6 +88,88 @@ public class StoreItemByHour extends StoreItem implements StoreDataByHourEntity 
 	public void setHour(String hour) {
 		this.hour = hour;
 	}//setHour
+
+	/**
+	 * Gets the Store Item By Hour's Store ID
+	 * @return String - the storeId
+	 */
+	public String getStoreId() {
+		return storeId;
+	}//getStoreId
+
+	/**
+	 * Sets the Store Item By Hour's Store ID.
+	 * @param storeId - the storeId to set
+	 */
+	public void setStoreId(String storeId) {
+		this.storeId = storeId;
+	}//setStoreId
+
+	/**
+	 * Gets the Store Item By Hour's value; the number of tickets sold in that hour.
+	 * @return double - the tickets by hour quantity.
+	 */
+	public double getQty() {
+		return qty;
+	}//getQty
+
+	/**
+	 * Sets the Store Item By Hour's value.
+	 * @param qty - the number of tickets sold in the represented hour to set
+	 */
+	public void setQty(int qty) {
+		this.qty = qty;
+	}//setQty
+
+	/**
+	 * Gets the time when the Store Item By Hour was created for the system. This does not necessarily matches
+	 * the actual time of any sale in this items.
+	 * @return Date - the creationDateTime of this entity for the system.
+	 */
+	public Date getCreationDateTime() {
+		return creationDateTime;
+	}//get CreationDateTime 
+
+	/**
+	 * Sets the creation date time for this entity. The creation date time should only be setted when reading
+	 * data from the DB.
+	 * @param creationDateTime - the creationDateTime to set
+	 */
+	public void setCreationDateTime(Date creationDateTime) {
+		this.creationDateTime = creationDateTime;
+	}//setCreationDateTime
+
+	/**
+	 * Gets the last date when this data was modified.
+	 * @return Date - the lastUpdate time.
+	 */
+	public Date getLastUpdate() {
+		return lastUpdate;
+	}//getLastUpdate
+
+	/**
+	 * Sets the last modification time for this data.
+	 * @param lastUpdate - the lastUpdate date to set
+	 */
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}//setLastUpdate
+
+	/**
+	 * Gets the date that corresponds to the items sale represented by this model.
+	 * @return String - the date of the sales
+	 */
+	public String getDate() {
+		return date;
+	}//getDate
+
+	/**
+	 * Sets the date when the items were sold. 
+	 * @param date - the date to set.
+	 */
+	public void setDate(String date) {
+		this.date = date;
+	}//setDate
 
 	@Override
 	public int hashCode() {
