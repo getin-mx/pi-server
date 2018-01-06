@@ -1,8 +1,7 @@
-package mobi.allshoppings.dao.spi;
+package mx.getin.dao.spi;
 
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -11,37 +10,36 @@ import org.springframework.util.StringUtils;
 
 import com.inodes.datanucleus.model.Key;
 
-import mobi.allshoppings.dao.StoreTicketByHourDAO;
+import mobi.allshoppings.dao.spi.DAOJDOPersistentManagerFactory;
+import mobi.allshoppings.dao.spi.GenericDAOJDO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.StoreTicketByHour;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
+import mx.getin.dao.StoreItemByHourDAO;
+import mx.getin.model.StoreItemByHour;
 
 /**
- * Implements the DAO to retrieve Store Ticket By Hour from the DB.
- * @author Matias Hapanowicz
+ * Implements the DAO to retrieve Store Items By Hour from the DB.
  * @author <a href="mailto:ignacio@getin.mx" >Manuel "Nachintoch" Castillo</a>
- * @version 1.0, 
- * @since Allshoppings
+ * @version 1.0, january 2018
+ * @since Mark III, january 2017
  */
-public class StoreTicketByHourDAOJDOImpl extends GenericDAOJDO<StoreTicketByHour> implements StoreTicketByHourDAO {
+public class StoreItemByHourDAOJDOImpl extends GenericDAOJDO<StoreItemByHour> implements StoreItemByHourDAO {
 
-	@SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(StoreTicketByHourDAOJDOImpl.class.getName());
-
-	public StoreTicketByHourDAOJDOImpl() {
-		super(StoreTicketByHour.class);
+	public StoreItemByHourDAOJDOImpl() {
+		super(StoreItemByHour.class);
 	}
 
 	@Override
 	public Key createKey() throws ASException {
-		return keyHelper.createStringUniqueKey(StoreTicketByHour.class);
+		return keyHelper.createStringUniqueKey(StoreItemByHour.class);
 	}
 
 	@Override
-	public List<StoreTicketByHour> getUsingStoreIdAndDateAndRange(String storeId, String date, String fromHour, String toHour, Range range, String order, boolean detachable) throws ASException {
-		List<StoreTicketByHour> returnedObjs = CollectionFactory.createList();
+	public List<StoreItemByHour> getUsingStoreIdAndDateAndRange(String storeId, String date,
+			String fromHour, String toHour, Range range, String order, boolean detachable) throws ASException {
+		List<StoreItemByHour> returnedObjs = CollectionFactory.createList();
 
 		PersistenceManager pm;
 		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
@@ -90,10 +88,11 @@ public class StoreTicketByHourDAOJDOImpl extends GenericDAOJDO<StoreTicketByHour
 			if( StringUtils.hasText(order)) query.setOrdering(order);
 
 			@SuppressWarnings("unchecked")
-			List<StoreTicketByHour> objs = parameters.size() > 0 ? (List<StoreTicketByHour>)query.executeWithMap(parameters) : (List<StoreTicketByHour>)query.execute();
+			List<StoreItemByHour> objs = (List<StoreItemByHour>) (parameters.size() > 0 ?
+					query.executeWithMap(parameters) : query.execute());
 			if (objs != null) {
 				// force to read
-				for (StoreTicketByHour obj : objs) {
+				for (StoreItemByHour obj : objs) {
 					if( detachable )
 						returnedObjs.add(pm.detachCopy(obj));
 					else
@@ -115,9 +114,9 @@ public class StoreTicketByHourDAOJDOImpl extends GenericDAOJDO<StoreTicketByHour
 
 	}
 
-	
 	@Override
-	public StoreTicketByHour getUsingStoreIdAndDateAndHour(String storeId, String date, String hour, boolean detachable) throws ASException {
+	public StoreItemByHour getUsingStoreIdAndDateAndHour(String storeId, String date, String hour,
+			boolean detachable) throws ASException {
 
 		PersistenceManager pm;
 		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
@@ -154,10 +153,11 @@ public class StoreTicketByHourDAOJDOImpl extends GenericDAOJDO<StoreTicketByHour
 			query.setFilter(toWellParametrizedFilter(filters));
 
 			@SuppressWarnings("unchecked")
-			List<StoreTicketByHour> objs = parameters.size() > 0 ? (List<StoreTicketByHour>)query.executeWithMap(parameters) : (List<StoreTicketByHour>)query.execute();
+			List<StoreItemByHour> objs = (List<StoreItemByHour>) (parameters.size() > 0 ?
+					query.executeWithMap(parameters) : query.execute());
 			if (objs != null) {
 				// force to read
-				for (StoreTicketByHour obj : objs) {
+				for (StoreItemByHour obj : objs) {
 					if( detachable )
 						return pm.detachCopy(obj);
 					else
@@ -178,4 +178,5 @@ public class StoreTicketByHourDAOJDOImpl extends GenericDAOJDO<StoreTicketByHour
 		}
 
 	}
+	
 }

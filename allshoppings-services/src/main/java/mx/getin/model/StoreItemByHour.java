@@ -1,4 +1,4 @@
-package mobi.allshoppings.model;
+package mx.getin.model;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,17 +14,16 @@ import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.model.interfaces.ModelKey;
 
 /**
- * Models a "Ticket by hour", which is the number of tickets sold within the same local hour for a store.
- * @author Matias Hapanowics
+ * Models a "Item by hour", which is the number of items sold within the same local hour for a store.
  * @author <a href="mailto:ignacio@getin.mx" >Manuel "Nachintoch" Castillo</a>
- * @version 1.0, 
- * @since Allshoppings
+ * @version 1.0, january 2017 
+ * @since Mark III
  */
 @PersistenceCapable(detachable="true")
-public class StoreTicketByHour implements ModelKey, Serializable, Identificable {
+public class StoreItemByHour implements ModelKey, Serializable, Identificable {
 
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = -5883423685204800884L;
+
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
 	private Key key;
@@ -33,138 +32,157 @@ public class StoreTicketByHour implements ModelKey, Serializable, Identificable 
 	private String storeId;
 	private String date;
 	private String hour;
-	private Integer qty;
+	private int qty;
 	private Date creationDateTime;
 	private Date lastUpdate;
 
-	public StoreTicketByHour() {
+	public StoreItemByHour() {
 		this.creationDateTime = new Date();
 		this.qty = 0;
 	}
 	
 	/**
-	 * @return this entity key
+	 * Gets the Store Item By Hour ID
+	 * @return String - this entity key
 	 */
 	public String getIdentifier() {
 		return this.getKey() != null ? this.getKey().getName() : "";
-	}
+	}//getIdentifier
 
 	/**
-	 * @return the key
+	 * Gets the Store Item By Hour Key
+	 * @return Key - the key of the entity
 	 */
 	public Key getKey() {
 		return key;
-	}
+	}//getKey
 
 	/**
-	 * @param key the key to set
+	 * Sets the Store Item By Hour BD key
+	 * @param key - the key to set
 	 */
 	public void setKey(Key key) {
 		this.key = key;
-	}
+	}//setKey
 
 	@Override
 	public void preStore() {
 		this.lastUpdate = new Date();
-	}
+	}//preStore
 
 	/**
-	 * @return the brandId
+	 * Gets the Store Item By Hour's brand.
+	 * @return String - the brandId
 	 */
 	public String getBrandId() {
 		return brandId;
-	}
+	}//getBrandId
 
 	/**
-	 * @param brandId the brandId to set
+	 * Sets the Store Item By Hour brand
+	 * @param brandId - the brandId to set
 	 */
 	public void setBrandId(String brandId) {
 		this.brandId = brandId;
-	}
+	}//setBrandId
 
 	/**
-	 * @return the hour
+	 * Gets the Store ITem By Hour's hour
+	 * @return String - the hour
 	 */
 	public String getHour() {
 		return hour;
-	}
+	}//getHour
 
 	/**
-	 * @param hour the hour to set
+	 * Sets the Store Item By Hour's hour
+	 * @param hour - the hour to set
 	 */
 	public void setHour(String hour) {
 		this.hour = hour;
-	}
+	}//setHour
 
 	/**
-	 * @return the storeId
+	 * Gets the Store Item By Hour's Store ID
+	 * @return String - the storeId
 	 */
 	public String getStoreId() {
 		return storeId;
-	}
+	}//getStoreId
 
 	/**
-	 * @param storeId the storeId to set
+	 * Sets the Store Item By Hour's Store ID.
+	 * @param storeId - the storeId to set
 	 */
 	public void setStoreId(String storeId) {
 		this.storeId = storeId;
-	}
+	}//setStoreId
 
 	/**
-	 * @return the qty
+	 * Gets the Store Item By Hour's value; the number of tickets sold in that hour.
+	 * @return double - the tickets by hour quantity.
 	 */
-	public Integer getQty() {
+	public int getQty() {
 		return qty;
-	}
+	}//getQty
 
 	/**
-	 * @param qty the qty to set
+	 * Sets the Store Item By Hour's value.
+	 * @param qty - the number of tickets sold in the represented hour to set
 	 */
-	public void setQty(Integer qty) {
+	public void setQty(int qty) {
 		this.qty = qty;
-	}
+	}//setQty
 
 	/**
-	 * @return the creationDateTime
+	 * Gets the time when the Store Item By Hour was created for the system. This does not necessarily matches
+	 * the actual time of any sale in this items.
+	 * @return Date - the creationDateTime of this entity for the system.
 	 */
 	public Date getCreationDateTime() {
 		return creationDateTime;
-	}
+	}//get CreationDateTime 
 
 	/**
-	 * @param creationDateTime the creationDateTime to set
+	 * Sets the creation date time for this entity. The creation date time should only be setted when reading
+	 * data from the DB.
+	 * @param creationDateTime - the creationDateTime to set
 	 */
 	public void setCreationDateTime(Date creationDateTime) {
 		this.creationDateTime = creationDateTime;
-	}
+	}//setCreationDateTime
 
 	/**
-	 * @return the lastUpdate
+	 * Gets the last date when this data was modified.
+	 * @return Date - the lastUpdate time.
 	 */
 	public Date getLastUpdate() {
 		return lastUpdate;
-	}
+	}//getLastUpdate
 
 	/**
-	 * @param lastUpdate the lastUpdate to set
+	 * Sets the last modification time for this data.
+	 * @param lastUpdate - the lastUpdate date to set
 	 */
 	public void setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
-	}
+	}//setLastUpdate
 
 	/**
-	 * @return the date
+	 * Gets the date that corresponds to the items sale represented by this model.
+	 * @return String - the date of the sales
 	 */
 	public String getDate() {
 		return date;
-	}
+	}//getDate
 
 	/**
-	 * @param date the date to set
+	 * Sets the date when the items were sold. 
+	 * @param date - the date to set.
 	 */
 	public void setDate(String date) {
 		this.date = date;
-	}
+	}//setDate
 
 	@Override
 	public int hashCode() {
@@ -172,7 +190,7 @@ public class StoreTicketByHour implements ModelKey, Serializable, Identificable 
 		int result = 1;
 		result = prime * result + ((key == null) ? 0 : key.hashCode());
 		return result;
-	}
+	}//hashCode
 
 	@Override
 	public boolean equals(Object obj) {
@@ -182,20 +200,20 @@ public class StoreTicketByHour implements ModelKey, Serializable, Identificable 
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		StoreTicketByHour other = (StoreTicketByHour) obj;
+		StoreItemByHour other = (StoreItemByHour) obj;
 		if (key == null) {
 			if (other.key != null)
 				return false;
 		} else if (!key.equals(other.key))
 			return false;
 		return true;
-	}
+	}//equals
 
 	@Override
 	public String toString() {
-		return "StoreTicketByHour [key=" + key + ", brandId=" + brandId + ", storeId=" + storeId + ", date=" + date
+		return "StoreItemByHour [key=" + key + ", brandId=" + brandId + ", storeId=" + storeId + ", date=" + date
 				+ ", hour=" + hour + ", qty=" + qty + ", creationDateTime=" + creationDateTime + ", lastUpdate="
 				+ lastUpdate + "]";
-	}
-
-}
+	}//toString
+	
+}//Store Item by Hour model
