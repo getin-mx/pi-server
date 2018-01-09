@@ -338,7 +338,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 													}
 												}
 											}
-												boolean originalDeleted = false;
+											boolean originalDeleted = false;
 											for(APHEntry toSplit : slotsToSplit.keySet()) {
 												for(String slot : slotsToSplit.get(toSplit)) {
 													Integer otherPow = toSplit.getRssi().get(slot);
@@ -1337,8 +1337,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Long time = (visit.getCheckinFinished().getTime() -visit.getCheckinStarted().getTime()) / 60000;
 		
 		// TODO add minimum peasant time
-		
-		
 		
 		visit.setDuration(time);
 		return time <= 60 *60;
