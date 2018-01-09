@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -326,15 +327,80 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 											forDate, tz, sFromDate, lastDate, START_CALENDAR, END_CALENDAR);
 									dumpHelper.dispose();
 
-									for(APHEntry entry : i) {
-										if(!cache.containsKey(entry.getMac()))
+									Map<APHEntry, List<String>> slotsToSplit = CollectionFactory.createMap();
+									for(Iterator<APHEntry> it = i.iterator(); it.hasNext();) {
+										APHEntry entry = it.next();
+										if(cache.containsKey(entry.getMac())) {
+											for(APHEntry e : cache.get(entry.getMac())) {
+												for(String slot : e.getRssi().keySet()) {
+													if(entry.getRssi().containsKey(slot)) {
+														if(!slotsToSplit.containsKey(e))
+															slotsToSplit.put(e, new ArrayList<String>());
+														slotsToSplit.get(e).add(slot);
+													}
+												}
+											}
+											boolean originalDeleted = false;
+											for(APHEntry toSplit : slotsToSplit.keySet()) {
+												for(String slot : slotsToSplit.get(toSplit)) {
+													Integer otherPow = toSplit.getRssi().get(slot);
+													if(otherPow == null) continue;
+													Integer thisPow = entry.getRssi().get(slot);
+													if(thisPow == null) continue;
+													boolean removingFromOther = thisPow > otherPow;
+													APHEntry needsSplit = null;
+													if(removingFromOther) {
+														toSplit.getRssi().remove(slot);
+														if(toSplit.getRssi().size() < 2) {
+															cache.get(toSplit.getMac()).remove(toSplit);
+															break;
+														} else needsSplit = toSplit;
+													} else {
+														entry.getRssi().remove(slot);
+														if(entry.getRssi().size() < 2) {
+															it.remove();
+															originalDeleted = true;
+															break;
+														} else needsSplit = entry;
+													} if(needsSplit != null) {
+														List<String> slots = CollectionFactory.createList(
+																needsSplit.getRssi().keySet());
+														Collections.sort(slots);
+														Map<String, Integer> newRssi = CollectionFactory.createMap();
+														int minRssi = Integer.MAX_VALUE;
+														int maxRssi = Integer.MIN_VALUE;
+														for(String separatedSlots : slots) {
+															if(separatedSlots.compareTo(slot) > 0) {
+																int rssi = needsSplit.getRssi().remove(separatedSlots);
+																newRssi.put(separatedSlots, rssi);
+																if(minRssi > rssi) minRssi = rssi;
+																if(maxRssi < rssi) maxRssi = rssi;
+															}
+														} if(newRssi.size() >= 2) {
+															APHEntry _new = new APHEntry();
+															_new.setDataCount(newRssi.size());
+															_new.setDate(needsSplit.getDate());
+															_new.setHostname(needsSplit.getHostname());
+															_new.setMac(needsSplit.getMac());
+															_new.setMinRssi(minRssi);
+															_new.setMaxRssi(maxRssi);
+															_new.setRssi(newRssi);
+															cache.get(_new.getMac()).add(_new);
+														}
+													}
+												} if(originalDeleted) break;
+											}
+											slotsToSplit.clear();
+										} else {
 											cache.put(entry.getMac(), new ArrayList<APHEntry>());
-										cache.get(entry.getMac()).add(entry);
+											cache.get(entry.getMac()).add(entry);
+										}
 									}
 								}
 
 								log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
 								for(String mac :  cache.keySet()) {
+									if(cache.get(mac).isEmpty()) continue;
 									List<APDVisit> visitList = aphEntryToVisits(cache.get(mac), apdCache, assignmentsCache,
 											blackListMacs, employeeListMacs, tz);
 									for(APDVisit visit : visitList ) {
@@ -508,6 +574,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		while(ix.hasNext()) {
 			APHEntry aphe = ix.next();
 			aphe.setDataCount(aphe.getRssi().size());
+			if(aphe.getDataCount() < 2) continue;
 			if(!BANNED.contains(aphe.getMac().toLowerCase())) {
 				aphe.setMaxRssi(-9999);
 				aphe.setMinRssi(0);
@@ -1422,14 +1489,18 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @return true if valid, false if not
 	 * @throws ParseException
 	 */
-	private boolean isPeasantValid(APDVisit visit, APDevice device,Boolean isEmployee) 
+	private boolean isPeasantValid(APDVisit visit, APDevice device,Boolean isEmployee, int entityKind) 
 		throws ParseException {
 		
 		if( isEmployee ) visit.setCheckinType(APDVisit.CHECKIN_EMPLOYEE);
 		
+		if(!isEmployee && entityKind == EntityKind.KIND_INNER_ZONE) return false;
+		
 		Long time = (visit.getCheckinFinished().getTime() -visit.getCheckinStarted().getTime()) / 60000;
 		
-		visit.setDuration(time);		
+		// TODO add minimum peasant time
+		
+		visit.setDuration(time);
 		return time <= 60 *60;
 	}
 
@@ -1523,4 +1594,4 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		return peasant;
 	}
 	
-}
+}//APDVisit Helper Implementation
