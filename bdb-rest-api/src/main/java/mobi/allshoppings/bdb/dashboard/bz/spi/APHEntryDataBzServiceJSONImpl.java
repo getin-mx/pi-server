@@ -116,9 +116,10 @@ implements BDBDashboardBzService {
 			this.entries = CollectionFactory.createList();
 			
 			
-			DumperHelper<APDVisit> apdVisitDumper = new DumpFactory<APDVisit>().build(null, APDVisit.class);
+			DumperHelper<APDVisit> apdVisitDumper = new DumpFactory<APDVisit>().build(null, APDVisit.class, false);
 			apdVisitDumper.setFilter(entityId);
-			Iterator<APDVisit> apdvisitIterator = apdVisitDumper.iterator(aphEntryStringDate, aphEntryStringDate);
+			Iterator<APDVisit> apdvisitIterator = apdVisitDumper.iterator(
+					aphEntryStringDate, aphEntryStringDate, false);
 			
 			while (apdvisitIterator.hasNext()) {
 				APDVisit visit = apdvisitIterator.next();
@@ -127,9 +128,9 @@ implements BDBDashboardBzService {
 			}
 	
 			
-			DumperHelper<APHEntry> dumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
+			DumperHelper<APHEntry> dumper = new DumpFactory<APHEntry>().build(null, APHEntry.class, false);
 			dumper.setFilter(hostname);
-			Iterator<APHEntry> dumperEntries = dumper.iterator(aphEntryStringDate, aphEntryStringDate);
+			Iterator<APHEntry> dumperEntries = dumper.iterator(aphEntryStringDate, aphEntryStringDate, false);
 			
 
 			while (dumperEntries.hasNext()) {

@@ -451,7 +451,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							} if( objs.size() > 0 || onlyDashboards) {
 								mapper.createAPDVisitPerformanceDashboardForDay(curDate,
 										Arrays.asList(new String[] { entityId }), entityKind, objs, isDailyProcess,
-										lastDate);
+										lastDate, startHour >= 0);
 							}
 						}
 					} catch( Exception e ) {
@@ -858,7 +858,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							} if( objs.size() > 0 || onlyDashboards) {
 								mapper.createAPDVisitPerformanceDashboardForDay(curDate,
 										Arrays.asList(new String[] { entityId }), entityKind, objs, isDailyProcess,
-										lastDate);
+										lastDate, startHour >= 0);
 							}
 						}
 					} catch( Exception e ) {
