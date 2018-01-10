@@ -77,8 +77,8 @@ public class CopyFakeAPHotspots extends AbstractCLI {
 			}
 
 			long count = 0;
-			DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
-			Iterator<APHotspot> i = dumper.iterator(fromDate, toDate);
+			DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(null, APHotspot.class, false);
+			Iterator<APHotspot> i = dumper.iterator(fromDate, toDate, false);
 			while( i.hasNext() ) {
 				APHotspot obj = i.next();
 				obj.setCreationDateTime(new Date(obj.getCreationDateTime().getTime() + offset));

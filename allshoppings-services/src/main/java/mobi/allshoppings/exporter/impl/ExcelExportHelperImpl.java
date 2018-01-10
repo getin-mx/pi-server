@@ -1059,6 +1059,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	@Override
 	public byte[] exportDB(List<String> storesId, String brandId, String fromDate, String toDate, String outDir,
 			boolean saveTmp, User toNotify) throws ASException {
+		// FIXME optimize to use only one loop for both daily and hourly data
 		if (brandId != null && StringUtils.hasText(brandId)) {
 			for (Store current : storeDao.getUsingBrandAndStatus(brandId, null, null)) {
 				if (!storesId.contains(current.getIdentifier()))
@@ -1101,6 +1102,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			}
 			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
 		}
+		if(brandId == null) brandId = "Tienda - ";
 		currentSheet = workbook.createSheet(WorkbookUtil.createSafeSheetName(brandId + " datos diarios"));
 		String parsedDate;
 		StoreTicket tickets;
@@ -1116,15 +1118,17 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		row.createCell(TICKET_CELL_INDEX).setCellValue(helper.createRichTextString(TICKET_CELL_TITLE));
 		row.createCell(STORE_NAME_CELL_INDEX).setCellValue(helper.createRichTextString(STORE_NAME_CELL_TITLE));
 		// processing begins
+		// adds daily values
+		log.log(Level.INFO, "Adding stores daily data");
 		for (String storeId : storesId) {
 			store = storeDao.get(storeId, false);
-			log.log(Level.INFO,
-					"Processing store " + store.getName() + " for period " + fromDate + " - " + toDate + "...");
+			log.log(Level.INFO, "Processing store " + store.getName() + " for period " + fromDate
+					+ " - " + toDate + "...");
 			curDate = new Date(initialDate.getTime());
 			// adds a row for each segment of data
 			while (curDate.compareTo(finalDate) < 0) {
-				log.log(Level.INFO, "Doing " + curDate +"...");
 				parsedDate = sdf.format(curDate);
+				log.log(Level.INFO, "Doing " + parsedDate +" (whole day)...");
 				row = currentSheet.createRow(rowIndex++);
 				ArrayList<String> stId = new ArrayList<String>();
 				stId.add(storeId);
@@ -1147,9 +1151,9 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				List<DashboardIndicatorData> visits = dashboardDataDao.getUsingFilters(store.getBrandId(), null,
 						"apd_visitor", "visitor_total_visits", null, storeId, null, parsedDate, parsedDate,
 						null, null, null, null, null, null, null, null);
-				List<DashboardIndicatorData> peaseants = dashboardDataDao.getUsingFilters(store.getBrandId(), null, "apd_visitor",
-						"visitor_total_peasents", null, storeId, null, parsedDate, parsedDate, null, null, null,
-						null, null, null, null, null);
+				List<DashboardIndicatorData> peaseants = dashboardDataDao.getUsingFilters(store.getBrandId(), null, 
+						"apd_visitor", "visitor_total_peasents", null, storeId, null, parsedDate, parsedDate, null,
+						null, null, null, null, null, null, null);
 				for (DashboardIndicatorData visit : visits) {
 					visitCount += visit.getDoubleValue().intValue();
 				}
@@ -1162,8 +1166,8 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				row.createCell(STORE_NAME_CELL_INDEX).setCellValue(store.getName());
 				curDate.setTime(curDate.getTime() + DAY_IN_MILLIS);
 			} // for each day
-		} // for each store
-			// currentSheet.autoSizeColumn(DATE_CELL_INDEX);
+		} // for each store */
+		// currentSheet.autoSizeColumn(DATE_CELL_INDEX);
 		currentSheet.autoSizeColumn(MONTH_CELL_INDEX);
 		currentSheet.autoSizeColumn(WEEK_OF_YEAR_INDEX);
 		currentSheet.autoSizeColumn(DAY_OF_WEEK_INDEX);
@@ -1185,10 +1189,12 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		row.createCell(STORE_NAME_CELL_INDEX + 1).setCellValue(helper.createRichTextString(STORE_NAME_CELL_TITLE));
 		Map<Integer, DashboardIndicatorData> visits = CollectionFactory.createMap();
 		Map<Integer, DashboardIndicatorData> peasents = CollectionFactory.createMap();
+		// adding hourly data
+		log.log(Level.INFO, "Adding stores hourly data");
 		for (String storeId : storesId) {
 			store = storeDao.get(storeId, false);
-			log.log(Level.INFO,
-					"Processing store " + store.getName() + " for period " + fromDate + " - " + toDate + "...");
+			log.log(Level.INFO, "Processing store " + store.getName() + " for period " + fromDate
+					+ " - " + toDate + "...");
 			curDate = new Date(initialDate.getTime());
 			// adds a row for each segment of data
 			dayLoop = 0;
@@ -1200,17 +1206,18 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				cell.setCellStyle(dataDStyle);
 
 				if (dayLoop == 0) {
+					log.log(Level.INFO, "Doing hourly " + parsedDate +"...");
 					cal.setTime(curDate);
 					visits.clear();
 					peasents.clear();
-					List<DashboardIndicatorData> data = dashboardDataDao.getUsingFilters(store.getBrandId(), null,
-							"apd_visitor", "visitor_total_visits", null, storeId, null, parsedDate, parsedDate,
-							null, null, null, null, null, null, null, null);
+					List<DashboardIndicatorData> data = dashboardDataDao.getUsingFilters(store.getBrandId(),
+							null, "apd_visitor", "visitor_total_visits", null, storeId, null, parsedDate,
+							parsedDate, null, null, null, null, null, null, null, null);
 					for (DashboardIndicatorData singleData : data)
 						visits.put(singleData.timeZone, singleData);
 					data = dashboardDataDao.getUsingFilters(store.getBrandId(), null, "apd_visitor",
-							"visitor_total_peasents", null, storeId, null, parsedDate, parsedDate, null, null, null,
-							null, null, null, null, null);
+							"visitor_total_peasents", null, storeId, null, parsedDate, parsedDate, null,
+							null, null, null, null, null, null, null);
 					for (DashboardIndicatorData singleData : data)
 						peasents.put(singleData.timeZone, singleData);
 				}
@@ -1221,9 +1228,9 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				cell.setCellValue(hourlySdf.format(curDate));
 				cell.setCellStyle(hourStyle);
 				row.createCell(PEASENTS_CELL_INDEX + 1)
-						.setCellValue(peasents.containsKey(dayLoop) ? peasents.get(dayLoop).doubleValue : 0);
+						.setCellValue(peasents.containsKey(dayLoop) ? peasents.get(dayLoop).getDoubleValue() : 0);
 				row.createCell(VISITS_CELL_INDEX + 1)
-						.setCellValue(visits.containsKey(dayLoop) ? visits.get(dayLoop).doubleValue : 0);
+						.setCellValue(visits.containsKey(dayLoop) ? visits.get(dayLoop).getDoubleValue() : 0);
 				try {
 					StoreTicketByHour hourlyTickets = sTicketHourDao.getUsingStoreIdAndDateAndHour(storeId, parsedDate,
 							hourlySdf.format(curDate), false);

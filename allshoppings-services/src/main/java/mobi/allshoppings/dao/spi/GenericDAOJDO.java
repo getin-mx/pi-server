@@ -2,6 +2,7 @@ package mobi.allshoppings.dao.spi;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,7 +56,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 
 	private T objectExample;
 
-	Class<T> clazz;
+	protected Class<T> clazz;
 	Logger log;
 
 	/**
@@ -1429,6 +1430,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 		try {
 			if( indexHelper != null ) {
 				List<ASScoredDocument> tmp = indexHelper.query(indexName, q, additionalFields);
+				if(tmp.isEmpty()) throw ASExceptionHelper.notFoundException(indexName +" " +q);
 				Iterator<ASScoredDocument> i = tmp.iterator();
 				while(i.hasNext()) {
 					ASScoredDocument d = i.next();
@@ -1447,9 +1449,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 								}
 							}
 						} catch( ASException e ) {
-							if( e.getErrorCode() != ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE) {
-								log.log(Level.SEVERE, e.getMessage(), e);
-							}
+							return indexFallback(q);
 						}
 					}
 				}
@@ -1479,7 +1479,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 
 		} catch (Exception e) {
 			if( e instanceof ASException ) {
-				throw (ASException)e;
+				return indexFallback(q);
 			} else { 
 				throw ASExceptionHelper.defaultException(e.getMessage(), e);
 			}
@@ -2062,6 +2062,18 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	 */
 	protected void enqueuePersistence(PersistenceManager pm, T obj) {
 		pm.makePersistent(obj);
+	}
+
+	@Override
+	public List<T> indexFallback(String id) {
+		try {
+			List<T> res = getUsingIdList(Arrays.asList(id.split(",")));
+			for(ModelKey obj : res) indexHelper.indexObject(obj);
+			return res;
+		} catch (ASException e) {
+			log.log(Level.WARNING, "Cant find non-indexed object\n" +e.getMessage(), e);
+			return CollectionFactory.createList();
+		}
 	}
 
 }

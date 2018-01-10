@@ -171,10 +171,10 @@ public class ExportHelperImpl implements ExportHelper {
 						toDate = cal.getTime();
 					}
 					dumper = new DumpFactory<APDVisit>().build(null,
-							APDVisit.class);
+							APDVisit.class, false);
 					dumper.setFilter(entityId);
 					Iterator<APDVisit> i = dumper.iterator(lastUpdate != null ? lastUpdate :
-								fromDate, toDate);
+								fromDate, toDate, false);
 
 					log.log(Level.INFO, "Processing results...");
 					long cnt = 0;

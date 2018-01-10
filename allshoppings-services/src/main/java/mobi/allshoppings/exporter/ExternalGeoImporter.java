@@ -154,7 +154,7 @@ public class ExternalGeoImporter {
 			pm.close();
 
 			// Now obtains the physical data information for the dump
-			dump = new DumpFactory<DeviceLocationHistory>().build(null, DeviceLocationHistory.class);
+			dump = new DumpFactory<DeviceLocationHistory>().build(null, DeviceLocationHistory.class, false);
 
 			count = 0;
 			long processed = 0;
@@ -168,7 +168,7 @@ public class ExternalGeoImporter {
 				workFrom = new Date(workDate.getTime());
 				workTo = new Date(workFrom.getTime() + DAY_IN_MILLIS);
 
-				Iterator<JSONObject> it = dump.jsonIterator(workFrom, workTo);
+				Iterator<JSONObject> it = dump.jsonIterator(workFrom, workTo, false);
 
 				while( it.hasNext() ) {
 

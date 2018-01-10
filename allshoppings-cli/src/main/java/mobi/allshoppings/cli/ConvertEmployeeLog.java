@@ -123,16 +123,16 @@ public class ConvertEmployeeLog extends AbstractCLI {
 					while(curDate.compareTo(toDate) < 0) {
 						if(requiresEntities) {
 							DumperHelper<APDVisit> visitDumper =
-									new DumpFactory<APDVisit>().build(null, APDVisit.class);
+									new DumpFactory<APDVisit>().build(null, APDVisit.class, false);
 							entities = visitDumper.getMultipleNameOptions(curDate);
 						}
 						Date nextDate = new Date(curDate.getTime() +TWENTY_FOUR_HOURS -1);
 						for(String entityId : entities) {
 							DumperHelper<APDVisit> visitDumper =
-									new DumpFactory<APDVisit>().build(null, APDVisit.class);
+									new DumpFactory<APDVisit>().build(null, APDVisit.class, false);
 							visitDumper.setFilter(entityId);
 							Iterator<APDVisit> visits = visitDumper.iterator(curDate,
-									nextDate);
+									nextDate, false);
 							while(visits.hasNext()) {
 								APDVisit apdv = visits.next();
 								total++;

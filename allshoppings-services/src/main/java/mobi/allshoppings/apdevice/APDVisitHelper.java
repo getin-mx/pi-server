@@ -18,11 +18,11 @@ public interface APDVisitHelper {
 	
 	void generateAPDVisits(List<String> brandIds, List<String> storeIds, Date fromDate, Date toDate,
 			boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards,
-			boolean isDailyProcess) throws ASException;
+			boolean isDailyProcess, byte startHour, byte endHour) throws ASException;
 
 	void generateAPDVisits(List<String> shoppingIds, Date fromDate, Date toDate, boolean deletePreviousRecords,
-			boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards, boolean isDailyProcess)
-					throws ASException;
+			boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards, boolean isDailyProcess,
+			byte startHour, byte endHour) throws ASException;
 
 	List<APDVisit> aphEntryToVisits(APHEntry entry, Map<String, APDevice> apdCache,
 			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,

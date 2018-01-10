@@ -28,13 +28,15 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 	private ConcurrentLinkedQueue<String> controlQueue;
 	private Semaphore sem;
 	private boolean doneSignal;
+	private boolean notFoundExpected;
+	
 	private XS3CloudFileManager manager;
 	
 	public XS3CloudFileManagerWorker(ConcurrentMap<String, Date> forPrefecth,
 			ConcurrentMap<String, Date> forUpload,
 			List<String> downloaded, List<String> notFound, String tmpPath,
 			String bucket, XS3Client client, ConcurrentLinkedQueue<String> controlQueue, Semaphore sem,
-			XS3CloudFileManager manager) {
+			XS3CloudFileManager manager, boolean notFoundExpected) {
 		super();
 		this.forPrefecth = forPrefecth;
 		this.forUpload = forUpload;
@@ -44,6 +46,7 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 		this.controlQueue = controlQueue;
 		this.sem = sem;
 		this.manager = manager;
+		this.notFoundExpected = notFoundExpected;
 	}
 
 	/**
@@ -115,6 +118,10 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 	public void setSem(Semaphore sem) {
 		this.sem = sem;
 	}
+	
+	public void setNotFoundExpected(boolean notFoundExpected) {
+		this.notFoundExpected = notFoundExpected;
+	}
 
 	/**
 	 * Sets this worker as done
@@ -168,7 +175,7 @@ public class XS3CloudFileManagerWorker extends Thread implements Runnable {
 						try {
 							if(StringUtils.hasText(file)) {
 								try {
-									manager.download(file, file);
+									manager.download(file, file, notFoundExpected);
 								} catch( Exception e2 ) {
 									manager.registerFileForPrefetch(file);
 								}

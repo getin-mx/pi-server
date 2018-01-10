@@ -480,9 +480,9 @@ public class APHHelperImpl implements APHHelper {
 
 		if( hostnames.size() == 1 ) {
 			for( String key : hostnames ) { 
-				DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
+				DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class, false);
 				apheDumper.setFilter(key);
-				Iterator<APHEntry> i = apheDumper.iterator(fromDate, toDate);
+				Iterator<APHEntry> i = apheDumper.iterator(fromDate, toDate, false);
 				while(i.hasNext()) {
 					APHEntry obj = i.next();
 					try {
@@ -494,8 +494,8 @@ public class APHHelperImpl implements APHHelper {
 				apheDumper.dispose();
 			}
 		} else {
-			DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
-			Iterator<APHEntry> i = apheDumper.iterator(fromDate, toDate);
+			DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class, false);
+			Iterator<APHEntry> i = apheDumper.iterator(fromDate, toDate, false);
 			while(i.hasNext()) {
 				APHEntry obj = i.next();
 				try {
@@ -698,7 +698,7 @@ public class APHHelperImpl implements APHHelper {
 		// Gets the input data
 		long totals = 0;
 		log.log(Level.INFO, "Processing Dump Records");
-		dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
+		dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class, false);
 
 		List<String> options;
 		if( hostnames == null || hostnames.size() == 0 ) {
@@ -712,17 +712,17 @@ public class APHHelperImpl implements APHHelper {
 		}
 
 		DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(
-				null, APHEntry.class); 
+				null, APHEntry.class, false); 
 		
 		for( String hostname : options ) {
 
 			log.log(Level.INFO, "Processing " + hostname + " for date " + fromDate
 					+ "...");
 
-			dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
+			dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class, false);
 			dumpHelper.setFilter(hostname);
 			Date xdate = new Date(toDate.getTime() -1);
-			Iterator<String> i = dumpHelper.stringIterator(fromDate, xdate);
+			Iterator<String> i = dumpHelper.stringIterator(fromDate, xdate, false);
 			JSONObject json;
 			while( i.hasNext() ) {
 				try {
@@ -799,7 +799,7 @@ public class APHHelperImpl implements APHHelper {
 		// Gets the input data
 		long totals = 0;
 		log.log(Level.INFO, "Processing Dump Records");
-		dumpHelper = new DumpFactory<ExternalAPHotspot>().build(null, ExternalAPHotspot.class);
+		dumpHelper = new DumpFactory<ExternalAPHotspot>().build(null, ExternalAPHotspot.class, false);
 
 		List<String> options;
 		if( hostnames == null || hostnames.size() == 0 ) {
@@ -812,17 +812,17 @@ public class APHHelperImpl implements APHHelper {
 			options.addAll(hostnames);
 		}
 
-		DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class); 
+		DumperHelper<APHEntry> apheDumper = new DumpFactory<APHEntry>().build(null, APHEntry.class, false); 
 
 		for( String hostname : options ) {
 
 			log.log(Level.INFO, "Processing " + hostname + " for date " + fromDate
 					+ "...");
 
-			dumpHelper = new DumpFactory<ExternalAPHotspot>().build(null, ExternalAPHotspot.class);
+			dumpHelper = new DumpFactory<ExternalAPHotspot>().build(null, ExternalAPHotspot.class, false);
 			dumpHelper.setFilter(hostname);
 			Date xdate = new Date(toDate.getTime() - HOUR_IN_MILLIS);
-			Iterator<ExternalAPHotspot> i = dumpHelper.iterator(fromDate, xdate);
+			Iterator<ExternalAPHotspot> i = dumpHelper.iterator(fromDate, xdate, false);
 			while( i.hasNext() ) {
 				ExternalAPHotspot obj = i.next();
 				if( totals % 1000 == 0 ) 

@@ -347,7 +347,7 @@ implements BDBDashboardBzService {
 		public JSONArray getJSONTotals() throws ASException {
 
 			DashboardRecordRep totals = new DashboardRecordRep(null, 0, null, null, "Totales", null, null);
-			List<Long> c = CollectionFactory.createList();
+			//List<Long> c = CollectionFactory.createList();
 
 			for( DashboardRecordRep rec : records ) {
 				if( rec.getLevel() == 0 ) {
@@ -356,7 +356,9 @@ implements BDBDashboardBzService {
 					totals.setTickets(totals.getTickets() + rec.getTickets());
 					totals.setItems(totals.getItems() + rec.getItems());
 					totals.setRevenue(totals.getRevenue() + rec.getRevenue());
-					c.add(rec.getPermanenceInMillis());
+					//c.add(rec.getPermanenceInMillis());
+					totals.setPermancenceQty(totals.getPermancenceQty() +rec.getPermancenceQty());
+					totals.setPermanenceInMillis(totals.getPermanenceInMillis() +rec.getPermanenceInMillis());
 
 					Map<String, Long> datesCache = totals.getDatesCache();
 					Map<String, Long> recDatesCache = rec.getDatesCache();
@@ -375,7 +377,8 @@ implements BDBDashboardBzService {
 				}
 			}
 
-			Collections.sort(c);
+			// TODO saca la mediana
+			/*Collections.sort(c);
 			if( c.size() == 0 )
 				totals.setPermanenceInMillis(0l);
 			else
@@ -383,8 +386,7 @@ implements BDBDashboardBzService {
 					int med = (int)(c.size() / 2);
 					totals.setPermanenceInMillis((c.get(med-1) + c.get(med)) / 2);
 				} else
-					totals.setPermanenceInMillis(c.get((int)Math.floor(c.size() / 2)));
-
+					totals.setPermanenceInMillis(c.get((int)Math.floor(c.size() / 2)));*/
 			return totals.toJSONArray();
 
 		}
@@ -538,7 +540,10 @@ implements BDBDashboardBzService {
 			row.put(h1 + calculateHigherDay() + h2);
 			row.put(h1 + calculateLowerDay() + h2);
 
-			row.put(h1 + String.valueOf(Math.round(permanenceInMillis / 60000)) + " mins"  + h2);
+			if(permancenceQty != 0)
+				row.put(h1 + String.valueOf(Math.round(permanenceInMillis /permancenceQty / 60000)) + " mins"  + h2);
+			else
+				row.put(h1 +df.format(0) +" mins" +h2);
 
 			return row;
 		}

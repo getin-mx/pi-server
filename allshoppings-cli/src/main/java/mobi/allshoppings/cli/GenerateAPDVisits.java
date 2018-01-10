@@ -29,6 +29,8 @@ public class GenerateAPDVisits extends AbstractCLI {
 	private static final String ONLY_DASHBOARDS_PARAM = "onlyDashboards";
 	private static final String UPDATE_DASHBOARDS_PARAM = "updateDashboards";
 	private static final String DAILY_PROCESS_PARAM = "isDailyProcess";
+	private static final String START_HOUR_PARAM = "startHour";
+	private static final String END_HOUR_PARAM = "endHour";
 	
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
@@ -50,6 +52,11 @@ public class GenerateAPDVisits extends AbstractCLI {
 		parser.accepts(DAILY_PROCESS_PARAM, "Whether the process is for a never before processed date (true - "
 				+ "common daily process) or is a reprocess (false). Default is false (reprocess)")
 				.withRequiredArg().ofType(Boolean.class);
+		parser.accepts(START_HOUR_PARAM, "The initial hour to build visits in the format HH:MM. Before this "
+				+ "time, visits will be downloaded from a previous process.").withRequiredArg()
+				.ofType(String.class);
+		parser.accepts(END_HOUR_PARAM, "The final hour to build visits in the format HH:MM. This is the limit "
+				+ "time to generate visits for every given day").withOptionalArg().ofType(String.class);
 		return parser;
 	}
 
@@ -78,6 +85,8 @@ public class GenerateAPDVisits extends AbstractCLI {
 			String brandIds = null;
 			String storeIds = null;
 			String shoppingIds = null;
+			byte startHour = -1;
+			byte endHour = -1;
 			List<String> brands = CollectionFactory.createList();
 			List<String> stores = CollectionFactory.createList();
 			List<String> shoppings = CollectionFactory.createList();
@@ -88,6 +97,14 @@ public class GenerateAPDVisits extends AbstractCLI {
 				
 				fromDate = StringUtils.hasText(sFromDate) ? sdf.parse(sFromDate) :
 					sdf.parse(sdf.format(System.currentTimeMillis() - Constants.DAY_IN_MILLIS));
+				
+				if(options.has(START_HOUR_PARAM)) startHour = Byte.valueOf(
+						options.valueOf(START_HOUR_PARAM).toString().substring(0, 2));
+				if(options.has(START_HOUR_PARAM)) endHour = Byte.valueOf(
+						options.valueOf(END_HOUR_PARAM).toString().substring(0, 2));
+				if(startHour >= 0 && endHour < 0) endHour = (byte)(startHour +1);
+				if(endHour > 0 && startHour < 0) startHour = (byte)(endHour -1);
+				if(endHour == 0 && startHour < 0) throw ASExceptionHelper.invalidArgumentsException();
 				
 				toDate = StringUtils.hasText(sToDate) ? sdf.parse(sToDate) :
 					new Date(fromDate.getTime() + Constants.DAY_IN_MILLIS);
@@ -148,10 +165,10 @@ public class GenerateAPDVisits extends AbstractCLI {
 			
 			if( shoppings.isEmpty() )
 				helper.generateAPDVisits(brands, stores, fromDate, toDate, deletePreviousRecors, updateDashboards,
-						onlyEmployees, onlyDashboards, isDailyProcess);
+						onlyEmployees, onlyDashboards, isDailyProcess, startHour, endHour);
 			else
 				helper.generateAPDVisits(shoppings, fromDate, toDate, deletePreviousRecors, updateDashboards,
-						onlyEmployees, onlyDashboards, isDailyProcess);
+						onlyEmployees, onlyDashboards, isDailyProcess, startHour, endHour);
 			
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);

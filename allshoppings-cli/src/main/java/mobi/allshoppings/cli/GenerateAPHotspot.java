@@ -63,7 +63,7 @@ public class GenerateAPHotspot extends AbstractCLI {
 	public static void main(String[] args) throws ASException {
 		OptionSet options = parser.parse(args);
 		
-		DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
+		DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(null, APHotspot.class, false);
 		
 		Integer debugHour = options.has("debugHour") ? (Integer)options.valueOf("debugHour") : -1;
 		

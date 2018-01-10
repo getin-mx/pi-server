@@ -84,6 +84,10 @@
 				<entry key="/dashboard/brandTableData" 			value-ref="spring.dashboard.brandtabledata.rest.resource" />
 				<entry key="/dashboard/generalData" 			value-ref="spring.dashboard.generaldata.rest.resource" />
 				<entry key="/dashboard/config" 					value-ref="spring.dashboard.dashboardconfigurationdata.rest.resource" />
+				<entry key="/dashboard/storeRevenueByHourData"
+					value-ref="spring.dashboard.storerevenuebyhourdata.rest.resource" />
+				<entry key="/dashboard/storeItemByHourData"
+					value-ref="spring.dashboard.storeitembyhourdata.rest.resource" />
 			</map>
 		</property>
 	</bean>
@@ -247,6 +251,14 @@
  	</bean>
  	<bean id="spring.dashboard.dashboardconfigurationdata.rest.resource" class="org.restlet.ext.spring.SpringFinder">
  	    <lookup-method name="create" bean="dashboard.dashboardconfigurationdata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.storerevenuebyhourdata.rest.resource"
+ 		class="org.restlet.ext.spring.SpringFinder" >
+ 		<lookup-method name="create" bean="dashboard.storerevenuebyhourdata.rest.resource" />
+ 	</bean>
+ 	<bean id="spring.dashboard.storeitembyhourdata.rest.resource"
+ 		class="org.restlet.ext.spring.SpringFinder" >
+ 		<lookup-method name="create" bean="dashboard.storeitembyhourdata.rest.resource" />
  	</bean>
 
 </beans>

@@ -1,22 +1,21 @@
-package mobi.allshoppings.dao;
-
+package mx.getin.dao;
 
 import java.util.List;
 
 import com.inodes.datanucleus.model.Key;
 
+import mobi.allshoppings.dao.GenericDAO;
 import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.model.StoreTicketByHour;
 import mobi.allshoppings.tools.Range;
+import mx.getin.model.StoreRevenueByHour;
 
 /**
- * Describes a DAO for the Store Tickey By Hour model.
- * @author Matias Hapanowicz
+ * Describes a DAO for the Store Revenue By Hour model.
  * @author <a href="mailto:ignacio@getin.mx" >Manuel "Nachintoch" Castillo</a>
- * @version 1.0, 
- * @since Allshoppings
+ * @version 1.0, january 2018
+ * @since Mark III
  */
-public interface StoreTicketByHourDAO extends GenericDAO<StoreTicketByHour> {
+public interface StoreRevenueByHourDAO extends GenericDAO<StoreRevenueByHour> {
 
 	/**
 	 * Creates a DB key for data.
@@ -26,7 +25,7 @@ public interface StoreTicketByHourDAO extends GenericDAO<StoreTicketByHour> {
 	Key createKey() throws ASException;
 	
 	/**
-	 * Retrieves Store Tickets By Hour using a Store ID, and Date.
+	 * Retrieves Store Revenue By Hour using a Store ID, and Date.
 	 * @param storeId - The store whose Tickets By Hour are desired.
 	 * @param date - The date to fetch tickets from.
 	 * @param fromHour - The initial hour to fetch.
@@ -34,23 +33,23 @@ public interface StoreTicketByHourDAO extends GenericDAO<StoreTicketByHour> {
 	 * @param range - ???
 	 * @param order - The order for the tickets.
 	 * @param detachable - ???
-	 * @return List&lt;SticketByHour&gt; - A list with the results of the query.
+	 * @return List&lt;StoreRevenueByHour&gt; - A list with the results of the query.
 	 * @throws ASException - If not found or else.
 	 */
-	List<StoreTicketByHour> getUsingStoreIdAndDateAndRange(String storeId, String date, String fromHour,
+	List<StoreRevenueByHour> getUsingStoreIdAndDateAndRange(String storeId, String date, String fromHour,
 			String toHour, Range range, String order, boolean detachable) throws ASException;
 	
 	/**
-	 * Retreives Store Tickets By Hour using the belonging Store ID, the date of the sales and an specific
+	 * Retrieves Store Revenue By Hour using the belonging Store ID, the date of the sales and an specific
 	 * sale hour.
-	 * @param storeId - The Store whose Tickets By Hour are desired.
+	 * @param storeId - The Store which Revenue By Hour is desired.
 	 * @param date - The date to fetch tickets from.
 	 * @param hour - The hour to fetch tickets from.
 	 * @param detachable - ???
-	 * @return List&lt;SticketByHour&gt; - A list with the results of the query.
+	 * @return List&lt;StoreRevenueByHour&gt; - A list with the results of the query.
 	 * @throws ASException - If not found or else.
 	 */
-	StoreTicketByHour getUsingStoreIdAndDateAndHour(String storeId, String date, String hour,
+	StoreRevenueByHour getUsingStoreIdAndDateAndHour(String storeId, String date, String hour,
 			boolean detachable) throws ASException;
 	
-}//Store Ticket By Hour DAO
+}//Store Revenue By Hour DAO
