@@ -95,9 +95,9 @@ public class HotspotComparer extends AbstractCLI {
 		}
 		Map<String, APHotspot> hotspots = CollectionFactory.createMap();
 		Calendar cal = Calendar.getInstance();
-		DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
+		DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(null, APHotspot.class, false);
 		dumper.setFilter(hostname);
-		Iterator<APHotspot> hotspotIterator = dumper.iterator(fromDate, toDate);
+		Iterator<APHotspot> hotspotIterator = dumper.iterator(fromDate, toDate, false);
 		while(hotspotIterator.hasNext()) {
 			APHotspot hotspot = hotspotIterator.next();
 			hotspots.put("APHotspot(\"" +hotspot.getIdentifier() +"\")", hotspot);

@@ -85,14 +85,15 @@ public class ConvertDump extends AbstractCLI {
 			log.log(Level.INFO, "Starting dump for entity " + entity.getName() + " from " + fromDate + " to " + toDate);
 			DumperHelper<ModelKey> oldDumper = new DumperHelperImpl<>(sOutDir, entity);
 			oldDumper.registerFileNameResolver(new LegacyFileNameResolver());
-			DumperHelperImpl<ModelKey> newDumper = (DumperHelperImpl<ModelKey>)new DumpFactory<ModelKey>().build(null, entity);
+			DumperHelperImpl<ModelKey> newDumper = (DumperHelperImpl<ModelKey>)new DumpFactory<ModelKey>()
+					.build(null, entity, false);
 			
 			String baseName = entity.getSimpleName();
 			String baseDir = newDumper.getBaseDir();
 			Date referenceDate = null;
 			String filter = null;
 			long count = 0;
-			Iterator<JSONObject> it = oldDumper.jsonIterator(fromDate, toDate);
+			Iterator<JSONObject> it = oldDumper.jsonIterator(fromDate, toDate, false);
 			while( it.hasNext()) {
 				
 				JSONObject obj = it.next();

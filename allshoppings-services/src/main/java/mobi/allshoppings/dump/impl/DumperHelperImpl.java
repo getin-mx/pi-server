@@ -534,8 +534,8 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	 * @see mobi.allshoppings.dump.DumperHelper#iterator(Date, Date)
 	 */
 	@Override
-	public Iterator<T> iterator(Date fromDate, Date toDate) {
-		return new DumpEnhancedIterator(fromDate, toDate);
+	public Iterator<T> iterator(Date fromDate, Date toDate, boolean notFoundExpected) {
+		return new DumpEnhancedIterator(fromDate, toDate, notFoundExpected);
 	}
 
 
@@ -543,8 +543,8 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	 * @see mobi.allshoppings.dump.DumperHelper#iterator(Date, Date)
 	 */
 	@Override
-	public Iterator<String> stringIterator(Date fromDate, Date toDate) {
-		return new DumpStringIterator(fromDate, toDate);
+	public Iterator<String> stringIterator(Date fromDate, Date toDate, boolean notFoundExpected) {
+		return new DumpStringIterator(fromDate, toDate, notFoundExpected);
 	}
 
 	/**
@@ -621,8 +621,8 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	 * @see mobi.allshoppings.dump.DumperHelper#iterator(Date, Date)
 	 */
 	@Override
-	public Iterator<JSONObject> jsonIterator(Date fromDate, Date toDate) {
-		return new DumpJSONIterator(fromDate, toDate);
+	public Iterator<JSONObject> jsonIterator(Date fromDate, Date toDate, boolean notFoundExpected) {
+		return new DumpJSONIterator(fromDate, toDate, notFoundExpected);
 	}
 	
 	/**
@@ -713,8 +713,8 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		
 		private Iterator<String> iterator;
 		
-		public DumpEnhancedIterator(Date fromDate, Date toDate) {
-			iterator = new DumpStringIterator(fromDate, toDate);
+		public DumpEnhancedIterator(Date fromDate, Date toDate, boolean notFoundExpected) {
+			iterator = new DumpStringIterator(fromDate, toDate, notFoundExpected);
 		}
 		
 		@Override
@@ -747,8 +747,8 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		
 		private Iterator<String> iterator;
 		
-		public DumpJSONIterator(Date fromDate, Date toDate) {
-			iterator = new DumpStringIterator(fromDate, toDate);
+		public DumpJSONIterator(Date fromDate, Date toDate, boolean notFoundExpected) {
+			iterator = new DumpStringIterator(fromDate, toDate, notFoundExpected);
 		}
 		
 		@Override
@@ -781,17 +781,19 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 		private Date toDate;
 		private Date curDate;
 		private BufferedReader br;
+		private boolean notFoundExpected;
 		
-		public DumpStringIterator(Date fromDate, Date toDate) {
+		public DumpStringIterator(Date fromDate, Date toDate, boolean notFoundExpected) {
 			elements = CollectionFactory.createList();
 			counter = 0;
 			this.fromDate = fromDate;
 			this.toDate = toDate;
+			this.notFoundExpected = notFoundExpected;
 
 			this.registerPrefetchFiles();
 			if( cfm != null ) {
 				try {
-					cfm.startPrefetch();
+					cfm.startPrefetch(notFoundExpected);
 				} catch( ASException e ) {
 					log.log(Level.SEVERE, e.getMessage(), e);
 				}
@@ -912,7 +914,8 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 							lastFileUsed = currentFileName;
 						}
 
-						if( cfm == null || cfm.checkLocalCopyIntegrity(currentFileName, true)) {
+						if( cfm == null || cfm.checkLocalCopyIntegrity(currentFileName,
+								true, notFoundExpected)) {
 							File f = new File(currentFileName);
 							if( f.exists() && f.canRead()) {
 								try {
@@ -994,9 +997,9 @@ public class DumperHelperImpl<T extends ModelKey> implements DumperHelper<T> {
 	}
 
 	@Override
-	public void startPrefetch() throws ASException {
+	public void startPrefetch(boolean expectedNotFound) throws ASException {
 		if( cfm != null )
-			cfm.startPrefetch();
+			cfm.startPrefetch(expectedNotFound);
 	}
 
 }

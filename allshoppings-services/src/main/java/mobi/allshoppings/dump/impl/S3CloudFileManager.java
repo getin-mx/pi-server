@@ -123,11 +123,13 @@ public class S3CloudFileManager implements CloudFileManager {
 	}
 
 	@Override
-	public void startPrefetch() throws ASException {
+	public void startPrefetch(boolean expectNotFound) throws ASException {
 
 		// Check if it was already started
-		if( workers != null && workers.size() > 0 )
+		if( workers != null && workers.size() > 0 ) {
+			//for(S3CloudFileManagerWorker w : workers) w.setNotFoundExpected(notFoundExpected);
 			return;
+		}
 		
 		if( instances == 0 ) 
 			return;
@@ -221,7 +223,7 @@ public class S3CloudFileManager implements CloudFileManager {
 	}
 
 	@Override
-	public boolean checkLocalCopyIntegrity(String fileName, boolean wait) throws ASException {
+	public boolean checkLocalCopyIntegrity(String fileName, boolean wait, boolean notFoundExpected) throws ASException {
 		try {
 
 			if( workers != null && workers.size() > 0 ) {

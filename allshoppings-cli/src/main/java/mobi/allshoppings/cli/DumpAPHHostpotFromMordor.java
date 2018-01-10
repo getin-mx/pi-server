@@ -32,7 +32,6 @@ private static final Logger log = Logger.getLogger(DumpHistory.class.getName());
 		return parser;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void main(String args[]) throws ASException {
 		DumperHelper<APHotspot> dumpHelper;
 		
@@ -74,7 +73,7 @@ private static final Logger log = Logger.getLogger(DumpHistory.class.getName());
 			// Gets the input data
 			long totals = 0;
 			log.log(Level.INFO, "Processing Dump Records");
-			dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
+			dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class, false);
 			
 			List<String> optionss = CollectionFactory.createList();
 			optionss = dumpHelper.getMultipleNameOptions(fromDate);
@@ -82,9 +81,9 @@ private static final Logger log = Logger.getLogger(DumpHistory.class.getName());
 			for( String hostname : optionss ){
 				log.log(Level.INFO, "Processing " + hostname + " for date " + fromDate + "...");
 				
-				dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
+				dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class, false);
 				dumpHelper.setFilter(hostname);
-				Iterator<String> i = dumpHelper.stringIterator(fromDate, toDate);
+				Iterator<String> i = dumpHelper.stringIterator(fromDate, toDate, false);
 				JSONObject json;
 				while( i.hasNext() ) {
 					json = new JSONObject(i.next());

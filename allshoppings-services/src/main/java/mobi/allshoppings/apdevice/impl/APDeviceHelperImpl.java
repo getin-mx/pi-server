@@ -473,16 +473,16 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 				cache.put(apu.getKey().getName(), apu);
 			}
 			DumperHelper<APHotspot>dumpHelper = new DumpFactory<APHotspot>()
-					.build(null, APHotspot.class);
+					.build(null, APHotspot.class, false);
 			List<String> hostnames = predefinedAPDevicesList ? apdevices
 					: dumpHelper.getMultipleNameOptions(date);
 
 			for (String hostname : hostnames) {
 				log.log(Level.INFO, "Processing for hostname " + hostname +
 						" for date " + date);
-				dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
+				dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class, false);
 				dumpHelper.setFilter(hostname);
-				Iterator<APHotspot> i = dumpHelper.iterator(date, xtoDate);
+				Iterator<APHotspot> i = dumpHelper.iterator(date, xtoDate, false);
 				while (i.hasNext()) {
 					APHotspot aphot = i.next();
 					if (apdevices.contains(aphot.getHostname())) {

@@ -53,7 +53,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 * 
 	 * @throws ASException
 	 */
-	void startPrefetch() throws ASException;
+	void startPrefetch(boolean expectNotFound) throws ASException;
 
 	/**
 	 * Applies all the plugins registered for an object before dumping the
@@ -181,7 +181,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            Date and time to which to retrieve entities
 	 * @return An iterator with all the selected records
 	 */
-	Iterator<T> iterator(Date fromDate, Date toDate);
+	Iterator<T> iterator(Date fromDate, Date toDate, boolean notFoundExpected);
 
 	/**
 	 * Gets an iterator with all the saved entities in a date range, in its
@@ -193,7 +193,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            Date and time to which to retrieve entities
 	 * @return An iterator with all the selected records
 	 */
-	Iterator<String> stringIterator(Date fromDate, Date toDate);
+	Iterator<String> stringIterator(Date fromDate, Date toDate, boolean notFoundExpected);
 
 	/**
 	 * Gets an iterator with all the saved entities in a date range, in its
@@ -205,7 +205,7 @@ public interface DumperHelper<T extends ModelKey> {
 	 *            Date and time to which to retrieve entities
 	 * @return An iterator with all the selected records
 	 */
-	Iterator<JSONObject> jsonIterator(Date fromDate, Date toDate);
+	Iterator<JSONObject> jsonIterator(Date fromDate, Date toDate, boolean notFoundExpected);
 
 	/**
 	 * Adds a new name discriminator to the name helper

@@ -108,7 +108,7 @@ public class RecoverAPHotspots extends AbstractCLI {
 				DumperHelper<APHotspot> dumpHelper;
 				List<String> hosts;
 				if( hostnames == null || hostnames.size() == 0 ) {
-					dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
+					dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class, false);
 					hosts = dumpHelper.getMultipleNameOptions(copyFromD);
 				} else if( hostnames.size() == 1 ) {
 					hosts = CollectionFactory.createList();
@@ -120,10 +120,10 @@ public class RecoverAPHotspots extends AbstractCLI {
 				for(String host : hosts) {
 					log.log(Level.INFO, "Processing " + host + " for date " + copyFromD + " into "
 							+curDate);
-					dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class);
+					dumpHelper = new DumpFactory<APHotspot>().build(null, APHotspot.class, false);
 					dumpHelper.setFilter(host);
 					Date xdate = new Date(copyCurDate.getTime() +HOUR_IN_MILLIS -1);
-					Iterator<APHotspot> i = dumpHelper.iterator(copyCurDate, xdate);
+					Iterator<APHotspot> i = dumpHelper.iterator(copyCurDate, xdate, false);
 					while(i.hasNext()) {
 						APHotspot copy = i.next();
 						APHotspot _new = new APHotspot();

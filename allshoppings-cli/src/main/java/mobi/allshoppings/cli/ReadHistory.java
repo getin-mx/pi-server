@@ -78,10 +78,10 @@ public class ReadHistory extends AbstractCLI {
 			}
 
 			log.log(Level.INFO, "Starting read for entity " + entity.getName() + " from " + fromDate + " to " + toDate);
-			DumperHelper<ModelKey> dumper = new DumpFactory<ModelKey>().build(null, entity);
+			DumperHelper<ModelKey> dumper = new DumpFactory<ModelKey>().build(null, entity, false);
 			if( StringUtils.hasText(filter)) dumper.setFilter(filter);
 			
-			Iterator<ModelKey> it = dumper.iterator(fromDate, toDate);
+			Iterator<ModelKey> it = dumper.iterator(fromDate, toDate, false);
 			while(it.hasNext()) {
 				ModelKey obj = it.next();
 				System.out.println(obj);

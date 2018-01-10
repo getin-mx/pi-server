@@ -191,9 +191,9 @@ public class DashboardAPDeviceMapperService {
 		log.log(Level.INFO, "LimitDate " + limitDate);
 
 		// All Wifi Data
-		DumperHelper<DeviceWifiLocationHistory> dumper = new DumpFactory<DeviceWifiLocationHistory>().build(baseDir,
-				DeviceWifiLocationHistory.class);
-		Iterator<DeviceWifiLocationHistory> i = dumper.iterator(processDate, limitDate);
+		DumperHelper<DeviceWifiLocationHistory> dumper = new DumpFactory<DeviceWifiLocationHistory>().build(
+				baseDir, DeviceWifiLocationHistory.class, false);
+		Iterator<DeviceWifiLocationHistory> i = dumper.iterator(processDate, limitDate, false);
 
 		Map<DashboardIndicatorData, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
 		while(i.hasNext()) {
@@ -284,8 +284,9 @@ public class DashboardAPDeviceMapperService {
 				}
 
 				// All Wifi Data
-				DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(baseDir, APHotspot.class);
-				Iterator<JSONObject> i = dumper.jsonIterator(processDate, limitDate);
+				DumperHelper<APHotspot> dumper = new DumpFactory<APHotspot>().build(
+						baseDir, APHotspot.class, false);
+				Iterator<JSONObject> i = dumper.jsonIterator(processDate, limitDate, false);
 
 				while(i.hasNext()) {
 					JSONObject json = i.next();
@@ -483,11 +484,12 @@ public class DashboardAPDeviceMapperService {
 				Map<String, List<APHEntry>> macEntries = CollectionFactory.createMap();
 				Map<Key, FloorMapJourney> journies = CollectionFactory.createMap();
 				for(String hostname : apDeviceIds) {
-					DumperHelper<APHEntry> dumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
+					DumperHelper<APHEntry> dumper = new DumpFactory<APHEntry>().build(
+							null, APHEntry.class, false);
 					dumper.setFilter(hostname);
 					for(APHEntry entry : APDVisitHelperImpl.integrateAPHE(dumper, apDevices.get(hostname),
 							processDate, getTimezoneForEntity(floorMapIdentifier, EntityKind.KIND_SHOPPING),
-							begginingDate, lastDay, CALENDAR, AUX_CALENDAR)) {
+							begginingDate, lastDay, CALENDAR, AUX_CALENDAR, (byte) -1, (byte) -1)) {
 						List<APHEntry> entryList = macEntries.get(entry.getMac());
 						if(entryList == null) {
 							entryList = CollectionFactory.createList();
@@ -621,8 +623,8 @@ public class DashboardAPDeviceMapperService {
 	// apd_visitor performance -------------------------------------------------------------------------------------------------------------------------
 
 	public void createAPDVisitPerformanceDashboardForDay(Date date, List<String> entityIds, Integer entityKind,
-			List<APDVisit> data, boolean isDailyProcess, boolean lastDay) throws ASException {
-
+			List<APDVisit> data, boolean isDailyProcess, boolean lastDay, boolean onlyVisits) throws ASException {
+//TODO ignore revenue & etc if only visits
 		log.log(Level.INFO, "Starting to create apd_visitor Performance Dashboard for Day " + date + "...");
 		long startTime = System.currentTimeMillis();
 		CALENDAR.setTime(date);
@@ -630,213 +632,222 @@ public class DashboardAPDeviceMapperService {
 		log.log(Level.INFO, "ProcessDate " + date);
 
 		try {
-
-			String entityId = null;
-			if( !CollectionUtils.isEmpty( entityIds )) entityId = entityIds.get(0);
-			String shoppingId = null;
-			String subentityId = null;
-			
-			// Looks for all visit records
+			if(entityIds == null) entityIds = CollectionFactory.createList();
+			if(entityIds.isEmpty()) {
+				if(storeCache.isEmpty()) buildCaches(false);
+				for(String id : storeCache.keySet()) {
+					if(!entityIds.contains(storeCache.get(id).getIdentifier()))
+						entityIds.add(storeCache.get(id).getIdentifier());
+				}
+				log.log(Level.INFO, "Entities are: " +entityIds);
+			}
 			Map<DashboardIndicatorData, DashboardIndicatorData> indicatorsSet = CollectionFactory.createMap();
 			List<APDVisit> list;
-			Store store = null;
-			TimeZone tz = null;
-			String sLimitDate = null;
-			int offset;
-			if(data == null || data.size() == 0) {
-				// Prepares the Object Query
-				Date dateFrom = new Date(date.getTime());
-				Date dateTo = new Date(dateFrom.getTime() + Constants.DAY_IN_MILLIS);
-				store = storeCache.get(entityId);
-				if( store == null ) {
-					store = storeDao.get(entityId, true);
-					if( store == null ) return;
-					storeCache.put(entityId, store);
-				}
-				tz = TimeZone.getTimeZone(store.getTimezone());
-				offset = tz.getOffset(dateFrom.getTime()) *-1;
-				if(offset > 0 && dateTo.getTime() < dateTo.getTime() +offset) {
-					dateTo.setTime(dateTo.getTime() +offset);
-				}
-				sLimitDate = dateSDF.format(dateFrom);
-				list = CollectionFactory.createList();
-				DumperHelper<APDVisit> visitDumper = new DumpFactory<APDVisit>()
-						.build(null, APDVisit.class);
-				visitDumper.setFilter(entityId);
-				Iterator<APDVisit> i = visitDumper.iterator(dateFrom, dateTo);
-				while(i.hasNext()) list.add(i.next());
-				visitDumper.dispose();
-			} else list = data;
-			if(list.size() == 0) {
-				log.log(Level.INFO, "Done - No stores were given to process");
-				return;
-			}
-			Calendar init = Calendar.getInstance();
-			Calendar finish = Calendar.getInstance();
-			TimeZone mxTz = TimeZone.getTimeZone("Mexico/General");
-			init.setTimeZone(mxTz);
-			finish.setTimeZone(mxTz);
-			log.log(Level.INFO, list.size() + " records to process... ");
-			for(APDVisit v : list ) {
-				if(sLimitDate != null && !v.getForDate().equals(sLimitDate)) continue;
+			for(String entityId : entityIds) {
+				String shoppingId = null;
+				String subentityId = null;
 				
-				try {
-					Shopping shopping = null;
-					InnerZone zone = null;
-					
-					if( entityKind == null ) entityKind = EntityKind.KIND_BRAND;
-					if( entityKind.equals(EntityKind.KIND_STORE)) entityKind = EntityKind.KIND_BRAND;
-					
-					if( entityKind.equals(EntityKind.KIND_BRAND)) {
-						store = storeCache.get(String.valueOf(v.getEntityId()));
-						if( store == null ) {
-							store = storeDao.get(String.valueOf(v.getEntityId()), true);
-							if( store == null ) return;
-							storeCache.put(String.valueOf(v.getEntityId()), store);
-						}
-						tz = TimeZone.getTimeZone(store.getTimezone());
-						entityId = store.getBrandId();
-						shoppingId = store.getShoppingId();
-						subentityId = store.getIdentifier();
-					} else if( entityKind.equals(EntityKind.KIND_SHOPPING)) {
-						shopping = shoppingCache.get(String.valueOf(v.getEntityId()));
-						entityId = shopping.getIdentifier();
-						shoppingId = shopping.getIdentifier();
-						subentityId = shopping.getIdentifier();
-						tz = TimeZone.getTimeZone(shopping.getTimezone());
-					} else if( entityKind.equals(EntityKind.KIND_INNER_ZONE)) {
-						zone = innerzoneDao.get(entityId);
-						shoppingId = entityId;
-						subentityId = entityId;
-						tz = getTimezoneForEntity(entityId, EntityKind.KIND_INNER_ZONE);
+				// Looks for all visit records
+				indicatorsSet.clear();
+				Store store = null;
+				TimeZone tz = null;
+				String sLimitDate = null;
+				int offset;
+				if(data == null || data.size() == 0) {
+					// Prepares the Object Query
+					Date dateFrom = new Date(date.getTime());
+					Date dateTo = new Date(dateFrom.getTime() + Constants.DAY_IN_MILLIS);
+					store = storeCache.get(entityId);
+					if( store == null ) {
+						store = storeDao.get(entityId, true);
+						if( store == null ) return;
+						storeCache.put(entityId, store);
 					}
-					CALENDAR.setTimeZone(tz);
+					tz = TimeZone.getTimeZone(store.getTimezone());
+					offset = tz.getOffset(dateFrom.getTime()) *-1;
+					if(offset > 0 && dateTo.getTime() < dateTo.getTime() +offset) {
+						dateTo.setTime(dateTo.getTime() +offset);
+					}
+					sLimitDate = dateSDF.format(dateFrom);
+					list = CollectionFactory.createList();
+					DumperHelper<APDVisit> visitDumper = new DumpFactory<APDVisit>()
+							.build(null, APDVisit.class, false);
+					visitDumper.setFilter(entityId);
+					Iterator<APDVisit> i = visitDumper.iterator(dateFrom, dateTo, false);
+					while(i.hasNext()) list.add(i.next());
+					visitDumper.dispose();
+				} else list = data;
+				if(list.size() == 0) {
+					log.log(Level.INFO, "Done - No stores were given to process");
+					return;
+				}
+				Calendar init = Calendar.getInstance();
+				Calendar finish = Calendar.getInstance();
+				TimeZone mxTz = TimeZone.getTimeZone("Mexico/General");
+				init.setTimeZone(mxTz);
+				finish.setTimeZone(mxTz);
+				log.log(Level.INFO, list.size() + " records to process... ");
+				for(APDVisit v : list ) {
+					if(sLimitDate != null && !v.getForDate().equals(sLimitDate)) continue;
 					
-					if( store != null || shopping != null || zone != null ) {
-						DashboardIndicatorData obj;
-
-						if( v.getCheckinType().equals(APDVisit.CHECKIN_PEASANT) ) {
-
-							// visitor_total_peasents -------------------------------------------------------------------------------
-							// ------------------------------------------------------------------------------------------------------
-							obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", "visitor_total_peasents",
-									"Paseantes", v.getCheckinStarted(), DashboardIndicatorData.PERIOD_TYPE_DAILY,
-									shoppingId, store, shopping, null, entityId, entityKind, v.getForDate());
-							if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
-							else indicatorsSet.put(obj, obj);
-							obj.setDoubleValue(obj.getDoubleValue() + 1);
-							
-							if(!v.getHidePermanence() ) {
-
-								// permanence_hourly_peasents ---------------------------------------------------------------------------
-								// ------------------------------------------------------------------------------------------------------
-								obj = buildBasicDashboardIndicatorData("apd_permanence", "Permanencia",
-										"permanence_hourly_peasents", "Paseantes", v.getCheckinStarted(),
-										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId, store, shopping, null,
-										entityId, entityKind, v.getForDate());
-								if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
-								else indicatorsSet.put(obj, obj);
-								obj.setDoubleValue(obj.getDoubleValue()
-										+ calculateDiffTime(v.getCheckinFinished(), v.getCheckinStarted()));
-								obj.setRecordCount(obj.getRecordCount() + 1);
+					try {
+						Shopping shopping = null;
+						InnerZone zone = null;
+						
+						if( entityKind == null ) entityKind = EntityKind.KIND_BRAND;
+						if( entityKind.equals(EntityKind.KIND_STORE)) entityKind = EntityKind.KIND_BRAND;
+						
+						if( entityKind.equals(EntityKind.KIND_BRAND)) {
+							store = storeCache.get(String.valueOf(v.getEntityId()));
+							if( store == null ) {
+								store = storeDao.get(String.valueOf(v.getEntityId()), true);
+								if( store == null ) return;
+								storeCache.put(String.valueOf(v.getEntityId()), store);
 							}
-
-							// occupation_total_peasents -------------------------------------------------------------------------------
-							// ------------------------------------------------------------------------------------------------------
-							init.setTime(v.getCheckinStarted());
-							finish.setTime(v.getCheckinFinished());
-							int day = init.get(Calendar.DAY_OF_MONTH);
-							while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) &&
-									day == init.get(Calendar.DAY_OF_MONTH)) {
-								obj = buildBasicDashboardIndicatorData("apd_occupation", "Ocupacion",
-										"occupation_hourly_peasants", "Paseantes", init.getTime(),
-										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId, store, shopping, null,
-										entityId, entityKind, v.getForDate());
-								if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
-								else indicatorsSet.put(obj, obj);
-								obj.setDoubleValue(obj.getDoubleValue() + 1);
-								
-								init.add(Calendar.HOUR_OF_DAY, 1);
-								
-							}
-
-						} else if( v.getCheckinType().equals(APDVisit.CHECKIN_VISIT) ) {
-
-							// visitor_total_visits ---------------------------------------------------------------------------------
-							// ------------------------------------------------------------------------------------------------------
-							obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", "visitor_total_visits",
-									"Visitas", v.getCheckinStarted(), DashboardIndicatorData.PERIOD_TYPE_DAILY,
-									shoppingId, store, shopping, null, entityId, entityKind, v.getForDate());
-							if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
-							else indicatorsSet.put(obj, obj);
-							obj.setDoubleValue(obj.getDoubleValue() + 1);
-
-							if( !v.getHidePermanence()) {
-								// permanence_hourly_visits -------------------------------------------------------------------------------
-								// ------------------------------------------------------------------------------------------------------
-								obj = buildBasicDashboardIndicatorData("apd_permanence", "Permanencia",
-										"permanence_hourly_visits", "Visitas", v.getCheckinStarted(),
-										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId, store, shopping, null,
-										entityId, entityKind, v.getForDate());
-								if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
-								else indicatorsSet.put(obj, obj);
-								obj.setDoubleValue(obj.getDoubleValue()
-										+ calculateDiffTime(v.getCheckinFinished(), v.getCheckinStarted()));
-								obj.setRecordCount(obj.getRecordCount() + 1);
-							}
-							// occupation_total_visits ---------------------------------------------------------------------------------
-							// ------------------------------------------------------------------------------------------------------
-							
-							init.setTime(v.getCheckinStarted());
-							finish.setTime(v.getCheckinFinished());
-							int day = init.get(Calendar.DAY_OF_MONTH);
-							while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) &&
-									day == init.get(Calendar.DAY_OF_MONTH)) {
-								obj = buildBasicDashboardIndicatorData("apd_occupation", "Ocupacion",
-										"occupation_hourly_visits", "Visitas", init.getTime(),
-										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId, store, shopping, null,
-										entityId, entityKind, v.getForDate());
-								if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
-								else indicatorsSet.put(obj, obj);
-								obj.setDoubleValue(obj.getDoubleValue() + 1);
-								init.add(Calendar.HOUR_OF_DAY, 1);
-									
-							}
+							tz = TimeZone.getTimeZone(store.getTimezone());
+							entityId = store.getBrandId();
+							shoppingId = store.getShoppingId();
+							subentityId = store.getIdentifier();
+						} else if( entityKind.equals(EntityKind.KIND_SHOPPING)) {
+							shopping = shoppingCache.get(String.valueOf(v.getEntityId()));
+							entityId = shopping.getIdentifier();
+							shoppingId = shopping.getIdentifier();
+							subentityId = shopping.getIdentifier();
+							tz = TimeZone.getTimeZone(shopping.getTimezone());
+						} else if( entityKind.equals(EntityKind.KIND_INNER_ZONE)) {
+							zone = innerzoneDao.get(entityId);
+							shoppingId = entityId;
+							subentityId = entityId;
+							tz = getTimezoneForEntity(entityId, EntityKind.KIND_INNER_ZONE);
 						}
-					} else {
+						CALENDAR.setTimeZone(tz);
+						
+						if( store != null || shopping != null || zone != null ) {
+							DashboardIndicatorData obj;
+
+							if( v.getCheckinType().equals(APDVisit.CHECKIN_PEASANT) ) {
+
+								// visitor_total_peasents -------------------------------------------------------------------------------
+								// ------------------------------------------------------------------------------------------------------
+								obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", "visitor_total_peasents",
+										"Paseantes", v.getCheckinStarted(), DashboardIndicatorData.PERIOD_TYPE_DAILY,
+										shoppingId, store, shopping, null, entityId, entityKind, v.getForDate());
+								if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
+								else indicatorsSet.put(obj, obj);
+								obj.setDoubleValue(obj.getDoubleValue() + 1);
+								
+								if(!v.getHidePermanence() ) {
+
+									// permanence_hourly_peasents ---------------------------------------------------------------------------
+									// ------------------------------------------------------------------------------------------------------
+									obj = buildBasicDashboardIndicatorData("apd_permanence", "Permanencia",
+											"permanence_hourly_peasents", "Paseantes", v.getCheckinStarted(),
+											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId, store, shopping, null,
+											entityId, entityKind, v.getForDate());
+									if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
+									else indicatorsSet.put(obj, obj);
+									obj.setDoubleValue(obj.getDoubleValue()
+											+ calculateDiffTime(v.getCheckinFinished(), v.getCheckinStarted()));
+									obj.setRecordCount(obj.getRecordCount() + 1);
+								}
+
+								// occupation_total_peasents -------------------------------------------------------------------------------
+								// ------------------------------------------------------------------------------------------------------
+								init.setTime(v.getCheckinStarted());
+								finish.setTime(v.getCheckinFinished());
+								int day = init.get(Calendar.DAY_OF_MONTH);
+								while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) &&
+										day == init.get(Calendar.DAY_OF_MONTH)) {
+									obj = buildBasicDashboardIndicatorData("apd_occupation", "Ocupacion",
+											"occupation_hourly_peasants", "Paseantes", init.getTime(),
+											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId, store, shopping, null,
+											entityId, entityKind, v.getForDate());
+									if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
+									else indicatorsSet.put(obj, obj);
+									obj.setDoubleValue(obj.getDoubleValue() + 1);
+									
+									init.add(Calendar.HOUR_OF_DAY, 1);
+									
+								}
+
+							} else if( v.getCheckinType().equals(APDVisit.CHECKIN_VISIT) ) {
+
+								// visitor_total_visits ---------------------------------------------------------------------------------
+								// ------------------------------------------------------------------------------------------------------
+								obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", "visitor_total_visits",
+										"Visitas", v.getCheckinStarted(), DashboardIndicatorData.PERIOD_TYPE_DAILY,
+										shoppingId, store, shopping, null, entityId, entityKind, v.getForDate());
+								if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
+								else indicatorsSet.put(obj, obj);
+								obj.setDoubleValue(obj.getDoubleValue() + 1);
+
+								if( !v.getHidePermanence()) {
+									// permanence_hourly_visits -------------------------------------------------------------------------------
+									// ------------------------------------------------------------------------------------------------------
+									obj = buildBasicDashboardIndicatorData("apd_permanence", "Permanencia",
+											"permanence_hourly_visits", "Visitas", v.getCheckinStarted(),
+											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId, store, shopping, null,
+											entityId, entityKind, v.getForDate());
+									if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
+									else indicatorsSet.put(obj, obj);
+									obj.setDoubleValue(obj.getDoubleValue()
+											+ calculateDiffTime(v.getCheckinFinished(), v.getCheckinStarted()));
+									obj.setRecordCount(obj.getRecordCount() + 1);
+								}
+								// occupation_total_visits ---------------------------------------------------------------------------------
+								// ------------------------------------------------------------------------------------------------------
+								
+								init.setTime(v.getCheckinStarted());
+								finish.setTime(v.getCheckinFinished());
+								int day = init.get(Calendar.DAY_OF_MONTH);
+								while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) &&
+										day == init.get(Calendar.DAY_OF_MONTH)) {
+									obj = buildBasicDashboardIndicatorData("apd_occupation", "Ocupacion",
+											"occupation_hourly_visits", "Visitas", init.getTime(),
+											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId, store, shopping, null,
+											entityId, entityKind, v.getForDate());
+									if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
+									else indicatorsSet.put(obj, obj);
+									obj.setDoubleValue(obj.getDoubleValue() + 1);
+									init.add(Calendar.HOUR_OF_DAY, 1);
+										
+								}
+							}
+						} else {
+							// Store not found
+							log.log(Level.INFO, "Entity with id " + v.getEntityId() + " not found!");
+						}
+
+					} catch( ASException e ) {
 						// Store not found
 						log.log(Level.INFO, "Entity with id " + v.getEntityId() + " not found!");
 					}
 
-				} catch( ASException e ) {
-					// Store not found
-					log.log(Level.INFO, "Entity with id " + v.getEntityId() + " not found!");
 				}
+				log.log(Level.INFO, "Starting Write Procedure for " +indicatorsSet.size() +" visits...");
 
-			}
-			log.log(Level.INFO, "Starting Write Procedure for " +indicatorsSet.size() +" visits...");
-
-			// save all the visits
-			saveIndicatorSet(indicatorsSet);
-			
-			// Looks for tickets, revenue & items
-			isDailyProcess = !isDailyProcess;
-			if( null != entityKind && !lastDay) {
-				if( entityKind.equals(EntityKind.KIND_BRAND)) {
-					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, isDailyProcess);
-					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, isDailyProcess);
-					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, isDailyProcess);
+				// save all the visits
+				saveIndicatorSet(indicatorsSet);
+				
+				// Looks for tickets, revenue & items
+				isDailyProcess = !isDailyProcess;
+				if( null != entityKind && !lastDay) {
+					if( entityKind.equals(EntityKind.KIND_BRAND)) {
+						createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, isDailyProcess);
+						createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, isDailyProcess);
+						createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, isDailyProcess);
+					}
+					if( entityKind.equals(EntityKind.KIND_STORE)) {
+						createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, isDailyProcess);
+						createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, isDailyProcess);
+						createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, isDailyProcess);
+					}
 				}
-				if( entityKind.equals(EntityKind.KIND_STORE)) {
-					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, isDailyProcess);
-					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, isDailyProcess);
-					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, isDailyProcess);
-				}
+				
+				long endTime = System.currentTimeMillis();
+				log.log(Level.INFO, "Finished to create apd_visitor Performance Dashboard for Day " + date + " in "
+						+ (endTime - startTime) + "ms");
 			}
-			
-			long endTime = System.currentTimeMillis();
-			log.log(Level.INFO, "Finished to create apd_visitor Performance Dashboard for Day " + date + " in "
-					+ (endTime - startTime) + "ms");
 
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
