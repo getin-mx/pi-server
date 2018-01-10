@@ -32,7 +32,7 @@ public class DumpFactory<T extends ModelKey> {
 	 *            Entity to work for
 	 * @return A fully builded DumperHelper
 	 */
-	public DumperHelper<T> build(String baseDir, Class<T> entity) {
+	public DumperHelper<T> build(String baseDir, Class<T> entity, boolean expectsNotFound) {
 		
 		boolean tmpdir = false;
 		
@@ -95,7 +95,7 @@ public class DumpFactory<T extends ModelKey> {
 		s3cfm.setBucket(bucket);
 		dumper.registerCloudFileManager(s3cfm);
 		try {
-			s3cfm.startPrefetch();
+			s3cfm.startPrefetch(expectsNotFound);
 		} catch (ASException e) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 		}

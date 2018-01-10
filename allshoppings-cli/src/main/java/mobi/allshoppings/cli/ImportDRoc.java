@@ -344,7 +344,8 @@ public class ImportDRoc extends AbstractCLI {
 				eaphDao.updateLastEntryDate(lastUpdates);
 				
 				log.log(Level.INFO, list.size() + " elements to write");
-				DumperHelper<ExternalAPHotspot> dumper = new DumpFactory<ExternalAPHotspot>().build(null, ExternalAPHotspot.class);
+				DumperHelper<ExternalAPHotspot> dumper = new DumpFactory<ExternalAPHotspot>().build(
+						null, ExternalAPHotspot.class, false);
 				start = System.currentTimeMillis();
 				for( ExternalAPHotspot ele : list ) {
 					dumper.dump(ele);

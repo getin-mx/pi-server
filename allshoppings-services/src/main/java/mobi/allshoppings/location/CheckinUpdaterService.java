@@ -48,7 +48,8 @@ public class CheckinUpdaterService {
 	
 	public void updateCheckins(Date fromDate, Date toDate) throws ASException, IOException {
 
-		DumperHelper<DeviceLocationHistory> dumper = new DumpFactory<DeviceLocationHistory>().build(null, DeviceLocationHistory.class);
+		DumperHelper<DeviceLocationHistory> dumper = new DumpFactory<DeviceLocationHistory>().build(
+				null, DeviceLocationHistory.class, false);
 		Map<String, List<InterestingPoint>> interestingPointsMap = getInterestingPointMap(shoppingDao, geocoder, null); 
 
 		long totals = 0;
@@ -59,7 +60,7 @@ public class CheckinUpdaterService {
 
 		Set<String> openedCheckins = CollectionFactory.createSet();
 		
-		Iterator<DeviceLocationHistory> i = dumper.iterator(fromDate, toDate);
+		Iterator<DeviceLocationHistory> i = dumper.iterator(fromDate, toDate, false);
 		while(i.hasNext()) {
 
 			obj = i.next();

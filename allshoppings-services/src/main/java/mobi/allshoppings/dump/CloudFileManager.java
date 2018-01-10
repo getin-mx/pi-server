@@ -37,7 +37,7 @@ public interface CloudFileManager {
 	 * 
 	 * @throws ASException
 	 */
-	void startPrefetch() throws ASException;
+	void startPrefetch(boolean notFoundExpected) throws ASException;
 
 	/**
 	 * Flushes the updated files to the Cloud
@@ -71,7 +71,7 @@ public interface CloudFileManager {
 	 * @return Returns true if the copy is OK, false if not
 	 * @throws ASException
 	 */
-	boolean checkLocalCopyIntegrity(String fileName, boolean wait) throws ASException;
+	boolean checkLocalCopyIntegrity(String fileName, boolean wait, boolean notFoundExpected) throws ASException;
 
 	/**
 	 * Gets a cloud directory listing

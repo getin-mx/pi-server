@@ -83,7 +83,7 @@ public class DumpHistory extends AbstractCLI {
 			log.log(Level.INFO, "Starting dump for entity " + entity.getName()
 					+ " from " + fromDate + " to " + toDate);
 			DumperHelper<ModelKey> dumper = new DumpFactory<ModelKey>()
-					.build(null, entity);
+					.build(null, entity, false);
 			
 			dumper.dumpModelKey(sCollection, fromDate, toDate, deleteAfterDump,
 					renameCollection);

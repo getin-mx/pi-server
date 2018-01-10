@@ -120,11 +120,13 @@ public class XS3CloudFileManager implements CloudFileManager {
 	}
 
 	@Override
-	public void startPrefetch() throws ASException {
+	public void startPrefetch(boolean notFoundExpected) throws ASException {
 
 		// Check if it was already started
-		if( workers != null && workers.size() > 0 )
+		if( workers != null && workers.size() > 0 ) {
+			for(XS3CloudFileManagerWorker w : workers) w.setNotFoundExpected(notFoundExpected);
 			return;
+		}
 		
 		if( instances == 0 ) 
 			return;
@@ -149,7 +151,7 @@ public class XS3CloudFileManager implements CloudFileManager {
 		for( int i = 0; i < instances; i++ ) {
 			XS3CloudFileManagerWorker w = new XS3CloudFileManagerWorker(forPrefecth,
 					forUpload, downloaded, notFound, tmpPath, bucket, client,
-					controlQueue, sem, this);
+					controlQueue, sem, this, notFoundExpected);
 			w.setName("S3 Worker " + i);
 			w.start();
 			workers.add(w);
@@ -219,7 +221,8 @@ public class XS3CloudFileManager implements CloudFileManager {
 	}
 
 	@Override
-	public boolean checkLocalCopyIntegrity(String fileName, boolean wait) throws ASException {
+	public boolean checkLocalCopyIntegrity(String fileName, boolean wait, boolean notFoundExpected)
+			throws ASException {
 		try {
 
 			if( workers != null && workers.size() > 0 ) {
@@ -241,7 +244,8 @@ public class XS3CloudFileManager implements CloudFileManager {
 									List<XS3Object> l = client.getObjectListing(bucket, sanitizeFileName(
 											fileName.substring(0, fileName.lastIndexOf(File.separator))));
 									if( l.size() > 0 ) {
-										download(sanitizeFileName(fileName), sanitizeFileName(fileName));
+										download(sanitizeFileName(fileName), sanitizeFileName(fileName),
+												notFoundExpected);
 										downloaded.add(sanitizeFileName(fileName));
 									} else {
 										sem.release();
@@ -271,7 +275,7 @@ public class XS3CloudFileManager implements CloudFileManager {
 				for( String key : refs ) {
 					File check = new File(tmpPath + key);
 					if(!check.exists()) {
-						download(key, key);
+						download(key, key, notFoundExpected);
 					}
 				}
 
@@ -401,7 +405,7 @@ public class XS3CloudFileManager implements CloudFileManager {
 		}
 	}
 	
-	public void download(String objectKey, String fileName) throws Exception {
+	public void download(String objectKey, String fileName, boolean notFoundExpected) throws Exception {
 		if( !isConnected() )
 			connect();
 
@@ -417,7 +421,7 @@ public class XS3CloudFileManager implements CloudFileManager {
 				client.getObject(bucket, objectKey, file.getAbsolutePath());
 				done = true;
 			} catch( Exception e ) {
-				if( retriesLeft <= 0 ) {
+				if( retriesLeft <= 0  || notFoundExpected) {
 					log.log(Level.WARNING, "Failed download for " + fileName + "...");
 					throw e;
 				}
