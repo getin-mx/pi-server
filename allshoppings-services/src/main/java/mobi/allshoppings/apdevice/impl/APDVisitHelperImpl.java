@@ -228,7 +228,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		while( (!reverse && (curDate.before(toDate) || (fromDate.equals(toDate) &&
 				curDate.equals(toDate)))) || (reverse && (toDate.before(curDate) ||
 						toDate.equals(fromDate) && toDate.equals(curDate)))) {
-
 			try {
 				log.log(Level.INFO, "entityIds are: " + entities);
 				
@@ -498,20 +497,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		int timezoneOffset = tz.getOffset(startCal.getTimeInMillis());
 		
-		/*String auxDate = null;
-		if(timezoneOffset > 0) {
-			startCal.add(Calendar.DATE, -1);
-			auxDate = sdf.format(startCal.getTime());
-			startCal.setTime(from);
-		}
-		
-		for(Iterator<APHEntry> i = lastRes.iterator(); i.hasNext();) {
-			if(timezoneOffset < 0 && forStringDate.compareTo(i.next().getDate()) > 0) i.remove();
-			else if(auxDate != null && auxDate.compareTo(i.next().getDate()) > 0) i.remove(); 
-		}*/
-		
-		APHEntry aphe;
-		
 		List<APHEntry> lastRes = CollectionFactory.createList();
 
 		if(timezoneOffset >= 0) {
@@ -556,9 +541,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			startHour *= 60 *60 /20;
 			endHour *= 60 *60 /20;
 		}
-		boolean changedDate = false;
-		for(Iterator<APHEntry> i = lastRes.iterator(); i.hasNext();) {
-			aphe = i.next();
+		
+		while(i.hasNext()) {
+			APHEntry aphe = i.next();
 			APHEntry mapped = map.get(aphe.getMac());
 			if(mapped == null) {
 				mapped = new APHEntry();

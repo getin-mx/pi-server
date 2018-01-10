@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -620,7 +619,6 @@ public class DashboardAPDeviceMapperService {
 
 	public void createAPDVisitPerformanceDashboardForDay(Date date, List<String> entityIds, Integer entityKind,
 			List<APDVisit> data, boolean isDailyProcess, boolean lastDay, boolean onlyVisits) throws ASException {
-
 		log.log(Level.INFO, "Starting to create apd_visitor Performance Dashboard for Day " + date + "...");
 		long startTime = System.currentTimeMillis();
 		CALENDAR.setTime(date);
@@ -726,8 +724,6 @@ public class DashboardAPDeviceMapperService {
 
 								// visitor_total_peasents -------------------------------------------------------------------------------
 								// ------------------------------------------------------------------------------------------------------
-								
-								
 								obj = buildDashboardIndicatorData(indicatorsSet, "apd_visitor", "Visitantes",
 										"visitor_total_peasents", "Paseantes", v.getCheckinStarted(), DashboardIndicatorData.PERIOD_TYPE_DAILY, 
 										shoppingId, store, shopping, null, subentityId, entityKind, v.getForDate()) ;
@@ -826,9 +822,6 @@ public class DashboardAPDeviceMapperService {
 								else indicatorsSet.put(obj, obj);
 								obj.setDoubleValue(obj.getDoubleValue() + 1);
 							}
-							
-							
-							
 						} else {
 							// Store not found
 							log.log(Level.INFO, "Entity with id " + v.getEntityId() + " not found!");
