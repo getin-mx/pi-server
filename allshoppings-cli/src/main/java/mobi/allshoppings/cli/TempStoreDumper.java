@@ -71,6 +71,16 @@ public class TempStoreDumper extends AbstractCLI {
 			} catch( Exception e ) {
 				log.log(Level.INFO, "Brand not found");
 			}
+			
+			try {
+				brand = brandDao.get("demo_devlyn_mx", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Opticas Devlyn Demo");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "demo_devlyn_mx"));
+				brandDao.create(brand);
+			}
 
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
