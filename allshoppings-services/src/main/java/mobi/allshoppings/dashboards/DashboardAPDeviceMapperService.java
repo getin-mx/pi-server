@@ -167,7 +167,7 @@ public class DashboardAPDeviceMapperService {
 
 				if( CollectionUtils.isEmpty(phases) || phases.contains(PHASE_APDVISIT))
 					createAPDVisitPerformanceDashboardForDay(curDate, entityIds, null, null, !deletePreviousRecords,
-							false);
+							false, false);
 
 				curDate = new Date(curDate.getTime() + Constants.DAY_IN_MILLIS);
 
@@ -624,7 +624,7 @@ public class DashboardAPDeviceMapperService {
 
 	public void createAPDVisitPerformanceDashboardForDay(Date date, List<String> entityIds, Integer entityKind,
 			List<APDVisit> data, boolean isDailyProcess, boolean lastDay, boolean onlyVisits) throws ASException {
-//TODO ignore revenue & etc if only visits
+
 		log.log(Level.INFO, "Starting to create apd_visitor Performance Dashboard for Day " + date + "...");
 		long startTime = System.currentTimeMillis();
 		CALENDAR.setTime(date);
@@ -678,18 +678,18 @@ public class DashboardAPDeviceMapperService {
 					visitDumper.dispose();
 				} else list = data;
 				if(list.size() == 0) {
-					log.log(Level.INFO, "Done - No stores were given to process");
-					return;
+					log.log(Level.INFO, "Done - No visits were given to process");
+					continue;
 				}
 				Calendar init = Calendar.getInstance();
 				Calendar finish = Calendar.getInstance();
 				TimeZone mxTz = TimeZone.getTimeZone("Mexico/General");
 				init.setTimeZone(mxTz);
 				finish.setTimeZone(mxTz);
+				boolean skip = false;
 				log.log(Level.INFO, list.size() + " records to process... ");
 				for(APDVisit v : list ) {
-					if(sLimitDate != null && !v.getForDate().equals(sLimitDate)) continue;
-					
+					if(sLimitDate != null && v.getForDate() != null && !v.getForDate().equals(sLimitDate)) continue;
 					try {
 						Shopping shopping = null;
 						InnerZone zone = null;
@@ -701,7 +701,8 @@ public class DashboardAPDeviceMapperService {
 							store = storeCache.get(String.valueOf(v.getEntityId()));
 							if( store == null ) {
 								store = storeDao.get(String.valueOf(v.getEntityId()), true);
-								if( store == null ) return;
+								skip = store == null;
+								if(skip) break;
 								storeCache.put(String.valueOf(v.getEntityId()), store);
 							}
 							tz = TimeZone.getTimeZone(store.getTimezone());
@@ -823,7 +824,7 @@ public class DashboardAPDeviceMapperService {
 						log.log(Level.INFO, "Entity with id " + v.getEntityId() + " not found!");
 					}
 
-				}
+				} if(skip) continue;
 				log.log(Level.INFO, "Starting Write Procedure for " +indicatorsSet.size() +" visits...");
 
 				// save all the visits
@@ -831,7 +832,7 @@ public class DashboardAPDeviceMapperService {
 				
 				// Looks for tickets, revenue & items
 				isDailyProcess = !isDailyProcess;
-				if( null != entityKind && !lastDay) {
+				if(null != entityKind && !lastDay && !onlyVisits) {
 					if( entityKind.equals(EntityKind.KIND_BRAND)) {
 						createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, isDailyProcess);
 						createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, isDailyProcess);

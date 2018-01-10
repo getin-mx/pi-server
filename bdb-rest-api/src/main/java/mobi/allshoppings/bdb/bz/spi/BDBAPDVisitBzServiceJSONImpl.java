@@ -92,9 +92,9 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 			//list = dao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, fromDate, toDate, checkinType, range, order, attributes, false);
 			
 			
-			DumperHelper<APDVisit> dumper = new DumpFactory<APDVisit>().build(null, APDVisit.class);
+			DumperHelper<APDVisit> dumper = new DumpFactory<APDVisit>().build(null, APDVisit.class, false);
 			dumper.setFilter(entityId);			
-			Iterator<APDVisit> visits = dumper.iterator(fromDate, toDate);
+			Iterator<APDVisit> visits = dumper.iterator(fromDate, toDate, false);
 			
 			
 			DateTime first = new DateTime(fromDate);
