@@ -85,7 +85,7 @@ public class TempUserCreation extends AbstractCLI {
 			    juanUser.setEmail("juan@aditivo.mx");
 			    juanUser.getSecuritySettings().setRole(Role.STORE);
 			    juanUser.getSecuritySettings()
-			        .setPassword(encodeString("Aditivo2017"));
+			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 			    juanUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "92ec9131-dbf2-4a42-a3ef-1d68170de391",
@@ -134,7 +134,7 @@ public class TempUserCreation extends AbstractCLI {
 			    carlosUser.setEmail("carlos@aditivo.mx");
 			    carlosUser.getSecuritySettings().setRole(Role.STORE);
 			    carlosUser.getSecuritySettings()
-			        .setPassword(encodeString("Aditivo2017"));
+			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 			    carlosUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "2810ac0e-480b-4374-8130-134862088a86",
@@ -161,7 +161,7 @@ public class TempUserCreation extends AbstractCLI {
 			    hectorUser.setEmail("hector@aditivo.mx");
 			    hectorUser.getSecuritySettings().setRole(Role.STORE);
 			    hectorUser.getSecuritySettings()
-			        .setPassword(encodeString("Aditivo2017"));
+			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 			    hectorUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "32543b75-32b2-4b41-9e03-f876a9e88d18",
@@ -199,7 +199,7 @@ public class TempUserCreation extends AbstractCLI {
 			    carloscUser.setEmail("carlosc@aditivo.mx");
 			    carloscUser.getSecuritySettings().setRole(Role.STORE);
 			    carloscUser.getSecuritySettings()
-			        .setPassword(encodeString("Aditivo2017"));
+			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 			    carloscUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "b251d67f-b441-42d2-b69d-6a84c036e123",
@@ -224,7 +224,7 @@ public class TempUserCreation extends AbstractCLI {
 			    albertoUser.setEmail("alberto@aditivo.mx");
 			    albertoUser.getSecuritySettings().setRole(Role.STORE);
 			    albertoUser.getSecuritySettings()
-			        .setPassword(encodeString("Aditivo2017"));
+			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 			    albertoUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "92ec9131-dbf2-4a42-a3ef-1d68170de391",
@@ -251,7 +251,7 @@ public class TempUserCreation extends AbstractCLI {
 			    anegeloUser.setEmail("angelo@aditivo.mx");
 			    anegeloUser.getSecuritySettings().setRole(Role.STORE);
 			    anegeloUser.getSecuritySettings()
-			        .setPassword(encodeString("Aditivo2017"));
+			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 			    anegeloUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "98abde27-4dcc-4d5b-ac16-d43eac63b94b",
@@ -278,7 +278,7 @@ public class TempUserCreation extends AbstractCLI {
 			    ricardoUser.setEmail("ricardol@aditivo.mx");
 			    ricardoUser.getSecuritySettings().setRole(Role.STORE);
 			    ricardoUser.getSecuritySettings()
-			        .setPassword(encodeString("Aditivo2017"));
+			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 			    ricardoUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 	        		"0221582e-c2fd-49d0-98ed-4635cd5e22db",
@@ -317,7 +317,7 @@ public class TempUserCreation extends AbstractCLI {
 			    miguelUser.setEmail("miguel@aditivo.mx");
 			    miguelUser.getSecuritySettings().setRole(Role.STORE);
 			    miguelUser.getSecuritySettings()
-			        .setPassword(encodeString("Aditivo2017"));
+			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 			    miguelUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "0221582e-c2fd-49d0-98ed-4635cd5e22db",
@@ -344,7 +344,7 @@ public class TempUserCreation extends AbstractCLI {
 			    joseUser.setEmail("joser@aditivo.mx");
 			    joseUser.getSecuritySettings().setRole(Role.STORE);
 			    joseUser.getSecuritySettings()
-			        .setPassword(encodeString("Aditivo2017"));
+			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 			    joseUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 	        		"77bfffb3-48a9-43b6-b1ec-51d526e96da8",
@@ -370,7 +370,7 @@ public class TempUserCreation extends AbstractCLI {
 			    ignacioUser.setEmail("ignacio@aditivo.mx");
 			    ignacioUser.getSecuritySettings().setRole(Role.STORE);
 			    ignacioUser.getSecuritySettings()
-			        .setPassword(encodeString("Aditivo2017"));
+			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 			    ignacioUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "9a14f70c-52eb-4756-8fb3-b48ee8b86094",
@@ -397,7 +397,7 @@ public class TempUserCreation extends AbstractCLI {
 			    aaronUser.setEmail("aaron@aditivo.mx");
 			    aaronUser.getSecuritySettings().setRole(Role.STORE);
 			    aaronUser.getSecuritySettings()
-			        .setPassword(encodeString("Aditivo2017"));
+			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 			    aaronUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "4d768d73-b9a9-44a0-bbbe-dc00a04f52ec",
@@ -431,7 +431,7 @@ public class TempUserCreation extends AbstractCLI {
 			    isaiasUser.setEmail("isaias@aditivo.mx");
 			    isaiasUser.getSecuritySettings().setRole(Role.STORE);
 			    isaiasUser.getSecuritySettings()
-			        .setPassword(encodeString("Aditivo2017"));
+			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 			    isaiasUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "07c6552d-c3fe-445b-aac4-e1d2c234d2ca",
@@ -446,6 +446,162 @@ public class TempUserCreation extends AbstractCLI {
 			    userDao.create(isaiasUser);
 			  }
 			  
+			  
+			  UserMenu umBalcarce = null;
+			  try {
+				umBalcarce = userMenuDao.get("cafe_balcarce_ar", true);
+			    userMenuDao.delete("cafe_balcarce_ar");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    umBalcarce = new UserMenu();
+				umBalcarce.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				umBalcarce.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				umBalcarce.setKey(userMenuDao.createKey("cafe_balcarce_ar"));
+				userMenuDao.create(umBalcarce);
+			  }
+			  
+
+			  try {
+			    um = userMenuDao.get("universodefragancias_vallejo_mx", true);
+			    userMenuDao.delete("universodefragancias_vallejo_mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    um = new UserMenu();
+				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+
+				
+				um.setKey(userMenuDao.createKey("universodefragancias_vallejo_mx"));
+				userMenuDao.create(um);
+			  }
+			  
+			  User universoUser = null;
+			  try {
+			    userDao.delete("universodefragancias_vallejo_mx");
+			    throw new Exception();
+			  } catch (Exception e) {
+			    log.log(Level.INFO, "Inserting universo de fragancias Vallejo...");
+			    universoUser = new User();
+			    universoUser.setFirstname("Universo de fragancias Vallejo");
+			    universoUser.setLastname("");
+			    universoUser.setEmail("universodefragancias_vallejo_mx");
+			    universoUser.getSecuritySettings().setRole(Role.STORE);
+			    universoUser.getSecuritySettings()
+			        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+			    universoUser.getSecuritySettings()
+			        .setStores(Arrays.asList(
+			        "2d856f3f-8793-49b5-a2a6-f662edb07d76"
+			        
+			        ));
+			    universoUser.setKey((Key) keyHelper.obtainKey(User.class, "universodefragancias_vallejo_mx"));
+			    userDao.create(universoUser);
+			  }
+			  
+			  
+			  
+			  
+			  try {
+				    um = userMenuDao.get("elgalpontacuara_ar", true);
+				    userMenuDao.delete("elgalpontacuara_ar");
+				    throw new Exception();
+				  } catch (Exception e) {
+				    um = new UserMenu();
+					um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+					
+					um.setKey(userMenuDao.createKey("elgalpontacuara_ar"));
+					userMenuDao.create(um);
+				  }
+				  
+				  User galponUser = null;
+				  try {
+				    userDao.delete("elgalpontacuara_ar");
+				    throw new Exception();
+				  } catch (Exception e) {
+				    log.log(Level.INFO, "Inserting elgalpontacuara_ar...");
+				    galponUser = new User();
+				    galponUser.setFirstname("El galpón de Tacuara");
+				    galponUser.setLastname("");
+				    galponUser.setEmail("elgalpontacuara_ar");
+				    galponUser.getSecuritySettings().setRole(Role.STORE);
+				    galponUser.getSecuritySettings()
+				        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+				    galponUser.getSecuritySettings()
+				        .setStores(Arrays.asList(
+				        "af28a490-208c-4213-a967-eb1982980435"
+				        
+				        ));
+				    galponUser.setKey((Key) keyHelper.obtainKey(User.class, "elgalpontacuara_ar"));
+				    userDao.create(galponUser);
+				  }
+				  
+				  User arturo = null;
+				  try {
+				    arturo = userDao.get("arturo@getin.mx", true);
+				    userDao.delete(arturo);
+				    throw new Exception();
+				  } catch( Exception e ) {
+				    arturo = new User();
+				    arturo.setFirstname("Arturo Armengod");
+				    arturo.setLastname("");
+				    arturo.setEmail("arturo@getin.mx");
+				    arturo.getSecuritySettings().setRole(Role.ADMIN);
+				    arturo.getSecuritySettings().setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+				    arturo.setKey((Key)keyHelper.obtainKey(User.class, "arturo@getin.mx"));
+				    userDao.create(arturo);
+				  }
+
+				  try {
+				    um = userMenuDao.get("arturo@getin.mx", true);
+				    userMenuDao.delete("arturo@getin.mx");
+				    throw new Exception();
+				  } catch( Exception e ) {
+				    um = new UserMenu();
+				  um.getEntries().add(new UserMenuEntry("index.apdevices", "fa-signal", "Antenas"));
+				  um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Dashboard"));
+				  um.getEntries().add(new UserMenuEntry("index.apreport", "fa-table", "Reporte"));
+				    um.getEntries().add(new UserMenuEntry("index.opentimes", "fa-lightbulb-o", "Horarios de Apertura"));
+				    um.getEntries().add(new UserMenuEntry("index.employeetimes", "fa-address-card-o", "Horario de Empleados"));
+				    um.getEntries().add(new UserMenuEntry("index.heatmap", "fa-building", "Heat Map"));
+				    um.getEntries().add(new UserMenuEntry("index.apdvanalysis", "fa-thermometer-full", "Analisis de Visitas"));
+				    um.getEntries().add(new UserMenuEntry("index.apdmaemployees", "fa-address-card-o", "Empleados"));
+				    um.getEntries().add(new UserMenuEntry("index.users", "fa-user-o", "Usuarios"));
+				    um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
+				    um.getEntries().add(new UserMenuEntry("index.storeitems", "fa-microchip", "Items Vendidos"));
+				    um.getEntries().add(new UserMenuEntry("index.storerevenue", "fa-money", "Revenue"));
+				    um.getEntries().add(new UserMenuEntry("index.processes", "fa-fast-backward", "Reprocesos"));
+				    um.setKey(userMenuDao.createKey("arturo@getin.mx"));
+				    userMenuDao.create(um);
+				  }
+				  
+				  User demo5User = null;
+				  try {
+				    demo5User = userDao.get("demo5_mx", true);
+				    userDao.delete(demo5User);
+				    throw new Exception();
+				  } catch( Exception e ) {
+				    demo5User = new User();
+				    demo5User.setFirstname("Demo Heatmap");
+				    demo5User.setLastname("Mexico");
+				    demo5User.setEmail("demo5User@allshoppings.mobi");
+				    demo5User.getSecuritySettings().setRole(Role.BRAND);
+				    demo5User.getSecuritySettings().setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+				    demo5User.getSecuritySettings().setShoppings(Arrays.asList("a9f9d78e-d5f6-42b5-97be-2a84aca5165d"));
+				    demo5User.setKey((Key)keyHelper.obtainKey(User.class, "demo5_mx"));
+				    userDao.create(demo5User);
+				  }
+				  try {
+				    um = userMenuDao.get("demo5_mx", true);
+				    userMenuDao.delete("demo5_mx");
+				    throw new Exception();
+				  } catch( Exception e ) {
+				    um = new UserMenu();
+				    um.getEntries().add(new UserMenuEntry("index.demovisits5", "fa-area-chart", "Tráfico"));
+				    um.getEntries().add(new UserMenuEntry("index.patternheatmapdemo", "fa-building", "Heatmaps"));
+				    um.setKey(userMenuDao.createKey("demo5_mx"));
+				    userMenuDao.create(um);
+				  }
+
+
 			  
 		} catch (Exception e) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
