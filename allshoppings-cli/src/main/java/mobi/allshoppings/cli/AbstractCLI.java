@@ -8,8 +8,8 @@ import joptsimple.OptionParser;
 
 public abstract class AbstractCLI {
 
-	static OptionParser parser;
-	static ApplicationContext context;
+	protected static OptionParser parser;
+	protected static ApplicationContext context;
 	
 	public static void usage(OptionParser parser) throws IOException {
 		parser.printHelpOn(System.out);
