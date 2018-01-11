@@ -11,9 +11,12 @@ import org.springframework.util.StringUtils;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.Store;
+import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 import mx.getin.Constants;
 
@@ -33,6 +36,7 @@ public class UpdateDashboards extends AbstractCLI {
 	
 	private static final String PHASES_PARAM = "phases";
 	private static final String ENTITY_IDS_PARAM = "entityIds";
+	private static final String BRAND_IDS_PARAM = "brandIds";
 	
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
@@ -46,6 +50,8 @@ public class UpdateDashboards extends AbstractCLI {
 						.withRequiredArg().ofType( String.class );
 		parser.accepts(ENTITY_IDS_PARAM, "Comma separated entity Ids to process (just for phase 0)").withRequiredArg()
 				.ofType( String.class );
+		parser.accepts(BRAND_IDS_PARAM, "Comma separated entity IDs to process (just for phase 4)").withRequiredArg()
+				.ofType(String.class);
 		parser.accepts(Constants.DELETE_PREVIOUS_RECORDS_PARAM, "Delete previus dashboards")
 				.withRequiredArg().ofType( Boolean.class );
 		return parser;
@@ -99,6 +105,10 @@ public class UpdateDashboards extends AbstractCLI {
 					sEntityIds = (String)options.valueOf(ENTITY_IDS_PARAM);
 					String[] parts = sEntityIds.split(",");
 					for( String part : parts ) entityIds.add(part.trim());
+				} if(options.has(BRAND_IDS_PARAM)) {
+					StoreDAO storeDao = (StoreDAO)getApplicationContext().getBean("store.dao.ref");
+					for(Store s : storeDao.getUsingBrandAndStatus(options.valueOf(BRAND_IDS_PARAM).toString(),
+							StatusHelper.statusActive(), null)) entityIds.add(s.getIdentifier());
 				}
 				
 				if(options.has(Constants.DELETE_PREVIOUS_RECORDS_PARAM)) {
