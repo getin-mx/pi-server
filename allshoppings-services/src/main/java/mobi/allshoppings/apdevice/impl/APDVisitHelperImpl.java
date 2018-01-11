@@ -582,7 +582,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			}
 			mapped.setKey(aphe.getKey());
 			map.put(mapped.getMac(), mapped);
-			
 		}
 
 		Iterator<APHEntry> ix = map.values().iterator();

@@ -43,10 +43,16 @@ public class CLI {
 		}
 
 		String className;
+		Class<?> clazz;
 		if(!args[0].contains("\\.")) {
 			className = "mobi.allshoppings.cli." + args[0];
 		} else {
 			className = args[0];
+		} try {
+			clazz = (Class<?>)Class.forName(className);
+		} catch(ClassNotFoundException e) {
+			className = "mx.getin.cli." +args[0];
+			clazz = (Class<?>)Class.forName(className);
 		}
 		List<String> newArgList = new ArrayList<String>();
 		for( int i = 1; i < args.length; i++ ) {
@@ -58,8 +64,6 @@ public class CLI {
 		parser.accepts( "appcontext", "Application Context File. Defauts to $ALLSHOPPINGS/etc/baseApplicationContext.xml" ).withRequiredArg().ofType( String.class );
 		parser.accepts( "nocontext", "Don't use an application context. This is used for StartServer" );
 		parser.accepts( "help", "Shows this help message" );
-
-		Class<?> clazz = (Class<?>)Class.forName(className);
 
 		Method buildOptionParser = clazz.getDeclaredMethod("buildOptionParser", OptionParser.class);
 		buildOptionParser.invoke(null, new Object[] {parser});
