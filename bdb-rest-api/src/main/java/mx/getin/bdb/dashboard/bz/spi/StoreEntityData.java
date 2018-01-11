@@ -1,6 +1,7 @@
 package mx.getin.bdb.dashboard.bz.spi;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,18 +50,29 @@ public abstract class StoreEntityData<T extends ModelKey> extends BDBRestBaseSer
 			obtainUserIdentifier(true);
 			
 			String storeId = obtainStringValue("storeId", null);
-			String fromDate = obtainStringValue("fromDate", null);
-			String toDate = obtainStringValue("toDate", null);
+			String fromDateString = obtainStringValue("fromDate", null);
+			String toDateString = obtainStringValue("toDate", null);
+			String fromHour = null;
 			String toHour = null;
-			if(!StringUtils.hasText(fromDate) || !StringUtils.hasText(toDate)) {
-				fromDate = obtainStringValue("date", null);
-				toDate = obtainStringValue("fromHour", null);
+			Date toDate = null;
+			Date fromDate = null;
+			
+			Calendar c = Calendar.getInstance();
+			
+			if(!StringUtils.hasText(fromDateString) || !StringUtils.hasText(toDateString)) {
+				fromDateString = obtainStringValue("date", null);
+				Date fromDateParsed = sdf.parse(fromDateString);
+				c.setTime(fromDateParsed);
+				c.add(Calendar.DATE, 1); 
+				toDate = c.getTime();
+				
+				fromHour = obtainStringValue("fromHour", null);
 				toHour = obtainStringValue("toHour", null);
 			}
 
 			boolean parsingHourly = StringUtils.hasText(toHour);
 			
-			List<T> list = daoGetUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, toHour);
+			List<T> list = daoGetUsingStoreIdAndDatesAndRange(storeId, fromDateString, toDateString, toHour);
 			Map<String, T> tmp = CollectionFactory.createMap();
 			for( T obj : list ) {
 				if(obj instanceof StoreTicket) {
@@ -78,8 +90,12 @@ public abstract class StoreEntityData<T extends ModelKey> extends BDBRestBaseSer
 				}
 			}
 			
-			Date curDate = sdf.parse(parsingHourly ? toDate : fromDate);
-			Date limitDate = sdf.parse(parsingHourly ? toHour : toDate);
+			Date curDate = sdf.parse(fromDateString);
+			Date limitDate = toDate;
+			if(!parsingHourly) {
+				limitDate = sdf.parse(toDateString);	
+			}
+			
 			JSONArray jsonArray = new JSONArray();
 			JSONArray dateArray = new JSONArray();
 			String parsedDate;
