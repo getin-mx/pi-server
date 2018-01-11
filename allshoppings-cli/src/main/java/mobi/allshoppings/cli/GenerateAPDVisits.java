@@ -24,13 +24,13 @@ public class GenerateAPDVisits extends AbstractCLI {
 	private static final Logger log = Logger.getLogger(GenerateAPDVisits.class.getName());
 	private static final String BRAND_IDS_PARAM = "brandIds";
 	private static final String STORE_IDS_PARAM = "storeIds";
-	private static final String SHOPPING_IDS_PARAM = "shoppingIds";
 	private static final String ONLY_EMPLOYEES_PARAM = "onlyEmployees";
 	private static final String ONLY_DASHBOARDS_PARAM = "onlyDashboards";
 	private static final String UPDATE_DASHBOARDS_PARAM = "updateDashboards";
 	private static final String DAILY_PROCESS_PARAM = "isDailyProcess";
 	private static final String START_HOUR_PARAM = "startHour";
 	private static final String END_HOUR_PARAM = "endHour";
+	private static final String IGNORED_BRANDS_PARAM = "ignoredBrands";
 	
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
@@ -40,8 +40,6 @@ public class GenerateAPDVisits extends AbstractCLI {
 		parser.accepts(BRAND_IDS_PARAM, "List of comma separated brands").withRequiredArg().ofType( String.class );
 		parser.accepts(STORE_IDS_PARAM, "List of comma separated stores (superseeds brandIds)").withRequiredArg()
 				.ofType( String.class );
-		parser.accepts(SHOPPING_IDS_PARAM, "List of comma separated shoppings (superseeds brandIds and storeIds)")
-				.withRequiredArg().ofType( String.class );
 		parser.accepts(ONLY_EMPLOYEES_PARAM, "Only process employees").withRequiredArg().ofType( Boolean.class );
 		parser.accepts(ONLY_DASHBOARDS_PARAM, "Only process dashboards with preexisting APDVisit data")
 				.withRequiredArg().ofType( Boolean.class );
@@ -57,6 +55,8 @@ public class GenerateAPDVisits extends AbstractCLI {
 				.ofType(String.class);
 		parser.accepts(END_HOUR_PARAM, "The final hour to build visits in the format HH:MM. This is the limit "
 				+ "time to generate visits for every given day").withOptionalArg().ofType(String.class);
+		parser.accepts(IGNORED_BRANDS_PARAM, "Comma separated list of brands which stores wont be processed")
+				.withRequiredArg().ofType(String.class);
 		return parser;
 	}
 
@@ -89,11 +89,13 @@ public class GenerateAPDVisits extends AbstractCLI {
 			byte endHour = -1;
 			List<String> brands = CollectionFactory.createList();
 			List<String> stores = CollectionFactory.createList();
-			List<String> shoppings = CollectionFactory.createList();
+			List<String> ignoredBrands = CollectionFactory.createList();
 			
 			try {
-				if( options.has(Constants.FROM_DATE_PARAM)) sFromDate = (String)options.valueOf(Constants.FROM_DATE_PARAM);
-				if( options.has(Constants.TO_DATE_PARAM)) sToDate = (String)options.valueOf(Constants.TO_DATE_PARAM);
+				if( options.has(Constants.FROM_DATE_PARAM)) sFromDate =
+						(String)options.valueOf(Constants.FROM_DATE_PARAM);
+				if( options.has(Constants.TO_DATE_PARAM)) sToDate =
+						(String)options.valueOf(Constants.TO_DATE_PARAM);
 				
 				fromDate = StringUtils.hasText(sFromDate) ? sdf.parse(sFromDate) :
 					sdf.parse(sdf.format(System.currentTimeMillis() - Constants.DAY_IN_MILLIS));
@@ -127,12 +129,12 @@ public class GenerateAPDVisits extends AbstractCLI {
 					}
 				}
 
-				if(options.has(SHOPPING_IDS_PARAM)) {
-					shoppingIds = (String)options.valueOf(SHOPPING_IDS_PARAM);
+				if(options.has(IGNORED_BRANDS_PARAM)) {
+					shoppingIds = (String)options.valueOf(IGNORED_BRANDS_PARAM);
 					String tmp[] = shoppingIds.split(",");
 					for( String s : tmp ) {
-						if(!shoppings.contains(s.trim()))
-							shoppings.add(s.trim());
+						if(!ignoredBrands.contains(s.trim()))
+							ignoredBrands.add(s.trim());
 					}
 				}
 				
@@ -163,13 +165,8 @@ public class GenerateAPDVisits extends AbstractCLI {
 			log.log(Level.INFO, "Generating APDVisits");
 			log.log(Level.INFO, "This process PID is: " +ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
 			
-			if( shoppings.isEmpty() )
-				helper.generateAPDVisits(brands, stores, fromDate, toDate, deletePreviousRecors, updateDashboards,
-						onlyEmployees, onlyDashboards, isDailyProcess, startHour, endHour);
-			else
-				helper.generateAPDVisits(shoppings, fromDate, toDate, deletePreviousRecors, updateDashboards,
-						onlyEmployees, onlyDashboards, isDailyProcess, startHour, endHour);
-			
+			helper.generateAPDVisits(brands, stores, ignoredBrands, fromDate, toDate, deletePreviousRecors,
+					updateDashboards, onlyEmployees, onlyDashboards, isDailyProcess, startHour, endHour);
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
