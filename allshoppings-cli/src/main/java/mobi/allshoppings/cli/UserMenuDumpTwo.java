@@ -98,7 +98,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setEmail("carlos@aditivo.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("ffc0b360-00d5-4e8f-8bef-f0472df6cb5f",
 								"1fac0105-51f2-4a5f-ac3f-eaf4b6d311ed", "f33140b3-3ecd-4d70-bfcc-159f47ac9058",
@@ -128,7 +128,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setEmail("hector@aditivo.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("b087d73e-ccb5-4457-8b09-e85ba72de7e7",
 								"4fe543ea-610e-444b-bde3-e0cf12092ae6", "71352b76-f76e-421b-b114-72f071633b61",
@@ -158,7 +158,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setEmail("isaias@aditivo.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("07c6552d-c3fe-445b-aac4-e1d2c234d2ca",
 								"d2112ef6-7cfa-49a4-94de-a127e45ff1c1", "1b509e3a-068e-4062-9781-d04c175db304",
@@ -188,7 +188,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setEmail("alberto@aditivo.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("fcc7aa01-7b2d-4773-ba65-acc2dd7e592c",
 								"f7b002fd-5c0c-4e2f-9879-0e98bda6cd5d", "2b06d29f-204e-4a38-ac87-b77cb7d39578",
@@ -218,7 +218,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setEmail("angelo@aditivo.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("9beaf247-e674-47a2-9d4c-c550bb1aa7cc",
 								"3338e021-59c4-4482-9603-fac42d656c7b", "98abde27-4dcc-4d5b-ac16-d43eac63b94b",
@@ -248,7 +248,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setEmail("aaron@aditivo.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("63644d2e-f052-45cb-94f2-911331f298f2",
 								"4d768d73-b9a9-44a0-bbbe-dc00a04f52ec", "5d8fa91b-b783-46ef-b615-c6aba8dec1fd",
@@ -278,7 +278,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setEmail("joser@aditivo.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("11a2f4a2-75e3-4ee2-be94-391e02739d28",
 								"da761750-c568-4e8b-9965-ee588c3d1d9a", "77bfffb3-48a9-43b6-b1ec-51d526e96da8",
@@ -308,7 +308,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setEmail("ignacio@aditivo.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("b6d96f4a-d9f7-4537-87ae-c6b3f4b3c5e5",
 								"9a14f70c-52eb-4756-8fb3-b48ee8b86094", "625f5d03-6726-4bb2-894e-60749397dba6",
@@ -337,7 +337,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setEmail("miguel@aditivo.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("06b26796-bbda-49ad-b0b8-e24bc8cbeef6",
 								"3bd9d22b-65d9-44af-805f-87a77af5f691", "3928b1d6-2fb7-4a62-a081-9e5a23e78e91",
@@ -366,7 +366,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setEmail("daniel@aditivo.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("E27EF9D38FBCA9628E996CBB113621E22764C88363499544FDF3E0C369FF7444");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("a45fc81f-900e-457e-854e-df4a312bb0e1",
 								"d2eab997-2497-49b3-b1bd-15cf80f05fc7", "8d2335b7-4cc3-4f76-b274-86137b34b4e5",
@@ -395,7 +395,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				julius.getSecuritySettings().getShoppings().add("mundoe");
 				julius.getSecuritySettings().getShoppings().add("plazaaragon");
 				julius.getSecuritySettings()
-						.setPassword(encodeString("admin01"));
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				julius.setKey((Key) keyHelper.obtainKey(User.class, "julius"));
 				userDao.create(julius);
 			}
@@ -425,7 +425,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				eross.getSecuritySettings().getShoppings().add("mundoe");
 				eross.getSecuritySettings().getShoppings().add("plazaaragon");
 				eross.getSecuritySettings()
-						.setPassword(encodeString("admin01"));
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				eross.setKey((Key) keyHelper.obtainKey(User.class, "eross"));
 				userDao.create(eross);
 			}
@@ -455,7 +455,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				fdiaz.getSecuritySettings().getShoppings().add("mundoe");
 				fdiaz.getSecuritySettings().getShoppings().add("plazaaragon");
 				fdiaz.getSecuritySettings()
-						.setPassword(encodeString("admin01"));
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				fdiaz.setKey((Key) keyHelper.obtainKey(User.class, "fdiaz"));
 				userDao.create(fdiaz);
 			}
@@ -489,7 +489,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				octavio.getSecuritySettings().getShoppings().add("mundoe");
 				octavio.getSecuritySettings().getShoppings().add("plazaaragon");
 				octavio.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				octavio.setKey((Key) keyHelper.obtainKey(User.class, "octavio"));
 				userDao.create(octavio);
 			}
@@ -519,7 +519,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				frisa.getSecuritySettings().getShoppings().add("mundoe");
 				frisa.getSecuritySettings().getShoppings().add("plazaaragon");
 				frisa.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				frisa.setKey((Key) keyHelper.obtainKey(User.class, "dir_frisa"));
 				userDao.create(frisa);
 			}
@@ -549,7 +549,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				jmiguel.getSecuritySettings().getShoppings().add("mundoe");
 				jmiguel.getSecuritySettings().getShoppings().add("plazaaragon");
 				jmiguel.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				jmiguel.setKey((Key) keyHelper.obtainKey(User.class, "jmiguel"));
 				userDao.create(jmiguel);
 			}
@@ -582,7 +582,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				gerenciaME.getSecuritySettings().setShoppings(new ArrayList<String>());
 				gerenciaME.getSecuritySettings().getShoppings().add("mundoe");
 				gerenciaME.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				gerenciaME.setKey((Key) keyHelper.obtainKey(User.class, "gerenciaME"));
 				userDao.create(gerenciaME);
 			}
@@ -611,7 +611,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				marketing.getSecuritySettings().setShoppings(new ArrayList<String>());
 				marketing.getSecuritySettings().getShoppings().add("mundoe");
 				marketing.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				marketing.setKey((Key) keyHelper.obtainKey(User.class, "marketing"));
 				userDao.create(marketing);
 			}
@@ -640,7 +640,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				alejandro.getSecuritySettings().setShoppings(new ArrayList<String>());
 				alejandro.getSecuritySettings().getShoppings().add("mundoe");
 				alejandro.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				alejandro.setKey((Key) keyHelper.obtainKey(User.class, "alejandro"));
 				userDao.create(alejandro);
 			}
@@ -673,7 +673,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				gerenciaA.getSecuritySettings().setShoppings(new ArrayList<String>());
 				frisa.getSecuritySettings().getShoppings().add("plazaaragon");
 				gerenciaA.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				gerenciaA.setKey((Key) keyHelper.obtainKey(User.class, "gerenciaA"));
 				userDao.create(gerenciaA);
 			}
@@ -702,7 +702,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				cesar.getSecuritySettings().setShoppings(new ArrayList<String>());
 				frisa.getSecuritySettings().getShoppings().add("plazaaragon");
 				cesar.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				cesar.setKey((Key) keyHelper.obtainKey(User.class, "cesar"));
 				userDao.create(cesar);
 			}
@@ -729,7 +729,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				demodevlyn.setEmail("demodevlyn@allshoppings.mobi");
 				demodevlyn.getSecuritySettings().setRole(Role.BRAND);
 				demodevlyn.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				demodevlyn.setKey((Key) keyHelper.obtainKey(User.class, "demo_devlyn_mx"));
 				userDao.create(demodevlyn);
 			}
@@ -761,7 +761,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				userAriel.setEmail("ariel@chilimbalam.com.mx");
 				userAriel.getSecuritySettings().setRole(Role.STORE);
 				userAriel.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				userAriel.getSecuritySettings()
 						.setStores(Arrays.asList("1471039822636", "1471039822656", "1471039822677", "1503537460654",
 								"1503537460669", "65ceefa9-f1ef-4007-a6f2-e3dd0d8ac10b",
@@ -795,7 +795,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				HMorales.setEmail("hmorales@chilimbalam.com.mx");
 				HMorales.getSecuritySettings().setRole(Role.STORE);
 				HMorales.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				HMorales.getSecuritySettings()
 						.setStores(Arrays.asList("1471039822636", "1471039822656", "1471039822677", "1503537460654",
 								"1503537460669", "65ceefa9-f1ef-4007-a6f2-e3dd0d8ac10b",
@@ -829,7 +829,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				Arocha.setEmail("arocha@chilimbalam.com.mx");
 				Arocha.getSecuritySettings().setRole(Role.STORE);
 				Arocha.getSecuritySettings()
-						.setPassword("279FE88523A2435CBDD676FEB2F134F45F5F43E179CFEEAFEDB72F2750AC29EA");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				Arocha.getSecuritySettings()
 						.setStores(Arrays.asList("1471039822636", "1471039822656", "1471039822677", "1503537460654",
 								"1503537460669", "65ceefa9-f1ef-4007-a6f2-e3dd0d8ac10b",
@@ -875,7 +875,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				user.setEmail("lamartinez@pradastores.mx");
 				user.getSecuritySettings().setRole(Role.STORE);
 				user.getSecuritySettings()
-						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				user.getSecuritySettings()
 						.setStores(Arrays.asList("1479933115741", "2179a275-e43a-42ac-b6e7-6eedf3f4ee0a",
 								"a062c268-877d-47e4-80aa-894da6ec93cc", "82979029-3ca9-4bc3-aaaf-d9ccdfca562c",
@@ -910,7 +910,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				userClaudia.setEmail("crua@pradastores.mx");
 				userClaudia.getSecuritySettings().setRole(Role.STORE);
 				userClaudia.getSecuritySettings()
-						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				userClaudia.getSecuritySettings()
 						.setStores(Arrays.asList("61534aa2-ec08-471e-9378-eff26344edec",
 								"4f9302f7-c155-46c7-b780-17834270a7f7", "f94a2759-554c-49a4-a32d-84c81cfe98cc",
@@ -946,7 +946,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				userJCruz.setEmail("jcruz@pradastores.mx");
 				userJCruz.getSecuritySettings().setRole(Role.STORE);
 				userJCruz.getSecuritySettings()
-						.setPassword("D461CFE028CE59C64C3B3CB7876FA4F92A7CB9540A65D750FED44321C8BA2F4E");
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				userJCruz.getSecuritySettings()
 						.setStores(Arrays.asList("e53ead22-8663-4e09-b0e7-069e91c1fae9",
 								"e3d005b1-9162-49c1-855c-cc0eaf19b8b7", "f8610b0e-158d-4f38-9c8a-dd2bf7a3f3a1",
@@ -982,7 +982,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				userMoises.setEmail("moisesgaray@outletdeportes_mx");
 				userMoises.getSecuritySettings().setRole(Role.STORE);
 				userMoises.getSecuritySettings()
-						.setPassword(encodeString("Outletdeportes01"));
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				userMoises.getSecuritySettings()
 						.setStores(Arrays.asList("41e68dc9-254d-4803-82b7-c083eeaf28df", "9263926c-88e3-435b-ad7e-1920abfb73a6",
 								"649c6de9-05aa-40de-bd39-7b1d37921658", "b6b1a93f-0116-4d9a-ad40-9c6842eaa8c0"));
@@ -1014,7 +1014,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				userJoseIvan.setEmail("joseivan@outletdeportes_mx");
 				userJoseIvan.getSecuritySettings().setRole(Role.STORE);
 				userJoseIvan.getSecuritySettings()
-						.setPassword(encodeString("Outletdeportes01"));
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				userJoseIvan.getSecuritySettings()
 						.setStores(Arrays.asList("23b16093-fbbf-4d9a-811b-6c82bd0eb940", "0804ce51-a635-40be-8952-28cc25c946dd",
 								"247b4ead-822f-4713-9465-177666b2e31c", "3a361ad5-9748-4bfa-9a69-460fd8214e6e",
@@ -1051,7 +1051,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				userLCepeda.setEmail("lcepeda@sportium.com.mx");
 				userLCepeda.getSecuritySettings().setRole(Role.STORE);
 				userLCepeda.getSecuritySettings()
-						.setPassword(encodeString("Sportium01"));
+						.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				userLCepeda.getSecuritySettings()
 						.setStores(Arrays.asList("8cd52856-7e34-4f19-8c45-e25e325d4ff9"));
 				userLCepeda.setKey((Key) keyHelper.obtainKey(User.class, "lcepeda@sportium.com.mx"));
@@ -1085,7 +1085,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				  userJCardenas.setEmail("jcardenas@sportium.com.mx");
 				  userJCardenas.getSecuritySettings().setRole(Role.STORE);
 				  userJCardenas.getSecuritySettings()
-				      .setPassword(encodeString("Sportium01"));
+				      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				  userJCardenas.getSecuritySettings()
 				      .setStores(Arrays.asList("8cd52856-7e34-4f19-8c45-e25e325d4ff9"));
 				  userJCardenas.setKey((Key) keyHelper.obtainKey(User.class, "jcardenas@sportium.com.mx"));
@@ -1120,7 +1120,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 					  userVVargas.setEmail("vvargas@sportium.com.mx");
 					  userVVargas.getSecuritySettings().setRole(Role.STORE);
 					  userVVargas.getSecuritySettings()
-					      .setPassword(encodeString("Sportium01"));
+					      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 					  userVVargas.getSecuritySettings()
 					      .setStores(Arrays.asList("67af6e6e-9f11-4948-9887-65679bfd3d69"));
 					  userVVargas.setKey((Key) keyHelper.obtainKey(User.class, "vvargas@sportium.com.mx"));
@@ -1154,7 +1154,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 					  userOEsquivel.setEmail("oesquivel@sportium.com.mx");
 					  userOEsquivel.getSecuritySettings().setRole(Role.STORE);
 					  userOEsquivel.getSecuritySettings()
-					      .setPassword(encodeString("Sportium01"));
+					      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 					  userOEsquivel.getSecuritySettings()
 					      .setStores(Arrays.asList("970b5795-ad0a-49ac-a7eb-110d826c7b8f"));
 					  userOEsquivel.setKey((Key) keyHelper.obtainKey(User.class, "oesquivel@sportium.com.mx"));
@@ -1187,7 +1187,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				      userLrivera.setEmail("lrivera@sportium.com.mx");
 				      userLrivera.getSecuritySettings().setRole(Role.STORE);
 				      userLrivera.getSecuritySettings()
-				          .setPassword(encodeString("Sportium01"));
+				          .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				      userLrivera.getSecuritySettings()
 				          .setStores(Arrays.asList("970b5795-ad0a-49ac-a7eb-110d826c7b8f"));
 				      userLrivera.setKey((Key) keyHelper.obtainKey(User.class, "lrivera@sportium.com.mx"));
@@ -1220,7 +1220,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 					  userORoa.setEmail("oroa@sportium.com.mx");
 					  userORoa.getSecuritySettings().setRole(Role.STORE);
 					  userORoa.getSecuritySettings()
-					      .setPassword(encodeString("Sportium01"));
+					      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 					  userORoa.getSecuritySettings()
 					      .setStores(Arrays.asList("c726776f-0a96-43d1-ae97-4169e595e5c6"));
 					  userORoa.setKey((Key) keyHelper.obtainKey(User.class, "oroa@sportium.com.mx"));
@@ -1253,7 +1253,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				  userIvette.setEmail("icordova@sportium.com.mx");
 				  userIvette.getSecuritySettings().setRole(Role.STORE);
 				  userIvette.getSecuritySettings()
-				      .setPassword(encodeString("Sportium01"));
+				      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				  userIvette.getSecuritySettings()
 				      .setStores(Arrays.asList("c726776f-0a96-43d1-ae97-4169e595e5c6"));
 				  userIvette.setKey((Key) keyHelper.obtainKey(User.class, "icordova@sportium.com.mx"));
@@ -1286,7 +1286,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				  userRContreras.setEmail("rcontreras@sportium.com.mx");
 				  userRContreras.getSecuritySettings().setRole(Role.STORE);
 				  userRContreras.getSecuritySettings()
-				      .setPassword(encodeString("Sportium01"));
+				      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				  userRContreras.getSecuritySettings()
 				      .setStores(Arrays.asList("f2a79040-fefe-48f2-bd5d-e2db54ef5f23"));
 				  userRContreras.setKey((Key) keyHelper.obtainKey(User.class, "rcontreras@sportium.com.mx"));
@@ -1319,7 +1319,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 				  userPFernandez.setEmail("pfernandez@sportium.com.mx");
 				  userPFernandez.getSecuritySettings().setRole(Role.STORE);
 				  userPFernandez.getSecuritySettings()
-				      .setPassword(encodeString("Sportium01"));
+				      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				  userPFernandez.getSecuritySettings()
 				      .setStores(Arrays.asList("f2a79040-fefe-48f2-bd5d-e2db54ef5f23"));
 				  userPFernandez.setKey((Key) keyHelper.obtainKey(User.class, "pfernandez@sportium.com.mx"));
@@ -1353,7 +1353,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 					  userRDelPozo.setEmail("rdelpozo@sportium.com.mx");
 					  userRDelPozo.getSecuritySettings().setRole(Role.STORE);
 					  userRDelPozo.getSecuritySettings()
-					      .setPassword(encodeString("Sportium01"));
+					      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 					  userRDelPozo.getSecuritySettings()
 					      .setStores(Arrays.asList("109ec028-6749-4332-9427-a39ccbfe7244"));
 					  userRDelPozo.setKey((Key) keyHelper.obtainKey(User.class, "rdelpozo@sportium.com.mx"));
@@ -1387,7 +1387,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 					  userUCarrillo.setEmail("ucarrillo@sportium.com.mx");
 					  userUCarrillo.getSecuritySettings().setRole(Role.STORE);
 					  userUCarrillo.getSecuritySettings()
-					      .setPassword(encodeString("Sportium01"));
+					      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 					  userUCarrillo.getSecuritySettings()
 					      .setStores(Arrays.asList("109ec028-6749-4332-9427-a39ccbfe7244"));
 					  userUCarrillo.setKey((Key) keyHelper.obtainKey(User.class, "ucarrillo@sportium.com.mx"));
@@ -1420,7 +1420,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 					  userGEsquivel.setEmail("gesquivel@sportium.com.mx");
 					  userGEsquivel.getSecuritySettings().setRole(Role.STORE);
 					  userGEsquivel.getSecuritySettings()
-					      .setPassword(encodeString("Sportium01"));
+					      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 					  userGEsquivel.getSecuritySettings()
 					      .setStores(Arrays.asList("1471039822614"));
 					  userGEsquivel.setKey((Key) keyHelper.obtainKey(User.class, "gesquivel@sportium.com.mx"));
@@ -1453,7 +1453,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 					  userCLopez.setEmail("clopez@sportium.com.mx");
 					  userCLopez.getSecuritySettings().setRole(Role.STORE);
 					  userCLopez.getSecuritySettings()
-					      .setPassword(encodeString("Sportium01"));
+					      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 					  userCLopez.getSecuritySettings()
 					      .setStores(Arrays.asList("1471039822614"));
 					  userCLopez.setKey((Key) keyHelper.obtainKey(User.class, "clopez@sportium.com.mx"));
@@ -1486,7 +1486,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 					  userZAguilar.setEmail("zaguilar@sportium.com.mx");
 					  userZAguilar.getSecuritySettings().setRole(Role.STORE);
 					  userZAguilar.getSecuritySettings()
-					      .setPassword(encodeString("Sportium01"));
+					      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 					  userZAguilar.getSecuritySettings()
 					      .setStores(Arrays.asList("1471039822461"));
 					  userZAguilar.setKey((Key) keyHelper.obtainKey(User.class, "zaguilar@sportium.com.mx"));
@@ -1519,7 +1519,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 					  userPCervantes.setEmail("pcervantes@sportium.com.mx");
 					  userPCervantes.getSecuritySettings().setRole(Role.STORE);
 					  userPCervantes.getSecuritySettings()
-					      .setPassword(encodeString("Sportium01"));
+					      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 					  userPCervantes.getSecuritySettings()
 					      .setStores(Arrays.asList("1471039822461"));
 					  userPCervantes.setKey((Key) keyHelper.obtainKey(User.class, "pcervantes@sportium.com.mx"));
@@ -1553,7 +1553,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 						userMMonroy.setEmail("mmonroy@sportium.com.mx");
 						userMMonroy.getSecuritySettings().setRole(Role.STORE);
 						userMMonroy.getSecuritySettings()
-								.setPassword(encodeString("Sportium01"));
+								.setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 						userMMonroy.getSecuritySettings()
 								.setStores(Arrays.asList("d0f83d5d-e451-45ee-ad41-e2b4da086f2f"));
 						userMMonroy.setKey((Key) keyHelper.obtainKey(User.class, "mmonroy@sportium.com.mx"));
@@ -1571,7 +1571,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 					  mtSport.setLastname("Mexico");
 					  mtSport.setEmail("mtsport@allshoppings.mobi");
 					  mtSport.getSecuritySettings().setRole(Role.BRAND);
-					  mtSport.getSecuritySettings().setPassword(encodeString("MTSport01"));
+					  mtSport.getSecuritySettings().setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 					  mtSport.setKey((Key)keyHelper.obtainKey(User.class, "mt_sport_mx"));
 					  userDao.create(mtSport);
 					}
@@ -1614,7 +1614,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 						  brunoCorza.setEmail("admin@brunocorza.mx");
 						  brunoCorza.getSecuritySettings().setRole(Role.STORE);
 						  brunoCorza.getSecuritySettings()
-						      .setPassword(encodeString("Brunocorza01"));
+						      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 						  brunoCorza.getSecuritySettings()
 						      .setStores(Arrays.asList("5a3ebe6b-225a-416f-9559-50946576e1a5", "ahFhbGxzaG9wcGluZ3MtdGVzdHIpCxIFU3RvcmUiHmJydW5vY29yemFfbXhfZ3JhbmRwbGF6YXRvbHVjYQw", 
 	                                        "2c75e9d0-06ea-42cb-8fd6-aa23ae21c73f", "1970a175-55e8-41de-b02e-f49ccf55f353",
@@ -1653,7 +1653,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 								  sistemasBrunoCorza.setEmail("sistemas2@brunocorza.mx");
 								  sistemasBrunoCorza.getSecuritySettings().setRole(Role.STORE);
 								  sistemasBrunoCorza.getSecuritySettings()
-								      .setPassword(encodeString("Brunocorza01"));
+								      .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 								  sistemasBrunoCorza.getSecuritySettings()
 								      .setStores(Arrays.asList("5a3ebe6b-225a-416f-9559-50946576e1a5", "ahFhbGxzaG9wcGluZ3MtdGVzdHIpCxIFU3RvcmUiHmJydW5vY29yemFfbXhfZ3JhbmRwbGF6YXRvbHVjYQw", 
 			                                        "2c75e9d0-06ea-42cb-8fd6-aa23ae21c73f", "1970a175-55e8-41de-b02e-f49ccf55f353",
@@ -1691,7 +1691,7 @@ public class UserMenuDumpTwo extends AbstractCLI {
 								    cymAdemara.setEmail("cymademaraburto@gmail.com");
 								    cymAdemara.getSecuritySettings().setRole(Role.STORE);
 								    cymAdemara.getSecuritySettings()
-								        .setPassword(encodeString("Outletdeportes01"));
+								        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 								    cymAdemara.getSecuritySettings()
 								        .setStores(Arrays.asList(
 								        "23b16093-fbbf-4d9a-811b-6c82bd0eb940",
