@@ -580,7 +580,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					newRssi.put(String.valueOf(slot), val);
 				}
 			}
-			mapped.setKey(aphe.getKey());
+			mapped.setKey(aphe.getKey());//TODO quitar si el tamaño de RSSI es mayor a 6 hrs
 			
 			map.put(mapped.getMac(), mapped);
 		}
