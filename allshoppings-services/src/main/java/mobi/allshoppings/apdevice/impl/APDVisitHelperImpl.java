@@ -44,9 +44,7 @@ import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.InnerZone;
-import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
-import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 
@@ -186,9 +184,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public void generateAPDVisits(List<String> brandIds, List<String> storeIds, Date fromDate, Date toDate,
-			boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees,
-			boolean onlyDashboards, boolean isDailyProcess, byte startHour, byte endHour) throws ASException {
+	public void generateAPDVisits(List<String> brandIds, List<String> storeIds, List<String> ignoredBrands,
+			Date fromDate, Date toDate, boolean deletePreviousRecords, boolean updateDashboards,
+			boolean onlyEmployees, boolean onlyDashboards, boolean isDailyProcess, byte startHour,
+			byte endHour) throws ASException {
 
 		List<Store> stores = null;
 		Map<String, APDevice> apdCache = CollectionFactory.createMap();
@@ -209,7 +208,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		}
 		
 		List<String> eids = CollectionFactory.createList();
-		for(Store store : stores) eids.add(store.getIdentifier());
+		for(Store store : stores) {
+			if(!ignoredBrands.contains(store.getBrandId()))
+				eids.add(store.getIdentifier());
+		}
 
 		Map<String, Integer> entities = getEntities(null, null, eids);
 
@@ -649,236 +651,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		return map;
 	}
 	
-	
-	/**
-	 * Writes a list of APDVisits in the database
-	 * 
-	 * @param shoppingIds
-	 *            List of shoppings to process
-	 * @param fromDate
-	 *            Date to start processing
-	 * @param toDate
-	 *            Date to stop processing
-	 * @throws ASException
-	 */
-	@Override
-	public void generateAPDVisits(List<String> shoppingIds, Date fromDate, Date toDate, boolean deletePreviousRecords,
-			boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards, boolean isDailyProcess,
-			byte startHour, byte endHour) throws ASException {
-
-		Map<String, APDevice> apdCache = CollectionFactory.createMap();
-		Map<String, APDAssignation> assignmentsCache = CollectionFactory.createMap();
-		DumperHelper<APHEntry> dumpHelper;
-		boolean cacheBuilt = false;
-
-		List<String> subShoppingIds = CollectionFactory.createList();
-		
-		if(!CollectionUtils.isEmpty(shoppingIds)) {
-			subShoppingIds.addAll(shoppingIds);
-		} else {
-			List<Shopping> shoppings = CollectionFactory.createList();
-			shoppings.addAll(shoppingDao.getUsingStatusAndRange( 
-				Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), null, null));
-			for(Shopping shopping : shoppings ) 
-				subShoppingIds.add(shopping.getIdentifier());
-		}
-
-		Map<String, Integer> entities = getEntities(subShoppingIds, null, null);
-		DumperHelper<APDVisit> apdvDumper = new DumpFactory<APDVisit>().build(null, APDVisit.class, false);
-		
-		Date curDate = new Date(fromDate.getTime());
-		Date toZonedDate = new Date(toDate.getTime());
-		boolean overtime = false;
-		boolean lastDate;
-		String sFromDate = sdf.format(fromDate);
-		while(curDate.before(toZonedDate) || (fromDate.equals(toZonedDate) && curDate.equals(toZonedDate))) {
-
-			lastDate = curDate.getTime() +DAY_IN_MILLIS >= toZonedDate.getTime();
-			
-			try {
-				log.log(Level.INFO, "entityIds are: " + entities);
-				
-				for( String entityId : entities.keySet() ) {
-
-					Integer entityKind = entities.get(entityId);
-					String name = null;
-					Store store = null;
-					if( entityKind.equals(EntityKind.KIND_STORE)) {
-						store = storeDao.get(entityId);
-						name = store.getName();
-					} else if ( entityKind.equals(EntityKind.KIND_INNER_ZONE)) {
-						InnerZone iz = innerzoneDao.get(entityId);
-						store = storeDao.get(iz.getEntityId());
-						name = iz.getName();
-					}
-					
-					TimeZone tz = TimeZone.getTimeZone(store.getTimezone());
-					int offset = tz.getOffset(curDate.getTime()) * -1;
-					if(!onlyDashboards && offset > 0 && toZonedDate.getTime() < toDate.getTime() +offset) {
-						toZonedDate.setTime(toDate.getTime() +offset);
-						overtime = true;
-						lastDate = curDate.getTime() +DAY_IN_MILLIS >= toZonedDate.getTime();
-					}//adds an time limit offset to match local timezone
-					
-					log.log(Level.INFO, "Processing " + name + " for " + curDate + "...");
-
-					try {
-						List<APDVisit> objs = CollectionFactory.createList();
-						List<String> keys = CollectionFactory.createList();
-						if(!onlyDashboards) {
-
-							List<String> blackListMacs = getBlackListByStore(store);
-							List<String> employeeListMacs = getEmployeeListByStore(store);
-
-							String forDate = sdf.format(curDate);
-							List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, curDate);
-							if( !CollectionUtils.isEmpty(assigs)) {
-								if( assigs.size() == 1 ) {
-
-									assignmentsCache.clear();
-									assignmentsCache.put(assigs.get(0).getHostname(), assigs.get(0));
-									if(!apdCache.containsKey(assigs.get(0).getHostname()))
-										apdCache.put(assigs.get(0).getHostname(), apdDao.get(assigs.get(0).getHostname(),
-												true));
-
-									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + curDate + "...");
-									log.log(Level.INFO, "Fetching APHEntries for " + assigs.get(0).getHostname() +
-											" and " + curDate + "...");
-									dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class, lastDate);
-									dumpHelper.setFilter(assigs.get(0).getHostname());
-									List<APHEntry> i = integrateAPHE(dumpHelper,
-											apdCache.get(assigs.get(0).getHostname()), forDate, tz,
-											sFromDate, lastDate && overtime, START_CALENDAR, END_CALENDAR, startHour,
-											endHour);
-									dumpHelper.dispose();
-
-									for(APHEntry entry : i) {
-										// Employee check
-										if(!onlyEmployees || employeeListMacs.contains(entry.getMac().toUpperCase())) {
-											List<APDVisit> visitList =
-													aphEntryToVisits(entry, apdCache, assignmentsCache, blackListMacs,
-															employeeListMacs, tz);
-											for(APDVisit visit : visitList )
-												if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE)) {
-													objs.add(visit);
-													keys.add(visit.getIdentifier());
-												}
-										}
-									}
-
-									dumpHelper.dispose();
-
-									if(objs.size() == 0) {
-										log.log(Level.INFO, "No data found for " +name +", skipping...");
-										continue;
-									}
-									
-									log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
-									for( APDVisit obj : objs ) {
-										apdvDumper.dump(obj);
-									}
-									
-								} else {
-									Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
-									List<String> hostnames = CollectionFactory.createList();
-									assignmentsCache.clear();
-									for( APDAssignation assig : assigs ) { 
-										hostnames.add(assig.getHostname());
-										assignmentsCache.put(assig.getHostname(), assig);
-										if(!apdCache.containsKey(assig.getHostname()))
-											apdCache.put(assig.getHostname(), apdDao.get(assig.getHostname(), true));
-									}
-
-									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + curDate + "...");
-									log.log(Level.INFO, "Fetching APHEntries for " + hostnames + " and " + curDate + "...");
-									dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class, lastDate);
-									for( String hostname : hostnames ) {
-										dumpHelper.setFilter(hostname);
-										List<APHEntry> i = integrateAPHE(dumpHelper, apdCache.get(hostname),
-												forDate, tz, sFromDate, lastDate && overtime, START_CALENDAR, END_CALENDAR,
-												startHour, endHour);
-										dumpHelper.dispose();
-
-										for(APHEntry entry : i) {
-											if(!cache.containsKey(entry.getMac()))
-												cache.put(entry.getMac(), new ArrayList<APHEntry>());
-
-											cache.get(entry.getMac()).add(entry);
-										}
-									}
-
-									log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
-									Iterator<String> i = cache.keySet().iterator();
-									while(i.hasNext()) {
-										String key = i.next();
-										List<APHEntry> e = cache.get(key);
-										List<APDVisit> visitList = aphEntryToVisits(e, apdCache,
-												assignmentsCache,blackListMacs,employeeListMacs,
-												tz);
-										for(APDVisit visit : visitList ) {
-											if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
-												objs.add(visit);
-										}
-									}
-
-									log.log(Level.INFO, "Saving " + objs.size() + " APDVisits...");
-									for( APDVisit obj : objs ) {
-										apdvDumper.dump(obj);
-									}
-
-								}
-							}
-						}
-						
-						// Try to update dashboard if needed
-						if(updateDashboards && !onlyEmployees) {
-							if(!cacheBuilt) {
-								try {
-									log.log(Level.INFO, "Building caches for dashboard mapper...");
-									mapper.buildCaches(false);
-									cacheBuilt = true;
-								} catch( Exception e ) {
-									throw ASExceptionHelper.defaultException(e.getMessage(), e);
-								}
-							}
-
-							if(deletePreviousRecords) {
-								if(overtime && lastDate) {//both true -> just delete the offset timezones
-									byte offsetHours = (byte) (-offset /(1000 *60 *60));
-									Date delDate = offsetHours < 0 ? new Date(curDate.getTime() -DAY_IN_MILLIS) :
-										new Date(curDate.getTime());
-									didDao.deleteUsingSubentityIdAndElementIdAndDateAndTimezoneOffset(entityId,
-											Arrays.asList("apd_visitor", "apd_permanence", "apd_occupation" ),
-											delDate, delDate, GMT, offsetHours);
-								} else {//one was false -> delete the whole day (stills needs one more day) 
-									didDao.deleteUsingSubentityIdAndElementIdAndDate(entityId,
-											Arrays.asList("apd_visitor", "apd_permanence", "apd_occupation" ),
-											curDate, curDate, GMT);
-								}
-							} if( objs.size() > 0 || onlyDashboards) {
-								mapper.createAPDVisitPerformanceDashboardForDay(curDate,
-										Arrays.asList(new String[] { entityId }), entityKind, objs, isDailyProcess,
-										lastDate, startHour >= 0);
-							}
-						}
-					} catch( Exception e ) {
-						log.log(Level.SEVERE, e.getMessage(), e);
-					}
-
-				} 
-			} catch( Exception e1 ) {
-				log.log(Level.SEVERE, e1.getMessage(), e1);
-			}
-			
-			curDate = new Date(curDate.getTime() + DAY_IN_MILLIS);
-			
-			apdvDumper.flush();
-			
-		}
-		
-		apdvDumper.dispose();
-	}
-
 	/**
 	 * 
 	 * Generate a list of MacAddress of blacklist
