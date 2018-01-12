@@ -299,7 +299,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 												objs.add(visit);
 											}
 										}
-									}
+									} if(sdf.parse(entry.getDate()).compareTo(START_CALENDAR.getTime()) <= 0)
+										i.remove();
 								}
 							} else {
 								final Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
@@ -337,7 +338,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 													}
 												}
 											}
-											boolean originalDeleted = false;
+												boolean originalDeleted = false;
 											for(APHEntry toSplit : slotsToSplit.keySet()) {
 												for(String slot : slotsToSplit.get(toSplit)) {
 													Integer otherPow = toSplit.getRssi().get(slot);
@@ -392,7 +393,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 										} else {
 											cache.put(entry.getMac(), new ArrayList<APHEntry>());
 											cache.get(entry.getMac()).add(entry);
-										}
+										} if(sdf.parse(entry.getDate()).compareTo(START_CALENDAR.getTime()) <= 0)
+											it.remove();;
 									}
 								}
 
@@ -541,9 +543,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			startHour *= 60 *60 /20;
 			endHour *= 60 *60 /20;
 		}
-		
-		while(i.hasNext()) {
-			APHEntry aphe = i.next();
+		for(APHEntry aphe : lastRes) {
 			APHEntry mapped = map.get(aphe.getMac());
 			if(mapped == null) {
 				mapped = new APHEntry();
@@ -619,7 +619,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						aphe.setMaxRssi(val);
 				}
 				// Controls banned mac addresses
-				res.add(aphe);
+				lastRes.add(aphe);
 			}
 		}
 		startCal.setTime(from);
