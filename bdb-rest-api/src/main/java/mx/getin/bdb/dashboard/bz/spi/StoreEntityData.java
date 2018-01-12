@@ -24,6 +24,7 @@ import mobi.allshoppings.model.StoreRevenue;
 import mobi.allshoppings.model.StoreTicket;
 import mobi.allshoppings.model.StoreTicketByHour;
 import mobi.allshoppings.model.interfaces.ModelKey;
+import mx.getin.Constants;
 import mx.getin.model.StoreItemByHour;
 import mx.getin.model.StoreRevenueByHour;
 
@@ -31,6 +32,7 @@ public abstract class StoreEntityData<T extends ModelKey> extends BDBRestBaseSer
 		implements BDBDashboardBzService, BDBPostBzService {
 
 	protected static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	protected static final SimpleDateFormat hdf = new SimpleDateFormat("HH:mm");
 	protected static final long ONE_DAY = 86400000;
 	protected static final long ONE_HOUR = 3600000;
 	protected static final Logger log = Logger.getLogger(StoreEntityData.class.getName());
@@ -38,7 +40,9 @@ public abstract class StoreEntityData<T extends ModelKey> extends BDBRestBaseSer
 	protected static final String UPLOAD_METHOD = "doFileUpdate";
 
 	static {
-		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		TimeZone gmt = TimeZone.getTimeZone("GMT");
+		sdf.setTimeZone(gmt);
+		hdf.setTimeZone(gmt);
 	}
 	
 	@Override
@@ -78,14 +82,17 @@ public abstract class StoreEntityData<T extends ModelKey> extends BDBRestBaseSer
 				}
 			}
 			
-			Date curDate = sdf.parse(parsingHourly ? toDate : fromDate);
-			Date limitDate = sdf.parse(parsingHourly ? toHour : toDate);
+			Date curDate = sdf.parse(fromDate);
+			byte curHour = (byte) (parsingHourly ? Integer.parseInt(toDate.substring(0, 2)) : 0);
+			Date limitDate = parsingHourly ? new Date(curDate.getTime()
+					+Integer.parseInt(toHour.substring(0, 2)) *60 *60 *1000) : sdf.parse(toDate);
+			if(parsingHourly) curDate.setTime(curDate.getTime() +curHour *60 *60 *1000);
 			JSONArray jsonArray = new JSONArray();
 			JSONArray dateArray = new JSONArray();
 			String parsedDate;
 			while( curDate.before(limitDate) || curDate.equals(limitDate) ) {
-				parsedDate = sdf.format(curDate);
-				dateArray.put(parsedDate);
+				parsedDate = parsingHourly ? hdf.format(curDate) : sdf.format(curDate);
+				dateArray.put(parsingHourly ? String.format("%02d:00", curHour) : parsedDate);
 				T obj = tmp.get(parsedDate);
 				if( obj == null ) {
 					jsonArray.put(0);
@@ -104,6 +111,7 @@ public abstract class StoreEntityData<T extends ModelKey> extends BDBRestBaseSer
 						jsonArray.put(((StoreItemByHour) obj).getQty());
 					}
 				}
+				curHour++;
 				curDate.setTime(curDate.getTime() +(parsingHourly ? ONE_HOUR : ONE_DAY));
 			}
 			
