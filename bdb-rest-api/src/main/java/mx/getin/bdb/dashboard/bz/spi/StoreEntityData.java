@@ -38,10 +38,14 @@ import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.Image;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.interfaces.ModelKey;
+
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.Range;
 import mx.getin.model.interfaces.StoreDataByHourEntity;
 import mx.getin.model.interfaces.StoreDataEntity;
+import mx.getin.Constants;
+import mx.getin.model.StoreItemByHour;
+import mx.getin.model.StoreRevenueByHour;
 
 public abstract class StoreEntityData<T extends ModelKey> extends BDBRestBaseServerResource
 		implements BDBDashboardBzService, BDBPostBzService {
