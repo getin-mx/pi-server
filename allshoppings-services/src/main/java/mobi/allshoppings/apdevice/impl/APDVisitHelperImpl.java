@@ -229,6 +229,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		boolean lastDate;
 		
 		int in;
+		// TODO remove zoned time, gather zoned aphes on integration
 		while( (!reverse && (curDate.before(toZonedDate) || (fromDate.equals(toZonedDate) &&
 				curDate.equals(toZonedDate)))) || (reverse && (toZonedDate.before(curDate) ||
 						toZonedDate.equals(fromDate) && toZonedDate.equals(curDate)))) {
@@ -287,7 +288,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									apdCache.put(assigs.get(0).getHostname(),
 											apdDao.get(assigs.get(0).getHostname(), true));
 
-								// Get APHE records
+								// Gets APHE records
 								log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + forDate +
 										" using " + assigs.get(0).getHostname() + "...");
 								dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class, lastDate && overtime);

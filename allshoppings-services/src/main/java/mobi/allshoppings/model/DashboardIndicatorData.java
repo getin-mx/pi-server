@@ -556,8 +556,6 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 				+ ((subentityName == null) ? 0 : subentityName.hashCode());
 		result = prime * result
 				+ ((dayOfWeek == null) ? 0 : dayOfWeek.hashCode());
-		result = prime * result
-				+ ((timeZone == null) ? 0 : timeZone.hashCode());
 		return result;
 	}
 
