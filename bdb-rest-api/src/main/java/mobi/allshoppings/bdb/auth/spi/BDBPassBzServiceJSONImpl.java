@@ -59,7 +59,7 @@ public class BDBPassBzServiceJSONImpl  extends BDBRestBaseServerResource impleme
 			user.getSecuritySettings().setPassword(newPassword);
 			dao.updateWithoutChangingMail(user);
 			jsonOut = this.generateJSONOkResponse();
-
+			// TODO de la mierda
 		}catch(ASException e){
 			log.log(Level.SEVERE, "exception catched", e);
 			jsonOut = this.getJSONRepresentationFromException(e);
