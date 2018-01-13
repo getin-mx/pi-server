@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -493,6 +494,10 @@ public class DashboardAPDeviceMapperService {
 						entryList.add(entry);
 					}
 					dumper.dispose();
+					for(Iterator<APHEntry> it = lastAphes.iterator(); it.hasNext();) {
+						APHEntry entry = it.next();
+						if(dateSDF.parse(entry.getDate()).compareTo(CALENDAR.getTime()) < 0) it.remove();
+					}
 					long count = 0;
 					for(String mac : macEntries.keySet()) {
 						

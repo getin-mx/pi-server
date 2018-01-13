@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -299,8 +300,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 												objs.add(visit);
 											}
 										}
-									} if(sdf.parse(entry.getDate()).compareTo(START_CALENDAR.getTime()) <= 0)
-										i.remove();
+									}
 								}
 							} else {
 								final Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
@@ -393,8 +393,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 										} else {
 											cache.put(entry.getMac(), new ArrayList<APHEntry>());
 											cache.get(entry.getMac()).add(entry);
-										} if(sdf.parse(entry.getDate()).compareTo(START_CALENDAR.getTime()) <= 0)
-											it.remove();;
+										}
 									}
 								}
 
@@ -543,7 +542,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			startHour *= 60 *60 /20;
 			endHour *= 60 *60 /20;
 		}
-		for(APHEntry aphe : lastRes) {
+		boolean changedDate = false;
+		for(Iterator<APHEntry> i = lastRes.iterator(); i.hasNext();) {
+			aphe = i.next();
 			APHEntry mapped = map.get(aphe.getMac());
 			if(mapped == null) {
 				mapped = new APHEntry();
@@ -619,7 +620,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						aphe.setMaxRssi(val);
 				}
 				// Controls banned mac addresses
-				lastRes.add(aphe);
+				res.add(aphe);
 			}
 		}
 		startCal.setTime(from);
