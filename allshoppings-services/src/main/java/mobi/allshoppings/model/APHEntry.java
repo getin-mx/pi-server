@@ -47,9 +47,6 @@ public class APHEntry implements ModelKey, Serializable, Identificable, Replicab
 	private Date lastUpdate;
 	private Date creationDateTime;
 	
-	@NotPersistent
-	private transient byte shiftDay;
-	
 	public static final byte PREVIOUS = -1;
 	public static final byte NEXT = 1;
 	public static final byte NO_SHIFT = 0;
@@ -302,12 +299,4 @@ public class APHEntry implements ModelKey, Serializable, Identificable, Replicab
 				+ dataCount + ", minRssi=" + minRssi + ", maxRssi=" + maxRssi + "]";
 	}
 	
-	public void setShiftDay(byte shift) {
-		this.shiftDay = shift;
-	}
-	
-	public byte getShiftDay() {
-		return this.shiftDay;
-	}
-
 }
