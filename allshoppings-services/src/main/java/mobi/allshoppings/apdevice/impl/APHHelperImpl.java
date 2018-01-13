@@ -949,9 +949,10 @@ public class APHHelperImpl implements APHHelper {
 	 * @throws ParseException
 	 */
 	@Override
-	public Date slotToDate(APHEntry source, int t, String date) throws ParseException {
+	public Date slotToDate(int t, String date) throws ParseException {
 		CALENDAR.clear();
 		CALENDAR.setTimeZone(gmt);
+		sdf2.setTimeZone(gmt);
 		CALENDAR.setTime(sdf2.parse(date));
 		CALENDAR.add(Calendar.SECOND, slotToSeconds(t));
 		return CALENDAR.getTime();
