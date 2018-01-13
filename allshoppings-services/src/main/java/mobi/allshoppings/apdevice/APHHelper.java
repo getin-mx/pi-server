@@ -35,7 +35,7 @@ public interface APHHelper {
 			throws NoSuchAlgorithmException, FileNotFoundException, IOException;
 	int stringToOffsetTime(String t) throws Exception;
 	int slotToSeconds(int t);
-	Date slotToDate(APHEntry ssrc, int t, TimeZone tz) throws ParseException;
+	Date slotToDate(APHEntry ssrc, int t, String date) throws ParseException;
 	
 	// Getters and setter
 	boolean isScanInDevices();
