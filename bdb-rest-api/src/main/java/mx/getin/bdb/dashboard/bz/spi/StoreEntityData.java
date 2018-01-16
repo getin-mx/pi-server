@@ -37,16 +37,8 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.Image;
 import mobi.allshoppings.model.Store;
-import mobi.allshoppings.model.StoreItem;
-import mobi.allshoppings.model.StoreRevenue;
-import mobi.allshoppings.model.StoreTicket;
-import mobi.allshoppings.model.StoreTicketByHour;
-import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.Range;
-import mx.getin.Constants;
-import mx.getin.model.StoreItemByHour;
-import mx.getin.model.StoreRevenueByHour;
 import mx.getin.model.interfaces.StoreDataByHourEntity;
 import mx.getin.model.interfaces.StoreDataEntity;
 
@@ -56,24 +48,46 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 	@Autowired
 	protected StoreDAO storeDao;
 	@Autowired
-	private DashboardAPDeviceMapperService mapper;
+	protected DashboardAPDeviceMapperService mapper;
 	@Autowired
-	private ImageDAO imageDao;
+	protected ImageDAO imageDao;
 	@Autowired
-	private BrandDAO brandDao;
+	protected BrandDAO brandDao;
+	
+	protected final Calendar CALENDAR = Calendar.getInstance();
 	
 	protected static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	protected static final SimpleDateFormat hdf = new SimpleDateFormat("HH:mm");
+	protected static final SimpleDateFormat mdf = new SimpleDateFormat("yyyy-MM");
 	protected static final long ONE_DAY = 86400000;
 	protected static final long ONE_HOUR = 3600000;
 	protected static final Logger log = Logger.getLogger(StoreEntityData.class.getName());
 	protected static final String PREVIEW_METHOD = "previewFileUpdate";
 	protected static final String UPLOAD_METHOD = "doFileUpdate";
+	protected static final String STORE_ID_PARAM = "storeId";
+	protected static final String STORE_NAME_PARAM = "storeName";
+	protected static final String FROM_DATE_PARAM = "fromDate";
+	protected static final String ORIGINAL_PARAM = "orignal";
+	protected static final String ERROR_PARAM = "error";
+	protected static final String TO_DATE_PARAM = "toDate";
+	protected static final String DATE_PARAM = "date";
+	protected static final String FROM_HOUR_PARAM = "fromHour";
+	protected static final String TO_HOUR_PARAM = "toHour";
+	protected static final String METHOD_PARAM = "method";
+	protected static final String PERIOD_PARAM = "period";
+	protected static final String BRAND_ID_PARAM = "brandId";
+	protected static final String IMAGE_ID_PARAM = "imageId";
+	protected static final String IS_HOURLY_PARAM = "isHourly";
+	protected static final String RESPONSE_DATA = "data";
+	protected static final String RESPONSE_DATES = "dates";
+	protected static final String RESPONSE_DATE_LIST = "dateList";
+	protected static final String RESPONSE_STORE_LIST = "storeList";
 
 	static {
 		TimeZone gmt = TimeZone.getTimeZone("GMT");
 		sdf.setTimeZone(gmt);
 		hdf.setTimeZone(gmt);
+		mdf.setTimeZone(gmt);
 	}
 	
 	@Override
@@ -83,14 +97,14 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 			// obtain the id and validates the auth token
 			obtainUserIdentifier(true);
 			
-			String storeId = obtainStringValue("storeId", null);
-			String fromDate = obtainStringValue("fromDate", null);
-			String toDate = obtainStringValue("toDate", null);
+			String storeId = obtainStringValue(STORE_ID_PARAM, null);
+			String fromDate = obtainStringValue(FROM_DATE_PARAM, null);
+			String toDate = obtainStringValue(TO_DATE_PARAM, null);
 			String toHour = null;
 			if(!StringUtils.hasText(fromDate) || !StringUtils.hasText(toDate)) {
-				fromDate = obtainStringValue("date", null);
-				toDate = obtainStringValue("fromHour", null);
-				toHour = obtainStringValue("toHour", null);
+				fromDate = obtainStringValue(DATE_PARAM, null);
+				toDate = obtainStringValue(FROM_HOUR_PARAM, null);
+				toHour = obtainStringValue(TO_HOUR_PARAM, null);
 			}
 
 			boolean parsingHourly = StringUtils.hasText(toHour);
@@ -124,17 +138,17 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 			
 			// Returns the final value
 			JSONObject ret = new JSONObject();
-			ret.put("storeId", storeId);
+			ret.put(STORE_ID_PARAM, storeId);
 			if(parsingHourly) {
-				ret.put("date", fromDate);
-				ret.put("fromHour", fromDate);
-				ret.put("toHour", toHour);
+				ret.put(DATE_PARAM, fromDate);
+				ret.put(FROM_HOUR_PARAM, fromDate);
+				ret.put(TO_HOUR_PARAM, toHour);
 			} else {
-				ret.put("fromDate", fromDate);
-				ret.put("toDate", toDate);
+				ret.put(FROM_DATE_PARAM, fromDate);
+				ret.put(TO_DATE_PARAM, toDate);
 			}
-			ret.put("data", jsonArray);
-			ret.put("dates", dateArray);
+			ret.put(RESPONSE_DATA, jsonArray);
+			ret.put(RESPONSE_DATES, dateArray);
 			return ret.toString();
 
 		} catch (ASException e) {
@@ -162,8 +176,8 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 
 			JSONObject json = entity.getJsonObject();
 			String method = new String();
-			if( json.has("method")) {
-				method = json.getString("method");
+			if( json.has(METHOD_PARAM)) {
+				method = json.getString(METHOD_PARAM);
 			}
 
 			// Scans the operations mode
@@ -179,16 +193,16 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 
 			} else {
 
-				String storeId = json.getString("storeId");
-				JSONArray arr = json.getJSONArray("data");
-				String fromDate = json.getString("fromDate");
-				String toDate = json.getString("toDate");
+				String storeId = json.getString(STORE_ID_PARAM);
+				JSONArray arr = json.getJSONArray(RESPONSE_DATA);
+				String fromDate = json.getString(FROM_DATE_PARAM);
+				String toDate = json.getString(TO_DATE_PARAM);
 				String date;
 				boolean parsingHourly = StringUtils.isEmpty(fromDate) || StringUtils.isEmpty(toDate);
 				if(parsingHourly) {
-					fromDate = json.getString("fromHour");
-					toDate = json.getString("toHour");
-					date = json.getString("date");
+					fromDate = json.getString(FROM_HOUR_PARAM);
+					toDate = json.getString(TO_HOUR_PARAM);
+					date = json.getString(DATE_PARAM);
 				} else date = null;
 
 				Store store = storeDao.get(storeId, true);
@@ -219,23 +233,18 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 					}
 		
 					// Creates or updates the daily record
-					T obj;
+					StoreDataEntity obj;
 					try {
 						obj = daoGetUsingStoreIdAndDate(storeId, date, null);
 						obj.setQty(total);
-						stDao.update(obj);
+						daoUpdate(obj);
 					} catch( Exception e ) {
-						obj = new StoreTicket();
-						obj.setStoreId(storeId);
-						obj.setBrandId(store.getBrandId());
-						obj.setDate(date);
-						obj.setQty(total);
-						obj.setKey(stDao.createKey());
-						stDao.create(obj);
+						createStoreData(store, total, date, null);	
 					}
 				}
 				
-				mapper.createStoreItemDataForDates(fromDate, toDate, storeId, true);
+				mapper.createStoreItemDataForDates(parsingHourly ? date : fromDate,
+						parsingHourly ? date : toDate, storeId, true);
 
 				return generateJSONOkResponse().toString();
 			}
@@ -256,21 +265,27 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 		}
 	}
 	
+	/**
+	 * Prepares a preview for a ticket import file
+	 * @param json
+	 * @return
+	 * @throws ASException
+	 */
 	public String previewFileUpdate(JSONObject json) throws ASException {
 		try {
 
-			String brandId = json.getString("brandId");
-			String period = json.getString("period");
-			String imageId = json.getString("imageId");
+			String brandId = json.getString(BRAND_ID_PARAM);
+			String period = json.getString(PERIOD_PARAM);
+			String imageId = json.getString(IMAGE_ID_PARAM);
 			
 			Image image = imageDao.get(imageId);
 			Brand brand = brandDao.get(brandId);
 			Date month = mdf.parse(period); 
 
-			JSONObject message = parseExcelTicketFile(image, brand, month);
-			message.put("brandId", brandId);
-			message.put("period", period);
-			message.put("imageId", imageId);
+			JSONObject message = parseExcelDataFile(image, brand, month, json.getBoolean(IS_HOURLY_PARAM));
+			message.put(BRAND_ID_PARAM, brandId);
+			message.put(PERIOD_PARAM, period);
+			message.put(IMAGE_ID_PARAM, imageId);
 			
 			return message.toString();
 
@@ -288,54 +303,75 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 		}		
 	}
 	
+	/**
+	 * Updates tickets based in a ticket input file
+	 * @param json
+	 * @return
+	 * @throws ASException
+	 */
 	public String doFileUpdate(JSONObject json) throws ASException {
 		try {
-
-			String brandId = json.getString("brandId");
-			String period = json.getString("period");
-			String imageId = json.getString("imageId");
+			Image image = imageDao.get(json.getString(IMAGE_ID_PARAM));
+			Brand brand = brandDao.get(json.getString(BRAND_ID_PARAM));
+			Date month = mdf.parse(json.getString(PERIOD_PARAM));
+			boolean isHourly = json.getBoolean(IS_HOURLY_PARAM);
 			
-			Image image = imageDao.get(imageId);
-			Brand brand = brandDao.get(brandId);
-			Date month = mdf.parse(period); 
+			JSONObject message = parseExcelDataFile(image, brand, month, isHourly);
 			
-			JSONObject message = parseExcelTicketFile(image, brand, month);
-			
-			JSONArray jsonDateList = message.getJSONArray("dateList");
+			JSONArray jsonDateList = message.getJSONArray(RESPONSE_DATE_LIST);
 			List<String> dateList = CollectionFactory.createList();
 			for( int i = 0; i < jsonDateList.length(); i++)
 				dateList.add(jsonDateList.getString(i));
-			String fromDate = dateList.get(0);
-			String toDate = dateList.get(dateList.size() -1);
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(sdf.parse(toDate));
-			cal.add(Calendar.DATE, 1);
-			toDate = sdf.format(cal.getTime());
+			String fromDate;
+			String toDate;
+			if(isHourly) {
+				fromDate = message.getString(DATE_PARAM);
+				toDate = fromDate;
+			} else {
+				fromDate = dateList.get(0);
+				CALENDAR.setTime(sdf.parse(dateList.get(dateList.size() -1)));
+				CALENDAR.add(Calendar.DATE, 1);
+				toDate = sdf.format(CALENDAR.getTime());
+			}
 			
-			JSONArray jsonStoreList = message.getJSONArray("storeList");
+			JSONArray jsonStoreList = message.getJSONArray(RESPONSE_DATA);
 			for( int i = 0; i < jsonStoreList.length(); i++ ) {
 				JSONObject entry = (JSONObject)jsonStoreList.get(i);
-				if(!"null".equals(entry.getString("storeId"))) {
-					Store store = storeDao.get(entry.getString("storeId"));
-					JSONArray data = entry.getJSONArray("tickets");
+				if(!"null".equals(entry.getString(STORE_ID_PARAM))) {
+					Store store = storeDao.get(entry.getString(STORE_ID_PARAM));
+					JSONArray data = entry.getJSONArray(RESPONSE_DATA);
 
 					for( int x = 0; x < dateList.size(); x++) {
-						StoreItem obj;
+						T obj;
 						try {
-							obj = dao.getUsingStoreIdAndDate(store.getIdentifier(), dateList.get(x), true);
+							obj = daoGetUsingStoreIdAndDate(store.getIdentifier(),
+									isHourly ? fromDate : dateList.get(x), isHourly ? dateList.get(x) : null);
 							obj.setQty(data.getInt(x));
-							dao.update(obj);
+							daoUpdate(obj);
 						} catch( Exception e ) {
-							obj = new StoreItem();
-							obj.setStoreId(store.getIdentifier());
-							obj.setBrandId(store.getBrandId());
-							obj.setDate(dateList.get(x));
-							obj.setQty(data.getInt(x));
-							obj.setKey(dao.createKey());
-							dao.create(obj);
+							createStoreData(store, data.getInt(x), isHourly ? fromDate : dateList.get(x),
+									isHourly ? dateList.get(x) : null);
 						}
 					}
-					mapper.createStoreItemDataForDates(fromDate, toDate, store.getIdentifier(), true);
+					if(isHourly) {
+						int total = 0;
+						for(T st : daoGetUsingStoreIdAndDatesAndRange(store.getIdentifier(), fromDate,
+								"00:00", "23:00", false)) {
+							total += st.getQty();
+						}
+			
+						// Creates or updates the daily record
+						StoreDataEntity obj;
+						try {
+							obj = daoGetUsingStoreIdAndDate(store.getIdentifier(), fromDate, null);
+							obj.setQty(total);
+							daoUpdate(obj);
+						} catch( Exception e ) {
+							createStoreData(store, total, fromDate, null);	
+						}
+					}
+					mapper.createStoreItemDataForDates(fromDate , isHourly ? fromDate : toDate,
+							store.getIdentifier(), true);
 				}
 			}
 			
@@ -356,12 +392,12 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 		return generateJSONOkResponse().toString();	
 	}
 	
-	public JSONObject parseExcelTicketFile(Image image, Brand brand, Date period) throws ASException {
+	public JSONObject parseExcelDataFile(Image image, Brand brand, Date period, boolean isHourly)
+			throws ASException {
 
 		JSONObject json = new JSONObject();
 
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(period);
+		CALENDAR.setTime(period);
 		Range range = new Range(0,1);
 
 		InputStream excelFile = null;
@@ -394,13 +430,13 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 					if(hCell.getStringCellValue().startsWith("t"))
 						break;
 
-					Integer num = Integer.parseInt(hCell.getStringCellValue());
-					cal.set(Calendar.DATE, num);
-					dateList.put(sdf.format(cal.getTime()));
+					CALENDAR.set(isHourly ? Calendar.HOUR_OF_DAY : Calendar.DATE,
+							Integer.parseInt(hCell.getStringCellValue()));
+					dateList.put(sdf.format(CALENDAR.getTime()));
 				} else if (CellType.NUMERIC.equals(hCell.getCellTypeEnum())) {
-					Integer num = (int)hCell.getNumericCellValue();
-					cal.set(Calendar.DATE, num);
-					dateList.put(sdf.format(cal.getTime()));
+					CALENDAR.set(isHourly ? Calendar.HOUR_OF_DAY : Calendar.DATE,
+							(int)hCell.getNumericCellValue());
+					dateList.put(sdf.format(CALENDAR.getTime()));
 				}
 
 				colIndex++;
@@ -414,14 +450,15 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 				try {
 					String storeName = row.getCell(1).getStringCellValue();
 					Map<String, String> additionalFields = CollectionFactory.createMap();
-					additionalFields.put("brandId", brand.getIdentifier());
+					additionalFields.put(BRAND_ID_PARAM, brand.getIdentifier());
 					String adaptedStoreName = new String(storeName);
 					adaptedStoreName = adaptedStoreName.replaceAll("a", "?");
 					adaptedStoreName = adaptedStoreName.replaceAll("e", "?");
 					adaptedStoreName = adaptedStoreName.replaceAll("i", "?");
 					adaptedStoreName = adaptedStoreName.replaceAll("o", "?");
 					adaptedStoreName = adaptedStoreName.replaceAll("u", "?");
-					List<Store> stores = storeDao.getUsingIndex(adaptedStoreName, null, StatusHelper.statusActive(), range, additionalFields, null, null);
+					List<Store> stores = storeDao.getUsingIndex(adaptedStoreName, null,
+							StatusHelper.statusActive(), range, additionalFields, null, null);
 
 					JSONObject jsonObject = new JSONObject();
 					JSONArray ticketsArray = new JSONArray();
@@ -429,9 +466,9 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 					if(!stores.isEmpty()) {
 						Store store = stores.get(0);
 
-						jsonObject.put("storeId", store.getIdentifier());
-						jsonObject.put("storeName", store.getName());
-						jsonObject.put("original", storeName);
+						jsonObject.put(STORE_ID_PARAM, store.getIdentifier());
+						jsonObject.put(STORE_NAME_PARAM, store.getName());
+						jsonObject.put(ORIGINAL_PARAM, storeName);
 						jsonObject.put("error", "");
 
 						for( colIndex = minColIndex; colIndex < maxColIndex; colIndex++ ) {
@@ -452,12 +489,12 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 
 					} else {
 
-						jsonObject.put("storeId", "null");
-						jsonObject.put("storeName", "No encontrado!");
-						jsonObject.put("original", storeName);
-						jsonObject.put("error", ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE);
+						jsonObject.put(STORE_ID_PARAM, "null");
+						jsonObject.put(STORE_NAME_PARAM, "No encontrado!");
+						jsonObject.put(ORIGINAL_PARAM, storeName);
+						jsonObject.put(ERROR_PARAM, ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE);
 
-						jsonObject.put("tickets", ticketsArray);
+						jsonObject.put(RESPONSE_DATA, ticketsArray);
 
 					}
 					storeList.put(jsonObject);
@@ -470,8 +507,8 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 				}
 			}
 
-			json.put("dateList", dateList);
-			json.put("storeList", storeList);
+			json.put(RESPONSE_DATE_LIST, dateList);
+			json.put(RESPONSE_STORE_LIST, storeList);
 
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
@@ -486,13 +523,45 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 		return json;
 	}
 	
+	/**
+	 * Uses the proper DAO to retrieve a list of the store entities data.
+	 * @param storeId - The store which data entities are desired.
+	 * @param fromDate - The starting date to fetch; or the date to fetch when loading hourly entities.
+	 * @param toDateOrFromHour - The final date to load or the starting hour to fetch data.
+	 * @param toHour - The final hour to fetch data (only hourly entities).
+	 * @param order - If the search must be ordered by time period.
+	 * @return List&lt;T&gt; - A list with the query results.
+	 * @throws ASException - If something goes wrong
+	 */
 	protected abstract List<T> daoGetUsingStoreIdAndDatesAndRange(String storeId, String fromDate,
 			String toDateOrFromHour, String toHour, boolean order) throws ASException;
 	
-	protected abstract T daoGetUsingStoreIdAndDate(String storeId, String date, String hour) throws ASException;
+	/**
+	 * Gets an specific store entity data for a given store for a single day (and hour).
+	 * @param storeId - The store which data entities is desired.
+	 * @param date - The specific date in format yyyy-MM-dd to fetch data from.
+	 * @param hour - The specific hour in format HH:mm
+	 * @return The specific data; hourly queries can return the super class form of their data.
+	 * @throws ASException - If something goes wrong.
+	 */
+	protected abstract <V extends StoreDataEntity> V daoGetUsingStoreIdAndDate(String storeId, String date, String hour) throws ASException;
 	
-	protected abstract void daoUpdate(T obj) throws ASException;
+	/**
+	 * Updates the given store entity data. Hourly implementations can update their super class
+	 * data instance.
+	 * @param obj - The object to create or update.
+	 * @throws ASException - If something goes wrong.
+	 */
+	protected abstract void daoUpdate(StoreDataEntity obj) throws ASException;
 	
+	/**
+	 * Builds an store data entity.
+	 * @param store - The store to which the entity data belongs to.
+	 * @param qty - The numeric value of the entity. 
+	 * @param date - The date of the entity.
+	 * @param hour - The hour of the entity.
+	 * @throws ASException - If something goes wrong.
+	 */
 	protected abstract void createStoreData(Store store, double qty, String date, String hour)
 			throws ASException;
 	
