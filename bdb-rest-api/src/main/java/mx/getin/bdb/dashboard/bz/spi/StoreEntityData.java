@@ -37,29 +37,23 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.Image;
 import mobi.allshoppings.model.Store;
-import mobi.allshoppings.model.interfaces.ModelKey;
-
+import mobi.allshoppings.model.StoreTicket;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.Range;
 import mx.getin.model.interfaces.StoreDataByHourEntity;
 import mx.getin.model.interfaces.StoreDataEntity;
-import mx.getin.Constants;
-import mx.getin.model.StoreItemByHour;
-import mx.getin.model.StoreRevenueByHour;
 
-public abstract class StoreEntityData<T extends ModelKey> extends BDBRestBaseServerResource
+public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRestBaseServerResource
 		implements BDBDashboardBzService, BDBPostBzService {
 
 	@Autowired
 	protected StoreDAO storeDao;
 	@Autowired
-	protected DashboardAPDeviceMapperService mapper;
+	private DashboardAPDeviceMapperService mapper;
 	@Autowired
-	protected ImageDAO imageDao;
+	private ImageDAO imageDao;
 	@Autowired
-	protected BrandDAO brandDao;
-	
-	protected final Calendar CALENDAR = Calendar.getInstance();
+	private BrandDAO brandDao;
 	
 	protected static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	protected static final SimpleDateFormat hdf = new SimpleDateFormat("HH:mm");
@@ -237,18 +231,23 @@ public abstract class StoreEntityData<T extends ModelKey> extends BDBRestBaseSer
 					}
 		
 					// Creates or updates the daily record
-					StoreDataEntity obj;
+					T obj;
 					try {
 						obj = daoGetUsingStoreIdAndDate(storeId, date, null);
 						obj.setQty(total);
-						daoUpdate(obj);
+						stDao.update(obj);
 					} catch( Exception e ) {
-						createStoreData(store, total, date, null);	
+						obj = new StoreTicket();
+						obj.setStoreId(storeId);
+						obj.setBrandId(store.getBrandId());
+						obj.setDate(date);
+						obj.setQty(total);
+						obj.setKey(stDao.createKey());
+						stDao.create(obj);
 					}
 				}
 				
-				mapper.createStoreItemDataForDates(parsingHourly ? date : fromDate,
-						parsingHourly ? date : toDate, storeId, true);
+				mapper.createStoreItemDataForDates(fromDate, toDate, storeId, true);
 
 				return generateJSONOkResponse().toString();
 			}

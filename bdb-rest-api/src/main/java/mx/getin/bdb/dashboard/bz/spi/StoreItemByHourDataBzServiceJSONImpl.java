@@ -48,21 +48,14 @@ public class StoreItemByHourDataBzServiceJSONImpl extends StoreEntityData<StoreI
 
 	@Override
 	protected void createStoreData(Store store, double qty, String date, String hour) throws ASException {
-		boolean createHourly = hour != null;
-		StoreItem obj = createHourly ? new StoreItemByHour() : new StoreItem();
+		StoreItemByHour obj = new StoreItemByHour();
 		obj.setStoreId(store.getIdentifier());
 		obj.setBrandId(store.getBrandId());
 		obj.setDate(date);
+		obj.setHour(hour);
 		obj.setQty(qty);
-		if(createHourly) {
-			StoreItemByHour hourObj = (StoreItemByHour) obj;
-			hourObj.setHour(hour);
-			hourObj.setKey(dao.createKey());
-			dao.create(hourObj);
-		} else {
-			obj.setKey(stDao.createKey());
-			stDao.create(obj);
-		}
+		obj.setKey(dao.createKey());
+		dao.create(obj);
 	}
 
 }

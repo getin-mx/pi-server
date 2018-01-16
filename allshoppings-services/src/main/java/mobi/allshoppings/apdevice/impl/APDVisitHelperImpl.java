@@ -290,7 +290,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									final APHEntry entry = i.next();
 									// Employee check
 									if(!onlyEmployees || employeeListMacs.contains(entry.getMac().toUpperCase())) {
-										if(!assignmentsCache.containsKey(entry.getMac())) continue;
 										aux.clear();
 										aux.add(entry);
 										final List<APDVisit> visitList = aphEntryToVisits(aux, apdCache,
@@ -399,15 +398,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								}
 
 								log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
-								boolean skip = false;
 								for(String mac :  cache.keySet()) {
 									if(cache.get(mac).isEmpty()) continue;
-									for(APHEntry aphe : cache.get(mac)) {
-										if(!assignmentsCache.containsKey(aphe.getMac())) {
-											skip = true;
-											break;
-										}
-									} if(skip) continue;
 									List<APDVisit> visitList = aphEntryToVisits(cache.get(mac), apdCache,
 											assignmentsCache, blackListMacs, employeeListMacs, tz, forDate);
 									for(APDVisit visit : visitList ) {
@@ -506,7 +498,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		int timezoneOffset = tz.getOffset(startCal.getTimeInMillis());
 		
-		String auxDate = null;
+		/*String auxDate = null;
 		if(timezoneOffset > 0) {
 			startCal.add(Calendar.DATE, -1);
 			auxDate = sdf.format(startCal.getTime());
@@ -516,7 +508,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		for(Iterator<APHEntry> i = lastRes.iterator(); i.hasNext();) {
 			if(timezoneOffset < 0 && forStringDate.compareTo(i.next().getDate()) > 0) i.remove();
 			else if(auxDate != null && auxDate.compareTo(i.next().getDate()) > 0) i.remove(); 
-		}
+		}*/
 		
 		APHEntry aphe;
 		if(timezoneOffset >= 0) {

@@ -23,14 +23,20 @@ public class StoreItemDataBzServiceJSONImpl extends StoreEntityData<StoreItem> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	protected List<StoreItem> daoGetUsingStoreIdAndDatesAndRange(String storeId, String fromDate,
+			String toDate, String toHour, boolean order) throws ASException {
+		return dao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null,
+				order ? "date" : null, false);
+	}
+	
+	@Override
 	protected StoreItem daoGetUsingStoreIdAndDate(String storeId, String date, String hour) throws ASException {
 		return dao.getUsingStoreIdAndDate(storeId, date, true);
 	}
 
 	@Override
-	protected void daoUpdate(StoreDataEntity obj) throws ASException {
-		if(obj instanceof StoreItem) dao.update((StoreItem) obj);
-		else throw ASExceptionHelper.invalidArgumentsException();
+	protected void daoUpdate(StoreItem obj) throws ASException {
+		dao.update(obj);
 	}
 
 	@Override
@@ -42,13 +48,6 @@ public class StoreItemDataBzServiceJSONImpl extends StoreEntityData<StoreItem> {
 		obj.setQty(qty);
 		obj.setKey(dao.createKey());
 		dao.create(obj);
-	}
-
-	@Override
-	protected List<StoreItem> daoGetUsingStoreIdAndDatesAndRange(String storeId, String fromDate,
-			String toDate, String toHour, boolean order) throws ASException {
-		return dao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null,
-				order ? "date" : null, false);
 	}
 
 }

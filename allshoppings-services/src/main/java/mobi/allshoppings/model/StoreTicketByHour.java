@@ -1,7 +1,5 @@
 package mobi.allshoppings.model;
 
-import java.util.Date;
-
 import javax.jdo.annotations.PersistenceCapable;
 
 import com.inodes.datanucleus.model.Key;
@@ -27,8 +25,7 @@ public class StoreTicketByHour extends StoreTicket implements StoreDataByHourEnt
 	private String hour;
 	
 	public StoreTicketByHour() {
-		this.creationDateTime = new Date();
-		this.qty = 0;
+		super();
 	}
 	
 	/*
@@ -67,73 +64,10 @@ public class StoreTicketByHour extends StoreTicket implements StoreDataByHourEnt
 	}
 
 	/**
-	 * @return the storeId
-	 */
-	public String getStoreId() {
-		return storeId;
-	}
-
-	/**
-	 * @param storeId the storeId to set
-	 */
-	public void setStoreId(String storeId) {
-		this.storeId = storeId;
-	}
-
-	/**
-	 * @return the qty
-	 */
-	public double getQty() {
-		return qty;
-	}
-
-	/**
 	 * @param qty the qty to set
 	 */
 	public void setQty(Integer qty) {
 		this.qty = qty;
-	}
-
-	/**
-	 * @return the creationDateTime
-	 */
-	public Date getCreationDateTime() {
-		return creationDateTime;
-	}
-
-	/**
-	 * @param creationDateTime the creationDateTime to set
-	 */
-	public void setCreationDateTime(Date creationDateTime) {
-		this.creationDateTime = creationDateTime;
-	}
-
-	/**
-	 * @return the lastUpdate
-	 */
-	public Date getLastUpdate() {
-		return lastUpdate;
-	}
-
-	/**
-	 * @param lastUpdate the lastUpdate to set
-	 */
-	public void setLastUpdate(Date lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
-
-	/**
-	 * @return the date
-	 */
-	public String getDate() {
-		return date;
-	}
-
-	/**
-	 * @param date the date to set
-	 */
-	public void setDate(String date) {
-		this.date = date;
 	}
 
 	@Override

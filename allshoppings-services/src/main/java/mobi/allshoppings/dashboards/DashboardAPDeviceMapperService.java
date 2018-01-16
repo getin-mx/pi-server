@@ -494,10 +494,6 @@ public class DashboardAPDeviceMapperService {
 						entryList.add(entry);
 					}
 					dumper.dispose();
-					for(Iterator<APHEntry> it = lastAphes.iterator(); it.hasNext();) {
-						APHEntry entry = it.next();
-						if(dateSDF.parse(entry.getDate()).compareTo(CALENDAR.getTime()) < 0) it.remove();
-					}
 					long count = 0;
 					for(String mac : macEntries.keySet()) {
 						
