@@ -71,45 +71,16 @@ public class StoreTicketByHourDataBzServiceJSONImpl extends StoreEntityData<Stor
 					int qty = arr.getInt(i);
 					StoreTicketByHour obj;
 					try {
-						obj = dao.getUsingStoreIdAndDateAndHour(storeId, date, hdf.format(curHour), true);
+						//obj = 
 						obj.setQty(qty);
 						dao.update(obj);
 					} catch( Exception e ) {
-						obj = new StoreTicketByHour();
-						obj.setStoreId(storeId);
-						obj.setBrandId(store.getBrandId());
-						obj.setDate(date);
-						obj.setHour(hdf.format(curHour));
-						obj.setQty(qty);
-						obj.setKey(dao.createKey());
-						dao.create(obj);
+						
 					}
 					i++;
 					curHour = new Date(curHour.getTime() + ONE_HOUR);
 				}
 	
-				int total = 0;
-				List<StoreTicketByHour> list = dao.getUsingStoreIdAndDateAndRange(storeId, date, "00:00", "23:00", null, null, true);
-				for( StoreTicketByHour st : list ) {
-					total += st.getQty();
-				}
-	
-				// Creates or updates the daily record
-				StoreTicket obj;
-				try {
-					obj = stDao.getUsingStoreIdAndDate(storeId, date, true);
-					obj.setQty(total);
-					stDao.update(obj);
-				} catch( Exception e ) {
-					obj = new StoreTicket();
-					obj.setStoreId(storeId);
-					obj.setBrandId(store.getBrandId());
-					obj.setDate(date);
-					obj.setQty(total);
-					obj.setKey(stDao.createKey());
-					stDao.create(obj);
-				}
-				
 				mapper.createStoreTicketDataForDates(date, date, storeId, true);
 	
 				return generateJSONOkResponse().toString();
@@ -132,8 +103,32 @@ public class StoreTicketByHourDataBzServiceJSONImpl extends StoreEntityData<Stor
 
 	@Override
 	protected List<StoreTicketByHour> daoGetUsingStoreIdAndDatesAndRange(String storeId, String fromDate,
-			String toDateOrFromHour, String toHour) throws ASException {
-		return dao.getUsingStoreIdAndDateAndRange(storeId, fromDate, toDateOrFromHour, toHour, null, "hour", false);
+			String toDateOrFromHour, String toHour, boolean order) throws ASException {
+		return dao.getUsingStoreIdAndDateAndRange(storeId, fromDate, toDateOrFromHour, toHour, null,
+				order ? "hour" : null, false);
 	}
+
+	@Override
+	protected StoreTicketByHour daoGetUsingStoreIdAndDate(String storeId, String date, String hour) throws ASException {
+		return hour == null ? stDao.getUsingStoreIdAndDate(storeId, date, true) :
+			dao.getUsingStoreIdAndDateAndHour(storeId, date, hour, true);
+	}
+
+	@Override
+	protected void daoUpdate(StoreTicketByHour obj) throws ASException {
+		dao.update(obj);
+	}
+
+	@Override
+	protected void createStoreData(Store store, double qty, String date, String hour) throws ASException {
+		StoreTicketByHour obj = new StoreTicketByHour();
+		obj.setStoreId(store.getIdentifier());
+		obj.setBrandId(store.getBrandId());
+		obj.setDate(date);
+		obj.setHour(hour);
+		obj.setQty(qty);
+		obj.setKey(dao.createKey());
+		dao.create(obj);
+	}	
 
 }

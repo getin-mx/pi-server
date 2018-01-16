@@ -223,7 +223,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		int in;
 		final List<APDVisit> objs = CollectionFactory.createList();
-		final List<APHEntry> gatheredAphes = new LinkedList<>();
+		//TODO delegar la memoria al cliente de XS3
+		//final Map<String, List<APHEntry>> gatheredAphes = CollectionFactory.createMap();
 		List<APHEntry> aux = CollectionFactory.createList();
 		while( (!reverse && (curDate.before(toDate) || (fromDate.equals(toDate) &&
 				curDate.equals(toDate)))) || (reverse && (toDate.before(curDate) ||
@@ -280,16 +281,16 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class, false);
 								dumpHelper.setFilter(assigs.get(0).getHostname());
 								
-								Iterator<APHEntry> i = integrateAPHE(dumpHelper, apdCache.get(
-										assigs.get(0).getHostname()), forDate, tz, START_CALENDAR,
-										gatheredAphes, END_CALENDAR, startHour, endHour).iterator();
+								String hostname = assigs.get(0).getHostname();
+								Iterator<APHEntry> i = integrateAPHE(dumpHelper, apdCache.get(hostname), forDate,
+										tz, START_CALENDAR, /*gatheredAphes.get(hostname),*/
+										END_CALENDAR, startHour, endHour).iterator();
 								dumpHelper.dispose();
 								
 								while(i.hasNext()) {
 									final APHEntry entry = i.next();
 									// Employee check
 									if(!onlyEmployees || employeeListMacs.contains(entry.getMac().toUpperCase())) {
-										if(!assignmentsCache.containsKey(entry.getMac())) continue;
 										aux.clear();
 										aux.add(entry);
 										final List<APDVisit> visitList = aphEntryToVisits(aux, apdCache,
@@ -321,7 +322,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									dumpHelper.setFilter(hostname);
 									
 									final List<APHEntry> i = integrateAPHE(dumpHelper, apdCache.get(hostname),
-											forDate, tz, START_CALENDAR, gatheredAphes, END_CALENDAR,
+											forDate, tz, START_CALENDAR, /*gatheredAphes.get(hostname),*/ END_CALENDAR,
 											startHour, endHour);
 									dumpHelper.dispose();
 
@@ -398,15 +399,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								}
 
 								log.log(Level.INFO, "Processing " + cache.size() + " APHEntries...");
-								boolean skip = false;
 								for(String mac :  cache.keySet()) {
 									if(cache.get(mac).isEmpty()) continue;
-									for(APHEntry aphe : cache.get(mac)) {
-										if(!assignmentsCache.containsKey(aphe.getMac())) {
-											skip = true;
-											break;
-										}
-									} if(skip) continue;
 									List<APDVisit> visitList = aphEntryToVisits(cache.get(mac), apdCache,
 											assignmentsCache, blackListMacs, employeeListMacs, tz, forDate);
 									for(APDVisit visit : visitList ) {
@@ -483,7 +477,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @return List&lt;APHE&gt; - The loaded APHE for the given date (may include next a date's extra).
 	 */
 	public static List<APHEntry> integrateAPHE(DumperHelper<APHEntry> dumpHelper, APDevice calibration,
-			String forStringDate, TimeZone tz, Calendar startCal, List<APHEntry> lastRes,
+			String forStringDate, TimeZone tz, Calendar startCal, /*List<APHEntry> lastRes,*/
 			Calendar endCal, short startHour, short endHour) {//TODO move to interface
 		
 		Map<String, APHEntry> map = CollectionFactory.createMap();
@@ -505,7 +499,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		int timezoneOffset = tz.getOffset(startCal.getTimeInMillis());
 		
-		String auxDate = null;
+		/*String auxDate = null;
 		if(timezoneOffset > 0) {
 			startCal.add(Calendar.DATE, -1);
 			auxDate = sdf.format(startCal.getTime());
@@ -515,19 +509,21 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		for(Iterator<APHEntry> i = lastRes.iterator(); i.hasNext();) {
 			if(timezoneOffset < 0 && forStringDate.compareTo(i.next().getDate()) > 0) i.remove();
 			else if(auxDate != null && auxDate.compareTo(i.next().getDate()) > 0) i.remove(); 
-		}
+		}*/
 		
 		APHEntry aphe;
+		
+		List<APHEntry> lastRes = CollectionFactory.createList();
 
 		if(timezoneOffset >= 0) {
 			startCal.add(Calendar.DATE, -1);
 			endCal.setTime(from);
 			endCal.add(Calendar.DATE, 1);
 			endCal.add(Calendar.MILLISECOND, -1);
-			if(lastRes.isEmpty()) {
+			//if(lastRes.isEmpty()) {
 				for(Iterator<APHEntry> i = dumpHelper.iterator(from, endCal.getTime(), false); i.hasNext();)
 					lastRes.add(i.next());
-			}
+			//}
 			startCal.add(Calendar.DATE, 1);
 			endCal.add(Calendar.DATE, 1);
 			for(Iterator<APHEntry> i = dumpHelper.iterator(startCal.getTime(), endCal.getTime(), false); i.hasNext();)
@@ -537,10 +533,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			endCal.setTime(from);
 			endCal.add(Calendar.DATE, 1);
 			endCal.add(Calendar.MILLISECOND, -1);
-			if(lastRes.isEmpty()) {
+			//if(lastRes.isEmpty()) {
 				for(Iterator<APHEntry> i = dumpHelper.iterator(from, endCal.getTime(), false); i.hasNext();)
 					lastRes.add(i.next());
-			}
+			//}
 			startCal.add(Calendar.DATE, 1);
 			endCal.add(Calendar.DATE, 1);
 			for(Iterator<APHEntry> i = dumpHelper.iterator(startCal.getTime(), endCal.getTime(), false); i.hasNext();)

@@ -101,13 +101,7 @@ public class StoreTicketDataBzServiceJSONImpl extends StoreEntityData<StoreTicke
 						obj.setQty(qty);
 						dao.update(obj);
 					} catch( Exception e ) {
-						obj = new StoreTicket();
-						obj.setStoreId(storeId);
-						obj.setBrandId(store.getBrandId());
-						obj.setDate(sdf.format(curDate));
-						obj.setQty(qty);
-						obj.setKey(dao.createKey());
-						dao.create(obj);
+						
 					}
 					i++;
 					curDate = new Date(curDate.getTime() + ONE_DAY);
@@ -382,8 +376,30 @@ public class StoreTicketDataBzServiceJSONImpl extends StoreEntityData<StoreTicke
 
 	@Override
 	protected List<StoreTicket> daoGetUsingStoreIdAndDatesAndRange(String storeId, String fromDate,
-			String toDate, String toHour) throws ASException {
-		return dao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null, "date", false);
+			String toDate, String toHour, boolean order) throws ASException {
+		return dao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null,
+				order ? "date" : null, false);
+	}
+
+	@Override
+	protected StoreTicket daoGetUsingStoreIdAndDate(String storeId, String date, String hour) throws ASException {
+		return dao.getUsingStoreIdAndDate(storeId, date, true);
+	}
+
+	@Override
+	protected void daoUpdate(StoreTicket obj) throws ASException {
+		dao.update(obj);
+	}
+
+	@Override
+	protected void createStoreData(Store store, double qty, String date, String hour) throws ASException {
+		StoreTicket obj = new StoreTicket();
+		obj.setStoreId(store.getIdentifier());
+		obj.setBrandId(store.getBrandId());
+		obj.setDate(date);
+		obj.setQty(qty);
+		obj.setKey(dao.createKey());
+		dao.create(obj);
 	}
 
 }
