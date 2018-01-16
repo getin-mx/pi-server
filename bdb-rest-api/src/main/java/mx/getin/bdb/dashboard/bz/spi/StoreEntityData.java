@@ -37,7 +37,6 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.Image;
 import mobi.allshoppings.model.Store;
-import mobi.allshoppings.model.StoreTicket;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.Range;
 import mx.getin.model.interfaces.StoreDataByHourEntity;
@@ -49,11 +48,13 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 	@Autowired
 	protected StoreDAO storeDao;
 	@Autowired
-	private DashboardAPDeviceMapperService mapper;
+	protected DashboardAPDeviceMapperService mapper;
 	@Autowired
-	private ImageDAO imageDao;
+	protected ImageDAO imageDao;
 	@Autowired
-	private BrandDAO brandDao;
+	protected BrandDAO brandDao;
+	
+	protected final Calendar CALENDAR = Calendar.getInstance();
 	
 	protected static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	protected static final SimpleDateFormat hdf = new SimpleDateFormat("HH:mm");
@@ -231,23 +232,18 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 					}
 		
 					// Creates or updates the daily record
-					T obj;
+					StoreDataEntity obj;
 					try {
 						obj = daoGetUsingStoreIdAndDate(storeId, date, null);
 						obj.setQty(total);
-						stDao.update(obj);
+						daoUpdate(obj);
 					} catch( Exception e ) {
-						obj = new StoreTicket();
-						obj.setStoreId(storeId);
-						obj.setBrandId(store.getBrandId());
-						obj.setDate(date);
-						obj.setQty(total);
-						obj.setKey(stDao.createKey());
-						stDao.create(obj);
+						createStoreData(store, total, date, null);	
 					}
 				}
 				
-				mapper.createStoreItemDataForDates(fromDate, toDate, storeId, true);
+				mapper.createStoreItemDataForDates(parsingHourly ? date : fromDate,
+						parsingHourly ? date : toDate, storeId, true);
 
 				return generateJSONOkResponse().toString();
 			}
@@ -318,9 +314,7 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 			Brand brand = brandDao.get(json.getString(BRAND_ID_PARAM));
 			Date month = mdf.parse(json.getString(PERIOD_PARAM));
 			boolean isHourly = json.getBoolean(IS_HOURLY_PARAM);
-			
 			JSONObject message = parseExcelDataFile(image, brand, month, isHourly);
-			
 			JSONArray jsonDateList = message.getJSONArray(RESPONSE_DATE_LIST);
 			List<String> dateList = CollectionFactory.createList();
 			for( int i = 0; i < jsonDateList.length(); i++)

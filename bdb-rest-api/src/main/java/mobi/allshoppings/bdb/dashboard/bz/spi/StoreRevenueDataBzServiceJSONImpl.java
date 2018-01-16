@@ -27,7 +27,7 @@ public class StoreRevenueDataBzServiceJSONImpl extends StoreEntityData<StoreReve
 		return dao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null,
 				order ? "date" : null, false);
 	}
-	
+
 	@Override
 	protected void daoUpdate(StoreDataEntity obj) throws ASException {
 		if(obj instanceof StoreRevenue) dao.update((StoreRevenue) obj);

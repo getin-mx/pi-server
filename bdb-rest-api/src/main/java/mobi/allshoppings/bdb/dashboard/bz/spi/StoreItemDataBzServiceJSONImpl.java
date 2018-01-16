@@ -29,14 +29,16 @@ public class StoreItemDataBzServiceJSONImpl extends StoreEntityData<StoreItem> {
 				order ? "date" : null, false);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected StoreItem daoGetUsingStoreIdAndDate(String storeId, String date, String hour) throws ASException {
 		return dao.getUsingStoreIdAndDate(storeId, date, true);
 	}
 
 	@Override
-	protected void daoUpdate(StoreItem obj) throws ASException {
-		dao.update(obj);
+	protected void daoUpdate(StoreDataEntity obj) throws ASException {
+		if(obj instanceof StoreItem) dao.update((StoreItem) obj);
+		else throw ASExceptionHelper.invalidArgumentsException();
 	}
 
 	@Override

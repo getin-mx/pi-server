@@ -28,7 +28,7 @@ public class StoreRevenueByHour extends StoreRevenue implements StoreDataByHourE
 		super();
 	}
 	
-	/**
+	/*
 	 * Gets the Store revenue By Hour ID
 	 * @return String - this entity key
 	 */
@@ -52,7 +52,7 @@ public class StoreRevenueByHour extends StoreRevenue implements StoreDataByHourE
 	 */
 	public void setKey(Key key) {
 		this.key = key;
-	}//setKey
+	}//setKey	*/
 
 	/**
 	 * Gets the Store revenue By Hour's hour

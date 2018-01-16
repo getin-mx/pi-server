@@ -48,7 +48,7 @@ public class StoreItemByHour extends StoreItem implements StoreDataByHourEntity 
 	 */
 	public void setKey(Key key) {
 		this.key = key;
-	}//setKey
+	}//setKey	*/
 
 	/**
 	 * Gets the Store ITem By Hour's hour
