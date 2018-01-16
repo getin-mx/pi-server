@@ -1,12 +1,8 @@
 package mobi.allshoppings.exporter;
 
-import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.mail.MailHelper;
 import mobi.allshoppings.model.User;
 
 public interface ExcelExportHelper {
@@ -43,5 +39,13 @@ public interface ExcelExportHelper {
 	 */
 	byte[] exportDB(List<String> sotresId, String brandId, String fromDate, String toDate,
 			String outDir, boolean saveTmp, User toNotify) throws ASException;
+	
+	/**
+	 * Imports dashboards indicators from a previoulsy exported excel file.
+	 * @param brandId - The brand to which the Excel file belongs to
+	 * @param inputFile - The path to a Excel file with a previous dump
+	 * @throws ASException - If something goes wrong.
+	 */
+	void importDB(String brandId, String inputFile) throws ASException;
 	
 }

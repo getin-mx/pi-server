@@ -1,8 +1,5 @@
 package mobi.allshoppings.model;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -10,8 +7,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.inodes.datanucleus.model.Key;
 
-import mobi.allshoppings.model.interfaces.Identificable;
-import mobi.allshoppings.model.interfaces.ModelKey;
+import mx.getin.model.interfaces.StoreDataByHourEntity;
 
 /**
  * Models a "Ticket by hour", which is the number of tickets sold within the same local hour for a store.
@@ -21,7 +17,7 @@ import mobi.allshoppings.model.interfaces.ModelKey;
  * @since Allshoppings
  */
 @PersistenceCapable(detachable="true")
-public class StoreTicketByHour implements ModelKey, Serializable, Identificable {
+public class StoreTicketByHour extends StoreTicket implements StoreDataByHourEntity {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -29,17 +25,10 @@ public class StoreTicketByHour implements ModelKey, Serializable, Identificable 
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
 	private Key key;
 
-	private String brandId;
-	private String storeId;
-	private String date;
 	private String hour;
-	private Integer qty;
-	private Date creationDateTime;
-	private Date lastUpdate;
-
+	
 	public StoreTicketByHour() {
-		this.creationDateTime = new Date();
-		this.qty = 0;
+		super();
 	}
 	
 	/**
@@ -63,25 +52,6 @@ public class StoreTicketByHour implements ModelKey, Serializable, Identificable 
 		this.key = key;
 	}
 
-	@Override
-	public void preStore() {
-		this.lastUpdate = new Date();
-	}
-
-	/**
-	 * @return the brandId
-	 */
-	public String getBrandId() {
-		return brandId;
-	}
-
-	/**
-	 * @param brandId the brandId to set
-	 */
-	public void setBrandId(String brandId) {
-		this.brandId = brandId;
-	}
-
 	/**
 	 * @return the hour
 	 */
@@ -94,76 +64,6 @@ public class StoreTicketByHour implements ModelKey, Serializable, Identificable 
 	 */
 	public void setHour(String hour) {
 		this.hour = hour;
-	}
-
-	/**
-	 * @return the storeId
-	 */
-	public String getStoreId() {
-		return storeId;
-	}
-
-	/**
-	 * @param storeId the storeId to set
-	 */
-	public void setStoreId(String storeId) {
-		this.storeId = storeId;
-	}
-
-	/**
-	 * @return the qty
-	 */
-	public Integer getQty() {
-		return qty;
-	}
-
-	/**
-	 * @param qty the qty to set
-	 */
-	public void setQty(Integer qty) {
-		this.qty = qty;
-	}
-
-	/**
-	 * @return the creationDateTime
-	 */
-	public Date getCreationDateTime() {
-		return creationDateTime;
-	}
-
-	/**
-	 * @param creationDateTime the creationDateTime to set
-	 */
-	public void setCreationDateTime(Date creationDateTime) {
-		this.creationDateTime = creationDateTime;
-	}
-
-	/**
-	 * @return the lastUpdate
-	 */
-	public Date getLastUpdate() {
-		return lastUpdate;
-	}
-
-	/**
-	 * @param lastUpdate the lastUpdate to set
-	 */
-	public void setLastUpdate(Date lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
-
-	/**
-	 * @return the date
-	 */
-	public String getDate() {
-		return date;
-	}
-
-	/**
-	 * @param date the date to set
-	 */
-	public void setDate(String date) {
-		this.date = date;
 	}
 
 	@Override

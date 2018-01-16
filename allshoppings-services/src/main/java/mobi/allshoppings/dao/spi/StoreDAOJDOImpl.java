@@ -526,4 +526,72 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 			pm.close();
 		}
 	}
+
+	@Override
+	public List<Store> getUsingNameAndBrandId(List<String> name, String brandId) throws ASException {
+
+		List<Store> ret = CollectionFactory.createList();
+		PersistenceManager pm;
+		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+		
+		try{
+			Map<String, Object> parameters = CollectionFactory.createMap();
+			List<String> declaredParams = CollectionFactory.createList();
+			List<String> filters = CollectionFactory.createList();
+			List<String> ids = CollectionFactory.createList();
+			for( String id : name ) {
+				if(!ids.contains(id.toUpperCase()))
+					ids.add(id);
+			}
+			
+			Query query = pm.newQuery(clazz);
+
+			// idList Parameter
+			if(!CollectionUtils.isEmpty(name)) {
+				declaredParams.add("java.util.List nameListParam");
+				filters.add("nameListParam.contains(name)");
+				parameters.put("nameListParam", ids);
+			}if( StringUtils.hasText(brandId)) {
+				declaredParams.add("String brandIdParam");
+				filters.add("brandId == brandIdParam");
+				parameters.put("brandIdParam", brandId);
+			}
+
+			query.declareParameters(toParameterList(declaredParams));
+			query.setFilter(toWellParametrizedFilter(filters));
+			
+			@SuppressWarnings("unchecked")
+			List<Store> list = (List<Store>)query.executeWithMap(parameters);
+			for(Store obj : list ) {
+				if(!ret.contains(obj))
+					ret.add(obj);
+			}
+			
+			return ret;
+			
+		} catch(Exception e) {
+			if(!( e instanceof ASException )) {
+				throw ASExceptionHelper.defaultException(e.getMessage(), e);
+			} else {
+				throw e;
+			}
+		} finally  {
+			pm.close();
+		}
+	}
+	
+	@Override
+	public List<Store> indexFallback(String idOrName) {
+		List<Store> res = super.indexFallback(idOrName);
+		if(res.isEmpty()) {
+			List<String> names = CollectionFactory.createList();
+			names.add(idOrName);
+			try {
+				return getUsingNameAndBrandId(names, null);
+			} catch(ASException e) {
+				return CollectionFactory.createList();
+			}
+		} else return res;
+	}
+	
 }

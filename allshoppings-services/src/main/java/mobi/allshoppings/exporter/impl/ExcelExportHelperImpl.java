@@ -12,11 +12,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,7 +56,6 @@ import mobi.allshoppings.dao.StoreItemDAO;
 import mobi.allshoppings.dao.StoreRevenueDAO;
 import mobi.allshoppings.dao.StoreTicketByHourDAO;
 import mobi.allshoppings.dao.StoreTicketDAO;
-import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.exporter.ExcelExportHelper;
@@ -1374,6 +1375,130 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		} catch (Exception e) {
 			log.log(Level.INFO, "Failed to send email notification", e);
 		}
+	}
+
+	@Override
+	public void importDB(String brandId, String inputFile) throws ASException {
+		// TODO import uptime
+		// TODO import innerzone
+		XSSFWorkbook workbook;
+		try {
+			workbook = new XSSFWorkbook(inputFile);
+		} catch(IOException e) {
+			throw ASExceptionHelper.notFoundException();
+		}
+		// daily data 
+		XSSFSheet currentSheet = workbook.getSheetAt(1);
+		Calendar cal = Calendar.getInstance();
+		TimeZone tz = TimeZone.getTimeZone("GMT");
+		cal.setTimeZone(tz);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		sdf.setTimeZone(tz);
+		List<String> name = CollectionFactory.createList();
+		List<DashboardIndicatorData> indicators = CollectionFactory.createList();
+		Date lowerL = new Date(0);
+		Date upperL = new Date();
+		String fromDate = null, toDate = null;
+		List<StoreTicket> dailyTickets = CollectionFactory.createList();
+		//List<StoreTicketByHour> hourlyTickets = CollectionFactory.createList();
+		HashSet<String> subentityIds = new HashSet<>();
+		byte hour = 0;
+		double doubleV;
+		for(Iterator<Row> rows = currentSheet.iterator(); rows.hasNext();) {
+			Row row = rows.next();
+			Date time = row.getCell(DATE_CELL_INDEX).getDateCellValue();
+			String date = sdf.format(time);
+			name.clear();
+			name.add(row.getCell(STORE_NAME_CELL_INDEX).getStringCellValue());
+			Store s = storeDao.getUsingNameAndBrandId(name, null).get(0);
+			subentityIds.add(s.getIdentifier());
+			if(lowerL.compareTo(time) > 0) {
+				lowerL = time;
+				fromDate = date;
+			}
+			if(upperL.compareTo(time) < 0) {
+				upperL = time;
+				toDate = date;
+			}
+			doubleV = row.getCell(PEASENTS_CELL_INDEX).getNumericCellValue();
+			if(doubleV != 0) {
+				indicators.add(buildIndicator(cal, date, time, doubleV, "apd_visitor", "Visitantes",
+						"visitor_total_peasents", "Paseantes", brandId, s.getIdentifier(), name.get(0), hour));
+			}
+			doubleV = row.getCell(VISITS_CELL_INDEX).getNumericCellValue();
+			if(doubleV != 0) {
+				indicators.add(buildIndicator(cal, date, time, doubleV, "apd_visitor", "Visitantes",
+						"visitor_total_visits", "Visitas", brandId, s.getIdentifier(), name.get(0), hour));
+			}
+			doubleV = row.getCell(TICKET_CELL_INDEX).getNumericCellValue();
+			if(doubleV != 0) {
+				indicators.add(buildIndicator(cal, date, time, doubleV, "apd_visitor", "Visitantes",
+						"visitor_total_tickets", "Tickets", brandId, s.getIdentifier(), name.get(0), hour));
+				StoreTicket ticket = new StoreTicket();
+				ticket.setBrandId(brandId);
+				ticket.setDate(date);
+				ticket.setQty((int) doubleV);
+				ticket.setStoreId(s.getIdentifier());
+				ticket.setKey(sTicketDao.createKey());
+				dailyTickets.add(ticket);
+			}
+		} for(String subentityId : subentityIds) {
+			didDao.deleteUsingSubentityIdAndElementIdAndDate(subentityId, null, lowerL, upperL, tz);
+			for(StoreTicket ticket : sTicketDao.getUsingStoreIdAndDatesAndRange(subentityId, fromDate, toDate,
+					null, null, true)) sTicketDao.delete(ticket);
+		} for(StoreTicket ticket : dailyTickets) {
+			sTicketDao.createOrUpdate(ticket);
+		} dailyTickets = null;
+		/*/ hourly data FIXME only fetches totals
+		currentSheet = workbook.getSheetAt(1);
+		for(Iterator<Row> rows = currentSheet.iterator(); rows.hasNext();) {
+			Row row = rows.next();
+			Date time = row.getCell(DATE_CELL_INDEX).getDateCellValue();
+			String date = sdf.format(time);
+			if(lowerL.compareTo(time) > 0) {
+				lowerL = time;
+				fromDate = date;
+			}
+			if(upperL.compareTo(time) < 0) {
+				upperL = time;
+				toDate = date;
+			}
+			if(doubleV != 0) {
+				indicators.add(buildIndicator(cal, date, time, doubleV, elementId, elementName, eSubId, eSubName, brandId, storeId, storeName, hour));
+			}
+			
+		}*/
+		for(DashboardIndicatorData did : indicators) {
+			didDao.createOrUpdate(did);
+		}
+		try {
+			workbook.close();
+		} catch(IOException e) {
+			throw new ASException(e.getMessage(), ASExceptionHelper.AS_EXCEPTION_INTERNALERROR_CODE);
+		}
+	}//importDb
+	
+	private DashboardIndicatorData buildIndicator(Calendar cal, String date, Date time, double value,
+			String elementId, String elementName, String eSubId, String eSubName, String brandId, String storeId,
+			String storeName, byte hour) throws ASException {
+		DashboardIndicatorData did = new DashboardIndicatorData();
+		cal.setTime(time);
+		did.setDate(time);
+		did.setDayOfWeek(cal.get(Calendar.DAY_OF_WEEK));
+		did.setDoubleValue(value);
+		did.setElementId(elementId);
+		did.setElementName(elementName);
+		did.setElementSubId(eSubId);
+		did.setElementSubName(eSubName);
+		did.setEntityId(brandId);
+		did.setEntityKind(EntityKind.KIND_STORE);
+		did.setRecordCount(1);
+		did.setStringDate(date);
+		did.setSubentityId(storeId);
+		did.setSubentityName(storeName);
+		did.setTimeZone((int)hour);
+		did.setKey(didDao.createKey(did));
+		return did;
 	}
 
 }
