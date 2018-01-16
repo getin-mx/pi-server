@@ -1,8 +1,6 @@
 package mx.getin.model;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
+import javax.jdo.annotations.PersistenceCapable;
 
 import com.inodes.datanucleus.model.Key;
 
@@ -15,12 +13,13 @@ import mx.getin.model.interfaces.StoreDataByHourEntity;
  * @version 1.0, january 2017 
  * @since Mark III
  */
+@PersistenceCapable(detachable="true")
 public class StoreRevenueByHour extends StoreRevenue implements StoreDataByHourEntity {
 	
 	private static final long serialVersionUID = 3175715115738373101L;
 
-	@PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
+	/*@PrimaryKey
+    @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED) */
 	private Key key;
 
 	private String hour;
@@ -29,10 +28,10 @@ public class StoreRevenueByHour extends StoreRevenue implements StoreDataByHourE
 		super();
 	}
 	
-	/**
+	/*
 	 * Gets the Store revenue By Hour ID
 	 * @return String - this entity key
-	 */
+	 *
 	public String getIdentifier() {
 		return this.getKey() != null ? this.getKey().getName() : "";
 	}//getIdentifier
@@ -40,7 +39,7 @@ public class StoreRevenueByHour extends StoreRevenue implements StoreDataByHourE
 	/**
 	 * Gets the Store revenue By Hour Key
 	 * @return Key - the key of the entity
-	 */
+	 *
 	public Key getKey() {
 		return key;
 	}//getKey
@@ -48,10 +47,10 @@ public class StoreRevenueByHour extends StoreRevenue implements StoreDataByHourE
 	/**
 	 * Sets the Store revenue By Hour BD key
 	 * @param key - the key to set
-	 */
+	 *
 	public void setKey(Key key) {
 		this.key = key;
-	}//setKey
+	}//setKey	*/
 
 	/**
 	 * Gets the Store revenue By Hour's hour

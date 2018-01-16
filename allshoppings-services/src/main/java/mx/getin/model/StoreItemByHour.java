@@ -1,9 +1,6 @@
 package mx.getin.model;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
 
 import com.inodes.datanucleus.model.Key;
 
@@ -21,8 +18,8 @@ public class StoreItemByHour extends StoreItem implements StoreDataByHourEntity 
 
 	private static final long serialVersionUID = -5883423685204800884L;
 
-	@PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
+	/*@PrimaryKey
+    @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED) */
 	private Key key;
 
 	private String hour;
@@ -31,10 +28,10 @@ public class StoreItemByHour extends StoreItem implements StoreDataByHourEntity 
 		super();
 	}
 	
-	/**
+	/*
 	 * Gets the Store Item By Hour ID
 	 * @return String - this entity key
-	 */
+	 *
 	public String getIdentifier() {
 		return this.getKey() != null ? this.getKey().getName() : "";
 	}//getIdentifier
@@ -42,7 +39,7 @@ public class StoreItemByHour extends StoreItem implements StoreDataByHourEntity 
 	/**
 	 * Gets the Store Item By Hour Key
 	 * @return Key - the key of the entity
-	 */
+	 *
 	public Key getKey() {
 		return key;
 	}//getKey
@@ -50,10 +47,10 @@ public class StoreItemByHour extends StoreItem implements StoreDataByHourEntity 
 	/**
 	 * Sets the Store Item By Hour BD key
 	 * @param key - the key to set
-	 */
+	 *
 	public void setKey(Key key) {
 		this.key = key;
-	}//setKey
+	}//setKey	*/
 
 	/**
 	 * Gets the Store ITem By Hour's hour

@@ -1,9 +1,6 @@
 package mobi.allshoppings.model;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
 
 import com.inodes.datanucleus.model.Key;
 
@@ -21,8 +18,8 @@ public class StoreTicketByHour extends StoreTicket implements StoreDataByHourEnt
 
 	private static final long serialVersionUID = 1L;
 	
-	@PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
+	/*@PrimaryKey
+    @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED) */
 	private Key key;
 
 	private String hour;
@@ -31,26 +28,26 @@ public class StoreTicketByHour extends StoreTicket implements StoreDataByHourEnt
 		super();
 	}
 	
-	/**
+	/*
 	 * @return this entity key
-	 */
+	 *
 	public String getIdentifier() {
 		return this.getKey() != null ? this.getKey().getName() : "";
 	}
 
 	/**
 	 * @return the key
-	 */
+	 *
 	public Key getKey() {
 		return key;
 	}
 
-	/**
+	/*
 	 * @param key the key to set
-	 */
+	 *
 	public void setKey(Key key) {
 		this.key = key;
-	}
+	} */
 
 	/**
 	 * @return the hour

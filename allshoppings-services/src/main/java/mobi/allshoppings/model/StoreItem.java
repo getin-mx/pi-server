@@ -18,7 +18,7 @@ public class StoreItem implements StoreDataEntity {
 	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
-	private Key key;
+	protected Key key;
 
 	protected String brandId;
 	protected String storeId;
