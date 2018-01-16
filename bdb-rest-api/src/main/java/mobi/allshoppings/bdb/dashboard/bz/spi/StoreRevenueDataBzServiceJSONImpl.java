@@ -54,17 +54,11 @@ public class StoreRevenueDataBzServiceJSONImpl extends StoreEntityData<StoreReve
 				double qty = arr.getDouble(i);
 				StoreRevenue obj;
 				try {
-					obj = dao.getUsingStoreIdAndDate(storeId, sdf.format(curDate), true);
+					//obj = 
 					obj.setQty(qty);
 					dao.update(obj);
 				} catch( Exception e ) {
-					obj = new StoreRevenue();
-					obj.setStoreId(storeId);
-					obj.setBrandId(store.getBrandId());
-					obj.setDate(sdf.format(curDate));
-					obj.setQty(qty);
-					obj.setKey(dao.createKey());
-					dao.create(obj);
+					
 				}
 				i++;
 				curDate = new Date(curDate.getTime() + ONE_DAY);
@@ -91,7 +85,29 @@ public class StoreRevenueDataBzServiceJSONImpl extends StoreEntityData<StoreReve
 
 	@Override
 	protected List<StoreRevenue> daoGetUsingStoreIdAndDatesAndRange(String storeId, String fromDate,
-			String toDate, String toHour) throws ASException {
-		return dao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null, "date", false);
+			String toDate, String toHour, boolean order) throws ASException {
+		return dao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null,
+				order ? "date" : null, false);
+	}
+
+	@Override
+	protected StoreRevenue daoGetUsingStoreIdAndDate(String storeId, String date, String hour) throws ASException {
+		return dao.getUsingStoreIdAndDate(storeId, date, true);
+	}
+
+	@Override
+	protected void daoUpdate(StoreRevenue obj) throws ASException {
+		dao.update(obj);
+	}
+
+	@Override
+	protected void createStoreData(Store store, double qty, String date, String hour) throws ASException {
+		StoreRevenue obj = new StoreRevenue();
+		obj.setStoreId(store.getIdentifier());
+		obj.setBrandId(store.getBrandId());
+		obj.setDate(date);
+		obj.setQty(qty);
+		obj.setKey(dao.createKey());
+		dao.create(obj);
 	}
 }

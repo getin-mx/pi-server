@@ -1,6 +1,5 @@
 package mobi.allshoppings.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -10,11 +9,10 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.inodes.datanucleus.model.Key;
 
-import mobi.allshoppings.model.interfaces.Identificable;
-import mobi.allshoppings.model.interfaces.ModelKey;
+import mx.getin.model.interfaces.StoreDataEntity;
 
 @PersistenceCapable(detachable="true")
-public class StoreRevenue implements ModelKey, Serializable, Identificable {
+public class StoreRevenue implements StoreDataEntity {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -22,15 +20,14 @@ public class StoreRevenue implements ModelKey, Serializable, Identificable {
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
 	private Key key;
 
-	private String brandId;
-	private String storeId;
-	private String date;
-	private Double qty;
-	private Date creationDateTime;
-	private Date lastUpdate;
+	protected String brandId;
+	protected String storeId;
+	protected String date;
+	protected Double qty;
+	protected Date creationDateTime;
+	protected Date lastUpdate;
 
 	public StoreRevenue() {
-		super();
 		this.creationDateTime = new Date();
 		this.qty = 0D;
 	}
@@ -92,14 +89,14 @@ public class StoreRevenue implements ModelKey, Serializable, Identificable {
 	/**
 	 * @return the qty
 	 */
-	public Double getQty() {
+	public double getQty() {
 		return qty;
 	}
 
 	/**
 	 * @param qty the qty to set
 	 */
-	public void setQty(Double qty) {
+	public void setQty(double qty) {
 		this.qty = qty;
 	}
 

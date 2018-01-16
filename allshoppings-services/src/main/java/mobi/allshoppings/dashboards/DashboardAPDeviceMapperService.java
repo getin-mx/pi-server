@@ -465,8 +465,6 @@ public class DashboardAPDeviceMapperService {
 		List<String> pList = CollectionFactory.createList();
 		if( entityIds == null || entityIds.isEmpty()) pList.addAll(systemConfiguration.getFloorMapTracking());
 		else pList.addAll(entityIds);
-		List<APHEntry> lastAphes = new LinkedList<>();
-		
 		try {
 			for( String floorMapIdentifier : pList ) {
 				FloorMap fm = floorMapDao.get(floorMapIdentifier, true);
@@ -495,7 +493,7 @@ public class DashboardAPDeviceMapperService {
 					dumper.setFilter(hostname);
 					for(APHEntry entry : APDVisitHelperImpl.integrateAPHE(dumper, apDevices.get(hostname),
 							processDate, getTimezoneForEntity(floorMapIdentifier, EntityKind.KIND_SHOPPING),
-							CALENDAR, lastAphes, AUX_CALENDAR, (short) -1, (short) -1)) {
+							CALENDAR, AUX_CALENDAR, (short) -1, (short) -1)) {
 						List<APHEntry> entryList = macEntries.get(entry.getMac());
 						if(entryList == null) {
 							entryList = CollectionFactory.createList();
@@ -504,10 +502,6 @@ public class DashboardAPDeviceMapperService {
 						entryList.add(entry);
 					}
 					dumper.dispose();
-					for(Iterator<APHEntry> it = lastAphes.iterator(); it.hasNext();) {
-						APHEntry entry = it.next();
-						if(dateSDF.parse(entry.getDate()).compareTo(CALENDAR.getTime()) < 0) it.remove();
-					}
 					long count = 0;
 					for(String mac : macEntries.keySet()) {
 						

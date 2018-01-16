@@ -28,4 +28,6 @@ public interface StoreDAO extends GenericDAO<Store> {
 	List<Store> getUsingStatusAndRange(List<Integer> status, Range range) throws ASException;
 	List<Store> getUsingIdsAndStatusAndRange(Collection<String> ids, List<Integer> status, Range range) throws ASException;
 	List<String> getBrandIdsUsingIdList(PersistenceProvider pp, List<String> idList, boolean detachable) throws ASException;
+	
+	List<Store> getUsingNameAndBrandId(List<String> name, String brandId) throws ASException;
 }

@@ -14,8 +14,14 @@ import joptsimple.OptionSet;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.exporter.ExcelExportHelper;
-import mobi.allshoppings.tools.CollectionFactory;;
+import mobi.allshoppings.tools.CollectionFactory;
 
+/**
+ * Dumps the given brand indicators data into a Excel file. 
+ * @author <a href="mailto:ignacio@getin.mx >Manuel "Nachintoch" Castillo</a>
+ * @version 1.0, september 2017
+ * @since Mark II
+ */
 public class DumpDBToExcel extends AbstractCLI {
 
 	private static final Logger LOG = Logger.getLogger(DumpDBToExcel.class.getSimpleName());
@@ -26,6 +32,7 @@ public class DumpDBToExcel extends AbstractCLI {
 	public static final String BRAND_PARAM = "brandId";
 	public static final String STORES_PARAM = "storeIds";
 	public static final String DESTINATION_FILE_PARAM = "destFile";
+	public static final String READ_PARAM = "read";
 	
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
@@ -35,15 +42,14 @@ public class DumpDBToExcel extends AbstractCLI {
 		parser.accepts(BRAND_PARAM, "Brand identifier").withRequiredArg().ofType( String.class );
 		parser.accepts(STORES_PARAM, "List of comma separated stores (superseeds brandIds)")
 				.withRequiredArg().ofType( String.class );
-		/*parser.accepts("generatePerDay", //TODO ???
-				"True (Default) outputs a database with only daily data. "
-				+ "False would generate a hourly one (if possible)")
-				.withRequiredArg().ofType( Boolean.class );*/
 		parser.accepts(DESTINATION_FILE_PARAM, "Specifies the route where the result XML should be "
 				+ "written into. If a directorry is given, the file will be named '<givenIds>.xml'."
 				+ " If a file with an extension different from XML is given, '.xml' will be "
 				+ "appended to the file name. By default, the file is writen to '<givenIds>.xml' in"
 				+ "current working directory").withRequiredArg().ofType(String.class);
+		parser.accepts(READ_PARAM, "Indicates that the dump file must be parsed into dashboard indicators; "
+				+ "rather than writting").withOptionalArg().defaultsTo(new String[] {"true"})
+				.ofType(Boolean.class);
 		return parser;
 	}
 	
@@ -69,7 +75,6 @@ public class DumpDBToExcel extends AbstractCLI {
 				if(!storesId.contains(aux)) storesId.add(aux);
 				storesIds.append(aux).append('-');
 			}
-			
 			storesIds.replace(storesIds.length() -1, storesIds.length(), "");
 		}//retrieves stores (if any)
 		if(!StringUtils.hasText(brandId) &&
@@ -78,12 +83,14 @@ public class DumpDBToExcel extends AbstractCLI {
 					null);
 		String destFile = StringUtils.hasText(brandId) ? brandId : "";
 		destFile += storesIds.toString();
-		if(destFile.length() > 200) destFile = destFile.substring(0, 200) +"__";
-		ExcelExportHelper helper = (ExcelExportHelper) getApplicationContext()
-				.getBean("excel.export.helper");
+		boolean parse = options.has(READ_PARAM) && (boolean)options.valueOf(READ_PARAM);
+		if(!parse && destFile.length() > 200) destFile = destFile.substring(0, 200) +"__";
+		ExcelExportHelper helper = (ExcelExportHelper) getApplicationContext().getBean("excel.export.helper");
 		LOG.log(Level.INFO, "Exporting to Excel...");
 		long benchmark = System.currentTimeMillis();
-		helper.exportDB(storesId, brandId, fromDate, toDate, destFile, true, null);
+		if(parse)
+			helper.importDB(brandId, destFile);
+		else helper.exportDB(storesId, brandId, fromDate, toDate, destFile, true, null);
 		LOG.log(Level.INFO, "DB Exported to MS Excel in " +(System.currentTimeMillis() -benchmark)
 				+"ms");
 	}

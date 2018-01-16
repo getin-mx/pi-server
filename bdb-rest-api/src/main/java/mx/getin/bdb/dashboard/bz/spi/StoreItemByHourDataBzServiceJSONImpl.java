@@ -13,6 +13,7 @@ import mobi.allshoppings.dao.StoreItemDAO;
 import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.Store;
 import mx.getin.dao.StoreItemByHourDAO;
 import mx.getin.model.StoreItemByHour;
 
@@ -72,8 +73,32 @@ public class StoreItemByHourDataBzServiceJSONImpl extends StoreEntityData<StoreI
 
 	@Override
 	protected List<StoreItemByHour> daoGetUsingStoreIdAndDatesAndRange(String storeId, String fromDate,
-			String toDateOrFromHour, String toHour) throws ASException {
-		return dao.getUsingStoreIdAndDateAndRange(storeId, fromDate, toDateOrFromHour, toHour, null, "hour", false);
+			String toDateOrFromHour, String toHour, boolean order) throws ASException {
+		return dao.getUsingStoreIdAndDateAndRange(storeId, fromDate, toDateOrFromHour, toHour, null,
+				order ? "hour" : null, false);
+	}
+
+	@Override
+	protected StoreItemByHour daoGetUsingStoreIdAndDate(String storeId, String date, String hour) throws ASException {
+		return hour == null ? stDao.getUsingStoreIdAndDate(storeId, date, true) :
+			dao.getUsingStoreIdAndDateAndHour(storeId, date, hour, true);
+	}
+
+	@Override
+	protected void daoUpdate(StoreItemByHour obj) throws ASException {
+		dao.update(obj);
+	}
+
+	@Override
+	protected void createStoreData(Store store, double qty, String date, String hour) throws ASException {
+		StoreItemByHour obj = new StoreItemByHour();
+		obj.setStoreId(store.getIdentifier());
+		obj.setBrandId(store.getBrandId());
+		obj.setDate(date);
+		obj.setHour(hour);
+		obj.setQty(qty);
+		obj.setKey(dao.createKey());
+		dao.create(obj);
 	}
 
 }
