@@ -451,15 +451,14 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 					String storeName = row.getCell(1).getStringCellValue();
 					Map<String, String> additionalFields = CollectionFactory.createMap();
 					additionalFields.put(BRAND_ID_PARAM, brand.getIdentifier());
-					String adaptedStoreName = new String(storeName);
-					adaptedStoreName = adaptedStoreName.replaceAll("a", "?");
-					adaptedStoreName = adaptedStoreName.replaceAll("e", "?");
-					adaptedStoreName = adaptedStoreName.replaceAll("i", "?");
-					adaptedStoreName = adaptedStoreName.replaceAll("o", "?");
-					adaptedStoreName = adaptedStoreName.replaceAll("u", "?");
-					List<Store> stores = storeDao.getUsingIndex(adaptedStoreName, null,
-							StatusHelper.statusActive(), range, additionalFields, null, null);
-
+					List<Store> stores = storeDao.getUsingIndex(storeName, null, StatusHelper.statusActive(),
+							range, additionalFields, null, null);
+					if(stores.isEmpty()) {
+						storeName = storeName.replaceAll("a", "?").replaceAll("e", "?")
+								.replaceAll("i", "?").replaceAll("o", "?").replaceAll("u", "?");
+						stores = storeDao.getUsingIndex(storeName, null, StatusHelper.statusActive(), range,
+								additionalFields, null, null);
+					}
 					JSONObject jsonObject = new JSONObject();
 					JSONArray ticketsArray = new JSONArray();
 
@@ -484,7 +483,7 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 								}
 							}
 
-							jsonObject.put("tickets", ticketsArray);
+							jsonObject.put(RESPONSE_DATA, ticketsArray);
 						}
 
 					} else {
