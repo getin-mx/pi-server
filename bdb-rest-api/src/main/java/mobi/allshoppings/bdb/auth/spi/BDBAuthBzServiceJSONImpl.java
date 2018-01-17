@@ -189,15 +189,15 @@ public class BDBAuthBzServiceJSONImpl extends BDBRestBaseServerResource implemen
 						jsonOut.put("email", user.getEmail());
 						jsonOut.put("role", user.getSecuritySettings().getRole());
 					} else {
-						log.info("forbiden wrong data "  + (jsonIn == null ? "[null]" : jsonIn.toString()));
+						log.info("forbiden wrong data "  /*+ (jsonIn == null ? "[null]" : jsonIn.toString())*/);
 						jsonOut = this.getJSONRepresentationFromException(ASExceptionHelper.forbiddenException());
 					}
 				} else {
-					log.info("forbiden wrong data 2 "  + (jsonIn == null ? "[null]" : jsonIn.toString()));
+					log.info("forbiden wrong data 2 "  /*+ (jsonIn == null ? "[null]" : jsonIn.toString())*/);
 					jsonOut = this.getJSONRepresentationFromException(ASExceptionHelper.forbiddenException());
 				}
 			} else {
-				log.info("forbiden wrong data 2 "  + (jsonIn == null ? "[null]" : jsonIn.toString()));
+				log.info("forbiden wrong data 2 "  /*+ (jsonIn == null ? "[null]" : jsonIn.toString())*/);
 				jsonOut = this.getJSONRepresentationFromException(ASExceptionHelper.forbiddenException());
 			}
 
