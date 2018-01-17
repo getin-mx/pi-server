@@ -24,7 +24,6 @@ public class StoreTicketDataBzServiceJSONImpl extends StoreEntityData<StoreTicke
 
 	@Autowired
 	private StoreTicketDAO dao;
-	@Autowired
 	
 	@Override
 	protected List<StoreTicket> daoGetUsingStoreIdAndDatesAndRange(String storeId, String fromDate,
