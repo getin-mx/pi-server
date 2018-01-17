@@ -2043,7 +2043,6 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 
 		}catch(JDOObjectNotFoundException e){
 			// its normal; looks for a record, but cant find it
-			// someone needs a little help with his english, don't ya?
 			return false;
 		}catch(Exception e){
 			log.log(Level.SEVERE, "exception catched", e);
