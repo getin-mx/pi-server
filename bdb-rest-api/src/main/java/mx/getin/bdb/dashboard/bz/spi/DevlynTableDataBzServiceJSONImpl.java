@@ -23,8 +23,6 @@ import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
-import mobi.allshoppings.bdb.dashboard.bz.spi.BrandTableDataBzServiceJSONImpl.DashboardRecordRep;
-import mobi.allshoppings.bdb.dashboard.bz.spi.BrandTableDataBzServiceJSONImpl.DashboardTableRep;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.InnerZoneDAO;
 import mobi.allshoppings.dao.StoreDAO;
@@ -644,7 +642,6 @@ implements BDBDashboardBzService {
 				row.put("cabinetConversion", (float)((float)(cabinet * 100)/visitors));
 			else 
 				row.put("cabinetConversion", 0);
-
 			// tickets_conversion
 			if( visitors != 0)
 				row.put("ticketsConversion", (float)((float)(tickets * 100) / visitors));

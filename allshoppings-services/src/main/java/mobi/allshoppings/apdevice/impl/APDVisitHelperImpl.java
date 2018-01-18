@@ -1022,8 +1022,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								assignments.get(curEntry.getHostname()), date);
 					lastPeasantSlot = slot;
 					// Checks for power for visit
-					if(value >= dev.getViewerPowerThreshold() && value >= dev.getViewerPowerThreshold() + dev.getOffsetViewer()) {
-						currentViewer = createViewer(curEntry, curDate, null,
+					if(value >= dev.getViewerPowerThreshold() && value <= dev.getViewerPowerThreshold() + dev.getOffsetViewer()) {
+						if(currentViewer == null) currentViewer = createViewer(curEntry, curDate, null,
 								assignments.get(curEntry.getHostname()), date);
 						lastViewerSlot = slot;
 					}
@@ -1099,16 +1099,16 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									assignments.get(curEntry.getHostname()).getEntityKind()))
 								res.add(currentPeasant);
 							currentPeasant = null;
-						}if( currentViewer != null ) {
-							currentViewer.setCheckinFinished(aphHelper.slotToDate(
-									finishSlot, date));
-							if(isPeasantValid(currentViewer, dev, isEmployee,
-									assignments.get(curEntry.getHostname()).getEntityKind()))
-								res.add(currentViewer);
-							currentViewer = null;
 						}
 						
 					}
+				} if( currentViewer != null && value < dev.getViewerPowerThreshold() && value > dev.getViewerPowerThreshold() + dev.getOffsetViewer()) {
+					currentViewer.setCheckinFinished(aphHelper.slotToDate(
+							slot, date));
+					if(isPeasantValid(currentViewer, dev, isEmployee,
+							assignments.get(curEntry.getHostname()).getEntityKind()))
+						res.add(currentViewer);
+					currentViewer = null;
 				}
 				// Updates the last slot
 				lastSlot = slot;
@@ -1427,8 +1427,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @throws ASException
 	 */
 	private APDVisit createViewer(APHEntry source, Date date, DeviceInfo device, APDAssignation assign,
-			String forDate) throws ASException {
-		
+			String forDate) throws ASException {		
 		String entityId = assign.getEntityId();
 		Integer entityKind = assign.getEntityKind();
 		WORK_CALENDAR.clear();
