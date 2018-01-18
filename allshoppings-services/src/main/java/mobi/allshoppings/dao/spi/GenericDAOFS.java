@@ -194,37 +194,37 @@ public abstract class GenericDAOFS<T extends ModelKey> implements GenericDAO<T> 
 	}
 
 	@Override
-	public List<T> getUsingStatusAndRange(List<Integer> status, Range range, String order) throws ASException {
+	public List<T> getUsingStatusAndRange(List<Byte> status, Range range, String order) throws ASException {
 		throw ASExceptionHelper.invalidArgumentsException();
 	}
 
 	@Override
-	public List<T> getUsingStatusAndRange(List<Integer> status, Range range, String order,
+	public List<T> getUsingStatusAndRange(List<Byte> status, Range range, String order,
 			Map<String, String> aattributes, boolean detachable) throws ASException {
 		throw ASExceptionHelper.invalidArgumentsException();
 	}
 
 	@Override
-	public List<T> getUsingStatusAndRangeAndCountry(List<Integer> status, Range range, String country, String order,
+	public List<T> getUsingStatusAndRangeAndCountry(List<Byte> status, Range range, String country, String order,
 			Map<String, String> aattributes, boolean detachable) throws ASException {
 		throw ASExceptionHelper.invalidArgumentsException();
 	}
 
 	@Override
-	public List<T> getUsingStatusAndRange(PersistenceProvider pp, List<Integer> status, Range range, String order)
+	public List<T> getUsingStatusAndRange(PersistenceProvider pp, List<Byte> status, Range range, String order)
 			throws ASException {
 		throw ASExceptionHelper.invalidArgumentsException();
 	}
 
 	@Override
-	public List<T> getUsingStatusAndRange(PersistenceProvider pp, List<Integer> status, Range range, String order,
+	public List<T> getUsingStatusAndRange(PersistenceProvider pp, List<Byte> status, Range range, String order,
 			Map<String, String> attributes, boolean detachable) throws ASException {
 		throw ASExceptionHelper.invalidArgumentsException();
 	}
 
 	@Override
 	public List<T> getUsingLastUpdateStatusAndRange(PersistenceProvider pp, Date lastUpdate,
-			boolean afterLastUpdateDate, List<Integer> status, Range range, String order,
+			boolean afterLastUpdateDate, List<Byte> status, Range range, String order,
 			Map<String, String> attributes, boolean detachable) throws ASException {
 		throw ASExceptionHelper.invalidArgumentsException();
 	}
@@ -317,13 +317,13 @@ public abstract class GenericDAOFS<T extends ModelKey> implements GenericDAO<T> 
 	}
 
 	@Override
-	public List<T> getUsingIndex(String q, ViewLocation viewLocation, List<Integer> status, Range range,
+	public List<T> getUsingIndex(String q, ViewLocation viewLocation, List<Byte> status, Range range,
 			Map<String, String> additionalFields, String order, String lang) throws ASException {
 		throw ASExceptionHelper.invalidArgumentsException();
 	}
 
 	@Override
-	public List<T> getUsingIndex(String indexName, String q, ViewLocation viewLocation, List<Integer> status,
+	public List<T> getUsingIndex(String indexName, String q, ViewLocation viewLocation, List<Byte> status,
 			Range range, Map<String, String> additionalFields, String order, String lang) throws ASException {
 		throw ASExceptionHelper.invalidArgumentsException();
 	}
@@ -344,7 +344,7 @@ public abstract class GenericDAOFS<T extends ModelKey> implements GenericDAO<T> 
 	}
 
 	@Override
-	public long count(List<Integer> status) throws ASException {
+	public long count(List<Byte> status) throws ASException {
 		throw ASExceptionHelper.invalidArgumentsException();
 	}
 

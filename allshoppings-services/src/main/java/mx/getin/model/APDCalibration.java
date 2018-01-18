@@ -13,10 +13,32 @@ import com.inodes.datanucleus.model.Key;
 import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.model.interfaces.Indexable;
 import mobi.allshoppings.model.interfaces.ModelKey;
+import mx.getin.Constants;
 
 public class APDCalibration implements ModelKey, Serializable, Identificable, Indexable {
 
 	private static final long serialVersionUID = -8616325869354294048L;
+	
+	/**
+	 * Minimum percentage from the total time slots within the total permanence time of a device
+	 * to consider it as a visit.
+	 */
+	public static final byte DEFAULT_VISIT_PERCENTAGE = 25;
+	
+	/**
+	 * Default time slots to wait for a device to pass by again.
+	 */
+	public static final byte DEFAULT_GAP = 10;
+	
+	public static final byte DEFAULT_VISIT_POWER_THRESHOLD = -60;
+	public static final int VISIT_MAX_TIME_THRESHOLD_MILLIS = Constants.SIX_HOURS_IN_MILLIS;
+	public static final byte DEFAULT_PEDERSTIAN_POWER_THRESHOLD = -80;
+	public static final byte MAX_DEFAULT_VISIT_REPETITION = 5;
+	public static final byte DEFAULT_TIME_DECAY = 10 *60 /20;
+	
+	// measuring with power, super power!
+	
+	public static final byte DEFAULT_POWER_DECAY = 3;
 
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
@@ -27,13 +49,15 @@ public class APDCalibration implements ModelKey, Serializable, Identificable, In
 	
 	private Date lastUpdate;
 	private Date creationDateTime;
-	private long visitPowerThreshold;
-	private long visitMaxThreshold;
-	private long visitGapThreshold;
+	private short visitPowerThreshold;
+	private int visitMaxTimeThreshold;
+	private int visitMinTimeThreshold;
+	private short visitGapThreshold;
 	private long visitCountThreshold;
-	private long peasantPowerThreshold;
+	private short peasantPowerThreshold;
 	private int repeatThreshold;
-	private long peasantDecay;
+	private short timeDecay;
+	private short powerDecay;
 	
 	private boolean visitsOnMon;
     private boolean visitsOnTue;
@@ -61,7 +85,9 @@ public class APDCalibration implements ModelKey, Serializable, Identificable, In
     private String monitorStart;
     private String monitorEnd;
     
-    @NotPersistent
+    private float visitMinTimeSlotPercentage;
+    
+   	@NotPersistent
 	private boolean doIndexNow = true;
 	
     public APDCalibration() {
@@ -71,13 +97,16 @@ public class APDCalibration implements ModelKey, Serializable, Identificable, In
 	}
     
     public void completeDefaults() {
-    	if( visitGapThreshold == 0) visitGapThreshold = 10;
-		if( visitPowerThreshold == 0) visitPowerThreshold = -60;
-		if( visitMaxThreshold == 0) visitMaxThreshold = 480;
-		if( peasantPowerThreshold == 0) peasantPowerThreshold = -80;
-		if( visitCountThreshold == 0) visitCountThreshold = 0;
-		if( repeatThreshold == 0) repeatThreshold = 5;
-		if( peasantDecay == 0) peasantDecay = visitGapThreshold; 
+    	if( visitGapThreshold <= 0) visitGapThreshold = DEFAULT_GAP;
+		if( visitPowerThreshold > 0) visitPowerThreshold = DEFAULT_VISIT_POWER_THRESHOLD;
+		if( visitMaxTimeThreshold <= 0) visitMaxTimeThreshold = VISIT_MAX_TIME_THRESHOLD_MILLIS;
+		if( peasantPowerThreshold > 0) peasantPowerThreshold = DEFAULT_PEDERSTIAN_POWER_THRESHOLD;
+		if( visitCountThreshold < 0) visitCountThreshold = 0;
+		if( repeatThreshold < 0) repeatThreshold = MAX_DEFAULT_VISIT_REPETITION;
+		if( timeDecay < 0) timeDecay = DEFAULT_TIME_DECAY;
+		if(powerDecay > 0) powerDecay = DEFAULT_POWER_DECAY;
+		if(visitMinTimeSlotPercentage < 0 || visitMinTimeSlotPercentage > 100)
+			visitMinTimeSlotPercentage = DEFAULT_VISIT_PERCENTAGE;
 	    
 		if( visitStartMon == null) visitStartMon = "11:00";
 		if( visitEndMon == null) visitEndMon = "20:00";
@@ -145,43 +174,57 @@ public class APDCalibration implements ModelKey, Serializable, Identificable, In
 	/**
 	 * @return the visitGapThreshold
 	 */
-	public long getVisitGapThreshold() {
+	public short getVisitGapThreshold() {
 		return visitGapThreshold;
 	}
 
 	/**
 	 * @param visitGapThreshold the visitGapThreshold to set
 	 */
-	public void setVisitGapThreshold(long visitGapThreshold) {
+	public void setVisitGapThreshold(short visitGapThreshold) {
 		this.visitGapThreshold = visitGapThreshold;
 	}
 
 	/**
 	 * @return the visitPowerThreshold
 	 */
-	public long getVisitPowerThreshold() {
+	public short getVisitPowerThreshold() {
 		return visitPowerThreshold;
 	}
 
 	/**
 	 * @param visitPowerThreshold the visitPowerThreshold to set
 	 */
-	public void setVisitPowerThreshold(long visitPowerThreshold) {
+	public void setVisitPowerThreshold(short visitPowerThreshold) {
 		this.visitPowerThreshold = visitPowerThreshold;
 	}
 
 	/**
 	 * @return the visitMaxThreshold
 	 */
-	public long getVisitMaxThreshold() {
-		return visitMaxThreshold;
+	public int getVisitMaxThreshold() {
+		return visitMaxTimeThreshold;
 	}
 
 	/**
 	 * @param visitMaxThreshold the visitMaxThreshold to set
 	 */
-	public void setVisitMaxThreshold(long visitMaxThreshold) {
-		this.visitMaxThreshold = visitMaxThreshold;
+	public void setVisitMaxThreshold(int visitMaxThreshold) {
+		this.visitMaxTimeThreshold = visitMaxThreshold;
+	}
+	
+	/**
+	 * @return the visitTimeThreshold
+	 */
+	public int getVisitMinTimeThreshold() {
+		return visitMinTimeThreshold;
+	}
+
+	/**
+	 * @param visitTimeThreshold the visitTimeThreshold to set
+	 */
+	public void setVisitMinTimeThreshold(int visitTimeThreshold) {
+		this.visitMinTimeThreshold = visitTimeThreshold;
 	}
 
 	/**
@@ -201,14 +244,14 @@ public class APDCalibration implements ModelKey, Serializable, Identificable, In
 	/**
 	 * @return the peasentPowerThreshold
 	 */
-	public long getPeasantPowerThreshold() {
+	public short getPeasantPowerThreshold() {
 		return peasantPowerThreshold;
 	}
 
 	/**
 	 * @param peasentPowerThreshold the peasentPowerThreshold to set
 	 */
-	public void setPeasentPowerThreshold(long peasentPowerThreshold) {
+	public void setPeasentPowerThreshold(short peasentPowerThreshold) {
 		this.peasantPowerThreshold = peasentPowerThreshold;
 	}
 
@@ -551,22 +594,22 @@ public class APDCalibration implements ModelKey, Serializable, Identificable, In
 	/**
 	 * @param peasantPowerThreshold the peasantPowerThreshold to set
 	 */
-	public void setPeasantPowerThreshold(long peasantPowerThreshold) {
+	public void setPeasantPowerThreshold(short peasantPowerThreshold) {
 		this.peasantPowerThreshold = peasantPowerThreshold;
 	}
 	
 	/**
 	 * @return the peasantDecay
 	 */
-	public long getPeasantDecay() {
-		return peasantDecay;
+	public short getTimeDecay() {
+		return timeDecay;
 	}
 
 	/**
 	 * @param peasantDecay the peasantDecay to set
 	 */
-	public void setPeasantDecay(long peasantDecay) {
-		this.peasantDecay = peasantDecay;
+	public void setTimeDecay(short peasantDecay) {
+		this.timeDecay = peasantDecay;
 	}
 	
 	/**
@@ -604,22 +647,38 @@ public class APDCalibration implements ModelKey, Serializable, Identificable, In
 		this.doIndexNow = doIndexNow;
 	}
 	
+	public float getVisitMinTimeSlotPercentage() {
+		return visitMinTimeSlotPercentage;
+	}
+
+	public void setVisitMinTimeSlotPercentage(float visitMinTimeSlotPercentage) {
+		this.visitMinTimeSlotPercentage = visitMinTimeSlotPercentage;
+	}
+	
+	public short getPowerDecay() {
+		return powerDecay;
+	}
+
+	public void setPowerDecay(short powerDecay) {
+		this.powerDecay = powerDecay;
+	}
+	
 	@Override
 	public String toString() {
 		return "APDCalibration [visitGapThreshold=" + visitGapThreshold + ", visitPowerThreshold="
-				+ visitPowerThreshold + ", visitMaxThreshold=" + visitMaxThreshold + ", peasantPowerThreshold="
-				+ peasantPowerThreshold + ", visitCountThreshold=" + visitCountThreshold + ", repeatThreshold="
-				+ repeatThreshold + ", visitsOnMon=" + visitsOnMon + ", visitsOnTue=" + visitsOnTue +
-				", visitsOnWed=" + visitsOnWed + ", visitsOnThu=" + visitsOnThu + ", visitsOnFri="
-				+ visitsOnFri + ", visitsOnSat=" + visitsOnSat + ", visitsOnSun=" + visitsOnSun
-				+ ", visitStartMon=" + visitStartMon + ", visitEndMon=" + visitEndMon + ", visitStartTue="
-				+ visitStartTue + ", visitEndTue=" + visitEndTue + ", visitStartWed=" + visitStartWed
-				+ ", visitEndWed=" + visitEndWed + ", visitStartThu=" + visitStartThu + ", visitEndThu="
-				+ visitEndThu + ", visitStartFri=" + visitStartFri + ", visitEndFri=" + visitEndFri
-				+ ", visitStartSat=" + visitStartSat + ", visitEndSat=" + visitEndSat + ", visitStartSun="
-				+ visitStartSun + ", visitEndSun=" + visitEndSun + ", monitorStart=" + monitorStart
-				+ ", monitorEnd=" + monitorEnd + "]";
-		
+				+ visitPowerThreshold +", visitTimeThreshold=" + visitMinTimeThreshold + ", visitMaxThreshold="
+				+ visitMaxTimeThreshold + ", peasantPowerThreshold=" + peasantPowerThreshold
+				+ ", visitCountThreshold=" + visitCountThreshold + ", repeatThreshold=" + repeatThreshold
+				+ ", visitsOnMon=" + visitsOnMon + ", visitsOnTue=" + visitsOnTue + ", visitsOnWed="
+				+ visitsOnWed + ", visitsOnThu=" + visitsOnThu + ", visitsOnFri=" + visitsOnFri
+				+ ", visitsOnSat=" + visitsOnSat + ", visitsOnSun=" + visitsOnSun + ", visitStartMon="
+				+ visitStartMon + ", visitEndMon=" + visitEndMon + ", visitStartTue=" + visitStartTue
+				+ ", visitEndTue=" + visitEndTue + ", visitStartWed=" + visitStartWed + ", visitEndWed="
+				+ visitEndWed + ", visitStartThu=" + visitStartThu + ", visitEndThu=" + visitEndThu
+				+ ", visitStartFri=" + visitStartFri + ", visitEndFri=" + visitEndFri + ", visitStartSat="
+				+ visitStartSat + ", visitEndSat=" + visitEndSat + ", visitStartSun=" + visitStartSun
+				+ ", visitEndSun=" + visitEndSun + ", monitorStart=" + monitorStart + ", monitorEnd="
+				+ monitorEnd + "]";
 	}
 
 }

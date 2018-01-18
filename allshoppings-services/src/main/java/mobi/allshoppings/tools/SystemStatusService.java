@@ -65,7 +65,7 @@ public class SystemStatusService {
 		}
 	}
 	
-	public Date getLastUpdate(Integer entityKind) {
+	public Date getLastUpdate(byte entityKind) {
 		return getLastUpdate(EntityKind.getClassByKind(entityKind));
 	}
 	

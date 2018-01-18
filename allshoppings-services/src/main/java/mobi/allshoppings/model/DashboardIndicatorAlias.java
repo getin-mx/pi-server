@@ -22,7 +22,7 @@ public class DashboardIndicatorAlias implements ModelKey, Serializable, Identifi
     private Key key;
 
 	public String entityId;
-	public Integer entityKind;
+	public byte entityKind;
 	public String screenName;
 	public String elementId;
 	public String elementName;
@@ -46,7 +46,7 @@ public class DashboardIndicatorAlias implements ModelKey, Serializable, Identifi
 	 * @param elementSubId
 	 * @param subentityId
 	 */
-	public DashboardIndicatorAlias(String entityId, Integer entityKind, String elementId, String elementSubId) {
+	public DashboardIndicatorAlias(String entityId, byte entityKind, String elementId, String elementSubId) {
 		this();
 		this.entityId = entityId;
 		this.entityKind = entityKind;
@@ -65,7 +65,7 @@ public class DashboardIndicatorAlias implements ModelKey, Serializable, Identifi
 	 * @param subentityId
 	 * @param subentityName
 	 */
-	public DashboardIndicatorAlias(String entityId, Integer entityKind,
+	public DashboardIndicatorAlias(String entityId, byte entityKind,
 			String screenName, String elementId, String elementName,
 			String elementSubId, String elementSubName, String subentityId,
 			String subentityName) {
@@ -139,14 +139,14 @@ public class DashboardIndicatorAlias implements ModelKey, Serializable, Identifi
 	/**
 	 * @return the entityKind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 
@@ -276,7 +276,7 @@ public class DashboardIndicatorAlias implements ModelKey, Serializable, Identifi
 		result = prime * result
 				+ ((entityId == null) ? 0 : entityId.hashCode());
 		result = prime * result
-				+ ((entityKind == null) ? 0 : entityKind.hashCode());
+				+ entityKind;
 		return result;
 	}
 
@@ -307,10 +307,7 @@ public class DashboardIndicatorAlias implements ModelKey, Serializable, Identifi
 				return false;
 		} else if (!entityId.equals(other.entityId))
 			return false;
-		if (entityKind == null) {
-			if (other.entityKind != null)
-				return false;
-		} else if (!entityKind.equals(other.entityKind))
+		if (entityKind != other.entityKind)
 			return false;
 		return true;
 	}

@@ -23,7 +23,7 @@ public class DashboardIndicatorAliasDAOJDOImpl extends GenericDAOJDO<DashboardIn
 	}
 
 	@Override
-	public DashboardIndicatorAlias getUsingFilters(String entityId, Integer entityKind, String elementId, String elementSubId) throws ASException {
+	public DashboardIndicatorAlias getUsingFilters(String entityId, byte entityKind, String elementId, String elementSubId) throws ASException {
 		DashboardIndicatorAlias alias = new DashboardIndicatorAlias(entityId, entityKind, elementId, elementSubId);
 		alias.setKey(createKey(alias));
 		return get(alias.getIdentifier(), true);

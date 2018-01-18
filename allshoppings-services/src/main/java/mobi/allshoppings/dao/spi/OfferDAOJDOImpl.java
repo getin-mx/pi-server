@@ -287,7 +287,7 @@ public class OfferDAOJDOImpl extends GenericDAOJDO<Offer> implements OfferDAO {
 	}
 	
 	@Override
-	public List<Offer> getUsingKindAndRangeInCache(String entityId, Integer entityKind, Range range, User user, int returnType) throws ASException {
+	public List<Offer> getUsingKindAndRangeInCache(String entityId, byte entityKind, Range range, User user, int returnType) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		List<Offer> ret = CollectionFactory.createList();
 		

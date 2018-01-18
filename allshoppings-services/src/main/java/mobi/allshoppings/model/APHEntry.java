@@ -144,6 +144,7 @@ public class APHEntry implements ModelKey, Serializable, Identificable, Replicab
 	/**
 	 * @return the devicePlatform
 	 */
+	@Deprecated
 	public String getDevicePlatform() {
 		return devicePlatform;
 	}
@@ -151,6 +152,7 @@ public class APHEntry implements ModelKey, Serializable, Identificable, Replicab
 	/**
 	 * @param devicePlatform the devicePlatform to set
 	 */
+	@Deprecated
 	public void setDevicePlatform(String devicePlatform) {
 		this.devicePlatform = devicePlatform;
 	}

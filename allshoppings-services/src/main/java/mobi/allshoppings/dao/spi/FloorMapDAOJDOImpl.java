@@ -38,7 +38,7 @@ public class FloorMapDAOJDOImpl extends GenericDAOJDO<FloorMap> implements Floor
 	}
 
 	@Override
-	public List<FloorMap> getUsingStatusAndShoppingId(Integer status, String shoppingId) throws ASException {
+	public List<FloorMap> getUsingStatusAndShoppingId(byte status, String shoppingId) throws ASException {
 
 		List<FloorMap> returnedObjs = CollectionFactory.createList();
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
@@ -54,7 +54,7 @@ public class FloorMapDAOJDOImpl extends GenericDAOJDO<FloorMap> implements Floor
 			parameters.put("shoppingIdParam", shoppingId);
 			
 			
-			if( status != null ) {
+			if( status >= 0) {
 				declaredParams.add("Integer statusParam");
 				filters.add("status == statusParam");
 				parameters.put("statusParam", status);
@@ -84,7 +84,7 @@ public class FloorMapDAOJDOImpl extends GenericDAOJDO<FloorMap> implements Floor
 	}
 
 	@Override
-	public List<FloorMap> getUsingStatusAndUserAndRange(Integer status, User user, Range range) throws ASException {
+	public List<FloorMap> getUsingStatusAndUserAndRange(byte status, User user, Range range) throws ASException {
 
 		List<FloorMap> returnedObjs = CollectionFactory.createList();
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
@@ -103,7 +103,7 @@ public class FloorMapDAOJDOImpl extends GenericDAOJDO<FloorMap> implements Floor
 				parameters.put("keyListParam", user.getSecuritySettings().getShoppings());
 			}
 			
-			if( status != null ) {
+			if( status >= 0) {
 				declaredParams.add("Integer statusParam");
 				filters.add("status == statusParam");
 				parameters.put("statusParam", status);

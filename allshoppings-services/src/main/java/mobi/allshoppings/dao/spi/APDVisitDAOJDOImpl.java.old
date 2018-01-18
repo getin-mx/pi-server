@@ -31,6 +31,7 @@ import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
 import mobi.allshoppings.tx.PersistenceProvider;
 
+@Deprecated
 public class APDVisitDAOJDOImpl extends GenericDAOJDO<APDVisit> implements APDVisitDAO {
 
 	private static final Logger log = Logger.getLogger(APDVisitDAOJDOImpl.class.getName());

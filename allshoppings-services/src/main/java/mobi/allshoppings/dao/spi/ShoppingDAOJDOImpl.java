@@ -278,7 +278,7 @@ public class ShoppingDAOJDOImpl extends GenericDAOJDO<Shopping> implements Shopp
 	}
 
 	@Override
-	public List<Shopping> getUsingStatusAndRangeAndCountry(List<Integer> status, Range range, String country, String order, Map<String, String> attributes, boolean detachable) throws ASException {
+	public List<Shopping> getUsingStatusAndRangeAndCountry(List<Byte> status, Range range, String country, String order, Map<String, String> attributes, boolean detachable) throws ASException {
 		List<Shopping> returnedObjs = CollectionFactory.createList();
 		
 		PersistenceManager pm;

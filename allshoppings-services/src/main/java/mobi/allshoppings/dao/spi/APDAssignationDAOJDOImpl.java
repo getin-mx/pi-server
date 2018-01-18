@@ -31,7 +31,7 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 	}
 
 	@Override
-	public List<APDAssignation> getUsingEntityIdAndEntityKind(String entityId, Integer entityKind) throws ASException {
+	public List<APDAssignation> getUsingEntityIdAndEntityKind(String entityId, byte entityKind) throws ASException {
 		return getUsingEntityIdAndEntityKindAndDate(entityId, entityKind, null);
 	}
 
@@ -139,7 +139,7 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 	}
 
 	@Override
-	public List<APDAssignation> getUsingEntityIdAndEntityKindAndDate(String entityId, Integer entityKind, Date date) throws ASException {
+	public List<APDAssignation> getUsingEntityIdAndEntityKindAndDate(String entityId, byte entityKind, Date date) throws ASException {
 
 		List<APDAssignation> ret = CollectionFactory.createList();
 		
@@ -157,7 +157,7 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 				parameters.put("entityIdParam", entityId);
 			}
 
-			if(entityKind != null) {
+			if(entityKind >= 0) {
 				declaredParams.add("Integer entityKindParam");
 				filters.add("entityKind == entityKindParam");
 				parameters.put("entityKindParam", entityKind);
@@ -198,7 +198,7 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 	}
 
 	@Override
-	public List<String> getEntityIds(Integer entityKind, Date forDate) throws ASException {
+	public List<String> getEntityIds(byte entityKind, Date forDate) throws ASException {
 		
 		List<String> ret = CollectionFactory.createList();
 		PersistenceManager pm;
@@ -212,7 +212,7 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 			Query query = pm.newQuery(clazz);
 
 			// Hostname Parameter
-			if(null != entityKind) {
+			if(entityKind >= 0) {
 				declaredParams.add("Integer entityKindParam");
 				filters.add("entityKind == entityKindParam");
 				parameters.put("entityKindParam", entityKind);

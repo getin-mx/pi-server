@@ -146,9 +146,9 @@ public class GenerateAPDVisits extends AbstractCLI {
 			
 			if( shoppings.isEmpty() )
 				helper.generateAPDVisits(brands, stores, fromDate, toDate, deletePreviousRecors, updateDashboards, onlyEmployees, onlyDashboards);
-			else
+			/*else
 				helper.generateAPDVisits(shoppings, fromDate, toDate, deletePreviousRecors, updateDashboards, onlyEmployees, onlyDashboards);
-			
+			*/
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}

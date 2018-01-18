@@ -48,17 +48,17 @@ public class GeoEntityDAOJDOImpl extends GenericDAOJDO<GeoEntity> implements Geo
 	}
 
 	@Override
-	public List<GeoEntity> getUsingEntityAndKind(String identifier, Integer entityKind) throws ASException {
+	public List<GeoEntity> getUsingEntityAndKind(String identifier, byte entityKind) throws ASException {
 		return getUsingEntityAndKind(null, identifier, entityKind, true);
 	}
 
 	@Override
-	public List<GeoEntity> getUsingEntityAndKind(String identifier, Integer entityKind, boolean detachable) throws ASException {
+	public List<GeoEntity> getUsingEntityAndKind(String identifier, byte entityKind, boolean detachable) throws ASException {
 		return getUsingEntityAndKind(null, identifier, entityKind, detachable);
 	}
 
 	@Override
-	public List<GeoEntity> getUsingEntityAndKind(PersistenceProvider pp, String identifier, Integer entityKind, boolean detachable) throws ASException {
+	public List<GeoEntity> getUsingEntityAndKind(PersistenceProvider pp, String identifier, byte entityKind, boolean detachable) throws ASException {
 
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		List<GeoEntity> ret = CollectionFactory.createList();
@@ -104,7 +104,7 @@ public class GeoEntityDAOJDOImpl extends GenericDAOJDO<GeoEntity> implements Geo
 	}
 
 	@Override
-	public GeoEntity getUniqueUsingEntityAndKind(String entityId, Integer entityKind)
+	public GeoEntity getUniqueUsingEntityAndKind(String entityId, byte entityKind)
 			throws ASException {
 		List<GeoEntity> l = getUsingEntityAndKind(entityId, entityKind);
 		if( l.size() != 1 ) {
@@ -116,7 +116,7 @@ public class GeoEntityDAOJDOImpl extends GenericDAOJDO<GeoEntity> implements Geo
 	}
 
 	@Override
-	public 	List<GeoEntity> getByProximity(GeoPoint geo, Integer entityKind, Integer presition, boolean includeAdjacents, boolean independentOnly, boolean detachable) throws ASException {
+	public 	List<GeoEntity> getByProximity(GeoPoint geo, byte entityKind, int presition, boolean includeAdjacents, boolean independentOnly, boolean detachable) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		List<GeoEntity> ret = CollectionFactory.createList();
 		String[] boxes = includeAdjacents ? new String[9] : new String[1];

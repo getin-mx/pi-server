@@ -37,7 +37,7 @@ public class InnerZoneDAOJDOImpl extends GenericDAOJDO<InnerZone> implements Inn
 	
 	
 	@Override
-	public List<InnerZone> getUsingEntityIdAndRange(String entityId, Integer entityKind, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
+	public List<InnerZone> getUsingEntityIdAndRange(String entityId, byte entityKind, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
 		List<InnerZone> returnedObjs = CollectionFactory.createList();
 
 		PersistenceManager pm;
@@ -58,7 +58,7 @@ public class InnerZoneDAOJDOImpl extends GenericDAOJDO<InnerZone> implements Inn
 			}
 			
 			// Date parameter
-			if( entityKind != null ) {
+			if( entityKind >= 0) {
 				declaredParams.add("Integer entityKindParam");
 				filters.add("entityKind >= entityKindParam");
 				parameters.put("entityKindParam", entityKind);

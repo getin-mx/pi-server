@@ -110,7 +110,7 @@ public class TouchAPDevices extends AbstractCLI {
 				log.log(Level.INFO, "Touching " + obj.getIdentifier() + "...");
 
 				boolean modifiedCal = cal.getVisitGapThreshold() != 180;
-				cal.setVisitGapThreshold(180);
+				cal.setVisitGapThreshold((short) 180);
 				if(modifiedCal) apdcalibration.update(cal);
 				apdeviceHelper.updateAssignationsUsingAPDevice(obj, rep);
 			}

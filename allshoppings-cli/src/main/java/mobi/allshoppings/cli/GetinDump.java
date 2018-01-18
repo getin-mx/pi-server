@@ -1660,7 +1660,7 @@ public class GetinDump extends AbstractCLI {
 		String name;
 		String brandId;
 		String shoppingId;
-		int storeKind;
+		byte storeKind;
 
 		public StoreAdapter(String externalKey, String name, String brandId, String shoppingId, int storeKind) {
 			super();
@@ -1669,7 +1669,7 @@ public class GetinDump extends AbstractCLI {
 			this.brandId = brandId;
 			this.shoppingId = shoppingId;
 			if(storeKind > 0 && storeKind < 8){
-				this.storeKind = storeKind;
+				this.storeKind = (byte) storeKind;
 			}else {
 				this.storeKind = FOOT_STREET;
 			}
@@ -1728,7 +1728,7 @@ public class GetinDump extends AbstractCLI {
 		 * 
 		 * @return the integer value corresponding to the storeKind type
 		 */
-		public int getStoreKind() {
+		public byte getStoreKind() {
 			return storeKind;
 		}
 		
@@ -1737,7 +1737,7 @@ public class GetinDump extends AbstractCLI {
 		 * @param storeKind the integer value corresponding to the storeKind type
 		 */
 		public void setStoreKind(int storeKind) {
-			this.storeKind = storeKind;
+			this.storeKind = (byte) storeKind;
 		}
 		
 		

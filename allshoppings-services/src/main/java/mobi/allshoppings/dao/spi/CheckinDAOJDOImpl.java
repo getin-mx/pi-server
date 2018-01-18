@@ -68,7 +68,7 @@ public class CheckinDAOJDOImpl extends GenericDAOJDO<Checkin> implements Checkin
 	}
 
 	@Override
-	public long getEntityCheckinCount(String entityId, Integer entityKind) throws ASException {
+	public long getEntityCheckinCount(String entityId, byte entityKind) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		try{
 			Map<String, Object> parameters = CollectionFactory.createMap();
@@ -104,20 +104,20 @@ public class CheckinDAOJDOImpl extends GenericDAOJDO<Checkin> implements Checkin
 
 	@Override
 	public Checkin getUnfinishedCheckinByEntityAndKindAndType(String deviceUUID,
-			String entityId, Integer entityKind, Integer checkinType) throws ASException {
-		return getUnfinishedCheckinByEntityAndKindAndType(deviceUUID, entityId, entityKind, checkinType, null);
+			String entityId, byte entityKind, byte checkinType) throws ASException {
+		return getUnfinishedCheckinByEntityAndKindAndType(deviceUUID, entityId, entityKind, checkinType, -1);
 	}
 
 	@Override
 	public Checkin getUnfinishedCheckinByEntityAndKindAndType(String deviceUUID,
-			String entityId, Integer entityKind, Integer checkinType, Long closeLimitMillis) throws ASException {
+			String entityId, byte entityKind, byte checkinType, long closeLimitMillis) throws ASException {
 		return getUnfinishedCheckinByEntityAndKindAndType(deviceUUID, entityId, entityKind, checkinType, closeLimitMillis, null);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Checkin getUnfinishedCheckinByEntityAndKindAndType(String deviceUUID,
-			String entityId, Integer entityKind, Integer checkinType, Long closeLimitMillis, Date forDate) throws ASException {
+			String entityId, byte entityKind, byte checkinType, long closeLimitMillis, Date forDate) throws ASException {
 
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		try {
@@ -142,14 +142,14 @@ public class CheckinDAOJDOImpl extends GenericDAOJDO<Checkin> implements Checkin
 				parameters.put("entityIdParam", entityId);
 			}
 			
-			if(entityKind != null) {
+			if(entityKind >= 0) {
 				declaredParams.add("Integer entityKindParam");
 				filters.add("entityKind == entityKindParam");
 				filtersWithFinish.add("entityKind == entityKindParam");
 				parameters.put("entityKindParam", entityKind);
 			}
 			
-			if(checkinType != null ) {
+			if(checkinType >= 0) {
 				declaredParams.add("Integer checkinTypeParam");
 				filters.add("checkinType == checkinTypeParam");
 				filtersWithFinish.add("checkinType == checkinTypeParam");
@@ -175,7 +175,7 @@ public class CheckinDAOJDOImpl extends GenericDAOJDO<Checkin> implements Checkin
 			query.setFilter(toWellParametrizedFilter(filters));
 			query.setOrdering("checkinStarted DESC");
 			
-			if( closeLimitMillis != null && closeLimitMillis > 0 ) {
+			if( closeLimitMillis > 0 ) {
 				// If we are here... We just have to try if there is a checkin recently closed, so we can reopen it if necesary
 				query.setFilter(toWellParametrizedFilter(filtersWithFinish));
 				List<Checkin> objs = (List<Checkin>)query.executeWithMap(parameters);
@@ -220,7 +220,7 @@ public class CheckinDAOJDOImpl extends GenericDAOJDO<Checkin> implements Checkin
 	@SuppressWarnings("unchecked")
 	@Override
 	public Checkin getCheckinByEntityAndKindAndType(String deviceUUID,
-			String entityId, Integer entityKind, Integer checkinType, Date forDate) throws ASException {
+			String entityId, byte entityKind, byte checkinType, Date forDate) throws ASException {
 
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		try {
@@ -243,14 +243,14 @@ public class CheckinDAOJDOImpl extends GenericDAOJDO<Checkin> implements Checkin
 				parameters.put("entityIdParam", entityId);
 			}
 			
-			if(entityKind != null) {
+			if(entityKind >= 0) {
 				declaredParams.add("Integer entityKindParam");
 				filters.add("entityKind == entityKindParam");
 				filtersWithFinish.add("entityKind == entityKindParam");
 				parameters.put("entityKindParam", entityKind);
 			}
 			
-			if(checkinType != null ) {
+			if(checkinType >= 0) {
 				declaredParams.add("Integer checkinTypeParam");
 				filters.add("checkinType == checkinTypeParam");
 				filtersWithFinish.add("checkinType == checkinTypeParam");
@@ -305,12 +305,12 @@ public class CheckinDAOJDOImpl extends GenericDAOJDO<Checkin> implements Checkin
 	}
 
 	@Override
-	public List<Checkin> getUsingEntityKindAndPossibleFakeAndDates(Integer entityKind, Boolean possibleFake, Date fromDate, Date toDate) throws ASException {
+	public List<Checkin> getUsingEntityKindAndPossibleFakeAndDates(byte entityKind, Boolean possibleFake, Date fromDate, Date toDate) throws ASException {
 		return getUsingEntityIdAndEntityKindAndPossibleFakeAndDates(null, entityKind, possibleFake, fromDate, toDate);
 	}
 	
 	@Override
-	public List<Checkin> getUsingEntityIdAndEntityKindAndPossibleFakeAndDates(String entityId, Integer entityKind, Boolean possibleFake, Date fromDate, Date toDate) throws ASException {
+	public List<Checkin> getUsingEntityIdAndEntityKindAndPossibleFakeAndDates(String entityId, byte entityKind, Boolean possibleFake, Date fromDate, Date toDate) throws ASException {
 
 		List<Checkin> ret = CollectionFactory.createList();
 		
@@ -334,7 +334,7 @@ public class CheckinDAOJDOImpl extends GenericDAOJDO<Checkin> implements Checkin
 				parameters.put("entityIdParam", entityId);
 			}
 
-			if(entityKind != null) {
+			if(entityKind >= 0) {
 				declaredParams.add("Integer entityKindParam");
 				filters.add("entityKind == entityKindParam");
 				parameters.put("entityKindParam", entityKind);

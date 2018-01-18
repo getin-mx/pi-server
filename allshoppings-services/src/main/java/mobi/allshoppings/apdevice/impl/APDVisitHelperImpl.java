@@ -1,8 +1,12 @@
 package mobi.allshoppings.apdevice.impl;
 
+import static mx.getin.Constants.DAY_IN_MILLIS;
+import static mx.getin.Constants.GMT;
+import static mx.getin.Constants.SLOT_NUMBER_IN_DAY;
+import static mx.getin.Constants.sdf;
+import static mx.getin.Constants.MINUTE_TO_TWENTY_SECONDS_SLOT;
+
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -24,11 +28,8 @@ import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.dao.APDMABlackListDAO;
 import mobi.allshoppings.dao.APDMAEmployeeDAO;
-import mobi.allshoppings.dao.APDVisitDAO;
-import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.InnerZoneDAO;
-import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
 import mobi.allshoppings.dump.DumperHelper;
@@ -39,17 +40,17 @@ import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.APDMABlackList;
 import mobi.allshoppings.model.APDMAEmployee;
 import mobi.allshoppings.model.APDVisit;
-import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.InnerZone;
-import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.SystemConfiguration;
-import mobi.allshoppings.model.interfaces.StatusAware;
+import mobi.allshoppings.model.tools.KeyHelper;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
+import mx.getin.dao.APDCalibrationDAO;
+import mx.getin.model.APDCalibration;
 
 public class APDVisitHelperImpl implements APDVisitHelper {
 
@@ -60,8 +61,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	public static final String ALGORITHM_MARKII = "markII";
 	
 	private static final Logger log = Logger.getLogger(APDVisitHelperImpl.class.getName());
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 	private static final List<String> BANNED = Arrays.asList("00:00:00:00:00:00");
 	private static final short MILLIS_TO_TWENTY_SECONDS_SLOT = 20000;
 	private static final short MAXIMUM_TIME_SLOTS = 6 *60 *60 /20;
@@ -70,67 +69,60 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	private static final List<String> INVALID_VENDORS;
 	
 	static {
-		sdf.setTimeZone(GMT);
 		INVALID_MACS = CollectionFactory.createList(new String[] {
 				"00:00:00:00:00:00", "FF:FF:FF:FF:FF:FF"
 			});
-			INVALID_VENDORS = CollectionFactory.createList(new String[] {
-					"DA:A1:19", "92:68:C3", "9C:93:4E", "70:B3:D5:7E:B", "1C:7D:22", "08:00:72", "08:00:37", "00:00:AA",
-					"00:00:0", "F8:D0:27", "B0:E8:92", "AC:18:26", "A4:EE:57", "9C:AE:D3", "64:EB:8C", "44:D2:44",
-					"38:9D:92", "00:26:AB", "00:00:48", "FC:3F:DB", "FC:15:B4", "F4:CE:46", "F4:30:B9", "F4:03:43",
-					"F0:92:1C", "EC:EB:B8", "EC:B1:D7", "EC:9A:74", "EC:8E:B5", "E8:F7:24", "E8:39:35", "E4:11:5B",
-					"E0:07:1B", "DC:4A:3E", "D8:D3:85", "D8:9D:67", "D8:94:03", "D4:C9:EF", "D4:85:64", "D0:BF:9C",
-					"D0:7E:28", "D0:67:26", "CC:3E:5F", "C8:D3:FF", "C8:CB:B8", "C8:B5:AD", "C4:34:6B", "BC:EA:FA",
-					"B8:AF:67", "B4:B5:2F", "B4:99:BA", "B0:5A:DA", "AC:E2:D3", "AC:16:2D", "A8:BD:27", "A4:5D:36",
-					"A0:D3:C1", "A0:B3:CC", "A0:8C:FD", "A0:48:1C", "A0:2B:B8", "A0:1D:48", "9C:DC:71", "9C:B6:54",
-					"9C:8E:99", "98:F2:B3", "98:E7:F4", "98:4B:E1", "94:F1:28", "94:57:A5", "94:3F:C2", "94:18:82",
-					"8C:DC:D4", "88:51:FB", "84:34:97", "80:CE:62", "80:C1:6E", "80:8D:B7", "78:E7:D1", "78:E3:B5",
-					"78:AC:C0", "78:48:59", "74:46:A0", "70:5A:0F", "70:10:6F", "6C:C2:17", "6C:3B:E5", "68:B5:99",
-					"64:51:06", "64:31:50", "5C:B9:01", "5C:8A:38", "58:20:B1", "50:65:F3", "48:DF:37", "48:BA:4E",
-					"48:0F:CF", "44:48:C1", "44:31:92", "44:1E:A1", "40:B9:3C", "40:B0:34", "40:A8:F0", "3C:D9:2B", 
-					"3C:A8:2A", "3C:52:82", "3C:4A:92", "38:EA:A7", "38:63:BB", "38:17:C3", "34:FC:B9", "34:64:A9",
-					"30:E1:71", "30:8D:99", "2C:76:8A", "2C:59:E5", "2C:44:FD", "2C:41:38", "2C:27:D7", "2C:23:3A",
-					"28:92:4A", "28:80:23", "24:F2:7F", "24:BE:05", "20:A6:CD", "1C:C1:DE", "1C:98:EC", "18:A9:05",
-					"18:60:24", "14:58:D0", "14:02:EC", "10:60:4B", "10:1F:74", "08:2E:5F", "08:00:09", "04:09:73",
-					"00:FD:45", "00:9C:02", "00:80:A0", "00:80:5F", "00:60:B0", "00:50:8B", "00:30:C1", "00:30:6E",
-					"00:26:55", "00:25:B3", "00:24:81", "00:23:7D", "00:22:64", "00:21:5A", "00:1F:29", "00:1E:0B",
-					"00:1C:C4", "00:1B:78", "00:1A:4B", "00:19:BB", "00:18:FE", "00:18:71", "00:17:A4", "00:17:08",
-					"00:16:35", "00:15:60", "00:14:C2", "00:14:38", "00:13:21", "00:12:79", "00:11:85", "00:11:0A",
-					"00:10:E3", "00:10:83", "00:0F:61", "00:0F:20", "00:0E:B3", "00:0E:7F", "00:0D:9D", "00:0B:CD",
-					"00:0A:57", "00:08:C7", "00:08:83", "00:08:02", "00:04:EA", "00:02:A5", "10:00:00:00", "10:00:00:0",
-					"F8:DB:88", "F8:CA:B8", "F8:BC:12", "F8:B1:56", "F4:8E:38", "F0:4D:A2", "F0:1F:AF", "EC:F4:BB",
-					"E4:F0:04", "E0:DB:55", "E0:D8:48", "D8:9E:F3", "D4:BE:D9", "D4:AE:52", "D4:81:D7", "D0:94:66",
-					"D0:67:E5", "D0:43:1E", "C8:1F:66", "BC:30:5B", "B8:CA:3A", "B8:AC:6F", "B8:2A:72", "B4:E1:0F",
-					"B0:83:FE", "A4:BA:DB", "A4:4C:C8", "A4:1F:72", "98:90:96", "98:40:BB", "90:B1:1C", "8C:EC:4B",
-					"8C:CF:09", "84:8F:69", "84:7B:EB", "84:2B:2B", "80:18:44", "7C:C9:5A", "78:45:C4", "78:2B:CB",
-					"74:E6:E2", "74:86:7A", "64:00:6A", "5C:F9:DD", "5C:26:0A", "58:8A:5A", "54:9F:35", "50:9A:4C",
-					"4C:76:25", "48:4D:7E", "44:A8:42", "40:5C:FD", "34:E6:D7", "34:17:EB", "28:F1:0E", "24:B6:FD",
-					"20:47:47", "20:04:0F", "1C:40:24", "18:FB:7B", "18:DB:F2", "18:A9:9B", "18:66:DA", "18:03:73",
-					"14:FE:B5", "14:B3:1F", "14:9E:CF", "14:18:77", "10:98:36", "10:7D:1A", "08:00:1B", "00:C0:4F",
-					"00:B0:D0", "60:48:", "00:26:B9", "00:25:BD", "25:64", "24:00:00:00:00", "00:23:AE", "22:19",
-					"00:21:9B", "21:70", "00:1E:C9", "00:1E:4F", "00:1D:09", "00:1C:23", "00:1A:A0", "00:19:B9",
-					"00:18:8B", "00:16:F0", "00:15:C5", "15:30", "14:22", "13:72", "12:48", "00:12:3F", "11:43",
-					"00:0F:1F", "00:0D:56", "00:0B:DB", "87:4", "00:06:5B", "14:4", "97", "FC:CF:62", "E4:1F:13",
-					"A8:97:DC", "98:BE:94", "90:4E:91:7", "74:99:75", "6C:AE:8B", "5C:F3:FC", "40:F2:E9", "34:40:B5",
-					"10:00:5A", "08:17:F4", "08:00:5A", "60:94", "50:76", "25:03", "22:00", "00:21:5E", "20:35",
-					"00:1A:64", "00:18:B1", "00:17:EF", "00:14:5E", "11:25", "00:10:D9", "00:0D:60", "00:09:6B",
-					"62:9", "00:04:AC", "25:5", "C4:2F:90", "C0:56:E3", "BC:AD:28", "B4:A3:82", "A4:14:37",
-					"54:C4:15", "4C:BD:8F", "44:19:B6", "28:57:BE", "18:68:CB", "68:C4:4D"
-			});
+		INVALID_VENDORS = CollectionFactory.createList(new String[] {
+				"DA:A1:19", "92:68:C3", "9C:93:4E", "70:B3:D5:7E:B", "1C:7D:22", "08:00:72", "08:00:37", "00:00:AA",
+				"00:00:0", "F8:D0:27", "B0:E8:92", "AC:18:26", "A4:EE:57", "9C:AE:D3", "64:EB:8C", "44:D2:44",
+				"38:9D:92", "00:26:AB", "00:00:48", "FC:3F:DB", "FC:15:B4", "F4:CE:46", "F4:30:B9", "F4:03:43",
+				"F0:92:1C", "EC:EB:B8", "EC:B1:D7", "EC:9A:74", "EC:8E:B5", "E8:F7:24", "E8:39:35", "E4:11:5B",
+				"E0:07:1B", "DC:4A:3E", "D8:D3:85", "D8:9D:67", "D8:94:03", "D4:C9:EF", "D4:85:64", "D0:BF:9C",
+				"D0:7E:28", "D0:67:26", "CC:3E:5F", "C8:D3:FF", "C8:CB:B8", "C8:B5:AD", "C4:34:6B", "BC:EA:FA",
+				"B8:AF:67", "B4:B5:2F", "B4:99:BA", "B0:5A:DA", "AC:E2:D3", "AC:16:2D", "A8:BD:27", "A4:5D:36",
+				"A0:D3:C1", "A0:B3:CC", "A0:8C:FD", "A0:48:1C", "A0:2B:B8", "A0:1D:48", "9C:DC:71", "9C:B6:54",
+				"9C:8E:99", "98:F2:B3", "98:E7:F4", "98:4B:E1", "94:F1:28", "94:57:A5", "94:3F:C2", "94:18:82",
+				"8C:DC:D4", "88:51:FB", "84:34:97", "80:CE:62", "80:C1:6E", "80:8D:B7", "78:E7:D1", "78:E3:B5",
+				"78:AC:C0", "78:48:59", "74:46:A0", "70:5A:0F", "70:10:6F", "6C:C2:17", "6C:3B:E5", "68:B5:99",
+				"64:51:06", "64:31:50", "5C:B9:01", "5C:8A:38", "58:20:B1", "50:65:F3", "48:DF:37", "48:BA:4E",
+				"48:0F:CF", "44:48:C1", "44:31:92", "44:1E:A1", "40:B9:3C", "40:B0:34", "40:A8:F0", "3C:D9:2B", 
+				"3C:A8:2A", "3C:52:82", "3C:4A:92", "38:EA:A7", "38:63:BB", "38:17:C3", "34:FC:B9", "34:64:A9",
+				"30:E1:71", "30:8D:99", "2C:76:8A", "2C:59:E5", "2C:44:FD", "2C:41:38", "2C:27:D7", "2C:23:3A",
+				"28:92:4A", "28:80:23", "24:F2:7F", "24:BE:05", "20:A6:CD", "1C:C1:DE", "1C:98:EC", "18:A9:05",
+				"18:60:24", "14:58:D0", "14:02:EC", "10:60:4B", "10:1F:74", "08:2E:5F", "08:00:09", "04:09:73",
+				"00:FD:45", "00:9C:02", "00:80:A0", "00:80:5F", "00:60:B0", "00:50:8B", "00:30:C1", "00:30:6E",
+				"00:26:55", "00:25:B3", "00:24:81", "00:23:7D", "00:22:64", "00:21:5A", "00:1F:29", "00:1E:0B",
+				"00:1C:C4", "00:1B:78", "00:1A:4B", "00:19:BB", "00:18:FE", "00:18:71", "00:17:A4", "00:17:08",
+				"00:16:35", "00:15:60", "00:14:C2", "00:14:38", "00:13:21", "00:12:79", "00:11:85", "00:11:0A",
+				"00:10:E3", "00:10:83", "00:0F:61", "00:0F:20", "00:0E:B3", "00:0E:7F", "00:0D:9D", "00:0B:CD",
+				"00:0A:57", "00:08:C7", "00:08:83", "00:08:02", "00:04:EA", "00:02:A5", "10:00:00:00", "10:00:00:0",
+				"F8:DB:88", "F8:CA:B8", "F8:BC:12", "F8:B1:56", "F4:8E:38", "F0:4D:A2", "F0:1F:AF", "EC:F4:BB",
+				"E4:F0:04", "E0:DB:55", "E0:D8:48", "D8:9E:F3", "D4:BE:D9", "D4:AE:52", "D4:81:D7", "D0:94:66",
+				"D0:67:E5", "D0:43:1E", "C8:1F:66", "BC:30:5B", "B8:CA:3A", "B8:AC:6F", "B8:2A:72", "B4:E1:0F",
+				"B0:83:FE", "A4:BA:DB", "A4:4C:C8", "A4:1F:72", "98:90:96", "98:40:BB", "90:B1:1C", "8C:EC:4B",
+				"8C:CF:09", "84:8F:69", "84:7B:EB", "84:2B:2B", "80:18:44", "7C:C9:5A", "78:45:C4", "78:2B:CB",
+				"74:E6:E2", "74:86:7A", "64:00:6A", "5C:F9:DD", "5C:26:0A", "58:8A:5A", "54:9F:35", "50:9A:4C",
+				"4C:76:25", "48:4D:7E", "44:A8:42", "40:5C:FD", "34:E6:D7", "34:17:EB", "28:F1:0E", "24:B6:FD",
+				"20:47:47", "20:04:0F", "1C:40:24", "18:FB:7B", "18:DB:F2", "18:A9:9B", "18:66:DA", "18:03:73",
+				"14:FE:B5", "14:B3:1F", "14:9E:CF", "14:18:77", "10:98:36", "10:7D:1A", "08:00:1B", "00:C0:4F",
+				"00:B0:D0", "60:48:", "00:26:B9", "00:25:BD", "25:64", "24:00:00:00:00", "00:23:AE", "22:19",
+				"00:21:9B", "21:70", "00:1E:C9", "00:1E:4F", "00:1D:09", "00:1C:23", "00:1A:A0", "00:19:B9",
+				"00:18:8B", "00:16:F0", "00:15:C5", "15:30", "14:22", "13:72", "12:48", "00:12:3F", "11:43",
+				"00:0F:1F", "00:0D:56", "00:0B:DB", "87:4", "00:06:5B", "14:4", "97", "FC:CF:62", "E4:1F:13",
+				"A8:97:DC", "98:BE:94", "90:4E:91:7", "74:99:75", "6C:AE:8B", "5C:F3:FC", "40:F2:E9", "34:40:B5",
+				"10:00:5A", "08:17:F4", "08:00:5A", "60:94", "50:76", "25:03", "22:00", "00:21:5E", "20:35",
+				"00:1A:64", "00:18:B1", "00:17:EF", "00:14:5E", "11:25", "00:10:D9", "00:0D:60", "00:09:6B",
+				"62:9", "00:04:AC", "25:5", "C4:2F:90", "C0:56:E3", "BC:AD:28", "B4:A3:82", "A4:14:37",
+				"54:C4:15", "4C:BD:8F", "44:19:B6", "28:57:BE", "18:68:CB", "68:C4:4D"
+		});
 	}
 	
 	@Autowired
-	private APDVisitDAO apdvDao;
-	
-	@Autowired
-	private APDeviceDAO apdDao;
+	private APDCalibrationDAO apdCal;
 
 	@Autowired
 	private APDAssignationDAO apdaDao;
 	
-	@Autowired
-	private ShoppingDAO shoppingDao;
-
 	@Autowired
 	private StoreDAO storeDao;
 	
@@ -154,6 +146,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 	@Autowired
 	private SystemConfiguration systemConfiguration;
+	
+	@Autowired
+	private KeyHelper keyHelper;
 
 	/**
 	 * Writes a list of APDVisits in the database
@@ -175,9 +170,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					throws ASException {
 
 		List<Store> stores = null;
-		Map<String, APDevice> apdCache = CollectionFactory.createMap();
+		Map<String, APDCalibration> apdCache = CollectionFactory.createMap();
 		Map<String, APDAssignation> assignmentsCache = CollectionFactory.createMap();
 		DumperHelper<APHEntry> dumpHelper;
+		List<APHEntry> e;
 		boolean cacheBuilt = false;
 
 		// Phase 1, determines entities to process ---------------------------------------------------------------------
@@ -196,7 +192,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		for(Store store : stores) 
 			eids.add(store.getIdentifier());
 
-		Map<String, Integer> entities = getEntities(null, null, eids);
+		Map<String, Byte> entities = getEntities(null, null, eids);
 
 		// Phase 2, Gets entities to process ---------------------------------------------------------------------
 
@@ -221,14 +217,14 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				in = 0;
 				for( String entityId : entities.keySet() ) {
 
-					Integer entityKind = entities.get(entityId);
+					byte entityKind = entities.get(entityId);
 					String name = null;
 					Store store = null;
 					
-					if( entityKind.equals(EntityKind.KIND_STORE)) {
+					if( entityKind == EntityKind.KIND_STORE) {
 						store = storeDao.get(entityId);
 						name = store.getName();
-					} else if ( entityKind.equals(EntityKind.KIND_INNER_ZONE)) {
+					} else if (entityKind == EntityKind.KIND_INNER_ZONE) {
 						InnerZone iz = innerzoneDao.get(entityId);
 						name = iz.getName();
 						store = storeDao.get(iz.getEntityId());
@@ -259,19 +255,20 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							String forDate = sdf.format(curDate);
 							List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(entityId,
 									entityKind, curDate);
-							if( !CollectionUtils.isEmpty(assigs)) {
-								if( assigs.size() == 1 ) {
+							if(!CollectionUtils.isEmpty(assigs)) {
+								if(assigs.size() == 1) {
 
+									e = CollectionFactory.createList();
 									assignmentsCache.clear();
 									assignmentsCache.put(assigs.get(0).getHostname(),
 											assigs.get(0));
 									if(!apdCache.containsKey(assigs.get(0).getHostname()))
 										apdCache.put(assigs.get(0).getHostname(),
-												apdDao.get(assigs.get(0).getHostname(), true));
+												apdCal.get(assigs.get(0).getHostname(), true));
 
 									// Get APHE records
-									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + forDate + " using "
-											+ assigs.get(0).getHostname() + "...");
+									log.log(Level.INFO, "Fetching APHEntries for " + name + " and " + forDate
+											+ " using " + assigs.get(0).getHostname() + "...");
 									dumpHelper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
 									dumpHelper.setFilter(assigs.get(0).getHostname());
 									
@@ -285,14 +282,13 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 										// Employee check
 										if(!onlyEmployees || employeeListMacs.contains(
 												entry.getMac().toUpperCase())) {
-											List<APDVisit> visitList = aphEntryToVisits(entry,
-													apdCache, assignmentsCache,
-													blackListMacs, employeeListMacs,
-													tz);
+											e.clear();
+											e.add(entry);
+											List<APDVisit> visitList = aphEntryToVisits(e, apdCache,
+													assignmentsCache, blackListMacs, employeeListMacs, tz);
 											for(APDVisit visit : visitList ) {
 												if(!onlyEmployees ||
-														visit.getCheckinType().equals(
-																APDVisit.CHECKIN_EMPLOYEE)) {
+														visit.getCheckinType() == APDVisit.CHECKIN_EMPLOYEE) {
 													objs.add(visit);
 													keys.add(visit.getIdentifier());
 												}
@@ -316,7 +312,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 										hostnames.add(assig.getHostname());
 										assignmentsCache.put(assig.getHostname(), assig);
 										if(!apdCache.containsKey(assig.getHostname()))
-											apdCache.put(assig.getHostname(), apdDao.get(assig.getHostname(), true));
+											apdCache.put(assig.getHostname(),
+													apdCal.get(assig.getHostname(), true));
 									}
 
 									log.log(Level.INFO, "Fetching APHEntries for " + name + " and "
@@ -335,11 +332,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									Iterator<String> i = cache.keySet().iterator();
 									while(i.hasNext()) {
 										String key = i.next();
-										List<APHEntry> e = cache.get(key);
+										e = cache.get(key);
 										List<APDVisit> visitList = aphEntryToVisits(e, apdCache, assignmentsCache,
 												blackListMacs, employeeListMacs, tz);
 										for(APDVisit visit : visitList ) {
-											if(!onlyEmployees || visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE))
+											if(!onlyEmployees ||
+													visit.getCheckinType() == APDVisit.CHECKIN_EMPLOYEE)
 												objs.add(visit);
 										}
 									}
@@ -360,8 +358,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									log.log(Level.INFO, "Building caches for dashboard mapper...");
 									mapper.buildCaches(false);
 									cacheBuilt = true;
-								} catch( Exception e ) {
-									throw ASExceptionHelper.defaultException(e.getMessage(), e);
+								} catch( Exception ex ) {
+									throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
 								}
 							}
 
@@ -371,22 +369,19 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 												"apd_permanence", "apd_occupation" ),
 										curDate, curDate, GMT);
 							}
-							
 							if( objs.size() > 0 || onlyDashboards) {
 								mapper.createAPDVisitPerformanceDashboardForDay(curDate,
 										Arrays.asList(new String[] { entityId }), entityKind, objs);
 							}
 						}
-					} catch( Exception e ) {
-						log.log(Level.SEVERE, e.getMessage(), e);
+					} catch( Exception ex ) {
+						log.log(Level.SEVERE, ex.getMessage(), ex);
 					}
-					
 					log.log(Level.INFO, "Progress: " +String.format("%.2f",
 							((++in *100d) /entities.size())
 									*((curDate.getTime() -fromDate.getTime() +1d)
 											/(toDate.getTime() -fromDate.getTime())))
 							+"%");
-
 				} 
 			} catch( Exception e1 ) {
 				log.log(Level.SEVERE, e1.getMessage(), e1);
@@ -404,7 +399,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	}
 	
 	private List<APHEntry> integrateAPHE(DumperHelper<APHEntry> dumpHelper,
-			APDevice calibration, String entityId, Integer entityKind,
+			APDCalibration calibration, String entityId, byte entityKind,
 			String forStringDate, TimeZone tz, String begginingDate, boolean lastDay) {
 		
 		Map<String, APHEntry> map = CollectionFactory.createMap();
@@ -515,8 +510,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		return res;
 	}
 	
-	public Map<String, Integer> getEntities(List<String> shoppingIds, List<String> brandIds, List<String> storeIds) throws ASException {
-		Map<String, Integer> ret = CollectionFactory.createMap();
+	public Map<String, Byte> getEntities(List<String> shoppingIds, List<String> brandIds, List<String> storeIds)
+			throws ASException {
+		Map<String, Byte> ret = CollectionFactory.createMap();
 
 		if( shoppingIds != null )
 			for( String shopping : shoppingIds )
@@ -538,16 +534,17 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		return ret;
 	}
 
-	public Map<String, Integer> aggregateZones(Map<String, Integer> map) throws ASException {
+	public Map<String, Byte> aggregateZones(Map<String, Byte> map) throws ASException {
 		
-		Map<String, Integer> newmap = CollectionFactory.createMap();
+		Map<String, Byte> newmap = CollectionFactory.createMap();
 		Set<String> keys = CollectionFactory.createSet();
 		keys.addAll(map.keySet());
 		Iterator<String> i = keys.iterator();
 		while(i.hasNext()) {
 			String entityId = i.next();
-			Integer entityKind = map.get(entityId);
-			List<InnerZone> zones = innerzoneDao.getUsingEntityIdAndRange(entityId, entityKind, null, null, null, false);
+			byte entityKind = map.get(entityId);
+			List<InnerZone> zones = innerzoneDao.getUsingEntityIdAndRange(entityId, entityKind, null, null,
+					null, false);
 			newmap = CollectionFactory.createMap();
 			for( InnerZone zone : zones ) 
 				newmap.put(zone.getIdentifier(), EntityKind.KIND_INNER_ZONE);
@@ -559,7 +556,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	}
 	
 	
-	/**
+	/*
 	 * Writes a list of APDVisits in the database
 	 * 
 	 * @param shoppingIds
@@ -569,7 +566,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @param toDate
 	 *            Date to stop processing
 	 * @throws ASException
-	 */
+	 *
 	@Override
 	public void generateAPDVisits(List<String> shoppingIds, Date fromDate, Date toDate, boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards) throws ASException {
 
@@ -584,13 +581,13 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			subShoppingIds.addAll(shoppingIds);
 		} else {
 			List<Shopping> shoppings = CollectionFactory.createList();
-			shoppings.addAll(shoppingDao.getUsingStatusAndRange( 
-				Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), null, null));
+			shoppings.addAll(shoppingDao.getUsingStatusAndRange(Arrays.asList(StatusAware.STATUS_ENABLED),
+					null, null));
 			for(Shopping shopping : shoppings ) 
 				subShoppingIds.add(shopping.getIdentifier());
 		}
 
-		Map<String, Integer> entities = getEntities(subShoppingIds, null, null);
+		Map<String, Byte> entities = getEntities(subShoppingIds, null, null);
 		DumperHelper<APDVisit> apdvDumper = new DumpFactory<APDVisit>().build(null, APDVisit.class);
 		
 		Date curDate = new Date(fromDate.getTime());
@@ -758,7 +755,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		}
 		
 		apdvDumper.dispose();
-	}
+	}*/
 
 	/**
 	 * 
@@ -780,7 +777,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 
 			// Generic Black Lists
 			List<APDMABlackList> blackListGen = apmaBlDao.getUsingEntityIdAndRange(null,
-					null, null, null, null, false);
+					(byte) -1, null, null, null, false);
 			for( APDMABlackList brand : blackListGen ) {
 				if (!macs.contains(brand.getMac().toUpperCase().trim())){
 					macs.add(brand.getMac().toUpperCase().trim());	
@@ -855,13 +852,15 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			//--- Start black list ------------
 			//Load blackListbyShopping for shopping
 			if( StringUtils.hasText(store.getShoppingId())) {
-				List<APDMAEmployee> employeesbyShopping = apmaEDao.getUsingEntityIdAndRange(store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, null, false);
+				List<APDMAEmployee> employeesbyShopping = apmaEDao.getUsingEntityIdAndRange(
+						store.getShoppingId(), EntityKind.KIND_SHOPPING, null, null, null, false);
 				for( APDMAEmployee emp_shop : employeesbyShopping ) {
 					if (!macs.contains(emp_shop.getMac().toUpperCase().trim())){
 						macs.add(emp_shop.getMac().toUpperCase().trim());	
 					}
 				}
-				log.log(Level.FINE,"(" +store.getIdentifier()+ ") -- Load Employees in list for Shopping: " + employeesbyShopping.size() + " macs");
+				log.log(Level.FINE,"(" +store.getIdentifier()+ ") -- Load Employees in list for Shopping: "
+							+ employeesbyShopping.size() + " macs");
 			}
 
 			//Load blackListbyShopping for brand
@@ -891,14 +890,14 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		return macs;
 	}
 	
-	/**
+	/*
 	 * Converts an APHEntry to a visit list
 	 * 
 	 * @param entry
 	 *            The entry to convert
 	 * @return A list with created visits
 	 * @throws ASException
-	 */
+	 *
 	@Override
 	public List<APDVisit> aphEntryToVisits(APHEntry entry, Map<String, APDevice> apdCache,
 			Map<String, APDAssignation> assignmentsCache,List<String> blackListMacs,
@@ -907,7 +906,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		entries.add(entry);
 		return aphEntryToVisits(entries, apdCache, assignmentsCache, blackListMacs,
 				employeeListMacs, tz);
-	}	
+	}*/	
 
 	/**
 	 * Converts an APHEntry to a visit list
@@ -919,7 +918,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 */
 	@SuppressWarnings("unused")
 	@Override
-	public List<APDVisit> aphEntryToVisits(List<APHEntry> entries, Map<String, APDevice> apdCache,
+	public List<APDVisit> aphEntryToVisits(List<APHEntry> entries, Map<String, APDCalibration> apdCache,
 			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,
 			List<String> employeeListMacs, TimeZone tz) throws ASException {
 
@@ -941,14 +940,14 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			if(ALGORITHM_MARKII.equals(systemConfiguration.getForceAlgorithm()))
 				mode = MARKII;
 			
-			switch(mode) {
-			case 1:
+			/*switch(mode) {
+			case 1:*/
 				return aphEntryToVisitsMarkII(entries, apdCache, assignmentsCache,
 						blackListMacs, employeeListMacs, tz);
-			default:
+			/*default:
 				return aphEntryToVisitsCommon(entries, apdCache, assignmentsCache,
 						blackListMacs, employeeListMacs, tz);
-			}
+			}*/
 		} catch( Exception e ) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}
@@ -963,7 +962,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @throws ASException
 	 */
 	private List<APDVisit> aphEntryToVisitsMarkII(List<APHEntry> entries,
-			Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache,
+			Map<String, APDCalibration> apdCache, Map<String, APDAssignation> assignmentsCache,
 			List<String> blackListMacs, List<String> employeeListMacs, TimeZone tz) throws ASException {
 
 		// Validates entries
@@ -972,7 +971,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		List<APDVisit> res = CollectionFactory.createList();
 
 		// Work variables
-		Boolean isEmployee = false;
+		boolean isEmployee = false;
 		
 		// Merges all the time slots
 		List<Integer> slots = null;
@@ -1024,10 +1023,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		if(slots.size() >= MAXIMUM_TIME_SLOTS) return res;
 		
 		// Adds all the devices in the cache
-		Map<String, APDevice> apd = CollectionFactory.createMap();
+		Map<String, APDCalibration> apd = CollectionFactory.createMap();
 		if( apdCache == null || apdCache.size() == 0 ) {
 			for( APHEntry entry : entries ) {
-				apd.put(entry.getHostname(), apdDao.get(entry.getHostname(), true));
+				apd.put(entry.getHostname(), apdCal.get(entry.getHostname(), true));
 			}
 		} else {
 			apd.putAll(apdCache);
@@ -1056,28 +1055,27 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		APDVisit currentVisit = null;
 		APDVisit currentPeasant = null;
 		APHEntry curEntry = null;
+		int repepatThreshold = 0;
+		int count = 0;
 		
 		// Now iterate the slots on each entry
-		for(Integer slot : slots ) {
+		for(int slot : slots ) {
 			try {
 				// Identifies the power and device
-				Integer value = null;
+				int value = 0;
 				for( APHEntry entry : entries ) {
 					Integer tValue = entry.getArtificialRssi().get(String.valueOf(slot));
-					if( tValue != null && (value == null || tValue > value)) {
+					if( tValue != null && (value == 0 || tValue > value)) {
 						value = tValue;
 						curEntry = entry;
 					}
 				}
-				// Controls invalid values
-				if(value == null) {
-					// Updates the last slot
-					continue;
-				} if( value > -1 ) return CollectionFactory.createList();
-				
+				// Controls invalid values & Updates the last slot
+				if(value > -1) continue;
 				Date curDate = aphHelper.slotToDate(curEntry, slot, tz);
-				APDevice dev = apd.get(curEntry.getHostname());
+				APDCalibration dev = apd.get(curEntry.getHostname());
 				dev.completeDefaults();
+				if(dev.getRepeatThreshold() > repepatThreshold) repepatThreshold = dev.getRepeatThreshold();
 				
 				// Closes open visits in case of slot continuity disruption
 				if(lastSlot != null) {
@@ -1090,13 +1088,16 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						testLastSlot -= SLOT_NUMBER_IN_DAY;
 					if(testSlot > ((testLastSlot + 2) %SLOT_NUMBER_IN_DAY)
 							&& (testSlot -testLastSlot) > (dev.getVisitGapThreshold()
-									*APHHelper.MINUTE_TO_TWENTY_SECONDS_SLOT)) { 
+									*MINUTE_TO_TWENTY_SECONDS_SLOT)) { 
 						if( currentVisit != null ) {
 							currentVisit.setCheckinFinished(
 									aphHelper.slotToDate(curEntry, lastSlot, tz));
 							addPermanenceCheck(currentVisit, currentPeasant, dev, tz);
-							if(isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz))
+							if(APDVisitHelper.isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz) &&
+									count <= repepatThreshold) {
 								res.add(currentVisit);
+								count++;
+							}
 							currentVisit = null;
 						}
 
@@ -1110,8 +1111,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					}
 				}
 				// If there is a peasant threshold
-				if(dev.getPeasantPowerThreshold() == null 
-						|| value >= dev.getPeasantPowerThreshold()) {
+				if(value >= dev.getPeasantPowerThreshold()) {
 					// Add a new peasant if there is no peasant active
 					if( currentPeasant == null )
 						currentPeasant = createPeasant(curEntry, curDate, null,
@@ -1127,8 +1127,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					} else if( currentVisit != null ) {
 						// Closes the visit if it was too far for more time than specified in visit gap threshold
 						currentVisit.addOffRangeSegment();
-						// 30DB Tolerance ... it should be a parameter
-						if( value > (dev.getVisitPowerThreshold() - 30)) {
+						// 30DB Tolerance 
+						if( value > (dev.getVisitPowerThreshold() - dev.getPowerDecay())) {
 							lastVisitSlot = slot;
 						} else {
 							int testSlot = slot;
@@ -1140,20 +1140,19 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							else if(testLastVS >= SLOT_NUMBER_IN_DAY)
 								testLastVS -= SLOT_NUMBER_IN_DAY;
 							if((testSlot - testLastVS) > (dev.getVisitGapThreshold()
-									*APHHelper.MINUTE_TO_TWENTY_SECONDS_SLOT)) {
+									*MINUTE_TO_TWENTY_SECONDS_SLOT)) {
 								int finishSlot = slot;
-								if((lastVisitSlot + (dev.getVisitDecay()
-										*APHHelper.MINUTE_TO_TWENTY_SECONDS_SLOT)) <
-										testSlot)
-									finishSlot = (int)(lastVisitSlot
-											+(dev.getVisitDecay()
-											*APHHelper.MINUTE_TO_TWENTY_SECONDS_SLOT));
+								if(lastVisitSlot + dev.getTimeDecay() < testSlot)
+									finishSlot = (int)(lastVisitSlot +dev.getTimeDecay());
 								currentVisit.setCheckinFinished(aphHelper.slotToDate(
 										curEntry, finishSlot, tz));
 								addPermanenceCheck(currentVisit, currentPeasant, dev,
 										tz);
-								if(isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz))
+								if(APDVisitHelper.isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz)
+										&& count <= repepatThreshold) {
 									res.add(currentVisit);
+									count++;
+								}
 								currentVisit = null;
 							}
 						}
@@ -1170,21 +1169,22 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					else if(testLastPeasant >= SLOT_NUMBER_IN_DAY)
 						testLastPeasant -= SLOT_NUMBER_IN_DAY;
 					if((testSlot - testLastPeasant) > (dev.getVisitGapThreshold()
-							*APHHelper.MINUTE_TO_TWENTY_SECONDS_SLOT)) {
+							*MINUTE_TO_TWENTY_SECONDS_SLOT)) {
 
 						int finishSlot = slot;
-						if((lastPeasantSlot + (dev.getVisitDecay()
-								*APHHelper.MINUTE_TO_TWENTY_SECONDS_SLOT)) < testSlot)
-							finishSlot = (int)(lastPeasantSlot + (dev.getVisitDecay()
-									*APHHelper.MINUTE_TO_TWENTY_SECONDS_SLOT));
+						if(lastPeasantSlot +dev.getTimeDecay() < testSlot)
+							finishSlot = (int)(lastPeasantSlot +dev.getTimeDecay());
 
 						// Closes open visits
 						if( currentVisit != null ) {
 							currentVisit.setCheckinFinished(aphHelper.slotToDate(
 									curEntry, finishSlot, tz));
 							addPermanenceCheck(currentVisit, currentPeasant, dev, tz);
-							if(isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz))
+							if(APDVisitHelper.isVisitValid(currentVisit, dev, isEmployee, WORK_CALENDAR, tz) &&
+									count <= repepatThreshold) {
 								res.add(currentVisit);
+								count++;
+							}
 							currentVisit = null;
 						} if( currentPeasant != null ) {
 							currentPeasant.setCheckinFinished(aphHelper.slotToDate(
@@ -1206,15 +1206,16 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		try {
 			if( currentVisit != null ) {
 				int finishSlot = lastSlot;
-				APDevice dev = apd.get(curEntry.getHostname());
-				if((lastVisitSlot + (dev.getVisitDecay()
-						*APHHelper.MINUTE_TO_TWENTY_SECONDS_SLOT)) < finishSlot)
-					finishSlot = (int)(lastVisitSlot + (dev.getVisitDecay()
-							*APHHelper.MINUTE_TO_TWENTY_SECONDS_SLOT));
+				APDCalibration dev = apd.get(curEntry.getHostname());
+				if(lastVisitSlot +dev.getTimeDecay() < finishSlot)
+					finishSlot = (int)(lastVisitSlot +dev.getTimeDecay());
 				currentVisit.setCheckinFinished(aphHelper.slotToDate(curEntry, finishSlot, tz));
 				addPermanenceCheck(currentVisit, currentPeasant, apd.get(curEntry.getHostname()), tz);
-				if(isVisitValid(currentVisit, apd.get(curEntry.getHostname()), isEmployee, WORK_CALENDAR, tz))
+				if(APDVisitHelper.isVisitValid(currentVisit, apd.get(curEntry.getHostname()), isEmployee,
+						WORK_CALENDAR, tz) && count <= repepatThreshold) {
 					res.add(currentVisit);
+					count++;
+				}
 				currentVisit = null;
 			}
 		} catch( Exception e ) {
@@ -1222,10 +1223,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		}
 
 		try {
-			if( currentPeasant != null ) {
+			if(currentPeasant != null) {
 				currentPeasant.setCheckinFinished(aphHelper.slotToDate(
 						curEntry, lastSlot, tz));
-				if(isPeasantValid(currentPeasant, apd.get(curEntry.getHostname()),isEmployee))
+				if(isPeasantValid(currentPeasant, apd.get(curEntry.getHostname()), isEmployee))
 					res.add(currentPeasant);
 				currentPeasant = null;
 			}
@@ -1233,50 +1234,17 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			log.log(Level.SEVERE, e.getMessage(), e);
 		}
 
-		
-		// Checks for max visits per day using RepeatThreshold
-		int repepatThreshold = 0;
-		for( APHEntry entry : entries ) {
-			APDevice dev = apd.get(entry.getHostname());
-			if(dev.getRepeatThreshold() > repepatThreshold)
-				repepatThreshold = dev.getRepeatThreshold();
-		}
-
-		int count = 0;
-		for( APDVisit visit : res ) {
-			if( visit.getCheckinType().equals(APDVisit.CHECKIN_VISIT))
-				count++;
-		}
-		if( count > repepatThreshold ) {// TODO discard changes from external context
-			List<APDVisit> tmp = CollectionFactory.createList();
-			tmp.addAll(res);
-			res.clear();
-			boolean one = false;
-			for( APDVisit v : tmp ) {
-				if(!v.getCheckinType().equals(APDVisit.CHECKIN_VISIT)) res.add(v);
-				else if(!one) {
-					res.add(v);
-					one = true;
-				}
-				/*else {
-					v.setCheckinType(APDVisit.CHECKIN_PEASANT);
-					res.add(v);
-				}*/
-			}
-		}
-		// End Checks for max visits per day using RepeatThreshold
-		
 		return res;
 	}
 
-	/**
+	/*
 	 * Converts an APHEntry to a visit list (Commons version)
 	 * 
 	 * @param entry
 	 *            The entry to convert
 	 * @return A list with created visits
 	 * @throws ASException
-	 */
+	 *
 	private List<APDVisit> aphEntryToVisitsCommon(List<APHEntry> entries,
 			Map<String, APDevice> apdCache, Map<String, APDAssignation> assignmentsCache,
 			List<String> blackListMacs, List<String> employeeListMacs, TimeZone tz) throws ASException {
@@ -1506,15 +1474,15 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		}
 
 		return ret;
-	}
+	}*/
 
-	private void addPermanenceCheck(APDVisit visit, APDVisit peasant, APDevice device,
+	private void addPermanenceCheck(APDVisit visit, APDVisit peasant, APDCalibration device,
 			TimeZone tz) {
 		long time = (long)(visit.getCheckinFinished().getTime()
 				-visit.getCheckinStarted().getTime()) / 60000;
 		visit.setHidePermanence(time < device.getVisitCountThreshold());
 		try {
-			if (isVisitValid(visit, device, false, WORK_CALENDAR, tz) && peasant != null &&
+			if (APDVisitHelper.isVisitValid(visit, device, false, WORK_CALENDAR, tz) && peasant != null &&
 					(peasant.getCheckinStarted().before(visit.getCheckinStarted())
 					|| peasant.getCheckinStarted().equals(visit.getCheckinStarted())))
 				peasant.setHidePermanence(true);
@@ -1532,7 +1500,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @return true if valid, false if not
 	 * @throws ParseException
 	 */
-	private boolean isPeasantValid(APDVisit visit, APDevice device,Boolean isEmployee) 
+	private boolean isPeasantValid(APDVisit visit, APDCalibration device,Boolean isEmployee) 
 		throws ParseException {
 		
 		if( isEmployee ) visit.setCheckinType(APDVisit.CHECKIN_EMPLOYEE);
@@ -1563,8 +1531,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			else break;
 		}
 		
-		Long time = (visit.getCheckinFinished().getTime()
-				-visit.getCheckinStarted().getTime()) / 60000;
+		Long time = (visit.getCheckinFinished().getTime() -visit.getCheckinStarted().getTime()) / 60000;
 		
 		visit.setDuration(time);		
 		return time <= 60 *60;
@@ -1586,7 +1553,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			Boolean isEmployee) throws ASException {
 		
 		String entityId = assign.getEntityId();
-		Integer entityKind = assign.getEntityKind();
+		byte entityKind = assign.getEntityKind();
 		WORK_CALENDAR.clear();
 		
 		APDVisit visit = new APDVisit();
@@ -1610,8 +1577,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		} catch(ParseException e) {
 			visit.setForDate(source.getDate());
 		}
-		visit.setKey(apdvDao.createKey(visit));
-		
+		//visit.setKey(apdvDao.createKey(visit));
+		visit.setKey(keyHelper.createStringUniqueKey(APDVisit.class));
 		return visit;
 	}
 
@@ -1631,12 +1598,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			throws ASException {
 		
 		String entityId = assign.getEntityId();
-		Integer entityKind = assign.getEntityKind();
+		byte entityKind = assign.getEntityKind();
 		WORK_CALENDAR.clear();
 		
 		APDVisit peasant = new APDVisit();
 		peasant.setApheSource(source.getIdentifier());
-		peasant.setCheckinStarted(date);// FIXME is this ok?
+		peasant.setCheckinStarted(date);
 		peasant.setCheckinType(APDVisit.CHECKIN_PEASANT);
 		peasant.setEntityId(entityId);
 		peasant.setEntityKind(entityKind);
@@ -1655,122 +1622,9 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		} catch(ParseException e) {
 			peasant.setForDate(source.getDate());
 		}
-		peasant.setKey(apdvDao.createKey(peasant));
+		peasant.setKey(keyHelper.createStringUniqueKey(APDVisit.class));
 		
 		return peasant;
-	}
-	
-	@Override
-	public void fakeVisitsWith(String storeId, String fakeWithStoreId, Date fromDate, Date toDate ) throws ASException {
-				
-		List<APDVisit> list1 = apdvDao.getUsingEntityIdAndEntityKindAndDate(storeId, EntityKind.KIND_STORE, fromDate, toDate, null, null, null, null, false);
-		List<APDVisit> list2 = apdvDao.getUsingEntityIdAndEntityKindAndDate(fakeWithStoreId, EntityKind.KIND_STORE, fromDate, toDate, null, null, null, null, false);
-		
-		List<APDVisit> lp = CollectionFactory.createList();
-		List<APDVisit> lv = CollectionFactory.createList();
-
-		SimpleDateFormat sdf = new SimpleDateFormat("HH");
-		
-		Map<Integer, Integer> l2p = CollectionFactory.createMap();
-		Map<Integer, Integer> l2v = CollectionFactory.createMap();
-		int l2pc = 0;
-		int l2vc = 0;
-		int l1pc = 0;
-		int l1vc = 0;
-		
-		for( APDVisit obj : list2 ) {
-			if(obj.getCheckinType().equals(APDVisit.CHECKIN_PEASANT)) {
-				l2pc++;
-				int key = Integer.parseInt(sdf.format(obj.getCheckinStarted()));
-				Integer val = l2p.get(key);
-				if( val == null ) val = 0;
-				val++;
-				l2p.put(key, val);
-			}
-			if(obj.getCheckinType().equals(APDVisit.CHECKIN_VISIT)) {
-				l2vc++;
-				int key = Integer.parseInt(sdf.format(obj.getCheckinStarted()));
-				Integer val = l2v.get(key);
-				if( val == null ) val = 0;
-				val++;
-				l2v.put(key, val);
-			}
-		}
-		
-		for( APDVisit obj : list1 ) {
-			if(obj.getCheckinType().equals(APDVisit.CHECKIN_PEASANT)) {
-				l1pc++;
-				lp.add(obj);
-			}
-			if(obj.getCheckinType().equals(APDVisit.CHECKIN_VISIT)) {
-				l1vc++;
-				lv.add(obj);
-			}
-		}
-
-		int idx = 0;
-		int x = 0;
-		for( int i = 11; i < 20; i++ ) {
-			int xl2p = l2p.get(i);
-			float perc = (xl2p * 100 / l2pc);
-			
-			int count = (int)(perc * l1pc / 100);
-			log.log(Level.INFO, count + " peasants for " + storeId + " and hour " + i);			
-			
-			x = 0;
-			while(x < count && idx < lp.size()) {
-				APDVisit obj = lp.get(idx);
-				idx++;
-				x++;
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(obj.getCheckinStarted());
-				cal.set(Calendar.HOUR_OF_DAY, i);
-				obj.setCheckinStarted(cal.getTime());
-				cal.setTime(obj.getCheckinFinished());
-				cal.set(Calendar.HOUR_OF_DAY, i);
-				obj.setCheckinFinished(cal.getTime());
-				if(obj.getCheckinFinished().before(obj.getCheckinStarted())) {
-					cal.setTime(obj.getCheckinFinished());
-					cal.set(Calendar.HOUR_OF_DAY, i+1);
-					obj.setCheckinFinished(cal.getTime());
-				}
-				apdvDao.update(obj);
-			}
-			
-		}
-
-	
-		idx = 0;
-		x = 0;
-		for( int i = 11; i < 20; i++ ) {
-			int xl2v = l2v.get(i);
-			float perc = (xl2v * 100 / l2vc);
-			
-			int count = (int)(perc * l1vc / 100);
-			log.log(Level.INFO, count + " visits for " + storeId + " and hour " + i);
-
-			x = 0;
-			while(x < count && idx < lv.size()) {
-				APDVisit obj = lv.get(idx);
-				idx++;
-				x++;
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(obj.getCheckinStarted());
-				cal.set(Calendar.HOUR_OF_DAY, i);
-				obj.setCheckinStarted(cal.getTime());
-				cal.setTime(obj.getCheckinFinished());
-				cal.set(Calendar.HOUR_OF_DAY, i);
-				obj.setCheckinFinished(cal.getTime());
-				if(obj.getCheckinFinished().before(obj.getCheckinStarted())) {
-					cal.setTime(obj.getCheckinFinished());
-					cal.set(Calendar.HOUR_OF_DAY, i+1);
-					obj.setCheckinFinished(cal.getTime());
-				}
-				apdvDao.update(obj);
-			}
-			
-		}
-
 	}
 	
 	@Override

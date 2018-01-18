@@ -241,7 +241,12 @@ public class GeoCodingHelperGMapsImpl implements GeoCodingHelper {
 
 		final Geocoder geocoder = new Geocoder();
 		GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(address).setLanguage("en").getGeocoderRequest();
-		GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
+		GeocodeResponse geocoderResponse = null;
+		try {
+			geocoderResponse = geocoder.geocode(geocoderRequest);
+		} catch(IOException e) {
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		}
 		if( geocoderResponse.getStatus().equals(GeocoderStatus.ZERO_RESULTS)) {
 			throw ASExceptionHelper.notFoundException();
 		}
@@ -751,7 +756,7 @@ public class GeoCodingHelperGMapsImpl implements GeoCodingHelper {
 	}
 
 	@Override
-	public void removeGeoEntity(String identifier, Integer entityKind) throws ASException {
+	public void removeGeoEntity(String identifier, byte entityKind) throws ASException {
 		List<GeoEntity> l = geDao.getUsingEntityAndKind(identifier, entityKind);
 		for( GeoEntity ge : l ) {
 			geDao.delete(ge);
@@ -759,10 +764,10 @@ public class GeoCodingHelperGMapsImpl implements GeoCodingHelper {
 	}
 
 	@Override
-	public void addGeoEntity(String identifier, Integer entityKind)
+	public void addGeoEntity(String identifier, byte entityKind)
 			throws ASException {
 
-		if(!StringUtils.hasText(identifier) || entityKind == null ) throw ASExceptionHelper.forbiddenException();
+		if(!StringUtils.hasText(identifier) || entityKind < 0 ) throw ASExceptionHelper.forbiddenException();
 
 		switch( entityKind ) {
 		case EntityKind.KIND_SHOPPING:
@@ -850,10 +855,10 @@ public class GeoCodingHelperGMapsImpl implements GeoCodingHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public GeoPoint getGeoPoint(Double lat, Double lon, String deviceUUID) throws ASException {
+	public GeoPoint getGeoPoint(double lat, double lon, String deviceUUID) throws ASException {
 
 		boolean hasLocation = true;
-		if(( lat == null || lat == 0 || lon == null || lon == 0 ) && (StringUtils.hasText(deviceUUID))) {
+		if(( lat == 0 || lon == 0 ) && (StringUtils.hasText(deviceUUID))) {
 			try {
 				DeviceLocation loc = dlDao.get(deviceUUID, true);
 				lat = loc.getLat();
@@ -865,7 +870,7 @@ public class GeoCodingHelperGMapsImpl implements GeoCodingHelper {
 			}
 		}
 
-		if( lat == null || lat == 0 || lon == null || lon == 0 ) 
+		if( lat == 0 || lon == 0 ) 
 			hasLocation = false;
 
 		if(hasLocation) {

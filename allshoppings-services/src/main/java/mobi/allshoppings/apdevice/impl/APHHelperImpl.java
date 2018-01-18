@@ -1,11 +1,15 @@
 package mobi.allshoppings.apdevice.impl;
 
+import static mx.getin.Constants.DAY_IN_MILLIS;
+import static mx.getin.Constants.MINUTE_TO_TWENTY_SECONDS_SLOT;
+import static mx.getin.Constants.SLOT_NUMBER_IN_DAY;
+import static mx.getin.Constants.sdf;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -21,47 +25,33 @@ import java.util.regex.Pattern;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import mobi.allshoppings.apdevice.APDVisitHelper;
-import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.apdevice.APHHelper;
-import com.inodes.datanucleus.model.Key;
-
-import mobi.allshoppings.dao.APHEntryDAO;
-import mobi.allshoppings.dao.DeviceInfoDAO;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
-import mobi.allshoppings.model.DeviceInfo;
 import mobi.allshoppings.model.ExternalAPHotspot;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.tools.KeyHelper;
 import mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.PersistentCacheFSImpl;
+import mx.getin.model.APDCalibration;
 
 public class APHHelperImpl implements APHHelper {
 
+	private static Calendar CALENDAR = Calendar.getInstance();
+	
 	private static final Logger log = Logger.getLogger(APHHelperImpl.class.getName());
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-	private static final long HOUR_IN_MILLIS = 3600000;
-	private static final long DAY_IN_MILLIS = 86400000;
-	private static final Calendar CALENDAR = Calendar.getInstance();
+	
 	private static final Pattern VALID_MAC_ADDRESS_REGEX =
 			Pattern.compile("^([0-9A-Fa-f]{2}[\\.:-]){5}([0-9A-Fa-f]{2})$");
 	
 	private PersistentCacheFSImpl<APHEntry> cache;
 
-	@Autowired
-	private APHEntryDAO apheDao;
-	@Autowired
-	private APDeviceHelper apdHelper;
-	@Autowired
-	private DeviceInfoDAO diDao;
 	@Autowired
 	private SystemConfiguration systemConfiguration;
 	
@@ -175,34 +165,28 @@ public class APHHelperImpl implements APHHelper {
 		if( cache == null ) useCache = false;
 		APHEntry ret = useCache ? cache.get(hash) : null;
 		if( null == ret ) {
+			DumperHelper<APHEntry> dumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
 			try {
-				if( cacheBuilt == true && useCache ) 
-					throw ASExceptionHelper.notFoundException();
-				
-				ret = apheDao.get(hash, true);
+				if(cacheBuilt == true && useCache) throw ASExceptionHelper.notFoundException();
+				dumper.setFilter(hostname);
+				Date dest = sdf.parse(date);
+				CALENDAR.setTime(dest);
+				CALENDAR.add(Calendar.DATE, 1);
+				CALENDAR.add(Calendar.MILLISECOND, -1);
+				return dumper.iterator(dest, CALENDAR.getTime()).next();
 			} catch( ASException e ) {
 				ret = new APHEntry(hostname, mac, date);
-				try {
-					ret.setKey(apheDao.createKey(ret));
-					if( scanInDevices ) {
-						List<DeviceInfo> di = diDao.getUsingMAC(mac);
-						if( di.size() > 0 ) {
-							ret.setDevicePlatform(di.get(0).getDevicePlatform());
-						} else {
-							throw ASExceptionHelper.notFoundException();
-						}
-					} else {
-						throw ASExceptionHelper.notFoundException();
-					}
-				} catch( ASException e1 ) {
-					ret.setDevicePlatform(apdHelper.getDevicePlatform(mac, null));
-				}
+				ret.setKey(keyHelper.createStringUniqueKey(APHEntry.class));
+			} catch(ParseException e) {
+				log.log(Level.SEVERE, "Cannot parse date " +date, e);
+			} finally {
+				dumper.dispose();
 			}
 		}
 		return ret;
 	}
 	
-	
+	/*
 	public APHEntry getFromCacheDumper(String hostname, String mac, String date) throws NoSuchAlgorithmException, FileNotFoundException, IOException {
 		String hash = getHash(hostname, mac, date);
 		if( cache == null ) useCache = false;
@@ -236,11 +220,11 @@ public class APHHelperImpl implements APHHelper {
 		return ret;
 	}
 
-	/**
+	/*
 	 * Obtains an APHEntry representation from cache
 	 * @param obj
 	 * @return
-	 */
+	 *
 	public APHEntry getFromCache(APHotspot obj) {
 		String hash = getHash(obj);
 		if( cache == null ) useCache = false;
@@ -278,11 +262,11 @@ public class APHHelperImpl implements APHHelper {
 		return ret;
 	}
 
-	/**
+	/*
 	 * Obtains an APHEntry representation from cache
 	 * @param obj
 	 * @return
-	 */
+	 *
 	public APHEntry getFromCache(ExternalAPHotspot obj) {
 		String hash = getHash(obj);
 		if( cache == null ) useCache = false;
@@ -320,7 +304,7 @@ public class APHHelperImpl implements APHHelper {
 			}
 		}
 		return ret;
-	}
+	}*/
 
 	/**
 	 * Inserts an APHEntry representation in the cache
@@ -436,34 +420,34 @@ public class APHHelperImpl implements APHHelper {
 		return null;
 	}
 
-	/**
+	/*
 	 * Sets the correct RSSI in a placed frame Frames are divided in the seconds
 	 * of the day / 20
 	 * 
 	 * @param aph
 	 *            The APHotspot from which the RSSI will be taken from
 	 * @return The modified APHEntry
-	 */
+	 *
 	@Override
 	public APHEntry setFramedRSSI(APHotspot aph) {
 		APHEntry aphe = getFromCache(aph);
 		return putInCache(setFramedRSSI(aphe, aph.getCreationDateTime(), aph.getSignalDB()));
-	}
+	}*/
 
-	/**
+	/*
 	 * Sets the correct RSSI in a placed frame Frames are divided in the seconds
 	 * of the day / 20
 	 * 
 	 * @param aph
 	 *            The APHotspot from which the RSSI will be taken from
 	 * @return The modified APHEntry
-	 */
+	 *
 	@Override
 	public APHEntry setFramedRSSI(ExternalAPHotspot aph) {
 		APHEntry aphe = getFromCache(aph);
 		
 		return putInCache(repeatFramedRSSI(aphe, aph.getFirstSeen(), aph.getLastSeen(), aph.getSignalDB()));
-	}
+	}*/
 	
 	/**
 	 * Pre build the APHEntries cache
@@ -530,7 +514,7 @@ public class APHHelperImpl implements APHHelper {
 		return ret;
 	}
 
-	/**
+	/*
 	 * Artificiate a group of APHEntries
 	 * 
 	 * @param apdevices
@@ -540,7 +524,7 @@ public class APHHelperImpl implements APHHelper {
 	 * @param toDate
 	 *            To wich date
 	 * @throws ASException
-	 */
+	 *
 	@Override
 	public void artificiateRSSI(Map<String, APDevice> apdevices, Date fromDate, Date toDate) throws ASException {
 		
@@ -563,7 +547,7 @@ public class APHHelperImpl implements APHHelper {
 			d1 = new Date(d2.getTime());
 			d2 = new Date(d1.getTime() + 86400000);
 		}
-	}
+	}*/
 
 	/**
 	 * Calculates an artificial RSSI in the spaces between gaps
@@ -575,12 +559,12 @@ public class APHHelperImpl implements APHHelper {
 	 * @throws ASException
 	 */
 	@Override
-	public List<Integer> artificiateRSSI(APHEntry obj, APDevice apd) throws ASException {
+	public List<Integer> artificiateRSSI(APHEntry obj, APDCalibration apd) throws ASException {
 		// Obtains the APDevice definition for reference
 		int maxDistance = 30 *MINUTE_TO_TWENTY_SECONDS_SLOT;
 
-		if( null != apd && apd.getVisitGapThreshold() != null)
-			maxDistance = apd.getVisitGapThreshold().intValue() * MINUTE_TO_TWENTY_SECONDS_SLOT;
+		if( null != apd && apd.getVisitGapThreshold() > 0)
+			maxDistance = apd.getVisitGapThreshold() *MINUTE_TO_TWENTY_SECONDS_SLOT;
 
 		// Clears all Artificial generated RSSI
 		obj.getArtificialRssi().clear();
@@ -744,7 +728,7 @@ public class APHHelperImpl implements APHHelper {
 			Iterator<APHEntry> x = cache.iterator();
 			while(x.hasNext()) {
 				APHEntry aphe = x.next();
-				aphe.setKey(apheDao.createKey(aphe));
+				aphe.setKey(keyHelper.createStringUniqueKey(APHEntry.class));
 				apheDumper.dump(aphe);
 			}
 			
@@ -761,7 +745,7 @@ public class APHHelperImpl implements APHHelper {
 
 	}
 
-	/**
+	/*
 	 * Generates the APHEntries tables from external APH
 	 * 
 	 * @param fromDate
@@ -770,7 +754,7 @@ public class APHHelperImpl implements APHHelper {
 	 *            Final date
 	 * @param apdevices
 	 *            Devices to match
-	 */
+	 *
 	@Override
 	public void generateAPHEntriesFromExternalAPH(Date fromDate, Date toDate, List<String> hostnames, boolean buildCache) throws ASException {
 
@@ -853,7 +837,7 @@ public class APHHelperImpl implements APHHelper {
 
 		log.log(Level.INFO, "Process Ended");
 
-	}
+	}*/
 
 	/**
 	 * @return the cacheBuilt
@@ -948,11 +932,11 @@ public class APHHelperImpl implements APHHelper {
 		sdf2.setTimeZone(tz);
 		CALENDAR.setTime(sdf2.parse(source.getDate()));
 		if(t < 0) {
-			t += APDVisitHelper.SLOT_NUMBER_IN_DAY;
+			t += SLOT_NUMBER_IN_DAY;
 			CALENDAR.add(Calendar.DATE, -1);
 			source.setShiftDay(APHEntry.PREVIOUS);
-		} else if(t >= APDVisitHelper.SLOT_NUMBER_IN_DAY) {
-			t -= APDVisitHelper.SLOT_NUMBER_IN_DAY;
+		} else if(t >= SLOT_NUMBER_IN_DAY) {
+			t -= SLOT_NUMBER_IN_DAY;
 			CALENDAR.add(Calendar.DATE, 1);
 			source.setShiftDay(APHEntry.NEXT);
 		} else source.setShiftDay(APHEntry.NO_SHIFT);

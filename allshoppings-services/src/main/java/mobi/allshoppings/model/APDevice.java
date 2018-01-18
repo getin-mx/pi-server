@@ -45,8 +45,6 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	private double lon;
 	
 	// Parameters
-	private long visitTimeThreshold;
-	
 	private Date creationDateTime;
 	
 	@NotPersistent
@@ -104,20 +102,6 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	 */
 	public void setCreationDateTime(Date creationDateTime) {
 		this.creationDateTime = creationDateTime;
-	}
-
-	/**
-	 * @return the visitTimeThreshold
-	 */
-	public long getVisitTimeThreshold() {
-		return visitTimeThreshold;
-	}
-
-	/**
-	 * @param visitTimeThreshold the visitTimeThreshold to set
-	 */
-	public void setVisitTimeThreshold(long visitTimeThreshold) {
-		this.visitTimeThreshold = visitTimeThreshold;
 	}
 
 	/**
@@ -280,9 +264,8 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	public String toString() {
 		return "APDevice [key=" + key + ", hostname=" + hostname + ", description=" + description 
 				+ ", model=" + model + ", mode=" + mode + ", lastInfoUpdate=" + lastInfoUpdate + ", external="
-				+ external + ", lat=" + lat + ", lon=" + lon + ", visitTimeThreshold=" + visitTimeThreshold
-				+ ", creationDateTime=" + creationDateTime + ", lastUpdate=" + lastUpdate + ", doIndexNow="
-				+ doIndexNow + "]";
+				+ external + ", lat=" + lat + ", lon=" + lon + ", creationDateTime=" + creationDateTime
+				+ ", lastUpdate=" + lastUpdate + ", doIndexNow=" + doIndexNow + "]";
 	}
 
 	@Override

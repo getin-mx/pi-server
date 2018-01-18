@@ -93,7 +93,7 @@ public class BrandDAOJDOImpl extends GenericDAOJDO<Brand> implements BrandDAO {
 	 *            The property that will be used as order parameter.
 	 */
 	@Override
-	public List<Brand> getUsingStatusAndRangeInCache(List<Integer> status, Range range, User user, int returnType) throws ASException {
+	public List<Brand> getUsingStatusAndRangeInCache(List<Byte> status, Range range, User user, int returnType) throws ASException {
 		return getUsingIdsAndStatusAndRangeInCache(null, status, range, user, returnType);
 	}
 	
@@ -119,7 +119,7 @@ public class BrandDAOJDOImpl extends GenericDAOJDO<Brand> implements BrandDAO {
 	 *            The property that will be used as order parameter.
 	 */
 	@Override
-	public List<Brand> getUsingIdsAndStatusAndRangeInCache(Collection<String> ids, List<Integer> status, Range range, User user, int returnType) throws ASException {
+	public List<Brand> getUsingIdsAndStatusAndRangeInCache(Collection<String> ids, List<Byte> status, Range range, User user, int returnType) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		List<Brand> ret = CollectionFactory.createList();
 		List<String> findIn = CollectionFactory.createList();
@@ -217,7 +217,7 @@ public class BrandDAOJDOImpl extends GenericDAOJDO<Brand> implements BrandDAO {
 	 *            The property that will be used as order parameter.
 	 */
 	@Override
-	public List<Brand> getByViewLocationAndStatus(ViewLocation vl, List<Integer> status, String order) throws ASException {
+	public List<Brand> getByViewLocationAndStatus(ViewLocation vl, List<Byte> status, String order) throws ASException {
 		return getByViewLocationAndStatus(null, vl, status, order, true);
 	}
 
@@ -237,7 +237,7 @@ public class BrandDAOJDOImpl extends GenericDAOJDO<Brand> implements BrandDAO {
 	 *            The property that will be used as order parameter.
 	 */
 	@Override
-	public List<Brand> getByViewLocationAndStatus(PersistenceProvider pp, ViewLocation vl, List<Integer> status, String order) throws ASException {
+	public List<Brand> getByViewLocationAndStatus(PersistenceProvider pp, ViewLocation vl, List<Byte> status, String order) throws ASException {
 		return getByViewLocationAndStatus(pp, vl, status, order, true);
 	}
 
@@ -256,12 +256,12 @@ public class BrandDAOJDOImpl extends GenericDAOJDO<Brand> implements BrandDAO {
 	 *            attached (false) to a JDO Session
 	 */
 	@Override
-	public List<Brand> getByViewLocationAndStatus(ViewLocation vl, List<Integer> status, String order, boolean detachable) throws ASException {
+	public List<Brand> getByViewLocationAndStatus(ViewLocation vl, List<Byte> status, String order, boolean detachable) throws ASException {
 		return getByViewLocationAndStatus(null, vl, status, order, detachable);
 	}
 
-	@Override
-	public List<Brand> getUsingStatusAndRangeAndCountry(List<Integer> status, Range range, String country, String order, Map<String, String> attributes, boolean detachable) throws ASException {
+	/*@Override
+	public List<Brand> getUsingStatusAndRangeAndCountry(List<Byte> status, Range range, String country, String order, Map<String, String> attributes, boolean detachable) throws ASException {
 		List<Brand> returnedObjs = CollectionFactory.createList();
 		
 		PersistenceManager pm;
@@ -319,7 +319,7 @@ public class BrandDAOJDOImpl extends GenericDAOJDO<Brand> implements BrandDAO {
 	    }
 		
 		return returnedObjs;
-	}
+	}*/
 
 	/**
 	 * Get a list of brand instances based on its View Location and Status.
@@ -340,7 +340,7 @@ public class BrandDAOJDOImpl extends GenericDAOJDO<Brand> implements BrandDAO {
 	 *            attached (false) to a JDO Session
 	 */
 	@Override
-	public List<Brand> getByViewLocationAndStatus(PersistenceProvider pp, ViewLocation vl, List<Integer> status, String order, boolean detachable) throws ASException {
+	public List<Brand> getByViewLocationAndStatus(PersistenceProvider pp, ViewLocation vl, List<Byte> status, String order, boolean detachable) throws ASException {
 
 		List<Brand> returnedObjs = CollectionFactory.createList();
 		

@@ -2,7 +2,6 @@ package mobi.allshoppings.dao.spi;
 
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -20,9 +19,6 @@ import mobi.allshoppings.tools.Range;
 
 public class APDMABlackListDAOJDOImpl extends GenericDAOJDO<APDMABlackList> implements APDMABlackListDAO {
 
-	@SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(APDMABlackListDAOJDOImpl.class.getName());
-	
 	public APDMABlackListDAOJDOImpl() {
 		super(APDMABlackList.class);
 	}
@@ -33,7 +29,7 @@ public class APDMABlackListDAOJDOImpl extends GenericDAOJDO<APDMABlackList> impl
 	}
 
 	@Override
-	public List<APDMABlackList> getUsingEntityIdAndRange(String entityId, Integer entityKind, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
+	public List<APDMABlackList> getUsingEntityIdAndRange(String entityId, byte entityKind, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
 		List<APDMABlackList> returnedObjs = CollectionFactory.createList();
 
 		PersistenceManager pm;
@@ -58,7 +54,7 @@ public class APDMABlackListDAOJDOImpl extends GenericDAOJDO<APDMABlackList> impl
 			}
 			
 			// Date parameter
-			if( entityKind != null ) {
+			if( entityKind >= 0) {
 				declaredParams.add("Integer entityKindParam");
 				filters.add("entityKind == entityKindParam");
 				parameters.put("entityKindParam", entityKind);

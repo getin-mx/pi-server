@@ -53,7 +53,7 @@ public class Store extends Entity implements IAdaptable, ViewLocationAware, ACLA
 	private String timezone;
 	private String customCheckinMessage;
 	private String externalId;
-	private int storeKind;
+	private byte storeKind;
 	private int storeLocationKind;
 
 	@Persistent(defaultFetchGroup = "true")
@@ -547,11 +547,11 @@ public class Store extends Entity implements IAdaptable, ViewLocationAware, ACLA
 		return this.address != null ? this.address.getCountry() : null;
 	}
 
-	public int getStoreKind() {
+	public byte getStoreKind() {
 		return storeKind;
 	}
 
-	public void setStoreKind(int storeKind) {
+	public void setStoreKind(byte storeKind) {
 		this.storeKind = storeKind;
 	}
 

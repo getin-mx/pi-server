@@ -13,14 +13,14 @@ import mobi.allshoppings.tools.Range;
 
 public interface UserEntityCacheDAO extends GenericDAO<UserEntityCache> {
 	
-	UserEntityCache getUsingKindAndFavorite(User user, Integer entityKind, int returnType, boolean forceCheck) throws ASException;
-	UserEntityCache getUsingKindAndViewLocation(ViewLocation vl, Integer entityKind, int returnType, boolean forceCheck) throws ASException;
-	UserEntityCache getUsingKindAndListName(String name, Integer entityKind, boolean forceCheck) throws ASException;
-	Key createKey(ViewLocation vl, Integer entityKind, int returnType) throws ASException;
-	Key createKey(String userId, Integer entityKind, int returnType) throws ASException;
+	UserEntityCache getUsingKindAndFavorite(User user, byte entityKind, int returnType, boolean forceCheck) throws ASException;
+	UserEntityCache getUsingKindAndViewLocation(ViewLocation vl, byte entityKind, int returnType, boolean forceCheck) throws ASException;
+	UserEntityCache getUsingKindAndListName(String name, byte entityKind, boolean forceCheck) throws ASException;
+	Key createKey(ViewLocation vl, byte entityKind, int returnType) throws ASException;
+	Key createKey(String userId, byte entityKind, int returnType) throws ASException;
 	boolean needsUpdate(UserEntityCache uec, User user) throws ASException;
 	boolean needsUpdate(UserEntityCache uec, ViewLocation vl) throws ASException;
-	boolean needsUpdate(UserEntityCache uec, Integer entityKind) throws ASException;
+	boolean needsUpdate(UserEntityCache uec, byte entityKind) throws ASException;
 	int needsUpdate(User user) throws Exception;
 	List<UserEntityCache> getEvicted(Date limit, Range range) throws ASException;
 	long countEvicted(Date limit) throws ASException;

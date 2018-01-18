@@ -17,19 +17,19 @@ public interface GeoCodingHelper {
 	
     public GeoPoint getGeoPointFromAddress(String address) throws ASException;
     public GeoPoint getGeoPoint(double lat, double lon) throws ASException;
-	GeoPoint getGeoPoint(Double lat, Double lon, String deviceUUID) throws ASException;
+	GeoPoint getGeoPoint(double lat, double lon, String deviceUUID) throws ASException;
     public void rebuildShoppingGeoPoints() throws ASException;
     public void rebuildShoppingGeoEntities() throws ASException;
     
 	void updateShoppingGeoPoint(Shopping obj) throws ASException;
 	void rebuildBrandGeoEntities() throws ASException;
 	void rebuildOfferGeoEntities() throws ASException;
-	void addGeoEntity(String identifier, Integer entityKind) throws ASException;
+	void addGeoEntity(String identifier, byte entityKind) throws ASException;
 	void addGeoEntity(Shopping obj) throws ASException;
 	void addGeoEntity(Brand obj) throws ASException;
 	void addGeoEntity(Store obj) throws ASException;
 	void addGeoEntity(Offer obj) throws ASException;
-	void removeGeoEntity(String identifier, Integer entityKind) throws ASException;
+	void removeGeoEntity(String identifier, byte entityKind) throws ASException;
 	void evictDeadOffers() throws ASException;
 
 	void addUserDefaultLocation() throws ASException;

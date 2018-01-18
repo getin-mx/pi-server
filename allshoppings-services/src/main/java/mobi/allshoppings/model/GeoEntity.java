@@ -25,12 +25,12 @@ public class GeoEntity implements ModelKey, Serializable, IAdaptable, Identifica
     private Key key;
 
 	private String entityId;
-	private Integer entityKind;
+	private byte entityKind;
 	private String geohash;
-	private Double lat;
-	private Double lon;
+	private double lat;
+	private double lon;
 	private Date lastUpdate;
-	private Boolean independent;
+	private boolean independent;
 	
     public GeoEntity() {
     	this.independent = true;
@@ -79,14 +79,14 @@ public class GeoEntity implements ModelKey, Serializable, IAdaptable, Identifica
 	/**
 	 * @return the entity kind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entity kind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 
@@ -182,8 +182,7 @@ public class GeoEntity implements ModelKey, Serializable, IAdaptable, Identifica
 		int result = 1;
 		result = prime * result
 				+ ((entityId == null) ? 0 : entityId.hashCode());
-		result = prime * result
-				+ ((entityKind == null) ? 0 : entityKind.hashCode());
+		result = prime * result + entityKind;
 		return result;
 	}
 
@@ -204,10 +203,7 @@ public class GeoEntity implements ModelKey, Serializable, IAdaptable, Identifica
 				return false;
 		} else if (!entityId.equals(other.entityId))
 			return false;
-		if (entityKind == null) {
-			if (other.entityKind != null)
-				return false;
-		} else if (!entityKind.equals(other.entityKind))
+		if (entityKind != other.entityKind)
 			return false;
 		return true;
 	}

@@ -24,12 +24,12 @@ public class DashboardConfigurationDAOJDOImpl extends GenericDAOJDO<DashboardCon
 	}
 
 	@Override
-	public String getIdentifierUsingEntityIdAndEntityKind(String entityId, Integer entityKind) throws ASException {
+	public String getIdentifierUsingEntityIdAndEntityKind(String entityId, byte entityKind) throws ASException {
 		return entityId + ":" + entityKind;
 	}
 
 	@Override
-	public DashboardConfiguration getUsingEntityIdAndEntityKind(String entityId, Integer entityKind, boolean detachable) throws ASException {
+	public DashboardConfiguration getUsingEntityIdAndEntityKind(String entityId, byte entityKind, boolean detachable) throws ASException {
 		String identifier = getIdentifierUsingEntityIdAndEntityKind(entityId, entityKind);
 		return get(identifier, detachable);
 	}

@@ -11,33 +11,29 @@ import java.util.TimeZone;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.APDVisit;
-import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.Store;
 import mx.getin.model.APDCalibration;
 
 public interface APDVisitHelper {
 
-	static final byte VISIT_PERCENTAGE = 25;
 	static final SimpleDateFormat tf2 = new SimpleDateFormat("HHmm");
 	
 	void generateAPDVisits(List<String> brandIds, List<String> storeIds, Date fromDate, Date toDate,
 			boolean deletePreviousRecords, boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards)
 			throws ASException;
 
-	void generateAPDVisits(List<String> shoppingIds, Date fromDate, Date toDate, boolean deletePreviousRecords,
-			boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards) throws ASException;
+	/*void generateAPDVisits(List<String> shoppingIds, Date fromDate, Date toDate, boolean deletePreviousRecords,
+			boolean updateDashboards, boolean onlyEmployees, boolean onlyDashboards) throws ASException;*/
 
-	List<APDVisit> aphEntryToVisits(APHEntry entry, Map<String, APDevice> apdCache,
+	/*List<APDVisit> aphEntryToVisits(APHEntry entry, Map<String, APDevice> apdCache,
+			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,
+			List<String> employeeListMacs, TimeZone tz) throws ASException;*/
+
+	List<APDVisit> aphEntryToVisits(List<APHEntry> entries, Map<String, APDCalibration> apdCache,
 			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,
 			List<String> employeeListMacs, TimeZone tz) throws ASException;
 
-	List<APDVisit> aphEntryToVisits(List<APHEntry> entries, Map<String, APDevice> apdCache,
-			Map<String, APDAssignation> assignmentsCache, List<String> blackListMacs,
-			List<String> employeeListMacs, TimeZone tz) throws ASException;
-
-	void fakeVisitsWith(String storeId, String fakeWithStoreId, Date fromDate, Date toDate) throws ASException;
-	
 	void fakeVisitsWith(Store store, Date copyFromDate, Date copyToDate,
 			Date insertFromDate) throws ASException;
 	
@@ -59,8 +55,8 @@ public interface APDVisitHelper {
 		if(visit != null) {
 			Long time = (visit.getCheckinFinished().getTime()  -visit.getCheckinStarted().getTime()) / 60000;
 			
-			// Validate Minimum time for visit  // TODO change name for getVisitMin
-			if( time < device.getVisitTimeThreshold()) return false;
+			// Validate Minimum time for visit
+			if( time < device.getVisitMinTimeThreshold()) return false;
 
 			// Validate Maximum time for visit  
 			if( time > device.getVisitMaxThreshold()) return false;
@@ -72,7 +68,7 @@ public interface APDVisitHelper {
 			if( null != visit.getInRangeSegments() && visit.getInRangeSegments() > 0 
 					&& null != visit.getTotalSegments() && visit.getTotalSegments() > 0 &&
 					visit.getInRangeSegments() * 100 / visit.getTotalSegments() <
-					VISIT_PERCENTAGE) return false; // TODO param
+					device.getVisitMinTimeSlotPercentage()) return false;
 			
 			visit.setDuration(time);
 			

@@ -47,7 +47,7 @@ public class UserEntityCacheDAOJDOImpl extends GenericDAOJDO<UserEntityCache> im
 	}
 
 	@Override
-	public UserEntityCache getUsingKindAndListName(String name, Integer entityKind, boolean forceCheck) throws ASException {
+	public UserEntityCache getUsingKindAndListName(String name, byte entityKind, boolean forceCheck) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		try{
 			Key key = createKey(createUserIdUsingListName(name), entityKind, UserEntityCache.TYPE_NORMAL_SORT);
@@ -69,7 +69,7 @@ public class UserEntityCacheDAOJDOImpl extends GenericDAOJDO<UserEntityCache> im
 	}
 
 	@Override
-	public UserEntityCache getUsingKindAndFavorite(User user, Integer entityKind, int returnType, boolean forceCheck) throws ASException {
+	public UserEntityCache getUsingKindAndFavorite(User user, byte entityKind, int returnType, boolean forceCheck) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		try{
 			Key key = createKey(user.getIdentifier(), entityKind, returnType);
@@ -91,7 +91,7 @@ public class UserEntityCacheDAOJDOImpl extends GenericDAOJDO<UserEntityCache> im
 	}
 
 	@Override
-	public UserEntityCache getUsingKindAndViewLocation(ViewLocation vl, Integer entityKind, int returnType, boolean forceCheck) throws ASException {
+	public UserEntityCache getUsingKindAndViewLocation(ViewLocation vl, byte entityKind, int returnType, boolean forceCheck) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		try {
 
@@ -180,7 +180,7 @@ public class UserEntityCacheDAOJDOImpl extends GenericDAOJDO<UserEntityCache> im
 	}
 
 	@Override
-	public boolean needsUpdate(UserEntityCache uec, Integer entityKind) throws ASException {
+	public boolean needsUpdate(UserEntityCache uec, byte entityKind) throws ASException {
 
 		if( uec.getLastUpdate() == null ) return true;
 		if( uec.getExpiresOn() == null || uec.getExpiresOn().before(new Date())) return true;
@@ -194,14 +194,14 @@ public class UserEntityCacheDAOJDOImpl extends GenericDAOJDO<UserEntityCache> im
 	}
 	
 	@Override
-	public Key createKey(ViewLocation vl, Integer entityKind, int returnType) throws ASException {
+	public Key createKey(ViewLocation vl, byte entityKind, int returnType) throws ASException {
 		try {
 			if(vl == null || !StringUtils.hasText(vl.getCountry()) ){
 				throw ASExceptionHelper.invalidArgumentsException("viewLocation cannot be null");
 			}
 			
-			if( entityKind == null ) {
-				throw ASExceptionHelper.invalidArgumentsException("kind cannot be null");
+			if( entityKind < 0) {
+				throw ASExceptionHelper.invalidArgumentsException("kind cannot be negative");
 			}
 			
 			String sKey = keyHelper.resolveKey(createUserIdUsingViewLocation(vl) + "_" + entityKind + "_" + returnType);
@@ -214,9 +214,9 @@ public class UserEntityCacheDAOJDOImpl extends GenericDAOJDO<UserEntityCache> im
 	}
 	
 	@Override
-	public Key createKey(String userId, Integer entityKind, int returnType) throws ASException {
+	public Key createKey(String userId, byte entityKind, int returnType) throws ASException {
 		try {
-			if(!StringUtils.hasText(userId) || entityKind == null ){
+			if(!StringUtils.hasText(userId) || entityKind < 0){
 				throw ASExceptionHelper.notAcceptedException();
 			}
 			
@@ -232,13 +232,13 @@ public class UserEntityCacheDAOJDOImpl extends GenericDAOJDO<UserEntityCache> im
 	@Override
 	public int needsUpdate(User user) throws ASException {
 
-		List<Integer> entityKinds = CollectionFactory.createList();
+		List<Byte> entityKinds = CollectionFactory.createList();
 		entityKinds.add(EntityKind.KIND_BRAND);
 		entityKinds.add(EntityKind.KIND_FINANCIAL_ENTITY);
 		entityKinds.add(EntityKind.KIND_SHOPPING);
 		entityKinds.add(EntityKind.KIND_OFFER);
 		
-		for( int kind : entityKinds ) {
+		for( byte kind : entityKinds ) {
 			Key k = createKey(user.getIdentifier(), kind, UserEntityCache.TYPE_FAVORITES_ONLY);
 			try {
 				UserEntityCache uec = get(k.getName(), false);

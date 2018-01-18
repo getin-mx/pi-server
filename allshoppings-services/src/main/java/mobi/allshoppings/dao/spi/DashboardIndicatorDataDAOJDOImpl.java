@@ -45,10 +45,10 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 
 	@Override
 	public List<DashboardIndicatorData> getUsingFilters(String entityId,
-			Integer entityKind, String elementId, String elementSubId,
+			byte entityKind, String elementId, String elementSubId,
 			String shoppingId, String subentityId, String periodType,
 			String fromStringDate, String toStringDate, String movieId,
-			String voucherType, Integer dayOfWeek, Integer timeZone, String order, 
+			String voucherType, byte dayOfWeek, byte timeZone, String order, 
 			String country, String province, String city)
 			throws ASException {
 
@@ -60,10 +60,10 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 
 	@Override
 	public List<DashboardIndicatorData> getUsingFilters(String entityId,
-			Integer entityKind, List<String> elementId, String elementSubId,
+			byte entityKind, List<String> elementId, String elementSubId,
 			String shoppingId, String subentityId, String periodType,
 			String fromStringDate, String toStringDate, String movieId,
-			String voucherType, Integer dayOfWeek, Integer timeZone, String order, 
+			String voucherType, byte dayOfWeek, byte timeZone, String order, 
 			String country, String province, String city)
 			throws ASException {
 		return getUsingFilters(entityId, entityKind, elementId,
@@ -74,10 +74,10 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 
 	@Override
 	public List<DashboardIndicatorData> getUsingFilters(String entityId,
-			Integer entityKind, List<String> elementId, List<String> elementSubId,
+			byte entityKind, List<String> elementId, List<String> elementSubId,
 			String shoppingId, String subentityId, String periodType,
 			String fromStringDate, String toStringDate, String movieId,
-			String voucherType, Integer dayOfWeek, Integer timeZone, String order, 
+			String voucherType, byte dayOfWeek, byte timeZone, String order, 
 			String country, String province, String city)
 			throws ASException {
 		List<String> entityIds;
@@ -90,10 +90,10 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 	
 	@Override
 	public List<DashboardIndicatorData> getUsingFilters(List<String> entityId,
-			Integer entityKind, List<String> elementId, List<String> elementSubId,
+			byte entityKind, List<String> elementId, List<String> elementSubId,
 			String shoppingId, List<String> subentityId, String periodType,
 			String fromStringDate, String toStringDate, String movieId,
-			String voucherType, Integer dayOfWeek, Integer timeZone, String order, 
+			String voucherType, byte dayOfWeek, byte timeZone, String order, 
 			String country, String province, String city)
 			throws ASException {
 
@@ -117,7 +117,7 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 				parameters.put("entityIdParm", entityId);
 			}
 
-			if(entityKind != null ) {
+			if(entityKind >= 0) {
 				declaredParams.add("Integer entityKindParm");
 				filters.add("entityKind == entityKindParm");
 				parameters.put("entityKindParm", entityKind);
@@ -183,13 +183,13 @@ public class DashboardIndicatorDataDAOJDOImpl extends GenericDAOJDO<DashboardInd
 				parameters.put("cityParm", city);
 			}
 
-			if(dayOfWeek != null && dayOfWeek > 0  ) {
+			if(dayOfWeek > 0  ) {
 				declaredParams.add("Integer dayOfWeekParm");
 				filters.add("dayOfWeek == dayOfWeekParm");
 				parameters.put("dayOfWeekParm", dayOfWeek);
 			}
 
-			if(timeZone != null && timeZone > 0 ) {
+			if(timeZone > 0 ) {
 				declaredParams.add("Integer timeZoneParm");
 				filters.add("timeZone == timeZoneParm");
 				parameters.put("timeZoneParm", timeZone);

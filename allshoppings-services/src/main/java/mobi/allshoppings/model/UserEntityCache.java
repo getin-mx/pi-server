@@ -32,8 +32,8 @@ public class UserEntityCache implements ModelKey, Serializable {
     private Key key;
 
 	private String userId;
-	private Integer entityKind;
-	private Integer returnType;
+	private byte entityKind;
+	private int returnType;
 	@Persistent(defaultFetchGroup = "true")
 	private List<String> entities;
 	private Date lastUpdate;
@@ -42,7 +42,7 @@ public class UserEntityCache implements ModelKey, Serializable {
     public UserEntityCache() {
     }
 
-    public UserEntityCache(String userId, Integer entityKind, Integer returnType) {
+    public UserEntityCache(String userId, byte entityKind, int returnType) {
     	this.userId = userId;
     	this.entityKind = entityKind;
     	this.returnType = returnType;
@@ -50,7 +50,7 @@ public class UserEntityCache implements ModelKey, Serializable {
     	expiresOn = null;
     }
     
-    public UserEntityCache(String userId, Integer entityKind, Integer returnType, long cacheDuration) {
+    public UserEntityCache(String userId, byte entityKind, int returnType, long cacheDuration) {
     	this.userId = userId;
     	this.entityKind = entityKind;
     	this.returnType = returnType;
@@ -98,14 +98,14 @@ public class UserEntityCache implements ModelKey, Serializable {
 	/**
 	 * @return the entity kind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entity kind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 

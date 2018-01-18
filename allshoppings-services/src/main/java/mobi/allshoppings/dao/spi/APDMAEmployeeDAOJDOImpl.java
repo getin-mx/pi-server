@@ -33,7 +33,7 @@ public class APDMAEmployeeDAOJDOImpl extends GenericDAOJDO<APDMAEmployee> implem
 	}
 
 	@Override
-	public List<APDMAEmployee> getUsingEntityIdAndRange(String entityId, Integer entityKind, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
+	public List<APDMAEmployee> getUsingEntityIdAndRange(String entityId, byte entityKind, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
 		List<APDMAEmployee> returnedObjs = CollectionFactory.createList();
 
 		PersistenceManager pm;
@@ -54,7 +54,7 @@ public class APDMAEmployeeDAOJDOImpl extends GenericDAOJDO<APDMAEmployee> implem
 			}
 			
 			// Entity Kind parameter
-			if( entityKind != null ) {
+			if( entityKind >= 0) {
 				declaredParams.add("Integer entityKindParam");
 				filters.add("entityKind == entityKindParam");
 				parameters.put("entityKindParam", entityKind);
@@ -105,7 +105,7 @@ public class APDMAEmployeeDAOJDOImpl extends GenericDAOJDO<APDMAEmployee> implem
 	}
 
 	@Override
-	public List<APDMAEmployee> getUsingEntityIdandMac(String entityId, Integer entityKind, String mac) throws ASException {
+	public List<APDMAEmployee> getUsingEntityIdandMac(String entityId, byte entityKind, String mac) throws ASException {
 		List<APDMAEmployee> returnedObjs = CollectionFactory.createList();
 
 		PersistenceManager pm;
@@ -126,7 +126,7 @@ public class APDMAEmployeeDAOJDOImpl extends GenericDAOJDO<APDMAEmployee> implem
 			}
 			
 			// Entity Kind parameter
-			if( entityKind != null ) {
+			if( entityKind >= 0) {
 				declaredParams.add("Integer entityKindParam");
 				filters.add("entityKind == entityKindParam");
 				parameters.put("entityKindParam", entityKind);

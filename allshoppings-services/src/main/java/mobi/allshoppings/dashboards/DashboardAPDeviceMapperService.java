@@ -1,5 +1,8 @@
 package mobi.allshoppings.dashboards;
 
+import static mx.getin.Constants.GMT;
+import static mx.getin.Constants.sdf;
+
 import java.sql.SQLException;
 import java.text.ParseException;
 //import java.sql.Connection;
@@ -30,7 +33,6 @@ import com.google.gson.Gson;
 import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.dao.APDeviceDAO;
-import mobi.allshoppings.dao.APHEntryDAO;
 import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.ExternalAPHotspotDAO;
@@ -78,8 +80,6 @@ import mobi.allshoppings.tools.GsonFactory;
 public class DashboardAPDeviceMapperService {
 
 	private static final Logger log = Logger.getLogger(DashboardAPDeviceMapperService.class.getName());
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 	
 	/**
 	 * Entity Kind to use
@@ -110,8 +110,6 @@ public class DashboardAPDeviceMapperService {
 	private APDeviceHelper apdHelper;
 	@Autowired
 	private APHHelper aphHelper;
-	@Autowired
-	private APHEntryDAO apheDao;
 	@Autowired
 	private APDeviceDAO apdDao;
 	@Autowired
@@ -154,7 +152,7 @@ public class DashboardAPDeviceMapperService {
 	}
 	
 	// General Driver ----------------------------------------------------------------------------------------------------------------------------------------
-	public void createDashboardDataForDays(String baseDir, Date fromDate, Date toDate, List<String> entityIds, List<Integer> phases) throws ASException {
+	public void createDashboardDataForDays(String baseDir, Date fromDate, Date toDate, List<String> entityIds, List<Byte> phases) throws ASException {
 		try {
 			buildCaches(true);
 
@@ -521,7 +519,11 @@ public class DashboardAPDeviceMapperService {
 					}
 				}
 
-				List<String> macs = apheDao.getMacsUsingHostnameAndDates(apDeviceIds, date, date);
+				//List<String> macs = apheDao.getMacsUsingHostnameAndDates(apDeviceIds, date, date);
+				List<String> macs = CollectionFactory.createList();
+				DumperHelper<APHEntry> dumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
+				dumper.get// TODO fill up macs list
+				
 				log.log(Level.INFO, "recovered " + macs.size() + " macs");
 
 				long count = 0;
@@ -658,7 +660,7 @@ public class DashboardAPDeviceMapperService {
 	// apd_visitor performance -------------------------------------------------------------------------------------------------------------------------
 
 	public void createAPDVisitPerformanceDashboardForDay(Date date, List<String> entityIds,
-			Integer entityKind, List<APDVisit> data) throws ASException {
+			byte entityKind, List<APDVisit> data) throws ASException {
 
 		log.log(Level.INFO, "Starting to create apd_visitor Performance Dashboard for Day " + date + "...");
 		long startTime = System.currentTimeMillis();
@@ -1145,7 +1147,7 @@ public class DashboardAPDeviceMapperService {
 	
 	public DashboardIndicatorData buildBasicDashboardIndicatorData(String elementId, String elementName,
 			String elementSubId, String elementSubName, Date date, String periodType, String shoppingId,
-			Store store, Shopping shopping, String subentityName, String entityId, Integer entityKind,
+			Store store, Shopping shopping, String subentityName, String entityId, byte entityKind,
 			String forDate) throws ASException, ParseException {
 
 		DashboardIndicatorData obj = new DashboardIndicatorData();

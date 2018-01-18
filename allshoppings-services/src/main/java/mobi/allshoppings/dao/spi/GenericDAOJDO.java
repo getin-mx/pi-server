@@ -1085,7 +1085,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	 *            Property to use as order. If null, sets default order
 	 */
 	@Override
-	public List<T> getUsingStatusAndRange(List<Integer> status, Range range, String order) throws ASException {
+	public List<T> getUsingStatusAndRange(List<Byte> status, Range range, String order) throws ASException {
 		return getUsingStatusAndRange(null, status, range, order, null, true);
 	}
 
@@ -1104,7 +1104,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	 *            attached (false) to a JDO Session
 	 */
 	@Override
-	public List<T> getUsingStatusAndRange(List<Integer> status, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
+	public List<T> getUsingStatusAndRange(List<Byte> status, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
 		return getUsingStatusAndRange(null, status, range, order, attributes, detachable);
 	}
 
@@ -1124,7 +1124,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	 *            Property to use as order. If null, sets default order
 	 */
 	@Override
-	public List<T> getUsingStatusAndRange(PersistenceProvider pp, List<Integer> status, Range range, String order) throws ASException {
+	public List<T> getUsingStatusAndRange(PersistenceProvider pp, List<Byte> status, Range range, String order) throws ASException {
 		return getUsingStatusAndRange(pp, status, range, order, null, true);
 	}
 
@@ -1147,7 +1147,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	 *            attached (false) to a JDO Session
 	 */
 	@Override
-	public List<T> getUsingStatusAndRange(PersistenceProvider pp, List<Integer> status, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
+	public List<T> getUsingStatusAndRange(PersistenceProvider pp, List<Byte> status, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
 		return getUsingLastUpdateStatusAndRange(pp, null, true, status, range, order, attributes, detachable);
 	}
 
@@ -1170,7 +1170,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	 *            attached (false) to a JDO Session
 	 */
 	@Override
-	public List<T> getUsingStatusAndRangeAndCountry(List<Integer> status, Range range, String country, String order, Map<String, String> attributes, boolean detachable) throws ASException {
+	public List<T> getUsingStatusAndRangeAndCountry(List<Byte> status, Range range, String country, String order, Map<String, String> attributes, boolean detachable) throws ASException {
 		return getUsingLastUpdateStatusAndRange(null, null, true, status, range, order, attributes, detachable);
 	}
 
@@ -1200,7 +1200,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	 *            attached (false) to a JDO Session
 	 */
 	@Override
-	public List<T> getUsingLastUpdateStatusAndRange(PersistenceProvider pp, Date lastUpdate, boolean afterLastUpdateDate, List<Integer> status, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
+	public List<T> getUsingLastUpdateStatusAndRange(PersistenceProvider pp, Date lastUpdate, boolean afterLastUpdateDate, List<Byte> status, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
 
 		List<T> returnedObjs = new ArrayList<T>();
 
@@ -1402,7 +1402,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	 *            then this parameter is ignored
 	 */
 	@Override
-	public List<T> getUsingIndex(String q, ViewLocation viewLocation, List<Integer> status, Range range, Map<String, String> additionalFields, String order, String lang) throws ASException {
+	public List<T> getUsingIndex(String q, ViewLocation viewLocation, List<Byte> status, Range range, Map<String, String> additionalFields, String order, String lang) throws ASException {
 		return getUsingIndex(clazz.getName(), q, viewLocation, status, range, additionalFields, order, lang);
 	}
 
@@ -1422,7 +1422,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	 *            then this parameter is ignored
 	 */
 	@Override
-	public List<T> getUsingIndex(String indexName, String q, ViewLocation viewLocation, List<Integer> status, Range range, Map<String, String> additionalFields, String order, String lang) throws ASException {
+	public List<T> getUsingIndex(String indexName, String q, ViewLocation viewLocation, List<Byte> status, Range range, Map<String, String> additionalFields, String order, String lang) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		List<T> ret = new ArrayList<T>();
 
@@ -1502,7 +1502,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	 * @param status
 	 *            The status list to validate the status from
 	 */
-	protected void addToListConditionallyByStatus(List<T> list, T obj, List<Integer> status) {
+	protected void addToListConditionallyByStatus(List<T> list, T obj, List<Byte> status) {
 		if(isThisClassSafeForStatusFiltering() && status != null && status.size() > 0 ) {
 			if(status.contains(((StatusAware)obj).getStatus())) 
 				if(!list.contains(obj)) list.add(obj);
@@ -1558,7 +1558,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	 *            A status list to filter the query
 	 */
 	@Override
-	public long count(List<Integer> status) throws ASException {
+	public long count(List<Byte> status) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		try{
 			List<String> filters = CollectionFactory.createList();

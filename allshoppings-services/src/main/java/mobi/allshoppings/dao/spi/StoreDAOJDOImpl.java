@@ -78,7 +78,7 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 	 *            The property that will be used to order the obtained dataset
 	 */
 	@Override
-	public List<Store> getUsingShoppingAndStatus(String shoppingId, List<Integer> status, String order) throws ASException {
+	public List<Store> getUsingShoppingAndStatus(String shoppingId, List<Byte> status, String order) throws ASException {
 		return getUsingBrandAndShoppingAndUserAndStatus(null, shoppingId, null, status, order);
 	}
 
@@ -95,7 +95,7 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 	 * @param order The property that will be used to order the obtained dataset
 	 */
 	@Override
-	public List<Store> getUsingUserAndBrandAndStatus(User user, String brandId, List<Integer> status, String order) throws ASException {
+	public List<Store> getUsingUserAndBrandAndStatus(User user, String brandId, List<Byte> status, String order) throws ASException {
 		return getUsingBrandAndShoppingAndUserAndStatus(brandId, null, user, status, order);
 	}
 
@@ -115,7 +115,7 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 	 */
 	@Override
 	public List<Store> getUsingBrandAndShoppingAndStatus(String brandId,
-			String shoppingId, List<Integer> status, String order) throws ASException {
+			String shoppingId, List<Byte> status, String order) throws ASException {
 		return getUsingBrandAndShoppingAndUserAndStatus(brandId, shoppingId, null, status, order);
 	}
 
@@ -132,7 +132,7 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 	 *            The property that will be used to order the obtained dataset
 	 */
 	@Override
-	public List<Store> getUsingBrandAndStatus(String brandId, List<Integer> status, String order) throws ASException {
+	public List<Store> getUsingBrandAndStatus(String brandId, List<Byte> status, String order) throws ASException {
 		return getUsingBrandAndShoppingAndUserAndStatus(brandId, null, null, status, order);
 	}
 
@@ -153,7 +153,7 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 	 *            The property that will be used to order the obtained dataset
 	 */
 	private List<Store> getUsingBrandAndShoppingAndUserAndStatus(String brandId,
-			String shoppingId, User user, List<Integer> status, String order) throws ASException {
+			String shoppingId, User user, List<Byte> status, String order) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		List<Store> ret = new ArrayList<Store>();
 
@@ -263,7 +263,7 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 	 * @return
 	 * @throws ASException
 	 */
-	public List<Store> getStreetUsingBrandAndStatus(String brandId, List<Integer> status, String order) throws ASException {
+	public List<Store> getStreetUsingBrandAndStatus(String brandId, List<Byte> status, String order) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		List<Store> ret = new ArrayList<Store>();
 
@@ -322,7 +322,7 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 	 *            A range object to bound the query with. @see Range
 	 */
 	@Override
-	public List<Store> getUsingStatus(List<Integer> status) throws ASException {
+	public List<Store> getUsingStatus(List<Byte> status) throws ASException {
 		return getUsingIdsAndStatus(null, status);
 	}
 	
@@ -337,7 +337,7 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 	 *            A range object to bound the query with. @see Range
 	 */
 	@Override
-	public List<Store> getUsingIdsAndStatus(Collection<String> ids, List<Integer> status) throws ASException {
+	public List<Store> getUsingIdsAndStatus(Collection<String> ids, List<Byte> status) throws ASException {
 		// TODO unused method, remove or fix to get by ID as in GenericDAO and filted with status
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		List<Store> ret = CollectionFactory.createList();
