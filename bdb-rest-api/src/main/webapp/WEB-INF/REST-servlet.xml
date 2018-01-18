@@ -88,6 +88,7 @@
 					value-ref="spring.dashboard.storerevenuebyhourdata.rest.resource" />
 				<entry key="/dashboard/storeItemByHourData"
 					value-ref="spring.dashboard.storeitembyhourdata.rest.resource" />
+				<entry key="/dashboard/devlynD" value-ref="spring.dashboard.devlynd.rest.resource" />
 			</map>
 		</property>
 	</bean>
@@ -260,5 +261,8 @@
  		class="org.restlet.ext.spring.SpringFinder" >
  		<lookup-method name="create" bean="dashboard.storeitembyhourdata.rest.resource" />
  	</bean>
+ 	 <bean id="spring.dashboard.devlynd.rest.resource" class="org.restlet.ext.spring.SpringFinder" >
+		<lookup-method name="create" bean="dashboard.devlynd.rest.resource" />
+	</bean>
 
 </beans>

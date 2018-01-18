@@ -78,6 +78,8 @@
     <bean id="dashboard.storeitembyhourdata.rest.resource"
       class="mx.getin.bdb.dashboard.bz.spi.StoreItemByHourDataBzServiceJSONImpl"
       parent="base.rest.resource" scope="prototype" />
+    <bean id="dashboard.devlynd.rest.resource"
+      class="mx.getin.bdb.dashboard.bz.spi.DevlynTableDataBzServiceJSONImpl" parent="base.rest.resource" scope="prototype"/>
 
 	<!-- Business Service validation beans -->
 	<bean id="user.bz.validator" class="mobi.allshoppings.bdb.bz.validation.BDBUserBzValidation" scope="singleton" />
