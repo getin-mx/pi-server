@@ -261,11 +261,8 @@
  		class="org.restlet.ext.spring.SpringFinder" >
  		<lookup-method name="create" bean="dashboard.storeitembyhourdata.rest.resource" />
  	</bean>
-<<<<<<< HEAD
  	 <bean id="spring.dashboard.devlynd.rest.resource" class="org.restlet.ext.spring.SpringFinder" >
 		<lookup-method name="create" bean="dashboard.devlynd.rest.resource" />
 	</bean>
-=======
->>>>>>> Ready models, DAO and services for Store Data by hour
 
 </beans>

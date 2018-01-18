@@ -1073,6 +1073,8 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	public byte[] exportDB(List<String> storesId, String brandId, String fromDate, String toDate, String outDir,
 			boolean saveTmp, User toNotify) throws ASException {
 		// FIXME optimize to use only one loop for both daily and hourly data
+		
+		
 		if (brandId != null && StringUtils.hasText(brandId)) {
 			for (Store current : storeDao.getUsingBrandAndStatus(brandId, null, null)) {
 				if (!storesId.contains(current.getIdentifier()))
@@ -1140,6 +1142,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		log.log(Level.INFO, "Adding stores daily data");
 		for (String storeId : storesId) {
 			store = storeDao.get(storeId, false);
+			
 			log.log(Level.INFO, "Processing store " + store.getName() + " for period " + fromDate
 					+ " - " + toDate + "...");
 			curDate = new Date(initialDate.getTime());
@@ -1212,8 +1215,6 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		log.log(Level.INFO, "Adding stores hourly data");
 		for (String storeId : storesId) {
 			store = storeDao.get(storeId, false);
-			log.log(Level.INFO, "Processing store " + store.getName() + " for period " + fromDate
-					+ " - " + toDate + "...");
 			curDate = new Date(initialDate.getTime());
 			calforcomp.setTime(curDate);
 			//apdassignation.clear();
