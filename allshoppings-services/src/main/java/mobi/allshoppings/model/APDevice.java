@@ -59,6 +59,7 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	private Long visitMaxThreshold;
 	private Long peasantPowerThreshold;
 	private Long visitCountThreshold;
+	private Long viewerPowerThreshold;
 	private Integer repeatThreshold;
 	
 	private Long visitDecay;
@@ -454,12 +455,26 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	public Long getPeasantPowerThreshold() {
 		return peasantPowerThreshold;
 	}
+	
+	/**
+	 * @return the viewerPowerThreshold
+	 */
+	public Long getViewerPowerThreshold() {
+		return viewerPowerThreshold;
+	}
 
 	/**
 	 * @param peasentPowerThreshold the peasentPowerThreshold to set
 	 */
 	public void setPeasentPowerThreshold(Long peasentPowerThreshold) {
 		this.peasantPowerThreshold = peasentPowerThreshold;
+	}
+	
+	/**
+	 * @param viewerPowerThreshold the viewerPowerThreshold to set
+	 */
+	public void setViewerPowerThreshold(long viewerPowerThreshold) {
+		this.viewerPowerThreshold = viewerPowerThreshold;
 	}
 
 	/**

@@ -579,8 +579,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				}
 			}
 			mapped.setKey(aphe.getKey());
-			
 			map.put(mapped.getMac(), mapped);
+			
 		}
 
 		Iterator<APHEntry> ix = map.values().iterator();
@@ -1518,6 +1518,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Long time = (visit.getCheckinFinished().getTime() -visit.getCheckinStarted().getTime()) / 60000;
 		
 		// TODO add minimum peasant time
+		
+		
 		
 		visit.setDuration(time);
 		return time <= 60 *60;
