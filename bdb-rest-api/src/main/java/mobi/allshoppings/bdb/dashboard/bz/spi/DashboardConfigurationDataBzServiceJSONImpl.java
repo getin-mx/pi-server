@@ -52,7 +52,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 			long millisPre = new Date().getTime();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", EntityKind.KIND_BRAND);
+			byte entityKind = obtainByteValue("entityKind", EntityKind.KIND_BRAND);
 
 			DashboardConfiguration obj = new DashboardConfiguration(entityId, entityKind);
 			try {
@@ -95,7 +95,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 			final JSONObject obj = entity.getJsonObject();
 
 			final String entityId = obj.getString("entityId");
-			final Integer entityKind = obj.getInt("entityKind");
+			final byte entityKind = (byte) obj.getInt("entityKind");
 
 			DashboardConfiguration modObj;
 			boolean doUpdate = true;

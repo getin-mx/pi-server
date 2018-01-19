@@ -100,7 +100,7 @@ public class BDBAPDMABlackListBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl
 			String entityId = this.obtainStringValue(ENTITY_ID, null);
 
 			// Get EntityId query
-			Integer entityKind = this.obtainIntegerValue(ENTITY_KIND, null);
+			byte entityKind = this.obtainByteValue(ENTITY_KIND, (byte) -1);
 
 			// Get Status query
 			String status = this.obtainStringValue(STATUS, null);
@@ -130,7 +130,7 @@ public class BDBAPDMABlackListBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl
 								myClazz.getName(), q, user.getSecuritySettings().getRole().equals(Role.ADMIN) 
 								? null : user.getViewLocation(),
 								StringUtils.hasText(status) 
-								? Arrays.asList(new Integer[] {Integer.valueOf(status)}) : null, range, 
+								? Arrays.asList(Byte.valueOf(status)) : null, range, 
 								additionalFields, order, lang);
 			} else {
 				list = dao.getUsingEntityIdAndRange(entityId, entityKind, range, order, attributes, false);

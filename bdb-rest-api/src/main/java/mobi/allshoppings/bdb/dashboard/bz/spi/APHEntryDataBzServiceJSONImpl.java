@@ -1,12 +1,11 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
+import static mx.getin.Constants.sdf;
 
 import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +29,9 @@ import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.tools.CollectionFactory;
+import mx.getin.Constants;
+import mx.getin.dao.APDCalibrationDAO;
+import mx.getin.model.APDCalibration;
 
 
 /**
@@ -40,8 +42,6 @@ extends BDBRestBaseServerResource
 implements BDBDashboardBzService {
 
 	private static final Logger log = Logger.getLogger(APHEntryDataBzServiceJSONImpl.class.getName());
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	
 		
 	@Autowired
 	private APHHelper aphHelper;
@@ -51,6 +51,9 @@ implements BDBDashboardBzService {
 	
 	@Autowired
 	private APDeviceDAO apdDao;
+	
+	@Autowired
+	private APDCalibrationDAO apdCal;
 	
 	private List<APDVisit> visits;
 	
@@ -66,35 +69,30 @@ implements BDBDashboardBzService {
 
 	
 	@Override
-	public String retrieve()
-	{
-		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-		
+	public String retrieve() {
 		long start = markStart();
 		try {
 			// obtain the id and validates the auth token
 			obtainUserIdentifier(true);
 
 			String identifier = obtainStringValue("identifier", null);
-			Boolean original = obtainBooleanValue("original", false);
+			boolean original = obtainBooleanValue("original", false);
 			
 			String[] idArray = identifier.split(":");
 			String hostname = idArray[6];
 			String aphEntryDate = idArray[7];
-			Date aphEntryStringDate = (Date) sdf.parse(aphEntryDate);
+			Date aphEntryStringDate = sdf.parse(aphEntryDate);
 			
 			
 			//All APDVisits for entity
 			List<APDAssignation> assignations = apdAssignationDao.getUsingHostnameAndDate(hostname, aphEntryStringDate);
 			APDAssignation assignation = assignations.get(0);
 			String entityId = assignation.getEntityId();
-			
-			
 
 			APDevice dev = null;
 			
 			int fromHour = 0;
-			int toHour = 4320;
+			int toHour = Constants.SLOT_NUMBER_IN_DAY;
 			try { 
 				String fromStringHour = obtainStringValue("fromStringHour", null);
 				fromHour = aphHelper.stringToOffsetTime(fromStringHour); 
@@ -142,7 +140,7 @@ implements BDBDashboardBzService {
 
 
 			for(APHEntry entry : entries ) {
-				APDevice apd = apdDao.get(entry.getHostname());
+				APDCalibration apd = apdCal.get(entry.getHostname());
 				aphHelper.artificiateRSSI(entry, apd);
 			}
 						
@@ -263,15 +261,15 @@ implements BDBDashboardBzService {
 
 					String name = "";
 					int yAxis = 0;
-					if( visit.getCheckinType().equals(APDVisit.CHECKIN_VISIT)) {
+					if( visit.getCheckinType() == APDVisit.CHECKIN_VISIT) {
 						name = "Visita";
 						yAxis = 3;
 					}
-					else if( visit.getCheckinType().equals(APDVisit.CHECKIN_PEASANT)) {
+					else if( visit.getCheckinType() == APDVisit.CHECKIN_PEASANT) {
 						name = "Paseante";
 						yAxis = 2;
 					}
-					else if( visit.getCheckinType().equals(APDVisit.CHECKIN_EMPLOYEE)) {
+					else if( visit.getCheckinType() == APDVisit.CHECKIN_EMPLOYEE) {
 						name = "Empleado";
 						yAxis = 3;
 					}

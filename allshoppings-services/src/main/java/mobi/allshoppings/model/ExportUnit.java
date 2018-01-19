@@ -20,9 +20,9 @@ import mobi.allshoppings.tools.CollectionFactory;
 @PersistenceCapable(detachable="true")
 public class ExportUnit implements ModelKey, Serializable, Identificable, StatusAware {
 
-	public static final int TARGET_MYSQL = 0;
+	public static final byte TARGET_MYSQL = 0;
 	
-	public static final int SOURCE_VISITS = 0;
+	public static final byte SOURCE_VISITS = 0;
 	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
@@ -31,15 +31,15 @@ public class ExportUnit implements ModelKey, Serializable, Identificable, Status
 	private String name;
 	private String description;
 	
-	private Integer status;
+	private byte status;
 
 	@Persistent(defaultFetchGroup = "true")
 	private List<String> entityIds;
-	private Integer entityKind;
+	private int entityKind;
 
-	private Boolean hideMac = false;
-	private Integer sourceType;
-	private Integer targetType;
+	private boolean hideMac = false;
+	private int sourceType;
+	private byte targetType;
 	private String targetURL;
 	private String targetDBName;
 	private String targetUser;
@@ -115,14 +115,14 @@ public class ExportUnit implements ModelKey, Serializable, Identificable, Status
 	/**
 	 * @return the status
 	 */
-	public Integer getStatus() {
+	public byte getStatus() {
 		return status;
 	}
 
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(Integer status) {
+	public void setStatus(byte status) {
 		this.status = status;
 	}
 
@@ -150,28 +150,28 @@ public class ExportUnit implements ModelKey, Serializable, Identificable, Status
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 
 	/**
 	 * @return the targetType
 	 */
-	public Integer getTargetType() {
+	public byte getTargetType() {
 		return targetType;
 	}
 
 	/**
 	 * @param targetType the targetType to set
 	 */
-	public void setTargetType(Integer targetType) {
+	public void setTargetType(byte targetType) {
 		this.targetType = targetType;
 	}
 
 	/**
 	 * @return the sourceType
 	 */
-	public Integer getSourceType() {
+	public int getSourceType() {
 		return sourceType;
 	}
 

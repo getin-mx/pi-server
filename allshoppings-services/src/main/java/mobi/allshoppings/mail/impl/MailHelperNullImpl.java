@@ -1,7 +1,5 @@
 package mobi.allshoppings.mail.impl;
 
-import java.util.Map;
-
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.mail.MailHelper;
 import mobi.allshoppings.model.User;
@@ -13,10 +11,10 @@ public class MailHelperNullImpl implements MailHelper {
 			throws ASException {
 	}
 
-	@Override
+	/*@Override
 	public void sendMessage(User user, String subject, String template,
 			Map<String, Object> replaceValues) throws ASException {
-	}
+	}*/
 
 	@Override
 	public void sendMessageWithAttachMents(User user, String subject, String message, String attachmentPath,

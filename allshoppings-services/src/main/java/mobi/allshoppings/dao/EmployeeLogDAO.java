@@ -15,7 +15,7 @@ public interface EmployeeLogDAO extends GenericDAO<EmployeeLog> {
 
 	Key createKey(EmployeeLog obj) throws ASException;
 
-	List<EmployeeLog> getUsingEntityIdAndEntityKindAndDate(String employeeId, List<String> entityId, Integer entityKind, Date fromDate, Date toDate,
+	List<EmployeeLog> getUsingEntityIdAndEntityKindAndDate(String employeeId, List<String> entityId, byte entityKind, Date fromDate, Date toDate,
 			Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException;
 
 }

@@ -1,9 +1,11 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
+import static mx.getin.Constants.sdf;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +23,6 @@ import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.ibm.icu.util.Calendar;
 import com.inodes.util.CollectionFactory;
 
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
@@ -40,8 +41,7 @@ import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.StoreItem;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.Range;
-
-
+import mx.getin.Constants;
 /**
  *
  */
@@ -50,9 +50,7 @@ extends BDBRestBaseServerResource
 implements BDBDashboardBzService, BDBPostBzService {
 
 	private static final Logger log = Logger.getLogger(StoreItemDataBzServiceJSONImpl.class.getName());
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat mdf = new SimpleDateFormat("yyyy-MM");
-	private static final long ONE_DAY = 86400000;
 	
 	@Autowired
 	private StoreItemDAO dao;
@@ -99,7 +97,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 				} else {
 					jsonArray.put(obj.getQty());
 				}
-				curDate = new Date(curDate.getTime() + ONE_DAY);
+				curDate = new Date(curDate.getTime() + Constants.DAY_IN_MILLIS);
 			}
 			
 			// Returns the final value
@@ -181,7 +179,7 @@ implements BDBDashboardBzService, BDBPostBzService {
 						dao.create(obj);
 					}
 					i++;
-					curDate = new Date(curDate.getTime() + ONE_DAY);
+					curDate = new Date(curDate.getTime() + Constants.DAY_IN_MILLIS);
 				}
 				mapper.createStoreItemDataForDates(fromDate, toDate, storeId);
 
@@ -316,7 +314,6 @@ implements BDBDashboardBzService, BDBPostBzService {
 		return generateJSONOkResponse().toString();	
 	}
 
-	@SuppressWarnings("deprecation")
 	public JSONObject parseExcelTicketFile(Image image, Brand brand, Date period) throws ASException {
 
 		JSONObject json = new JSONObject();

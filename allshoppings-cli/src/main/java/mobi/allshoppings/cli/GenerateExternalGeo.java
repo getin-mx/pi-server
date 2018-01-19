@@ -41,7 +41,7 @@ public class GenerateExternalGeo extends AbstractCLI {
 			OptionSet options = parser.parse(args);
 
 			String sEntityIds = null;
-			Integer entityKind = null;
+			byte entityKind = -1;
 			List<String> entityIds = CollectionFactory.createList();
 			
 			try {
@@ -56,7 +56,7 @@ public class GenerateExternalGeo extends AbstractCLI {
 				sEntityIds = (String)options.valueOf("entityIds");
 				String parts[] = sEntityIds.split(",");
 				for(int i = 0; i < parts.length; i++) entityIds.add(parts[i].trim());
-				entityKind = (Integer)options.valueOf("entityKind");
+				entityKind = (Byte)options.valueOf("entityKind");
 				
 			} catch( Exception e ) {
 				usage(parser);

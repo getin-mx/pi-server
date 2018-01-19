@@ -19,12 +19,10 @@ import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bz.DashboardTableDataBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
-import mobi.allshoppings.dao.CinemaDAO;
 import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.Cinema;
 import mobi.allshoppings.model.DashboardIndicatorAlias;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.tools.CollectionFactory;
@@ -43,8 +41,6 @@ implements DashboardTableDataBzService {
 	private DashboardIndicatorDataDAO dao;
 	@Autowired
 	private DashboardIndicatorAliasDAO diAliasDao;
-	@Autowired
-	private CinemaDAO cinemaDao;
 
 	/**
 	 * Obtains information about a user
@@ -78,7 +74,7 @@ implements DashboardTableDataBzService {
 			String country = obtainStringValue("country", null);
 			String province = obtainStringValue("province", null);
 			String city = obtainStringValue("city", null);
-			Boolean obtainGroupNameByCinema = obtainBooleanValue("obtainGroupNameByCinema", false);
+			//Boolean obtainGroupNameByCinema = obtainBooleanValue("obtainGroupNameByCinema", false);
 
 			List<String> idList = CollectionFactory.createList();
 			if(StringUtils.hasText(elementId))
@@ -157,7 +153,7 @@ implements DashboardTableDataBzService {
 				String groupKey = i.next();
 				JSONArray val = new JSONArray();
 				Map<String, Integer> row = resultMap.get(groupKey);
-				if(obtainGroupNameByCinema) {
+				/*if(obtainGroupNameByCinema) {
 					try {
 						Cinema cinema = cinemaDao.get(groupKey,true);
 						if( cinema.getStatus().equals(Cinema.STATUS_ENABLED)) {
@@ -174,7 +170,7 @@ implements DashboardTableDataBzService {
 							jsonArray.put(val);
 						}
 					} catch( ASException e ) {}
-				} else {
+				} else {*/
 					val.put(groupKey);
 					for( String orderKey : orderList ) {
 						String key = aliasMap.get(orderKey);
@@ -186,7 +182,7 @@ implements DashboardTableDataBzService {
 						}
 					}
 					jsonArray.put(val);
-				}
+				//}
 			}
 
 			// Totals row

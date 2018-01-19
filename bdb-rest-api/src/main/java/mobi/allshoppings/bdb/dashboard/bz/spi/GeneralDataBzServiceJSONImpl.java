@@ -57,8 +57,8 @@ implements BDBDashboardBzService {
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			@SuppressWarnings("unused")
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			/*@SuppressWarnings("unused")
+			Integer entityKind = obtainIntegerValue("entityKind", null);*/
 			String subentityId = obtainStringValue("subentityId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
@@ -76,9 +76,9 @@ implements BDBDashboardBzService {
 			List<DashboardIndicatorData> list;
 
 			// peasents, visits, and tickets
-			list = dao.getUsingFilters(entityIds, null, Arrays.asList("apd_visitor"),
+			list = dao.getUsingFilters(entityIds, (byte) -1, Arrays.asList("apd_visitor"),
 					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets", "visitor_total_revenue"), null,
-					subentityIds, null, fromStringDate, toStringDate, null, null, null, null, null, null,
+					subentityIds, null, fromStringDate, toStringDate, null, null, (byte) -1, (byte) -1, null, null,
 					null, null);
 
 			for(DashboardIndicatorData obj : list) {
@@ -107,9 +107,9 @@ implements BDBDashboardBzService {
 
 			// permanence
 			list = dao.getUsingFilters(entityIds,
-					null, Arrays.asList("apd_permanence"), Arrays.asList("permanence_hourly_visits"), null,
+					(byte) -1, Arrays.asList("apd_permanence"), Arrays.asList("permanence_hourly_visits"), null,
 					subentityIds, null, fromStringDate, toStringDate,
-					null, null, null, null, null, null, null, null);
+					null, null, (byte) -1, (byte) -1, null, null, null, null);
 
 			for( DashboardIndicatorData obj : list ) {
 				try {

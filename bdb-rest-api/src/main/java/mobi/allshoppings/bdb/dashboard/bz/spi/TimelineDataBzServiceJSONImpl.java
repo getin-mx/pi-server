@@ -1,5 +1,7 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
+import static mx.getin.Constants.sdf;
+
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -32,7 +34,6 @@ import mobi.allshoppings.tools.CollectionFactory;
 public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource implements BDBTimelineDataBzService {
 
 	private static final Logger log = Logger.getLogger(TimelineDataBzServiceJSONImpl.class.getName());
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@Autowired
 	private DashboardIndicatorDataDAO dao;
@@ -51,7 +52,7 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String elementId = obtainStringValue("elementId", null);
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
@@ -67,7 +68,7 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			//String country = obtainStringValue("country", null);
 			//String province = obtainStringValue("province", null);
 			//String city = obtainStringValue("city", null);
-			Boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
+			boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
 			
 			if(!StringUtils.hasText(entityId)) throw ASExceptionHelper.invalidArgumentsException("entityId");
 			if(!StringUtils.hasText(subentityId)) throw ASExceptionHelper.invalidArgumentsException("subentityId");
@@ -75,7 +76,7 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			List<DashboardIndicatorData> list = dao.getUsingFilters(Arrays.asList(entityId), entityKind,
 					Arrays.asList(elementId), elementSubId == null ? null : Arrays.asList(elementSubId), shoppingId,
 					CollectionFactory.createList(subentityId.split(",")), null, fromStringDate, toStringDate, null,
-					null, null, null, null, null, null, null);
+					null, (byte) -1, (byte) -1, null, null, null, null);
 			
 			log.log(Level.INFO, list.size() + " dashboard elements found");
 

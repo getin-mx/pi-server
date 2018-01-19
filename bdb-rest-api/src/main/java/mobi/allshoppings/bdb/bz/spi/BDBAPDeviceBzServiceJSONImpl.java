@@ -7,15 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.bdb.bz.BDBCrudBzService;
-import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.interfaces.StatusAware;
+import mx.getin.dao.APDReportDAO;
+import mx.getin.model.APDReport;
 
-public class BDBAPDeviceBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDevice> implements BDBCrudBzService {
+public class BDBAPDeviceBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDReport> implements BDBCrudBzService {
 
 	@Autowired
-	private APDeviceDAO dao;
+	private APDReportDAO dao;
 
 	@Autowired
 	private APDeviceHelper apdeviceHelper;
@@ -47,9 +47,9 @@ public class BDBAPDeviceBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDev
 	}
 	
 	@Override
-	public void postChange(APDevice obj) throws ASException {
+	public void postChange(APDReport obj) throws ASException {
 		try {
-			if( obj.getStatus().equals(StatusAware.STATUS_DISABLED))
+			if( obj.getStatus() == StatusAware.STATUS_DISABLED)
 				apdeviceHelper.unassignUsingAPDevice(obj.getHostname());
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
@@ -57,7 +57,7 @@ public class BDBAPDeviceBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDev
 	}
 	
 	@Override
-	public void postDelete(APDevice obj) throws ASException {
+	public void postDelete(APDReport obj) throws ASException {
 		try {
 			apdeviceHelper.unassignUsingAPDevice(obj.getHostname());
 		} catch( Exception e ) {
@@ -68,11 +68,11 @@ public class BDBAPDeviceBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDev
 	@Override
 	public void config() {
 		setMyDao(dao);
-		setMyClazz(APDevice.class);
+		setMyClazz(APDReport.class);
 	}
 
 	@Override
-	public void setKey(APDevice obj, JSONObject seed) throws ASException {
+	public void setKey(APDReport obj, JSONObject seed) throws ASException {
 		obj.setKey(dao.createKey(seed.getString("hostname")));
 	}
 

@@ -31,8 +31,6 @@ public class CSVVisitDetailExport {
 	@Autowired
 	private StoreDAO storeDao;
 	@Autowired
-	private APDVisitDAO apdvDao;
-	@Autowired
 	private ShoppingDAO shoppingDao;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -59,7 +57,7 @@ public class CSVVisitDetailExport {
 			storeCache.put(store.getIdentifier(), store);
 		} else {
 			if( brand != null ) {
-				List<Store> stores = storeDao.getUsingBrandAndStatus(brand.getIdentifier(), Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), null);
+				List<Store> stores = storeDao.getUsingBrandAndStatus(brand.getIdentifier(), Arrays.asList(StatusAware.STATUS_ENABLED), null);
 				for(Store obj : stores ) {
 					if( StringUtils.hasText(obj.getExternalId())) {
 						storeIds.add(obj.getIdentifier());

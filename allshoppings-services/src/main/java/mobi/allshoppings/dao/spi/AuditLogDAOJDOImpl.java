@@ -36,7 +36,7 @@ public class AuditLogDAOJDOImpl extends GenericDAOJDO<AuditLog> implements Audit
 	}
 
 	@Override
-	public List<AuditLog> getUsingUserAndTypeAndRange(String userId, Integer eventType, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
+	public List<AuditLog> getUsingUserAndTypeAndRange(String userId, byte eventType, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
 		List<AuditLog> returnedObjs = CollectionFactory.createList();
 
 		PersistenceManager pm;
@@ -57,7 +57,7 @@ public class AuditLogDAOJDOImpl extends GenericDAOJDO<AuditLog> implements Audit
 			}
 			
 			// Date parameter
-			if( eventType != null ) {
+			if( eventType >= 0) {
 				declaredParams.add("Integer eventTypeParam");
 				filters.add("eventType == eventTypeParam");
 				parameters.put("eventTypeParam", eventType);

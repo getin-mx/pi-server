@@ -1,5 +1,6 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
+import static mx.getin.Constants.sdf;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -18,13 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.APDAssignationDAO;
-import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.APUptimeDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDAssignation;
-import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APUptime;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Store;
@@ -32,6 +31,9 @@ import mobi.allshoppings.model.User;
 import mobi.allshoppings.model.UserSecurity.Role;
 import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
+import mx.getin.Constants;
+import mx.getin.dao.APDCalibrationDAO;
+import mx.getin.model.APDCalibration;
 
 
 /**
@@ -42,8 +44,6 @@ extends BDBRestBaseServerResource
 implements BDBDashboardBzService {
 
 	private static final Logger log = Logger.getLogger(OpenTimesDataBzServiceJSONImpl.class.getName());
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	private static final long ONE_DAY = 86400000;
 
 	@Autowired
 	private StoreDAO storeDao;
@@ -52,7 +52,7 @@ implements BDBDashboardBzService {
 	@Autowired
 	private APUptimeDAO apuDao;
 	@Autowired
-	private APDeviceDAO devDao;
+	private APDCalibrationDAO devCal;
 
 	/**
 	 * Obtains information about a user
@@ -68,19 +68,19 @@ implements BDBDashboardBzService {
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
 
 			// Get all the stores that matches the brand
 			List<Store> stores = CollectionFactory.createList();
-			if( entityKind.equals(EntityKind.KIND_BRAND)) {
-				List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), "name"); 
+			if( entityKind == EntityKind.KIND_BRAND) {
+				List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, Arrays.asList(StatusAware.STATUS_ENABLED), "name"); 
 				for( Store store : tmpStores ) {
 					if( isValidForUser(user, store))
 						stores.add(store);
 				}
-			} else if( entityKind.equals(EntityKind.KIND_STORE)) {
+			} else if( entityKind == EntityKind.KIND_STORE) {
 				stores.add(storeDao.get(entityId));
 			}
 			
@@ -104,7 +104,7 @@ implements BDBDashboardBzService {
 			
 			Calendar cal = Calendar.getInstance();
 			List<APDAssignation> devAssig;
-			APDevice dev;
+			APDCalibration dev;
 			String openTime;
 			String closeTime;
 
@@ -140,7 +140,7 @@ implements BDBDashboardBzService {
 					data.put(store.getIdentifier(), data2);
 					
 				}
-				curDate = new Date(curDate.getTime() + ONE_DAY);
+				curDate = new Date(curDate.getTime() + Constants.DAY_IN_MILLIS);
 			}
 
 						
@@ -167,7 +167,7 @@ implements BDBDashboardBzService {
 				devAssig = apdaDao.getUsingEntityIdAndEntityKind(store.getIdentifier(),
 						EntityKind.KIND_STORE);
 				dev = devAssig != null && !devAssig.isEmpty() ?
-						devDao.get(devAssig.get(0).getHostname()) : null;
+						devCal.get(devAssig.get(0).getHostname()) : null;
 				
 				Iterator<Date> i = dates.iterator();
 				while( i.hasNext()) {

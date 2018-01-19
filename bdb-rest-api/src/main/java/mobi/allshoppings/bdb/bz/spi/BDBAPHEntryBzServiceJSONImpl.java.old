@@ -26,12 +26,6 @@ import mobi.allshoppings.tools.Range;
 
 public class BDBAPHEntryBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APHEntry> implements BDBCrudBzService {
 
-	@Autowired
-	private APHEntryDAO dao;
-
-	@Autowired
-	private APDVisitDAO apdvDao;
-
 	@Override
 	public String[] getListFields() {
 		return new String[] {

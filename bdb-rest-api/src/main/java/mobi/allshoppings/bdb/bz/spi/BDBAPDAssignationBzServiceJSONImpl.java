@@ -1,6 +1,7 @@
 package mobi.allshoppings.bdb.bz.spi;
 
-import java.text.SimpleDateFormat;
+import static mx.getin.Constants.sdf;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -32,8 +33,6 @@ import mobi.allshoppings.tools.Range;
 
 public class BDBAPDAssignationBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDAssignation> implements BDBCrudBzService {
 
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	
 	private static final String ENTITYID = "entityId";
 	private static final String ENTITYKIND = "entityKind";
 	private static final String HOSTNAME = "hostname";
@@ -172,17 +171,17 @@ public class BDBAPDAssignationBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl
 			String entityId = this.obtainStringValue(ENTITYID, null);
 
 			// Get entityKnd
-			Integer entityKind = this.obtainIntegerValue(ENTITYKIND, null);
+			byte entityKind = this.obtainByteValue(ENTITYKIND, (byte) -1);
 
 			// Get entityKnd
-			Boolean active = this.obtainBooleanValue(ACTIVE, false);
+			boolean active = this.obtainBooleanValue(ACTIVE, false);
 
 			Map<String,String> attributes = CollectionFactory.createMap();
 			
 			// Staus filter
-			List<Integer> statusList = null;
+			List<Byte> statusList = null;
 			if( StringUtils.hasText(status))
-				statusList = Arrays.asList(new Integer[] {Integer.parseInt(status)});
+				statusList = Arrays.asList(Byte.parseByte(status));
 
 			// retrieve all elements
 			long millisPre = new Date().getTime();
@@ -262,7 +261,7 @@ public class BDBAPDAssignationBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl
 		else 
 			adapter.setActive(true);
 		
-		if( obj.getEntityKind().equals(EntityKind.KIND_STORE)) {
+		if( obj.getEntityKind() == EntityKind.KIND_STORE) {
 			Store tmp = storeDao.get(obj.getEntityId());
 			adapter.setName(tmp.getName());
 			
@@ -270,7 +269,7 @@ public class BDBAPDAssignationBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl
 			adapter.setBrandId(tmpb.getIdentifier());
 			adapter.setBrandName(tmpb.getName());
 			
-		} else if( obj.getEntityKind().equals(EntityKind.KIND_SHOPPING)) {
+		} else if( obj.getEntityKind() == EntityKind.KIND_SHOPPING) {
 			Shopping tmp = shoppingDao.get(obj.getEntityId());
 			adapter.setName(tmp.getName());
 		}

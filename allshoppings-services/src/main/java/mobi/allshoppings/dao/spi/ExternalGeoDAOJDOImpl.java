@@ -51,7 +51,7 @@ public class ExternalGeoDAOJDOImpl extends GenericDAOJDO<ExternalGeo> implements
 	}
 
 	@Override
-	public String getHash(Float lat, Float lon, String period, String entityId, Integer entityKind, Integer type) {
+	public String getHash(double lat, double lon, String period, String entityId, byte entityKind, int type) {
 		String seed = geocoder.encodeGeohash(lat, lon).substring(0,7)
 				+ ":" + period
 				+ ":" + entityId
@@ -156,7 +156,7 @@ public class ExternalGeoDAOJDOImpl extends GenericDAOJDO<ExternalGeo> implements
 	}
 
 	@Override
-	public String getEntityIdAndPeriods(PersistenceProvider pp, String entityId, Integer entityKind, Integer type, String period) throws ASException {
+	public String getEntityIdAndPeriods(PersistenceProvider pp, String entityId, byte entityKind, int type, String period) throws ASException {
 
 		JSONArray returnedObjs = new JSONArray();
 		
@@ -180,12 +180,12 @@ public class ExternalGeoDAOJDOImpl extends GenericDAOJDO<ExternalGeo> implements
 				filters.add("entityId == entityIdParam");
 				parameters.put("entityIdParam", entityId);
 			}
-			if( entityKind != null ) {
+			if( entityKind >= 0) {
 				declaredParams.add("Integer entityKindParam");
 				filters.add("entityKind == entityKindParam");
 				parameters.put("entityKindParam", entityKind);
 			}
-			if( type != null ) {
+			if( type >= 0) {
 				declaredParams.add("Integer typeParam");
 				filters.add("type == typeParam");
 				parameters.put("typeParam", type);
@@ -226,7 +226,7 @@ public class ExternalGeoDAOJDOImpl extends GenericDAOJDO<ExternalGeo> implements
 	}
 
 	@Override
-	public List<ExternalGeo> getUsingEntityIdAndPeriod(PersistenceProvider pp, String entityId, Integer entityKind, Integer type, String period, Range range, String order, boolean detachable) throws ASException {
+	public List<ExternalGeo> getUsingEntityIdAndPeriod(PersistenceProvider pp, String entityId, byte entityKind, int type, String period, Range range, String order, boolean detachable) throws ASException {
 
 		List<ExternalGeo> returnedObjs = CollectionFactory.createList();
 		
@@ -250,12 +250,12 @@ public class ExternalGeoDAOJDOImpl extends GenericDAOJDO<ExternalGeo> implements
 				filters.add("entityId == entityIdParam");
 				parameters.put("entityIdParam", entityId);
 			}
-			if( entityKind != null ) {
+			if( entityKind >= 0) {
 				declaredParams.add("Integer entityKindParam");
 				filters.add("entityKind == entityKindParam");
 				parameters.put("entityKindParam", entityKind);
 			}
-			if( type != null ) {
+			if( type >= 0) {
 				declaredParams.add("Integer typeParam");
 				filters.add("type == typeParam");
 				parameters.put("typeParam", type);
@@ -374,7 +374,7 @@ public class ExternalGeoDAOJDOImpl extends GenericDAOJDO<ExternalGeo> implements
 	}
 
 	@Override
-	public void deleteUsingEntityIdAndPeriod(PersistenceProvider pp, List<String> entityId, Integer entityKind, Integer type, String period) throws ASException {
+	public void deleteUsingEntityIdAndPeriod(PersistenceProvider pp, List<String> entityId, byte entityKind, int type, String period) throws ASException {
 		
 		PersistenceManager pm;
 		if( pp == null ) {
@@ -393,9 +393,9 @@ public class ExternalGeoDAOJDOImpl extends GenericDAOJDO<ExternalGeo> implements
 			List<BasicDBObject> parts = CollectionFactory.createList();
 			if( !CollectionUtils.isEmpty(entityId))
 				parts.add(new BasicDBObject("entityId", new BasicDBObject("$in", entityId.toArray(new String[entityId.size()]))));
-			if(null != entityKind)
+			if(entityKind >= 0)
 				parts.add(new BasicDBObject("entityKind", entityKind));
-			if(null != type)
+			if(type >= 0)
 				parts.add(new BasicDBObject("type", type));
 			if( StringUtils.hasText(period))
 				parts.add(new BasicDBObject("period", period));

@@ -1,5 +1,6 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
+import static mx.getin.Constants.sdf;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -36,10 +37,7 @@ extends BDBRestBaseServerResource
 implements BDBTimelineHourBzService {
 
 	private static final Logger log = Logger.getLogger(RepetitionsBzServiceJSONImpl.class.getName());
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-	@Autowired
-	private APDVisitDAO apdvDao;
+	
 	@Autowired
 	private StoreDAO storeDao;
 
@@ -57,7 +55,7 @@ implements BDBTimelineHourBzService {
 			getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String subentityId = obtainStringValue("subentityId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);

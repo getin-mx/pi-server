@@ -15,6 +15,7 @@ import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.tools.CollectionFactory;
+import mx.getin.Constants;
 
 
 public class UpdateDashboards extends AbstractCLI {
@@ -51,7 +52,7 @@ public class UpdateDashboards extends AbstractCLI {
 			Date toDate = null;
 			String sOutDir = null;
 			String sPhases = null;
-			List<Integer> phases = CollectionFactory.createList();
+			List<Byte> phases = CollectionFactory.createList();
 			String sEntityIds = null;
 			List<String> entityIds = CollectionFactory.createList();
 			
@@ -62,7 +63,7 @@ public class UpdateDashboards extends AbstractCLI {
 				if( StringUtils.hasText(sFromDate)) {
 					fromDate = sdf.parse(sFromDate);
 				} else {
-					fromDate = sdf.parse(sdf.format(new Date(new Date().getTime() - 86400000 /* 12 hours */)));
+					fromDate = sdf.parse(sdf.format(System.currentTimeMillis() -Constants.TWELVE_HOURS_IN_MILLIS));
 				}
 				
 				if( StringUtils.hasText(sToDate)) {
@@ -78,7 +79,7 @@ public class UpdateDashboards extends AbstractCLI {
 					sPhases = (String)options.valueOf("phases");
 					String[] parts = sPhases.split(",");
 					for( String part : parts ) {
-						phases.add(Integer.valueOf(part));
+						phases.add(Byte.valueOf(part));
 					}
 				}
 				

@@ -186,7 +186,7 @@ public class ExportHelperImpl implements ExportHelper {
 						APDVisit dbo = i.next();
 						if(StringUtils.hasText(dbo.getEntityId()) &&
 								StringUtils.hasText(dbo.getMac()) &&
-								dbo.getCheckinType() != null &&
+								dbo.getCheckinType() >= 0 &&
 								dbo.getCheckinStarted() != null &&
 								dbo.getCheckinFinished() != null) {
 
@@ -210,9 +210,9 @@ public class ExportHelperImpl implements ExportHelper {
 								identifier = mac + identifier.substring(17);
 							}
 							
-							Integer entityKind = dbo.getEntityKind();
+							byte entityKind = dbo.getEntityKind();
 							String devicePlatform = dbo.getDevicePlatform();
-							Integer checkinType = dbo.getCheckinType();
+							byte checkinType = dbo.getCheckinType();
 							Date checkinStarted = dbo.getCheckinStarted();
 							Date checkinFinished = dbo.getCheckinFinished();
 							Date creationDateTime = dbo.getCreationDateTime();

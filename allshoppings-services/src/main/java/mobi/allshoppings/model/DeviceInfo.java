@@ -33,16 +33,15 @@ public class DeviceInfo implements ModelKey, Serializable, Identificable, Status
 	private String appVersion;
 	private String apiVersion;
 	private String messagingToken;
-	private Boolean messagingSandbox;
+	private boolean messagingSandbox;
 	private String lang;
 	private Date lastUpdate;
 	private Date creationDateTime;
-	private Integer status;
+	private byte status;
 	private String appId;
 	private String mac;
 	
 	public DeviceInfo() {
-		super();
 		this.creationDateTime = new Date();
 		this.status = StatusAware.STATUS_ENABLED;
 	}
@@ -214,21 +213,20 @@ public class DeviceInfo implements ModelKey, Serializable, Identificable, Status
 
 	@Override
 	public void preStore() {
-		if(messagingSandbox == null) messagingSandbox = false;
 		lastUpdate = new Date();
 	}
 
 	/**
 	 * @return the status
 	 */
-	public Integer getStatus() {
+	public byte getStatus() {
 		return status;
 	}
 
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(Integer status) {
+	public void setStatus(byte status) {
 		this.status = status;
 	}
 

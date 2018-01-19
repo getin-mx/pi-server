@@ -403,7 +403,7 @@ public class UserDAOJDOImpl extends GenericDAOJDO<User> implements UserDAO {
 	 */
 	@Override
 	public List<User> getUsingLastUpdateStatusAndRangeAndRole(PersistenceProvider pp, Date lastUpdate,
-			boolean afterLastUpdateDate, List<Integer> status, Range range, String order, List<Integer> role,
+			boolean afterLastUpdateDate, List<Byte> status, Range range, String order, List<Byte> role,
 			Map<String, String> attributes, boolean detachable) throws ASException {
 
 		List<User> returnedObjs = new ArrayList<User>();

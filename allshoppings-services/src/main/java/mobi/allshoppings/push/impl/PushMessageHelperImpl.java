@@ -212,7 +212,7 @@ public class PushMessageHelperImpl implements PushMessageHelper {
 	 */
 	@Override
 	public void sendNotification(User user, String title, String avatarId,
-			String message, String action, DeviceInfo device, String entityId, Integer entityKind)
+			String message, String action, DeviceInfo device, String entityId, byte entityKind)
 			throws ASException {
 		try {
 			NotificationLog nl = new NotificationLog();
@@ -317,7 +317,8 @@ public class PushMessageHelperImpl implements PushMessageHelper {
 	 * @return A fully formed push message log
 	 * @throws ASException
 	 */
-	public PushMessageLog buildPushMessageLog(DeviceInfo device, User user, Integer messageType, Key owner, JSONObject extras) throws ASException {
+	@Override
+	public PushMessageLog buildPushMessageLog(DeviceInfo device, User user, int messageType, Key owner, JSONObject extras) throws ASException {
 		
 		PushMessageLog log = new PushMessageLog();
 		log.setDeviceUUID(device.getIdentifier());

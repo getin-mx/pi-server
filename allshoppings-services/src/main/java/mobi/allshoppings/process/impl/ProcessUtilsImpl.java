@@ -63,7 +63,7 @@ public class ProcessUtilsImpl implements ProcessUtils {
 			.append(";");
 		}
 		
-		if( process.getProcessType().equals(Process.PROCESS_TYPE_GENERATE_VISITS)) {
+		if( process.getProcessType() == Process.PROCESS_TYPE_GENERATE_VISITS) {
 			sb.append("/usr/local/allshoppings/bin/aspi2 GenerateAPDVisits ")
 			.append("--datastore /usr/local/allshoppings/etc/datastore.nocache.properties ")
 			.append("--updateDashboards true --onlyDashboards false ")
@@ -90,7 +90,7 @@ public class ProcessUtilsImpl implements ProcessUtils {
 	public void startProcess(String identifier, boolean wait) throws ASException {
 		
 		final Process p = dao.get(identifier, true);
-		if(!p.getStatus().equals(StatusAware.STATUS_PREPARED))
+		if(p.getStatus() != StatusAware.STATUS_PREPARED)
 			throw ASExceptionHelper.defaultException("Invalid status for process " + p.getIdentifier(), new Exception());
 		
 		if( !StringUtils.hasText(p.getCmdLine()))
@@ -189,7 +189,7 @@ public class ProcessUtilsImpl implements ProcessUtils {
 	@Override
 	public void cancelPendingProcesses() throws ASException {
 		List<Process> list = dao.getUsingLastUpdateStatusAndRange(null, null, false,
-				Arrays.asList(new Integer[] { StatusAware.STATUS_RUNNING }), null, null, null, true);
+				Arrays.asList(StatusAware.STATUS_RUNNING), null, null, null, true);
 		
 		long now = System.currentTimeMillis();
 		
@@ -207,7 +207,7 @@ public class ProcessUtilsImpl implements ProcessUtils {
 	@Override
 	public void completePendingProcesses() throws ASException {
 		List<Process> list = dao.getUsingLastUpdateStatusAndRange(null, null, false,
-				Arrays.asList(new Integer[] { StatusAware.STATUS_RUNNING }), null, null, null, true);
+				Arrays.asList(StatusAware.STATUS_RUNNING), null, null, null, true);
 
 		for( Process p : list ) {
 			log.log(Level.INFO, "Completing process " + p.getIdentifier());

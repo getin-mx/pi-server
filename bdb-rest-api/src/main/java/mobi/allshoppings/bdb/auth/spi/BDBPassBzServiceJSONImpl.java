@@ -131,9 +131,9 @@ public class BDBPassBzServiceJSONImpl  extends BDBRestBaseServerResource impleme
 			HashMap<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put("newPassword", newPassword);
 			parameters.put("recoveryTokenValidity", user.getSecuritySettings().getRecoveryTokenValidity());
-			mailHelper.sendMessage(user, getI18NMessage(loc.toString(), "mail.passwordrecoverymail"),
+			/*mailHelper.sendMessage(user, getI18NMessage(loc.toString(), "mail.passwordrecoverymail"),
 					"mails/apppasswordrecovery.vm",
-					parameters);
+					parameters);*/
 
 			jsonOut = this.generateJSONOkResponse();
 		} catch (Exception e) {

@@ -64,15 +64,7 @@ public class Brand implements ModelKey, Serializable, Identificable, Indexable, 
 	@Embedded	
 	private ACL acl;
 	
-	private Integer status;
-
-	// Search fields ... this is too ugly... Fuck you Google!!!!
-	@SuppressWarnings("unused")
-	private String uIdentifier;
-	@SuppressWarnings("unused")
-	private String uName;
-	@SuppressWarnings("unused")
-	private String uCountry;
+	private byte status;
 
 	@NotPersistent
 	private boolean doIndexNow = true;
@@ -113,9 +105,6 @@ public class Brand implements ModelKey, Serializable, Identificable, Indexable, 
 	 */
 	@Override
 	public void preStore() {
-		uIdentifier = getIdentifier() == null ? "" : getIdentifier().toUpperCase();
-		uName = getName() == null ? "" : getName().toUpperCase();
-		uCountry = getCountry() == null ? "" : getCountry().toUpperCase();
 		this.lastUpdate = new Date();
 	}
 
@@ -397,14 +386,14 @@ public class Brand implements ModelKey, Serializable, Identificable, Indexable, 
 	/**
 	 * @return the status
 	 */
-	public Integer getStatus() {
+	public byte getStatus() {
 		return status;
 	}
 
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(Integer status) {
+	public void setStatus(byte status) {
 		this.status = status;
 	}
 

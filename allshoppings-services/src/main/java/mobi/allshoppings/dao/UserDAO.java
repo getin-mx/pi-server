@@ -30,7 +30,7 @@ public interface UserDAO extends GenericDAO<User> {
 	List<User> getTopFifteenRanking(User me, boolean global, boolean friends) throws ASException;
 
 	List<User> getUsingLastUpdateStatusAndRangeAndRole(PersistenceProvider pp, Date lastUpdate,
-			boolean afterLastUpdateDate, List<Integer> status, Range range, String order, List<Integer> role,
+			boolean afterLastUpdateDate, List<Byte> status, Range range, String order, List<Byte> role,
 			Map<String, String> attributes, boolean detachable) throws ASException;
 	
 	void updateWithoutChangingMail(User obj) throws ASException;

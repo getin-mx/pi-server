@@ -27,18 +27,18 @@ public class FloorMap implements ModelKey, Serializable, Identificable, StatusAw
 	private String shoppingId;
 	private String floor;
 	private String imageId;
-	private Integer status;
+	private byte status;
 	
 	private Date creationDateTime;
 	private Date lastUpdate;
 
-	private Integer marginTop;
-	private Integer screenHeight;
-	private Integer screenWidth;
-	private Integer mapHeight;
-	private Integer mapWidth;
+	private int marginTop;
+	private int screenHeight;
+	private int screenWidth;
+	private int mapHeight;
+	private int mapWidth;
 
-	private Boolean corrected;
+	private boolean corrected;
 	
 	@NotPersistent
 	private boolean doIndexNow = true;
@@ -237,12 +237,12 @@ public class FloorMap implements ModelKey, Serializable, Identificable, StatusAw
 	}
 
 	@Override
-	public Integer getStatus() {
+	public byte getStatus() {
 		return status;
 	}
 
 	@Override
-	public void setStatus(Integer status) {
+	public void setStatus(byte status) {
 		this.status = status;
 	}
 

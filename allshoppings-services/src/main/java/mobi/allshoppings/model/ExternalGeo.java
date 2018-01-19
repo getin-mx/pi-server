@@ -19,32 +19,31 @@ public class ExternalGeo implements ModelKey, Serializable, Identificable, Repli
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final Integer TYPE_GPS_WORK = 3;
-	public static final Integer TYPE_GPS_HOME = 2;
-	public static final Integer TYPE_GPS_WORK_PEASANT = 5;
-	public static final Integer TYPE_GPS_HOME_PEASANT = 4;
-	public static final Integer TYPE_GPS = 1;
-	public static final Integer TYPE_WIFI = 0;
+	public static final byte TYPE_GPS_WORK = 3;
+	public static final byte TYPE_GPS_HOME = 2;
+	public static final byte TYPE_GPS_WORK_PEASANT = 5;
+	public static final byte TYPE_GPS_HOME_PEASANT = 4;
+	public static final byte TYPE_GPS = 1;
+	public static final byte TYPE_WIFI = 0;
 
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
 	private Key key;
 
 	private String entityId;
-	private Integer entityKind;
+	private byte entityKind;
 	private String venue;
 	private String externalReference;
-	private Integer connections;
-	private Integer userCount;
-	private Float lat;
-	private Float lon;
-	private Integer type;
+	private int connections;
+	private int userCount;
+	private double lat;
+	private double lon;
+	private int type;
 	private String period;
 	private Date lastUpdate;
 	private Date creationDateTime;
 	
 	public ExternalGeo() {
-		super();
 		this.creationDateTime = new Date();
 	}
 	
@@ -119,28 +118,28 @@ public class ExternalGeo implements ModelKey, Serializable, Identificable, Repli
 	/**
 	 * @return the lat
 	 */
-	public Float getLat() {
+	public double getLat() {
 		return lat;
 	}
 
 	/**
 	 * @param lat the lat to set
 	 */
-	public void setLat(Float lat) {
+	public void setLat(double lat) {
 		this.lat = lat;
 	}
 
 	/**
 	 * @return the lon
 	 */
-	public Float getLon() {
+	public double getLon() {
 		return lon;
 	}
 
 	/**
 	 * @param lon the lon to set
 	 */
-	public void setLon(Float lon) {
+	public void setLon(double lon) {
 		this.lon = lon;
 	}
 
@@ -217,14 +216,14 @@ public class ExternalGeo implements ModelKey, Serializable, Identificable, Repli
 	/**
 	 * @return the entityKind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 

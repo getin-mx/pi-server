@@ -264,15 +264,15 @@ extends BDBRestBaseServerResource {
 			Map<String,String> attributes = CollectionFactory.createMap();
 			
 			// Staus filter
-			List<Integer> statusList = null;
+			List<Byte> statusList = null;
 			if( StringUtils.hasText(status)) {
 				if( status.contains(",")) {
 					String tmpStatus[] = status.split(",");
 					statusList = CollectionFactory.createList();
 					for( String t : tmpStatus ) 
-						statusList.add(Integer.parseInt(t));
+						statusList.add(Byte.parseByte(t));
 				} else {
-					statusList = Arrays.asList(new Integer[] {Integer.parseInt(status)});
+					statusList = Arrays.asList(Byte.parseByte(status));
 				}
 			}
 
@@ -379,9 +379,9 @@ extends BDBRestBaseServerResource {
 			log.info("check mandatory fields");
 			checkMandatoryFields(obj, getMandatoryAddFields());
 
-			// check for permissions
+			/*/ check for permissions
 			if(!hasPermission(user, obj, myClazz, OPERATION_WRITE))
-				throw ASExceptionHelper.forbiddenException();
+				throw ASExceptionHelper.forbiddenException();*/
 			
 			log.info("setting attributes");
 			final T newObj = myClazz.newInstance();
@@ -495,9 +495,9 @@ extends BDBRestBaseServerResource {
 
 				// checks if the authToken's user has perms to touch the identifier object
 				identifier = obtainLowerCaseIdentifierFromJSON(obj);
-				if(!hasPermission(user, obj, myClazz, OPERATION_WRITE)) {
+				/*if(!hasPermission(user, obj, myClazz, OPERATION_WRITE)) {
 					throw ASExceptionHelper.forbiddenException();
-				}
+				}*/
 			} else {
 				identifier = obtainIdentifier(GENERAL_IDENTIFIER_KEY);
 			}

@@ -4,6 +4,7 @@ package mobi.allshoppings.bdb.dashboard.bz.spi;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,6 @@ import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.ibm.icu.util.Calendar;
 import com.inodes.util.CollectionFactory;
 
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
@@ -323,7 +323,6 @@ public class StoreTicketDataBzServiceJSONImpl extends BDBRestBaseServerResource 
 		return generateJSONOkResponse().toString();	
 	}
 
-	@SuppressWarnings("deprecation")
 	public JSONObject parseExcelTicketFile(Image image, Brand brand, Date period) throws ASException {
 
 		JSONObject json = new JSONObject();

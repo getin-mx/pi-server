@@ -118,7 +118,6 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 
 	private static final String HOUR_CELL_TITLE = "Hora";
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public byte[] export(String storeId, String fromDate, String toDate, int weeks,
 			String outDir, User toNotify) throws ASException {
@@ -189,7 +188,8 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			List<DashboardIndicatorData> list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND,
 					Arrays.asList("apd_visitor"),
 					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets"), null,
-					storeId, "D", parsedInitD, parsedFinalD, null, null, null, null, null, null, null, null);
+					storeId, "D", parsedInitD, parsedFinalD, null, null, (byte) -1, (byte) -1, null, null,
+					null, null);
 
 			log.log(Level.INFO, "Using " + list.size() + " elements...");
 
@@ -217,7 +217,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			// Hour graph
 			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND, Arrays.asList("apd_visitor"),
 					Arrays.asList("visitor_total_peasents", "visitor_total_visits"), null, storeId, "D", parsedLimitD,
-					parsedFinalD, null, null, null, null, null, null, null, null);
+					parsedFinalD, null, null, (byte) -1, (byte) -1, null, null, null, null);
 
 			log.log(Level.INFO, "Using " + list.size() + " elements...");
 
@@ -242,7 +242,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			// Graph
 			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND, Arrays.asList("apd_permanence"),
 					Arrays.asList("permanence_hourly_peasents", "permanence_hourly_visits"), null, storeId, "D",
-					parsedLimitD, parsedFinalD, null, null, null, null, null, null, null, null);
+					parsedLimitD, parsedFinalD, null, null, (byte) -1, (byte) -1, null, null, null, null);
 
 			log.log(Level.INFO, "Using " + list.size() + " elements...");
 
@@ -1090,7 +1090,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		Store store;
 		Date initialDate, finalDate, curDate;
 		final SimpleDateFormat hourlySdf = new SimpleDateFormat("HH:mm");
-		int dayLoop;
+		byte dayLoop;
 		try {
 			initialDate = sdf.parse(fromDate);
 			finalDate = sdf.parse(toDate);
@@ -1145,12 +1145,13 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				int visitCount = 0;
 				int peasantCount = 0;
 				visitCount = peasantCount = 0;
-				List<DashboardIndicatorData> visits = dashboardDataDao.getUsingFilters(store.getBrandId(), null,
-						"apd_visitor", "visitor_total_visits", null, storeId, null, parsedDate, parsedDate,
-						null, null, null, null, null, null, null, null);
-				List<DashboardIndicatorData> peaseants = dashboardDataDao.getUsingFilters(store.getBrandId(), null, "apd_visitor",
-						"visitor_total_peasents", null, storeId, null, parsedDate, parsedDate, null, null, null,
-						null, null, null, null, null);
+				List<DashboardIndicatorData> visits = dashboardDataDao.getUsingFilters(store.getBrandId(),
+						(byte) -1, "apd_visitor", "visitor_total_visits", null, storeId, null, parsedDate, parsedDate,
+						null, null, (byte) -1, (byte) -1, null, null, null, null);
+				List<DashboardIndicatorData> peaseants = dashboardDataDao.getUsingFilters(store.getBrandId(),
+						(byte) -1, "apd_visitor",
+						"visitor_total_peasents", null, storeId, null, parsedDate, parsedDate, null, null,
+						(byte) -1, (byte) -1, null, null, null, null);
 				for (DashboardIndicatorData visit : visits) {
 					visitCount += visit.getDoubleValue().intValue();
 				}
@@ -1184,8 +1185,8 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		row.createCell(VISITS_CELL_INDEX + 1).setCellValue(helper.createRichTextString(VISITS_CELL_TITLE));
 		row.createCell(TICKET_CELL_INDEX + 1).setCellValue(helper.createRichTextString(TICKET_CELL_TITLE));
 		row.createCell(STORE_NAME_CELL_INDEX + 1).setCellValue(helper.createRichTextString(STORE_NAME_CELL_TITLE));
-		Map<Integer, DashboardIndicatorData> visits = CollectionFactory.createMap();
-		Map<Integer, DashboardIndicatorData> peasents = CollectionFactory.createMap();
+		Map<Byte, DashboardIndicatorData> visits = CollectionFactory.createMap();
+		Map<Byte, DashboardIndicatorData> peasents = CollectionFactory.createMap();
 		for (String storeId : storesId) {
 			store = storeDao.get(storeId, false);
 			log.log(Level.INFO,
@@ -1204,14 +1205,14 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 					cal.setTime(curDate);
 					visits.clear();
 					peasents.clear();
-					List<DashboardIndicatorData> data = dashboardDataDao.getUsingFilters(store.getBrandId(), null,
+					List<DashboardIndicatorData> data = dashboardDataDao.getUsingFilters(store.getBrandId(), (byte) -1,
 							"apd_visitor", "visitor_total_visits", null, storeId, null, parsedDate, parsedDate,
-							null, null, null, null, null, null, null, null);
+							null, null, (byte) -1, (byte) -1, null, null, null, null);
 					for (DashboardIndicatorData singleData : data)
 						visits.put(singleData.timeZone, singleData);
-					data = dashboardDataDao.getUsingFilters(store.getBrandId(), null, "apd_visitor",
-							"visitor_total_peasents", null, storeId, null, parsedDate, parsedDate, null, null, null,
-							null, null, null, null, null);
+					data = dashboardDataDao.getUsingFilters(store.getBrandId(), (byte) -1, "apd_visitor",
+							"visitor_total_peasents", null, storeId, null, parsedDate, parsedDate, null, null,
+							(byte) -1, (byte) -1, null, null, null, null);
 					for (DashboardIndicatorData singleData : data)
 						peasents.put(singleData.timeZone, singleData);
 				}
@@ -1234,7 +1235,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				}
 				row.createCell(STORE_NAME_CELL_INDEX + 1).setCellValue(store.getName());
 				curDate.setTime(curDate.getTime() + HOUR_IN_MILLIS);
-				dayLoop = (dayLoop + 1) % 24;
+				dayLoop = (byte) ((dayLoop + 1) % 24);
 			} // por cada día
 		} // por cada tienda
 

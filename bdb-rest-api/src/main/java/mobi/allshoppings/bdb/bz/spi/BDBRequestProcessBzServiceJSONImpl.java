@@ -54,7 +54,7 @@ public class BDBRequestProcessBzServiceJSONImpl extends BDBRestBaseServerResourc
 			final JSONObject obj = entity.getJsonObject();
 
 			final String entityId = obj.getString("entityId");
-			final Integer entityKind = obj.getInt("entityKind");
+			final byte entityKind = (byte) obj.getInt("entityKind");
 			final String fromDate = obj.getString("fromDate");
 			final String toDate = obj.getString("toDate");
 			final Boolean processAPHE = obj.getBoolean("processAPHE");
@@ -71,12 +71,12 @@ public class BDBRequestProcessBzServiceJSONImpl extends BDBRestBaseServerResourc
 			p.setGenerateAPHE(processAPHE);
 			
 			String name = entityId;
-			if( p.getEntityKind().equals(EntityKind.KIND_SHOPPING)) {
+			if( p.getEntityKind() == EntityKind.KIND_SHOPPING) {
 				try {
 					Shopping tmp = shoppingDao.get(entityId);
 					name = tmp.getName();
 				} catch( Exception e ) {}
-			} else if( p.getEntityKind().equals(EntityKind.KIND_STORE)) {
+			} else if( p.getEntityKind() == EntityKind.KIND_STORE) {
 				try {
 					Store tmp = storeDao.get(entityId);
 					brandId = tmp.getBrandId();

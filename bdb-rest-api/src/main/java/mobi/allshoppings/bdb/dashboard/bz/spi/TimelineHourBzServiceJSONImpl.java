@@ -56,7 +56,7 @@ public class TimelineHourBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			byte entityKind = obtainByteValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String elementId = obtainStringValue("elementId", null);
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
@@ -94,7 +94,7 @@ public class TimelineHourBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			for(DashboardIndicatorData obj : dao.getUsingFilters(Arrays.asList(entityId), entityKind,
 					Arrays.asList(elementId), elementSubId == null ? null : Arrays.asList(elementSubId),
 							shoppingId, CollectionFactory.createList(subentityId.split(",")), null,
-							fromStringDate, toStringDate, null, null, null, null, null, null, null, null)) {
+							fromStringDate, toStringDate, null, null, (byte) -1, (byte) -1, null, null, null, null)) {
 				if(!isValidForUser(user, obj)) continue;
 				String key = obj.getElementSubName();
 				long[] valArray = resultMap.get(key);
@@ -114,8 +114,8 @@ public class TimelineHourBzServiceJSONImpl extends BDBRestBaseServerResource imp
 					else 
 						log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
 
-					if( obj.getRecordCount() != null )
-						counterArray[position] += obj.getRecordCount().intValue();
+					if( obj.getRecordCount() >= 0)
+						counterArray[position] += obj.getRecordCount();
 					else 
 						log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
 

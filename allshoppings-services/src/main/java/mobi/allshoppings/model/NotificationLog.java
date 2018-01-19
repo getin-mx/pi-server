@@ -30,7 +30,7 @@ public class NotificationLog implements ModelKey, Serializable, Identificable, I
     private String deviceUUID;
     private String senderId;
     private String entityId;
-    private Integer entityKind;
+    private byte entityKind;
 
 	@Extension(vendorName="datanucleus", key="gae.unindexed", value="true")
     private String title;
@@ -47,7 +47,7 @@ public class NotificationLog implements ModelKey, Serializable, Identificable, I
 	private Date notifyDate;
     private Date receivedDate;
     private Date lastUpdate;
-    private Integer status;
+    private byte status;
     	
 	@NotPersistent
 	private boolean doIndexNow = true;
@@ -115,14 +115,14 @@ public class NotificationLog implements ModelKey, Serializable, Identificable, I
 	/**
 	 * @return the entityKind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 
@@ -269,14 +269,14 @@ public class NotificationLog implements ModelKey, Serializable, Identificable, I
 	/**
 	 * @return the status
 	 */
-	public Integer getStatus() {
+	public byte getStatus() {
 		return status;
 	}
 
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(Integer status) {
+	public void setStatus(byte status) {
 		this.status = status;
 	}
 

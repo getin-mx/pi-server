@@ -46,9 +46,9 @@ implements BDBDashboardBzService {
 			obtainUserIdentifier(true);
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String period = obtainStringValue("period", null);
-			Integer type = obtainIntegerValue("type", null);
+			byte type = obtainByteValue("type", (byte) -1);
 
 			// Creates the final JSON Array
 			JSONArray jsonArray = new JSONArray();
@@ -61,13 +61,13 @@ implements BDBDashboardBzService {
 			}
 			
 			List<ExternalGeo> list = null;
-			List<Integer> typeList = type == null
-					? Arrays.asList(new Integer[] { ExternalGeo.TYPE_GPS, ExternalGeo.TYPE_GPS_HOME,
+			List<Byte> typeList = type < 0
+					? Arrays.asList(ExternalGeo.TYPE_GPS, ExternalGeo.TYPE_GPS_HOME,
 							ExternalGeo.TYPE_GPS_WORK, ExternalGeo.TYPE_GPS_HOME_PEASANT,
-							ExternalGeo.TYPE_GPS_WORK_PEASANT, ExternalGeo.TYPE_WIFI })
-					: Arrays.asList(new Integer[] { type });			
+							ExternalGeo.TYPE_GPS_WORK_PEASANT, ExternalGeo.TYPE_WIFI)
+					: Arrays.asList(type);			
 			
-			for( Integer myType : typeList ) {
+			for(byte myType : typeList) {
 				list = dao.getUsingEntityIdAndPeriod(null, entityId, entityKind, myType, period, range, "connections desc", true);
 
 				for(ExternalGeo obj : list ) {

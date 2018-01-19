@@ -20,7 +20,7 @@ import mobi.allshoppings.model.interfaces.Replicable;
 @PersistenceCapable(detachable="true")
 public class AuditLog implements ModelKey, Serializable, Identificable, Indexable, Replicable {
 
-	public static final int EVENT_LOGIN = 0;
+	public static final byte EVENT_LOGIN = 0;
 	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
@@ -28,12 +28,12 @@ public class AuditLog implements ModelKey, Serializable, Identificable, Indexabl
 
 	private String userId;
 	private Date eventDate;
-	private Integer eventType;
+	private byte eventType;
 	private String description;
 	private String meta;
 
 	private String entityId;
-	private Integer entityKind;
+	private byte entityKind;
 	
 	private Date creationDateTime;
 	private Date lastUpdate;
@@ -94,14 +94,14 @@ public class AuditLog implements ModelKey, Serializable, Identificable, Indexabl
 	/**
 	 * @return the eventType
 	 */
-	public Integer getEventType() {
+	public byte getEventType() {
 		return eventType;
 	}
 
 	/**
 	 * @param eventType the eventType to set
 	 */
-	public void setEventType(Integer eventType) {
+	public void setEventType(byte eventType) {
 		this.eventType = eventType;
 	}
 
@@ -192,14 +192,14 @@ public class AuditLog implements ModelKey, Serializable, Identificable, Indexabl
 	/**
 	 * @return the entityKind
 	 */
-	public Integer getEntityKind() {
+	public byte getEntityKind() {
 		return entityKind;
 	}
 
 	/**
 	 * @param entityKind the entityKind to set
 	 */
-	public void setEntityKind(Integer entityKind) {
+	public void setEntityKind(byte entityKind) {
 		this.entityKind = entityKind;
 	}
 

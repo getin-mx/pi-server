@@ -60,9 +60,9 @@ public class HeatmapDataBzServiceJSONImpl extends BDBRestBaseServerResource impl
 			FloorMap floorMap = floorMapDao.get(subentityId, true);
 			String shoppingId = floorMap.getShoppingId();
 			
-			List<DashboardIndicatorData> list = dao.getUsingFilters(Arrays.asList(shoppingId), 0,
+			List<DashboardIndicatorData> list = dao.getUsingFilters(Arrays.asList(shoppingId), (byte) 0,
 					Arrays.asList("heatmap_data"), null, null, Arrays.asList(subentityId), null,
-					fromStringDate, toStringDate, null, null, null, null, null, null, null, null);
+					fromStringDate, toStringDate, null, null, (byte) -1, (byte) -1, null, null, null, null);
 
 			// Creates the total value indicator
 			double totalValue = 0D;

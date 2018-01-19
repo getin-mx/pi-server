@@ -73,9 +73,9 @@ public class CSVAPDeviceExport {
 				"lastUpdate"
 				));
 		
-		List<Integer> statusList = CollectionFactory.createList();
+		List<Byte> statusList = CollectionFactory.createList();
 		if(StringUtils.hasText(status))
-			statusList.add(Integer.valueOf(status));
+			statusList.add(Byte.valueOf(status));
 		
 		List<APDevice> list = apdeviceDao.getUsingStatusAndRange(statusList, null, "hostname");
 		StringBuffer sb = new StringBuffer();

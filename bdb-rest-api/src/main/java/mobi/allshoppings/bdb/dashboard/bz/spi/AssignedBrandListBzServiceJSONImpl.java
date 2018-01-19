@@ -62,7 +62,7 @@ implements BDBDashboardBzService {
 			if( user.getSecuritySettings().getRole().equals(Role.ADMIN)) {
 
 				brandList = brandDao.getUsingLastUpdateStatusAndRange(null, null, false,
-						Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, "uName", null, false);
+						Arrays.asList(StatusAware.STATUS_ENABLED), null, "name", null, false);
 				diff = new Date().getTime() - millisPre;
 				log.info("Number of brands found [" + brandList.size() + "] in " + diff + " millis");
 

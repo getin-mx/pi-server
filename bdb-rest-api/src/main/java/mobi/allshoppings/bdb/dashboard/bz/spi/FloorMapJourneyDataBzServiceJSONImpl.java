@@ -50,13 +50,13 @@ implements BDBDashboardBzService {
 			String mac = obtainStringValue("mac", null);
 			String fromDate = obtainStringValue("fromStringDate", null);
 			String toDate = obtainStringValue("toStringDate", null);
-			Integer fromRange = obtainIntegerValue("fromRange", null);
-			Integer toRange = obtainIntegerValue("toRange", null);
+			byte fromRange = obtainByteValue("fromRange", (byte) -1);
+			byte toRange = obtainByteValue("toRange", (byte) -1);
 
-			if( fromRange == null ) 
+			if( fromRange < 0) 
 				fromRange = 0;
 			
-			if( toRange == null )
+			if( toRange < 0)
 				toRange = 20;
 			
 			Range range = new Range(fromRange,toRange);

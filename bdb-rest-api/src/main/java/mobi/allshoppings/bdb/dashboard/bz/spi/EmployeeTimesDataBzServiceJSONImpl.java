@@ -73,21 +73,21 @@ implements BDBDashboardBzService {
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue(ENTITY_ID_PARAM, null);
-			Integer entityKind = obtainIntegerValue(ENTITY_KIND_PARAM, null);
+			byte entityKind = obtainByteValue(ENTITY_KIND_PARAM, (byte) -1);
 			String employeeId = obtainStringValue(EMPLOYEE_ID_PARAM, null);
 			String fromStringDate = obtainStringValue(FROM_STRING_DATE_PARAM, null);
 			String toStringDate = obtainStringValue(TO_STRING_DATE_PARAM, null);
 
 			// Get all the stores that matches the brand
 			Map<String, Store> storeMap = CollectionFactory.createMap();
-			if( entityKind.equals(EntityKind.KIND_BRAND)) {
+			if( entityKind == EntityKind.KIND_BRAND) {
 				List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId,
-						Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED}), null); 
+						Arrays.asList(StatusAware.STATUS_ENABLED), null); 
 				for( Store store : tmpStores ) {
 					if( isValidForUser(user, store))
 						storeMap.put(store.getIdentifier(), store);
 				}
-			} else if( entityKind.equals(EntityKind.KIND_STORE)) {
+			} else if( entityKind == EntityKind.KIND_STORE) {
 				Store store = storeDao.get(entityId, true);
 				storeMap.put(store.getIdentifier(), store);
 			}
@@ -96,7 +96,7 @@ implements BDBDashboardBzService {
 			
 			// Get all employees 
 			Map<String, APDMAEmployee> employeeMap = CollectionFactory.createMap();
-			if( entityKind.equals(EntityKind.KIND_BRAND)) {
+			if( entityKind == EntityKind.KIND_BRAND) {
 				List<APDMAEmployee> tmpList = apdmaeDao.getUsingEntityIdAndRange(entityId, entityKind, null, null, null, false);
 				for( APDMAEmployee obj : tmpList ) employeeMap.put(obj.getMac(), obj);
 				Iterator<Store> i = storeMap.values().iterator();
@@ -108,7 +108,7 @@ implements BDBDashboardBzService {
 					}
 				}
 			
-			} else if( entityKind.equals(EntityKind.KIND_STORE)) {
+			} else if( entityKind == EntityKind.KIND_STORE) {
 				List<APDMAEmployee> tmpList = apdmaeDao.getUsingEntityIdAndRange(entityId, entityKind, null, null, null, false);
 				for( APDMAEmployee obj : tmpList ) {
 					employeeMap.put(obj.getMac(), obj);
@@ -170,7 +170,7 @@ implements BDBDashboardBzService {
 	public class EmployeeLogRecordRep {
 		
 		private String entityId;
-		private Integer entityKind;
+		private byte entityKind;
 		private String storeName;
 		private String employeeName;
 		private String mac;
@@ -178,7 +178,7 @@ implements BDBDashboardBzService {
 		private Date checkinFinished;
 		private String forDate;
 
-		public EmployeeLogRecordRep(String entityId, Integer entityKind, String mac, Date checkinStarted,
+		public EmployeeLogRecordRep(String entityId, byte entityKind, String mac, Date checkinStarted,
 				Date checkinFinished, Map<String, Store> storeMap, Map<String, APDMAEmployee> employeeMap) {
 			super();
 			this.entityId = entityId;
@@ -208,14 +208,14 @@ implements BDBDashboardBzService {
 		/**
 		 * @return the entityKind
 		 */
-		public Integer getEntityKind() {
+		public byte getEntityKind() {
 			return entityKind;
 		}
 		
 		/**
 		 * @param entityKind the entityKind to set
 		 */
-		public void setEntityKind(Integer entityKind) {
+		public void setEntityKind(byte entityKind) {
 			this.entityKind = entityKind;
 		}
 		
@@ -337,13 +337,13 @@ implements BDBDashboardBzService {
 			this.records = records;
 		}
 
-		public void addRecord(String entityId, Integer entityKind, String mac, Date checkinStarted,
+		public void addRecord(String entityId, byte entityKind, String mac, Date checkinStarted,
 				Date checkinFinished, Map<String, Store> storeMap, Map<String, APDMAEmployee> employeeMap) {
 			
 			EmployeeLogRecordRep r = null;
 			String forDate = sdf.format(checkinStarted);
 			for( EmployeeLogRecordRep rec : records ) {
-				if (rec.getEntityId().equals(entityId) && rec.getEntityKind().equals(entityKind)
+				if (rec.getEntityId().equals(entityId) && rec.getEntityKind() == entityKind
 						&& rec.getMac().equals(mac) && rec.getForDate().equals(forDate)) {
 					r = rec;
 					break;

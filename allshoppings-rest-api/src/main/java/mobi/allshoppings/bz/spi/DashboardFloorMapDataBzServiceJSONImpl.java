@@ -14,13 +14,11 @@ import org.springframework.util.StringUtils;
 import mobi.allshoppings.bz.DashboardFloorMapDataBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
 import mobi.allshoppings.bz.spi.fields.BzFields;
-import mobi.allshoppings.dao.CinemaDAO;
 import mobi.allshoppings.dao.FloorMapDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.WifiSpotDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.Cinema;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.FloorMap;
 import mobi.allshoppings.model.WifiSpot;
@@ -39,8 +37,6 @@ implements DashboardFloorMapDataBzService {
 
 	private static final Logger log = Logger.getLogger(DashboardFloorMapDataBzServiceJSONImpl.class.getName());
 
-	@Autowired
-	private CinemaDAO cinemaDao;
 	@Autowired
 	private FloorMapDAO floormapDao;
 	@Autowired
@@ -73,10 +69,10 @@ implements DashboardFloorMapDataBzService {
 
 				if( entityKind == -1 || entityKind == EntityKind.KIND_SHOPPING) {
 					shoppingId = entityId;
-				} else {
+				} /*else {
 					Cinema cinema = cinemaDao.get(entityId, true);
 					shoppingId = cinema.getShoppingId();
-				}
+				}*/
 
 				// get level, if not defined use default value
 				String level = this.obtainStringValue(LEVEL, BzFields.LEVEL_LIST);

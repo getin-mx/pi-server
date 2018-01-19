@@ -56,16 +56,16 @@ implements BDBDashboardBzService {
 			long millisPre = new Date().getTime();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
-			Boolean onlyExternalIds = obtainBooleanValue("onlyExternalIds", false);
-			Integer storeType = obtainIntegerValue("storeType", null);
-			List<Integer> status = Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED});
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
+			boolean onlyExternalIds = obtainBooleanValue("onlyExternalIds", false);
+			byte storeType = obtainByteValue("storeType", (byte) -1);
+			List<Byte> status = Arrays.asList(StatusAware.STATUS_ENABLED);
 			
 			
 			if( EntityKind.KIND_SHOPPING == entityKind ) {
-				storeList = storeDao.getUsingShoppingAndStatus(entityId, status, "uName");
+				storeList = storeDao.getUsingShoppingAndStatus(entityId, status, "name");
 			} else if( EntityKind.KIND_BRAND == entityKind ) {
-				storeList = storeDao.getUsingBrandAndStatus(entityId, status, "uName");
+				storeList = storeDao.getUsingBrandAndStatus(entityId, status, "name");
 			}
 			
 			if( onlyExternalIds ) {
@@ -98,7 +98,7 @@ implements BDBDashboardBzService {
 			// Creates the list
 			List<NameAndIdAdapter> adapter = CollectionFactory.createList();
 			for( Store b : storeList ) {
-					if(storeType == null || storeType == 0 || storeType == b.getStoreKind()) {
+					if(storeType < 0 || storeType == 0 || storeType == b.getStoreKind()) {
 						NameAndIdAdapter obj = new NameAndIdAdapter();
 						obj.setIdentifier(b.getIdentifier());
 						obj.setName(b.getName());

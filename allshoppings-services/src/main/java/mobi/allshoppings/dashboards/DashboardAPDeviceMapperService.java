@@ -1,19 +1,14 @@
 package mobi.allshoppings.dashboards;
 
-import static mx.getin.Constants.GMT;
 import static mx.getin.Constants.sdf;
 
 import java.sql.SQLException;
 import java.text.ParseException;
-//import java.sql.Connection;
-//import java.sql.DriverManager;
-//import java.sql.ResultSet;
-//import java.sql.SQLException;
-//import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.time.DateUtils;
-//import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +24,7 @@ import org.springframework.util.StringUtils;
 
 import com.google.gson.Gson;
 
-import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.apdevice.APHHelper;
-import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.ExternalAPHotspotDAO;
@@ -52,7 +44,6 @@ import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDVisit;
-import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.APHEntry;
 import mobi.allshoppings.model.APHotspot;
 import mobi.allshoppings.model.DashboardIndicatorAlias;
@@ -76,17 +67,14 @@ import mobi.allshoppings.model.interfaces.StatusAware;
 import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CollectionUtils;
 import mobi.allshoppings.tools.GsonFactory;
+import mx.getin.Constants;
+import mx.getin.dao.APDCalibrationDAO;
+import mx.getin.model.APDCalibration;
 
 public class DashboardAPDeviceMapperService {
 
 	private static final Logger log = Logger.getLogger(DashboardAPDeviceMapperService.class.getName());
 	
-	/**
-	 * Entity Kind to use
-	 */
-	public static final long TWENTY_FOUR_HOURS = 86400000;
-
-	private static final SimpleDateFormat dateSDF = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	private static final Gson gson = GsonFactory.getInstance();
 	private static final Calendar CALENDAR = Calendar.getInstance();
@@ -107,11 +95,7 @@ public class DashboardAPDeviceMapperService {
 	@Autowired
 	private WifiSpotDAO wifiSpotDao;
 	@Autowired
-	private APDeviceHelper apdHelper;
-	@Autowired
 	private APHHelper aphHelper;
-	@Autowired
-	private APDeviceDAO apdDao;
 	@Autowired
 	private FloorMapJourneyDAO fmjDao;
 	@Autowired
@@ -128,6 +112,8 @@ public class DashboardAPDeviceMapperService {
 	private InnerZoneDAO innerzoneDao;
 	@Autowired
 	private ExternalAPHotspotDAO eaphDao;
+	@Autowired
+	private APDCalibrationDAO apdCal;
 
 	@Autowired
 	private SystemConfiguration systemConfiguration;
@@ -140,17 +126,13 @@ public class DashboardAPDeviceMapperService {
 	private Map<String, InnerZone> zoneCache;
 
 	// Phases
-	public static final int PHASE_APDEVICE = 0;
-	public static final int PHASE_WIFI_HEATMAP = 1;
-	public static final int PHASE_APDEVICE_HEATMAP = 2;
-	public static final int PHASE_FLOORMAP_TRACKING = 3;
-	public static final int PHASE_APDVISIT = 4;
-	public static final int PHASE_EXTERNAL_APDEVICE_HEATMAP = 5;
+	public static final byte PHASE_APDEVICE = 0;
+	public static final byte PHASE_WIFI_HEATMAP = 1;
+	public static final byte PHASE_APDEVICE_HEATMAP = 2;
+	public static final byte PHASE_FLOORMAP_TRACKING = 3;
+	public static final byte PHASE_APDVISIT = 4;
+	public static final byte PHASE_EXTERNAL_APDEVICE_HEATMAP = 5;
 
-	static {
-		dateSDF.setTimeZone(GMT);
-	}
-	
 	// General Driver ----------------------------------------------------------------------------------------------------------------------------------------
 	public void createDashboardDataForDays(String baseDir, Date fromDate, Date toDate, List<String> entityIds, List<Byte> phases) throws ASException {
 		try {
@@ -172,9 +154,9 @@ public class DashboardAPDeviceMapperService {
 					createFloorMapTrackingForDay(curDate, entityIds);
 
 				if( CollectionUtils.isEmpty(phases) || phases.contains(PHASE_APDVISIT))
-					createAPDVisitPerformanceDashboardForDay(curDate, entityIds, null, null);
+					createAPDVisitPerformanceDashboardForDay(curDate, entityIds, (byte) -1, null);
 
-				curDate = new Date(curDate.getTime() + TWENTY_FOUR_HOURS);
+				curDate = new Date(curDate.getTime() + Constants.DAY_IN_MILLIS);
 
 			}
 
@@ -504,13 +486,13 @@ public class DashboardAPDeviceMapperService {
 				FloorMap fm = floorMapDao.get(floorMapIdentifier, true);
 				Map<String, WifiSpot> apMap = CollectionFactory.createMap();
 
-				Map<String, APDevice> apDevices = CollectionFactory.createMap();
+				Map<String, APDCalibration> apDevices = CollectionFactory.createMap();
 				List<String> apDeviceIds = CollectionFactory.createList();
 				List<WifiSpot> list = wifiSpotDao.getUsingFloorMapId(fm.getIdentifier());
 				for( WifiSpot ws : list ) {
 					if( StringUtils.hasText(ws.getApDevice())) {
 						try {
-							apDevices.put(ws.getApDevice(), apdDao.get(ws.getApDevice(), true));
+							apDevices.put(ws.getApDevice(), apdCal.get(ws.getApDevice(), true));
 							apMap.put(ws.getApDevice(), ws);
 							apDeviceIds.add(ws.getApDevice());
 						} catch(ASException e ) {
@@ -520,15 +502,26 @@ public class DashboardAPDeviceMapperService {
 				}
 
 				//List<String> macs = apheDao.getMacsUsingHostnameAndDates(apDeviceIds, date, date);
-				List<String> macs = CollectionFactory.createList();
+				HashMap<String, List<APHEntry>> macs = new HashMap<>();
 				DumperHelper<APHEntry> dumper = new DumpFactory<APHEntry>().build(null, APHEntry.class);
-				dumper.get// TODO fill up macs list
-				
+				for(String hostname : apDeviceIds) {
+					dumper.setFilter(hostname);
+					for(Iterator<APHEntry> it = dumper.iterator(date, date); it.hasNext();) {
+						APHEntry e = it.next();
+						List<APHEntry> entries = macs.get(e.getMac());
+						if(entries == null) {
+							entries = CollectionFactory.createList();
+							macs.put(e.getMac(), entries);
+						}
+						entries.add(e);
+					}
+					dumper.dispose();
+				}
 				log.log(Level.INFO, "recovered " + macs.size() + " macs");
 
 				long count = 0;
 				
-				for( String mac : macs ) {
+				for( String mac : macs.keySet() ) {
 					
 					if( count % 100 == 0 )
 						log.log(Level.INFO, "Processing record " + count + " of " + macs.size() + "...");
@@ -536,11 +529,7 @@ public class DashboardAPDeviceMapperService {
 					count++;
 //					if( count > 100 ) break;
 					
-					List<APHEntry> aphes = CollectionFactory.createList();
-					for( String apDeviceId : apDeviceIds) {
-						try { aphes.add(apheDao.get(aphHelper.getHash(apDeviceId, mac, date ), true));
-						} catch( Exception e ) {}
-					}
+					List<APHEntry> aphes = macs.get(mac);
 					
 					// Find the minimal slot time for this mac address.
 					// It means, the first time that this mac was saw for any of the APDevices
@@ -567,17 +556,15 @@ public class DashboardAPDeviceMapperService {
 								maxDataCount = entry.getDataCount();
 							
 							// Search for max visit time threshold
-							APDevice apd = apDevices.get(entry.getHostname());
+							APDCalibration apd = apDevices.get(entry.getHostname());
 							if( apd.getVisitMaxThreshold() > maxVisitTimeThreshold)
-								maxVisitTimeThreshold = apd.getVisitMaxThreshold().intValue();
+								maxVisitTimeThreshold = apd.getVisitMaxThreshold();
 							
 							// Try basic rules
 							int distance = (int)((myMaximalSlot - myMinimalSlot) / 3);
-							if( entry.getMaxRssi() >= apd.getVisitPowerThreshold())
-								if( distance >= apd.getVisitTimeThreshold())
-									if( distance <= apd.getVisitMaxThreshold() )
-										valid = true;
-
+							valid = entry.getMaxRssi() >= apd.getVisitPowerThreshold() &&
+									distance >= apd.getVisitMinTimeThreshold() &&
+											distance <= apd.getVisitMaxThreshold();
 						} catch( Exception e ) {
 							// no element found
 						}
@@ -590,7 +577,7 @@ public class DashboardAPDeviceMapperService {
 					if( valid ) {
 						// Create the final journey
 						FloorMapJourney journey = new FloorMapJourney();
-						journey.setDate(dateSDF.format(date));
+						journey.setDate(sdf.format(date));
 						journey.setMac(mac);
 						journey.setFloorMapId(fm.getIdentifier());
 						journey.setKey(fmjDao.createKey(journey));
@@ -686,7 +673,7 @@ public class DashboardAPDeviceMapperService {
 			if(data == null || data.size() == 0) {
 				// Prepares the Object Query
 				Date dateFrom = new Date(date.getTime());
-				Date dateTo = new Date(dateFrom.getTime() + TWENTY_FOUR_HOURS);
+				Date dateTo = new Date(dateFrom.getTime() +Constants.DAY_IN_MILLIS);
 				store = storeCache.get(entityId);
 				if( store == null ) {
 					store = storeDao.get(entityId, true);
@@ -698,7 +685,7 @@ public class DashboardAPDeviceMapperService {
 				if(offset > 0 && dateTo.getTime() < dateTo.getTime() +offset) {
 					dateTo.setTime(dateTo.getTime() +offset);
 				}
-				sLimitDate = dateSDF.format(dateFrom);
+				sLimitDate = sdf.format(dateFrom);
 				list = CollectionFactory.createList();
 				DumperHelper<APDVisit> visitDumper = new DumpFactory<APDVisit>()
 						.build(null, APDVisit.class);
@@ -722,10 +709,10 @@ public class DashboardAPDeviceMapperService {
 					Shopping shopping = null;
 					InnerZone zone = null;
 					
-					if( entityKind == null ) entityKind = EntityKind.KIND_BRAND;
-					if( entityKind.equals(EntityKind.KIND_STORE)) entityKind = EntityKind.KIND_BRAND;
+					if( entityKind < 0) entityKind = EntityKind.KIND_BRAND;
+					if( entityKind == EntityKind.KIND_STORE) entityKind = EntityKind.KIND_BRAND;
 					
-					if( entityKind.equals(EntityKind.KIND_BRAND)) {
+					if( entityKind == EntityKind.KIND_BRAND) {
 						store = storeCache.get(String.valueOf(v.getEntityId()));
 						if( store == null ) {
 							store = storeDao.get(String.valueOf(v.getEntityId()), true);
@@ -736,13 +723,13 @@ public class DashboardAPDeviceMapperService {
 						entityId = store.getBrandId();
 						shoppingId = store.getShoppingId();
 						subentityId = store.getIdentifier();
-					} else if( entityKind.equals(EntityKind.KIND_SHOPPING)) {
+					} else if( entityKind == EntityKind.KIND_SHOPPING) {
 						shopping = shoppingCache.get(String.valueOf(v.getEntityId()));
 						entityId = shopping.getIdentifier();
 						shoppingId = shopping.getIdentifier();
 						subentityId = shopping.getIdentifier();
 						tz = TimeZone.getTimeZone(shopping.getTimezone());
-					} else if( entityKind.equals(EntityKind.KIND_INNER_ZONE)) {
+					} else if( entityKind == EntityKind.KIND_INNER_ZONE) {
 						zone = innerzoneDao.get(entityId);
 						shoppingId = entityId;
 						subentityId = entityId;
@@ -753,7 +740,7 @@ public class DashboardAPDeviceMapperService {
 					if( store != null || shopping != null || zone != null ) {
 						DashboardIndicatorData obj;
 
-						if( v.getCheckinType().equals(APDVisit.CHECKIN_PEASANT) ) {
+						if( v.getCheckinType() == APDVisit.CHECKIN_PEASANT) {
 
 							// visitor_total_peasents -------------------------------------------------------------------------------
 							// ------------------------------------------------------------------------------------------------------
@@ -811,7 +798,7 @@ public class DashboardAPDeviceMapperService {
 								
 							}
 
-						} else if( v.getCheckinType().equals(APDVisit.CHECKIN_VISIT) ) {
+						} else if( v.getCheckinType() == APDVisit.CHECKIN_VISIT) {
 
 							// visitor_total_visits ---------------------------------------------------------------------------------
 							// ------------------------------------------------------------------------------------------------------
@@ -880,17 +867,12 @@ public class DashboardAPDeviceMapperService {
 
 			}
 			// Looks for ticket
-			if( null != entityKind ) {
-				if( entityKind.equals(EntityKind.KIND_BRAND)) {
-					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId, false);
-					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId);
-					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), subentityId);
-				}
-				if( entityKind.equals(EntityKind.KIND_STORE)) {
-					createStoreTicketDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, false);
-					createStoreItemDataForDates(dateSDF.format(date), dateSDF.format(date), entityId);
-					createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), entityId);
-				}
+			boolean isBrand = entityKind == EntityKind.KIND_STORE;
+			if(isBrand || entityKind == EntityKind.KIND_STORE) {
+				String parsedDate = sdf.format(date);
+				createStoreTicketDataForDates(parsedDate, parsedDate, isBrand ? subentityId : entityId, false);
+				createStoreItemDataForDates(parsedDate, parsedDate, isBrand ? subentityId : entityId);
+				createStoreRevenueDataForDates(parsedDate, parsedDate, isBrand ? subentityId : entityId);
 			}
 			
 			log.log(Level.INFO, "Starting Write Procedure for " +indicatorsSet.size()
@@ -977,9 +959,9 @@ public class DashboardAPDeviceMapperService {
 			if( store != null ) {
 				
 				if(deletePreviousRecords) {
-					for(DashboardIndicatorData did : dao.getUsingFilters(null, null, "apd_visitor",
-							"visitor_total_tickets", null, storeId, null, fromDate, toDate, null, null, null, null,
-							null, null, null, null))
+					for(DashboardIndicatorData did : dao.getUsingFilters(null, (byte) -1, "apd_visitor",
+							"visitor_total_tickets", null, storeId, null, fromDate, toDate, null, null,
+							(byte) -1, (byte) -1, null, null, null, null))
 						dao.delete(did);
 				}
 				
@@ -1165,7 +1147,7 @@ public class DashboardAPDeviceMapperService {
 		
 		CALENDAR.clear();
 		CALENDAR.setTime(date);
-		obj.setDayOfWeek(CALENDAR.get(Calendar.DAY_OF_WEEK));
+		obj.setDayOfWeek((byte) CALENDAR.get(Calendar.DAY_OF_WEEK));
 		obj.setDate(date);
 		obj.setMovieId(null);
 		obj.setMovieName(null);
@@ -1175,13 +1157,13 @@ public class DashboardAPDeviceMapperService {
 			obj.setCountry(store.getAddress().getCountry());
 			obj.setCity(store.getAddress().getCity());
 			obj.setProvince(store.getAddress().getProvince());
-		} else if( entityKind.equals(EntityKind.KIND_SHOPPING)) {
+		} else if( entityKind == EntityKind.KIND_SHOPPING) {
 			obj.setSubentityId(entityId);
 			obj.setSubentityName(shopping.getName());
 			obj.setCountry(shopping.getAddress().getCountry());
 			obj.setCity(shopping.getAddress().getCity());
 			obj.setProvince(shopping.getAddress().getProvince());
-		} else if( entityKind.equals(EntityKind.KIND_INNER_ZONE)) {
+		} else if( entityKind == EntityKind.KIND_INNER_ZONE) {
 			InnerZone zone = zoneCache.get(entityId);
 			obj.setSubentityId(entityId);
 			obj.setSubentityName(zone.getName());
@@ -1197,14 +1179,10 @@ public class DashboardAPDeviceMapperService {
 		return obj;
 	}
 
-	public int getTimeZone(Date date) {
+	public byte getTimeZone(Date date) {
 		CALENDAR.clear();
 		CALENDAR.setTime(date);
-		return CALENDAR.get(Calendar.HOUR_OF_DAY);
-	}
-
-	public String getDeviceType(String mac) {
-		return apdHelper.getDevicePlatform(mac, macVendorCache).toLowerCase();
+		return (byte) CALENDAR.get(Calendar.HOUR_OF_DAY);
 	}
 
 	public void buildCaches(boolean withMacVendor) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, ASException {
@@ -1212,7 +1190,7 @@ public class DashboardAPDeviceMapperService {
 		// Prepares Store cache
 		storeCache = CollectionFactory.createMap();
 		List<Store> stores = storeDao.getUsingLastUpdateStatusAndRange(null, null, false,
-				Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, null, null, false);
+				Arrays.asList(StatusAware.STATUS_ENABLED), null, null, null, false);
 		for( Store store : stores ) {
 			if( StringUtils.hasText(store.getExternalId())) 
 				storeCache.put(store.getExternalId(), store);
@@ -1220,28 +1198,28 @@ public class DashboardAPDeviceMapperService {
 		}
 
 		List<Shopping> shoppings = shoppingDao.getUsingLastUpdateStatusAndRange(null, null, false,
-				Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, null, null, false);
+				Arrays.asList(StatusAware.STATUS_ENABLED), null, null, null, false);
 		shoppingCache = CollectionFactory.createMap();
 		for(Shopping shopping : shoppings ) {
 			shoppingCache.put(shopping.getIdentifier(), shopping);
 		}
 
 		List<InnerZone> zones = innerzoneDao.getUsingLastUpdateStatusAndRange(null, null, false,
-				Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, null, null, false);
+				Arrays.asList(StatusAware.STATUS_ENABLED), null, null, null, false);
 		zoneCache = CollectionFactory.createMap();
 		for(InnerZone zone : zones ) {
 			zoneCache.put(zone.getIdentifier(), zone);
 		}
 
 		List<WifiSpot> wifiSpots = wifiSpotDao.getUsingLastUpdateStatusAndRange(null, null, false,
-				Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, null, null, false);
+				Arrays.asList(StatusAware.STATUS_ENABLED), null, null, null, false);
 		wifiSpotCache = CollectionFactory.createMap();
 		for(WifiSpot wifiSpot : wifiSpots) {
 			wifiSpotCache.put(wifiSpot.getIdentifier(), wifiSpot);
 		}
 
 		List<FloorMap> floorMaps = floorMapDao.getUsingLastUpdateStatusAndRange(null, null, false,
-				Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, null, null, false);
+				Arrays.asList(StatusAware.STATUS_ENABLED), null, null, null, false);
 		floorMapCache = CollectionFactory.createMap();
 		for(FloorMap floorMap : floorMaps) {
 			floorMapCache.put(floorMap.getIdentifier(), floorMap);
@@ -1249,7 +1227,7 @@ public class DashboardAPDeviceMapperService {
 
 		if( withMacVendor ) {
 			List<MacVendor> macVendors = macVendorDao.getUsingLastUpdateStatusAndRange(null, null, false,
-					Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, null, null, false);
+					Arrays.asList(StatusAware.STATUS_ENABLED), null, null, null, false);
 			macVendorCache = CollectionFactory.createMap();
 			for(MacVendor macVendor : macVendors) {
 				macVendorCache.put(macVendor.getIdentifier(), macVendor);
@@ -1269,9 +1247,9 @@ public class DashboardAPDeviceMapperService {
 	 *            Entity Kind to inspect
 	 * @return The Time zone for the requested entity
 	 */
-	private TimeZone getTimezoneForEntity(String entityId, Integer entityKind) {
+	private TimeZone getTimezoneForEntity(String entityId, byte entityKind) {
 		
-		if( entityKind.equals(EntityKind.KIND_STORE)) {
+		if( entityKind == EntityKind.KIND_STORE) {
 			try {
 				Store obj = storeDao.get(entityId, true);
 				TimeZone ret = TimeZone.getTimeZone(obj.getTimezone());
@@ -1279,14 +1257,14 @@ public class DashboardAPDeviceMapperService {
 			} catch( Exception e ) {
 				log.log(Level.WARNING, e.getMessage(), e);
 			}
-		} else if( entityKind.equals(EntityKind.KIND_INNER_ZONE)) {
+		} else if( entityKind == EntityKind.KIND_INNER_ZONE) {
 			try {
 				InnerZone obj = innerzoneDao.get(entityId, true);
 				return getTimezoneForEntity(obj.getEntityId(), obj.getEntityKind());
 			} catch( Exception e ) {
 				log.log(Level.WARNING, e.getMessage(), e);
 			}
-		} else if( entityKind.equals(EntityKind.KIND_SHOPPING)) {
+		} else if( entityKind == EntityKind.KIND_SHOPPING) {
 			try {
 				Shopping obj = shoppingDao.get(entityId, true);
 				TimeZone ret = TimeZone.getTimeZone(obj.getTimezone());

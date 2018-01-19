@@ -62,7 +62,7 @@ implements BDBDashboardBzService {
 			if( user.getSecuritySettings().getRole().equals(Role.ADMIN)) {
 
 				shoppingList = shoppingDao.getUsingLastUpdateStatusAndRange(null, null, false,
-						Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, "uName", null, false);
+						Arrays.asList(StatusAware.STATUS_ENABLED), null, "name", null, false);
 				diff = new Date().getTime() - millisPre;
 				log.info("Number of shoppings found [" + shoppingList.size() + "] in " + diff + " millis");
 

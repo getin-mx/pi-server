@@ -52,13 +52,7 @@ public class FinancialEntity implements ModelKey, Serializable, Identificable, I
 	@Embedded	
 	private ACL acl;
 
-	private Integer status;
-	
-	// Search fields ... this is too ugly... Fuck you Google!!!!
-	@SuppressWarnings("unused")
-	private String uIdentifier;
-	@SuppressWarnings("unused")
-	private String uCountry;
+	private byte status;
 	
 	@NotPersistent
 	private boolean doIndexNow = true;
@@ -96,8 +90,6 @@ public class FinancialEntity implements ModelKey, Serializable, Identificable, I
 	 */
 	@Override
 	public void preStore() {
-		this.uIdentifier = getName() == null ? "" : getName().toUpperCase();
-		this.uCountry = getCountry() == null ? "" : getCountry().toUpperCase();
 		this.lastUpdate = new Date();
 	}
 
@@ -294,14 +286,14 @@ public class FinancialEntity implements ModelKey, Serializable, Identificable, I
 	/**
 	 * @return the status
 	 */
-	public Integer getStatus() {
+	public byte getStatus() {
 		return status;
 	}
 
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(Integer status) {
+	public void setStatus(byte status) {
 		this.status = status;
 	}
 

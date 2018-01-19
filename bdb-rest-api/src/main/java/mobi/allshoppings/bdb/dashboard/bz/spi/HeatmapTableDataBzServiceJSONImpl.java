@@ -51,7 +51,7 @@ implements BDBHeatmapTableDataBzService {
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String elementId = obtainStringValue("elementId", null);
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
@@ -63,22 +63,22 @@ implements BDBHeatmapTableDataBzService {
 			//String voucherType = obtainStringValue("voucherType", null);
 			//Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
 			//Integer timezone = obtainIntegerValue("timezone", null);
-			Integer top = obtainIntegerValue("top", null);
+			int top = obtainIntegerValue("top", -1);
 			
 			List<DashboardIndicatorData> list = dao.getUsingFilters(Arrays.asList(entityId), entityKind,
 					Arrays.asList(elementId), Arrays.asList(elementSubId), shoppingId,
 					CollectionFactory.createList(subentityId.split(",")), null, fromStringDate, toStringDate,
-					null, null, null, null, null, null, null, null);
+					null, null, (byte) -1, (byte) -1, null, null, null, null);
 
-			Map<String, Map<Integer, Integer>> dataSet = CollectionFactory.createMap();
+			Map<String, Map<Byte, Integer>> dataSet = CollectionFactory.createMap();
 			Map<String, Integer> toBeOrderedDataSet = CollectionFactory.createMap(); 
 	        ValueComparator bvc = new ValueComparator(toBeOrderedDataSet);
 	        @SuppressWarnings("unchecked")
 			TreeMap<String, Integer> sorted_map = new TreeMap<String, Integer>(bvc);
 
-			Map<Integer, Integer> data = null;
+			Map<Byte, Integer> data = null;
 			Integer value = null;
-			Map<Integer, Integer> totals = CollectionFactory.createMap();
+			Map<Byte, Integer> totals = CollectionFactory.createMap();
 			totals.put(DashboardIndicatorData.TIME_ZONE_ALL, 0);
 			totals.put(DashboardIndicatorData.TIME_ZONE_MORNING, 0);
 			totals.put(DashboardIndicatorData.TIME_ZONE_NOON, 0);
@@ -88,7 +88,7 @@ implements BDBHeatmapTableDataBzService {
 			for( DashboardIndicatorData obj : list ) {
 				if( isValidForUser(user, obj)) {
 					String key = obj.getElementSubName();
-					if(!obj.getTimeZone().equals(DashboardIndicatorData.TIME_ZONE_ALL) && StringUtils.hasText(key)) {
+					if(obj.getTimeZone() != DashboardIndicatorData.TIME_ZONE_ALL && StringUtils.hasText(key)) {
 						// Data for this timezone
 						data = dataSet.get(key);
 						if( data == null ) data = CollectionFactory.createMap();
@@ -115,15 +115,15 @@ implements BDBHeatmapTableDataBzService {
 			
 			// Order the dataset
 			sorted_map.putAll(toBeOrderedDataSet);
-			if( top != null && top > 0 ) {
-				Map<String, Map<Integer, Integer>> temp = CollectionFactory.createMap();
+			if( top > 0 ) {
+				Map<String, Map<Byte, Integer>> temp = CollectionFactory.createMap();
 				totals.clear();
 				Iterator<String> x = sorted_map.keySet().iterator();
 				int myCount = 0;
 				while(x.hasNext() && myCount < top ) {
 					String key = x.next();
-					Map<Integer, Integer> val = dataSet.get(key);
-					for( int i = DashboardIndicatorData.TIME_ZONE_ALL; i <= DashboardIndicatorData.TIME_ZONE_NIGHT; i++) {
+					Map<Byte, Integer> val = dataSet.get(key);
+					for( byte i = DashboardIndicatorData.TIME_ZONE_ALL; i <= DashboardIndicatorData.TIME_ZONE_NIGHT; i++) {
 						totals.put(i, (totals.containsKey(i) ? totals.get(i) : 0) + (val.containsKey(i) ? val.get(i) : 0));
 					}
 					temp.put(key, val);
@@ -190,7 +190,7 @@ implements BDBHeatmapTableDataBzService {
 				if( data.get(DashboardIndicatorData.TIME_ZONE_NIGHT) == null ) data.put(DashboardIndicatorData.TIME_ZONE_NIGHT, 0);
 				
 				JSONArray element = new JSONArray();
-				for( int i = DashboardIndicatorData.TIME_ZONE_ALL; i <= DashboardIndicatorData.TIME_ZONE_NIGHT; i++ ) {
+				for( byte i = DashboardIndicatorData.TIME_ZONE_ALL; i <= DashboardIndicatorData.TIME_ZONE_NIGHT; i++ ) {
 					element = new JSONArray();
 					element.put(row);
 					element.put(i);
@@ -206,13 +206,13 @@ implements BDBHeatmapTableDataBzService {
 			}
 			ret.put("data", dataJson);
 
-			if( top != null && top > 0 ) {
+			if( top > 0 ) {
 				JSONArray orderedJson = new JSONArray();
 				Iterator<String> x = sorted_map.keySet().iterator();
 				int myCount = 0;
 				while(x.hasNext() && myCount < top ) {
 					String key = x.next();
-					Map<Integer, Integer> val = dataSet.get(key);
+					Map<Byte, Integer> val = dataSet.get(key);
 					int count = val.get(DashboardIndicatorData.TIME_ZONE_ALL);
 					int total = totals.get(DashboardIndicatorData.TIME_ZONE_ALL);
 					int percent = total > 0 ? (count * 100 / total) : 0;

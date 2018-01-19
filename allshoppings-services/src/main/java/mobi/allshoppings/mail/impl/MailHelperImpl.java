@@ -1,8 +1,6 @@
 package mobi.allshoppings.mail.impl;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,11 +18,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.ui.velocity.VelocityEngineUtils;
-import org.springframework.web.context.ContextLoader;
 
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
@@ -83,7 +77,7 @@ public class MailHelperImpl implements MailHelper {
 
 	}
 
-	@Override
+	/*@Override
 	public void sendMessage(User user, String subject, String template,
 			Map<String, Object> replaceValues) throws ASException {
 
@@ -98,7 +92,7 @@ public class MailHelperImpl implements MailHelper {
 				(VelocityEngine)ctx.getBean("velocityEngine"), template, replaceValues);
 		sendMessage(user, subject, text);
 
-	}
+	}*/
 	
 	@Override
 	public void sendMessageWithAttachMents(User user, String subject, String message,

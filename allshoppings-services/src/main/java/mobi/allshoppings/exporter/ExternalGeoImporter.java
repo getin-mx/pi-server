@@ -62,7 +62,7 @@ public class ExternalGeoImporter {
 	
 	private DumperHelper<DeviceLocationHistory> dump;
 
-	public void importFromGpsRecords(List<String> entityId, Integer entityKind) throws ASException {
+	public void importFromGpsRecords(List<String> entityId, byte entityKind) throws ASException {
 
 		SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -86,7 +86,7 @@ public class ExternalGeoImporter {
 			Map<String, Map<Integer,HashSet<String>>> devices = CollectionFactory.createMap();
 			List<String> entityIds = CollectionFactory.createList();
 			
-			if( entityKind != null && entityKind.equals(EntityKind.KIND_BRAND)) {
+			if( entityKind >= 0 && entityKind == EntityKind.KIND_BRAND) {
 				for( String eid : entityId) {
 					List<Store> stores = storeDao.getUsingBrandAndStatus(eid, StatusHelper.statusActive(), null);
 					for(Store store : stores ) {
@@ -101,7 +101,7 @@ public class ExternalGeoImporter {
 
 			// First delete previous data
 			log.log(Level.INFO, "Deleting previous data...");
-			dao.deleteUsingEntityIdAndPeriod((PersistenceProvider)null, entityIds, entityKind, null, period);
+			dao.deleteUsingEntityIdAndPeriod((PersistenceProvider)null, entityIds, entityKind, -1, period);
 
 			// Obtains a list of all the matched mac addresses
 			log.log(Level.INFO, "Reading Matches...");
@@ -193,11 +193,11 @@ public class ExternalGeoImporter {
 								HashSet<String> ids = devices2.get(type);
 								for( String id : ids ) {
 									try {
-										Integer myType = dao.getType(type, hour);
+										int myType = dao.getType(type, hour);
 										period = sdfPeriod.format(
 												mordorSdf.parse(json.getString("lastUpdate")));
-										String key = dao.getHash(new Float(json.getDouble("lat")), 
-												new Float(json.getDouble("lon")), period, id, entityKind, myType);
+										String key = dao.getHash(json.getDouble("lat"), 
+												json.getDouble("lon"), period, id, entityKind, myType);
 
 										ExternalGeo val = null;
 										try {

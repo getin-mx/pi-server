@@ -42,7 +42,7 @@ public class TouchUsers extends AbstractCLI {
 			log.log(Level.INFO, "Touching brands....");
 //			List<User> list = userDao.getAll();
 //			List<User> list = userDao.getUsingStatusAndRange(null, new Range(0,2), null);
-			List<Integer> role = Arrays.asList(new Integer[] {1,3,5,7,9,11,13,15,17});
+			List<Byte> role = Arrays.asList((byte)1,(byte)3,(byte)5,(byte)7,(byte)9,(byte)11,(byte)13,(byte)15,(byte)17);
 			List<User> list = userDao.getUsingLastUpdateStatusAndRangeAndRole(null, null, false, null, null, null, role, null, true);
 			for( User obj : list ) {
 				log.log(Level.INFO, "Touching " + obj.getIdentifier() + "...");

@@ -1,7 +1,6 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -16,14 +15,12 @@ import org.springframework.util.StringUtils;
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBPostBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
-import mobi.allshoppings.dao.CinemaDAO;
 import mobi.allshoppings.dao.FloorMapDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dao.WifiSpotDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.Cinema;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.FloorMap;
 import mobi.allshoppings.model.WifiSpot;
@@ -42,8 +39,6 @@ implements BDBDashboardBzService, BDBPostBzService {
 
 	private static final Logger log = Logger.getLogger(FloorMapDataBzServiceJSONImpl.class.getName());
 
-	@Autowired
-	private CinemaDAO cinemaDao;
 	@Autowired
 	private FloorMapDAO floormapDao;
 	@Autowired
@@ -68,18 +63,18 @@ implements BDBDashboardBzService, BDBPostBzService {
 //			obtainUserIdentifier(true);
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String floorMapId = obtainStringValue("floorMapId", null);
 
 			if( !StringUtils.hasText(floorMapId)) {
 				String shoppingId = null;
 
-				if( entityKind == null || entityKind.equals(EntityKind.KIND_SHOPPING)) {
+				if( entityKind < 0 || entityKind == EntityKind.KIND_SHOPPING) {
 					shoppingId = entityId;
-				} else {
+				}/* else {
 					Cinema cinema = cinemaDao.get(entityId, true);
 					shoppingId = cinema.getShoppingId();
-				}
+				}*/
 
 				// inject adapter options
 				Map<String,Object> options = CollectionFactory.createMap();

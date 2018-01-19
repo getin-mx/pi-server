@@ -61,8 +61,8 @@ implements BDBDashboardBzService {
 			long millisPre = new Date().getTime();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
-			List<Integer> status = Arrays.asList(new Integer[] {StatusAware.STATUS_ENABLED});
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
+			List<Byte> status = Arrays.asList(StatusAware.STATUS_ENABLED);
 			
 			
 			if( EntityKind.KIND_SHOPPING == entityKind ) {

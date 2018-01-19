@@ -67,9 +67,9 @@ extends BDBCrudBzServiceJSONImpl<T> {
 			Map<String,String> attributes = CollectionFactory.createMap();
 			
 			// Staus filter
-			List<Integer> statusList = null;
+			List<Byte> statusList = null;
 			if( StringUtils.hasText(status))
-				statusList = Arrays.asList(new Integer[] {Integer.parseInt(status)});
+				statusList = Arrays.asList(Byte.parseByte(status));
 			
 			// retrieve all elements
 			long millisPre = new Date().getTime();
@@ -84,7 +84,7 @@ extends BDBCrudBzServiceJSONImpl<T> {
 								myClazz.getName(), q, user.getSecuritySettings().getRole().equals(Role.ADMIN) 
 								? null : user.getViewLocation(),
 								StringUtils.hasText(status) 
-								? Arrays.asList(new Integer[] {Integer.valueOf(status)}) : null, range, 
+								? Arrays.asList(Byte.valueOf(status)) : null, range, 
 								additionalFields, order, lang);
 			} else {
 				list = myDao.getUsingStatusAndRangeAndCountry(statusList, range, country, order, attributes, true);

@@ -32,8 +32,6 @@ import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
-import org.restlet.data.Form;
-import org.restlet.data.Reference;
 import org.restlet.engine.util.Base64;
 import org.restlet.ext.servlet.ServletUtils;
 import org.restlet.resource.ServerResource;
@@ -276,7 +274,7 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	 */
 	public byte obtainByteValue(String key, byte defaultValue) {
 		String val = obtainStringValue(key, null);
-		try {b
+		try {
 			return StringUtils.hasText(val) ? Byte.valueOf(val) : defaultValue;
 		} catch( NumberFormatException e ) {
 			logger.finer("Cannot convert value " + val + " to integer!");
@@ -357,8 +355,8 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	public Range obtainRange() {
 		int defaultTo = this.systemConfiguration.getDefaultToRange();
 		int defaultFrom = this.systemConfiguration.getDefaultFromRange();
-		int from = this.obtainIntValue("from", defaultFrom);
-		int to = this.obtainIntValue("to", from+defaultTo);
+		int from = this.obtainIntegerValue("from", defaultFrom);
+		int to = this.obtainIntegerValue("to", from+defaultTo);
 		
 		if (from < 0) {
 			from = defaultFrom;
@@ -711,7 +709,6 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	 * @throws NoSuchMethodException
 	 */
 	public String[] guessGenericFields(final Object obj, final String level) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		@SuppressWarnings("unchecked")
 		Map<String, Object> fields = PropertyUtils.describe(obj);
 		List<String> outputFields = new ArrayList<String>(fields.keySet());
 		outputFields.remove("class");
@@ -726,7 +723,6 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 					&& !(o instanceof Map )
 					&& !(o instanceof Boolean )
 					&& !(o instanceof Key) & !(o instanceof Class)) {
-				@SuppressWarnings("unchecked")
 				Map<String, Object> subFields = PropertyUtils.describe(o);
 				outputFields.remove(key);
 				Iterator<String> i2 = subFields.keySet().iterator();
@@ -907,7 +903,6 @@ public abstract class BDBRestBaseServerResource extends ServerResource {
 	 *            Language to use in multi language wrappers
 	 * @return A JSON Representation of the entity input object
 	 */
-	@SuppressWarnings("unchecked")
 	public JSONObject getJSONRepresentationFromObject(Object input, String[] fields, String lang) {
 		if(!StringUtils.hasText(lang)) lang = systemConfiguration.getDefaultLang();
 		JSONObject jsonobj = new JSONObject();

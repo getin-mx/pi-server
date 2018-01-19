@@ -1,7 +1,5 @@
 package mobi.allshoppings.auth.spi;
 
-import java.util.HashMap;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -126,7 +124,7 @@ public class PassBzServiceJSONImpl  extends RestBaseServerResource implements Pa
 
 			User user = dao.getByEmail(mail);
 			if( user == null ) throw ASExceptionHelper.notFoundException();
-			String newPassword = authHelper.generateAltPasswordForUser(user);
+			/*String newPassword = authHelper.generateAltPasswordForUser(user);
 			dao.updateWithoutChangingMail(user);
 			
 			// mail helper
@@ -138,7 +136,7 @@ public class PassBzServiceJSONImpl  extends RestBaseServerResource implements Pa
 					"mails/apppasswordrecovery.vm",
 					parameters);
 
-			jsonOut = this.generateJSONOkResponse();
+			jsonOut = this.generateJSONOkResponse();*/
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "exception catched", e);
 			jsonOut = this.getJSONRepresentationFromException(e);

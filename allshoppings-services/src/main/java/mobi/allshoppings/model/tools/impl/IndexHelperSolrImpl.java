@@ -43,7 +43,7 @@ public class IndexHelperSolrImpl implements IndexHelper {
 	protected static final String[] EMPTY_STRING_ARRAY = new String[0];
 	protected static final List<String> INVALID_READ_FIELDS = Arrays.asList(new String[] {"key"});
 
-	protected static SolrClient solrSingleton;
+	protected SolrClient solrSingleton;
 
 	@Autowired
 	private SystemConfiguration systemConfiguration;
@@ -55,7 +55,7 @@ public class IndexHelperSolrImpl implements IndexHelper {
 	 */
 	public SolrClient getSolrClient() {
 		if( solrSingleton == null )
-			solrSingleton = new HttpSolrClient(systemConfiguration.getSolrUrl());
+			solrSingleton = new HttpSolrClient.Builder(systemConfiguration.getSolrUrl()).build();
 		return solrSingleton;
 	}
 
@@ -103,7 +103,6 @@ public class IndexHelperSolrImpl implements IndexHelper {
 	private SolrInputDocument appendFields(SolrInputDocument doc, Object obj, String[] fields) 
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 
-		@SuppressWarnings("unchecked")
 		Map<String, Object> properties = PropertyUtils.describe(obj);
 
 		for (int idx = 0; idx < fields.length; idx++) {
@@ -381,7 +380,6 @@ public class IndexHelperSolrImpl implements IndexHelper {
 	 * @throws NoSuchMethodException
 	 */
 	private String[] guessGenericFields(final Object obj, final String level) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		@SuppressWarnings("unchecked")
 		Map<String, Object> fields = PropertyUtils.describe(obj);
 		List<String> outputFields = new ArrayList<String>(fields.keySet());
 		outputFields.remove("class");
@@ -394,7 +392,6 @@ public class IndexHelperSolrImpl implements IndexHelper {
 					&& !(o instanceof Date) && !(o instanceof MultiLang)
 					&& !(o instanceof Collection) && !(o instanceof Text)
 					&& !(o instanceof Key) & !(o instanceof Class)) {
-				@SuppressWarnings("unchecked")
 				Map<String, Object> subFields = PropertyUtils.describe(o);
 				outputFields.remove(key);
 				Iterator<String> i2 = subFields.keySet().iterator();

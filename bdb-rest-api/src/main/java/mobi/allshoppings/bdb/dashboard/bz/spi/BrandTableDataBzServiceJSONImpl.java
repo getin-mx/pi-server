@@ -98,10 +98,10 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 			// Starts to Collect the data
 			
 			// peasents, visits, and tickets
-			for(DashboardIndicatorData obj : dao.getUsingFilters(brandId, null, Arrays.asList("apd_visitor"),
+			for(DashboardIndicatorData obj : dao.getUsingFilters(brandId, (byte) -1, Arrays.asList("apd_visitor"),
 					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets",
 							"visitor_total_items", "visitor_total_revenue"), null, entityIds, null,
-					fromStringDate, toStringDate, null, null, null, null, null, null, null, null)) {
+					fromStringDate, toStringDate, null, null, (byte) -1, (byte) -1, null, null, null, null)) {
 
 				DashboardRecordRep rec = obj.getEntityKind() == EntityKind.KIND_INNER_ZONE ?
 						table.findRecordWithEntityId(obj.getEntityId(), EntityKind.KIND_INNER_ZONE,
@@ -134,16 +134,16 @@ public class BrandTableDataBzServiceJSONImpl extends BDBRestBaseServerResource i
 			}
 
 			// permanence
-			for(DashboardIndicatorData obj : dao.getUsingFilters(brandId, null, Arrays.asList("apd_permanence"),
+			for(DashboardIndicatorData obj : dao.getUsingFilters(brandId, (byte) -1, Arrays.asList("apd_permanence"),
 					Arrays.asList("permanence_hourly_visits"), null, entityIds, null, fromStringDate, toStringDate,
-					null, null, null, null, null, null, null, null)) {
+					null, null, (byte) -1, (byte) -1, null, null, null, null)) {
 				DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId(), (byte) -1,
 						obj.getSubentityName());
 				if( rec == null ) continue;
 				if( obj.getDoubleValue() != null )
 					rec.setPermanenceInMillis(rec.getPermanenceInMillis() + obj.getDoubleValue().longValue());
 				else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
-				if( obj.getRecordCount() != null ) rec.setPermancenceQty(rec.getPermancenceQty() + obj.getRecordCount());
+				if( obj.getRecordCount() > 0) rec.setPermancenceQty(rec.getPermancenceQty() + obj.getRecordCount());
 				else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
 			}
 

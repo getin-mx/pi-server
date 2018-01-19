@@ -300,25 +300,25 @@ implements BDBCrudBzService {
 			Map<String,String> attributes = CollectionFactory.createMap();
 			
 			// Status filter
-			List<Integer> statusList = null;
+			List<Byte> statusList = null;
 			if( StringUtils.hasText(status)) {
 				statusList = CollectionFactory.createList();
 				String parts[] = status.split(",");
 				for(String part : parts ) {
 					try {
-						statusList.add(Integer.valueOf(part));
+						statusList.add(Byte.valueOf(part));
 					} catch( Exception e) {}
 				}
 			}
 
 			// Role filter
-			List<Integer> roleList = null;
+			List<Byte> roleList = null;
 			if( StringUtils.hasText(role)) {
 				roleList = CollectionFactory.createList();
 				String parts[] = role.split(",");
 				for(String part : parts ) {
 					try {
-						roleList.add(Integer.valueOf(part));
+						roleList.add(Byte.valueOf(part));
 					} catch( Exception e) {}
 				}
 			}

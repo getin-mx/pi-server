@@ -72,7 +72,7 @@ public class BDBAuditLogBzServiceJSONImpl extends BDBRestBaseServerResource impl
 			String userId = this.obtainStringValue("userId", null);
 
 			// Get Event Type Query
-			Integer eventType = this.obtainIntegerValue("eventType", null);
+			byte eventType = this.obtainByteValue("eventType", (byte) -1);
 
 			// Get order
 			String order = "eventDate descend";
@@ -86,15 +86,15 @@ public class BDBAuditLogBzServiceJSONImpl extends BDBRestBaseServerResource impl
 			Map<String,String> attributes = CollectionFactory.createMap();
 			
 			// Staus filter
-			List<Integer> statusList = null;
+			List<Byte> statusList = null;
 			if( StringUtils.hasText(status)) {
 				if( status.contains(",")) {
 					String tmpStatus[] = status.split(",");
 					statusList = CollectionFactory.createList();
 					for( String t : tmpStatus ) 
-						statusList.add(Integer.parseInt(t));
+						statusList.add(Byte.parseByte(t));
 				} else {
-					statusList = Arrays.asList(new Integer[] {Integer.parseInt(status)});
+					statusList = Arrays.asList(Byte.parseByte(status));
 				}
 			}
 

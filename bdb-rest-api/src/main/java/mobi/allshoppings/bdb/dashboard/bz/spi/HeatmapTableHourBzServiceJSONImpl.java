@@ -56,7 +56,7 @@ public class HeatmapTableHourBzServiceJSONImpl extends BDBRestBaseServerResource
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			String elementId = obtainStringValue("elementId", null);
 			String elementSubId = obtainStringValue("elementSubId", null);
 			String shoppingId = obtainStringValue("shoppingId", null);
@@ -68,9 +68,9 @@ public class HeatmapTableHourBzServiceJSONImpl extends BDBRestBaseServerResource
 			//String voucherType = obtainStringValue("voucherType", null);
 			//Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
 			//Integer timezone = obtainIntegerValue("timezone", null);
-			Boolean average = obtainBooleanValue("average", false);
-			Boolean toMinutes = obtainBooleanValue("toMinutes", false);
-			Boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
+			boolean average = obtainBooleanValue("average", false);
+			boolean toMinutes = obtainBooleanValue("toMinutes", false);
+			boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
 			
 			if(!StringUtils.hasText(entityId)) throw ASExceptionHelper.invalidArgumentsException("entityId");
 			if(!StringUtils.hasText(subentityId)) throw ASExceptionHelper.invalidArgumentsException("subentityId");
@@ -80,7 +80,7 @@ public class HeatmapTableHourBzServiceJSONImpl extends BDBRestBaseServerResource
 			
 			List<DashboardIndicatorData> list = dao.getUsingFilters(Arrays.asList(entityId), entityKind, lElementId,
 					lElementSubId, shoppingId, CollectionFactory.createList(subentityId.split(",")), null,
-					fromStringDate, toStringDate, null, null, null, null, null, null, null, null);
+					fromStringDate, toStringDate, null, null, (byte) -1, (byte) -1, null, null, null, null);
 
 			// Gets dashboard configuration for this session
 			DashboardConfiguration config = new DashboardConfiguration(entityId, entityKind);
@@ -90,8 +90,8 @@ public class HeatmapTableHourBzServiceJSONImpl extends BDBRestBaseServerResource
 			
 
 			// Data
-			Map<String, Map<Integer, Map<Integer, Long>>> yData = CollectionFactory.createMap();
-			Map<String, Map<Integer, Map<Integer, Long>>> yCounter = CollectionFactory.createMap();
+			Map<String, Map<Integer, Map<Byte, Long>>> yData = CollectionFactory.createMap();
+			Map<String, Map<Integer, Map<Byte, Long>>> yCounter = CollectionFactory.createMap();
 
 			// y Categories
 			List<String> yCategories = CollectionFactory.createList();
@@ -115,12 +115,12 @@ public class HeatmapTableHourBzServiceJSONImpl extends BDBRestBaseServerResource
 			
 			// Creates the initial data
 			for(String ele : lElementSubId ) {
-				Map<Integer, Map<Integer, Long>> ySubData = CollectionFactory.createMap();
-				Map<Integer, Map<Integer, Long>> ySubCounter = CollectionFactory.createMap();
+				Map<Integer, Map<Byte, Long>> ySubData = CollectionFactory.createMap();
+				Map<Integer, Map<Byte, Long>> ySubCounter = CollectionFactory.createMap();
 
 				for( int i = 0; i < 24; i++ ) {
-					ySubData.put(i, new HashMap<Integer, Long>());
-					ySubCounter.put(i, new HashMap<Integer, Long>());
+					ySubData.put(i, new HashMap<Byte, Long>());
+					ySubCounter.put(i, new HashMap<Byte, Long>());
 				}
 				
 				yData.put(ele, ySubData);
@@ -148,7 +148,7 @@ public class HeatmapTableHourBzServiceJSONImpl extends BDBRestBaseServerResource
 							position = position - 24;
 					}
 
-					Map<Integer, Long> xData = yData.get(obj.getElementSubId()).get(position);
+					Map<Byte, Long> xData = yData.get(obj.getElementSubId()).get(position);
 
 					// Sets the double value
 					obj.setDayOfWeek(mapDayOfWeek(obj.getDayOfWeek()));
@@ -161,7 +161,7 @@ public class HeatmapTableHourBzServiceJSONImpl extends BDBRestBaseServerResource
 					xData = yCounter.get(obj.getElementSubId()).get(position);
 					val = xData.get(obj.getDayOfWeek());
 					if( val == null ) val = 0L;
-					if( obj.getRecordCount() != null )
+					if( obj.getRecordCount() >= 0)
 						val += obj.getRecordCount();
 					else 
 						log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
@@ -177,11 +177,11 @@ public class HeatmapTableHourBzServiceJSONImpl extends BDBRestBaseServerResource
 					Iterator<Integer> i1 = yData.get(ele).keySet().iterator();
 					while( i1.hasNext() ) {
 						Integer key1 = i1.next();
-						Map<Integer, Long> xData = yData.get(ele).get(key1);
-						Map<Integer, Long> xCounter = yCounter.get(ele).get(key1);
-						Iterator<Integer> i2 = xData.keySet().iterator();
+						Map<Byte, Long> xData = yData.get(ele).get(key1);
+						Map<Byte, Long> xCounter = yCounter.get(ele).get(key1);
+						Iterator<Byte> i2 = xData.keySet().iterator();
 						while( i2.hasNext() ) {
-							Integer key2 = i2.next();
+							byte key2 = i2.next();
 							Long val = xData.get(key2);
 							if( val != null ) {
 								Long count = xCounter.get(key2);
@@ -211,7 +211,7 @@ public class HeatmapTableHourBzServiceJSONImpl extends BDBRestBaseServerResource
 					String ele = ix.next();
 					List<String> newYCategories = CollectionFactory.createList();
 					for( int i = 0; i < 24; i++ ) {
-						Map<Integer, Long> xData = yData.get(ele).get(i);
+						Map<Byte, Long> xData = yData.get(ele).get(i);
 						if( xData.size() > 0 ) 
 							newYCategories.add(i + ":00");
 						else
@@ -263,8 +263,8 @@ public class HeatmapTableHourBzServiceJSONImpl extends BDBRestBaseServerResource
 				boolean hasAnyY = false;
 				for( int j = 0; j < lElementSubId.size(); j++) {
 					if( yData.get(lElementSubId.get(j)).get(y) != null ) {
-						for( int x = 0; x <= 7; x++ ) {
-							Map<Integer, Long> xTmpData = yData.get(lElementSubId.get(j)).get(y);
+						for( byte x = 0; x <= 7; x++ ) {
+							Map<Byte, Long> xTmpData = yData.get(lElementSubId.get(j)).get(y);
 							if( xTmpData != null ) {
 								Long tmpVal = xTmpData.get(x);
 								if( tmpVal != null && tmpVal != 0 ) {
@@ -277,14 +277,14 @@ public class HeatmapTableHourBzServiceJSONImpl extends BDBRestBaseServerResource
 				
 				// If has any element fills the space
 				if( hasAnyY ) {
-					for( int x = 0; x <= 7; x++ ) {
+					for( byte x = 0; x <= 7; x++ ) {
 						element = new JSONArray();
 						element.put(x);
 						element.put(yPositions.get(y));
 						
 						boolean hasAnyX = false;
 						for(int j = 0; j < lElementSubId.size(); j++ ) {
-							Map<Integer, Long> xTmpData = yData.get(lElementSubId.get(j)).get(y);
+							Map<Byte, Long> xTmpData = yData.get(lElementSubId.get(j)).get(y);
 							if( xTmpData != null ) {
 								Long tmpVal = xTmpData.get(x);
 								if( tmpVal != null ) {
@@ -325,10 +325,10 @@ public class HeatmapTableHourBzServiceJSONImpl extends BDBRestBaseServerResource
 		}
 	}
 
-	private int mapDayOfWeek(Integer dayOfWeek){
-		int result = 0;
+	private byte mapDayOfWeek(byte dayOfWeek){
+		byte result = 0;
 		if(dayOfWeek != 1){ 
-			result = dayOfWeek - 2;
+			result = (byte) (dayOfWeek - 2);
 		} else{ 
 			result = 6;
 		}

@@ -19,7 +19,6 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.User;
-import mobi.allshoppings.tools.Range;
 
 public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVisit> implements BDBCrudBzService {
 
@@ -61,14 +60,14 @@ public class BDBAPDVisitBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDVi
 			User user = this.getUserFromToken();
 
 			// get range, if not defined use default value
-			Range range = this.obtainRange();
+			//Range range = this.obtainRange();
 			
 			// Aditional Parameters
 			String entityId = this.obtainStringValue(ENTITY_ID, null);
-			Integer entityKind = this.obtainIntegerValue(ENTITY_KIND, null);
+			//byte entityKind = this.obtainByteValue(ENTITY_KIND, (byte) -1);
 			String date = this.obtainStringValue(DATE, sdf.format(new Date()));
-			Integer checkinType = this.obtainIntegerValue(CHECKIN_TYPE, null);
-			String order = this.obtainStringValue(ORDER, null);
+			//byte checkinType = this.obtainByteValue(CHECKIN_TYPE, (byte) -1);
+			//String order = this.obtainStringValue(ORDER, null);
 
 			if( "".equals(entityId)) entityId = null;
 			if( "".equals(date)) date = sdf.format(new Date());

@@ -31,7 +31,7 @@ public class EmployeeLogDAOJDOImpl extends GenericDAOJDO<EmployeeLog> implements
 	}
 
 	@Override
-	public List<EmployeeLog> getUsingEntityIdAndEntityKindAndDate(String employeeId, List<String> entityId, Integer entityKind, Date fromDate,
+	public List<EmployeeLog> getUsingEntityIdAndEntityKindAndDate(String employeeId, List<String> entityId, byte entityKind, Date fromDate,
 			Date toDate, Range range, String order, Map<String, String> attributes, boolean detachable)
 			throws ASException {
 
@@ -61,7 +61,7 @@ public class EmployeeLogDAOJDOImpl extends GenericDAOJDO<EmployeeLog> implements
 			}
 
 			// entityKind Parameter
-			if(null != entityKind) {
+			if(entityKind >= 0) {
 				declaredParams.add("Integer entityKindParam");
 				filters.add("entityKind == entityKindParam");
 				parameters.put("entityKindParam", entityKind);

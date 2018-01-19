@@ -453,7 +453,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				mapped = new APHEntry();
 				mapped.setCreationDateTime(aphe.getCreationDateTime());
 				mapped.setDate(forStringDate);
-				mapped.setDevicePlatform(aphe.getDevicePlatform());
 				mapped.setHostname(aphe.getHostname());
 				mapped.setMac(aphe.getMac());
 				mapped.setKey(aphe.getKey());
@@ -1114,14 +1113,15 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				if(value >= dev.getPeasantPowerThreshold()) {
 					// Add a new peasant if there is no peasant active
 					if( currentPeasant == null )
-						currentPeasant = createPeasant(curEntry, curDate, null,
-								assignments.get(curEntry.getHostname()));
+						currentPeasant = createVisit(curEntry, curDate, null,
+								assignments.get(curEntry.getHostname()), APDVisit.CHECKIN_PEASANT);
 					lastPeasantSlot = slot;
 					// Checks for power for visit
 					if( value >= dev.getVisitPowerThreshold() ) {
 						if( currentVisit == null )
 							currentVisit = createVisit(curEntry, curDate, null,
-									assignments.get(curEntry.getHostname()), isEmployee);
+									assignments.get(curEntry.getHostname()), isEmployee ?
+											APDVisit.CHECKIN_EMPLOYEE : APDVisit.CHECKIN_VISIT);
 						currentVisit.addInRangeSegment();
 						lastVisitSlot = slot;
 					} else if( currentVisit != null ) {
@@ -1550,7 +1550,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @throws ASException
 	 */
 	private APDVisit createVisit(APHEntry source, Date date, DeviceInfo device, APDAssignation assign,
-			Boolean isEmployee) throws ASException {
+			byte checkingType) throws ASException {
 		
 		String entityId = assign.getEntityId();
 		byte entityKind = assign.getEntityKind();
@@ -1559,11 +1559,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		APDVisit visit = new APDVisit();
 		visit.setApheSource(source.getIdentifier());
 		visit.setCheckinStarted(date);
-		visit.setCheckinType(APDVisit.CHECKIN_VISIT);
+		visit.setCheckinType(checkingType);
 		visit.setEntityId(entityId);
 		visit.setEntityKind(entityKind);
 		visit.setMac(source.getMac());
-		visit.setDevicePlatform(source.getDevicePlatform());
 		visit.setVerified(false);
 		visit.setDeviceUUID(device == null ? null : device.getDeviceUUID());
 		visit.setUserId(null);
@@ -1582,51 +1581,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		return visit;
 	}
 
-	/**
-	 * Creates a peasant
-	 * 
-	 * @param source
-	 *            The APHEntry source
-	 * @param date
-	 *            Visit Date Start
-	 * @param device
-	 *            DeviceInfo to attach
-	 * @return A new fully formed visit
-	 * @throws ASException
-	 */
-	private APDVisit createPeasant(APHEntry source, Date date, DeviceInfo device, APDAssignation assign)
-			throws ASException {
-		
-		String entityId = assign.getEntityId();
-		byte entityKind = assign.getEntityKind();
-		WORK_CALENDAR.clear();
-		
-		APDVisit peasant = new APDVisit();
-		peasant.setApheSource(source.getIdentifier());
-		peasant.setCheckinStarted(date);
-		peasant.setCheckinType(APDVisit.CHECKIN_PEASANT);
-		peasant.setEntityId(entityId);
-		peasant.setEntityKind(entityKind);
-		peasant.setMac(source.getMac());
-		peasant.setDevicePlatform(source.getDevicePlatform());
-		peasant.setVerified(false);
-		peasant.setDeviceUUID(device == null ? null : device.getDeviceUUID());
-		peasant.setUserId(null);
-		try {
-			WORK_CALENDAR.setTime(sdf.parse(source.getDate()));
-			if(source.getShiftDay() == APHEntry.NEXT)
-				WORK_CALENDAR.add(Calendar.DATE, 1);
-			else if(source.getShiftDay() == APHEntry.PREVIOUS)
-				WORK_CALENDAR.add(Calendar.DATE, -1);
-			peasant.setForDate(sdf.format(WORK_CALENDAR.getTime()));
-		} catch(ParseException e) {
-			peasant.setForDate(source.getDate());
-		}
-		peasant.setKey(keyHelper.createStringUniqueKey(APDVisit.class));
-		
-		return peasant;
-	}
-	
 	@Override
 	public void fakeVisitsWith(Store store, Date copyFromDate,
 			Date copyToDate, Date insertFromDate) throws ASException {

@@ -56,9 +56,9 @@ implements BDBDashboardBzService {
 			long millisPre = new Date().getTime();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
+			byte entityKind = obtainByteValue("entityKind", (byte) -1);
 			
-			if( entityKind.equals(EntityKind.KIND_BRAND)) {
+			if(entityKind == EntityKind.KIND_BRAND) {
 				List<Store> stores = storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), "name");
 				if( stores.size() > 0 ) {
 					entityId = stores.get(0).getIdentifier();
