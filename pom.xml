@@ -79,11 +79,7 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
-			</plugins>
-		</pluginManagement>
-
-		<plugins>
-			<plugin>
+				<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>3.0.2</version>
@@ -103,7 +99,80 @@
 					</execution>
 				</executions>
 			</plugin>
-		</plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-shade-plugin</artifactId>
+			    <version>3.1.0</version>
+			    <executions>
+	                <execution>
+	                    <phase>package</phase>
+	                    <goals><goal>shade</goal></goals>
+	                </execution>
+	            </executions>
+	            <configuration>
+	                <artifactSet>
+	                    <includes>
+	                        <include>mx.getin.*:*</include>
+	                    </includes>
+					</artifactSet>
+	            </configuration>
+	        </plugin>
+	        <!-- proguard -->
+	        <plugin>
+			    <groupId>com.github.wvengen</groupId>
+			    <artifactId>proguard-maven-plugin</artifactId>
+			    <executions>
+			        <execution>
+			            <phase>package</phase>
+			            <goals><goal>proguard</goal></goals>
+			        </execution>
+			    </executions>
+			    <configuration>
+			        <maxMemory>1024m</maxMemory>
+
+			        <!-- File with proguard configuration -->
+			        <proguardInclude>${basedir}/proguard.conf</proguardInclude>
+
+			        <!-- Now exclude all modules that are embedded in the jar, so that
+			            ProGuard won't see a redefinition of each single class.
+			            You don't have to write down your main module. -->
+			        <exclusions>
+			            <exclusion>
+			                <groupId>mobi.allshoppings</groupId>
+			                <artifactId>allshoppings-cli</artifactId>
+			            </exclusion>
+			            <exclusion>
+			                <groupId>mobi.allshoppings</groupId>
+			                <artifactId>allshoppings-rest-api</artifactId>
+			            </exclusion>
+			            <exclusion>
+			                <groupId>mobi.allshoppings</groupId>
+			                <artifactId>allshoppings-services</artifactId>
+			            </exclusion>
+			            <exclusion>
+			                <groupId>com.inodes</groupId>
+			                <artifactId>datanucleus-gae-mappings</artifactId>
+			            </exclusion>
+			            <exclusion>
+			                <groupId>mobi.allshoppings</groupId>
+			                <artifactId>gcm-server</artifactId>
+			            </exclusion>
+			            <exclusion>
+			                <groupId>mobi.allshoppings</groupId>
+			                <artifactId>gcm-server</artifactId>
+			            </exclusion>
+			        </exclusions>
+
+			        <libs>
+			            <lib>${java.home}/lib/rt.jar</lib>
+			            <lib>${java.home}/lib/jce.jar</lib>
+			            <lib>${java.home}/lib/ext/sunjce_provider.jar</lib>
+			        </libs>
+			   	 </configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 	</build>
 
 </project>

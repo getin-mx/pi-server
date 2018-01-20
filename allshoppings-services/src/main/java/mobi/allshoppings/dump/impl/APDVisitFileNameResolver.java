@@ -3,6 +3,7 @@ package mobi.allshoppings.dump.impl;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -14,7 +15,7 @@ import mobi.allshoppings.dump.DumperFileNameResolver;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.APDVisit;
 import mobi.allshoppings.model.interfaces.ModelKey;
-import mobi.allshoppings.tools.CollectionFactory;
+import mx.getin.Constants;
 
 public class APDVisitFileNameResolver implements DumperFileNameResolver<ModelKey> {
 
@@ -44,7 +45,7 @@ public class APDVisitFileNameResolver implements DumperFileNameResolver<ModelKey
 		String myMonth = month.format(forDate);
 		String myDay = day.format(forDate);
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		if( element == null && !StringUtils.hasText(filter) ) {
 			sb.append(baseDir);
@@ -52,7 +53,7 @@ public class APDVisitFileNameResolver implements DumperFileNameResolver<ModelKey
 			sb.append(myYear).append(File.separator);
 			sb.append(myMonth).append(File.separator);
 			sb.append(myDay).append(File.separator);
-			sb.append(baseName).append(".json");
+			sb.append(baseName).append(Constants.JSON_FILE_EXTENSION);
 		} else {
 			if( element != null ) {
 				forDate = new Date(((APDVisit)element).getCheckinStarted().getTime());
@@ -67,7 +68,7 @@ public class APDVisitFileNameResolver implements DumperFileNameResolver<ModelKey
 			sb.append(myDay).append(File.separator);
 			sb.append(baseName).append(File.separator);
 			if( element != null )
-				sb.append(((APDVisit)element).getEntityId()).append(".json");
+				sb.append(((APDVisit)element).getEntityId()).append(Constants.JSON_FILE_EXTENSION);
 			else 
 				sb.append(filter).append(".json");
 		}
@@ -83,13 +84,13 @@ public class APDVisitFileNameResolver implements DumperFileNameResolver<ModelKey
 	@Override
 	public List<String> getMultipleFileOptions(String baseDir, String baseName, Date forDate, CloudFileManager cfm ) throws ASException {
 
-		List<String> ret = CollectionFactory.createList();
+		List<String> ret = new ArrayList<>();
 		
 		String myYear = year.format(forDate);
 		String myMonth = month.format(forDate);
 		String myDay = day.format(forDate);
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(baseDir);
 		if(!baseDir.endsWith(File.separator)) sb.append(File.separator);
 		sb.append(myYear).append(File.separator);
@@ -104,9 +105,7 @@ public class APDVisitFileNameResolver implements DumperFileNameResolver<ModelKey
 				String [] names = dir.list(new FilenameFilter() {
 					@Override
 					public boolean accept(File dir, String name) {
-						if( name.endsWith(".json"))
-							return true;
-						return false;
+						return name.endsWith(Constants.JSON_FILE_EXTENSION);
 					}
 				});
 

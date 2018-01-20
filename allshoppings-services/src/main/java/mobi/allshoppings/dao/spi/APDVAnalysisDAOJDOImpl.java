@@ -1,12 +1,13 @@
 package mobi.allshoppings.dao.spi;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -22,14 +23,10 @@ import mobi.allshoppings.dao.APDVAnalysisDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDVAnalysis;
-import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
 
 public class APDVAnalysisDAOJDOImpl extends GenericDAOJDO<APDVAnalysis> implements APDVAnalysisDAO {
 	
-	@SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(APDVAnalysisDAOJDOImpl.class.getName());
-
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	public APDVAnalysisDAOJDOImpl() {
@@ -45,14 +42,14 @@ public class APDVAnalysisDAOJDOImpl extends GenericDAOJDO<APDVAnalysis> implemen
 	@Override
 	public List<APDVAnalysis> getUsingHostnameAndDates(List<String> hostname, Date fromDate, Date toDate, Range range, boolean detachable) throws ASException {
 
-		List<APDVAnalysis> ret = CollectionFactory.createList();
+		List<APDVAnalysis> ret = new ArrayList<>();
 		PersistenceManager pm;
 		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		
 		try{
-			Map<String, Object> parameters = CollectionFactory.createMap();
-			List<String> declaredParams = CollectionFactory.createList();
-			List<String> filters = CollectionFactory.createList();
+			Map<String, Object> parameters = new HashMap<>();
+			List<String> declaredParams = new ArrayList<>();
+			List<String> filters = new ArrayList<>();
 
 			Query query = pm.newQuery(clazz);
 
@@ -96,11 +93,7 @@ public class APDVAnalysisDAOJDOImpl extends GenericDAOJDO<APDVAnalysis> implemen
 			return ret;
 			
 		} catch(Exception e) {
-			if(!( e instanceof ASException )) {
-				throw ASExceptionHelper.defaultException(e.getMessage(), e);
-			} else {
-				throw e;
-			}
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		} finally  {
 			pm.close();
 		}
@@ -110,7 +103,7 @@ public class APDVAnalysisDAOJDOImpl extends GenericDAOJDO<APDVAnalysis> implemen
 	@Override
 	public List<String> getMacsUsingHostnameAndDates(List<String> hostname, Date fromDate, Date toDate) throws ASException {
 		
-		List<String> ret = CollectionFactory.createList();
+		List<String> ret = new ArrayList<>();
 		PersistenceManager pm;
 		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		
@@ -135,11 +128,7 @@ public class APDVAnalysisDAOJDOImpl extends GenericDAOJDO<APDVAnalysis> implemen
 			return ret;
 			
 		} catch(Exception e) {
-			if(!( e instanceof ASException )) {
-				throw ASExceptionHelper.defaultException(e.getMessage(), e);
-			} else {
-				throw e;
-			}
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		} finally  {
 			pm.close();
 		}

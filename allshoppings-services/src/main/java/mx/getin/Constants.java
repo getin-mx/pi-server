@@ -29,6 +29,14 @@ public final class Constants {
 	
 	public static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 	
+	public static final String DAO_PARAM_DATE_DECLARATION = "java.util.Date dateParam";
+	public static final String DAO_CONSTRAINT_FROM_DATE = "fromDate <= dateParam";
+	public static final String DAO_CONSTRAINT_TO_DATE_NULL = "(toDate == null || toDate >= dateParam)";
+	public static final String DAO_PARAM_DATE = "dateParam";
+	public static final String DAO_ORDER_DATE_DESC = "fromDate DESC";
+	
+	public static final String JSON_FILE_EXTENSION = ".json";
+	
 	static {
 		sdf.setTimeZone(GMT);
 	}

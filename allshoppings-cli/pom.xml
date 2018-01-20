@@ -68,6 +68,13 @@
 			<version>5.0.4</version>
 		</dependency>
 
+		<!-- @Nullable & more -->
+		<dependency>
+		    <groupId>com.google.code.findbugs</groupId>
+		    <artifactId>jsr305</artifactId>
+		    <version>3.0.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

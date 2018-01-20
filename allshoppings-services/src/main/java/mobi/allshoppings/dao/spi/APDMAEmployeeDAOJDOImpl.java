@@ -1,8 +1,9 @@
 package mobi.allshoppings.dao.spi;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -13,16 +14,11 @@ import com.inodes.datanucleus.model.Key;
 
 import mobi.allshoppings.dao.APDMAEmployeeDAO;
 import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDMAEmployee;
-import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
 
 public class APDMAEmployeeDAOJDOImpl extends GenericDAOJDO<APDMAEmployee> implements APDMAEmployeeDAO {
 
-	@SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(APDMAEmployeeDAOJDOImpl.class.getName());
-	
 	public APDMAEmployeeDAOJDOImpl() {
 		super(APDMAEmployee.class);
 	}
@@ -34,15 +30,15 @@ public class APDMAEmployeeDAOJDOImpl extends GenericDAOJDO<APDMAEmployee> implem
 
 	@Override
 	public List<APDMAEmployee> getUsingEntityIdAndRange(String entityId, byte entityKind, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
-		List<APDMAEmployee> returnedObjs = CollectionFactory.createList();
+		List<APDMAEmployee> returnedObjs = new ArrayList<>();
 
 		PersistenceManager pm;
 		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 
 		try{
-			Map<String, Object> parameters = CollectionFactory.createMap();
-			List<String> declaredParams = CollectionFactory.createList();
-			List<String> filters = CollectionFactory.createList();
+			Map<String, Object> parameters = new HashMap<>();
+			List<String> declaredParams = new ArrayList<>();
+			List<String> filters = new ArrayList<>();
 
 			Query query = pm.newQuery(clazz);
 
@@ -90,12 +86,6 @@ public class APDMAEmployeeDAOJDOImpl extends GenericDAOJDO<APDMAEmployee> implem
 				}
 			}
 
-		} catch(Exception e) {
-			if(!( e instanceof ASException )) {
-				throw ASExceptionHelper.defaultException(e.getMessage(), e);
-			} else {
-				throw e;
-			}
 		} finally  {
 			pm.close();
 		}
@@ -106,15 +96,15 @@ public class APDMAEmployeeDAOJDOImpl extends GenericDAOJDO<APDMAEmployee> implem
 
 	@Override
 	public List<APDMAEmployee> getUsingEntityIdandMac(String entityId, byte entityKind, String mac) throws ASException {
-		List<APDMAEmployee> returnedObjs = CollectionFactory.createList();
+		List<APDMAEmployee> returnedObjs = new ArrayList<>();
 
 		PersistenceManager pm;
 		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 
 		try{
-			Map<String, Object> parameters = CollectionFactory.createMap();
-			List<String> declaredParams = CollectionFactory.createList();
-			List<String> filters = CollectionFactory.createList();
+			Map<String, Object> parameters = new HashMap<>();
+			List<String> declaredParams = new ArrayList<>();
+			List<String> filters = new ArrayList<>();
 
 			Query query = pm.newQuery(clazz);
 
@@ -151,12 +141,6 @@ public class APDMAEmployeeDAOJDOImpl extends GenericDAOJDO<APDMAEmployee> implem
 				}
 			}
 
-		} catch(Exception e) {
-			if(!( e instanceof ASException )) {
-				throw ASExceptionHelper.defaultException(e.getMessage(), e);
-			} else {
-				throw e;
-			}
 		} finally  {
 			pm.close();
 		}

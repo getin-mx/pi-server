@@ -1,17 +1,18 @@
 package mobi.allshoppings.apdevice.impl;
 
 import static mx.getin.Constants.DAY_IN_MILLIS;
-import static mx.getin.Constants.GMT;
-import static mx.getin.Constants.SLOT_NUMBER_IN_DAY;
 import static mx.getin.Constants.sdf;
-import static mx.getin.Constants.MINUTE_TO_TWENTY_SECONDS_SLOT;
+import static mx.getin.Constants.GMT;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +22,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.CollectionFactory;
 import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.apdevice.APDVisitHelper;
@@ -48,7 +50,6 @@ import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.SystemConfiguration;
 import mobi.allshoppings.model.tools.KeyHelper;
 import mobi.allshoppings.model.tools.StatusHelper;
-import mobi.allshoppings.tools.CollectionFactory;
 import mx.getin.dao.APDCalibrationDAO;
 import mx.getin.model.APDCalibration;
 
@@ -69,11 +70,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	private static final List<String> INVALID_VENDORS;
 	
 	static {
-		INVALID_MACS = CollectionFactory.createList(new String[] {
-				"00:00:00:00:00:00", "FF:FF:FF:FF:FF:FF"
-			});
-		INVALID_VENDORS = CollectionFactory.createList(new String[] {
-				"DA:A1:19", "92:68:C3", "9C:93:4E", "70:B3:D5:7E:B", "1C:7D:22", "08:00:72", "08:00:37", "00:00:AA",
+		INVALID_MACS = Arrays.asList("00:00:00:00:00:00", "FF:FF:FF:FF:FF:FF");
+		INVALID_VENDORS = Arrays.asList("DA:A1:19", "92:68:C3", "9C:93:4E", "70:B3:D5:7E:B", "1C:7D:22", "08:00:72", "08:00:37", "00:00:AA",
 				"00:00:0", "F8:D0:27", "B0:E8:92", "AC:18:26", "A4:EE:57", "9C:AE:D3", "64:EB:8C", "44:D2:44",
 				"38:9D:92", "00:26:AB", "00:00:48", "FC:3F:DB", "FC:15:B4", "F4:CE:46", "F4:30:B9", "F4:03:43",
 				"F0:92:1C", "EC:EB:B8", "EC:B1:D7", "EC:9A:74", "EC:8E:B5", "E8:F7:24", "E8:39:35", "E4:11:5B",
@@ -113,8 +111,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				"10:00:5A", "08:17:F4", "08:00:5A", "60:94", "50:76", "25:03", "22:00", "00:21:5E", "20:35",
 				"00:1A:64", "00:18:B1", "00:17:EF", "00:14:5E", "11:25", "00:10:D9", "00:0D:60", "00:09:6B",
 				"62:9", "00:04:AC", "25:5", "C4:2F:90", "C0:56:E3", "BC:AD:28", "B4:A3:82", "A4:14:37",
-				"54:C4:15", "4C:BD:8F", "44:19:B6", "28:57:BE", "18:68:CB", "68:C4:4D"
-		});
+				"54:C4:15", "4C:BD:8F", "44:19:B6", "28:57:BE", "18:68:CB", "68:C4:4D");
 	}
 	
 	@Autowired
@@ -170,29 +167,32 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					throws ASException {
 
 		List<Store> stores = null;
-		Map<String, APDCalibration> apdCache = CollectionFactory.createMap();
-		Map<String, APDAssignation> assignmentsCache = CollectionFactory.createMap();
+		Map<String, APDCalibration> apdCache = new HashMap<>();
+		Map<String, APDAssignation> assignmentsCache = new HashMap<>();
 		DumperHelper<APHEntry> dumpHelper;
 		List<APHEntry> e;
 		boolean cacheBuilt = false;
 
 		// Phase 1, determines entities to process ---------------------------------------------------------------------
-		if(!CollectionUtils.isEmpty(storeIds)) {
-			stores = storeDao.getUsingIdList(storeIds);
-		} if(!CollectionUtils.isEmpty(brandIds)) {
-			if(stores == null) stores = CollectionFactory.createList();
-			for(String brandId : brandIds )
-				stores.addAll(storeDao.getUsingBrandAndStatus(brandId, StatusHelper.statusActive(), null));
-		} if(stores == null) {
-			stores = CollectionFactory.createList();
-			stores.addAll(storeDao.getUsingBrandAndStatus(null, StatusHelper.statusActive(), null));
+		Map<String, Byte> entities;
+		{
+			if(!CollectionUtils.isEmpty(storeIds)) {
+				stores = storeDao.getUsingIdList(storeIds);
+			}
+			
+			if(!CollectionUtils.isEmpty(brandIds)) {
+				if(stores == null) stores = new LinkedList<>();
+				for(String brandId : brandIds )
+					stores.addAll(storeDao.getUsingBrandAndStatus(brandId, StatusHelper.statusActive(), null));
+			} if(stores == null) {
+				stores = new LinkedList<>();
+				stores.addAll(storeDao.getUsingBrandAndStatus(null, StatusHelper.statusActive(), null));
+			}
+			List<String> eids = new LinkedList<>();
+			
+			for(Store store : stores) eids.add(store.getIdentifier());
+			entities = getEntities(null, null, eids);
 		}
-		
-		List<String> eids = CollectionFactory.createList();
-		for(Store store : stores) 
-			eids.add(store.getIdentifier());
-
-		Map<String, Byte> entities = getEntities(null, null, eids);
 
 		// Phase 2, Gets entities to process ---------------------------------------------------------------------
 
@@ -200,7 +200,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				null, APDVisit.class);
 		
 		Date curDate = new Date(fromDate.getTime());
-		Date limitDate = new Date(fromDate.getTime() + DAY_IN_MILLIS);
+		Date limitDate;// = new Date(fromDate.getTime() + DAY_IN_MILLIS);
 		String sFromDate = sdf.format(fromDate);
 		Date toZonedDate = new Date(toDate.getTime());
 		boolean overtime = false;
@@ -242,8 +242,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					}
 					
 					try {
-						List<APDVisit> objs = CollectionFactory.createList();
-						List<String> keys = CollectionFactory.createList();
+						List<APDVisit> objs = new LinkedList<>();
+						List<String> keys = new LinkedList<>();
 						if(!onlyDashboards) {
 
 							List<String> blackListMacs = getBlackListByStore(store);
@@ -258,7 +258,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							if(!CollectionUtils.isEmpty(assigs)) {
 								if(assigs.size() == 1) {
 
-									e = CollectionFactory.createList();
+									e = new ArrayList<>();
 									assignmentsCache.clear();
 									assignmentsCache.put(assigs.get(0).getHostname(),
 											assigs.get(0));
@@ -296,7 +296,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 										}
 									}
 									
-									if(objs.size() == 0) {
+									if(objs.isEmpty()) {
 										log.log(Level.INFO, "No data found for " +name +", skipping...");
 										continue;
 									}
@@ -305,8 +305,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 											+ " APDVisits...");
 									for( APDVisit obj : objs ) apdvDumper.dump(obj);
 								} else {
-									Map<String, List<APHEntry>> cache = CollectionFactory.createMap();
-									List<String> hostnames = CollectionFactory.createList();
+									Map<String, List<APHEntry>> cache = new HashMap<>();
+									List<String> hostnames = new LinkedList<>();
 									assignmentsCache.clear();
 									for( APDAssignation assig : assigs ) { 
 										hostnames.add(assig.getHostname());

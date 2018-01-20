@@ -1,5 +1,7 @@
 package mobi.allshoppings.dao.spi;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,9 +14,7 @@ import com.inodes.datanucleus.model.Key;
 
 import mobi.allshoppings.dao.APDMABlackListDAO;
 import mobi.allshoppings.exception.ASException;
-import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDMABlackList;
-import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.Range;
 
 public class APDMABlackListDAOJDOImpl extends GenericDAOJDO<APDMABlackList> implements APDMABlackListDAO {
@@ -30,15 +30,15 @@ public class APDMABlackListDAOJDOImpl extends GenericDAOJDO<APDMABlackList> impl
 
 	@Override
 	public List<APDMABlackList> getUsingEntityIdAndRange(String entityId, byte entityKind, Range range, String order, Map<String, String> attributes, boolean detachable) throws ASException {
-		List<APDMABlackList> returnedObjs = CollectionFactory.createList();
+		List<APDMABlackList> returnedObjs = new ArrayList<>();
 
 		PersistenceManager pm;
 		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 
 		try{
-			Map<String, Object> parameters = CollectionFactory.createMap();
-			List<String> declaredParams = CollectionFactory.createList();
-			List<String> filters = CollectionFactory.createList();
+			Map<String, Object> parameters = new HashMap<>();
+			List<String> declaredParams = new ArrayList<>();
+			List<String> filters = new ArrayList<>();
 
 			Query query = pm.newQuery(clazz);
 
@@ -91,11 +91,7 @@ public class APDMABlackListDAOJDOImpl extends GenericDAOJDO<APDMABlackList> impl
 			}
 
 		} catch(Exception e) {
-			if(!( e instanceof ASException )) {
-				throw ASExceptionHelper.defaultException(e.getMessage(), e);
-			} else {
-				throw e;
-			}
+			throw e;
 		} finally  {
 			pm.close();
 		}

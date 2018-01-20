@@ -2,10 +2,10 @@ package mobi.allshoppings.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -15,7 +15,6 @@ import com.inodes.datanucleus.model.Key;
 import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.interfaces.Replicable;
-import mobi.allshoppings.tools.CollectionFactory;
 
 @PersistenceCapable(detachable="true")
 public class APDVAnalysis implements ModelKey, Serializable, Identificable, Replicable {
@@ -47,9 +46,8 @@ public class APDVAnalysis implements ModelKey, Serializable, Identificable, Repl
 	private Date creationDateTime;
 
 	public APDVAnalysis() {
-		super();
-		this.rssi = CollectionFactory.createMap();
-		this.artificialRssi = CollectionFactory.createMap();
+		this.rssi = new HashMap<>();
+		this.artificialRssi = new HashMap<>();
 		this.dataCount = 0;
 		this.creationDateTime = new Date();
 	}
@@ -59,8 +57,8 @@ public class APDVAnalysis implements ModelKey, Serializable, Identificable, Repl
 		this.hostname = hostname;
 		this.mac = mac;
 		this.date = date;
-		this.rssi = CollectionFactory.createMap();
-		this.artificialRssi = CollectionFactory.createMap();
+		this.rssi = new HashMap<>();
+		this.artificialRssi = new HashMap<>();
 		this.dataCount = 0;
 		this.creationDateTime = new Date();
 	}

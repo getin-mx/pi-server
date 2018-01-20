@@ -63,16 +63,6 @@ public class User implements ModelKey, Serializable, Identificable, Indexable, R
 
 	private Integer activityStatus;
 	
-	// Search fields ... this is too ugly... Fuck you Google!!!!
-	@SuppressWarnings("unused")
-	private String uIdentifier;
-	@SuppressWarnings("unused")
-	private String uFirstname;
-	@SuppressWarnings("unused")
-	private String uLastname;
-	@SuppressWarnings("unused")
-	private String uEmail;
-	
 	@NotPersistent
 	private boolean doIndexNow = true;
 
@@ -376,10 +366,10 @@ public class User implements ModelKey, Serializable, Identificable, Indexable, R
 	 */
 	@Override
 	public void preStore() {
-		uIdentifier = getIdentifier().toUpperCase();
+		/*uIdentifier = getIdentifier().toUpperCase();
 		uFirstname = getFullname().toUpperCase();
 		uLastname = getFullnameReverse().toUpperCase();
-		uEmail = getContactInfo().getMail() != null ? getContactInfo().getMail().getEmail().toUpperCase() : null;
+		uEmail = getContactInfo().getMail() != null ? getContactInfo().getMail().getEmail().toUpperCase() : null;*/
 		this.lastUpdate = new Date();
 	}
 

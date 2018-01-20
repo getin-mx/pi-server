@@ -1,7 +1,9 @@
 package mobi.allshoppings.cli;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -9,11 +11,8 @@ import org.json.JSONObject;
 import org.springframework.context.ApplicationContext;
 
 import com.google.gson.Gson;
-import com.ibm.icu.util.Calendar;
-import com.inodes.util.CollectionFactory;
 
 import joptsimple.OptionParser;
-import joptsimple.OptionSet;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.tools.GsonFactory;
@@ -31,14 +30,10 @@ public class GetAnnualCalendar extends AbstractCLI {
 		context = ctx;
 	}
 	
-	public static void main(String args[]) throws ASException {
+	public static void main(String[] args) throws ASException {
 		try {
 			
-			// Option parser help is in http://pholser.github.io/jopt-simple/examples.html
-			@SuppressWarnings("unused")
-			OptionSet options = parser.parse(args);
-
-			List<RetailCalendarEntry> list = CollectionFactory.createList();
+			List<RetailCalendarEntry> list = new LinkedList<>();
 			GetAnnualCalendar instance = new GetAnnualCalendar();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date initial = sdf.parse("2016-01-01");

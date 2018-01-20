@@ -1,9 +1,10 @@
 package mobi.allshoppings.dao.spi;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -14,13 +15,10 @@ import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDAssignation;
-import mobi.allshoppings.tools.CollectionFactory;
+import mx.getin.Constants;
 
 public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> implements APDAssignationDAO {
 	
-	@SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(APDAssignationDAOJDOImpl.class.getName());
-
 	public APDAssignationDAOJDOImpl() {
 		super(APDAssignation.class);
 	}
@@ -39,9 +37,9 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 	public APDAssignation getOneUsingHostnameAndDate(String hostname, Date date) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		try {
-			Map<String, Object> parameters = CollectionFactory.createMap();
-			List<String> declaredParams = CollectionFactory.createList();
-			List<String> filters = CollectionFactory.createList();
+			Map<String, Object> parameters = new HashMap<>();
+			List<String> declaredParams = new ArrayList<>();
+			List<String> filters = new ArrayList<>();
 
 			Query query = pm.newQuery(APDAssignation.class);
 
@@ -52,35 +50,31 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 			}
 
 			if( date != null ) {
-				declaredParams.add("java.util.Date dateParam");
-				filters.add("fromDate <= dateParam");
-				filters.add("(toDate == null || toDate >= dateParam)");
-				parameters.put("dateParam", date);
+				declaredParams.add(Constants.DAO_PARAM_DATE_DECLARATION);
+				filters.add(Constants.DAO_CONSTRAINT_FROM_DATE);
+				filters.add(Constants.DAO_CONSTRAINT_TO_DATE_NULL);
+				parameters.put(Constants.DAO_PARAM_DATE, date);
 			}
 			
 			// Setting query parameters
 			query.declareParameters(toParameterList(declaredParams));
 			query.setFilter(toWellParametrizedFilter(filters));
-			query.setOrdering("fromDate DESC");
+			query.setOrdering(Constants.DAO_ORDER_DATE_DESC);
 			
 			@SuppressWarnings("unchecked")
 			List<APDAssignation> objs = (List<APDAssignation>)query.executeWithMap(parameters);
-			if (objs != null) {
+			if (objs != null && !objs.isEmpty()) {
 				// force to read
-				for (APDAssignation obj : objs) {
-					return pm.detachCopy(obj);
-				}
+				return pm.detachCopy(objs.get(0));
 			}
 			
 			throw ASExceptionHelper.notFoundException();
 			
-		} catch(Exception e) {
-			if( e instanceof ASException ) {
-				throw e;
-			} else {
+		} catch(ASException e) {
+			throw e;
+		} catch(Exception e) { 
 				throw ASExceptionHelper.defaultException(e.getMessage(), e);
-			}
-	    } finally  {
+		} finally  {
 	    	pm.close();
 	    }
 
@@ -88,13 +82,13 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 	@Override
 	public List<APDAssignation> getUsingHostnameAndDate(String hostname, Date date) throws ASException {
 
-		List<APDAssignation> ret = CollectionFactory.createList();
+		List<APDAssignation> ret = new ArrayList<>();
 		
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		try {
-			Map<String, Object> parameters = CollectionFactory.createMap();
-			List<String> declaredParams = CollectionFactory.createList();
-			List<String> filters = CollectionFactory.createList();
+			Map<String, Object> parameters = new HashMap<>();
+			List<String> declaredParams = new ArrayList<>();
+			List<String> filters = new ArrayList<>();
 
 			Query query = pm.newQuery(APDAssignation.class);
 
@@ -105,10 +99,10 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 			}
 
 			if( date != null ) {
-				declaredParams.add("java.util.Date dateParam");
-				filters.add("fromDate <= dateParam");
-				filters.add("(toDate == null || toDate >= dateParam)");
-				parameters.put("dateParam", date);
+				declaredParams.add(Constants.DAO_PARAM_DATE_DECLARATION);
+				filters.add(Constants.DAO_CONSTRAINT_FROM_DATE);
+				filters.add(Constants.DAO_CONSTRAINT_TO_DATE_NULL);
+				parameters.put(Constants.DAO_PARAM_DATE, date);
 			}
 			
 			// Setting query parameters
@@ -128,12 +122,8 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 			return ret;
 			
 		} catch(Exception e) {
-			if( e instanceof ASException ) {
-				throw e;
-			} else {
 				throw ASExceptionHelper.defaultException(e.getMessage(), e);
-			}
-	    } finally  {
+		} finally  {
 	    	pm.close();
 	    }
 	}
@@ -141,13 +131,13 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 	@Override
 	public List<APDAssignation> getUsingEntityIdAndEntityKindAndDate(String entityId, byte entityKind, Date date) throws ASException {
 
-		List<APDAssignation> ret = CollectionFactory.createList();
+		List<APDAssignation> ret = new ArrayList<>();
 		
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		try {
-			Map<String, Object> parameters = CollectionFactory.createMap();
-			List<String> declaredParams = CollectionFactory.createList();
-			List<String> filters = CollectionFactory.createList();
+			Map<String, Object> parameters = new HashMap<>();
+			List<String> declaredParams = new ArrayList<>();
+			List<String> filters = new ArrayList<>();
 
 			Query query = pm.newQuery(APDAssignation.class);
 
@@ -164,10 +154,10 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 			}
 				
 			if( date != null ) {
-				declaredParams.add("java.util.Date dateParam");
-				filters.add("fromDate <= dateParam");
-				filters.add("(toDate == null || toDate >= dateParam)");
-				parameters.put("dateParam", date);
+				declaredParams.add(Constants.DAO_PARAM_DATE_DECLARATION);
+				filters.add(Constants.DAO_CONSTRAINT_FROM_DATE);
+				filters.add(Constants.DAO_CONSTRAINT_TO_DATE_NULL);
+				parameters.put(Constants.DAO_PARAM_DATE, date);
 			}
 			
 			// Setting query parameters
@@ -187,12 +177,8 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 			return ret;
 			
 		} catch(Exception e) {
-			if( e instanceof ASException ) {
-				throw e;
-			} else {
 				throw ASExceptionHelper.defaultException(e.getMessage(), e);
-			}
-	    } finally  {
+		} finally  {
 	    	pm.close();
 	    }
 	}
@@ -200,14 +186,14 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 	@Override
 	public List<String> getEntityIds(byte entityKind, Date forDate) throws ASException {
 		
-		List<String> ret = CollectionFactory.createList();
+		List<String> ret = new ArrayList<>();
 		PersistenceManager pm;
 		pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
 		
 		try{
-			Map<String, Object> parameters = CollectionFactory.createMap();
-			List<String> declaredParams = CollectionFactory.createList();
-			List<String> filters = CollectionFactory.createList();
+			Map<String, Object> parameters = new HashMap<>();
+			List<String> declaredParams = new ArrayList<>();
+			List<String> filters = new ArrayList<>();
 
 			Query query = pm.newQuery(clazz);
 
@@ -220,10 +206,10 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 
 			// toDate Parameter
 			if( forDate != null ) {
-				declaredParams.add("java.util.Date dateParam");
-				filters.add("fromDate <= dateParam");
-				filters.add("(toDate == null || toDate >= dateParam)");
-				parameters.put("dateParam", forDate);
+				declaredParams.add(Constants.DAO_PARAM_DATE_DECLARATION);
+				filters.add(Constants.DAO_CONSTRAINT_FROM_DATE);
+				filters.add(Constants.DAO_CONSTRAINT_TO_DATE_NULL);
+				parameters.put(Constants.DAO_PARAM_DATE, forDate);
 			}
 
 			query.setResult("entityId");
@@ -240,11 +226,7 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 			return ret;
 			
 		} catch(Exception e) {
-			if(!( e instanceof ASException )) {
-				throw ASExceptionHelper.defaultException(e.getMessage(), e);
-			} else {
-				throw e;
-			}
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		} finally  {
 			pm.close();
 		}
