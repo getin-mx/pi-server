@@ -1099,6 +1099,13 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									assignments.get(curEntry.getHostname()).getEntityKind()))
 								res.add(currentPeasant);
 							currentPeasant = null;
+						}if( currentViewer != null ) {
+							currentViewer.setCheckinFinished(aphHelper.slotToDate(
+									finishSlot, date));
+							if(isPeasantValid(currentViewer, dev, isEmployee,
+									assignments.get(curEntry.getHostname()).getEntityKind()))
+								res.add(currentViewer);
+							currentViewer = null;
 						}
 						
 					}
@@ -1154,6 +1161,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					if(isPeasantValid(currentViewer, apd.get(curEntry.getHostname()), isEmployee,
 							assignments.get(curEntry.getHostname()).getEntityKind()))
 						res.add(currentViewer);
+					currentViewer = null;
 			}
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
