@@ -1015,6 +1015,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						}
 					}
 				}
+				
+				dev.setViewerPowerThreshold((dev.getVisitPowerThreshold() + dev.getPeasantPowerThreshold()) / 2);
 				// If there is a peasant threshold
 				if(dev.getPeasantPowerThreshold() == null 
 						|| value >= dev.getPeasantPowerThreshold()) {
@@ -1024,7 +1026,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								assignments.get(curEntry.getHostname()), date);
 					lastPeasantSlot = slot;
 					// Checks for power for visit
-					if(value >= dev.getViewerPowerThreshold()) {
+					if(value >= dev.getViewerPowerThreshold() && value >= dev.getViewerPowerThreshold() + dev.getOffsetViewer()) {
 						currentViewer = createViewer(curEntry, curDate, null, assignments.get(curEntry.getHostname()));
 						lastViewerSlot = slot;
 					}
@@ -1100,7 +1102,15 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									assignments.get(curEntry.getHostname()).getEntityKind()))
 								res.add(currentPeasant);
 							currentPeasant = null;
+						}if( currentViewer != null ) {
+							currentViewer.setCheckinFinished(aphHelper.slotToDate(
+									curEntry, finishSlot, tz));
+							if(isPeasantValid(currentViewer, dev, isEmployee,
+									assignments.get(curEntry.getHostname()).getEntityKind()))
+								res.add(currentViewer);
+							currentViewer = null;
 						}
+						
 					}
 				}
 				// Updates the last slot
@@ -1140,6 +1150,19 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 		}
+		try {
+			if( currentViewer != null ) {
+				currentViewer.setCheckinFinished(aphHelper.slotToDate(
+							curEntry, lastSlot, tz));
+					if(isPeasantValid(currentViewer, apd.get(curEntry.getHostname()), isEmployee,
+							assignments.get(curEntry.getHostname()).getEntityKind()))
+						res.add(currentViewer);
+					currentViewer = null;
+			}
+		} catch( Exception e ) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+		}
+		
 
 		
 		// Checks for max visits per day using RepeatThreshold
