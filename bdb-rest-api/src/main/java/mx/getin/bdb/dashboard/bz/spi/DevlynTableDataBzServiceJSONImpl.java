@@ -641,9 +641,9 @@ implements BDBDashboardBzService {
 			else
 				row.put("visitsConversion", 0);
 			if(cabinet != 0)
-				row.put("gabineteconvertions", (float)((float)(cabinet * 100)/visitors));
+				row.put("cabinetConversion", (float)((float)(cabinet * 100)/visitors));
 			else 
-				row.put("gabineteconvertion", 0);
+				row.put("cabinetConversion", 0);
 
 			// tickets_conversion
 			if( visitors != 0)
@@ -655,19 +655,19 @@ implements BDBDashboardBzService {
 			row.put("lowerDay", calculateLowerDay());
 
 			if( permanenceInMillis > 0 && permancenceQty > 0 ) {
-				row.put("averagePermanence", Math.round(permanenceInMillis / permancenceQty / 60000D ));
+				row.put("averagePermanenceEntrance", Math.round(permanenceInMillis / permancenceQty / 60000D ));
 			} else {
-				row.put("averagePermanence", 0);
+				row.put("averagePermanenceEntrance", 0);
 			}
 			if( permanenceInMillisGab > 0 && permancenceQtyGabs > 0 ) {
-				row.put("averagePermanence", Math.round(permanenceInMillisGab / permancenceQtyGabs / 60000D ));
+				row.put("averagePermanencecabinet", Math.round(permanenceInMillisGab / permancenceQtyGabs / 60000D ));
 			} else {
-				row.put("averagePermanence", 0);
+				row.put("averagePermanencecabinet", 0);
 			}
 			if( permanenceInMillisGab > 0 && permancenceQtyGabs > 0 ) {
-				row.put("averagePermanence", ((Math.round(permanenceInMillisGab / permancenceQtyGabs / 60000D) + Math.round(permanenceInMillis / permancenceQty / 60000D )/2)));
+				row.put("averagePermanenceAll", ((Math.round(permanenceInMillisGab / permancenceQtyGabs / 60000D) + Math.round(permanenceInMillis / permancenceQty / 60000D )/2)));
 			} else {
-				row.put("averagePermanence", 0);
+				row.put("averagePermanenceAll", 0);
 			}
 			
 
