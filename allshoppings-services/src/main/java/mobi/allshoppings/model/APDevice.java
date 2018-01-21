@@ -59,7 +59,13 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	private Long visitMaxThreshold;
 	private Long peasantPowerThreshold;
 	private Long visitCountThreshold;
+	private Long viewerPowerThreshold;
 	private Integer repeatThreshold;
+	
+	/**
+	 * This Value must be positive
+	 */
+	private int offSetViewer;
 	
 	private Long visitDecay;
 	private Long peasantDecay;
@@ -123,10 +129,12 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 		if( visitPowerThreshold == null) visitPowerThreshold = -60L;
 		if( visitMaxThreshold == null) visitMaxThreshold = 480L;
 		if( peasantPowerThreshold == null) peasantPowerThreshold = -80L;
+		if( viewerPowerThreshold == null) viewerPowerThreshold = -100l; 
 		if( visitCountThreshold == null) visitCountThreshold = 0L;
 		if( repeatThreshold == null ) repeatThreshold = 5;
 		if( visitDecay == null ) visitDecay = visitGapThreshold;
 		if( peasantDecay == null ) peasantDecay = visitGapThreshold; 
+		if( offSetViewer == 0) offSetViewer = Math.abs(offSetViewer); 
 	    
 		if( timezone == null) timezone = "CDT";
 		if( visitsOnMon == null) visitsOnMon = true;
@@ -454,12 +462,26 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	public Long getPeasantPowerThreshold() {
 		return peasantPowerThreshold;
 	}
+	
+	/**
+	 * @return the viewerPowerThreshold
+	 */
+	public Long getViewerPowerThreshold() {
+		return viewerPowerThreshold;
+	}
 
 	/**
 	 * @param peasentPowerThreshold the peasentPowerThreshold to set
 	 */
 	public void setPeasentPowerThreshold(Long peasentPowerThreshold) {
 		this.peasantPowerThreshold = peasentPowerThreshold;
+	}
+	
+	/**
+	 * @param viewerPowerThreshold the viewerPowerThreshold to set
+	 */
+	public void setViewerPowerThreshold(long viewerPowerThreshold) {
+		this.viewerPowerThreshold = viewerPowerThreshold;
 	}
 
 	/**
@@ -1066,6 +1088,14 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	 */
 	public void setPeasantDecay(Long peasantDecay) {
 		this.peasantDecay = peasantDecay;
+	}
+	
+	public void setOffsetView(int offSetViewer) {
+		this.offSetViewer = Math.abs(offSetViewer);
+	}
+	
+	public int getOffsetViewer() {
+		return offSetViewer;
 	}
 
 	@Override
