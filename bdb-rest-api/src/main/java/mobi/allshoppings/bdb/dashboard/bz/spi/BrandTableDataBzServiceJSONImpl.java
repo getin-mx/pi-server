@@ -97,7 +97,7 @@ implements BDBDashboardBzService {
 
 			// peasents, visits, and tickets
 			list = dao.getUsingFilters(entityIds, null, Arrays.asList("apd_visitor"),
-					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets", "visitor_total_items", "visitor_total_revenue"), null,
+					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets", "visitor_total_items", "visitor_total_revenue", "visitor_total_viewer"), null,
 					null, null, fromStringDate, toStringDate, null, null, null, null, null, null,
 					null, null);
 
@@ -120,9 +120,10 @@ implements BDBDashboardBzService {
 						rec.setTickets(rec.getTickets() + obj.getDoubleValue().longValue());
 					} else if( obj.getElementSubId().equals("visitor_total_items")) {
 						rec.setItems(rec.getItems() + (int) obj.getDoubleValue().longValue());
-					}
-					else if( obj.getElementSubId().equals("visitor_total_revenue"))
+					} else if( obj.getElementSubId().equals("visitor_total_revenue"))
 						rec.setRevenue(rec.getRevenue() + obj.getDoubleValue());
+					else if(obj.getElementSubId().equals("visitor_total_viewer"))
+						rec.viewers += obj.getDoubleValue();
 
 				}
 			}
@@ -347,8 +348,7 @@ implements BDBDashboardBzService {
 		public JSONArray getJSONTotals() throws ASException {
 
 			DashboardRecordRep totals = new DashboardRecordRep(null, 0, null, null, "Totales", null, null);
-			//List<Long> c = CollectionFactory.createList();
-
+			
 			for( DashboardRecordRep rec : records ) {
 				if( rec.getLevel() == 0 ) {
 					totals.setPeasants(totals.getPeasants() + rec.getPeasants());
@@ -356,9 +356,9 @@ implements BDBDashboardBzService {
 					totals.setTickets(totals.getTickets() + rec.getTickets());
 					totals.setItems(totals.getItems() + rec.getItems());
 					totals.setRevenue(totals.getRevenue() + rec.getRevenue());
-					//c.add(rec.getPermanenceInMillis());
 					totals.setPermancenceQty(totals.getPermancenceQty() +rec.getPermancenceQty());
 					totals.setPermanenceInMillis(totals.getPermanenceInMillis() +rec.getPermanenceInMillis());
+					totals.viewers += rec.viewers;
 
 					Map<String, Long> datesCache = totals.getDatesCache();
 					Map<String, Long> recDatesCache = rec.getDatesCache();
@@ -405,6 +405,7 @@ implements BDBDashboardBzService {
 			totals.setItems(0);
 			totals.setPermanenceInMillis(0L);
 			totals.setPermancenceQty(0);
+			totals.viewers = 0;
 
 			for( DashboardRecordRep rec : records ) {
 				if( rec.getLevel() == 0 ) {
@@ -415,6 +416,7 @@ implements BDBDashboardBzService {
 					totals.setRevenue(totals.getRevenue() + rec.getRevenue());
 					totals.setPermanenceInMillis(totals.getPermanenceInMillis() + rec.getPermanenceInMillis());
 					totals.setPermancenceQty(totals.getPermancenceQty() + rec.getPermancenceQty());
+					totals.viewers += rec.viewers;
 				}
 			}
 
@@ -455,6 +457,7 @@ implements BDBDashboardBzService {
 		private Date lowerDate;
 		private Long permanenceInMillis;
 		private int permancenceQty;
+		private long viewers;
 		private Map<String, Long> datesCache;
 		private DashboardTableRep parent;
 
@@ -519,6 +522,7 @@ implements BDBDashboardBzService {
 				tit = "&nbsp;&nbsp;" + tit;
 
 			row.put(h1 + tit + h2);
+			row.put(h1 + viewers +h2);
 			row.put(h1 + String.valueOf(peasants) + h2);
 			row.put(h1 + String.valueOf(visitors) + h2);
 			row.put(h1 + String.valueOf(tickets) + h2);
@@ -562,6 +566,7 @@ implements BDBDashboardBzService {
 
 			row.put("header", header);
 			row.put("title", tit);
+			row.put("viewers", viewers);
 			row.put("peasants", peasants);
 			row.put("visitors", visitors);
 			row.put("tickets", tickets);
