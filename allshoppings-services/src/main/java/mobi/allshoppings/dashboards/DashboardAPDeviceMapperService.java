@@ -831,6 +831,9 @@ public class DashboardAPDeviceMapperService {
 								obj = buildDashboardIndicatorData(indicatorsSet, "apd_visitor", "Visitantes",
 										"visitor_total_viewer", "Miradores", v.getCheckinStarted(), DashboardIndicatorData.PERIOD_TYPE_DAILY, 
 										shoppingId, store, shopping, null, subentityId, entityKind, v.getForDate()) ;
+								if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
+								else indicatorsSet.put(obj, obj);
+								obj.setDoubleValue(obj.getDoubleValue() + 1);
 							}
 							
 							

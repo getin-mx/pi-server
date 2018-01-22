@@ -86,10 +86,10 @@ implements BDBTimelineHourBzService {
 					movieId, voucherType, dayOfWeek, timezone, null, country, province, city);
 
 			// Gets dashboard configuration for this session
-			DashboardConfiguration config = new DashboardConfiguration(entityId, entityKind);
+			/*DashboardConfiguration config = new DashboardConfiguration(entityId, entityKind);
 			try {
 				config = dcDao.getUsingEntityIdAndEntityKind(entityId, entityKind, true);
-			} catch( Exception e ) {}
+			} catch( Exception e ) {}*/
 			
 			List<String> categories = CollectionFactory.createList();
 
@@ -172,11 +172,11 @@ implements BDBTimelineHourBzService {
 
 						// Position calc according to the timezone
 						int position = hourMap.get(obj.getTimeZone());
-						if( config.getTimezone().equals("-06:00")) {
+						/*if( config.getTimezone().equals("-06:00")) {
 							position = position - 1;
 							if( position >= 24 )
 								position = position - 24;
-						}
+						}*/
 
 						if( average ) {
 							if( obj.getDoubleValue() != null )

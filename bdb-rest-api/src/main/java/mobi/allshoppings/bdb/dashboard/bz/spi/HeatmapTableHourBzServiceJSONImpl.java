@@ -82,11 +82,11 @@ implements BDBHeatmapTableHourBzService {
 					subentityId, periodType, fromStringDate, toStringDate,
 					movieId, voucherType, dayOfWeek, timezone, null, null, null, null);
 
-			// Gets dashboard configuration for this session
+			/* Gets dashboard configuration for this session
 			DashboardConfiguration config = new DashboardConfiguration(entityId, entityKind);
 			try {
 				config = dcDao.getUsingEntityIdAndEntityKind(entityId, entityKind, true);
-			} catch( Exception e ) {}
+			} catch( Exception e ) {}*/
 			
 
 			// Data
@@ -142,11 +142,11 @@ implements BDBHeatmapTableHourBzService {
 				if( isValidForUser(user, obj)) {
 					// Position calc according to the timezone
 					int position = obj.getTimeZone();
-					if( config.getTimezone().equals("-06:00")) {
+					/*if( config.getTimezone().equals("-06:00")) {
 						position = position - 1;
 						if( position >= 24 )
 							position = position - 24;
-					}
+					}*/
 
 					Map<Integer, Long> xData = yData.get(obj.getElementSubId()).get(position);
 
