@@ -1349,6 +1349,26 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		visit.setDuration(time);
 		return time <= 60 *60;
 	}
+	
+	/**
+	 * Checks if a viewer is valid according the device parameters
+	 * 
+	 * @param visit - The visit to check
+	 * @param device - The device that contains the parameters
+	 * @return true if valid, false if not
+	 * @throws ParseException
+	 */
+	private boolean isViewerValid(APDVisit visit, APDevice device, boolean isEmployee, int entityKind) {
+		
+		if( isEmployee ) return false;
+		
+		if(entityKind == EntityKind.KIND_INNER_ZONE) return false;
+		
+		long time = (visit.getCheckinFinished().getTime() -visit.getCheckinStarted().getTime()) / 60000;
+		
+		visit.setDuration(time);
+		return device.getViewerMinTimeThreshold() <= time && time <= device.getViewerMaxTimeThreshold();
+	}
 
 	/**
 	 * Creates a visit

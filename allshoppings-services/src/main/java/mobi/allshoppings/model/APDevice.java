@@ -1,6 +1,7 @@
 package mobi.allshoppings.model;
 
 import java.io.Serializable;
+
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.model.interfaces.Indexable;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.interfaces.StatusAware;
+import mx.getin.Constants;
 
 @PersistenceCapable(detachable="true")
 public class APDevice implements ModelKey, Serializable, Identificable, Indexable, StatusAware {
@@ -61,7 +63,9 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	private Long visitCountThreshold;
 	private Long viewerPowerThreshold;
 	private Integer repeatThreshold;
-	
+	private int viewerMinTimeThreshold;
+	private int viewerMaxTimeThreshold;
+
 	/**
 	 * This Value must be positive
 	 */
@@ -113,7 +117,6 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	private boolean doIndexNow = true;
 
 	public APDevice() {
-		super();
 		this.creationDateTime = new Date();
 		this.status = StatusAware.STATUS_ENABLED;
 		this.reportStatus = REPORT_STATUS_NOT_REPORTED;
@@ -135,6 +138,9 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 		if( visitDecay == null ) visitDecay = visitGapThreshold;
 		if( peasantDecay == null ) peasantDecay = visitGapThreshold; 
 		if( offSetViewer == 0) offSetViewer = Math.abs(offSetViewer); 
+		
+		if(viewerMinTimeThreshold < 0) viewerMinTimeThreshold = visitTimeThreshold.intValue();
+		if(viewerMaxTimeThreshold < viewerMinTimeThreshold) viewerMaxTimeThreshold = Constants.FIVE_MINUTES_IN_MILLIS;
 	    
 		if( timezone == null) timezone = "CDT";
 		if( visitsOnMon == null) visitsOnMon = true;
@@ -1106,6 +1112,22 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	@Override
 	public void disableIndexing(boolean val) {
 		this.doIndexNow = !val;
+	}
+	
+	public int getViewerMinTimeThreshold() {
+		return viewerMinTimeThreshold;
+	}
+
+	public void setViewerMinTimeThreshold(int viewerMinTimeThreshold) {
+		this.viewerMinTimeThreshold = viewerMinTimeThreshold;
+	}
+	
+	public int getViewerMaxTimeThreshold() {
+		return viewerMaxTimeThreshold;
+	}
+
+	public void setViewerMaxTimeThreshold(int viewerMaxTimeThreshold) {
+		this.viewerMaxTimeThreshold = viewerMaxTimeThreshold;
 	}
 
 	/* (non-Javadoc)
