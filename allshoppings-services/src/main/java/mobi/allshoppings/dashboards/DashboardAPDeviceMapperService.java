@@ -165,15 +165,8 @@ public class DashboardAPDeviceMapperService {
 							curDate.getTime() +Constants.DAY_IN_MILLIS < toDate.getTime());
 
 				if( CollectionUtils.isEmpty(phases) || phases.contains(PHASE_APDVISIT))
-					if( CollectionUtils.isEmpty(entityIds)) {
-						createAPDVisitPerformanceDashboardForDay(curDate, entityIds, null, null, !deletePreviousRecords,
-								false, false);
-					} else {
-						for( String entityId : entityIds ) {
-							createAPDVisitPerformanceDashboardForDay(curDate, Arrays.asList(entityId), null, null, !deletePreviousRecords,
-									false, false);
-						}
-					}
+					createAPDVisitPerformanceDashboardForDay(curDate, entityIds, null, null, !deletePreviousRecords,
+							false, false);
 
 				curDate = new Date(curDate.getTime() + Constants.DAY_IN_MILLIS);
 
@@ -730,9 +723,7 @@ public class DashboardAPDeviceMapperService {
 						
 						if( store != null || shopping != null || zone != null ) {
 							DashboardIndicatorData obj;
-
 							if( v.getCheckinType().equals(APDVisit.CHECKIN_PEASANT) ) {
-
 								// visitor_total_peasents -------------------------------------------------------------------------------
 								// ------------------------------------------------------------------------------------------------------
 								
@@ -750,7 +741,6 @@ public class DashboardAPDeviceMapperService {
 								*/
 								
 								if(!v.getHidePermanence() ) {
-
 									// permanence_hourly_peasents ---------------------------------------------------------------------------
 									// ------------------------------------------------------------------------------------------------------
 									obj = buildBasicDashboardIndicatorData("apd_permanence", "Permanencia",
@@ -778,7 +768,6 @@ public class DashboardAPDeviceMapperService {
 									if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
 									else indicatorsSet.put(obj, obj);
 									obj.setDoubleValue(obj.getDoubleValue() + 1);
-									
 									init.add(Calendar.HOUR_OF_DAY, 1);
 									
 								}
