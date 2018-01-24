@@ -23,8 +23,6 @@ import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
-import mobi.allshoppings.bdb.dashboard.bz.spi.BrandTableDataBzServiceJSONImpl.DashboardRecordRep;
-import mobi.allshoppings.bdb.dashboard.bz.spi.BrandTableDataBzServiceJSONImpl.DashboardTableRep;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.InnerZoneDAO;
 import mobi.allshoppings.dao.StoreDAO;
@@ -636,20 +634,9 @@ implements BDBDashboardBzService {
 			row.put("revenue", revenue);
 
 			// peasents_conversion
-			if( peasants != 0)
-				row.put("visitsConversion", (float)((float)(visitors * 100) / peasants));
-			else
-				row.put("visitsConversion", 0);
-			if(cabinet != 0)
-				row.put("cabinetConversion", (float)((float)(cabinet * 100)/visitors));
-			else 
-				row.put("cabinetConversion", 0);
-
-			// tickets_conversion
-			if( visitors != 0)
-				row.put("ticketsConversion", (float)((float)(tickets * 100) / visitors));
-			else
-				row.put("ticketsConversion", 0);
+			row.put("visitsConversion", peasants == 0 ? 0 : (visitors * 100f) / peasants);
+			row.put("cabinetConversion", visitors == 0 ? 0 : (cabinet * 100f)/visitors);
+			row.put("ticketsConversion", visitors == 0 ? 0 : (tickets * 100f) / visitors);
 
 			row.put("higherDay", calculateHigherDay());
 			row.put("lowerDay", calculateLowerDay());
@@ -660,9 +647,9 @@ implements BDBDashboardBzService {
 				row.put("averagePermanenceEntrance", 0);
 			}
 			if( permanenceInMillisGab > 0 && permancenceQtyGabs > 0 ) {
-				row.put("averagePermanencecabinet", Math.round(permanenceInMillisGab / permancenceQtyGabs / 60000D ));
+				row.put("averagePermanenceCabinet", Math.round(permanenceInMillisGab / permancenceQtyGabs / 60000D ));
 			} else {
-				row.put("averagePermanencecabinet", 0);
+				row.put("averagePermanenceCabinet", 0);
 			}
 			if( permanenceInMillisGab > 0 && permancenceQtyGabs > 0 ) {
 				row.put("averagePermanenceAll", ((Math.round(permanenceInMillisGab / permancenceQtyGabs / 60000D) + Math.round(permanenceInMillis / permancenceQty / 60000D )/2)));
