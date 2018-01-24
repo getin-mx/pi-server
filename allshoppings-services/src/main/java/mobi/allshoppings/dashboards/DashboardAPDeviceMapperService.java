@@ -726,17 +726,12 @@ public class DashboardAPDeviceMapperService {
 
 								// visitor_total_peasents -------------------------------------------------------------------------------
 								// ------------------------------------------------------------------------------------------------------
-								obj = buildDashboardIndicatorData(indicatorsSet, "apd_visitor", "Visitantes",
-										"visitor_total_peasents", "Paseantes", v.getCheckinStarted(), DashboardIndicatorData.PERIOD_TYPE_DAILY, 
-										shoppingId, store, shopping, null, subentityId, entityKind, v.getForDate()) ;
-								/*
 								obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", "visitor_total_peasents",
 										"Paseantes", v.getCheckinStarted(), DashboardIndicatorData.PERIOD_TYPE_DAILY,
 										shoppingId, store, shopping, null, entityId, entityKind, v.getForDate());
 								if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
 								else indicatorsSet.put(obj, obj);
 								obj.setDoubleValue(obj.getDoubleValue() + 1);
-								*/
 								
 								if(!v.getHidePermanence() ) {
 
@@ -817,9 +812,10 @@ public class DashboardAPDeviceMapperService {
 							}
 							else if(v.getCheckinType().equals(APDVisit.CHECKIN_VIEWER)) {
 								
-								obj = buildDashboardIndicatorData(indicatorsSet, "apd_visitor", "Visitantes",
-										"visitor_total_viewer", "Miradores", v.getCheckinStarted(), DashboardIndicatorData.PERIOD_TYPE_DAILY, 
-										shoppingId, store, shopping, null, subentityId, entityKind, v.getForDate()) ;
+								obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes",
+										"visitor_total_viewer", "Miradores", v.getCheckinStarted(),
+										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId, store, shopping, null,
+										subentityId, entityKind, v.getForDate()) ;
 								if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
 								else indicatorsSet.put(obj, obj);
 								obj.setDoubleValue(obj.getDoubleValue() + 1);
@@ -828,12 +824,10 @@ public class DashboardAPDeviceMapperService {
 							// Store not found
 							log.log(Level.INFO, "Entity with id " + v.getEntityId() + " not found!");
 						}
-
 					} catch( ASException e ) {
 						// Store not found
 						log.log(Level.INFO, "Entity with id " + v.getEntityId() + " not found!");
 					}
-
 				} if(skip) continue;
 				log.log(Level.INFO, "Starting Write Procedure for " +indicatorsSet.size() +" visits...");
 
@@ -854,12 +848,10 @@ public class DashboardAPDeviceMapperService {
 						createStoreRevenueDataForDates(dateSDF.format(date), dateSDF.format(date), entityId, isDailyProcess);
 					}
 				}
-				
 				long endTime = System.currentTimeMillis();
 				log.log(Level.INFO, "Finished to create apd_visitor Performance Dashboard for Day " + date + " in "
 						+ (endTime - startTime) + "ms");
 			}
-
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 			throw ASExceptionHelper.defaultException(e.getLocalizedMessage(), e);
@@ -1241,27 +1233,5 @@ public class DashboardAPDeviceMapperService {
 		}
 		return TimeZone.getDefault();
 	}
-	
-	
-	public DashboardIndicatorData buildDashboardIndicatorData(Map<DashboardIndicatorData, DashboardIndicatorData> indicatorsSet ,String elementId, String elementName,
-			String elementSubId, String elementSubName, Date date, String periodType, String shoppingId,
-			Store store, Shopping shopping, String subentityName, String entityId, Integer entityKind,
-			String forDate) throws ASException
-	{
-		DashboardIndicatorData dinddat= null;
-		try {
-			dinddat = buildBasicDashboardIndicatorData(elementId, elementName, elementSubId,
-				elementSubName , date, periodType,
-				shoppingId, store, shopping, subentityName, entityId, entityKind, forDate);
-		if(indicatorsSet.containsKey(dinddat)) dinddat = indicatorsSet.get(dinddat);
-		else indicatorsSet.put(dinddat, dinddat);
-		dinddat.setDoubleValue(dinddat.getDoubleValue() + 1);
-		return dinddat;
-		}		catch (Exception e) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-	}
-		return dinddat;
-	}
-
 
 }
