@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -510,6 +509,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			else if(auxDate != null && auxDate.compareTo(i.next().getDate()) > 0) i.remove(); 
 		}*/
 		
+		List<APHEntry> lastRes = CollectionFactory.createList();
+		
 		APHEntry aphe;
 		if(timezoneOffset >= 0) {
 			startCal.add(Calendar.DATE, -1);
@@ -945,7 +946,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Integer lastSlot = null;
 		Integer lastVisitSlot = null;
 		Integer lastPeasantSlot = null;
-		int lastViewerSlot = 0;
 		APDVisit currentVisit = null;
 		APDVisit currentPeasant = null;
 		APDVisit currentViewer = null;
@@ -1025,7 +1025,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					if(value >= dev.getViewerPowerThreshold() && value <= dev.getViewerPowerThreshold() + dev.getOffsetViewer()) {
 						if(currentViewer == null) currentViewer = createViewer(curEntry, curDate, null,
 								assignments.get(curEntry.getHostname()), date);
-						lastViewerSlot = slot;
 					}
 					if( value >= dev.getVisitPowerThreshold() ) {
 						if( currentVisit == null )
@@ -1387,12 +1386,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		String entityId = assign.getEntityId();
 		Integer entityKind = assign.getEntityKind();
-		WORK_CALENDAR.clear();
 		
 		APDVisit visit = new APDVisit();
 		visit.setApheSource(source.getIdentifier());
 		visit.setCheckinStarted(date);
-		visit.setCheckinType(APDVisit.CHECKIN_VISIT);
+		visit.setCheckinType(isEmployee ? APDVisit.CHECKIN_EMPLOYEE : APDVisit.CHECKIN_VISIT);
 		visit.setEntityId(entityId);
 		visit.setEntityKind(entityKind);
 		visit.setMac(source.getMac());
@@ -1423,7 +1421,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		String entityId = assign.getEntityId();
 		Integer entityKind = assign.getEntityKind();
-		WORK_CALENDAR.clear();
 		
 		APDVisit peasant = new APDVisit();
 		peasant.setApheSource(source.getIdentifier());
@@ -1458,7 +1455,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			String forDate) throws ASException {		
 		String entityId = assign.getEntityId();
 		Integer entityKind = assign.getEntityKind();
-		WORK_CALENDAR.clear();
 		
 		APDVisit viewer = new APDVisit();
 		viewer.setApheSource(source.getIdentifier());
