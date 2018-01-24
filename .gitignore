@@ -29,3 +29,6 @@ datanucleus.log
 # Maven
 log/
 target/
+
+#standarized project files
+datastore.properties
