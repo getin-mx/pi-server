@@ -28,15 +28,16 @@ public class StoreRevenueDataBzServiceJSONImpl extends StoreEntityData<StoreReve
 				order ? "date" : null, false);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	protected StoreRevenue daoGetUsingStoreIdAndDate(String storeId, String date, String hour) throws ASException {
+		return dao.getUsingStoreIdAndDate(storeId, date, true);
+	}
+
 	@Override
 	protected void daoUpdate(StoreDataEntity obj) throws ASException {
 		if(obj instanceof StoreRevenue) dao.update((StoreRevenue) obj);
 		else throw ASExceptionHelper.invalidArgumentsException();
-	}
-
-	@Override
-	protected StoreRevenue daoGetUsingStoreIdAndDate(String storeId, String date, String hour) throws ASException {
-		return dao.getUsingStoreIdAndDate(storeId, date, true);
 	}
 
 	@Override

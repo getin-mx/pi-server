@@ -28,6 +28,10 @@ public class StoreItemByHour extends StoreItem implements StoreDataByHourEntity 
 		super();
 	}
 	
+	/*
+	 * Gets the Store Item By Hour ID
+	 * @return String - this entity key
+	 */
 	public String getIdentifier() {
 		return this.getKey() != null ? this.getKey().getName() : "";
 	}//getIdentifier

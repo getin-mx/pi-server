@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -40,7 +39,6 @@ import mobi.allshoppings.dao.StoreRevenueDAO;
 import mobi.allshoppings.dao.StoreTicketByHourDAO;
 import mobi.allshoppings.dao.StoreTicketDAO;
 import mobi.allshoppings.dao.WifiSpotDAO;
-import mobi.allshoppings.dao.spi.DashboardIndicatorDataDAOJDOImpl;
 import mobi.allshoppings.dump.DumperHelper;
 import mobi.allshoppings.dump.impl.DumpFactory;
 import mobi.allshoppings.exception.ASException;
@@ -721,9 +719,7 @@ public class DashboardAPDeviceMapperService {
 						
 						if( store != null || shopping != null || zone != null ) {
 							DashboardIndicatorData obj;
-
 							if( v.getCheckinType().equals(APDVisit.CHECKIN_PEASANT) ) {
-
 								// visitor_total_peasents -------------------------------------------------------------------------------
 								// ------------------------------------------------------------------------------------------------------
 								obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", "visitor_total_peasents",
@@ -734,7 +730,6 @@ public class DashboardAPDeviceMapperService {
 								obj.setDoubleValue(obj.getDoubleValue() + 1);
 								
 								if(!v.getHidePermanence() ) {
-
 									// permanence_hourly_peasents ---------------------------------------------------------------------------
 									// ------------------------------------------------------------------------------------------------------
 									obj = buildBasicDashboardIndicatorData("apd_permanence", "Permanencia",
@@ -762,7 +757,6 @@ public class DashboardAPDeviceMapperService {
 									if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
 									else indicatorsSet.put(obj, obj);
 									obj.setDoubleValue(obj.getDoubleValue() + 1);
-									
 									init.add(Calendar.HOUR_OF_DAY, 1);
 									
 								}

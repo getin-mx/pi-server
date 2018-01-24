@@ -31,7 +31,7 @@ public class StoreRevenueByHour extends StoreRevenue implements StoreDataByHourE
 	/*
 	 * Gets the Store revenue By Hour ID
 	 * @return String - this entity key
-	 */
+	 *
 	public String getIdentifier() {
 		return this.getKey() != null ? this.getKey().getName() : "";
 	}//getIdentifier

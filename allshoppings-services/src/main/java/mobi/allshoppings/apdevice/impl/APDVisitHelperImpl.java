@@ -510,7 +510,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		}*/
 		
 		List<APHEntry> lastRes = CollectionFactory.createList();
-		
 		APHEntry aphe;
 		if(timezoneOffset >= 0) {
 			startCal.add(Calendar.DATE, -1);
@@ -1002,8 +1001,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							currentPeasant = null;
 						}
 						if( currentViewer != null ) {
-							currentViewer.setCheckinFinished(aphHelper.slotToDate(
-									lastSlot, date));
+							currentViewer.setCheckinFinished(aphHelper.slotToDate(lastSlot, date));
 							if(isPeasantValid(currentViewer, dev, isEmployee,
 									assignments.get(curEntry.getHostname()).getEntityKind()))
 								res.add(currentViewer);
@@ -1099,9 +1097,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								res.add(currentPeasant);
 							currentPeasant = null;
 						}if( currentViewer != null ) {
-							currentViewer.setCheckinFinished(aphHelper.slotToDate(
-									finishSlot, date));
-							if(isPeasantValid(currentViewer, dev, isEmployee,
+							currentViewer.setCheckinFinished(aphHelper.slotToDate(finishSlot, date));
+							if(isViewerValid(currentViewer, dev, isEmployee,
 									assignments.get(curEntry.getHostname()).getEntityKind()))
 								res.add(currentViewer);
 							currentViewer = null;
@@ -1148,7 +1145,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				if(isPeasantValid(currentPeasant, apd.get(curEntry.getHostname()), isEmployee,
 						assignments.get(curEntry.getHostname()).getEntityKind()))
 					res.add(currentPeasant);
-				currentPeasant = null;
+				//currentPeasant = null;
 			}
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
@@ -1157,7 +1154,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			if( currentViewer != null ) {
 				currentViewer.setCheckinFinished(aphHelper.slotToDate(
 							lastSlot, date));
-					if(isPeasantValid(currentViewer, apd.get(curEntry.getHostname()), isEmployee,
+					if(isViewerValid(currentViewer, apd.get(curEntry.getHostname()), isEmployee,
 							assignments.get(curEntry.getHostname()).getEntityKind()))
 						res.add(currentViewer);
 					currentViewer = null;
@@ -1165,8 +1162,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 		}
-		
-
 		
 		// Checks for max visits per day using RepeatThreshold
 		int repepatThreshold = 0;
@@ -1192,10 +1187,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					res.add(v);
 					one = true;
 				}
-				/*else {
-					v.setCheckinType(APDVisit.CHECKIN_PEASANT);
-					res.add(v);
-				}*/
 			}
 		}
 		// End Checks for max visits per day using RepeatThreshold
@@ -1452,7 +1443,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 	 * @throws ASException
 	 */
 	private APDVisit createViewer(APHEntry source, Date date, DeviceInfo device, APDAssignation assign,
-			String forDate) throws ASException {		
+			String forDate) throws ASException {
 		String entityId = assign.getEntityId();
 		Integer entityKind = assign.getEntityKind();
 		

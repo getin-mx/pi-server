@@ -21,7 +21,7 @@ import mx.getin.model.interfaces.StoreDataEntity;
  * @since Allshoppings
  */
 public class StoreTicketDataBzServiceJSONImpl extends StoreEntityData<StoreTicket> {
-	
+
 	@Autowired
 	private StoreTicketDAO dao;
 	

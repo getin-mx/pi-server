@@ -63,13 +63,6 @@ public class StoreTicketByHour extends StoreTicket implements StoreDataByHourEnt
 		this.hour = hour;
 	}
 
-	/**
-	 * @param qty the qty to set
-	 */
-	public void setQty(Integer qty) {
-		this.qty = qty;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
