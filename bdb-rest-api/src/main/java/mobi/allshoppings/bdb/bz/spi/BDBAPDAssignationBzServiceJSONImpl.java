@@ -18,6 +18,7 @@ import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.bdb.bz.BDBCrudBzService;
 import mobi.allshoppings.dao.APDAssignationDAO;
 import mobi.allshoppings.dao.BrandDAO;
+import mobi.allshoppings.dao.InnerZoneDAO;
 import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
@@ -25,6 +26,7 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.EntityKind;
+import mobi.allshoppings.model.InnerZone;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
@@ -53,6 +55,9 @@ public class BDBAPDAssignationBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl
 	
 	@Autowired
 	private APDeviceHelper apdeviceHelper;
+	
+	@Autowired
+	private InnerZoneDAO innerZoneDao;
 
 	/**
 	 * Get Add mandatory fields
@@ -182,11 +187,11 @@ public class BDBAPDAssignationBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl
 			// Staus filter
 			List<Integer> statusList = null;
 			if( StringUtils.hasText(status))
-				statusList = Arrays.asList(new Integer[] {Integer.parseInt(status)});
+				statusList = Arrays.asList(Integer.parseInt(status));
 
 			// retrieve all elements
-			long millisPre = new Date().getTime();
-			Date forDate = true == active ? new Date() : null;
+			long millisPre = System.currentTimeMillis();
+			Date forDate = active ? new Date() : null;
 			
 			if( StringUtils.hasText(hostname) ) {
 				list = ((APDAssignationDAO)myDao).getUsingHostnameAndDate(hostname, forDate);
@@ -196,7 +201,7 @@ public class BDBAPDAssignationBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl
 				list = myDao.getUsingStatusAndRange(statusList, range, order, attributes, true);
 			}
 			
-			long diff = new Date().getTime() - millisPre;
+			long diff = System.currentTimeMillis() - millisPre;
 			
 			// Logs the result
 			log.info("Number of elements found [" + list.size() + "] in " + diff + " millis");
@@ -257,22 +262,25 @@ public class BDBAPDAssignationBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl
 		adapter.setFromDate(obj.getFromDate());
 		adapter.setToDate(obj.getToDate());
 
-		if( obj.getToDate() != null && obj.getToDate().before(new Date()))
-			adapter.setActive(false);
-		else 
-			adapter.setActive(true);
-		
-		if( obj.getEntityKind().equals(EntityKind.KIND_STORE)) {
-			Store tmp = storeDao.get(obj.getEntityId());
-			adapter.setName(tmp.getName());
+		adapter.setActive(!(obj.getToDate() != null && obj.getToDate().before(new Date())));
+		Store store = null;
+		switch(obj.getEntityKind()) {
+		case EntityKind.KIND_INNER_ZONE :
+			InnerZone zone = innerZoneDao.get(obj.getEntityId());
+			store = storeDao.get(zone.getEntityId());
+			adapter.setName(zone.getName());
+		case EntityKind.KIND_STORE :
+			if(store == null) store = storeDao.get(obj.getEntityId());
+			if(!StringUtils.hasText(adapter.getName())) adapter.setName(store.getName());
 			
-			Brand tmpb = brandDao.get(tmp.getBrandId());
+			Brand tmpb = brandDao.get(store.getBrandId());
 			adapter.setBrandId(tmpb.getIdentifier());
 			adapter.setBrandName(tmpb.getName());
-			
-		} else if( obj.getEntityKind().equals(EntityKind.KIND_SHOPPING)) {
+			break;
+		case EntityKind.KIND_SHOPPING :
 			Shopping tmp = shoppingDao.get(obj.getEntityId());
 			adapter.setName(tmp.getName());
+			break;
 		}
 
 		return adapter;
