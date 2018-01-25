@@ -260,9 +260,10 @@ implements BDBDashboardBzService {
 	public void initializeTableRecords(DashboardTableRep table, String fromStringDate, String toStringDate,
 			String userBrand) throws ASException {
 
-		List<String> ids = new ArrayList<>();
-
 		for (Store store : table.getStores()) {
+			
+			List<String> ids = new ArrayList<>();
+			
 			List<InnerZone> zonesl1 = innerZoneDao.getUsingEntityIdAndRange(store.getIdentifier(),
 					EntityKind.KIND_STORE, null, "name", null, true);
 
@@ -275,6 +276,8 @@ implements BDBDashboardBzService {
 					ids.add(zonel2.getIdentifier());
 				}
 			}
+			
+			ids.add(store.getIdentifier());
 			
 			table.getRecords().add(new DashboardRecordRep(table, 0, ids, store.getName().replaceFirst(userBrand, ""),
 					fromStringDate, toStringDate));	

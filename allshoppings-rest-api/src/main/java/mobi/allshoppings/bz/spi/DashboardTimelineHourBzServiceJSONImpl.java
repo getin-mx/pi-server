@@ -18,12 +18,10 @@ import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bz.DashboardTimelineHourBzService;
 import mobi.allshoppings.bz.RestBaseServerResource;
-import mobi.allshoppings.dao.DashboardConfigurationDAO;
 import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.DashboardConfiguration;
 import mobi.allshoppings.model.DashboardIndicatorAlias;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.User;
@@ -41,8 +39,8 @@ public class DashboardTimelineHourBzServiceJSONImpl extends RestBaseServerResour
 	private DashboardIndicatorDataDAO dao;
 	@Autowired
 	private DashboardIndicatorAliasDAO diAliasDao;
-	@Autowired
-	private DashboardConfigurationDAO dcDao;
+	/*@Autowired
+	private DashboardConfigurationDAO dcDao;*/
 
 	/**
 	 * Obtains information about a user
@@ -81,12 +79,12 @@ public class DashboardTimelineHourBzServiceJSONImpl extends RestBaseServerResour
 					shoppingId, subentityId, periodType, fromStringDate, toStringDate, movieId, voucherType, dayOfWeek,
 					timezone, null, country, province, city);
 
-			// Gets dashboard configuration for this session
+			/*/ Gets dashboard configuration for this session
 			DashboardConfiguration config = new DashboardConfiguration(entityId, entityKind);
 			try {
 				config = dcDao.getUsingEntityIdAndEntityKind(entityId, entityKind, true);
 			} catch (Exception e) {
-			}
+			}*/
 
 			List<String> categories = CollectionFactory.createList();
 
@@ -171,11 +169,11 @@ public class DashboardTimelineHourBzServiceJSONImpl extends RestBaseServerResour
 						try {
 							// Position calc according to the timezone
 							int position = hourMap.get(obj.getTimeZone());
-							if (config.getTimezone().equals("-06:00")) {
+							/*if (config.getTimezone().equals("-06:00")) {
 								position = position - 1;
 								if (position >= 24)
 									position = position - 24;
-							}
+							}*/
 
 							if (average) {
 								if (obj.getDoubleValue() != null)

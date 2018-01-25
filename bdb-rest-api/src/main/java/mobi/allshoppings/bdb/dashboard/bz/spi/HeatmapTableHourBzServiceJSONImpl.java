@@ -41,8 +41,8 @@ implements BDBHeatmapTableHourBzService {
 	
 	@Autowired
 	private DashboardIndicatorDataDAO dao;
-	@Autowired
-	private DashboardConfigurationDAO dcDao;
+	/*@Autowired
+	private DashboardConfigurationDAO dcDao;*/
 
 	/**
 	 * Obtains information about a user

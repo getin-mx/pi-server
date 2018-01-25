@@ -74,9 +74,8 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			String city = obtainStringValue("city", null);
 			Boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
 
-			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
-					entityKind, elementId, elementSubId, shoppingId,
-					subentityId, null /*periodType*/, fromStringDate, toStringDate,
+			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId, entityKind, elementId, elementSubId,
+					shoppingId, subentityId, null /*periodType*/, fromStringDate, toStringDate,
 					movieId, voucherType, dayOfWeek, timezone, null, country, province, city);
 			
 			log.log(Level.INFO, list.size() + " dashboard elements found");

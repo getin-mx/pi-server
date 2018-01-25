@@ -26,7 +26,6 @@ import mobi.allshoppings.dao.InnerZoneDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.InnerZone;
@@ -96,13 +95,11 @@ implements BDBDashboardBzService {
 				if(sec.getBrands() != null && !sec.getBrands().isEmpty()) {
 					userBrand = sec.getBrands().get(0);
 				} else {
-					Brand brand = null;
 					try { 
-						brand = brandDao.get(user.getIdentifier());
+						userBrand = brandDao.get(user.getIdentifier()).getName();
 					} catch(ASException e) {
 						userBrand = "";
 					}
-					userBrand = brand.getName();
 				}
 			}
 			table.setStores(tmpStores2);

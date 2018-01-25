@@ -43,8 +43,8 @@ implements BDBTimelineHourBzService {
 	private DashboardIndicatorDataDAO dao;
 	@Autowired
 	private DashboardIndicatorAliasDAO diAliasDao;
-	@Autowired
-	private DashboardConfigurationDAO dcDao;
+	/*@Autowired
+	private DashboardConfigurationDAO dcDao;*/
 
 	/**
 	 * Obtains information about a user
