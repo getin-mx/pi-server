@@ -5,12 +5,14 @@ package mx.getin.bdb.dashboard.bz.spi;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -19,10 +21,10 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
+import mobi.allshoppings.dao.BrandDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.InnerZoneDAO;
 import mobi.allshoppings.dao.StoreDAO;
@@ -33,8 +35,10 @@ import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.InnerZone;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.UserSecurity;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
+import mx.getin.Constants;
 
 /**
  * @author ArturoArmengod
@@ -51,6 +55,8 @@ implements BDBDashboardBzService {
 	@Autowired
 	private StoreDAO storeDao;
 	@Autowired
+	private BrandDAO brandDao;
+	@Autowired
 	private InnerZoneDAO innerZoneDao;
 
 	private DecimalFormat df = new DecimalFormat("##.00");
@@ -62,18 +68,13 @@ implements BDBDashboardBzService {
 	 * @return A JSON representation of the selected fields for a user
 	 */
 	@Override
-	public String retrieve()
-	{
+	public String retrieve() {
 		long start = markStart();
 		try {
 			// obtain the id and validates the auth token
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			@SuppressWarnings("unused")
-			Integer entityKind = obtainIntegerValue("entityKind", null);
-			@SuppressWarnings("unused")
-			String subentityId = obtainStringValue("subentityId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
 			String format = obtainStringValue("format", "table");
@@ -82,9 +83,26 @@ implements BDBDashboardBzService {
 			DashboardTableRep table = new DashboardTableRep();
 			List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), "name");
 			List<Store> tmpStores2 = CollectionFactory.createList();
+			String userBrand;
 			for( Store store : tmpStores ) {
 			 	if( isValidForUser(user, store) )
 					tmpStores2.add(store);
+			} switch(user.getSecuritySettings().getRole()) {
+			case UserSecurity.Role.ADMIN :
+			case UserSecurity.Role.COUNTRY_ADMIN :
+				userBrand = "";
+				break;
+			default :
+				UserSecurity sec = user.getSecuritySettings();
+				if(sec.getBrands() != null && !sec.getBrands().isEmpty()) {
+					userBrand = sec.getBrands().get(0);
+				} else {
+					try { 
+						userBrand = brandDao.get(user.getIdentifier()).getName();
+					} catch(ASException e) {
+						userBrand = "";
+					}
+				}
 			}
 			table.setStores(tmpStores2);
 			Collections.sort(table.getStores(), new Comparator<Store>() {
@@ -93,69 +111,63 @@ implements BDBDashboardBzService {
 					return o1.getName().compareTo(o2.getName());
 				}
 			});
-			List<String> entityIds = initializeTableRecords(table, fromStringDate, toStringDate);
-			entityIds.add(entityId);
+			initializeTableRecords(table, fromStringDate, toStringDate, userBrand);
 
 			// Starts to Collect the data
 			List<DashboardIndicatorData> list;
 
 			// peasents, visits, and tickets
-			list = dao.getUsingFilters(entityIds, null, Arrays.asList("apd_visitor"),
-					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets", "visitor_total_items", "visitor_total_revenue"), null,
-					null, null, fromStringDate, toStringDate, null, null, null, null, null, null,
-					null, null);
+			list = dao.getUsingFilters(entityId, null, Arrays.asList("apd_visitor"),
+					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets",
+							"visitor_total_items", "visitor_total_revenue", "visitor_total_viewer"), null, null, null,
+					fromStringDate, toStringDate, null, null, null, null, null, null, null, null);
 
 			for(DashboardIndicatorData obj : list) {
 
-				DashboardRecordRep rec = obj.getEntityKind().equals(EntityKind.KIND_INNER_ZONE)
-						? table.findRecordWithEntityId(obj.getEntityId(), obj.getEntityKind())
-						: table.findRecordWithEntityId(obj.getSubentityId(), EntityKind.KIND_STORE);
+				DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId());
 
 				DashboardRecordRep totals = table.getTotals();
-
+				// solo se toma en cuenta la zona de gabinete como zona
 				if( null != rec ) {
 					if( obj.getElementSubId().equals("visitor_total_peasents"))
 						rec.setPeasants(rec.getPeasants() + obj.getDoubleValue().longValue());
-					else if( obj.getElementSubId().equals("visitor_total_visits") && obj.getEntityKind().equals(EntityKind.KIND_STORE)) {
-						rec.setVisitors(rec.getVisitors() + obj.getDoubleValue().longValue());
-						rec.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
-						totals.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
+					else if( obj.getElementSubId().equals("visitor_total_visits")) {
+						if(obj.getEntityKind().equals(EntityKind.KIND_INNER_ZONE)) {
+							if(obj.getSubentityName().toLowerCase().contains(" gabinete"))
+								rec.setCabinets(rec.getCabinetes() + obj.getDoubleValue().longValue());
+						} else {
+							rec.setVisitors(rec.getVisitors() + obj.getDoubleValue().longValue());
+							rec.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
+							totals.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
+						}
 					} else if( obj.getElementSubId().equals("visitor_total_tickets")) {
 						rec.setTickets(rec.getTickets() + obj.getDoubleValue().longValue());
 					} else if( obj.getElementSubId().equals("visitor_total_items")) {
 						rec.setItems(rec.getItems() + (int) obj.getDoubleValue().longValue());
-					}
-					else if( obj.getElementSubId().equals("visitor_total_revenue"))
+					} else if( obj.getElementSubId().equals("visitor_total_revenue"))
 						rec.setRevenue(rec.getRevenue() + obj.getDoubleValue());
-					else if( obj.getElementSubId().equals("visitor_total_visits") && obj.getEntityKind().equals(EntityKind.KIND_INNER_ZONE) && obj.getSubentityName().toLowerCase().contains("gabinete"))
-					{
-						rec.setgabinetes(rec.getgabinetes() + obj.getDoubleValue().longValue());
-						rec.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
-						totals.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
-					}
-						
+					else if( obj.getElementSubId().equals("visitor_total_viewer")) {
+						rec.setViewers(rec.getViewers() + obj.getDoubleValue().longValue());
+					}	
 				}
 			}
 
 			// permanence
-			list = dao.getUsingFilters(entityIds,
-					null, Arrays.asList("apd_permanence"), Arrays.asList("permanence_hourly_visits"), null,
-					null, null, fromStringDate, toStringDate,
+			list = dao.getUsingFilters(entityId, null, Arrays.asList("apd_permanence"),
+					Arrays.asList("permanence_hourly_visits"), null, null, null, fromStringDate, toStringDate,
 					null, null, null, null, null, null, null, null);
 
-			{
-				for(DashboardIndicatorData obj : list) {
-					DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId(), null);
-					if( rec != null ) {
-						if( obj.getDoubleValue() != null ) rec.setPermanenceInMillis(rec.getPermanenceInMillis() + obj.getDoubleValue().longValue());
-						else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
-						if( obj.getRecordCount() != null ) rec.setPermancenceQty(rec.getPermancenceQty() + obj.getRecordCount());
-						else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
-						if(obj.getDoubleValue() != null && obj.getEntityKind().equals(EntityKind.KIND_INNER_ZONE) && obj.getSubentityName().toLowerCase().contains("gabinete"))
-							rec.setPermanenceInMillisGab(rec.getPermanenceInMillisGab() + obj.getDoubleValue().longValue());
-						if(obj.getRecordCount() != null && obj.getEntityKind().equals(EntityKind.KIND_INNER_ZONE) && obj.getSubentityName().toLowerCase().contains("gabinete"))
-							rec.setPermancenceQtyGab(rec.getPermancenceQtyGab() + obj.getRecordCount());
-					}
+			for(DashboardIndicatorData obj : list) {
+				DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId());
+				if( rec != null ) {
+					if( obj.getDoubleValue() != null ) {
+						if(obj.getEntityKind().equals(EntityKind.KIND_INNER_ZONE)) {
+							if(obj.getSubentityName().toLowerCase().contains(" gabinete"))
+								rec.addPermanenceCab(obj.getDoubleValue().longValue(), obj.getRecordCount());
+							if(obj.getSubentityName().toLowerCase().contains(" exhibicion"))
+								rec.addPermanenceExh(obj.getDoubleValue().longValue(), obj.getRecordCount());
+						}
+					} else log.log(Level.WARNING, "Inconsistent DashboardIndicator: " + obj.toString());
 				}
 			}
 
@@ -164,7 +176,7 @@ implements BDBDashboardBzService {
 
 				JSONObject resp = new JSONObject();
 				JSONArray data = new JSONArray();
-				for( DashboardRecordRep r : table.records ) {
+				for(DashboardRecordRep r : table.records) {
 					data.put(r.toJSONObject());
 				}
 				resp.put("data", data);
@@ -199,7 +211,7 @@ implements BDBDashboardBzService {
 	}
 
 	public String getDateName(Date date) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
 
 		Calendar cal = Calendar.getInstance();
@@ -242,62 +254,47 @@ implements BDBDashboardBzService {
 	 * @param fromStringDate
 	 *            - initial date for the records.
 	 * @param toStringDate
-	 *            - final date to for the records.           
-	 * @return String list.
+	 *            - final date to for the records.
 	 *          
 	 */
-	public List<String> initializeTableRecords(DashboardTableRep table, String fromStringDate, String toStringDate)
-			throws ASException {
+	public void initializeTableRecords(DashboardTableRep table, String fromStringDate, String toStringDate,
+			String userBrand) throws ASException {
 
-		List<String> ret = CollectionFactory.createList();
+		List<String> ids = new ArrayList<>();
 
 		for (Store store : table.getStores()) {
-			table.getRecords().add(new DashboardRecordRep(table, 0, store.getIdentifier(), EntityKind.KIND_STORE,
-					store.getName(), fromStringDate, toStringDate));
-
 			List<InnerZone> zonesl1 = innerZoneDao.getUsingEntityIdAndRange(store.getIdentifier(),
 					EntityKind.KIND_STORE, null, "name", null, true);
 
 			for (InnerZone zonel1 : zonesl1) {
-				table.getRecords().add(new DashboardRecordRep(null, 1, zonel1.getIdentifier(), EntityKind.KIND_INNER_ZONE,
-						zonel1.getName(), fromStringDate, toStringDate));
-
+				ids.add(zonel1.getIdentifier());
+		
 				List<InnerZone> zonesl2 = innerZoneDao.getUsingEntityIdAndRange(zonel1.getIdentifier(),
 						EntityKind.KIND_INNER_ZONE, null, "name", null, true);
-				if( zonesl2.size() > 0 ) table.getRecords().get(table.getRecords().size()-1).setHeader(true);
-
 				for (InnerZone zonel2 : zonesl2) {
-					table.getRecords().add(new DashboardRecordRep(null, 2, zonel2.getIdentifier(), EntityKind.KIND_INNER_ZONE,
-							zonel2.getName(), fromStringDate, toStringDate));
-
+					ids.add(zonel2.getIdentifier());
 				}
 			}
+			
+			table.getRecords().add(new DashboardRecordRep(table, 0, ids, store.getName().replaceFirst(userBrand, ""),
+					fromStringDate, toStringDate));	
 		}
-
-		for( DashboardRecordRep rec : table.getRecords()) {
-			if( StringUtils.hasText(rec.getEntityId()))
-				ret.add(rec.getEntityId());
-		}
-
-		return ret;
-
 	}
 
 	public class DashboardTableRep {
 		private List<Store> stores;
-		private List<DashboardRecordRep> records;
+		private LinkedList<DashboardRecordRep> records;
 		private DashboardRecordRep totals;
 
 		public DashboardTableRep() {
 			stores = CollectionFactory.createList();
-			records = CollectionFactory.createList();
-			totals = new DashboardRecordRep(null, 0, null, null, "Totales", null, null);
+			records = new LinkedList<>();
+			totals = new DashboardRecordRep(null, 0, null, "Totales", null, null);
 		}
 
-		public DashboardRecordRep findRecordWithEntityId(String entityId, Integer entityKind) {
-			for(DashboardRecordRep rec : records ) {
-				if( rec.getEntityId().equals(entityId) && (entityKind == null || rec.getEntityKind().equals(entityKind)))
-					return rec;
+		public DashboardRecordRep findRecordWithEntityId(String entityId) {
+			for(DashboardRecordRep rec : records) {
+				if(rec.entityIds.contains(entityId)) return rec;
 			}
 			return null;
 		}
@@ -319,7 +316,7 @@ implements BDBDashboardBzService {
 		/**
 		 * @return the records
 		 */
-		public List<DashboardRecordRep> getRecords() {
+		public LinkedList<DashboardRecordRep> getRecords() {
 			return records;
 		}
 		/**
@@ -336,12 +333,6 @@ implements BDBDashboardBzService {
 		}
 
 		/**
-		 * @param records the records to set
-		 */
-		public void setRecords(List<DashboardRecordRep> records) {
-			this.records = records;
-		}
-		/**
 		 * Gets all the headers in a JSON Array
 		 * @return
 		 */
@@ -351,22 +342,22 @@ implements BDBDashboardBzService {
 			JSONArray titles = new JSONArray();
 
 			titles.put("Tienda");
-			titles.put("Mirador");
+			titles.put("Paseantes");
+			titles.put("Miradores");
 			titles.put("Visitas");
 			titles.put("Gabinetes");
 			titles.put("Tickets");
 			titles.put("Items");
 			titles.put("Revenue");
-			titles.put("Visitantes/Mirador");
-			titles.put("Gabinete/visitas");
-			titles.put("Ovs/visitas");
-			titles.put("Día más Alto");
-			titles.put("Día más Bajo");
-			titles.put("Permanencia Exhibición");
-			titles.put("Permanencia Promedio");
-			titles.put("Permanencia Óptica");
+			titles.put("Exhibici&ocuate;n/Mirador");
+			titles.put("Ovs/Exhibici&oacute;n");
+			titles.put("Gabinete/Exhibici&oacute;n");
+			titles.put("D&iacute;a m&aacute;s Alto");
+			titles.put("D&iacute;a m&aacute;s Bajo");
+			titles.put("Permanencia Exhibici&oacute;n");
+			titles.put("Permanencia Gabinete");
+			titles.put("Permanencia &Oacute;ptica");
 			
-
 			return titles;
 		}
 
@@ -377,22 +368,19 @@ implements BDBDashboardBzService {
 		 */
 		public JSONArray getJSONTotals() throws ASException {
 
-			DashboardRecordRep totals = new DashboardRecordRep(null, 0, null, null, "Totales", null, null);
-			//List<Long> c = CollectionFactory.createList();
+			DashboardRecordRep totals = new DashboardRecordRep(null, 0, null, "Totales", null, null);
 
-			for( DashboardRecordRep rec : records ) {
+			for( DashboardRecordRep rec : records) {
 				if( rec.getLevel() == 0 ) {
 					totals.setPeasants(totals.getPeasants() + rec.getPeasants());
 					totals.setVisitors(totals.getVisitors() + rec.getVisitors());
-					totals.setgabinetes(totals.getgabinetes() + rec.getgabinetes());
+					totals.setCabinets(totals.getCabinetes() + rec.getCabinetes());
 					totals.setTickets(totals.getTickets() + rec.getTickets());
 					totals.setItems(totals.getItems() + rec.getItems());
 					totals.setRevenue(totals.getRevenue() + rec.getRevenue());
-					//c.add(rec.getPermanenceInMillis());
-					totals.setPermancenceQty(totals.getPermancenceQty() +rec.getPermancenceQty());
-					totals.setPermanenceInMillis(totals.getPermanenceInMillis() +rec.getPermanenceInMillis());
-					totals.setPermanenceInMillisGab(totals.getPermanenceInMillisGab() + rec.getPermanenceInMillisGab());
-					totals.setPermancenceQtyGab(totals.getPermancenceQtyGab() + rec.getPermancenceQtyGab());
+					totals.addPermanenceCab(totals.getPermanenceCab());
+					totals.addPermanenceExh(totals.getPermanenceExh());
+					totals.setViewers(totals.getViewers() +rec.getViewers());
 
 					Map<String, Long> datesCache = totals.getDatesCache();
 					Map<String, Long> recDatesCache = rec.getDatesCache();
@@ -408,24 +396,9 @@ implements BDBDashboardBzService {
 						datesCache.put(key, tot);
 					}
 					totals.setDatesCache(datesCache);
-					if(totals.getEntityId() == "gabinete")
-					{
-						//totals.setVisitors(totals.getVisitors() + rec.getVisitors());
-						//rec.title="gabinete";
-					}
 				}
 			}
 
-			// TODO saca la mediana
-			/*Collections.sort(c);
-			if( c.size() == 0 )
-				totals.setPermanenceInMillis(0l);
-			else
-				if( c.size() % 2 == 0 && c.size() >= 2 ) {
-					int med = (int)(c.size() / 2);
-					totals.setPermanenceInMillis((c.get(med-1) + c.get(med)) / 2);
-				} else
-					totals.setPermanenceInMillis(c.get((int)Math.floor(c.size() / 2)));*/
 			return totals.toJSONArray();
 
 		}
@@ -438,26 +411,24 @@ implements BDBDashboardBzService {
 		public JSONObject toJSONTotals() throws ASException {
 
 			totals.setParent(null);
-			totals.setPeasants(0L);
-			totals.setVisitors(0L);
-			totals.setgabinetes(0l);
-			totals.setRevenue(0.0);
+			totals.setPeasants(0);
+			totals.setVisitors(0);
+			totals.setCabinets(0);
+			totals.setRevenue(0);
 			totals.setItems(0);
-			totals.setPermanenceInMillis(0L);
-			totals.setPermancenceQty(0);
+			totals.setViewers(0);
 
-			for( DashboardRecordRep rec : records ) {
+			for( DashboardRecordRep rec : records) {
 				if( rec.getLevel() == 0 ) {
 					totals.setPeasants(totals.getPeasants() + rec.getPeasants());
 					totals.setVisitors(totals.getVisitors() + rec.getVisitors());
-					totals.setgabinetes(totals.getgabinetes() + rec .getgabinetes());
+					totals.setCabinets(totals.getCabinetes() + rec .getCabinetes());
 					totals.setTickets(totals.getTickets() + rec.getTickets());
 					totals.setItems(totals.getItems() + rec.getItems());
 					totals.setRevenue(totals.getRevenue() + rec.getRevenue());
-					totals.setPermanenceInMillis(totals.getPermanenceInMillis() + rec.getPermanenceInMillis());
-					totals.setPermanenceInMillisGab(totals.getPermanenceInMillisGab() + rec.getPermanenceInMillisGab());
-					totals.setPermancenceQty(totals.getPermancenceQty() + rec.getPermancenceQty());
-					totals.setPermancenceQtyGab(totals.getPermancenceQtyGab() + rec.getPermancenceQtyGab());
+					totals.addPermanenceCab(totals.getPermanenceCab());
+					totals.addPermanenceExh(totals.getPermanenceExh());
+					totals.setViewers(totals.getViewers() +rec.getViewers());
 				}
 			}
 
@@ -476,8 +447,7 @@ implements BDBDashboardBzService {
 			if( array == null)
 				array = new JSONArray();
 
-			for( DashboardRecordRep rec : records )
-				array.put(rec.toJSONArray());
+			for( DashboardRecordRep rec : records) array.put(rec.toJSONArray());
 
 			return array;
 		}
@@ -486,51 +456,46 @@ implements BDBDashboardBzService {
 	public class DashboardRecordRep {
 		private boolean header;
 		private int level;
-		private String entityId;
-		private Integer entityKind;
 		private String title;
-		private Long peasants;
-		private Long visitors;
+		private long peasants;
+		private long visitors;
 		private long cabinet;
 		private int items;
-		private Long tickets;
-		private Double revenue;
+		private long tickets;
+		private long viewers;
+		private double revenue;
 		private Date higherDate;
 		private Date lowerDate;
-		private Long permanenceInMillis;
-		private long permanenceInMillisGab;
-		private int permancenceQty;
-		private int permancenceQtyGabs;
+		private LinkedList<Long> permanenceCab;
+		private LinkedList<Long> permanenceExh;
+		private ArrayList<String> entityIds;
 		private Map<String, Long> datesCache;
 		private DashboardTableRep parent;
 
-		public DashboardRecordRep(DashboardTableRep parent, int level, String entityId, Integer entityKind, String title, String fromStringDate, String toStringDate) {
-			super();
-
+		public DashboardRecordRep(DashboardTableRep parent, int level, List<String> entityIds,
+				String title, String fromStringDate, String toStringDate) {
 			this.parent = parent;
 
-			this.entityId = entityId;
-			this.entityKind = entityKind;
 			this.level = level;
 			this.title = title;
 
-			peasants = 0l;
-			visitors = 0l;
-			tickets = 0l;
+			peasants = 0;
+			visitors = 0;
+			tickets = 0;
 			items = 0;
-			revenue = 0.0;
-			permanenceInMillis = 0l;
-			permanenceInMillisGab=0l;
-			cabinet = 0l;
-			permancenceQtyGabs=0;
-
+			revenue = 0;
+			cabinet = 0;
+			permanenceCab = new LinkedList<>();
+			permanenceExh = new LinkedList<>();
+			this.entityIds = new ArrayList<>();
+			if(entityIds != null) this.entityIds.addAll(entityIds);
 			try {
 				datesCache = CollectionFactory.createMap();
 				Date d1 = sdf.parse(fromStringDate);
 				Date d2 = sdf.parse(toStringDate);
 				while( d1.before(d2) || d1.equals(d2)) {
 					datesCache.put(sdf.format(d1), 0l);
-					d1 = new Date(d1.getTime() + 86400000);
+					d1.setTime(d1.getTime() +Constants.DAY_IN_MILLIS);
 				}
 			} catch( Exception e ) {}
 
@@ -562,53 +527,32 @@ implements BDBDashboardBzService {
 				h1 = "<b>";
 				h2 = "</b>";
 			}
-
 			String tit = title;
 			for( int x = 0; x < level; x++ )
 				tit = "&nbsp;&nbsp;" + tit;
 
 			row.put(h1 + tit + h2);
 			row.put(h1 + String.valueOf(peasants) + h2);
+			row.put(h1 + String.valueOf(viewers) +h2);
 			row.put(h1 + String.valueOf(visitors) + h2);
 			row.put(h1 + String.valueOf(cabinet)+ h2);
 			row.put(h1 + String.valueOf(tickets) + h2);
 			row.put(h1 + String.valueOf(items)    + h2);
 			row.put(h1 + String.valueOf(revenue) + h2);
 
-
 			// peasents_conversion
-			if( peasants != 0)
-				row.put(h1 + df.format(visitors * 100 / peasants) + "%" + h2);
-			else
-				row.put(h1 + df.format(0) + "%" + h2);
-			if(cabinet != 0)
-				row.put(h1 + df.format(cabinet* 100 / visitors) + "%" + h2);
-			else
-				row.put(h1 + df.format(0) + "%" + h2);
-				
-
+			row.put(h1 + (peasants != 0 ? df.format(visitors * 100f / peasants) : 0) + "%" + h2);
+			row.put(h1 + (cabinet != 0 ? df.format(cabinet* 100f / visitors) : 0) + "%" + h2);
+			row.put(h1 + (viewers != 0 ? df.format(visitors *100f /viewers) : 0) + "%" +h2);
 			// tickets_conversion
-			if( visitors != 0)
-				row.put(h1 + df.format(tickets * 100 / visitors) + "%" + h2);
-			else
-				row.put(h1 + df.format(0) + "%" + h2);
-
+			row.put(h1 + (visitors != 0 ? df.format(tickets * 100f / visitors) : 0) + "%" + h2);
 			row.put(h1 + calculateHigherDay() + h2);
 			row.put(h1 + calculateLowerDay() + h2);
 
-			if(permancenceQty != 0)
-				row.put(h1 + String.valueOf(Math.round(permanenceInMillis /permancenceQty / 60000)) + " mins"  + h2);
-			else
-				row.put(h1 +df.format(0) +" mins" +h2);
-			if(permancenceQtyGabs != 0)
-				row.put(h1 + String.valueOf(Math.round(permanenceInMillisGab /permancenceQtyGabs / 60000)) + " mins"  + h2);
-			else
-				row.put(h1 +df.format(0) +" mins" +h2);
-			if(permancenceQtyGabs != 0 && permancenceQty != 0)
-				row.put(h1 + String.valueOf(Math.round((permanenceInMillisGab /permancenceQtyGabs / 60000) + Math.round(permanenceInMillis /permancenceQty / 60000)/2)) +  " mins"  + h2);
-			else
-				row.put(h1 +df.format(0) +" mins" +h2);
-
+			row.put(h1 +(getExhMedian() / 60000) +"mins" +h2);
+			row.put(h1 +(getCabMedian() / 60000) + " mins"  + h2);
+			row.put(h1 +(getTotalMedian() / 60000) +" mins" +h2);
+			
 			return row;
 		}
 
@@ -627,6 +571,7 @@ implements BDBDashboardBzService {
 			row.put("header", header);
 			row.put("title", tit);
 			row.put("peasants", peasants);
+			row.put("viewers", viewers);
 			row.put("visitors", visitors);
 			row.put("cabinet", cabinet);
 			row.put("tickets", tickets);
@@ -635,29 +580,17 @@ implements BDBDashboardBzService {
 
 			// peasents_conversion
 			row.put("visitsConversion", peasants == 0 ? 0 : (visitors * 100f) / peasants);
+			row.put("viewerConversion", viewers == 0 ? 0 : (visitors *100f) /viewers);
 			row.put("cabinetConversion", visitors == 0 ? 0 : (cabinet * 100f)/visitors);
 			row.put("ticketsConversion", visitors == 0 ? 0 : (tickets * 100f) / visitors);
 
 			row.put("higherDay", calculateHigherDay());
 			row.put("lowerDay", calculateLowerDay());
 
-			if( permanenceInMillis > 0 && permancenceQty > 0 ) {
-				row.put("averagePermanenceEntrance", Math.round(permanenceInMillis / permancenceQty / 60000D ));
-			} else {
-				row.put("averagePermanenceEntrance", 0);
-			}
-			if( permanenceInMillisGab > 0 && permancenceQtyGabs > 0 ) {
-				row.put("averagePermanenceCabinet", Math.round(permanenceInMillisGab / permancenceQtyGabs / 60000D ));
-			} else {
-				row.put("averagePermanenceCabinet", 0);
-			}
-			if( permanenceInMillisGab > 0 && permancenceQtyGabs > 0 ) {
-				row.put("averagePermanenceAll", ((Math.round(permanenceInMillisGab / permancenceQtyGabs / 60000D) + Math.round(permanenceInMillis / permancenceQty / 60000D )/2)));
-			} else {
-				row.put("averagePermanenceAll", 0);
-			}
+			row.put("averagePermanenceEntrance", getExhMedian() / 60000);
+			row.put("averagePermanenceCabinet", getCabMedian() / 60000);
+			row.put("averagePermanenceAll", getTotalMedian() / 60000);
 			
-
 			return row;
 		}
 
@@ -724,22 +657,6 @@ implements BDBDashboardBzService {
 			return header;
 		}
 
-		public int getPermancenceQty() {
-			return permancenceQty;
-		}
-		
-		public int getPermancenceQtyGab() {
-			return permancenceQtyGabs;
-		}
-
-		public void setPermancenceQty(int permancenceQty) {
-			this.permancenceQty = permancenceQty;
-		}
-		
-		public void setPermancenceQtyGab(int permancenceQtyGab) {
-			this.permancenceQtyGabs = permancenceQtyGab;
-		}
-
 		/**
 		 * @param header the header to set
 		 */
@@ -757,7 +674,7 @@ implements BDBDashboardBzService {
 		/**
 		 * @param revenue the revenue to set
 		 */
-		public void setRevenue(Double revenue) {
+		public void setRevenue(double revenue) {
 			this.revenue = revenue;
 		}
 
@@ -773,34 +690,6 @@ implements BDBDashboardBzService {
 		 */
 		public void setLevel(int level) {
 			this.level = level;
-		}
-
-		/**
-		 * @return the entityId
-		 */
-		public String getEntityId() {
-			return entityId;
-		}
-
-		/**
-		 * @param entityId the entityId to set
-		 */
-		public void setEntityId(String entityId) {
-			this.entityId = entityId;
-		}
-
-		/**
-		 * @return the entityKind
-		 */
-		public Integer getEntityKind() {
-			return entityKind;
-		}
-
-		/**
-		 * @param entityKind the entityKind to set
-		 */
-		public void setEntityKind(Integer entityKind) {
-			this.entityKind = entityKind;
 		}
 
 		/**
@@ -827,49 +716,49 @@ implements BDBDashboardBzService {
 		/**
 		 * @param peasants the peasants to set
 		 */
-		public void setPeasants(Long peasants) {
+		public void setPeasants(long peasants) {
 			this.peasants = peasants;
 		}
 
 		/**
 		 * @return the visitors
 		 */
-		public Long getVisitors() {
+		public long getVisitors() {
 			return visitors;
 		}
 
 		/**
 		 * @param visitors the visitors to set
 		 */
-		public void setVisitors(Long visitors) {
+		public void setVisitors(long visitors) {
 			this.visitors = visitors;
 		}
 		
 		/**
 		 * @param visitors cabinet the visitors to set
 		 */
-		public void setgabinetes(long cabinet) {
+		public void setCabinets(long cabinet) {
 			this.cabinet = cabinet;
 		}
 		
 		/**
 		 * @param return cabinet
 		 */
-		public long getgabinetes() {
+		public long getCabinetes() {
 			return cabinet;
 		}
 
 		/**
 		 * @return the tickets
 		 */
-		public Long getTickets() {
+		public long getTickets() {
 			return tickets;
 		}
 
 		/**
 		 * @param tickets the tickets to set
 		 */
-		public void setTickets(Long tickets) {
+		public void setTickets(long tickets) {
 			this.tickets = tickets;
 		}
 
@@ -904,29 +793,37 @@ implements BDBDashboardBzService {
 		/**
 		 * @return the permanenceInMillis
 		 */
-		public Long getPermanenceInMillis() {
-			return permanenceInMillis;
+		public LinkedList<Long> getPermanenceCab() {
+			return permanenceCab;
 		}
 		
 		/**
 		 * @return the permanenceInMillisGab
 		 */
-		public Long getPermanenceInMillisGab() {
-			return permanenceInMillisGab;
+		public LinkedList<Long> getPermanenceExh() {
+			return permanenceExh;
 		}
 
 		/**
 		 * @param permanenceInMillis the permanenceInMillis to set
 		 */
-		public void setPermanenceInMillis(Long permanenceInMillis) {
-			this.permanenceInMillis = permanenceInMillis;
+		public void addPermanenceCab(long permanenceInMillis, long repetitions) {
+			/*for(long in = 0; in < repetitions; in++)*/ permanenceCab.add(permanenceInMillis);
+		}
+		
+		private void addPermanenceCab(LinkedList<Long> permanecnes) {
+			permanenceCab.addAll(permanecnes);
 		}
 		
 		/**
 		 * @param permanenceInMillis the permanenceInMillis to set in gabinete
 		 */
-		public void setPermanenceInMillisGab(Long permanenceInMillisGab) {
-			this.permanenceInMillisGab = permanenceInMillisGab;
+		public void addPermanenceExh(long permanenceInMillis, long repetitions) {
+			/*for(long in = 0; in < repetitions; in++)*/ permanenceExh.add(permanenceInMillis);
+		}
+		
+		private void addPermanenceExh(LinkedList<Long> permanences) {
+			permanenceExh.addAll(permanences);
 		}
 
 		/**
@@ -964,6 +861,42 @@ implements BDBDashboardBzService {
 		public void setItems(int items) {
 			this.items = items;
 		}
+		
+		public long getViewers() {
+			return viewers;
+		}
+
+		public void setViewers(long viewers) {
+			this.viewers = viewers;
+		}
+		
+		private double getCabMedian() {
+			if(permanenceCab.isEmpty()) return 0;
+			Long[] permanences = permanenceCab.toArray(new Long[0]);
+			Arrays.sort(permanences);
+			return permanences.length % 2 == 0 ? (permanences[permanences.length /2]
+					+permanences[(permanences.length /2) +1]) /2f : permanences[permanences.length /2];
+		}
+		
+		private double getExhMedian() {
+			if(permanenceExh.isEmpty()) return 0;
+			Long[] permancens = permanenceExh.toArray(new Long[0]);
+			Arrays.sort(permancens);
+			return permancens.length % 2 == 0 ? (permancens[permancens.length /2]
+					+permancens[(permancens.length /2) +1]) /2f : permancens[permancens.length /2];
+		}
+		
+		private double getTotalMedian() {
+			LinkedList<Long> permanences = new LinkedList<>();
+			permanences.addAll(permanenceCab);
+			permanences.addAll(permanenceExh);
+			if(permanences.isEmpty()) return 0;
+			Long[] perms = permanences.toArray(new Long[0]);
+			Arrays.sort(perms);
+			return perms.length %2 == 0 ? (perms[perms.length /2] +perms[(perms.length /2) +1]) /2f :
+				perms[perms.length /2];
+		}
 
 	}
+	
 }

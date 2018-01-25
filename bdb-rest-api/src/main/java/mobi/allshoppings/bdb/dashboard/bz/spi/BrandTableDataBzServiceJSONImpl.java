@@ -20,16 +20,19 @@ import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bdb.bz.BDBDashboardBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
+import mobi.allshoppings.dao.BrandDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.InnerZoneDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
+import mobi.allshoppings.model.Brand;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.InnerZone;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.UserSecurity;
 import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 
@@ -48,6 +51,8 @@ implements BDBDashboardBzService {
 	private StoreDAO storeDao;
 	@Autowired
 	private InnerZoneDAO innerZoneDao;
+	@Autowired
+	private BrandDAO brandDao;
 
 	private DecimalFormat df = new DecimalFormat("##.00");
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -78,9 +83,27 @@ implements BDBDashboardBzService {
 			DashboardTableRep table = new DashboardTableRep();
 			List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), "name");
 			List<Store> tmpStores2 = CollectionFactory.createList();
+			String userBrand;
 			for( Store store : tmpStores ) {
 			 	if( isValidForUser(user, store) )
 					tmpStores2.add(store);
+			} switch(user.getSecuritySettings().getRole()) {
+			case UserSecurity.Role.ADMIN :
+			case UserSecurity.Role.COUNTRY_ADMIN :
+				userBrand = "";
+			default :
+				UserSecurity sec = user.getSecuritySettings();
+				if(sec.getBrands() != null && !sec.getBrands().isEmpty()) {
+					userBrand = sec.getBrands().get(0);
+				} else {
+					Brand brand = null;
+					try { 
+						brand = brandDao.get(user.getIdentifier());
+					} catch(ASException e) {
+						userBrand = "";
+					}
+					userBrand = brand.getName();
+				}
 			}
 			table.setStores(tmpStores2);
 			Collections.sort(table.getStores(), new Comparator<Store>() {
@@ -89,7 +112,7 @@ implements BDBDashboardBzService {
 					return o1.getName().compareTo(o2.getName());
 				}
 			});
-			List<String> entityIds = initializeTableRecords(table, fromStringDate, toStringDate);
+			List<String> entityIds = initializeTableRecords(table, fromStringDate, toStringDate, userBrand);
 			entityIds.add(entityId);
 
 			// Starts to Collect the data
@@ -222,21 +245,21 @@ implements BDBDashboardBzService {
 		return sb.toString();
 	}
 
-	public List<String> initializeTableRecords(DashboardTableRep table, String fromStringDate, String toStringDate)
-			throws ASException {
+	public List<String> initializeTableRecords(DashboardTableRep table, String fromStringDate, String toStringDate,
+			String userBrand) throws ASException {
 
 		List<String> ret = CollectionFactory.createList();
 
 		for (Store store : table.getStores()) {
 			table.getRecords().add(new DashboardRecordRep(table, 0, store.getIdentifier(), EntityKind.KIND_STORE,
-					store.getName(), fromStringDate, toStringDate));
+					store.getName().replaceFirst(userBrand, ""), fromStringDate, toStringDate));
 
 			List<InnerZone> zonesl1 = innerZoneDao.getUsingEntityIdAndRange(store.getIdentifier(),
 					EntityKind.KIND_STORE, null, "name", null, true);
 
 			for (InnerZone zonel1 : zonesl1) {
 				table.getRecords().add(new DashboardRecordRep(null, 1, zonel1.getIdentifier(), EntityKind.KIND_INNER_ZONE,
-						zonel1.getName(), fromStringDate, toStringDate));
+						zonel1.getName().replaceFirst(userBrand, ""), fromStringDate, toStringDate));
 
 				List<InnerZone> zonesl2 = innerZoneDao.getUsingEntityIdAndRange(zonel1.getIdentifier(),
 						EntityKind.KIND_INNER_ZONE, null, "name", null, true);
@@ -244,7 +267,7 @@ implements BDBDashboardBzService {
 
 				for (InnerZone zonel2 : zonesl2) {
 					table.getRecords().add(new DashboardRecordRep(null, 2, zonel2.getIdentifier(), EntityKind.KIND_INNER_ZONE,
-							zonel2.getName(), fromStringDate, toStringDate));
+							zonel2.getName().replaceFirst(userBrand, ""), fromStringDate, toStringDate));
 				}
 			}
 		}
