@@ -1013,20 +1013,18 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					}
 				}
 				
-				dev.setViewerPowerThreshold((dev.getVisitPowerThreshold() + dev.getPeasantPowerThreshold()) / 2);
 				// If there is a peasant threshold
 				if(dev.getPeasantPowerThreshold() == null 
 						|| value >= dev.getPeasantPowerThreshold()) {
 					// Add a new peasant if there is no peasant active
-					if( currentPeasant == null )
-						currentPeasant = createPeasant(curEntry, curDate, null,
+					if( currentPeasant == null ) currentPeasant = createPeasant(curEntry, curDate, null,
 								assignments.get(curEntry.getHostname()), date);
 					lastPeasantSlot = slot;
 					// Checks for power for visit
-					if(value >= dev.getViewerPowerThreshold() && value <= dev.getViewerPowerThreshold() + dev.getOffsetViewer()) {
-						if(currentViewer == null) currentViewer = createViewer(curEntry, curDate, null,
+					if(currentViewer == null && value >= dev.getViewerPowerThreshold() &&
+							value <= dev.getViewerPowerThreshold() + dev.getOffsetViewer())
+						currentViewer = createViewer(curEntry, curDate, null,
 								assignments.get(curEntry.getHostname()), date);
-					}
 					if( value >= dev.getVisitPowerThreshold() ) {
 						if( currentVisit == null )
 							currentVisit = createVisit(curEntry, curDate, null,
@@ -1108,7 +1106,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						}
 						
 					}
-				} if( currentViewer != null && value < dev.getViewerPowerThreshold() && value > dev.getViewerPowerThreshold() + dev.getOffsetViewer()) {
+				} if( currentViewer != null && (value < dev.getViewerPowerThreshold() ||
+						value > dev.getViewerPowerThreshold() + dev.getOffsetViewer())) {
 					currentViewer.setCheckinFinished(aphHelper.slotToDate(
 							slot, date));
 					if(isPeasantValid(currentViewer, dev, isEmployee,
