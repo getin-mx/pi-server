@@ -86,22 +86,14 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			List<Store> srtlist = CollectionFactory.createList();
 			List<String> subname= CollectionFactory.createList();
 			
-			if(region != null || format != null || district != null) {			
-				srtlist = daoSRt.getUsingRegionAndFormatAndDistrict(region, format, district, orderx);
-				for(Store i : srtlist) {
-					subname.add(i.getIdentifier()); 
-				}
-				list = dao.getUsingFilters(null,
-					entityKind, null, null, shoppingId,
-					subname, null /*periodType*/, fromStringDate, toStringDate,
-					movieId, voucherType, dayOfWeek, timezone, null, country, province, city);
-			
-			} else {
-				list = dao.getUsingFilters(entityId,
-						entityKind, elementId, elementSubId, shoppingId,
-						subentityId, null /*periodType*/, fromStringDate, toStringDate,
-						movieId, voucherType, dayOfWeek, timezone, null, country, province, city);
+			srtlist = daoSRt.getUsingRegionAndFormatAndDistrict(region, format, district, orderx);
+			for(Store i : srtlist) {
+				subname.add(i.getIdentifier()); 
 			}
+			list = dao.getUsingFilters(null,
+				entityKind, null, null, shoppingId,
+				subname, null /*periodType*/, fromStringDate, toStringDate,
+				movieId, voucherType, dayOfWeek, timezone, null, country, province, city);
 			
 			log.log(Level.INFO, list.size() + " dashboard elements found");
 
