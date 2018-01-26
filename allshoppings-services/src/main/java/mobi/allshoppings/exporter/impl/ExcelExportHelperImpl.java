@@ -1225,19 +1225,6 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			
 			}
 			
-			//for (APUptime i : uptime) {
-			//	Map<String, Integer> uptimetime = i.getRecord();
-			//	Iterator<Entry<String, Integer>> j = uptimetime.entrySet().iterator();
-			//	while(j.hasNext())
-			//	{
-			//		Map.Entry<String, Integer> hora= j.next();
-			//		hora.getKey();
-			//		
-			//		
-			//	}
-			//}
-
-			
 			log.log(Level.INFO, "Processing store " + store.getName() + " for period " + fromDate
 					+ " - " + toDate + "...");			
 
