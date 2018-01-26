@@ -264,7 +264,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							// Determine which antennas are valid for this entity and date 
 							final List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(
 									entityId, entityKind, curDate);
-							if(CollectionUtils.isEmpty(assigs)) continue;
+							if(CollectionUtils.isEmpty(assigs)) {
+								log.log(Level.INFO, "Didn't find any antenna assignated to: " +name +". Skipping...");
+								continue;
+							}
 							assignmentsCache.clear();
 							if(assigs.size() == 1) {
 

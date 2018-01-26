@@ -126,7 +126,6 @@ implements BDBDashboardBzService {
 
 				DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId());
 
-				DashboardRecordRep totals = table.getTotals();
 				// solo se toma en cuenta la zona de gabinete como zona
 				if( null != rec ) {
 					if( obj.getElementSubId().equals("visitor_total_peasents"))
@@ -138,7 +137,7 @@ implements BDBDashboardBzService {
 						} else {
 							rec.setVisitors(rec.getVisitors() + obj.getDoubleValue().longValue());
 							rec.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
-							totals.addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
+							table.getTotals().addToDateCache(obj.getDoubleValue().longValue(), obj.getStringDate());
 						}
 					} else if( obj.getElementSubId().equals("visitor_total_tickets")) {
 						rec.setTickets(rec.getTickets() + obj.getDoubleValue().longValue());
@@ -796,14 +795,14 @@ implements BDBDashboardBzService {
 		/**
 		 * @return the permanenceInMillis
 		 */
-		public LinkedList<Long> getPermanenceCab() {
+		public List<Long> getPermanenceCab() {
 			return permanenceCab;
 		}
 		
 		/**
 		 * @return the permanenceInMillisGab
 		 */
-		public LinkedList<Long> getPermanenceExh() {
+		public List<Long> getPermanenceExh() {
 			return permanenceExh;
 		}
 
@@ -814,7 +813,7 @@ implements BDBDashboardBzService {
 			/*for(long in = 0; in < repetitions; in++)*/ permanenceCab.add(permanenceInMillis);
 		}
 		
-		private void addPermanenceCab(LinkedList<Long> permanecnes) {
+		private void addPermanenceCab(List<Long> permanecnes) {
 			permanenceCab.addAll(permanecnes);
 		}
 		
@@ -825,7 +824,7 @@ implements BDBDashboardBzService {
 			/*for(long in = 0; in < repetitions; in++)*/ permanenceExh.add(permanenceInMillis);
 		}
 		
-		private void addPermanenceExh(LinkedList<Long> permanences) {
+		private void addPermanenceExh(List<Long> permanences) {
 			permanenceExh.addAll(permanences);
 		}
 
