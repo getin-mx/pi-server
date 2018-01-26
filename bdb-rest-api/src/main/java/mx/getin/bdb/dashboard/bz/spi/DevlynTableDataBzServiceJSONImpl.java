@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,12 +82,11 @@ implements BDBDashboardBzService {
 
 			// Initializes the table using the received information
 			DashboardTableRep table = new DashboardTableRep();
-			List<Store> tmpStores = storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), "name");
 			List<Store> tmpStores2 = CollectionFactory.createList();
 			String userBrand;
-			for( Store store : tmpStores ) {
-			 	if( isValidForUser(user, store) )
-					tmpStores2.add(store);
+			
+			for( Store store : storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), "name") ) {
+			 	if( isValidForUser(user, store) ) tmpStores2.add(store);
 			} switch(user.getSecuritySettings().getRole()) {
 			case UserSecurity.Role.ADMIN :
 			case UserSecurity.Role.COUNTRY_ADMIN :
@@ -111,13 +111,11 @@ implements BDBDashboardBzService {
 					return o1.getName().compareTo(o2.getName());
 				}
 			});
-			initializeTableRecords(table, fromStringDate, toStringDate, userBrand);
-
-			// Starts to Collect the data
-			List<DashboardIndicatorData> list;
-
-			// peasents, visits, and tickets
-			list = dao.getUsingFilters(entityId, null, Arrays.asList("apd_visitor"),
+			LinkedList<String> entityIds = new LinkedList<>();
+			entityIds.add(entityId);
+			entityIds.addAll(initializeTableRecords(table, fromStringDate, toStringDate, userBrand));
+			
+			List<DashboardIndicatorData> list = dao.getUsingFilters(entityIds, null, Arrays.asList("apd_visitor"),
 					Arrays.asList("visitor_total_peasents", "visitor_total_visits", "visitor_total_tickets",
 							"visitor_total_items", "visitor_total_revenue", "visitor_total_viewer"), null, null, null,
 					fromStringDate, toStringDate, null, null, null, null, null, null, null, null);
@@ -152,10 +150,9 @@ implements BDBDashboardBzService {
 			}
 
 			// permanence
-			list = dao.getUsingFilters(entityId, null, Arrays.asList("apd_permanence"),
-					Arrays.asList("permanence_hourly_visits"), null, null, null, fromStringDate, toStringDate,
-					null, null, null, null, null, null, null, null);
-
+			list = dao.getUsingFilters(entityIds, null, Arrays.asList("apd_permanence"),
+					Arrays.asList("permanence_hourly_visits"), null, null, null, fromStringDate, toStringDate, null,
+	 				null, null, null, null, null, null, null);
 			for(DashboardIndicatorData obj : list) {
 				DashboardRecordRep rec = table.findRecordWithEntityId(obj.getSubentityId());
 				if( rec != null ) {
@@ -256,9 +253,11 @@ implements BDBDashboardBzService {
 	 *            - final date to for the records.
 	 *          
 	 */
-	public void initializeTableRecords(DashboardTableRep table, String fromStringDate, String toStringDate,
+	public List<String> initializeTableRecords(DashboardTableRep table, String fromStringDate, String toStringDate,
 			String userBrand) throws ASException {
 
+		HashSet<String> ret = new HashSet<>();
+		
 		for (Store store : table.getStores()) {
 			
 			List<String> ids = new ArrayList<>();
@@ -279,8 +278,12 @@ implements BDBDashboardBzService {
 			ids.add(store.getIdentifier());
 			
 			table.getRecords().add(new DashboardRecordRep(table, 0, ids, store.getName().replaceFirst(userBrand, ""),
-					fromStringDate, toStringDate));	
+					fromStringDate, toStringDate));
+			
+			ret.addAll(ids);
 		}
+		
+		return new ArrayList<>(ret);
 	}
 
 	public class DashboardTableRep {
@@ -810,7 +813,7 @@ implements BDBDashboardBzService {
 		 * @param permanenceInMillis the permanenceInMillis to set
 		 */
 		public void addPermanenceCab(long permanenceInMillis, long repetitions) {
-			/*for(long in = 0; in < repetitions; in++)*/ permanenceCab.add(permanenceInMillis);
+			permanenceCab.add(permanenceInMillis /repetitions);
 		}
 		
 		private void addPermanenceCab(List<Long> permanecnes) {
@@ -821,7 +824,7 @@ implements BDBDashboardBzService {
 		 * @param permanenceInMillis the permanenceInMillis to set in gabinete
 		 */
 		public void addPermanenceExh(long permanenceInMillis, long repetitions) {
-			/*for(long in = 0; in < repetitions; in++)*/ permanenceExh.add(permanenceInMillis);
+			permanenceExh.add(permanenceInMillis /repetitions);
 		}
 		
 		private void addPermanenceExh(List<Long> permanences) {
@@ -874,18 +877,20 @@ implements BDBDashboardBzService {
 		
 		private double getCabMedian() {
 			if(permanenceCab.isEmpty()) return 0;
+			if(permanenceCab.size() == 1) return permanenceCab.get(0);
 			Long[] permanences = permanenceCab.toArray(new Long[0]);
 			Arrays.sort(permanences);
 			return permanences.length % 2 == 0 ? (permanences[permanences.length /2]
-					+permanences[(permanences.length /2) +1]) /2f : permanences[permanences.length /2];
+					+permanences[(permanences.length /2) +1]) /2 : permanences[permanences.length /2];
 		}
 		
 		private double getExhMedian() {
 			if(permanenceExh.isEmpty()) return 0;
+			if(permanenceExh.size() == 1) return permanenceExh.get(0);
 			Long[] permancens = permanenceExh.toArray(new Long[0]);
 			Arrays.sort(permancens);
 			return permancens.length % 2 == 0 ? (permancens[permancens.length /2]
-					+permancens[(permancens.length /2) +1]) /2f : permancens[permancens.length /2];
+					+permancens[(permancens.length /2) +1]) /2 : permancens[permancens.length /2];
 		}
 		
 		private double getTotalMedian() {
@@ -893,9 +898,10 @@ implements BDBDashboardBzService {
 			permanences.addAll(permanenceCab);
 			permanences.addAll(permanenceExh);
 			if(permanences.isEmpty()) return 0;
+			if(permanences.size() == 1) return permanences.get(0);
 			Long[] perms = permanences.toArray(new Long[0]);
 			Arrays.sort(perms);
-			return perms.length %2 == 0 ? (perms[perms.length /2] +perms[(perms.length /2) +1]) /2f :
+			return perms.length %2 == 0 ? (perms[perms.length /2] +perms[(perms.length /2) +1]) /2 :
 				perms[perms.length /2];
 		}
 
