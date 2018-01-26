@@ -21,10 +21,12 @@ import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.bdb.bz.BDBTimelineDataBzService;
 import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
+import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DashboardIndicatorAlias;
 import mobi.allshoppings.model.DashboardIndicatorData;
+import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
 import mobi.allshoppings.tools.CollectionFactory;
 
@@ -41,6 +43,8 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 	private DashboardIndicatorDataDAO dao;
 	@Autowired
 	private DashboardIndicatorAliasDAO diAliasDao;
+	@Autowired
+	private StoreDAO daoSRt;
 
 	/**
 	 * Obtains information about a user
@@ -73,10 +77,31 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			String province = obtainStringValue("province", null);
 			String city = obtainStringValue("city", null);
 			Boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
-
-			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId, entityKind, elementId, elementSubId,
-					shoppingId, subentityId, null /*periodType*/, fromStringDate, toStringDate,
+			String zone = obtainStringValue("zone", null);
+			String region = obtainStringValue("region", null);
+			String format = obtainStringValue("format", null);
+			String district = obtainStringValue("disctrict", null);
+			String orderx = obtainStringValue("order", null);
+			List<DashboardIndicatorData> list = CollectionFactory.createList();
+			List<Store> srtlist = CollectionFactory.createList();
+			List<String> subname= CollectionFactory.createList();
+			
+			if(region != null || format != null || district != null) {			
+				srtlist = daoSRt.getUsingRegionAndFormatAndDistrict(region, format, district, orderx);
+				for(Store i : srtlist) {
+					subname.add(i.getIdentifier()); 
+				}
+				list = dao.getUsingFilters(null,
+					entityKind, null, null, shoppingId,
+					subname, null /*periodType*/, fromStringDate, toStringDate,
 					movieId, voucherType, dayOfWeek, timezone, null, country, province, city);
+			
+			} else {
+				list = dao.getUsingFilters(entityId,
+						entityKind, elementId, elementSubId, shoppingId,
+						subentityId, null /*periodType*/, fromStringDate, toStringDate,
+						movieId, voucherType, dayOfWeek, timezone, null, country, province, city);
+			}
 			
 			log.log(Level.INFO, list.size() + " dashboard elements found");
 
@@ -136,6 +161,8 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 					Date objDate = calculateDateFrame(DateUtils.truncate(obj.getDate(), Calendar.DATE), periodType);
 					if (!(objDate.compareTo(fromDate) >= 0 && objDate.compareTo(toDate) <= 0)) continue;
 					String key = obj.getElementSubName();
+					String zoneSubStrg = obj.getSubentityName();
+					if(!(zoneSubStrg.contains(zone))) continue;
 					String orderKey = obj.getElementSubId();
 					if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
 						aliasMap.put(orderKey, key);
