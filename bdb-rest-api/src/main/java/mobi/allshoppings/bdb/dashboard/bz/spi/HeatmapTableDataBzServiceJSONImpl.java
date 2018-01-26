@@ -63,6 +63,7 @@ implements BDBHeatmapTableDataBzService {
 			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
 			Integer timezone = obtainIntegerValue("timezone", null);
 			Integer top = obtainIntegerValue("top", null);
+			String zone = obtainStringValue("zone" , null);
 			
 			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
 					entityKind, elementId, elementSubId, shoppingId,
@@ -87,6 +88,8 @@ implements BDBHeatmapTableDataBzService {
 			for( DashboardIndicatorData obj : list ) {
 				if( isValidForUser(user, obj)) {
 					String key = obj.getElementSubName();
+					String zoneSubStrg = obj.getSubentityName();
+					if(!(zoneSubStrg.contains(zone))) continue;
 					if(!obj.getTimeZone().equals(DashboardIndicatorData.TIME_ZONE_ALL) && StringUtils.hasText(key)) {
 						// Data for this timezone
 						data = dataSet.get(key);

@@ -208,6 +208,64 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 		
 		return ret;
 	}
+	
+	public List<Store> getUsingRegionAndFormatAndDistrict(String region, String format, String district, String order) throws ASException
+	{
+		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
+		List<Store> ret = new ArrayList<Store>();
+		
+		try {
+			
+			Map<String, Object> parameters = CollectionFactory.createMap();
+			List<String> declaredParams = CollectionFactory.createList();
+			List<String> filters = CollectionFactory.createList();
+			
+			Query query = pm.newQuery(Store.class);
+			
+			// Region parameters
+			if( StringUtils.hasText(region)) {
+				declaredParams.add("String regionParam");
+				filters.add("region == null || region == regionParam" );
+				parameters.put("regionParam", region);
+			}
+			
+			// Format parameters
+			if( StringUtils.hasText(format)) {
+				declaredParams.add("String formatParam");
+				filters.add("format == null || format == formatParam");
+				parameters.put("formatParam", format);
+			}
+			
+			// District parameters
+			if( StringUtils.hasText(district)) {
+				declaredParams.add("String districtParam");
+				filters.add("district == null || district == districtParam");
+				parameters.put("districtParam", district);
+			}
+			
+			// Setting query parameters
+			query.declareParameters(toParameterList(declaredParams));
+			query.setFilter(toWellParametrizedFilter(filters));
+			if(StringUtils.hasText(order)) query.setOrdering(order);
+			
+			// Executes the query
+			@SuppressWarnings("unchecked")
+			List<Store> objs = (List<Store>)query.executeWithMap(parameters);
+			if (objs != null) {
+				// force to read
+				for (Store obj : objs) {
+					ret.add(pm.detachCopy(obj));
+				}
+			}
+			
+		}catch(Exception e){
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
+		}finally {
+			pm.close();
+		}
+		
+		return ret;
+	}
 
 	/**
 	 * Get a store instance using an external ID interface

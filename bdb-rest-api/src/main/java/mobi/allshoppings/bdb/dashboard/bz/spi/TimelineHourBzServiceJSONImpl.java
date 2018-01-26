@@ -79,6 +79,7 @@ implements BDBTimelineHourBzService {
 			Boolean average = obtainBooleanValue("average", false);
 			Boolean toMinutes = obtainBooleanValue("toMinutes", false);
 			Boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
+			String zone = obtainStringValue("zone", null);
 
 			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
 					entityKind, elementId, elementSubId, shoppingId,
@@ -152,6 +153,8 @@ implements BDBTimelineHourBzService {
 			for(DashboardIndicatorData obj : list) {
 				if( isValidForUser(user, obj)) {
 					String key = obj.getElementSubName();
+					String zoneSubStrg = obj.getSubentityName();
+					if(!(zoneSubStrg.contains(zone))) continue;
 					String orderKey = obj.getElementSubId();
 					if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
 						aliasMap.put(orderKey, key);

@@ -132,12 +132,14 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 		if( visitPowerThreshold == null) visitPowerThreshold = -60L;
 		if( visitMaxThreshold == null) visitMaxThreshold = 480L;
 		if( peasantPowerThreshold == null) peasantPowerThreshold = -80L;
-		if( viewerPowerThreshold == null) viewerPowerThreshold = (visitPowerThreshold +peasantPowerThreshold) /2; 
+		if( viewerPowerThreshold == null) viewerPowerThreshold = (visitPowerThreshold +peasantPowerThreshold) /2;
+		if(viewerPowerThreshold < visitPowerThreshold) viewerPowerThreshold = visitPowerThreshold;
 		if( visitCountThreshold == null) visitCountThreshold = 0L;
 		if( repeatThreshold == null ) repeatThreshold = 5;
 		if( visitDecay == null ) visitDecay = visitGapThreshold;
 		if( peasantDecay == null ) peasantDecay = visitGapThreshold; 
 		if( offSetViewer <= 0) offSetViewer = 5; 
+		if(viewerPowerThreshold -offSetViewer < peasantPowerThreshold) offSetViewer = (int)(peasantPowerThreshold -viewerPowerThreshold);
 		
 		if(viewerMinTimeThreshold < 0) viewerMinTimeThreshold = visitTimeThreshold.intValue();
 		if(viewerMaxTimeThreshold < viewerMinTimeThreshold) viewerMaxTimeThreshold = Constants.FIVE_MINUTES_IN_MILLIS;
