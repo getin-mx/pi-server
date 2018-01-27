@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,6 @@ import com.inodes.datanucleus.model.Key;
 import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.apdevice.impl.APDVisitHelperImpl;
 import mobi.allshoppings.dao.APDeviceDAO;
-import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.ExternalAPHotspotDAO;
 import mobi.allshoppings.dao.FloorMapDAO;
@@ -81,6 +81,42 @@ public class DashboardAPDeviceMapperService {
 	private static final Gson gson = GsonFactory.getInstance();
 	private final Calendar CALENDAR = Calendar.getInstance();
 	private final Calendar AUX_CALENDAR = Calendar.getInstance();
+	public static final String ELEMENT_SUB_ID_HOURLY_OCCUPATION_PEDERSTIANS = "occupation_hourly_peasants";
+	public static final String ELEMENT_SUB_ID_HOURLY_OCCUPATION_VISITS = "occupation_hourly_visits";
+	public static final String ELEMENT_SUB_ID_HOURLY_PERMANENCE_VISITS = "permanence_hourly_visits";
+	public static final String ELEMENT_SUB_ID_HOURLY_PERMANCENCE_PEDERSTIANS = "permanence_hourly_peasents";
+	public static final String ELEMENT_SUB_ID_HOURLY_TICKETS = "visitor_hourly_tickets";
+	public static final String ELEMENT_SUB_ID_TOTAL_PEDERSTIANS = "visitor_total_peasents";
+	public static final String ELEMENT_SUB_ID_TOTAL_TICKETS = "visitor_total_tickets";
+	public static final String ELEMENT_SUB_ID_TOTAL_ITEMS = "visitor_total_items";
+	public static final String ELEMENT_SUB_ID_TOTAL_REVENUE = "visitor_total_revenue";
+	public static final String ELEMENT_SUB_ID_TOTAL_VIEWERS = "visitor_total_viewer";
+	public static final String ELEMENT_SUB_ID_TOTAL_VISITS = "visitor_total_visits";
+	public static final String ELEMENT_SUB_ID_HEATMAP_DATA = "heatmap_data";
+	public static final String ELEMENT_SUB_NAME_VISITS = "Visitas";
+	public static final String ELEMENT_SUB_NAME_PEDERSTIANS = "Paseantes";
+	public static final String ELEMENT_SUB_NAME_TICKETS = "Tickets";
+	public static final String ELEMENT_SUB_NAME_ITEMS = "Items Vendidos";
+	public static final String ELEMENT_SUB_NAME_REVENUE = "Revenue";
+	public static final String ELEMENT_SUB_NAME_VIEWERS = "Miradores";
+	public static final String ELEMENT_SUB_NAME_HEATMAP_DATA = "Heat Map Data";
+	public static final Map<String, String> INDICATORS_ALIASES;
+	
+	static {
+		INDICATORS_ALIASES = new HashMap<>(11);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_HOURLY_OCCUPATION_PEDERSTIANS, ELEMENT_SUB_NAME_PEDERSTIANS);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_HOURLY_OCCUPATION_VISITS, ELEMENT_SUB_NAME_VISITS);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_HOURLY_PERMANCENCE_PEDERSTIANS, ELEMENT_SUB_NAME_PEDERSTIANS);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_HOURLY_PERMANENCE_VISITS, ELEMENT_SUB_NAME_VISITS);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_HOURLY_TICKETS, ELEMENT_SUB_NAME_TICKETS);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_TOTAL_PEDERSTIANS, ELEMENT_SUB_NAME_PEDERSTIANS);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_TOTAL_ITEMS, ELEMENT_SUB_NAME_ITEMS);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_TOTAL_REVENUE, ELEMENT_SUB_NAME_REVENUE);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_TOTAL_TICKETS, ELEMENT_SUB_NAME_TICKETS);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_TOTAL_VIEWERS, ELEMENT_SUB_NAME_VIEWERS);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_TOTAL_VISITS, ELEMENT_SUB_NAME_VISITS);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_HEATMAP_DATA, ELEMENT_SUB_NAME_HEATMAP_DATA);
+	}
 
 	/**
 	 * DAOs 
@@ -89,8 +125,6 @@ public class DashboardAPDeviceMapperService {
 	private StoreDAO storeDao;
 	@Autowired
 	private DashboardIndicatorDataDAO dao;
-	@Autowired
-	private DashboardIndicatorAliasDAO diAliasDao;
 	@Autowired
 	private ShoppingDAO shoppingDao;
 	@Autowired
@@ -209,8 +243,8 @@ public class DashboardAPDeviceMapperService {
 								String forDate = sdf.format(location.getCreationDateTime());
 								// heatmap ----------------------------------------------------------------------------------------------
 								// ------------------------------------------------------------------------------------------------------
-								obj = buildBasicDashboardIndicatorData("heatmap_data", "Heat Map Data",
-										wifiSpot.getIdentifier(), wifiSpot.getIdentifier(),
+								obj = buildBasicDashboardIndicatorData(ELEMENT_SUB_ID_HEATMAP_DATA,
+										ELEMENT_SUB_NAME_HEATMAP_DATA, wifiSpot.getIdentifier(), wifiSpot.getIdentifier(),
 										location.getCreationDateTime(), DashboardIndicatorData.PERIOD_TYPE_DAILY,
 										shopping.getIdentifier(), null, shopping, floorMap.getFloor(),
 										shopping.getIdentifier(), EntityKind.KIND_SHOPPING, forDate);
@@ -398,12 +432,12 @@ public class DashboardAPDeviceMapperService {
 								
 								// heatmap ----------------------------------------------------------------------------------------------
 								obj = EntityKind.KIND_SHOPPING == entityKind ? buildBasicDashboardIndicatorData(
-										"heatmap_data", "Heat Map Data", wifiSpot.getIdentifier(),
+										ELEMENT_SUB_ID_HEATMAP_DATA, ELEMENT_SUB_NAME_HEATMAP_DATA, wifiSpot.getIdentifier(),
 										wifiSpot.getIdentifier(), hotspot.getCreationDateTime(),
 										DashboardIndicatorData.PERIOD_TYPE_DAILY, shopping.getIdentifier(),
 										null, shopping, floorMap.getFloor(), shopping.getIdentifier(),
 										EntityKind.KIND_SHOPPING, forDate) : buildBasicDashboardIndicatorData(
-													"heatmap_data", "Heat Map Data", wifiSpot.getIdentifier(),
+													ELEMENT_SUB_ID_HEATMAP_DATA, ELEMENT_SUB_NAME_HEATMAP_DATA, wifiSpot.getIdentifier(),
 													wifiSpot.getIdentifier(), hotspot.getCreationDateTime(),
 													DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getIdentifier(),
 													store, shopping, floorMap.getFloor(), store.getIdentifier(),
@@ -532,7 +566,7 @@ public class DashboardAPDeviceMapperService {
 									maxVisitTimeThreshold = apd.getVisitMaxThreshold().intValue();
 								
 								// Try basic rules
-								int distance = (int)((myMaximalSlot - myMinimalSlot) / 3);
+								int distance = (myMaximalSlot - myMinimalSlot) / 3;
 								valid = entry.getMaxRssi() >= apd.getVisitPowerThreshold() &&
 										distance >= apd.getVisitTimeThreshold() && distance <= apd.getVisitMaxThreshold();
 
@@ -722,8 +756,8 @@ public class DashboardAPDeviceMapperService {
 							if( v.getCheckinType().equals(APDVisit.CHECKIN_PEASANT) ) {
 								// visitor_total_peasents -------------------------------------------------------------------------------
 								// ------------------------------------------------------------------------------------------------------
-								obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", "visitor_total_peasents",
-										"Paseantes", v.getCheckinStarted(), DashboardIndicatorData.PERIOD_TYPE_DAILY,
+								obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", ELEMENT_SUB_ID_TOTAL_PEDERSTIANS,
+										ELEMENT_SUB_NAME_PEDERSTIANS, v.getCheckinStarted(), DashboardIndicatorData.PERIOD_TYPE_DAILY,
 										shoppingId, store, shopping, null, entityId, entityKind, v.getForDate());
 								if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
 								else indicatorsSet.put(obj, obj);
@@ -733,7 +767,7 @@ public class DashboardAPDeviceMapperService {
 									// permanence_hourly_peasents ---------------------------------------------------------------------------
 									// ------------------------------------------------------------------------------------------------------
 									obj = buildBasicDashboardIndicatorData("apd_permanence", "Permanencia",
-											"permanence_hourly_peasents", "Paseantes", v.getCheckinStarted(),
+											ELEMENT_SUB_ID_HOURLY_PERMANCENCE_PEDERSTIANS, ELEMENT_SUB_NAME_PEDERSTIANS, v.getCheckinStarted(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId, store, shopping, null,
 											entityId, entityKind, v.getForDate());
 									if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
@@ -751,7 +785,7 @@ public class DashboardAPDeviceMapperService {
 								while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) &&
 										day == init.get(Calendar.DAY_OF_MONTH)) {
 									obj = buildBasicDashboardIndicatorData("apd_occupation", "Ocupacion",
-											"occupation_hourly_peasants", "Paseantes", init.getTime(),
+											ELEMENT_SUB_ID_HOURLY_OCCUPATION_PEDERSTIANS, ELEMENT_SUB_NAME_PEDERSTIANS, init.getTime(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId, store, shopping, null,
 											entityId, entityKind, v.getForDate());
 									if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
@@ -765,8 +799,8 @@ public class DashboardAPDeviceMapperService {
 
 								// visitor_total_visits ---------------------------------------------------------------------------------
 								// ------------------------------------------------------------------------------------------------------
-								obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", "visitor_total_visits",
-										"Visitas", v.getCheckinStarted(), DashboardIndicatorData.PERIOD_TYPE_DAILY,
+								obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", ELEMENT_SUB_ID_TOTAL_VISITS,
+										ELEMENT_SUB_NAME_VISITS, v.getCheckinStarted(), DashboardIndicatorData.PERIOD_TYPE_DAILY,
 										shoppingId, store, shopping, null, entityId, entityKind, v.getForDate());
 								if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
 								else indicatorsSet.put(obj, obj);
@@ -776,7 +810,7 @@ public class DashboardAPDeviceMapperService {
 									// permanence_hourly_visits -------------------------------------------------------------------------------
 									// ------------------------------------------------------------------------------------------------------
 									obj = buildBasicDashboardIndicatorData("apd_permanence", "Permanencia",
-											"permanence_hourly_visits", "Visitas", v.getCheckinStarted(),
+											ELEMENT_SUB_ID_HOURLY_PERMANENCE_VISITS, ELEMENT_SUB_NAME_VISITS, v.getCheckinStarted(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId, store, shopping, null,
 											entityId, entityKind, v.getForDate());
 									if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
@@ -794,7 +828,7 @@ public class DashboardAPDeviceMapperService {
 								while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) &&
 										day == init.get(Calendar.DAY_OF_MONTH)) {
 									obj = buildBasicDashboardIndicatorData("apd_occupation", "Ocupacion",
-											"occupation_hourly_visits", "Visitas", init.getTime(),
+											ELEMENT_SUB_ID_HOURLY_OCCUPATION_VISITS, ELEMENT_SUB_NAME_VISITS, init.getTime(),
 											DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId, store, shopping, null,
 											entityId, entityKind, v.getForDate());
 									if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
@@ -807,7 +841,7 @@ public class DashboardAPDeviceMapperService {
 							else if(v.getCheckinType().equals(APDVisit.CHECKIN_VIEWER)) {
 								
 								obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes",
-										"visitor_total_viewer", "Miradores", v.getCheckinStarted(),
+										ELEMENT_SUB_ID_TOTAL_VIEWERS, ELEMENT_SUB_NAME_VIEWERS, v.getCheckinStarted(),
 										DashboardIndicatorData.PERIOD_TYPE_DAILY, shoppingId, store, shopping, null,
 										subentityId, entityKind, v.getForDate()) ;
 								if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
@@ -857,49 +891,38 @@ public class DashboardAPDeviceMapperService {
 		return (quit.getTime() - enter.getTime());
 	}
 
-	public void saveIndicatorAliasSet(List<DashboardIndicatorAlias> aliases) throws ASException {
-		for( DashboardIndicatorAlias alias : aliases ) {
-			try {
-				diAliasDao.delete(alias.getIdentifier());
-			} catch( Exception e ) {}
-
-			diAliasDao.create(alias);
-		}
-	}
+	@Deprecated
+	public void saveIndicatorAliasSet(List<DashboardIndicatorAlias> aliases) throws ASException {}
 
 	public void saveIndicatorSet(Map<DashboardIndicatorData, DashboardIndicatorData> indicatorsSet) throws ASException {
 
-		List<DashboardIndicatorAlias> aliases = createAliasList(indicatorsSet);
-		saveIndicatorAliasSet(aliases);
+		//List<DashboardIndicatorAlias> aliases = createAliasList(indicatorsSet);
+		//saveIndicatorAliasSet(aliases);
 
 		dao.createOrUpdate(null, CollectionFactory.createList(indicatorsSet.values()), true);
 	}
 
+	@Deprecated
 	public List<DashboardIndicatorAlias> createAliasList(Map<DashboardIndicatorData, DashboardIndicatorData> indicatorsSet)
 			throws ASException {
-		List<DashboardIndicatorAlias> aliases = CollectionFactory.createList();
+		/*List<DashboardIndicatorAlias> aliases = CollectionFactory.createList();
 
 		for(DashboardIndicatorData data : indicatorsSet.values()) {
 			DashboardIndicatorAlias alias = new DashboardIndicatorAlias(
-					data.getEntityId(), data.getEntityKind(),
-					data.getScreenName(), data.getElementId(),
-					data.getElementName(), data.getElementSubId(),
-					data.getElementSubName(), data.getSubentityId(),
+					data.getEntityId(), data.getEntityKind(), data.getScreenName(), data.getElementId(),
+					data.getElementName(), data.getElementSubId(), data.getElementSubName(), data.getSubentityId(),
 					data.getSubentityName());
 			alias.setKey(diAliasDao.createKey(alias));
 			if(!aliases.contains(alias)) aliases.add(alias);
 
-			alias = new DashboardIndicatorAlias(
-					data.getEntityId(), data.getEntityKind(),
-					data.getScreenName(), data.getElementId().replace("ticket_", "promo_"),
-					data.getElementName(), data.getElementSubId(),
-					data.getElementSubName(), data.getSubentityId(),
-					data.getSubentityName());
+			alias = new DashboardIndicatorAlias(data.getEntityId(), data.getEntityKind(), data.getScreenName(),
+					data.getElementId().replace("ticket_", "promo_"), data.getElementName(), data.getElementSubId(),
+					data.getElementSubName(), data.getSubentityId(), data.getSubentityName());
 			alias.setKey(diAliasDao.createKey(alias));
 			if(!aliases.contains(alias)) aliases.add(alias);
 		}
 
-		return aliases;
+		return aliases;*/return null;
 	}
 	
 	
@@ -919,7 +942,7 @@ public class DashboardAPDeviceMapperService {
 				
 				if(deletePreviousRecords) {
 					for(DashboardIndicatorData did : dao.getUsingFilters(null, null, "apd_visitor",
-							"visitor_total_tickets", null, storeId, null, fromDate, toDate, null, null, null, null,
+							ELEMENT_SUB_ID_TOTAL_TICKETS, null, storeId, null, fromDate, toDate, null, null, null, null,
 							null, null, null, null))
 						dao.delete(did);
 				}
@@ -931,8 +954,8 @@ public class DashboardAPDeviceMapperService {
 
 					// visitor_total_tickets --------------------------------------------------------------------------------
 					// ------------------------------------------------------------------------------------------------------
-					obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", "visitor_total_tickets",
-							"Tickets", sdf.parse(ticket.getDate()), DashboardIndicatorData.PERIOD_TYPE_DAILY,
+					obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", ELEMENT_SUB_ID_TOTAL_TICKETS,
+							ELEMENT_SUB_NAME_TICKETS, sdf.parse(ticket.getDate()), DashboardIndicatorData.PERIOD_TYPE_DAILY,
 							store.getShoppingId(), store, null, null, store.getBrandId(), EntityKind.KIND_BRAND,
 							forDate);
 					if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
@@ -943,8 +966,8 @@ public class DashboardAPDeviceMapperService {
 					// ------------------------------------------------------------------------------------------------------
 					List<StoreTicketByHour> hours = sthDao.getUsingStoreIdAndDateAndRange(store.getIdentifier(), ticket.getDate(), "00:00", "23:00", null, null, true);
 					for( StoreTicketByHour th : hours ) {
-						obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", "visitor_hourly_tickets",
-								"Tickets", sdf2.parse(th.getDate() + " " + th.getHour()),
+						obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", ELEMENT_SUB_ID_HOURLY_TICKETS,
+								ELEMENT_SUB_NAME_TICKETS, sdf2.parse(th.getDate() + " " + th.getHour()),
 								DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(), store, null, null,
 								store.getBrandId(), EntityKind.KIND_BRAND, forDate);
 						if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
@@ -983,7 +1006,7 @@ public class DashboardAPDeviceMapperService {
 			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
-				
+				// TODO ADD ITEMS PER HOUR
 				if(deletePreviousRecords) {
 					for(DashboardIndicatorData did : dao.getUsingFilters(null, null, "apd_visitor", "visitor_total_items",
 							null, storeId, null, fromDate, toDate, null, null, null, null, null, null, null, null))
@@ -1037,7 +1060,7 @@ public class DashboardAPDeviceMapperService {
 			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
-				
+				// TODO ADD REVENUE PER HOUR
 				if(deletePreviousRecords) {
 					for(DashboardIndicatorData did : dao.getUsingFilters(null, null, "apd_visitor",
 							"visitor_total_revenue", null, storeId, null, fromDate, toDate, null, null, null, null,
@@ -1142,7 +1165,7 @@ public class DashboardAPDeviceMapperService {
 		// Prepares Store cache
 		storeCache = CollectionFactory.createMap();
 		List<Store> stores = storeDao.getUsingLastUpdateStatusAndRange(null, null, false,
-				Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, null, null, false);
+				Arrays.asList(StatusAware.STATUS_ENABLED), null, null, null, false);
 		for( Store store : stores ) {
 			if( StringUtils.hasText(store.getExternalId())) 
 				storeCache.put(store.getExternalId(), store);
@@ -1150,28 +1173,28 @@ public class DashboardAPDeviceMapperService {
 		}
 
 		List<Shopping> shoppings = shoppingDao.getUsingLastUpdateStatusAndRange(null, null, false,
-				Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, null, null, false);
+				Arrays.asList(StatusAware.STATUS_ENABLED), null, null, null, false);
 		shoppingCache = CollectionFactory.createMap();
 		for(Shopping shopping : shoppings ) {
 			shoppingCache.put(shopping.getIdentifier(), shopping);
 		}
 
 		List<InnerZone> zones = innerzoneDao.getUsingLastUpdateStatusAndRange(null, null, false,
-				Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, null, null, false);
+				Arrays.asList(StatusAware.STATUS_ENABLED), null, null, null, false);
 		zoneCache = CollectionFactory.createMap();
 		for(InnerZone zone : zones ) {
 			zoneCache.put(zone.getIdentifier(), zone);
 		}
 
 		List<WifiSpot> wifiSpots = wifiSpotDao.getUsingLastUpdateStatusAndRange(null, null, false,
-				Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, null, null, false);
+				Arrays.asList(StatusAware.STATUS_ENABLED), null, null, null, false);
 		wifiSpotCache = CollectionFactory.createMap();
 		for(WifiSpot wifiSpot : wifiSpots) {
 			wifiSpotCache.put(wifiSpot.getIdentifier(), wifiSpot);
 		}
 
 		List<FloorMap> floorMaps = floorMapDao.getUsingLastUpdateStatusAndRange(null, null, false,
-				Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, null, null, false);
+				Arrays.asList(StatusAware.STATUS_ENABLED), null, null, null, false);
 		floorMapCache = CollectionFactory.createMap();
 		for(FloorMap floorMap : floorMaps) {
 			floorMapCache.put(floorMap.getIdentifier(), floorMap);
@@ -1179,7 +1202,7 @@ public class DashboardAPDeviceMapperService {
 
 		if( withMacVendor ) {
 			List<MacVendor> macVendors = macVendorDao.getUsingLastUpdateStatusAndRange(null, null, false,
-					Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, null, null, false);
+					Arrays.asList(StatusAware.STATUS_ENABLED), null, null, null, false);
 			macVendorCache = CollectionFactory.createMap();
 			for(MacVendor macVendor : macVendors) {
 				macVendorCache.put(macVendor.getIdentifier(), macVendor);

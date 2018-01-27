@@ -28,6 +28,7 @@ import mobi.allshoppings.model.DashboardIndicatorAlias;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -41,8 +42,6 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 	
 	@Autowired
 	private DashboardIndicatorDataDAO dao;
-	@Autowired
-	private DashboardIndicatorAliasDAO diAliasDao;
 	@Autowired
 	private StoreDAO daoSRt;
 
@@ -63,37 +62,34 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			Integer entityKind = obtainIntegerValue("entityKind", null);
 			String elementId = obtainStringValue("elementId", null);
 			String elementSubId = obtainStringValue("elementSubId", null);
-			String shoppingId = obtainStringValue("shoppingId", null);
 			String subentityId = obtainStringValue("subentityId", null);
 			String periodType = obtainStringValue("periodType", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
-			String movieId = obtainStringValue("movieId", null);
-			String voucherType = obtainStringValue("voucherType", null);
 			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
 			Integer timezone = obtainIntegerValue("timezone", null);
 			String subIdOrder = obtainStringValue("subIdOrder", null);
-			String country = obtainStringValue("country", null);
-			String province = obtainStringValue("province", null);
-			String city = obtainStringValue("city", null);
 			Boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
-			String zone = obtainStringValue("zone", null);
 			String region = obtainStringValue("region", null);
-			String format = obtainStringValue("format", null);
+			String format = obtainStringValue("storeFormat", null);
 			String district = obtainStringValue("disctrict", null);
 			String orderx = obtainStringValue("order", null);
 			List<DashboardIndicatorData> list = CollectionFactory.createList();
-			List<Store> srtlist = CollectionFactory.createList();
-			List<String> subname= CollectionFactory.createList();
-			
-			srtlist = daoSRt.getUsingRegionAndFormatAndDistrict(region, format, district, orderx);
-			for(Store i : srtlist) {
-				subname.add(i.getIdentifier()); 
+			List<String> subname = CollectionFactory.createList();
+			boolean notEmptySubentity = StringUtils.hasText(subentityId);
+			boolean singleData = notEmptySubentity ||
+					(!StringUtils.hasText(region) && !StringUtils.hasText(format) && !StringUtils.hasText(district));
+			if(singleData) {
+				if(notEmptySubentity) subname.add(subentityId);
+			} else {
+				for(Store i : daoSRt.getUsingRegionAndFormatAndDistrict(entityId, null, null,
+						StatusHelper.statusActive(), region, format, district, orderx)) {
+					subname.add(i.getIdentifier()); 
+				}
 			}
-			list = dao.getUsingFilters(null,
-				entityKind, null, null, shoppingId,
-				subname, null /*periodType*/, fromStringDate, toStringDate,
-				movieId, voucherType, dayOfWeek, timezone, null, country, province, city);
+			list = dao.getUsingFilters(singleData ? Arrays.asList(entityId) : null, entityKind, Arrays.asList(elementId),
+					notEmptySubentity ? Arrays.asList(elementSubId) : null, null, subname, null,
+							fromStringDate, toStringDate, null, null, dayOfWeek, timezone, null, null, null, null);
 			
 			log.log(Level.INFO, list.size() + " dashboard elements found");
 
@@ -108,6 +104,7 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			if(StringUtils.hasText(subIdOrder))
 				orderList.addAll(Arrays.asList(subIdOrder.split(",")));
 
+			// TODO USE MAPPER MAP
 			Map<String, String> aliasMap = CollectionFactory.createMap();
 			if(!CollectionUtils.isEmpty(orderList)) {
 				for( String order : orderList ) {
@@ -153,8 +150,6 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 					Date objDate = calculateDateFrame(DateUtils.truncate(obj.getDate(), Calendar.DATE), periodType);
 					if (!(objDate.compareTo(fromDate) >= 0 && objDate.compareTo(toDate) <= 0)) continue;
 					String key = obj.getElementSubName();
-					String zoneSubStrg = obj.getSubentityName();
-					if(!(zoneSubStrg.contains(zone))) continue;
 					String orderKey = obj.getElementSubId();
 					if(!StringUtils.hasText(subIdOrder) || orderList.contains(orderKey)) {
 						aliasMap.put(orderKey, key);

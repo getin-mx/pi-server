@@ -1,6 +1,7 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -17,10 +18,13 @@ import org.springframework.util.StringUtils;
 import mobi.allshoppings.bdb.bz.BDBHeatmapTableDataBzService;
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
+import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.DashboardIndicatorData;
+import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -35,6 +39,8 @@ implements BDBHeatmapTableDataBzService {
 	
 	@Autowired
 	private DashboardIndicatorDataDAO dao;
+	@Autowired
+	private StoreDAO daoSRt;
 
 	/**
 	 * Obtains information about a user
@@ -53,22 +59,34 @@ implements BDBHeatmapTableDataBzService {
 			Integer entityKind = obtainIntegerValue("entityKind", null);
 			String elementId = obtainStringValue("elementId", null);
 			String elementSubId = obtainStringValue("elementSubId", null);
-			String shoppingId = obtainStringValue("shoppingId", null);
 			String subentityId = obtainStringValue("subentityId", null);
-			String periodType = obtainStringValue("periodId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
-			String movieId = obtainStringValue("movieId", null);
-			String voucherType = obtainStringValue("voucherType", null);
 			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
 			Integer timezone = obtainIntegerValue("timezone", null);
 			Integer top = obtainIntegerValue("top", null);
 			String zone = obtainStringValue("zone" , null);
+			String region = obtainStringValue("region", null);
+			String format = obtainStringValue("storeFormat", null);
+			String district = obtainStringValue("disctrict", null);
+			String orderx = obtainStringValue("order", null);
+			List<String> subname = CollectionFactory.createList();
+			boolean notEmptySubentity = StringUtils.hasText(subentityId);
+			boolean singleData = notEmptySubentity ||
+					(!StringUtils.hasText(region) && !StringUtils.hasText(format) && !StringUtils.hasText(district));
+			if(singleData) {
+				if(notEmptySubentity) subname.add(subentityId);
+			} else {
+				for(Store i : daoSRt.getUsingRegionAndFormatAndDistrict(entityId, null, null,
+						StatusHelper.statusActive(), region, format, district, orderx)) {
+					subname.add(i.getIdentifier()); 
+				}
+			}
 			
-			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
-					entityKind, elementId, elementSubId, shoppingId,
-					subentityId, periodType, fromStringDate, toStringDate,
-					movieId, voucherType, dayOfWeek, timezone, null, null, null, null);
+			List<DashboardIndicatorData> list = dao.getUsingFilters(singleData ? Arrays.asList(entityId) : null,
+					entityKind, Arrays.asList(elementId), notEmptySubentity ? Arrays.asList(elementSubId) : null, null,
+							subname, null, fromStringDate, toStringDate, null, null, dayOfWeek, timezone, null, null,
+							null, null);
 
 			Map<String, Map<Integer, Integer>> dataSet = CollectionFactory.createMap();
 			Map<String, Integer> toBeOrderedDataSet = CollectionFactory.createMap(); 

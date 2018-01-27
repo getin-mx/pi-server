@@ -156,16 +156,23 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 	 */
 	private List<Store> getUsingBrandAndShoppingAndUserAndStatus(String brandId,
 			String shoppingId, User user, List<Integer> status, String order) throws ASException {
+		return getUsingRegionAndFormatAndDistrict(brandId, shoppingId, user, status, null, null, null, order);
+	}
+	
+	@Override
+	public List<Store> getUsingRegionAndFormatAndDistrict(String brandId, String shoppingId, User user,
+			List<Integer> status, String region, String format, String district, String order) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
-		List<Store> ret = new ArrayList<Store>();
-
+		List<Store> ret = new ArrayList<>();
+		
 		try {
+			
 			Map<String, Object> parameters = CollectionFactory.createMap();
 			List<String> declaredParams = CollectionFactory.createList();
 			List<String> filters = CollectionFactory.createList();
 			
 			Query query = pm.newQuery(Store.class);
-
+			
 			// Brand parameters
 			if( StringUtils.hasText(brandId)) {
 				declaredParams.add("String brandIdParam");
@@ -181,46 +188,9 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 			}
 
 			// Status parameters
-			if( status != null && status.size() > 0 ) {
+			if( status != null && !status.isEmpty()) {
 				filters.add(toListFilterCriteria("status", status, false));
 			}
-
-			// Setting query parameters
-			query.declareParameters(toParameterList(declaredParams));
-			query.setFilter(toWellParametrizedFilter(filters));
-			if(StringUtils.hasText(order)) query.setOrdering(order);
-			
-			// Executes the query
-			@SuppressWarnings("unchecked")
-			List<Store> objs = (List<Store>)query.executeWithMap(parameters);
-			if (objs != null) {
-				// force to read
-				for (Store obj : objs) {
-					ret.add(pm.detachCopy(obj));
-				}
-			}
-			
-		} catch (Exception e) {
-			throw ASExceptionHelper.defaultException(e.getMessage(), e);
-		} finally {
-			pm.close();
-		}
-		
-		return ret;
-	}
-	
-	public List<Store> getUsingRegionAndFormatAndDistrict(String region, String format, String district, String order) throws ASException
-	{
-		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
-		List<Store> ret = new ArrayList<Store>();
-		
-		try {
-			
-			Map<String, Object> parameters = CollectionFactory.createMap();
-			List<String> declaredParams = CollectionFactory.createList();
-			List<String> filters = CollectionFactory.createList();
-			
-			Query query = pm.newQuery(Store.class);
 			
 			// Region parameters
 			if( StringUtils.hasText(region)) {

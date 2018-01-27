@@ -875,34 +875,55 @@ implements BDBDashboardBzService {
 			this.viewers = viewers;
 		}
 		
-		private double getCabMedian() {
-			if(permanenceCab.isEmpty()) return 0;
-			if(permanenceCab.size() == 1) return permanenceCab.get(0);
-			Long[] permanences = permanenceCab.toArray(new Long[0]);
-			Arrays.sort(permanences);
-			return permanences.length % 2 == 0 ? (permanences[permanences.length /2]
-					+permanences[(permanences.length /2) +1]) /2 : permanences[permanences.length /2];
+		private long getCabMedian() {
+			switch(permanenceCab.size()) {
+			case 0 :
+				return 0;
+			case 1 :
+				return permanenceCab.get(0);
+			case 2 :
+				return (permanenceCab.get(0) +permanenceCab.get(1)) /2;
+			default :
+				Long[] permanences = permanenceCab.toArray(new Long[0]);
+				Arrays.sort(permanences);
+				return permanences.length % 2 == 0 ? (permanences[permanences.length /2]
+						+permanences[(permanences.length /2) +1]) /2 : permanences[permanences.length /2];
+			}
 		}
 		
-		private double getExhMedian() {
-			if(permanenceExh.isEmpty()) return 0;
-			if(permanenceExh.size() == 1) return permanenceExh.get(0);
-			Long[] permancens = permanenceExh.toArray(new Long[0]);
-			Arrays.sort(permancens);
-			return permancens.length % 2 == 0 ? (permancens[permancens.length /2]
-					+permancens[(permancens.length /2) +1]) /2 : permancens[permancens.length /2];
+		private long getExhMedian() {
+			switch(permanenceExh.size()) {
+			case 0 :
+				return 0;
+			case 1 :
+				return permanenceExh.get(0);
+			case 2 :
+				return (permanenceExh.get(0) +permanenceExh.get(1)) /2;
+			default :
+				Long[] permancens = permanenceExh.toArray(new Long[0]);
+				Arrays.sort(permancens);
+				return permancens.length % 2 == 0 ? (permancens[permancens.length /2]
+						+permancens[(permancens.length /2) +1]) /2 : permancens[permancens.length /2];
+			}
 		}
 		
-		private double getTotalMedian() {
+		private long getTotalMedian() {
 			LinkedList<Long> permanences = new LinkedList<>();
 			permanences.addAll(permanenceCab);
 			permanences.addAll(permanenceExh);
-			if(permanences.isEmpty()) return 0;
-			if(permanences.size() == 1) return permanences.get(0);
-			Long[] perms = permanences.toArray(new Long[0]);
-			Arrays.sort(perms);
-			return perms.length %2 == 0 ? (perms[perms.length /2] +perms[(perms.length /2) +1]) /2 :
-				perms[perms.length /2];
+			switch(permanences.size()) {
+			case 0 :
+				return 0;
+			case 1 :
+				return permanences.get(0);
+			case 2 :
+				return (permanences.get(0) +permanences.get(1)) /2;
+			default :
+				Long[] perms = permanences.toArray(new Long[0]);
+				Arrays.sort(perms);
+				return perms.length %2 == 0 ? (perms[perms.length /2] +perms[(perms.length /2) +1]) /2 :
+					perms[perms.length /2];
+			}
 		}
 
 	}
