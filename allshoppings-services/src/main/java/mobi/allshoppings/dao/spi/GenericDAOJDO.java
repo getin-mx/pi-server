@@ -1621,7 +1621,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	 */
 	@Override
 	public String toParameterList(List<String> parms) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		boolean first = true;
 		Iterator<String> i = parms.iterator();
 		while(i.hasNext()) {
@@ -1712,7 +1712,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	public String toWellParametrizedFilter(List<String> filters) {
 		if( filters == null || filters.size() == 0 ) return null;
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		boolean first = true;
 		for(String filter : filters ) {
 			if( !first ) {

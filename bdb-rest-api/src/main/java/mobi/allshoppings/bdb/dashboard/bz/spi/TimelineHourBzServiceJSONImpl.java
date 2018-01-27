@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,12 +20,11 @@ import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.bdb.bz.BDBTimelineHourBzService;
-import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.StoreDAO;
+import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.DashboardIndicatorAlias;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
@@ -59,9 +59,7 @@ implements BDBTimelineHourBzService {
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
 			String elementId = obtainStringValue("elementId", null);
-			String elementSubId = obtainStringValue("elementSubId", null);
 			String subentityId = obtainStringValue("subentityId", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
@@ -73,25 +71,22 @@ implements BDBTimelineHourBzService {
 			Boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
 			String region = obtainStringValue("region", null);
 			String format = obtainStringValue("storeFormat", null);
-			String district = obtainStringValue("disctrict", null);
+			String district = obtainStringValue("district", null);
 			String orderx = obtainStringValue("order", null);
 			List<String> subname = CollectionFactory.createList();
 			boolean notEmptySubentity = StringUtils.hasText(subentityId);
 			boolean singleData = notEmptySubentity ||
 					(!StringUtils.hasText(region) && !StringUtils.hasText(format) && !StringUtils.hasText(district));
-			if(singleData) {
-				if(notEmptySubentity) subname.add(subentityId);
-			} else {
-				for(Store i : daoSRt.getUsingRegionAndFormatAndDistrict(entityId, null, null,
-						StatusHelper.statusActive(), region, format, district, orderx)) {
-					subname.add(i.getIdentifier()); 
+			if(notEmptySubentity) subname.add(subentityId);
+			else {
+				if(singleData) {
+					for(Store i : daoSRt.getUsingRegionAndFormatAndDistrict(entityId, null, null,
+							StatusHelper.statusActive(), region, format, district, orderx)) subname.add(i.getIdentifier());
 				}
 			}
-			
-			List<DashboardIndicatorData> list = dao.getUsingFilters(singleData ? Arrays.asList(entityId) : null,
-					entityKind, Arrays.asList(elementId), notEmptySubentity ? Arrays.asList(elementSubId) : null, null,
-							subname, null, fromStringDate, toStringDate, null, null, dayOfWeek, timezone, null, null,
-							null, null);
+			//on all brands, null entityId  may produce undesired behaviour
+			List<DashboardIndicatorData> list = dao.getUsingFilters(null, null, Arrays.asList(elementId), null, null,
+					subname, null, fromStringDate, toStringDate, null, null, dayOfWeek, timezone, null, null, null, null);
 
 			List<String> categories = CollectionFactory.createList();
 
@@ -99,18 +94,8 @@ implements BDBTimelineHourBzService {
 			List<String> orderList = CollectionFactory.createList();
 			if(StringUtils.hasText(subIdOrder))
 				orderList.addAll(Arrays.asList(subIdOrder.split(",")));
-			// TODO USE MAPPER MAP
-			Map<String, String> aliasMap = CollectionFactory.createMap();
-			if(!CollectionUtils.isEmpty(orderList)) {
-				for( String order : orderList ) {
-					try {
-						DashboardIndicatorAlias alias = diAliasDao.getUsingFilters(entityId, entityKind, elementId, order);
-						aliasMap.put(order, alias.getElementSubName());
-					} catch( ASException e ) {
-						log.log(Level.INFO, "Alias Not Found for subelementId " + order);
-					}
-				}
-			}
+			
+			Map<String, String> aliasMap = new HashMap<>(DashboardAPDeviceMapperService.INDICATORS_ALIASES);
 
 			// Creates the Hour Map
 			Map<Integer, Integer> hourMap = CollectionFactory.createMap();

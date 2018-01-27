@@ -187,30 +187,30 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 				parameters.put("shoppingIdParam", shoppingId);
 			}
 
-			// Status parameters
-			if( status != null && !status.isEmpty()) {
-				filters.add(toListFilterCriteria("status", status, false));
-			}
-			
 			// Region parameters
 			if( StringUtils.hasText(region)) {
 				declaredParams.add("String regionParam");
-				filters.add("region == null || region == regionParam" );
+				filters.add("(region == null || region == regionParam)" );
 				parameters.put("regionParam", region);
 			}
 			
 			// Format parameters
 			if( StringUtils.hasText(format)) {
 				declaredParams.add("String formatParam");
-				filters.add("format == null || format == formatParam");
+				filters.add("(format == null || format == formatParam)");
 				parameters.put("formatParam", format);
 			}
 			
 			// District parameters
 			if( StringUtils.hasText(district)) {
 				declaredParams.add("String districtParam");
-				filters.add("district == null || district == districtParam");
+				filters.add("(district == null || district == districtParam)");
 				parameters.put("districtParam", district);
+			}
+			
+			// Status parameters
+			if( status != null && !status.isEmpty()) {
+				filters.add(toListFilterCriteria("status", status, false));
 			}
 			
 			// Setting query parameters

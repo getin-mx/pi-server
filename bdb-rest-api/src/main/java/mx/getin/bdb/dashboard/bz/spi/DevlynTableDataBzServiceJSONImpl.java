@@ -79,13 +79,17 @@ implements BDBDashboardBzService {
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
 			String format = obtainStringValue("format", "table");
+			String region = obtainStringValue("region", null);
+			String storeFormat = obtainStringValue("storeFormat", null);
+			String district = obtainStringValue("district", null);
 
 			// Initializes the table using the received information
 			DashboardTableRep table = new DashboardTableRep();
 			List<Store> tmpStores2 = CollectionFactory.createList();
 			String userBrand;
 			
-			for( Store store : storeDao.getUsingBrandAndStatus(entityId, StatusHelper.statusActive(), "name") ) {
+			for( Store store : storeDao.getUsingRegionAndFormatAndDistrict(entityId, null, null,
+					StatusHelper.statusActive(), region, storeFormat, district, "name") ) {
 			 	if( isValidForUser(user, store) ) tmpStores2.add(store);
 			} switch(user.getSecuritySettings().getRole()) {
 			case UserSecurity.Role.ADMIN :

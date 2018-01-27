@@ -69,6 +69,10 @@ import mobi.allshoppings.tools.CollectionFactory;
 import mobi.allshoppings.tools.CollectionUtils;
 import mobi.allshoppings.tools.GsonFactory;
 import mx.getin.Constants;
+import mx.getin.dao.StoreItemByHourDAO;
+import mx.getin.dao.StoreRevenueByHourDAO;
+import mx.getin.model.StoreItemByHour;
+import mx.getin.model.StoreRevenueByHour;
 
 public class DashboardAPDeviceMapperService {
 
@@ -83,9 +87,13 @@ public class DashboardAPDeviceMapperService {
 	private final Calendar AUX_CALENDAR = Calendar.getInstance();
 	public static final String ELEMENT_SUB_ID_HOURLY_OCCUPATION_PEDERSTIANS = "occupation_hourly_peasants";
 	public static final String ELEMENT_SUB_ID_HOURLY_OCCUPATION_VISITS = "occupation_hourly_visits";
+	public static final String ELEMENT_SUB_ID_HOURLY_OCCUPATION_VIEWER = "occupation_hourly_viewer";
 	public static final String ELEMENT_SUB_ID_HOURLY_PERMANENCE_VISITS = "permanence_hourly_visits";
 	public static final String ELEMENT_SUB_ID_HOURLY_PERMANCENCE_PEDERSTIANS = "permanence_hourly_peasents";
+	public static final String ELEMENT_SUB_ID_HOURLY_PERMANENCE_VIEWERS = "permanence_hourly_viewers";
 	public static final String ELEMENT_SUB_ID_HOURLY_TICKETS = "visitor_hourly_tickets";
+	public static final String ELEMENT_SUB_ID_HOURLY_ITEMS = "visitor_hourly_items";
+	public static final String ELEMENT_SUB_ID_HOURLY_REVENUE = "visitor_hourly_revenue";
 	public static final String ELEMENT_SUB_ID_TOTAL_PEDERSTIANS = "visitor_total_peasents";
 	public static final String ELEMENT_SUB_ID_TOTAL_TICKETS = "visitor_total_tickets";
 	public static final String ELEMENT_SUB_ID_TOTAL_ITEMS = "visitor_total_items";
@@ -103,12 +111,15 @@ public class DashboardAPDeviceMapperService {
 	public static final Map<String, String> INDICATORS_ALIASES;
 	
 	static {
-		INDICATORS_ALIASES = new HashMap<>(11);
+		INDICATORS_ALIASES = new HashMap<>(15);
 		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_HOURLY_OCCUPATION_PEDERSTIANS, ELEMENT_SUB_NAME_PEDERSTIANS);
 		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_HOURLY_OCCUPATION_VISITS, ELEMENT_SUB_NAME_VISITS);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_HOURLY_OCCUPATION_VIEWER, ELEMENT_SUB_NAME_VIEWERS);
 		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_HOURLY_PERMANCENCE_PEDERSTIANS, ELEMENT_SUB_NAME_PEDERSTIANS);
 		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_HOURLY_PERMANENCE_VISITS, ELEMENT_SUB_NAME_VISITS);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_HOURLY_PERMANENCE_VIEWERS, ELEMENT_SUB_NAME_VIEWERS);
 		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_HOURLY_TICKETS, ELEMENT_SUB_NAME_TICKETS);
+		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_HOURLY_REVENUE, ELEMENT_SUB_NAME_REVENUE);
 		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_TOTAL_PEDERSTIANS, ELEMENT_SUB_NAME_PEDERSTIANS);
 		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_TOTAL_ITEMS, ELEMENT_SUB_NAME_ITEMS);
 		INDICATORS_ALIASES.put(ELEMENT_SUB_ID_TOTAL_REVENUE, ELEMENT_SUB_NAME_REVENUE);
@@ -146,7 +157,11 @@ public class DashboardAPDeviceMapperService {
 	@Autowired
 	private StoreItemDAO siDao;
 	@Autowired
+	private StoreItemByHourDAO sihDao;
+	@Autowired
 	private StoreRevenueDAO srDao;
+	@Autowired
+	private StoreRevenueByHourDAO srhDao;
 	@Autowired
 	private InnerZoneDAO innerzoneDao;
 	@Autowired
@@ -837,8 +852,7 @@ public class DashboardAPDeviceMapperService {
 									init.add(Calendar.HOUR_OF_DAY, 1);
 										
 								}
-							}
-							else if(v.getCheckinType().equals(APDVisit.CHECKIN_VIEWER)) {
+							} else if(v.getCheckinType().equals(APDVisit.CHECKIN_VIEWER)) {
 								
 								obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes",
 										ELEMENT_SUB_ID_TOTAL_VIEWERS, ELEMENT_SUB_NAME_VIEWERS, v.getCheckinStarted(),
@@ -847,6 +861,31 @@ public class DashboardAPDeviceMapperService {
 								if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
 								else indicatorsSet.put(obj, obj);
 								obj.setDoubleValue(obj.getDoubleValue() + 1);
+								if(!v.getHidePermanence()) {
+									obj = buildBasicDashboardIndicatorData("apd_permanence", "Permanencia",
+											ELEMENT_SUB_ID_HOURLY_PERMANENCE_VIEWERS, ELEMENT_SUB_NAME_VIEWERS,
+											v.getCheckinStarted(), null, shoppingId, store, shopping, null,
+											entityId, entityKind, v.getForDate());
+									if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
+									else indicatorsSet.put(obj, obj);
+									obj.setDoubleValue(obj.getDoubleValue()
+											+ calculateDiffTime(v.getCheckinFinished(), v.getCheckinStarted()));
+									obj.setRecordCount(obj.getRecordCount() + 1);
+								}//add viewers permanence
+								init.setTime(v.getCheckinStarted());
+								finish.setTime(v.getCheckinFinished());
+								int day = init.get(Calendar.DAY_OF_MONTH);
+								while (init.get(Calendar.HOUR_OF_DAY) <= finish.get(Calendar.HOUR_OF_DAY) &&
+										day == init.get(Calendar.DAY_OF_MONTH)) {
+									obj = buildBasicDashboardIndicatorData("apd_occupation", "Ocupacion",
+											ELEMENT_SUB_ID_HOURLY_OCCUPATION_VIEWER, ELEMENT_SUB_NAME_VIEWERS,
+											init.getTime(), null, shoppingId, store, shopping, null, entityId, entityKind,
+											v.getForDate());
+									if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
+									else indicatorsSet.put(obj, obj);
+									obj.setDoubleValue(obj.getDoubleValue() + 1);
+									init.add(Calendar.HOUR_OF_DAY, 1);
+								}
 							}
 						} else {
 							// Store not found
@@ -925,7 +964,15 @@ public class DashboardAPDeviceMapperService {
 		return aliases;*/return null;
 	}
 	
-	
+	/**
+	 * Creates dashboard indicators for tickets: daily &amp; hourly indicators.
+	 * @param fromDate - The starting date to create indicators.
+	 * @param toDate - The last date to create indicators.
+	 * @param storeId - The store which indicators are being created.
+	 * @param deletePreviousRecords - If previous indicators must be removed.
+	 * @throws ASException - If something goes wrong.
+	 * @throws ParseException - If a date has an invalid format.
+	 */
 	public void createStoreTicketDataForDates(String fromDate, String toDate, String storeId,
 			boolean deletePreviousRecords) throws ASException, ParseException{
 		
@@ -973,27 +1020,31 @@ public class DashboardAPDeviceMapperService {
 						if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
 						else indicatorsSet.put(obj, obj);
 						obj.setDoubleValue(obj.getDoubleValue() + th.getQty());
-					}
-					
-				}
+					}//creates daily indicators
+				}//creates indicators for the given tickets
 				log.log(Level.INFO, "Starting Write Procedure for " +indicatorsSet.size() +" indicators ...");
-
 				// Finally, save all the information
 				saveIndicatorSet(indicatorsSet);
-
 			} else {
-				// Store not found
+				
 				log.log(Level.INFO, "Store with id " + storeId + " not found!");
-			}
-			
+			}// Store not founds
 		} catch (ASException e) {
 			log.log(Level.SEVERE, e.getMessage(), e);
-		}
-		
+		}//if something goes wrong
 		long endTime = System.currentTimeMillis();
 		log.log(Level.INFO, "Finished to create store tickets Dashboard for Day " + fromDate + " to: " + toDate + " total time: "+ (endTime - startTime) + "ms");
-	}
+	}//createStoreTicketDataForDates
 	
+	/**
+	 * Creates dashboard indicators for the given items; daily &amp; hourly.
+	 * @param fromDate - Begining date to create indicators.
+	 * @param toDate - Limit date to create indicators.
+	 * @param storeId - The store for which indicators are being created.
+	 * @param deletePreviousRecords - if previous indicators are being created.
+	 * @throws ASException - If something goes wrong.
+	 * @throws ParseException - If any date has an invalid date.
+	 */
 	public void createStoreItemDataForDates(String fromDate,String toDate, String storeId, boolean deletePreviousRecords)
 			throws ASException, ParseException {
 		
@@ -1006,10 +1057,10 @@ public class DashboardAPDeviceMapperService {
 			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
-				// TODO ADD ITEMS PER HOUR
+
 				if(deletePreviousRecords) {
-					for(DashboardIndicatorData did : dao.getUsingFilters(null, null, "apd_visitor", "visitor_total_items",
-							null, storeId, null, fromDate, toDate, null, null, null, null, null, null, null, null))
+					for(DashboardIndicatorData did : dao.getUsingFilters(null, null, "apd_visitor", ELEMENT_SUB_ID_TOTAL_ITEMS,
+							ELEMENT_SUB_NAME_ITEMS, storeId, null, fromDate, toDate, null, null, null, null, null, null, null, null))
 						dao.delete(did);
 				}
 				
@@ -1020,32 +1071,49 @@ public class DashboardAPDeviceMapperService {
 
 					// visitor_total_itemss --------------------------------------------------------------------------------
 					// ------------------------------------------------------------------------------------------------------
-					obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", "visitor_total_items",
-							"Items Vendidos", sdf.parse(item.getDate()), DashboardIndicatorData.PERIOD_TYPE_DAILY,
+					obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", ELEMENT_SUB_ID_TOTAL_ITEMS,
+							ELEMENT_SUB_NAME_ITEMS, sdf.parse(item.getDate()), DashboardIndicatorData.PERIOD_TYPE_DAILY,
 							store.getShoppingId(), store, null, null, store.getBrandId(), EntityKind.KIND_BRAND,
 							forDate);
 					if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
 					else indicatorsSet.put(obj, obj);
 					obj.setDoubleValue(obj.getDoubleValue() + item.getQty());
-				}
+					
+					// visitor_hourly_tickets -------------------------------------------------------------------------------
+					// ------------------------------------------------------------------------------------------------------
+					List<StoreItemByHour> hours = sihDao.getUsingStoreIdAndDateAndRange(store.getIdentifier(), item.getDate(), "00:00", "23:00", null, null, true);
+					for(StoreItemByHour th : hours ) {
+						obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", ELEMENT_SUB_ID_HOURLY_ITEMS,
+								ELEMENT_SUB_NAME_ITEMS, sdf2.parse(th.getDate() + " " + th.getHour()),
+								DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(), store, null, null,
+								store.getBrandId(), EntityKind.KIND_BRAND, forDate);
+						if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
+						else indicatorsSet.put(obj, obj);
+						obj.setDoubleValue(obj.getDoubleValue() + th.getQty());
+					}//creates hourly items
+				}//creates indicators for all items
 				log.log(Level.INFO, "Starting Write Procedure for " +indicatorsSet.size() +" indicators...");
-
 				// Finally, save all the information
 				saveIndicatorSet(indicatorsSet);
-
 			} else {
-				// Store not found
 				log.log(Level.INFO, "Store with id " + storeId + " not found!");
-			}
-			
+			}// Store not found
 		} catch (ASException e) {
 			log.log(Level.SEVERE, e.getMessage(), e);
-		}
-		
+		}//if something goes wrong
 		long endTime = System.currentTimeMillis();
 		log.log(Level.INFO, "Finished to create store itemss Dashboard for Day " + fromDate + " to: " + toDate + " total time: "+ (endTime - startTime) + "ms");
-	}
+	}//createStoreItemDataForDates
 
+	/**
+	 * Creates dashboard indicators for store revenue; daily &amp; hourly.
+	 * @param fromDate - The starting date to create dashboard indicators.
+	 * @param toDate - The last date to create indicators.
+	 * @param storeId - The store for which the indicators will be created.
+	 * @param deletePreviousRecords - If previous indicators need to be deleted.
+	 * @throws ASException - If something goes wrong.
+	 * @throws ParseException - If any date has an invalid format. 
+	 */
 	public void createStoreRevenueDataForDates(String fromDate,String toDate, String storeId,
 			boolean deletePreviousRecords) throws ASException,ParseException{
 		
@@ -1057,31 +1125,38 @@ public class DashboardAPDeviceMapperService {
 			List<StoreRevenue> revenues =  srDao.getUsingStoreIdAndDatesAndRange(storeId, fromDate, toDate, null,
 					null, false);
 			
-			
 			Store store = storeDao.get(storeId);
 			if( store != null ) {
-				// TODO ADD REVENUE PER HOUR
 				if(deletePreviousRecords) {
 					for(DashboardIndicatorData did : dao.getUsingFilters(null, null, "apd_visitor",
 							"visitor_total_revenue", null, storeId, null, fromDate, toDate, null, null, null, null,
 							null, null, null, null))
 						dao.delete(did);
 				}
-				
-				for( StoreRevenue revenue: revenues){		
-					
+				for( StoreRevenue revenue: revenues){			
 					DashboardIndicatorData obj;
 					String forDate = revenue.getDate();
-
 					// visitor_total_revenues --------------------------------------------------------------------------------
 					// ------------------------------------------------------------------------------------------------------
-					obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", "visitor_total_revenue",
-							"Revenue", sdf.parse(revenue.getDate()), DashboardIndicatorData.PERIOD_TYPE_DAILY,
+					obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", ELEMENT_SUB_ID_TOTAL_REVENUE,
+							ELEMENT_SUB_NAME_REVENUE, sdf.parse(revenue.getDate()), DashboardIndicatorData.PERIOD_TYPE_DAILY,
 							store.getShoppingId(), store, null, null, store.getBrandId(), EntityKind.KIND_BRAND,
 							forDate);
 					if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
 					else indicatorsSet.put(obj, obj);
 					obj.setDoubleValue(obj.getDoubleValue() + revenue.getQty());
+					// visitor_hourly_revenue -------------------------------------------------------------------------------
+					// ------------------------------------------------------------------------------------------------------
+					List<StoreRevenueByHour> hours = srhDao.getUsingStoreIdAndDateAndRange(store.getIdentifier(), revenue.getDate(), "00:00", "23:00", null, null, true);
+					for(StoreRevenueByHour th : hours ) {
+						obj = buildBasicDashboardIndicatorData("apd_visitor", "Visitantes", ELEMENT_SUB_ID_HOURLY_REVENUE,
+								ELEMENT_SUB_NAME_REVENUE, sdf2.parse(th.getDate() + " " + th.getHour()),
+								DashboardIndicatorData.PERIOD_TYPE_DAILY, store.getShoppingId(), store, null, null,
+								store.getBrandId(), EntityKind.KIND_BRAND, forDate);
+						if(indicatorsSet.containsKey(obj)) obj = indicatorsSet.get(obj);
+						else indicatorsSet.put(obj, obj);
+						obj.setDoubleValue(obj.getDoubleValue() + th.getQty());
+					}
 				}
 				log.log(Level.INFO, "Starting Write Procedure for " +indicatorsSet.size() +" indicators...");
 

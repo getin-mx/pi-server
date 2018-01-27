@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.jdo.annotations.Embedded;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -81,6 +80,10 @@ public class Store implements ModelKey, Serializable, IAdaptable, Identificable,
 	private ACL acl;
 	
 	private Integer status;
+	
+	private String region;
+	private String format;
+	private String district;
 
 	// Search fields ... this is too ugly... Fuck you Google!!!!
 	@SuppressWarnings("unused")
@@ -634,6 +637,28 @@ public class Store implements ModelKey, Serializable, IAdaptable, Identificable,
 		this.storeLocationKind = storeLocationKind;
 	}
 	
-	
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+
+	public String getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(String district) {
+		this.district = district;
+	}
 
 }
