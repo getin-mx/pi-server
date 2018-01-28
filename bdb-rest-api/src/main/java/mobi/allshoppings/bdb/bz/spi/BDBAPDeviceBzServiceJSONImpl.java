@@ -127,7 +127,7 @@ public class BDBAPDeviceBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDev
 			modObj.setVisitStartFri(obj.getString("visitStartFri"));
 			modObj.setMonitorStart(obj.getString("monitorStart"));
 			modObj.setExternal(obj.getBoolean("external"));
-			modObj.setOffsetView((int)Math.abs(obj.getLong("viewerOffsetPowerThreshold")+obj.getLong("viewerPowerThreshold")));
+			modObj.setOffsetView((int)Math.abs(obj.getLong("viewerOffsetPowerThreshold")-obj.getLong("viewerPowerThreshold")));
 			modObj.setLastUpdate(datef);
 			modObj.setVisitsOnMon(obj.getBoolean("visitsOnMon"));
 			modObj.setStatus(obj.getInt("status"));
