@@ -30,14 +30,14 @@ public class TempUserCreation extends AbstractCLI {
 	public static void setApplicationContext(ApplicationContext ctx) {
 		context = ctx;
 	}
-	
+
 	private static final char HEXES[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-	
+
 	private static String encodeString(String input) {
 		 String output = "";
 		try {
 			Mac mac = Mac.getInstance("HmacSHA256");
-			byte keyBytes[] = "MSIR33L264H1VVXSINHR".getBytes(); 
+			byte keyBytes[] = "MSIR33L264H1VVXSINHR".getBytes();
 			SecretKey key = new SecretKeySpec(keyBytes, "HmacSHA256");
 			mac.init(key);
 			mac.update(input.getBytes());
@@ -70,7 +70,7 @@ public class TempUserCreation extends AbstractCLI {
 			UserMenuDAO userMenuDao = (UserMenuDAO) getApplicationContext().getBean("usermenu.dao.ref");
 			UserDAO userDao = (UserDAO) getApplicationContext().getBean("user.dao.ref");
 			KeyHelper keyHelper = (KeyHelper) getApplicationContext().getBean("key.helper");
-			
+
 
 			  User juanUser = null;
 			  try {
@@ -118,9 +118,9 @@ public class TempUserCreation extends AbstractCLI {
 			    juanUser.setKey((Key) keyHelper.obtainKey(User.class, "juan@aditivo.mx"));
 			    userDao.create(juanUser);
 			  }
-			
-			  
-			  
+
+
+
 			  User carlosUser = null;
 			  try {
 			    userDao.delete("carlos@aditivo.mx");
@@ -146,8 +146,8 @@ public class TempUserCreation extends AbstractCLI {
 			    carlosUser.setKey((Key) keyHelper.obtainKey(User.class, "carlos@aditivo.mx"));
 			    userDao.create(carlosUser);
 			  }
-			  
-			  
+
+
 			  User hectorUser = null;
 			  try {
 			    userDao.delete("hector@aditivo.mx");
@@ -172,7 +172,7 @@ public class TempUserCreation extends AbstractCLI {
 			    hectorUser.setKey((Key) keyHelper.obtainKey(User.class, "hector@aditivo.mx"));
 			    userDao.create(hectorUser);
 			  }
-			  
+
 			  UserMenu um = null;
 			  try {
 			    um = userMenuDao.get("carlosc@aditivo.mx", true);
@@ -181,11 +181,11 @@ public class TempUserCreation extends AbstractCLI {
 			  } catch (Exception e) {
 			    um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				
+
 				um.setKey(userMenuDao.createKey("carlosc@aditivo.mx"));
 				userMenuDao.create(um);
 			  }
-			  
+
 			  User carloscUser = null;
 			  try {
 			    userDao.delete("carlosc@aditivo.mx");
@@ -208,9 +208,9 @@ public class TempUserCreation extends AbstractCLI {
 			    carloscUser.setKey((Key) keyHelper.obtainKey(User.class, "carlosc@aditivo.mx"));
 			    userDao.create(carloscUser);
 			  }
-			  
-			  
-			  
+
+
+
 			  User albertoUser = null;
 			  try {
 			    userDao.delete("alberto@aditivo.mx");
@@ -236,8 +236,8 @@ public class TempUserCreation extends AbstractCLI {
 			    albertoUser.setKey((Key) keyHelper.obtainKey(User.class, "alberto@aditivo.mx"));
 			    userDao.create(albertoUser);
 			  }
-			  
-			  
+
+
 			  User anegeloUser = null;
 			  try {
 			    userDao.delete("angelo@aditivo.mx");
@@ -264,7 +264,7 @@ public class TempUserCreation extends AbstractCLI {
 			    userDao.create(anegeloUser);
 			  }
 
-			  
+
 			  User ricardoUser = null;
 			  try {
 			    userDao.delete("ricardol@aditivo.mx");
@@ -302,8 +302,8 @@ public class TempUserCreation extends AbstractCLI {
 			    ricardoUser.setKey((Key) keyHelper.obtainKey(User.class, "ricardol@aditivo.mx"));
 			    userDao.create(ricardoUser);
 			  }
-			  
-			  
+
+
 			  User miguelUser = null;
 			  try {
 			    userDao.delete("miguel@aditivo.mx");
@@ -329,8 +329,8 @@ public class TempUserCreation extends AbstractCLI {
 			    miguelUser.setKey((Key) keyHelper.obtainKey(User.class, "miguel@aditivo.mx"));
 			    userDao.create(miguelUser);
 			  }
-			  
-			  
+
+
 			  User joseUser = null;
 			  try {
 			    userDao.delete("joser@aditivo.mx");
@@ -356,7 +356,7 @@ public class TempUserCreation extends AbstractCLI {
 			    joseUser.setKey((Key) keyHelper.obtainKey(User.class, "joser@aditivo.mx"));
 			    userDao.create(joseUser);
 			  }
-			  
+
 			  User ignacioUser = null;
 			  try {
 			    userDao.delete("ignacio@aditivo.mx");
@@ -382,8 +382,8 @@ public class TempUserCreation extends AbstractCLI {
 			    ignacioUser.setKey((Key) keyHelper.obtainKey(User.class, "ignacio@aditivo.mx"));
 			    userDao.create(ignacioUser);
 			  }
-			  
-			  
+
+
 			  User aaronUser = null;
 			  try {
 			    userDao.delete("aaron@aditivo.mx");
@@ -416,8 +416,8 @@ public class TempUserCreation extends AbstractCLI {
 			    userDao.create(aaronUser);
 			  }
 
-			  
-			  
+
+
 			  User isaiasUser = null;
 			  try {
 			    userDao.delete("isaias@aditivo.mx");
@@ -444,7 +444,7 @@ public class TempUserCreation extends AbstractCLI {
 			    isaiasUser.setKey((Key) keyHelper.obtainKey(User.class, "isaias@aditivo.mx"));
 			    userDao.create(isaiasUser);
 			  }
-			  
+
 			  UserMenu umBalcarce = null;
 			  try {
 				umBalcarce = userMenuDao.get("cafe_balcarce_ar", true);
@@ -457,8 +457,8 @@ public class TempUserCreation extends AbstractCLI {
 				umBalcarce.setKey(userMenuDao.createKey("cafe_balcarce_ar"));
 				userMenuDao.create(umBalcarce);
 			  }
-			  
-			  
+
+
 			  try {
 			    um = userMenuDao.get("universodefragancias_vallejo_mx", true);
 			    userMenuDao.delete("universodefragancias_vallejo_mx");
@@ -468,11 +468,11 @@ public class TempUserCreation extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 
-				
+
 				um.setKey(userMenuDao.createKey("universodefragancias_vallejo_mx"));
 				userMenuDao.create(um);
 			  }
-			  
+
 			  User universoUser = null;
 			  try {
 			    userDao.delete("universodefragancias_vallejo_mx");
@@ -489,15 +489,15 @@ public class TempUserCreation extends AbstractCLI {
 			    universoUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "2d856f3f-8793-49b5-a2a6-f662edb07d76"
-			        
+
 			        ));
 			    universoUser.setKey((Key) keyHelper.obtainKey(User.class, "universodefragancias_vallejo_mx"));
 			    userDao.create(universoUser);
 			  }
-			  
-			  
-			  
-			  
+
+
+
+
 			  try {
 				    um = userMenuDao.get("elgalpontacuara_ar", true);
 				    userMenuDao.delete("elgalpontacuara_ar");
@@ -505,11 +505,11 @@ public class TempUserCreation extends AbstractCLI {
 				  } catch (Exception e) {
 				    um = new UserMenu();
 					um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-					
+
 					um.setKey(userMenuDao.createKey("elgalpontacuara_ar"));
 					userMenuDao.create(um);
 				  }
-				  
+
 				  User galponUser = null;
 				  try {
 				    userDao.delete("elgalpontacuara_ar");
@@ -526,18 +526,19 @@ public class TempUserCreation extends AbstractCLI {
 				    galponUser.getSecuritySettings()
 				        .setStores(Arrays.asList(
 				        "af28a490-208c-4213-a967-eb1982980435"
-				        
+
 				        ));
 				    galponUser.setKey((Key) keyHelper.obtainKey(User.class, "elgalpontacuara_ar"));
 				    userDao.create(galponUser);
 				  }
-				  
+
 				  User arturo = null;
 				  try {
 				    arturo = userDao.get("arturo@getin.mx", true);
 				    userDao.delete(arturo);
 				    throw new Exception();
 				  } catch( Exception e ) {
+					log.log(Level.INFO, "Inserting Armengod...");
 				    arturo = new User();
 				    arturo.setFirstname("Arturo Armengod");
 				    arturo.setLastname("");
@@ -570,13 +571,14 @@ public class TempUserCreation extends AbstractCLI {
 				    um.setKey(userMenuDao.createKey("arturo@getin.mx"));
 				    userMenuDao.create(um);
 				  }
-				  
+
 				  User demo5User = null;
 				  try {
 				    demo5User = userDao.get("demo5_mx", true);
 				    userDao.delete(demo5User);
 				    throw new Exception();
 				  } catch( Exception e ) {
+					    log.log(Level.INFO, "Inserting demo5...");
 				    demo5User = new User();
 				    demo5User.setFirstname("Demo Heatmap");
 				    demo5User.setLastname("Mexico");
@@ -598,6 +600,315 @@ public class TempUserCreation extends AbstractCLI {
 				    um.setKey(userMenuDao.createKey("demo5_mx"));
 				    userMenuDao.create(um);
 				  }
+
+
+				  User michelDomit = null;
+				  try {
+				    michelDomit = userDao.get("micheldomit_mx", true);
+				    userDao.delete("micheldomit_mx");
+				    throw new Exception();
+				  } catch( Exception e ) {
+					    log.log(Level.INFO, "Inserting michel_domit...");
+				    michelDomit = new User();
+				    michelDomit.setFirstname("Michel Domit");
+				    michelDomit.setLastname("Mexico");
+				    michelDomit.setEmail("michelDomit@getin.mx");
+				    michelDomit.getSecuritySettings().setRole(Role.BRAND);
+				    michelDomit.getSecuritySettings().setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+				    michelDomit.setKey((Key)keyHelper.obtainKey(User.class, "micheldomit_mx"));
+				    userDao.create(michelDomit);
+				  }
+					try {
+						um = userMenuDao.get("micheldomit_mx", true);
+						userMenuDao.delete("micheldomit_mx");
+						throw new Exception();
+					} catch( Exception e ) {
+						um = new UserMenu();
+						um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+						um.setKey(userMenuDao.createKey("micheldomit_mx"));
+						userMenuDao.create(um);
+					}
+
+				  //Sunglass Hut Argentina
+				  User sunglassHutAr = null;
+				  try {
+					sunglassHutAr = userDao.get("sunglasshut_ar", true);
+				    userDao.delete("sunglasshut_ar");
+				    throw new Exception();
+				  } catch( Exception e ) {
+					    log.log(Level.INFO, "Sunglass Hut...");
+					  sunglassHutAr = new User();
+					  sunglassHutAr.setFirstname("Sunglass Hut");
+					  sunglassHutAr.setLastname("Mexico");
+					  sunglassHutAr.setEmail("sunglasshut@getin.mx");
+					  sunglassHutAr.getSecuritySettings().setRole(Role.BRAND);
+					  sunglassHutAr.getSecuritySettings().setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+					  sunglassHutAr.setKey((Key)keyHelper.obtainKey(User.class, "sunglasshut_ar"));
+				    userDao.create(sunglassHutAr);
+				  }
+					try {
+						um = userMenuDao.get("sunglasshut_ar", true);
+						userMenuDao.delete("sunglasshut_ar");
+						throw new Exception();
+					} catch( Exception e ) {
+						um = new UserMenu();
+						um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+						um.setKey(userMenuDao.createKey("sunglasshut_ar"));
+						userMenuDao.create(um);
+					}
+
+
+
+
+					//anchavez@brunocorza.com
+					try {
+					    um = userMenuDao.get("anchavez@brunocorza.com", true);
+					    userMenuDao.delete("anchavez@brunocorza.com");
+					    throw new Exception();
+					  } catch (Exception e) {
+					    um = new UserMenu();
+					    um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+					    um.setKey(userMenuDao.createKey("anchavez@brunocorza.com"));
+					    userMenuDao.create(um);
+					  }
+
+
+					  User brunoCorzaAnChavez = null;
+					  try {
+					    userDao.delete("anchavez@brunocorza.com");
+					    throw new Exception();
+					  } catch (Exception e) {
+					    log.log(Level.INFO, "Inserting Anchavez...");
+					    brunoCorzaAnChavez = new User();
+					    brunoCorzaAnChavez.setFirstname("Anchavez");
+					    brunoCorzaAnChavez.setLastname("");
+					    brunoCorzaAnChavez.setEmail("anchavez@brunocorza.com");
+					    brunoCorzaAnChavez.getSecuritySettings().setRole(Role.STORE);
+					    brunoCorzaAnChavez.getSecuritySettings()
+					        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+					    brunoCorzaAnChavez.getSecuritySettings()
+					        .setStores(Arrays.asList("5a3ebe6b-225a-416f-9559-50946576e1a5",
+					                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIpCxIFU3RvcmUiHmJydW5vY29yemFfbXhfZ3JhbmRwbGF6YXRvbHVjYQw",
+					                                  "2c75e9d0-06ea-42cb-8fd6-aa23ae21c73f",
+					                                  "1970a175-55e8-41de-b02e-f49ccf55f353",
+					                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIqCxIFU3RvcmUiH2JydW5vY29yemFfbXhfZ2FsZXJpYXNtb250ZXJyZXkM",
+					                                  "2bd032ca-5346-48d6-b211-8fca31cd8533",
+					                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIsCxIFU3RvcmUiIWJydW5vY29yemFfbXhfZ2FsZXJpYXNpbnN1cmdlbnRlcww",
+					                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIuCxIFU3RvcmUiI2Jpc3Ryb3RicnVub2lzZV9teF9nYWxlcmlhc2F0aXphcGFuDA",
+					                                  "bc37fece-83a9-4848-bbf8-869580bfc50d",
+					                                  "00bc49f3-99a9-49ac-8f14-7af01a113bc2"));
+					    brunoCorzaAnChavez.setKey((Key) keyHelper.obtainKey(User.class, "anchavez@brunocorza.com"));
+					    userDao.create(brunoCorzaAnChavez);
+					  }
+
+
+						//patriciao@brunocorza.com
+					  try {
+						    um = userMenuDao.get("patriciao@brunocorza.com", true);
+						    userMenuDao.delete("patriciao@brunocorza.com");
+						    throw new Exception();
+						  } catch (Exception e) {
+						    um = new UserMenu();
+						    um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+						    um.setKey(userMenuDao.createKey("patriciao@brunocorza.com"));
+						    userMenuDao.create(um);
+						  }
+
+
+						  User brunoCorzaPatricia = null;
+						  try {
+						    userDao.delete("patriciao@brunocorza.com");
+						    throw new Exception();
+						  } catch (Exception e) {
+						    log.log(Level.INFO, "Inserting Patricia...");
+						    brunoCorzaPatricia = new User();
+						    brunoCorzaPatricia.setFirstname("Martha P Olguín");
+						    brunoCorzaPatricia.setLastname("");
+						    brunoCorzaPatricia.setEmail("patriciao@brunocorza.com");
+						    brunoCorzaPatricia.getSecuritySettings().setRole(Role.STORE);
+						    brunoCorzaPatricia.getSecuritySettings()
+						        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+						    brunoCorzaPatricia.getSecuritySettings()
+						        .setStores(Arrays.asList("5a3ebe6b-225a-416f-9559-50946576e1a5",
+						                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIpCxIFU3RvcmUiHmJydW5vY29yemFfbXhfZ3JhbmRwbGF6YXRvbHVjYQw",
+						                                  "2c75e9d0-06ea-42cb-8fd6-aa23ae21c73f",
+						                                  "1970a175-55e8-41de-b02e-f49ccf55f353",
+						                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIqCxIFU3RvcmUiH2JydW5vY29yemFfbXhfZ2FsZXJpYXNtb250ZXJyZXkM",
+						                                  "2bd032ca-5346-48d6-b211-8fca31cd8533",
+						                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIsCxIFU3RvcmUiIWJydW5vY29yemFfbXhfZ2FsZXJpYXNpbnN1cmdlbnRlcww",
+						                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIuCxIFU3RvcmUiI2Jpc3Ryb3RicnVub2lzZV9teF9nYWxlcmlhc2F0aXphcGFuDA",
+						                                  "bc37fece-83a9-4848-bbf8-869580bfc50d",
+						                                  "00bc49f3-99a9-49ac-8f14-7af01a113bc2"));
+						    brunoCorzaPatricia.setKey((Key) keyHelper.obtainKey(User.class, "patriciao@brunocorza.com"));
+						    userDao.create(brunoCorzaPatricia);
+						  }
+
+
+
+						  //Tania
+						  try {
+							    um = userMenuDao.get("taniapm@brunocorza.com", true);
+							    userMenuDao.delete("taniapm@brunocorza.com");
+							    throw new Exception();
+							  } catch (Exception e) {
+							    um = new UserMenu();
+							    um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+							    um.setKey(userMenuDao.createKey("taniapm@brunocorza.com"));
+							    userMenuDao.create(um);
+							  }
+
+
+							  User brunoCorzaTania = null;
+							  try {
+							    userDao.delete("taniapm@brunocorza.com");
+							    throw new Exception();
+							  } catch (Exception e) {
+							    log.log(Level.INFO, "Inserting Tania...");
+							    brunoCorzaTania = new User();
+							    brunoCorzaTania.setFirstname("Tania Perez");
+							    brunoCorzaTania.setLastname("");
+							    brunoCorzaTania.setEmail("taniapm@brunocorza.com");
+							    brunoCorzaTania.getSecuritySettings().setRole(Role.STORE);
+							    brunoCorzaTania.getSecuritySettings()
+							        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+							    brunoCorzaTania.getSecuritySettings()
+							        .setStores(Arrays.asList("5a3ebe6b-225a-416f-9559-50946576e1a5",
+							                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIpCxIFU3RvcmUiHmJydW5vY29yemFfbXhfZ3JhbmRwbGF6YXRvbHVjYQw",
+							                                  "2c75e9d0-06ea-42cb-8fd6-aa23ae21c73f",
+							                                  "1970a175-55e8-41de-b02e-f49ccf55f353",
+							                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIqCxIFU3RvcmUiH2JydW5vY29yemFfbXhfZ2FsZXJpYXNtb250ZXJyZXkM",
+							                                  "2bd032ca-5346-48d6-b211-8fca31cd8533",
+							                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIsCxIFU3RvcmUiIWJydW5vY29yemFfbXhfZ2FsZXJpYXNpbnN1cmdlbnRlcww",
+							                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIuCxIFU3RvcmUiI2Jpc3Ryb3RicnVub2lzZV9teF9nYWxlcmlhc2F0aXphcGFuDA",
+							                                  "bc37fece-83a9-4848-bbf8-869580bfc50d",
+							                                  "00bc49f3-99a9-49ac-8f14-7af01a113bc2"));
+							    brunoCorzaTania.setKey((Key) keyHelper.obtainKey(User.class, "taniapm@brunocorza.com"));
+							    userDao.create(brunoCorzaTania);
+							  }
+
+							  //Ambrosio
+							  try {
+								    um = userMenuDao.get("ambrosiom@brunocorza.com", true);
+								    userMenuDao.delete("ambrosiom@brunocorza.com");
+								    throw new Exception();
+								  } catch (Exception e) {
+								    um = new UserMenu();
+								    um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+								    um.setKey(userMenuDao.createKey("ambrosiom@brunocorza.com"));
+								    userMenuDao.create(um);
+								  }
+
+
+								  User brunoAmbrisio = null;
+								  try {
+								    userDao.delete("ambrosiom@brunocorza.com");
+								    throw new Exception();
+								  } catch (Exception e) {
+								    log.log(Level.INFO, "Inserting Ambrosio...");
+								    brunoAmbrisio = new User();
+								    brunoAmbrisio.setFirstname("Ambrosio Mata");
+								    brunoAmbrisio.setLastname("");
+								    brunoAmbrisio.setEmail("ambrosiom@brunocorza.com");
+								    brunoAmbrisio.getSecuritySettings().setRole(Role.STORE);
+								    brunoAmbrisio.getSecuritySettings()
+								        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+								    brunoAmbrisio.getSecuritySettings()
+								        .setStores(Arrays.asList("5a3ebe6b-225a-416f-9559-50946576e1a5",
+								                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIpCxIFU3RvcmUiHmJydW5vY29yemFfbXhfZ3JhbmRwbGF6YXRvbHVjYQw",
+								                                  "2c75e9d0-06ea-42cb-8fd6-aa23ae21c73f",
+								                                  "1970a175-55e8-41de-b02e-f49ccf55f353",
+								                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIqCxIFU3RvcmUiH2JydW5vY29yemFfbXhfZ2FsZXJpYXNtb250ZXJyZXkM",
+								                                  "2bd032ca-5346-48d6-b211-8fca31cd8533",
+								                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIsCxIFU3RvcmUiIWJydW5vY29yemFfbXhfZ2FsZXJpYXNpbnN1cmdlbnRlcww",
+								                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIuCxIFU3RvcmUiI2Jpc3Ryb3RicnVub2lzZV9teF9nYWxlcmlhc2F0aXphcGFuDA",
+								                                  "bc37fece-83a9-4848-bbf8-869580bfc50d",
+								                                  "00bc49f3-99a9-49ac-8f14-7af01a113bc2"));
+								    brunoAmbrisio.setKey((Key) keyHelper.obtainKey(User.class, "ambrosiom@brunocorza.com"));
+								    userDao.create(brunoAmbrisio);
+							  }
+
+							  //Ramiro Cruz
+							  try {
+								    um = userMenuDao.get("racruz@brunocorza.com", true);
+								    userMenuDao.delete("racruz@brunocorza.com");
+								    throw new Exception();
+								  } catch (Exception e) {
+								    um = new UserMenu();
+								    um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+								    um.setKey(userMenuDao.createKey("racruz@brunocorza.com"));
+								    userMenuDao.create(um);
+								  }
+
+							  //Ramiro Cruz
+							  User brunoRamiroCruz = null;
+							  try {
+							    userDao.delete("racruz@brunocorza.com");
+							    throw new Exception();
+							  } catch (Exception e) {
+							    log.log(Level.INFO, "Inserting Ramiro Cruz...");
+							    brunoRamiroCruz = new User();
+							    brunoRamiroCruz.setFirstname("Ramiro Cruz");
+							    brunoRamiroCruz.setLastname("");
+							    brunoRamiroCruz.setEmail("racruz@brunocorza.com");
+							    brunoRamiroCruz.getSecuritySettings().setRole(Role.STORE);
+							    brunoRamiroCruz.getSecuritySettings()
+							        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+							    brunoRamiroCruz.getSecuritySettings()
+							        .setStores(Arrays.asList("5a3ebe6b-225a-416f-9559-50946576e1a5",
+							                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIpCxIFU3RvcmUiHmJydW5vY29yemFfbXhfZ3JhbmRwbGF6YXRvbHVjYQw",
+							                                  "2c75e9d0-06ea-42cb-8fd6-aa23ae21c73f",
+							                                  "1970a175-55e8-41de-b02e-f49ccf55f353",
+							                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIqCxIFU3RvcmUiH2JydW5vY29yemFfbXhfZ2FsZXJpYXNtb250ZXJyZXkM",
+							                                  "2bd032ca-5346-48d6-b211-8fca31cd8533",
+							                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIsCxIFU3RvcmUiIWJydW5vY29yemFfbXhfZ2FsZXJpYXNpbnN1cmdlbnRlcww",
+							                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIuCxIFU3RvcmUiI2Jpc3Ryb3RicnVub2lzZV9teF9nYWxlcmlhc2F0aXphcGFuDA",
+							                                  "bc37fece-83a9-4848-bbf8-869580bfc50d",
+							                                  "00bc49f3-99a9-49ac-8f14-7af01a113bc2"));
+							    brunoRamiroCruz.setKey((Key) keyHelper.obtainKey(User.class, "racruz@brunocorza.com"));
+							    userDao.create(brunoRamiroCruz);
+							  }
+
+							  //Hugo Loria
+							  try {
+								    um = userMenuDao.get("hloria@brunocorza.com", true);
+								    userMenuDao.delete("hloria@brunocorza.com");
+								    throw new Exception();
+								  } catch (Exception e) {
+								    um = new UserMenu();
+								    um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+								    um.setKey(userMenuDao.createKey("hloria@brunocorza.com"));
+								    userMenuDao.create(um);
+								  }
+
+
+								  User brunoHugoLoria = null;
+								  try {
+								    userDao.delete("hloria@brunocorza.com");
+								    throw new Exception();
+								  } catch (Exception e) {
+								    log.log(Level.INFO, "Inserting Hugo Loria...");
+								    brunoHugoLoria = new User();
+								    brunoHugoLoria.setFirstname("Hugo Loria");
+								    brunoHugoLoria.setLastname("");
+								    brunoHugoLoria.setEmail("hloria@brunocorza.com");
+								    brunoHugoLoria.getSecuritySettings().setRole(Role.STORE);
+								    brunoHugoLoria.getSecuritySettings()
+								        .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+								    brunoHugoLoria.getSecuritySettings()
+								        .setStores(Arrays.asList("5a3ebe6b-225a-416f-9559-50946576e1a5",
+								                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIpCxIFU3RvcmUiHmJydW5vY29yemFfbXhfZ3JhbmRwbGF6YXRvbHVjYQw",
+								                                  "2c75e9d0-06ea-42cb-8fd6-aa23ae21c73f",
+								                                  "1970a175-55e8-41de-b02e-f49ccf55f353",
+								                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIqCxIFU3RvcmUiH2JydW5vY29yemFfbXhfZ2FsZXJpYXNtb250ZXJyZXkM",
+								                                  "2bd032ca-5346-48d6-b211-8fca31cd8533",
+								                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIsCxIFU3RvcmUiIWJydW5vY29yemFfbXhfZ2FsZXJpYXNpbnN1cmdlbnRlcww",
+								                                  "ahFhbGxzaG9wcGluZ3MtdGVzdHIuCxIFU3RvcmUiI2Jpc3Ryb3RicnVub2lzZV9teF9nYWxlcmlhc2F0aXphcGFuDA",
+								                                  "bc37fece-83a9-4848-bbf8-869580bfc50d",
+								                                  "00bc49f3-99a9-49ac-8f14-7af01a113bc2"));
+								    brunoHugoLoria.setKey((Key) keyHelper.obtainKey(User.class, "hloria@brunocorza.com"));
+								    userDao.create(brunoHugoLoria);
+								  }
+
 
 		} catch (Exception e) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
