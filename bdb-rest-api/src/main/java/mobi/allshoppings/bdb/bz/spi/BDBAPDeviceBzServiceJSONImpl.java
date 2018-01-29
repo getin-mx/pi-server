@@ -1,15 +1,26 @@
 package mobi.allshoppings.bdb.bz.spi;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.logging.Level;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.restlet.ext.json.JsonRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.amazonaws.util.json.JSONArray;
+import com.ibm.icu.text.DateFormat;
+import com.ibm.icu.text.SimpleDateFormat;
 
 import mobi.allshoppings.apdevice.APDeviceHelper;
 import mobi.allshoppings.bdb.bz.BDBCrudBzService;
 import mobi.allshoppings.dao.APDeviceDAO;
 import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.APDevice;
+import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.interfaces.Indexable;
 import mobi.allshoppings.model.interfaces.StatusAware;
 
 public class BDBAPDeviceBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDevice> implements BDBCrudBzService {
@@ -74,6 +85,116 @@ public class BDBAPDeviceBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDev
 	@Override
 	public void setKey(APDevice obj, JSONObject seed) throws ASException {
 		obj.setKey(dao.createKey(seed.getString("hostname")));
+	}
+	@Override
+	public String change(JsonRepresentation entity) {
+		if( myDao == null ) config();
+		long start = markStart();
+		Date datef = new Date();
+		DateFormat frmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		try {
+
+			// validate authToken
+			final User user = getUserFromToken();
+			final JSONObject obj = entity.getJsonObject();
+
+			// check mandatory fields
+			log.info("check mandatory fields");
+			checkMandatoryFields(obj, getMandatoryUpdateFields());
+
+			final String identifier = obtainLowerCaseIdentifierFromJSON(obj);
+
+			APDevice modObj = myDao.get(identifier, true);
+			modObj.setCountry(obj.getString("country"));
+			modObj.setOffsetView(obj.getInt("offsetViewer"));
+			modObj.setVisitMaxThreshold(obj.getLong("visitMaxThreshold"));
+			//modObj.setHostname(obj.getString("hostname"));
+			modObj.setProvince(obj.getString("province"));
+			org.json.JSONArray algo = obj.getJSONArray("reportMailList");
+			//modObj.setReportMailList(Arrays.asList(algo.getString("reportMailList").split(",")));			
+			modObj.setVisitEndFri(obj.getString("visitEndFri"));
+			modObj.setVisitStartSun(obj.getString("visitStartSun"));
+			modObj.setVisitStartWed(obj.getString("visitStartWed"));
+			modObj.setVisitCountThreshold(obj.getLong("visitCountThreshold"));
+			modObj.setLat(obj.getDouble("lat"));
+			modObj.setVisitEndThu(obj.getString("visitEndThu"));
+			modObj.setDoIndexNow(obj.getBoolean("doIndexNow"));
+			modObj.setVisitEndTue(obj.getString("visitEndTue"));
+			modObj.setVisitsOnFri(obj.getBoolean("visitsOnFri"));
+			modObj.setReportable(obj.getBoolean("reportable"));
+			modObj.setVisitEndMon(obj.getString("visitEndMon"));
+			modObj.setViewerPowerThreshold(obj.getLong("viewerPowerThreshold"));
+			modObj.setVisitStartFri(obj.getString("visitStartFri"));
+			modObj.setMonitorStart(obj.getString("monitorStart"));
+			modObj.setExternal(obj.getBoolean("external"));
+			modObj.setOffsetView((int)Math.abs(obj.getLong("viewerOffsetPowerThreshold")-obj.getLong("viewerPowerThreshold")));
+			modObj.setLastUpdate(datef);
+			modObj.setVisitsOnMon(obj.getBoolean("visitsOnMon"));
+			modObj.setStatus(obj.getInt("status"));
+			modObj.setVisitsOnTue(obj.getBoolean("visitsOnTue"));
+			modObj.setVisitStartMon(obj.getString("visitStartMon"));
+			modObj.setPassEnd(obj.getString("passEnd"));
+			modObj.setVisitsOnThu(obj.getBoolean("visitsOnThu"));
+			modObj.setMonitorEnd(obj.getString("monitorEnd"));
+			modObj.setCity(obj.getString("city"));
+			modObj.setTimezone(obj.getString("timezone"));			
+			modObj.setVisitEndSat(obj.getString("visitEndSat"));
+			modObj.setVisitGapThreshold(obj.getLong("visitGapThreshold"));
+			modObj.setDescription(obj.getString("description"));
+			modObj.setLon(obj.getDouble("lon"));
+			modObj.setViewerMinTimeThreshold(obj.getInt("viewerMinTimeThreshold"));
+			modObj.setVisitDecay(obj.getLong("visitDecay"));
+			modObj.setVisitEndWed(obj.getString("visitEndWed"));
+			modObj.setPeasantDecay(obj.getLong("peasantDecay"));
+			modObj.setVisitStartTue(obj.getString("visitStartTue"));
+			modObj.setVisitStartThu(obj.getString("visitStartThu"));
+			modObj.setVisitsOnSat(obj.getBoolean("visitsOnSat"));
+			modObj.setVisitTimeThreshold(obj.getLong("visitTimeThreshold"));
+			modObj.setPassStart(obj.getString("passStart"));
+			modObj.setVisitEndSun(obj.getString("visitEndSun"));
+			modObj.setPeasantPowerThreshold(obj.getLong("peasantPowerThreshold"));
+			modObj.setViewerMaxTimeThreshold(obj.getInt("viewerMaxTimeThreshold"));
+			modObj.setVisitsOnWed(obj.getBoolean("visitsOnWed"));
+			modObj.setRepeatThreshold(obj.getInt("repeatThreshold"));
+			modObj.setVisitPowerThreshold(obj.getLong("visitPowerThreshold"));
+			modObj.setVisitStartSat(obj.getString("visitStartSat"));
+			modObj.setVisitsOnSun(obj.getBoolean("visitsOnSun"));
+			
+			//preModify(modObj, obj);
+			//setPropertiesFromJSONObject(obj, modObj, EMPTY_SET);
+			//prePersist(modObj, obj);
+
+			myDao.update(modObj);
+			log.info("object updated");
+			postChange(modObj);
+
+			// index object if needed
+			if( modObj instanceof Indexable ) {
+				indexHelper.indexObject(modObj);
+				log.info("object indexed: " + modObj.getIdentifier());
+			}
+
+			// track action
+			trackerHelper.enqueue( user, getRequestIP(),
+					getRequestAgent(), getFullRequestURI(),
+					getI18NMessage("es_AR", "service." + myClazz.getName() + "BzService.put"), 
+					null, null);
+
+			return getJSONRepresentationFromObject(modObj, obtainOutputFields(myClazz)).toString();
+			
+		} catch (JSONException e) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+			return getJSONRepresentationFromException(ASExceptionHelper.defaultException(e.getMessage(), e)).toString();
+		} catch (Exception e) {
+			if( e instanceof ASException && ((ASException)e).getErrorCode() == ASExceptionHelper.AS_EXCEPTION_NOTFOUND_CODE)
+				return getJSONRepresentationFromException(ASExceptionHelper.notFoundException()).toString();
+			
+			log.log(Level.SEVERE, e.getMessage(), e);
+			return getJSONRepresentationFromException(e).toString();
+		} finally {
+			markEnd(start);
+		}
+
 	}
 
 }

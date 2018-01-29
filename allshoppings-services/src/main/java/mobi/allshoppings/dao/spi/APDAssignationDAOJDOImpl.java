@@ -187,11 +187,7 @@ public class APDAssignationDAOJDOImpl extends GenericDAOJDO<APDAssignation> impl
 			return ret;
 			
 		} catch(Exception e) {
-			if( e instanceof ASException ) {
-				throw e;
-			} else {
-				throw ASExceptionHelper.defaultException(e.getMessage(), e);
-			}
+			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 	    } finally  {
 	    	pm.close();
 	    }

@@ -2,6 +2,7 @@ package mobi.allshoppings.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -14,6 +15,7 @@ import com.inodes.datanucleus.model.Key;
 
 import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.model.interfaces.ModelKey;
+import mobi.allshoppings.tools.CollectionFactory;
 
 @SuppressWarnings("serial")
 @PersistenceCapable(detachable="true")
@@ -21,12 +23,6 @@ import mobi.allshoppings.model.interfaces.ModelKey;
 public class DashboardIndicatorData implements ModelKey, Serializable, Identificable {
 
 	public static final String PERIOD_TYPE_DAILY = "D";
-	
-	@Deprecated
-	public static final String PERIOD_TYPE_WEEKLY = "W";
-	
-	@Deprecated
-	public static final String PERIOD_TYPE_MONTHLY = "M";
 	
 	public static final Integer TIME_ZONE_ALL = 0;
 	public static final Integer TIME_ZONE_MORNING = 1;
@@ -36,7 +32,7 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
-    private Key key;
+    public Key key;
 
 	public String entityId;
 	public Integer entityKind;
@@ -91,11 +87,15 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 	public Date creationDateTime;
 	public Date lastUpdate;
 	
+	@NotPersistent
+	public List<Double> workArray;
+	
 	public DashboardIndicatorData() {
 		super();
 		this.creationDateTime = new Date();
 		this.doubleValue = 0D;
 		this.recordCount = 0;
+		this.workArray = CollectionFactory.createList();
 	}
 	
 	/**
@@ -141,6 +141,20 @@ public class DashboardIndicatorData implements ModelKey, Serializable, Identific
 	@Override
 	public Date getLastUpdate() {
 		return lastUpdate;
+	}
+
+	/**
+	 * @return the workArray
+	 */
+	public List<Double> getWorkArray() {
+		return workArray;
+	}
+
+	/**
+	 * @param workArray the workArray to set
+	 */
+	public void setWorkArray(List<Double> workArray) {
+		this.workArray = workArray;
 	}
 
 	/**

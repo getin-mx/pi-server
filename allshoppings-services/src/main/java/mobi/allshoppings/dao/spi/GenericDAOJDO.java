@@ -1621,7 +1621,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	 */
 	@Override
 	public String toParameterList(List<String> parms) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		boolean first = true;
 		Iterator<String> i = parms.iterator();
 		while(i.hasNext()) {
@@ -1712,7 +1712,7 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 	public String toWellParametrizedFilter(List<String> filters) {
 		if( filters == null || filters.size() == 0 ) return null;
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		boolean first = true;
 		for(String filter : filters ) {
 			if( !first ) {
@@ -2043,7 +2043,6 @@ public class GenericDAOJDO<T extends ModelKey> implements GenericDAO<T> {
 
 		}catch(JDOObjectNotFoundException e){
 			// its normal; looks for a record, but cant find it
-			// someone needs a little help with his english, don't ya?
 			return false;
 		}catch(Exception e){
 			log.log(Level.SEVERE, "exception catched", e);

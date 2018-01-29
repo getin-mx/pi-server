@@ -753,6 +753,7 @@
 	<bean id="excel.export.helper" class="mobi.allshoppings.exporter.impl.ExcelExportHelperImpl" scope="singleton" />
 	<bean id="external.geo.importer" class="mobi.allshoppings.exporter.ExternalGeoImporter" scope="singleton" />
 	<bean id="dashboard.apdevice.mapper" class="mobi.allshoppings.dashboards.DashboardAPDeviceMapperService" scope="singleton" />
+	<bean id="dashboard.resume.mapper" class="mobi.allshoppings.dashboards.DashboardResumeMapperService" scope="singleton" />
 	
 	<!-- ** DAOs implementation ** -->
 	<bean id="shopping.dao.ref" class="mobi.allshoppings.dao.spi.ShoppingDAOJDOImpl" />
@@ -797,6 +798,9 @@
 	<bean id="dashboardconfiguration.dao.ref" class="mobi.allshoppings.dao.spi.DashboardConfigurationDAOJDOImpl" />
 	<bean id="dashboardindicatoralias.dao.ref" class="mobi.allshoppings.dao.spi.DashboardIndicatorAliasDAOJDOImpl" />
 	<bean id="dashboardindicatordata.dao.ref" class="mobi.allshoppings.dao.spi.DashboardIndicatorDataDAOJDOImpl" />
+	<bean id="weeklydashboardindicatordata.dao.ref" class="mobi.allshoppings.dao.spi.WeeklyDashboardIndicatorDataDAOJDOImpl" />
+	<bean id="monthlydashboardindicatordata.dao.ref" class="mobi.allshoppings.dao.spi.MonthlyDashboardIndicatorDataDAOJDOImpl" />
+	<bean id="quarterlydashboardindicatordata.dao.ref" class="mobi.allshoppings.dao.spi.QuarterlyDashboardIndicatorDataDAOJDOImpl" />
 	<bean id="cinema.dao.ref" class="mobi.allshoppings.dao.spi.CinemaDAOJDOImpl" />
 	<bean id="movie.dao.ref" class="mobi.allshoppings.dao.spi.MovieDAOJDOImpl" />
 	<bean id="macvendor.dao.ref" class="mobi.allshoppings.dao.spi.MacVendorDAOJDOImpl" />

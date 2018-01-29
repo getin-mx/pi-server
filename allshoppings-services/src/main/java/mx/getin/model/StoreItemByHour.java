@@ -31,7 +31,7 @@ public class StoreItemByHour extends StoreItem implements StoreDataByHourEntity 
 	/*
 	 * Gets the Store Item By Hour ID
 	 * @return String - this entity key
-	 *
+	 */
 	public String getIdentifier() {
 		return this.getKey() != null ? this.getKey().getName() : "";
 	}//getIdentifier
@@ -40,6 +40,7 @@ public class StoreItemByHour extends StoreItem implements StoreDataByHourEntity 
 	 * Gets the Store Item By Hour Key
 	 * @return Key - the key of the entity
 	 *
+	 */
 	public Key getKey() {
 		return key;
 	}//getKey
@@ -48,6 +49,7 @@ public class StoreItemByHour extends StoreItem implements StoreDataByHourEntity 
 	 * Sets the Store Item By Hour BD key
 	 * @param key - the key to set
 	 *
+	 */
 	public void setKey(Key key) {
 		this.key = key;
 	}//setKey	*/

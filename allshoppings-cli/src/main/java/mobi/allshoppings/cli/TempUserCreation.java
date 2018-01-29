@@ -1,6 +1,5 @@
 package mobi.allshoppings.cli;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.crypto.Mac;
@@ -31,14 +30,14 @@ public class TempUserCreation extends AbstractCLI {
 	public static void setApplicationContext(ApplicationContext ctx) {
 		context = ctx;
 	}
-	
+
 	private static final char HEXES[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-	
+
 	private static String encodeString(String input) {
 		 String output = "";
 		try {
 			Mac mac = Mac.getInstance("HmacSHA256");
-			byte keyBytes[] = "MSIR33L264H1VVXSINHR".getBytes(); 
+			byte keyBytes[] = "MSIR33L264H1VVXSINHR".getBytes();
 			SecretKey key = new SecretKeySpec(keyBytes, "HmacSHA256");
 			mac.init(key);
 			mac.update(input.getBytes());
@@ -71,7 +70,7 @@ public class TempUserCreation extends AbstractCLI {
 			UserMenuDAO userMenuDao = (UserMenuDAO) getApplicationContext().getBean("usermenu.dao.ref");
 			UserDAO userDao = (UserDAO) getApplicationContext().getBean("user.dao.ref");
 			KeyHelper keyHelper = (KeyHelper) getApplicationContext().getBean("key.helper");
-			
+
 
 			  User juanUser = null;
 			  try {
@@ -119,9 +118,9 @@ public class TempUserCreation extends AbstractCLI {
 			    juanUser.setKey((Key) keyHelper.obtainKey(User.class, "juan@aditivo.mx"));
 			    userDao.create(juanUser);
 			  }
-			
-			  
-			  
+
+
+
 			  User carlosUser = null;
 			  try {
 			    userDao.delete("carlos@aditivo.mx");
@@ -147,8 +146,8 @@ public class TempUserCreation extends AbstractCLI {
 			    carlosUser.setKey((Key) keyHelper.obtainKey(User.class, "carlos@aditivo.mx"));
 			    userDao.create(carlosUser);
 			  }
-			  
-			  
+
+
 			  User hectorUser = null;
 			  try {
 			    userDao.delete("hector@aditivo.mx");
@@ -173,7 +172,7 @@ public class TempUserCreation extends AbstractCLI {
 			    hectorUser.setKey((Key) keyHelper.obtainKey(User.class, "hector@aditivo.mx"));
 			    userDao.create(hectorUser);
 			  }
-			  
+
 			  UserMenu um = null;
 			  try {
 			    um = userMenuDao.get("carlosc@aditivo.mx", true);
@@ -182,11 +181,11 @@ public class TempUserCreation extends AbstractCLI {
 			  } catch (Exception e) {
 			    um = new UserMenu();
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-				
+
 				um.setKey(userMenuDao.createKey("carlosc@aditivo.mx"));
 				userMenuDao.create(um);
 			  }
-			  
+
 			  User carloscUser = null;
 			  try {
 			    userDao.delete("carlosc@aditivo.mx");
@@ -209,9 +208,9 @@ public class TempUserCreation extends AbstractCLI {
 			    carloscUser.setKey((Key) keyHelper.obtainKey(User.class, "carlosc@aditivo.mx"));
 			    userDao.create(carloscUser);
 			  }
-			  
-			  
-			  
+
+
+
 			  User albertoUser = null;
 			  try {
 			    userDao.delete("alberto@aditivo.mx");
@@ -237,8 +236,8 @@ public class TempUserCreation extends AbstractCLI {
 			    albertoUser.setKey((Key) keyHelper.obtainKey(User.class, "alberto@aditivo.mx"));
 			    userDao.create(albertoUser);
 			  }
-			  
-			  
+
+
 			  User anegeloUser = null;
 			  try {
 			    userDao.delete("angelo@aditivo.mx");
@@ -265,7 +264,7 @@ public class TempUserCreation extends AbstractCLI {
 			    userDao.create(anegeloUser);
 			  }
 
-			  
+
 			  User ricardoUser = null;
 			  try {
 			    userDao.delete("ricardol@aditivo.mx");
@@ -303,8 +302,8 @@ public class TempUserCreation extends AbstractCLI {
 			    ricardoUser.setKey((Key) keyHelper.obtainKey(User.class, "ricardol@aditivo.mx"));
 			    userDao.create(ricardoUser);
 			  }
-			  
-			  
+
+
 			  User miguelUser = null;
 			  try {
 			    userDao.delete("miguel@aditivo.mx");
@@ -330,8 +329,8 @@ public class TempUserCreation extends AbstractCLI {
 			    miguelUser.setKey((Key) keyHelper.obtainKey(User.class, "miguel@aditivo.mx"));
 			    userDao.create(miguelUser);
 			  }
-			  
-			  
+
+
 			  User joseUser = null;
 			  try {
 			    userDao.delete("joser@aditivo.mx");
@@ -357,7 +356,7 @@ public class TempUserCreation extends AbstractCLI {
 			    joseUser.setKey((Key) keyHelper.obtainKey(User.class, "joser@aditivo.mx"));
 			    userDao.create(joseUser);
 			  }
-			  
+
 			  User ignacioUser = null;
 			  try {
 			    userDao.delete("ignacio@aditivo.mx");
@@ -383,8 +382,8 @@ public class TempUserCreation extends AbstractCLI {
 			    ignacioUser.setKey((Key) keyHelper.obtainKey(User.class, "ignacio@aditivo.mx"));
 			    userDao.create(ignacioUser);
 			  }
-			  
-			  
+
+
 			  User aaronUser = null;
 			  try {
 			    userDao.delete("aaron@aditivo.mx");
@@ -417,8 +416,8 @@ public class TempUserCreation extends AbstractCLI {
 			    userDao.create(aaronUser);
 			  }
 
-			  
-			  
+
+
 			  User isaiasUser = null;
 			  try {
 			    userDao.delete("isaias@aditivo.mx");
@@ -445,8 +444,7 @@ public class TempUserCreation extends AbstractCLI {
 			    isaiasUser.setKey((Key) keyHelper.obtainKey(User.class, "isaias@aditivo.mx"));
 			    userDao.create(isaiasUser);
 			  }
-			  
-			  
+
 			  UserMenu umBalcarce = null;
 			  try {
 				umBalcarce = userMenuDao.get("cafe_balcarce_ar", true);
@@ -459,7 +457,7 @@ public class TempUserCreation extends AbstractCLI {
 				umBalcarce.setKey(userMenuDao.createKey("cafe_balcarce_ar"));
 				userMenuDao.create(umBalcarce);
 			  }
-			  
+
 
 			  try {
 			    um = userMenuDao.get("universodefragancias_vallejo_mx", true);
@@ -470,11 +468,11 @@ public class TempUserCreation extends AbstractCLI {
 				um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 				um.getEntries().add(new UserMenuEntry("index.storetickets", "fa-ticket", "Tickets"));
 
-				
+
 				um.setKey(userMenuDao.createKey("universodefragancias_vallejo_mx"));
 				userMenuDao.create(um);
 			  }
-			  
+
 			  User universoUser = null;
 			  try {
 			    userDao.delete("universodefragancias_vallejo_mx");
@@ -491,15 +489,15 @@ public class TempUserCreation extends AbstractCLI {
 			    universoUser.getSecuritySettings()
 			        .setStores(Arrays.asList(
 			        "2d856f3f-8793-49b5-a2a6-f662edb07d76"
-			        
+
 			        ));
 			    universoUser.setKey((Key) keyHelper.obtainKey(User.class, "universodefragancias_vallejo_mx"));
 			    userDao.create(universoUser);
 			  }
-			  
-			  
-			  
-			  
+
+
+
+
 			  try {
 				    um = userMenuDao.get("elgalpontacuara_ar", true);
 				    userMenuDao.delete("elgalpontacuara_ar");
@@ -507,11 +505,11 @@ public class TempUserCreation extends AbstractCLI {
 				  } catch (Exception e) {
 				    um = new UserMenu();
 					um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
-					
+
 					um.setKey(userMenuDao.createKey("elgalpontacuara_ar"));
 					userMenuDao.create(um);
 				  }
-				  
+
 				  User galponUser = null;
 				  try {
 				    userDao.delete("elgalpontacuara_ar");
@@ -528,12 +526,12 @@ public class TempUserCreation extends AbstractCLI {
 				    galponUser.getSecuritySettings()
 				        .setStores(Arrays.asList(
 				        "af28a490-208c-4213-a967-eb1982980435"
-				        
+
 				        ));
 				    galponUser.setKey((Key) keyHelper.obtainKey(User.class, "elgalpontacuara_ar"));
 				    userDao.create(galponUser);
 				  }
-				  
+
 				  User arturo = null;
 				  try {
 				    arturo = userDao.get("arturo@getin.mx", true);
@@ -573,7 +571,7 @@ public class TempUserCreation extends AbstractCLI {
 				    um.setKey(userMenuDao.createKey("arturo@getin.mx"));
 				    userMenuDao.create(um);
 				  }
-				  
+
 				  User demo5User = null;
 				  try {
 				    demo5User = userDao.get("demo5_mx", true);
@@ -602,8 +600,8 @@ public class TempUserCreation extends AbstractCLI {
 				    um.setKey(userMenuDao.createKey("demo5_mx"));
 				    userMenuDao.create(um);
 				  }
-				  
-				  
+
+
 				  User michelDomit = null;
 				  try {
 				    michelDomit = userDao.get("micheldomit_mx", true);
@@ -630,7 +628,7 @@ public class TempUserCreation extends AbstractCLI {
 						um.setKey(userMenuDao.createKey("micheldomit_mx"));
 						userMenuDao.create(um);
 					}
-					
+
 				  //Sunglass Hut Argentina
 				  User sunglassHutAr = null;
 				  try {
@@ -658,10 +656,10 @@ public class TempUserCreation extends AbstractCLI {
 						um.setKey(userMenuDao.createKey("sunglasshut_ar"));
 						userMenuDao.create(um);
 					}
-					
-					
-					
-					
+
+
+
+
 					//anchavez@brunocorza.com
 					try {
 					    um = userMenuDao.get("anchavez@brunocorza.com", true);
@@ -702,8 +700,8 @@ public class TempUserCreation extends AbstractCLI {
 					    brunoCorzaAnChavez.setKey((Key) keyHelper.obtainKey(User.class, "anchavez@brunocorza.com"));
 					    userDao.create(brunoCorzaAnChavez);
 					  }
-					  
-					  
+
+
 						//patriciao@brunocorza.com
 					  try {
 						    um = userMenuDao.get("patriciao@brunocorza.com", true);
@@ -744,8 +742,8 @@ public class TempUserCreation extends AbstractCLI {
 						    brunoCorzaPatricia.setKey((Key) keyHelper.obtainKey(User.class, "patriciao@brunocorza.com"));
 						    userDao.create(brunoCorzaPatricia);
 						  }
-						  
-						  
+
+
 
 						  //Tania
 						  try {
@@ -787,7 +785,7 @@ public class TempUserCreation extends AbstractCLI {
 							    brunoCorzaTania.setKey((Key) keyHelper.obtainKey(User.class, "taniapm@brunocorza.com"));
 							    userDao.create(brunoCorzaTania);
 							  }
-							  
+
 							  //Ambrosio
 							  try {
 								    um = userMenuDao.get("ambrosiom@brunocorza.com", true);
@@ -828,7 +826,7 @@ public class TempUserCreation extends AbstractCLI {
 								    brunoAmbrisio.setKey((Key) keyHelper.obtainKey(User.class, "ambrosiom@brunocorza.com"));
 								    userDao.create(brunoAmbrisio);
 							  }
-							  
+
 							  //Ramiro Cruz
 							  try {
 								    um = userMenuDao.get("racruz@brunocorza.com", true);
@@ -869,7 +867,7 @@ public class TempUserCreation extends AbstractCLI {
 							    brunoRamiroCruz.setKey((Key) keyHelper.obtainKey(User.class, "racruz@brunocorza.com"));
 							    userDao.create(brunoRamiroCruz);
 							  }
-							  
+
 							  //Hugo Loria
 							  try {
 								    um = userMenuDao.get("hloria@brunocorza.com", true);
@@ -911,7 +909,7 @@ public class TempUserCreation extends AbstractCLI {
 								    userDao.create(brunoHugoLoria);
 								  }
 
-			  
+
 		} catch (Exception e) {
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
 		}

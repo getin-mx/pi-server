@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +20,15 @@ import org.springframework.util.StringUtils;
 
 import mobi.allshoppings.bdb.bz.BDBRestBaseServerResource;
 import mobi.allshoppings.bdb.bz.BDBTimelineDataBzService;
-import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
+import mobi.allshoppings.dao.StoreDAO;
+import mobi.allshoppings.dashboards.DashboardAPDeviceMapperService;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.DashboardIndicatorAlias;
 import mobi.allshoppings.model.DashboardIndicatorData;
+import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.User;
+import mobi.allshoppings.model.tools.StatusHelper;
 import mobi.allshoppings.tools.CollectionFactory;
 
 
@@ -40,7 +43,7 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 	@Autowired
 	private DashboardIndicatorDataDAO dao;
 	@Autowired
-	private DashboardIndicatorAliasDAO diAliasDao;
+	private StoreDAO daoSRt;
 
 	/**
 	 * Obtains information about a user
@@ -56,28 +59,33 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			User user = getUserFromToken();
 
 			String entityId = obtainStringValue("entityId", null);
-			Integer entityKind = obtainIntegerValue("entityKind", null);
 			String elementId = obtainStringValue("elementId", null);
-			String elementSubId = obtainStringValue("elementSubId", null);
-			String shoppingId = obtainStringValue("shoppingId", null);
 			String subentityId = obtainStringValue("subentityId", null);
 			String periodType = obtainStringValue("periodType", null);
 			String fromStringDate = obtainStringValue("fromStringDate", null);
 			String toStringDate = obtainStringValue("toStringDate", null);
-			String movieId = obtainStringValue("movieId", null);
-			String voucherType = obtainStringValue("voucherType", null);
 			Integer dayOfWeek = obtainIntegerValue("dayOfWeek", null);
 			Integer timezone = obtainIntegerValue("timezone", null);
 			String subIdOrder = obtainStringValue("subIdOrder", null);
-			String country = obtainStringValue("country", null);
-			String province = obtainStringValue("province", null);
-			String city = obtainStringValue("city", null);
 			Boolean eraseBlanks = obtainBooleanValue("eraseBlanks", false);
-
-			List<DashboardIndicatorData> list = dao.getUsingFilters(entityId,
-					entityKind, elementId, elementSubId, shoppingId,
-					subentityId, null /*periodType*/, fromStringDate, toStringDate,
-					movieId, voucherType, dayOfWeek, timezone, null, country, province, city);
+			String region = obtainStringValue("region", null);
+			String format = obtainStringValue("storeFormat", null);
+			String district = obtainStringValue("district", null);
+			String orderx = obtainStringValue("order", null);
+			List<String> subname = CollectionFactory.createList();
+			boolean notEmptySubentity = StringUtils.hasText(subentityId);
+			boolean singleData = !StringUtils.hasText(region) && !StringUtils.hasText(format) &&
+					!StringUtils.hasText(district);
+			if(notEmptySubentity) subname.add(subentityId);
+			else {
+				if(singleData) {
+					for(Store i : daoSRt.getUsingRegionAndFormatAndDistrict(entityId, null, null,
+							StatusHelper.statusActive(), region, format, district, orderx)) subname.add(i.getIdentifier());
+				}
+			}
+			//on all brands, null entityId may produce undesired behaviour
+			List<DashboardIndicatorData> list = dao.getUsingFilters(null, null, Arrays.asList(elementId), null, null,
+					subname, null, fromStringDate, toStringDate, null, null, dayOfWeek, timezone, null, null, null, null);
 			
 			log.log(Level.INFO, list.size() + " dashboard elements found");
 
@@ -92,18 +100,8 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 			if(StringUtils.hasText(subIdOrder))
 				orderList.addAll(Arrays.asList(subIdOrder.split(",")));
 
-			Map<String, String> aliasMap = CollectionFactory.createMap();
-			if(!CollectionUtils.isEmpty(orderList)) {
-				for( String order : orderList ) {
-					try {
-						DashboardIndicatorAlias alias = diAliasDao.getUsingFilters(entityId, entityKind, elementId, order);
-						aliasMap.put(order, alias.getElementSubName());
-					} catch( ASException e ) {
-						log.log(Level.INFO, "Alias Not Found for subelementId " + order);
-					}
-				}
-			}
-
+			Map<String, String> aliasMap = new HashMap<>(DashboardAPDeviceMapperService.INDICATORS_ALIASES);
+			
 			// Creates the Date Map
 			Map<Date, Integer> dateMap = CollectionFactory.createMap();
 			int dateMapPosition = 0;
@@ -125,7 +123,7 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 					if( valArray == null ) {
 						valArray = new Double[dateMap.keySet().size()];
 						for( int i = 0; i < dateMap.keySet().size(); i++ ) {
-							valArray[i] = new Double(0.0);
+							valArray[i] = 0d;
 						}
 					}
 					resultMap.put(key, valArray);
@@ -144,10 +142,9 @@ public class TimelineDataBzServiceJSONImpl extends BDBRestBaseServerResource imp
 						if( valArray == null ) {
 							valArray = new Double[dateMap.keySet().size()];
 							for( int i = 0; i < dateMap.keySet().size(); i++ ) {
-								valArray[i] = new Double(0.0);
+								valArray[i] = 0d;
 							}
 						}
-						log.info(objDate.toString());
 						int position = dateMap.get(objDate);
 						valArray[position] += obj.getDoubleValue();
 						resultMap.put(key, valArray);

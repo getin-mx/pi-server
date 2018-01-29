@@ -94,6 +94,18 @@
             <field name="key" column="_id" length="100"/>
         </class>
 
+        <class name="WeeklyDashboardIndicatorData" table="WeeklyDashboardIndicatorData">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="MonthlyDashboardIndicatorData" table="MonthlyDashboardIndicatorData">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
+        <class name="QuarterlyDashboardIndicatorData" table="QuarterlyDashboardIndicatorData">
+            <field name="key" column="_id" length="100"/>
+        </class>
+
         <class name="DeviceInfo" table="DeviceInfo">
             <field name="key" column="_id" length="100"/>
         </class>

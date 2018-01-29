@@ -514,7 +514,7 @@ implements BDBDashboardBzService {
 			sum.setPeasants(peasants);
 			sum.setVisits(visits);
 			sum.setTickets(tickets);
-			sum.setAvgTickets(revenue/tickets);
+			sum.setAvgTickets(tickets == 0 ? 0 : revenue/tickets);
 			
 			{
 				List<PerformanceEntry> performance = CollectionFactory.createList();

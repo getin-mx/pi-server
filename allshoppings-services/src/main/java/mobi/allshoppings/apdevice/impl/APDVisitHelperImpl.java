@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -229,7 +228,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		while( (!reverse && (curDate.before(toDate) || (fromDate.equals(toDate) &&
 				curDate.equals(toDate)))) || (reverse && (toDate.before(curDate) ||
 						toDate.equals(fromDate) && toDate.equals(curDate)))) {
-
 			try {
 				log.log(Level.INFO, "entityIds are: " + entities);
 				
@@ -266,7 +264,10 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 							// Determine which antennas are valid for this entity and date 
 							final List<APDAssignation> assigs = apdaDao.getUsingEntityIdAndEntityKindAndDate(
 									entityId, entityKind, curDate);
-							if(CollectionUtils.isEmpty(assigs)) continue;
+							if(CollectionUtils.isEmpty(assigs)) {
+								log.log(Level.INFO, "Didn't find any antenna assignated to: " +name +". Skipping...");
+								continue;
+							}
 							assignmentsCache.clear();
 							if(assigs.size() == 1) {
 
@@ -511,10 +512,8 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 			else if(auxDate != null && auxDate.compareTo(i.next().getDate()) > 0) i.remove(); 
 		}*/
 		
-		APHEntry aphe;
-		
 		List<APHEntry> lastRes = CollectionFactory.createList();
-
+		APHEntry aphe;
 		if(timezoneOffset >= 0) {
 			startCal.add(Calendar.DATE, -1);
 			endCal.setTime(from);
@@ -616,6 +615,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				}
 			}
 			map.put(mapped.getMac(), mapped);
+			
 		}
 
 		Iterator<APHEntry> ix = map.values().iterator();
@@ -950,6 +950,7 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		Integer lastPeasantSlot = null;
 		APDVisit currentVisit = null;
 		APDVisit currentPeasant = null;
+		APDVisit currentViewer = null;
 		APHEntry curEntry = null;
 		
 		// Now iterate the slots on each entry
@@ -1002,17 +1003,28 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 								res.add(currentPeasant);
 							currentPeasant = null;
 						}
+						if( currentViewer != null ) {
+							currentViewer.setCheckinFinished(aphHelper.slotToDate(lastSlot, date));
+							if(isPeasantValid(currentViewer, dev, isEmployee,
+									assignments.get(curEntry.getHostname()).getEntityKind()))
+								res.add(currentViewer);
+							currentViewer = null;
+						}
 					}
 				}
+				
 				// If there is a peasant threshold
 				if(dev.getPeasantPowerThreshold() == null 
 						|| value >= dev.getPeasantPowerThreshold()) {
 					// Add a new peasant if there is no peasant active
-					if( currentPeasant == null )
-						currentPeasant = createPeasant(curEntry, curDate, null,
+					if( currentPeasant == null ) currentPeasant = createPeasant(curEntry, curDate, null,
 								assignments.get(curEntry.getHostname()), date);
 					lastPeasantSlot = slot;
 					// Checks for power for visit
+					if(currentViewer == null && value >= dev.getViewerPowerThreshold() &&
+							value <= dev.getViewerPowerThreshold() + dev.getOffsetViewer())
+						currentViewer = createViewer(curEntry, curDate, null,
+								assignments.get(curEntry.getHostname()), date);
 					if( value >= dev.getVisitPowerThreshold() ) {
 						if( currentVisit == null )
 							currentVisit = createVisit(curEntry, curDate, null,
@@ -1085,8 +1097,23 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 									assignments.get(curEntry.getHostname()).getEntityKind()))
 								res.add(currentPeasant);
 							currentPeasant = null;
+						}if( currentViewer != null ) {
+							currentViewer.setCheckinFinished(aphHelper.slotToDate(finishSlot, date));
+							if(isViewerValid(currentViewer, dev, isEmployee,
+									assignments.get(curEntry.getHostname()).getEntityKind()))
+								res.add(currentViewer);
+							currentViewer = null;
 						}
+						
 					}
+				} if( currentViewer != null && (value < dev.getViewerPowerThreshold() ||
+						value > dev.getViewerPowerThreshold() + dev.getOffsetViewer())) {
+					currentViewer.setCheckinFinished(aphHelper.slotToDate(
+							slot, date));
+					if(isPeasantValid(currentViewer, dev, isEmployee,
+							assignments.get(curEntry.getHostname()).getEntityKind()))
+						res.add(currentViewer);
+					currentViewer = null;
 				}
 				// Updates the last slot
 				lastSlot = slot;
@@ -1120,12 +1147,23 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 				if(isPeasantValid(currentPeasant, apd.get(curEntry.getHostname()), isEmployee,
 						assignments.get(curEntry.getHostname()).getEntityKind()))
 					res.add(currentPeasant);
-				currentPeasant = null;
+				//currentPeasant = null;
 			}
 		} catch( Exception e ) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 		}
-
+		try {
+			if( currentViewer != null ) {
+				currentViewer.setCheckinFinished(aphHelper.slotToDate(
+							lastSlot, date));
+					if(isViewerValid(currentViewer, apd.get(curEntry.getHostname()), isEmployee,
+							assignments.get(curEntry.getHostname()).getEntityKind()))
+						res.add(currentViewer);
+					currentViewer = null;
+			}
+		} catch( Exception e ) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+		}
 		
 		// Checks for max visits per day using RepeatThreshold
 		int repepatThreshold = 0;
@@ -1151,10 +1189,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 					res.add(v);
 					one = true;
 				}
-				/*else {
-					v.setCheckinType(APDVisit.CHECKIN_PEASANT);
-					res.add(v);
-				}*/
 			}
 		}
 		// End Checks for max visits per day using RepeatThreshold
@@ -1302,8 +1336,30 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		// TODO add minimum peasant time
 		
+		
+		
 		visit.setDuration(time);
 		return time <= 60 *60;
+	}
+	
+	/**
+	 * Checks if a viewer is valid according the device parameters
+	 * 
+	 * @param visit - The visit to check
+	 * @param device - The device that contains the parameters
+	 * @return true if valid, false if not
+	 * @throws ParseException
+	 */
+	private boolean isViewerValid(APDVisit visit, APDevice device, boolean isEmployee, int entityKind) {
+		
+		if( isEmployee ) return false;
+		
+		if(entityKind == EntityKind.KIND_INNER_ZONE) return false;
+		
+		long time = (visit.getCheckinFinished().getTime() -visit.getCheckinStarted().getTime()) / 60000;
+		
+		visit.setDuration(time);
+		return device.getViewerMinTimeThreshold() <= time && time <= device.getViewerMaxTimeThreshold();
 	}
 
 	/**
@@ -1323,12 +1379,11 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		String entityId = assign.getEntityId();
 		Integer entityKind = assign.getEntityKind();
-		WORK_CALENDAR.clear();
 		
 		APDVisit visit = new APDVisit();
 		visit.setApheSource(source.getIdentifier());
 		visit.setCheckinStarted(date);
-		visit.setCheckinType(APDVisit.CHECKIN_VISIT);
+		visit.setCheckinType(isEmployee ? APDVisit.CHECKIN_EMPLOYEE : APDVisit.CHECKIN_VISIT);
 		visit.setEntityId(entityId);
 		visit.setEntityKind(entityKind);
 		visit.setMac(source.getMac());
@@ -1359,7 +1414,6 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		
 		String entityId = assign.getEntityId();
 		Integer entityKind = assign.getEntityKind();
-		WORK_CALENDAR.clear();
 		
 		APDVisit peasant = new APDVisit();
 		peasant.setApheSource(source.getIdentifier());
@@ -1376,6 +1430,40 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 		peasant.setKey(apdvDao.createKey(peasant));
 
 		return peasant;
+	}
+	
+	/**
+	 * Creates a viewer
+	 * 
+	 * @param source
+	 *            The APHEntry source
+	 * @param date
+	 *            Visit Date Start
+	 * @param device
+	 *            DeviceInfo to attach
+	 * @return A new fully formed visit
+	 * @throws ASException
+	 */
+	private APDVisit createViewer(APHEntry source, Date date, DeviceInfo device, APDAssignation assign,
+			String forDate) throws ASException {
+		String entityId = assign.getEntityId();
+		Integer entityKind = assign.getEntityKind();
+		
+		APDVisit viewer = new APDVisit();
+		viewer.setApheSource(source.getIdentifier());
+		viewer.setCheckinStarted(date);
+		viewer.setCheckinType(APDVisit.CHECKIN_VIEWER);
+		viewer.setEntityId(entityId);
+		viewer.setEntityKind(entityKind);
+		viewer.setMac(source.getMac());
+		viewer.setDevicePlatform(source.getDevicePlatform());
+		viewer.setVerified(false);
+		viewer.setDeviceUUID(device == null ? null : device.getDeviceUUID());
+		viewer.setUserId(null);
+		viewer.setForDate(forDate);
+		viewer.setKey(apdvDao.createKey(viewer));
+
+		return viewer;
 	}
 	
 }//APDVisit Helper Implementation

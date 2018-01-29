@@ -21,6 +21,7 @@ public class StoreItemDataBzServiceJSONImpl extends StoreEntityData<StoreItem> {
 	@Autowired
 	private StoreItemDAO dao;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected List<StoreItem> daoGetUsingStoreIdAndDatesAndRange(String storeId, String fromDate,
 			String toDate, String toHour, boolean order) throws ASException {

@@ -37,21 +37,18 @@ import mobi.allshoppings.model.EmployeeLog;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.tools.impl.KeyHelperGaeImpl;
 import mobi.allshoppings.tools.CollectionFactory;
+import mx.getin.Constants;
 
 public class ConvertEmployeeLog extends AbstractCLI {
 
 	private static final Logger log = Logger.getLogger(ConvertEmployeeLog.class.getName());
-	public static final long TWENTY_FOUR_HOURS = 86400000;
 	private static final String FROM_DATE_PARAM = "fromDate";
 	private static final String TO_DATE_PARAM = "toDate";
 	private static final String ENTITY_IDS_PARAM = "entityIds";
 	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 
 	public static OptionParser buildOptionParser(OptionParser base) {
-		if (base == null)
-			parser = new OptionParser();
-		else
-			parser = base;
+		parser = base == null ? new OptionParser() : base;
 		parser.accepts(FROM_DATE_PARAM, "The starting date to process").withRequiredArg().ofType(String.class);
 		parser.accepts(TO_DATE_PARAM, "The limit date to process").withRequiredArg().ofType(String.class);
 		parser.accepts(ENTITY_IDS_PARAM, "The entities whose employees will be " + "processed").withRequiredArg()
@@ -63,7 +60,7 @@ public class ConvertEmployeeLog extends AbstractCLI {
 		context = ctx;
 	}
 
-	public static void main(String args[]) throws ASException {
+	public static void main(String[] args) throws ASException {
 		try {
 			EmployeeLogDAO employeeLogDao = (EmployeeLogDAO)getApplicationContext().getBean("employeelog.dao.ref");
 			APDMAEmployeeDAO apdmaeDao = (APDMAEmployeeDAO)getApplicationContext().getBean("apdmaemployee.dao.ref");
@@ -85,10 +82,10 @@ public class ConvertEmployeeLog extends AbstractCLI {
 				
 				fromDate = StringUtils.hasText(sFromDate) ? SDF.parse(sFromDate) :
 					SDF.parse(SDF.format(
-							new Date(System.currentTimeMillis() - TWENTY_FOUR_HOURS)));
+							new Date(System.currentTimeMillis() -Constants.DAY_IN_MILLIS)));
 				
 				toDate = StringUtils.hasText(sToDate) ? SDF.parse(sToDate) :
-					new Date(fromDate.getTime() + TWENTY_FOUR_HOURS);
+					new Date(fromDate.getTime() +Constants.DAY_IN_MILLIS);
 				
 				List<String> entities = null;
 				
@@ -126,7 +123,7 @@ public class ConvertEmployeeLog extends AbstractCLI {
 									new DumpFactory<APDVisit>().build(null, APDVisit.class, false);
 							entities = visitDumper.getMultipleNameOptions(curDate);
 						}
-						Date nextDate = new Date(curDate.getTime() +TWENTY_FOUR_HOURS -1);
+						Date nextDate = new Date(curDate.getTime() +Constants.DAY_IN_MILLIS -1);
 						for(String entityId : entities) {
 							DumperHelper<APDVisit> visitDumper =
 									new DumpFactory<APDVisit>().build(null, APDVisit.class, false);

@@ -1,6 +1,7 @@
 package mobi.allshoppings.model;
 
 import java.io.Serializable;
+
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import mobi.allshoppings.model.interfaces.Identificable;
 import mobi.allshoppings.model.interfaces.Indexable;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.interfaces.StatusAware;
+import mx.getin.Constants;
 
 @PersistenceCapable(detachable="true")
 public class APDevice implements ModelKey, Serializable, Identificable, Indexable, StatusAware {
@@ -59,7 +61,15 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	private Long visitMaxThreshold;
 	private Long peasantPowerThreshold;
 	private Long visitCountThreshold;
+	private Long viewerPowerThreshold;
 	private Integer repeatThreshold;
+	private int viewerMinTimeThreshold;
+	private int viewerMaxTimeThreshold;
+
+	/**
+	 * This Value must be positive
+	 */
+	private int offSetViewer;
 	
 	private Long visitDecay;
 	private Long peasantDecay;
@@ -107,7 +117,6 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	private boolean doIndexNow = true;
 
 	public APDevice() {
-		super();
 		this.creationDateTime = new Date();
 		this.status = StatusAware.STATUS_ENABLED;
 		this.reportStatus = REPORT_STATUS_NOT_REPORTED;
@@ -123,10 +132,17 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 		if( visitPowerThreshold == null) visitPowerThreshold = -60L;
 		if( visitMaxThreshold == null) visitMaxThreshold = 480L;
 		if( peasantPowerThreshold == null) peasantPowerThreshold = -80L;
+		if( viewerPowerThreshold == null) viewerPowerThreshold = (visitPowerThreshold +peasantPowerThreshold) /2;
+		if(viewerPowerThreshold < visitPowerThreshold) viewerPowerThreshold = visitPowerThreshold;
 		if( visitCountThreshold == null) visitCountThreshold = 0L;
 		if( repeatThreshold == null ) repeatThreshold = 5;
 		if( visitDecay == null ) visitDecay = visitGapThreshold;
 		if( peasantDecay == null ) peasantDecay = visitGapThreshold; 
+		if( offSetViewer <= 0) offSetViewer = 5; 
+		if(viewerPowerThreshold -offSetViewer < peasantPowerThreshold) offSetViewer = (int)(peasantPowerThreshold -viewerPowerThreshold);
+		
+		if(viewerMinTimeThreshold < 0) viewerMinTimeThreshold = visitTimeThreshold.intValue();
+		if(viewerMaxTimeThreshold < viewerMinTimeThreshold) viewerMaxTimeThreshold = Constants.FIVE_MINUTES_IN_MILLIS;
 	    
 		if( timezone == null) timezone = "CDT";
 		if( visitsOnMon == null) visitsOnMon = true;
@@ -454,12 +470,26 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	public Long getPeasantPowerThreshold() {
 		return peasantPowerThreshold;
 	}
+	
+	/**
+	 * @return the viewerPowerThreshold
+	 */
+	public Long getViewerPowerThreshold() {
+		return viewerPowerThreshold;
+	}
 
 	/**
 	 * @param peasentPowerThreshold the peasentPowerThreshold to set
 	 */
 	public void setPeasentPowerThreshold(Long peasentPowerThreshold) {
 		this.peasantPowerThreshold = peasentPowerThreshold;
+	}
+	
+	/**
+	 * @param viewerPowerThreshold the viewerPowerThreshold to set
+	 */
+	public void setViewerPowerThreshold(long viewerPowerThreshold) {
+		this.viewerPowerThreshold = viewerPowerThreshold;
 	}
 
 	/**
@@ -1067,6 +1097,14 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	public void setPeasantDecay(Long peasantDecay) {
 		this.peasantDecay = peasantDecay;
 	}
+	
+	public void setOffsetView(int offSetViewer) {
+		this.offSetViewer = Math.abs(offSetViewer);
+	}
+	
+	public int getOffsetViewer() {
+		return offSetViewer;
+	}
 
 	@Override
 	public boolean doIndex() {
@@ -1076,6 +1114,22 @@ public class APDevice implements ModelKey, Serializable, Identificable, Indexabl
 	@Override
 	public void disableIndexing(boolean val) {
 		this.doIndexNow = !val;
+	}
+	
+	public int getViewerMinTimeThreshold() {
+		return viewerMinTimeThreshold;
+	}
+
+	public void setViewerMinTimeThreshold(int viewerMinTimeThreshold) {
+		this.viewerMinTimeThreshold = viewerMinTimeThreshold;
+	}
+	
+	public int getViewerMaxTimeThreshold() {
+		return viewerMaxTimeThreshold;
+	}
+
+	public void setViewerMaxTimeThreshold(int viewerMaxTimeThreshold) {
+		this.viewerMaxTimeThreshold = viewerMaxTimeThreshold;
 	}
 
 	/* (non-Javadoc)

@@ -40,6 +40,7 @@ public class StoreRevenueByHour extends StoreRevenue implements StoreDataByHourE
 	 * Gets the Store revenue By Hour Key
 	 * @return Key - the key of the entity
 	 *
+	 */
 	public Key getKey() {
 		return key;
 	}//getKey
@@ -48,6 +49,7 @@ public class StoreRevenueByHour extends StoreRevenue implements StoreDataByHourE
 	 * Sets the Store revenue By Hour BD key
 	 * @param key - the key to set
 	 *
+	 */
 	public void setKey(Key key) {
 		this.key = key;
 	}//setKey	*/

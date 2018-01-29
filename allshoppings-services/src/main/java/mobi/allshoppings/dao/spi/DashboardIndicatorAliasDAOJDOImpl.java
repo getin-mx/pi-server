@@ -8,6 +8,7 @@ import mobi.allshoppings.dao.DashboardIndicatorAliasDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.DashboardIndicatorAlias;
 
+@Deprecated
 public class DashboardIndicatorAliasDAOJDOImpl extends GenericDAOJDO<DashboardIndicatorAlias> implements DashboardIndicatorAliasDAO {
 
 	@SuppressWarnings("unused")

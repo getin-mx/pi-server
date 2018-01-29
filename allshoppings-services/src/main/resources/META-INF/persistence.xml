@@ -32,6 +32,9 @@
         <class>mobi.allshoppings.model.DashboardConfiguration</class>
         <class>mobi.allshoppings.model.DashboardIndicatorAlias</class>
         <class>mobi.allshoppings.model.DashboardIndicatorData</class>
+        <class>mobi.allshoppings.model.WeeklyDashboardIndicatorData</class>
+        <class>mobi.allshoppings.model.MonthlyDashboardIndicatorData</class>
+        <class>mobi.allshoppings.model.QuarterlyDashboardIndicatorData</class>
         <class>mobi.allshoppings.model.DeviceInfo</class>
         <class>mobi.allshoppings.model.DeviceLocation</class>
         <class>mobi.allshoppings.model.DeviceLocationHistory</class>

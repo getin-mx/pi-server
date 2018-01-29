@@ -96,7 +96,6 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 		try {
 			// obtain the id and validates the auth token
 			obtainUserIdentifier(true);
-			
 			String storeId = obtainStringValue(STORE_ID_PARAM, null);
 			String fromDate = obtainStringValue(FROM_DATE_PARAM, null);
 			String toDate = obtainStringValue(TO_DATE_PARAM, null);
@@ -315,9 +314,7 @@ public abstract class StoreEntityData<T extends StoreDataEntity> extends BDBRest
 			Brand brand = brandDao.get(json.getString(BRAND_ID_PARAM));
 			Date month = mdf.parse(json.getString(PERIOD_PARAM));
 			boolean isHourly = json.getBoolean(IS_HOURLY_PARAM);
-			
 			JSONObject message = parseExcelDataFile(image, brand, month, isHourly);
-			
 			JSONArray jsonDateList = message.getJSONArray(RESPONSE_DATE_LIST);
 			List<String> dateList = CollectionFactory.createList();
 			for( int i = 0; i < jsonDateList.length(); i++)

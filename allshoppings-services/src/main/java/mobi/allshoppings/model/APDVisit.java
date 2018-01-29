@@ -25,6 +25,7 @@ public class APDVisit implements ModelKey, Serializable, Identificable {
 	public final static Integer CHECKIN_VISIT = 2;
 	public final static Integer CHECKIN_PEASANT = 3;
 	public final static Integer CHECKIN_EMPLOYEE = 4;
+	public final static int CHECKIN_VIEWER = 5;
 	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)

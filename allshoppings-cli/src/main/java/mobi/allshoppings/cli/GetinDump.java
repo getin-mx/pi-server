@@ -60,9 +60,8 @@ public class GetinDump extends AbstractCLI {
 			ExternalAPHotspotDAO eaphDao = (ExternalAPHotspotDAO)getApplicationContext().getBean("externalaphotspot.dao.ref");
 			APDAssignationDAO apdaDao = (APDAssignationDAO)getApplicationContext().getBean("apdassignation.dao.ref");
 
-//			GeoCodingHelper geocoder = (GeoCodingHelper)getApplicationContext().getBean("geocoding.helper");
-
 			log.log(Level.INFO, "Dumping Getin Data....");
+
 			// Shoppings ----------------------------------------------------------------------------------------------------
 			Shopping shopping = null;
 			try {
@@ -1072,6 +1071,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("461", "Modatelas Tierra Blanca", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("462", "Modatelas Parral", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("463", "Modatelas Chihuahua IV", "modatelas_mx", null, GetinDump.MALL));
+			// IDS disponibles
 			stores.add(new StoreAdapter("466", "FULLSAND LA QUINTA", "fullsand_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("467", "Volaris AICM Nacional", "volaris_mx", null, GetinDump.AIRPORT));
 			stores.add(new StoreAdapter("468", "Pamela de Haro Athos", "pameladeharo_mx", null, 0));
@@ -1294,6 +1294,7 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("699","Farmacias Similares Polanco 1", "farmacias_similares_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("700","Farmacias Similares Apatlaco 1", "farmacias_similares_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("701","Farmacias Similares Aragón 2", "farmacias_similares_mx", null, GetinDump.FOOT_STREET));
+			// ID disponible
 			stores.add(new StoreAdapter("703", "Mobo Aeropuerto Terminal 1", "mobo_mx",null, GetinDump.AIRPORT));
 			stores.add(new StoreAdapter("704", "Mobo Aeropuerto T2 Llegadas", "mobo_mx",null, GetinDump.AIRPORT));
 			stores.add(new StoreAdapter("705","Aditivo Puebla Centro", "aditivo_mx", null, GetinDump.FOOT_STREET));
@@ -1411,7 +1412,6 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("827","Opticas Devlyn Cervantes Saavedra Gabinete", "devlyn_demo_mx", null, 0));
 			stores.add(new StoreAdapter("831", "Bruno Corza Parque Puebla", "brunocorza_mx", null, GetinDump.MALL));
 			stores.add(new StoreAdapter("832", "98 Coast Av. Culiacán", "98coastav_mx", null, GetinDump.MALL));
-
 
 			Store store;
 			for(StoreAdapter obj : stores ) {

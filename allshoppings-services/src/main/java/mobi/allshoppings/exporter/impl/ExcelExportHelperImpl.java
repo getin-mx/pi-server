@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +48,8 @@ import org.springframework.util.StringUtils;
 
 import com.google.common.io.Files;
 
+import mobi.allshoppings.dao.APDAssignationDAO;
+import mobi.allshoppings.dao.APUptimeDAO;
 import mobi.allshoppings.dao.DashboardIndicatorDataDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.dao.StoreItemDAO;
@@ -57,6 +60,8 @@ import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.exporter.ExcelExportHelper;
 import mobi.allshoppings.mail.MailHelper;
+import mobi.allshoppings.model.APDAssignation;
+import mobi.allshoppings.model.APUptime;
 import mobi.allshoppings.model.DashboardIndicatorData;
 import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Store;
@@ -74,6 +79,10 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 
 	static final DecimalFormat DF = new DecimalFormat("00");
 
+	@Autowired
+	private APDAssignationDAO asdao;
+	@Autowired
+	private APUptimeDAO apudao;
 	@Autowired
 	DashboardIndicatorDataDAO didDao;
 	@Autowired
@@ -106,6 +115,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	private static final byte VISITS_CELL_INDEX = 5;
 	private static final byte TICKET_CELL_INDEX = 6;
 	private static final byte STORE_NAME_CELL_INDEX = 7;
+	private static final byte UPTIME_BY_HOUR_PERCENTAGE_INDEX = 8;
 
 	private static final byte HOUR_CELL_INDEX = 4;
 
@@ -117,13 +127,14 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	private static final String VISITS_CELL_TITLE = "Visitas";
 	private static final String TICKET_CELL_TITLE = "Ticket";
 	private static final String STORE_NAME_CELL_TITLE = "Tienda";
+	private static final String UPTIME_BY_HOUR_PERCENTAGE = "Uptime";
 
 	private static final String HOUR_CELL_TITLE = "Hora";
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public byte[] export(String storeId, String fromDate, String toDate, int weeks,
-			String outDir, User toNotify) throws ASException {
+	public byte[] export(String storeId, String fromDate, String toDate, int weeks, String outDir, User toNotify)
+			throws ASException {
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -140,7 +151,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			Map<String, DateAndHourEntry> dateAndHourMap = CollectionFactory.createMap();
 			Date initialDate = sdf.parse(fromDate);
 			Date finalDate = sdf.parse(toDate);
-			finalDate.setTime(finalDate.getTime() +DAY_IN_MILLIS);
+			finalDate.setTime(finalDate.getTime() + DAY_IN_MILLIS);
 			Date curDate = new Date(initialDate.getTime());
 			String dateName = getStringDate(finalDate);
 			Calendar cal = Calendar.getInstance();
@@ -218,8 +229,8 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			// How iterates the Dashboard Indicator Data List for Traffic by
 			// Hour graph
 			list = didDao.getUsingFilters(brandId, EntityKind.KIND_BRAND, Arrays.asList("apd_visitor"),
-					Arrays.asList("visitor_total_peasents", "visitor_total_visits"), null, storeId, null,
-					parsedLimitD, parsedFinalD, null, null, null, null, null, null, null, null);
+					Arrays.asList("visitor_total_peasents", "visitor_total_visits"), null, storeId, null, parsedLimitD,
+					parsedFinalD, null, null, null, null, null, null, null, null);
 
 			log.log(Level.INFO, "Using " + list.size() + " elements for apd_visitor totals...");
 
@@ -568,8 +579,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			File tmp = File.createTempFile(storeId,
-					".xlsx");
+			File tmp = File.createTempFile(storeId, ".xlsx");
 			FileOutputStream fos = new FileOutputStream(tmp);
 			log.log(Level.INFO, "Written to: " + tmp.getAbsolutePath());
 			workbook.write(fos);
@@ -577,11 +587,12 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			fos.close();
 			workbook.write(bos);
 			bos.close();
-			
-			if(toNotify != null) sendReportMail(mailHelper,
-					toNotify, tmp, log);
-			else tmp.delete();
-			
+
+			if (toNotify != null)
+				sendReportMail(mailHelper, toNotify, tmp, log);
+			else
+				tmp.delete();
+
 			workbook.close();
 			return bos.toByteArray();
 		} catch (Exception ex) {
@@ -1062,6 +1073,8 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 	public byte[] exportDB(List<String> storesId, String brandId, String fromDate, String toDate, String outDir,
 			boolean saveTmp, User toNotify) throws ASException {
 		// FIXME optimize to use only one loop for both daily and hourly data
+		
+		
 		if (brandId != null && StringUtils.hasText(brandId)) {
 			for (Store current : storeDao.getUsingBrandAndStatus(brandId, null, null)) {
 				if (!storesId.contains(current.getIdentifier()))
@@ -1091,8 +1104,13 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		int rowIndex = 0;
 		Store store;
 		Date initialDate, finalDate, curDate;
+		List<APDAssignation> apdassignation = CollectionFactory.createList();
+		List<APUptime> uptime = null;
+		Calendar calforcomp = Calendar.getInstance();
 		final SimpleDateFormat hourlySdf = new SimpleDateFormat("HH:mm");
 		int dayLoop;
+		int total = 0 ;
+		int contador = 0;
 		try {
 			initialDate = sdf.parse(fromDate);
 			finalDate = sdf.parse(toDate);
@@ -1124,6 +1142,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		log.log(Level.INFO, "Adding stores daily data");
 		for (String storeId : storesId) {
 			store = storeDao.get(storeId, false);
+			
 			log.log(Level.INFO, "Processing store " + store.getName() + " for period " + fromDate
 					+ " - " + toDate + "...");
 			curDate = new Date(initialDate.getTime());
@@ -1189,15 +1208,26 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		row.createCell(VISITS_CELL_INDEX + 1).setCellValue(helper.createRichTextString(VISITS_CELL_TITLE));
 		row.createCell(TICKET_CELL_INDEX + 1).setCellValue(helper.createRichTextString(TICKET_CELL_TITLE));
 		row.createCell(STORE_NAME_CELL_INDEX + 1).setCellValue(helper.createRichTextString(STORE_NAME_CELL_TITLE));
+		row.createCell(UPTIME_BY_HOUR_PERCENTAGE_INDEX+1).setCellValue(helper.createRichTextString(UPTIME_BY_HOUR_PERCENTAGE));
 		Map<Integer, DashboardIndicatorData> visits = CollectionFactory.createMap();
 		Map<Integer, DashboardIndicatorData> peasents = CollectionFactory.createMap();
 		// adding hourly data
 		log.log(Level.INFO, "Adding stores hourly data");
 		for (String storeId : storesId) {
 			store = storeDao.get(storeId, false);
-			log.log(Level.INFO, "Processing store " + store.getName() + " for period " + fromDate
-					+ " - " + toDate + "...");
 			curDate = new Date(initialDate.getTime());
+			calforcomp.setTime(curDate);
+			//apdassignation.clear();
+			apdassignation = asdao.getUsingEntityIdAndEntityKind(storeId, EntityKind.KIND_STORE);
+			for (APDAssignation assing : apdassignation)
+			{
+			uptime = apudao.getUsingHostnameAndDates(assing.getHostname(),curDate,finalDate);
+			
+			}
+			
+			log.log(Level.INFO, "Processing store " + store.getName() + " for period " + fromDate
+					+ " - " + toDate + "...");			
+
 			// adds a row for each segment of data
 			dayLoop = 0;
 			while (curDate.compareTo(finalDate) < 0) {
@@ -1229,6 +1259,27 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 				cell = row.createCell(HOUR_CELL_INDEX);
 				cell.setCellValue(hourlySdf.format(curDate));
 				cell.setCellStyle(hourStyle);
+				calforcomp.add(Calendar.HOUR_OF_DAY, 1);
+				for (APUptime i : uptime) {
+					Map<String, Integer> uptimetime = i.getRecord();
+					Iterator<Entry<String, Integer>> j = uptimetime.entrySet().iterator();
+					while(j.hasNext())
+					{
+						Map.Entry<String, Integer> hora= j.next();
+						if(hora.getKey().compareTo(hourlySdf.format(curDate)) >= 0 && hora.getKey().compareTo(hourlySdf.format(calforcomp.getTime())) < 0)
+						{
+							if(hora.getValue() == 1) {
+							contador++;
+							total++;
+							}else 
+							{
+								total++;
+							}
+						}
+
+				}
+				
+				}
 				row.createCell(PEASENTS_CELL_INDEX + 1)
 						.setCellValue(peasents.containsKey(dayLoop) ? peasents.get(dayLoop).getDoubleValue() : 0);
 				row.createCell(VISITS_CELL_INDEX + 1)
@@ -1241,8 +1292,15 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 					row.createCell(TICKET_CELL_INDEX + 1).setCellValue(helper.createRichTextString("NA"));
 				}
 				row.createCell(STORE_NAME_CELL_INDEX + 1).setCellValue(store.getName());
+				if(total== 0)
+				{
+					row.createCell(UPTIME_BY_HOUR_PERCENTAGE_INDEX + 1).setCellValue(0);
+				}else
+				row.createCell(UPTIME_BY_HOUR_PERCENTAGE_INDEX + 1).setCellValue((contador *100)/total);
 				curDate.setTime(curDate.getTime() + HOUR_IN_MILLIS);
 				dayLoop = (dayLoop + 1) % 24;
+				total= 0;
+				contador=0;
 			} // por cada día
 		} // por cada tienda
 
@@ -1255,6 +1313,7 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 		currentSheet.autoSizeColumn(VISITS_CELL_INDEX + 1);
 		currentSheet.autoSizeColumn(TICKET_CELL_INDEX + 1);
 		currentSheet.autoSizeColumn(STORE_NAME_CELL_INDEX + 1);
+		currentSheet.autoSizeColumn(UPTIME_BY_HOUR_PERCENTAGE_INDEX+1);
 		try {
 			if (saveTmp || toNotify != null) {
 				FileOutputStream fos;
@@ -1278,28 +1337,29 @@ public class ExcelExportHelperImpl implements ExcelExportHelper {
 			log.log(Level.SEVERE, ex.getMessage(), ex);
 			throw ASExceptionHelper.defaultException(ex.getMessage(), ex);
 		}
+		
 	}
-	
+
 	/**
-	 * Helper method to send a notification mail no the
-	 * requester user.
-	 * @param helper - The mail helper bean to use.
-	 * @param user - The user to mail.
-	 * @param report - The resultant excel report to attach
-	 * to mail.
-	 * @param log - A Logger to print debug logs. Its a
-	 * mandatory field.
+	 * Helper method to send a notification mail no the requester user.
+	 * 
+	 * @param helper
+	 *            - The mail helper bean to use.
+	 * @param user
+	 *            - The user to mail.
+	 * @param report
+	 *            - The resultant excel report to attach to mail.
+	 * @param log
+	 *            - A Logger to print debug logs. Its a mandatory field.
 	 */
-	public static void sendReportMail(MailHelper helper, User user, File report,
-			Logger log) {
+	public static void sendReportMail(MailHelper helper, User user, File report, Logger log) {
 		try {
-			helper.sendMessageWithAttachMents(user, "Getin - Su reporte está "
-					+ "listo", "<p>Su reporte se ha generado y se ha adjuntado a este"
+			helper.sendMessageWithAttachMents(user, "Getin - Su reporte está " + "listo",
+					"<p>Su reporte se ha generado y se ha adjuntado a este"
 							+ " mensaje para su comodidad.</p><p>El equipo de "
-							+ "<a href=\"getin.mx\">Getin</a> le desea un excelente"
-							+ " d&iacute;a.", report.getAbsolutePath(),
-							report.getName());
-		} catch(Exception e) {
+							+ "<a href=\"getin.mx\">Getin</a> le desea un excelente" + " d&iacute;a.",
+					report.getAbsolutePath(), report.getName());
+		} catch (Exception e) {
 			log.log(Level.INFO, "Failed to send email notification", e);
 		}
 	}

@@ -156,16 +156,23 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 	 */
 	private List<Store> getUsingBrandAndShoppingAndUserAndStatus(String brandId,
 			String shoppingId, User user, List<Integer> status, String order) throws ASException {
+		return getUsingRegionAndFormatAndDistrict(brandId, shoppingId, user, status, null, null, null, order);
+	}
+	
+	@Override
+	public List<Store> getUsingRegionAndFormatAndDistrict(String brandId, String shoppingId, User user,
+			List<Integer> status, String region, String format, String district, String order) throws ASException {
 		PersistenceManager pm = DAOJDOPersistentManagerFactory.get().getPersistenceManager();
-		List<Store> ret = new ArrayList<Store>();
-
+		List<Store> ret = new ArrayList<>();
+		
 		try {
+			
 			Map<String, Object> parameters = CollectionFactory.createMap();
 			List<String> declaredParams = CollectionFactory.createList();
 			List<String> filters = CollectionFactory.createList();
 			
 			Query query = pm.newQuery(Store.class);
-
+			
 			// Brand parameters
 			if( StringUtils.hasText(brandId)) {
 				declaredParams.add("String brandIdParam");
@@ -180,11 +187,32 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 				parameters.put("shoppingIdParam", shoppingId);
 			}
 
+			// Region parameters
+			if( StringUtils.hasText(region)) {
+				declaredParams.add("String regionParam");
+				filters.add("(region == null || region == regionParam)" );
+				parameters.put("regionParam", region);
+			}
+			
+			// Format parameters
+			if( StringUtils.hasText(format)) {
+				declaredParams.add("String formatParam");
+				filters.add("(format == null || format == formatParam)");
+				parameters.put("formatParam", format);
+			}
+			
+			// District parameters
+			if( StringUtils.hasText(district)) {
+				declaredParams.add("String districtParam");
+				filters.add("(district == null || district == districtParam)");
+				parameters.put("districtParam", district);
+			}
+			
 			// Status parameters
-			if( status != null && status.size() > 0 ) {
+			if( status != null && !status.isEmpty()) {
 				filters.add(toListFilterCriteria("status", status, false));
 			}
-
+			
 			// Setting query parameters
 			query.declareParameters(toParameterList(declaredParams));
 			query.setFilter(toWellParametrizedFilter(filters));
@@ -200,9 +228,9 @@ public class StoreDAOJDOImpl extends GenericDAOJDO<Store> implements StoreDAO {
 				}
 			}
 			
-		} catch (Exception e) {
+		}catch(Exception e){
 			throw ASExceptionHelper.defaultException(e.getMessage(), e);
-		} finally {
+		}finally {
 			pm.close();
 		}
 		

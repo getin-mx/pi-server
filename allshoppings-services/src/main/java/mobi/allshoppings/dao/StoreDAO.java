@@ -21,7 +21,10 @@ public interface StoreDAO extends GenericDAO<Store> {
 	List<Store> getUsingShoppingAndStatus(String shoppingId, List<Integer> status, String order) throws ASException;
 	List<Store> getUsingUserAndBrandAndStatus(User user, String brandId, List<Integer> status, String order) throws ASException;
 	List<Store> getUsingBrandAndStatus(String brandId, List<Integer> status, String order) throws ASException;
-	List<Store> getUsingBrandAndShoppingAndStatus(String brandId, String shoppingId, List<Integer> status, String order) throws ASException;
+	List<Store> getUsingBrandAndShoppingAndStatus(String brandId, String shoppingId, List<Integer> status,
+			String order) throws ASException;
+	List<Store> getUsingRegionAndFormatAndDistrict(String brandId, String shoppingId, User user,
+			List<Integer> status, String region, String format, String district, String order) throws ASException;
 	List<Store> getStreetUsingBrandAndStatus(String brandId, List<Integer> status, String order) throws ASException;
 	Store getUsingExternalId(String externalId) throws ASException;
 	

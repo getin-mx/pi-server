@@ -267,17 +267,17 @@ extends BDBRestBaseServerResource {
 			List<Integer> statusList = null;
 			if( StringUtils.hasText(status)) {
 				if( status.contains(",")) {
-					String tmpStatus[] = status.split(",");
+					String[] tmpStatus = status.split(",");
 					statusList = CollectionFactory.createList();
 					for( String t : tmpStatus ) 
 						statusList.add(Integer.parseInt(t));
 				} else {
-					statusList = Arrays.asList(new Integer[] {Integer.parseInt(status)});
+					statusList = Arrays.asList(Integer.parseInt(status));
 				}
 			}
 
 			// retrieve all elements
-			long millisPre = new Date().getTime();
+			long millisPre = System.currentTimeMillis();
 			if( q != null && !q.trim().equals("")) {
 				
 				if( StringUtils.hasText(status) )
@@ -293,7 +293,7 @@ extends BDBRestBaseServerResource {
 				list = myDao.getUsingStatusAndRange(statusList, range, order, attributes, true);
 			}
 			
-			long diff = new Date().getTime() - millisPre;
+			long diff = System.currentTimeMillis() - millisPre;
 			
 			// Logs the result
 			log.info("Number of elements found [" + list.size() + "] in " + diff + " millis");

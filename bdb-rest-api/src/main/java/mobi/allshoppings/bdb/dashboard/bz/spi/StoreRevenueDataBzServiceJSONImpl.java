@@ -1,6 +1,5 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,4 +50,5 @@ public class StoreRevenueDataBzServiceJSONImpl extends StoreEntityData<StoreReve
 		obj.setKey(dao.createKey());
 		dao.create(obj);
 	}
+
 }
