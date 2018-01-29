@@ -67,74 +67,37 @@ public class TempStoreDumper extends AbstractCLI {
 			// Brands ----------------------------------------------------------------------------------------------------
 			Brand brand;
 			try {
-				brand = brandDao.get("devlyn_mx", true);
+				brand = brandDao.get("trender_mx", true);
 			} catch( Exception e ) {
 				log.log(Level.INFO, "Brand not found");
 			}
 			
 			try {
-				brand = brandDao.get("demo_devlyn_mx", true);
+				brand = brandDao.get("trender_mx", true);
 			} catch( Exception e ) {
 				brand = new Brand();
-				brand.setName("Opticas Devlyn Demo");
+				brand.setName("Trender");
 				brand.setCountry("Mexico");
-				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "demo_devlyn_mx"));
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "trender_mx"));
 				brandDao.create(brand);
 			}
+
 
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			
-			stores.add(new StoreAdapter("871", "Ópticas Devlyn Multiplaza Arboledas", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("872", "Ópticas Devlyn Perinorte", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("873", "Ópticas Devlyn Atizapan Alamedas", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("874", "Ópticas Devlyn Mundo E", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("875", "Ópticas Devlyn Satelite I", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("876", "Ópticas Devlyn Plaza Tlalnepantla", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("877", "Ópticas Devlyn Satelite Ii", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("878", "Ópticas Devlyn Valle Dorado", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("879", "Ópticas Devlyn Sams Lomas Verdes", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("880", "Ópticas Devlyn Oah Inm Esmeralda J. Cantu", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("881", "Ópticas Devlyn Chedraui Tenayuca", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("882", "Ópticas Devlyn San Mateo", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("883", "Ópticas Devlyn Outlet Naucalpan", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("884", "Ópticas Devlyn La Cuspide", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("885", "Ópticas Devlyn Oah Che Nicolas Romero Atizapan", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("886", "Ópticas Devlyn Oah Sor Mex Perinorte Mex. - Qro.", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("887", "Ópticas Devlyn Echegaray", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("888", "Ópticas Devlyn Town Center Nicolas Romero", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("889", "Ópticas Devlyn Oah Che Atizapan San Mateo", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("890", "Ópticas Devlyn Copilco", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("891", "Ópticas Devlyn Via Acoxpa", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("892", "Ópticas Devlyn Parque Jardin", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("893", "Ópticas Devlyn Portal San Angel", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("894", "Ópticas Devlyn Coppel Perinorte", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("895", "Ópticas Devlyn Salamanca", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("896", "Ópticas Devlyn Plaza Universidad", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("897", "Ópticas Devlyn Delta I", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("898", "Ópticas Devlyn Solare Coyoacan", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("899", "Ópticas Devlyn Oah Che Anfora", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("900", "Ópticas Devlyn Chedraui El Anfora", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("901", "Ópticas Devlyn Forum Buenavista", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("902", "Ópticas Devlyn Galerias Insurgentes", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("903", "Ópticas Devlyn Delta II", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("904", "Ópticas Devlyn Centro Comercial Perisur", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("905", "Ópticas Devlyn Satelite Ii", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("906", "Ópticas Devlyn Perinorte", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("907", "Ópticas Devlyn Coppel Perinorte", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("908", "Ópticas Devlyn Mundo E", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("909", "Ópticas Devlyn Atizapan Alamedas", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("910", "Ópticas Devlyn Oah Che Atizapan San Mateo", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("911", "Ópticas Devlyn Oah Sor Mex Perinorte Mex. - Qro.", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("912", "Ópticas Devlyn Chedraui Tenayuca", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("913", "Ópticas Devlyn Valle Dorado", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("914", "Ópticas Devlyn Echegaray", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("915", "Ópticas Devlyn Satelite I", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("916", "Ópticas Devlyn Via Vallejo", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("917", "Ópticas Devlyn Patio La Raza", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("918", "Ópticas Devlyn Plaza Tepeyac", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("919", "Ópticas Devlyn Gran Patio Santa Fe", "devlyn_mx", null, TempStoreDumper.MALL));
-			stores.add(new StoreAdapter("920", "Ópticas Devlyn Plaza Azcapotzalco", "devlyn_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("833", "MT Sport S2 San Martín", "mt_sport_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("834", "MT Sport S4 Tuxtla", "mt_sport_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("835", "MT Sport S10 Tuxtla", "mt_sport_mx", null, TempStoreDumper.MALL));
+
+			stores.add(new StoreAdapter("836", "Trender Parque Tezontle", "trender_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("837", "Trender Parque Delta", "trender_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("838", "Trender Forum Buenavista", "trender_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("839", "Trender Madero", "trender_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("840", "Trender Cosmopol", "trender_mx", null, TempStoreDumper.MALL));
+			
+			stores.add(new StoreAdapter("841", "Sunglass Hut Vision Ar", "sunglasshut_ar", null, TempStoreDumper.MALL));
+
 			
 			Store store;
 			for(StoreAdapter obj : stores ) {
