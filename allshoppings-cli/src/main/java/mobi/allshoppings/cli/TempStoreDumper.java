@@ -87,6 +87,8 @@ public class TempStoreDumper extends AbstractCLI {
 			
 			try {
 				brand = brandDao.get("tiendatec_mx", true);
+				brandDao.delete(brand);
+				throw new Exception();
 			} catch( Exception e ) {
 				brand = new Brand();
 				brand.setName("Tienda Tec");
@@ -103,7 +105,7 @@ public class TempStoreDumper extends AbstractCLI {
 				brand = new Brand();
 				brand.setName("Cloe");
 				brand.setCountry("Mexico");
-				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "tiendatec_mx"));
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "cloe_mx"));
 				brandDao.create(brand);
 			    log.log(Level.INFO, "created cloe...");
 

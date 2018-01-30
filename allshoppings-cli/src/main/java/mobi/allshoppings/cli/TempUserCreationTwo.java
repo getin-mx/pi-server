@@ -84,15 +84,17 @@ public class TempUserCreationTwo extends AbstractCLI {
 			  userDao.delete("trender_mx");
 			  throw new Exception();
 			} catch( Exception e ) {
-			    log.log(Level.INFO, "Inserting michel_domit...");
+			    log.log(Level.INFO, "Inserting trender_mx...");
 			  trenderU = new User();
-			  trenderU.setFirstname("Michel Domit");
+			  trenderU.setFirstname("Trender");
 			  trenderU.setLastname("Mexico");
 			  trenderU.setEmail("trenderU@getin.mx");
 			  trenderU.getSecuritySettings().setRole(Role.BRAND);
 			  trenderU.getSecuritySettings().setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 			  trenderU.setKey((Key)keyHelper.obtainKey(User.class, "trender_mx"));
 			  userDao.create(trenderU);
+			    log.log(Level.INFO, "Inserting Trender...");
+
 			}
 			try {
 			  um = userMenuDao.get("trender_mx", true);
@@ -122,6 +124,8 @@ public class TempUserCreationTwo extends AbstractCLI {
 				  asiaPacificoU.getSecuritySettings().setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
 				  asiaPacificoU.setKey((Key)keyHelper.obtainKey(User.class, "asiapacifico_mx"));
 				  userDao.create(asiaPacificoU);
+				  
+				  log.log(Level.INFO, "Inserting Asia Pacifico...");
 				}
 				try {
 				  um = userMenuDao.get("asiapacifico_mx", true);
@@ -142,9 +146,9 @@ public class TempUserCreationTwo extends AbstractCLI {
 				    userDao.delete("tiendatec_mx");
 				    throw new Exception();
 				  } catch( Exception e ) {
-				      log.log(Level.INFO, "Inserting asiapacifico...");
+				    log.log(Level.INFO, "Inserting tienda Tec...");
 				    tiendaTecUser = new User();
-				    tiendaTecUser.setFirstname("Asia Pacífico Shoes");
+				    tiendaTecUser.setFirstname("Tienda Tec");
 				    tiendaTecUser.setLastname("Mexico");
 				    tiendaTecUser.setEmail("tiendatec@getin.mx");
 				    tiendaTecUser.getSecuritySettings().setRole(Role.BRAND);
@@ -171,9 +175,9 @@ public class TempUserCreationTwo extends AbstractCLI {
 				      userDao.delete("aditivofranquicias2_mx");
 				      throw new Exception();
 				    } catch( Exception e ) {
-				        log.log(Level.INFO, "Inserting michel_domit...");
+				        log.log(Level.INFO, "Inserting aditivofranquicias2_mx...");
 				      aditivoCelia = new User();
-				      aditivoCelia.setFirstname("Michel Domit");
+				      aditivoCelia.setFirstname("Aditivo Celia");
 				      aditivoCelia.setLastname("Mexico");
 				      aditivoCelia.setEmail("aditivoCelia@getin.mx");
 				      aditivoCelia.getSecuritySettings().setRole(Role.BRAND);
@@ -204,6 +208,8 @@ public class TempUserCreationTwo extends AbstractCLI {
 					  um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
 					  um.setKey(userMenuDao.createKey("victor@tanyamoss.com"));
 					  userMenuDao.create(um);
+				       
+					  log.log(Level.INFO, "Inserting victor@tanyamoss...");
 					}
 
 				User victorUser = null;
@@ -299,6 +305,7 @@ public class TempUserCreationTwo extends AbstractCLI {
 			          "ec77ff67-9221-4c41-afba-0c47f73e0ba3"));
 			      juanLuisChomarc.setKey((Key) keyHelper.obtainKey(User.class, "juanluis.fernandez@grupochomarc.com.mx"));
 			      userDao.create(juanLuisChomarc);
+			      log.log(Level.INFO, "Inserted Juan Luis Chomarc...");
 			    }
 			    
 			    
