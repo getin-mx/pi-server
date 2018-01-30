@@ -105,7 +105,7 @@ public class ImportDRoc extends AbstractCLI {
 					log.log(Level.INFO, "Processing for date: {0}", sdf.format(curDate));
 					start = System.currentTimeMillis();
 					StringBuilder sb  = new StringBuilder();
-					sb.append("SELECT SysLogTag, ReceivedAt, Message FROM SystemEvents WHERE ReceivedAt > '");
+					sb.append("SELECT SysLogTag, ReceivedAt, Message FROM SystemEvents WHERE ReceivedAt >= '");
 					sb.append(sdf.format(curDate)).append("' AND ReceivedAt < '");
 					sb.append(sdf.format(curDate.getTime() +Constants.DAY_IN_MILLIS));
 					sb.append("' AND SysLogTag LIKE '(\"%,%,%\")' AND (Message LIKE '%EVENT_STA_LEAVE%' ");
