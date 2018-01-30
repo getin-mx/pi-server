@@ -60,11 +60,7 @@ public class TempStoreDumper extends AbstractCLI {
 			
 			// Brands ----------------------------------------------------------------------------------------------------
 			Brand brand;
-			try {
-				brand = brandDao.get("trender_mx", true);
-			} catch( Exception e ) {
-				log.log(Level.INFO, "Brand not found");
-			}
+
 			
 			try {
 				brand = brandDao.get("trender_mx", true);
@@ -74,6 +70,43 @@ public class TempStoreDumper extends AbstractCLI {
 				brand.setCountry("Mexico");
 				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "trender_mx"));
 				brandDao.create(brand);
+			}
+			
+			try {
+				brand = brandDao.get("asiapacifico_mx", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Asia Pacífico Shoes");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "asiapacifico_mx"));
+				brandDao.create(brand);
+			    log.log(Level.INFO, "created Asia P...");
+
+			}
+			
+			
+			try {
+				brand = brandDao.get("tiendatec_mx", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Tienda Tec");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "tiendatec_mx"));
+				brandDao.create(brand);
+			    log.log(Level.INFO, "created tienda tec...");
+
+			}
+			
+			try {
+				brand = brandDao.get("cloe_mx", true);
+			} catch( Exception e ) {
+				brand = new Brand();
+				brand.setName("Cloe");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "tiendatec_mx"));
+				brandDao.create(brand);
+			    log.log(Level.INFO, "created cloe...");
+
 			}
 
 
@@ -91,6 +124,11 @@ public class TempStoreDumper extends AbstractCLI {
 			stores.add(new StoreAdapter("840", "Trender Cosmopol", "trender_mx", null, TempStoreDumper.MALL));
 			
 			stores.add(new StoreAdapter("841", "Sunglass Hut Vision Ar", "sunglasshut_ar", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("842", "Asia Pacifico Shoes LN001 LI-NING Galerías Serdán", "asiapacifico_mx", null, TempStoreDumper.MALL)); 
+			stores.add(new StoreAdapter("843", "Tienda Tec", "tiendatec_mx", null, TempStoreDumper.MALL)); 
+			stores.add(new StoreAdapter("844", "Cloe Andares", "cloe_mx", null, TempStoreDumper.MALL)); 
+			stores.add(new StoreAdapter("845", "Aditivo Gran Patio Ecatepec", "aditivo_mx", null, TempStoreDumper.MALL)); 
+
 
 			
 			Store store;
@@ -104,8 +142,8 @@ public class TempStoreDumper extends AbstractCLI {
 					log.log(Level.INFO, "Se ha modificado la tienda "+obj.getName());
 				} catch( Exception e ) {
 					brand = brandDao.get(obj.getBrandId(), true);
-
 					store = new Store();
+					store.setTimezone("America/Mexico_City");
 					store.setExternalId(obj.getExternalKey());
 					store.setName(obj.getName());
 					store.setStoreKind(obj.getStoreKind());
