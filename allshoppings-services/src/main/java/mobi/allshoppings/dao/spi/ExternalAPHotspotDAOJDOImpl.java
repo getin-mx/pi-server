@@ -23,6 +23,7 @@ import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.model.ExternalAPHotspot;
 import mobi.allshoppings.tools.CollectionFactory;
 
+@Deprecated
 public class ExternalAPHotspotDAOJDOImpl extends GenericDAOJDO<ExternalAPHotspot> implements ExternalAPHotspotDAO {
 	
 	@SuppressWarnings("unused")

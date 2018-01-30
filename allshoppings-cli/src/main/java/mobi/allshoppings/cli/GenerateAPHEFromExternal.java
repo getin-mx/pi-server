@@ -16,12 +16,12 @@ import mobi.allshoppings.apdevice.APHHelper;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
 import mobi.allshoppings.tools.CollectionFactory;
+import mx.getin.Constants;
 
 
 public class GenerateAPHEFromExternal extends AbstractCLI {
 
 	private static final Logger log = Logger.getLogger(GenerateAPHEFromExternal.class.getName());
-	public static final long TWENTY_FOUR_HOURS = 86400000;
 
 	public static OptionParser buildOptionParser(OptionParser base) {
 		if( base == null ) parser = new OptionParser();
@@ -60,13 +60,13 @@ public class GenerateAPHEFromExternal extends AbstractCLI {
 				if( StringUtils.hasText(sFromDate)) {
 					fromDate = sdf.parse(sFromDate);
 				} else {
-					fromDate = sdf.parse(sdf.format(new Date(new Date().getTime() - 86400000 /* 24 hours */)));
+					fromDate = sdf.parse(sdf.format(new Date(System.currentTimeMillis() - Constants.DAY_IN_MILLIS)));
 				}
 
 				if( StringUtils.hasText(sToDate)) {
 					toDate = sdf.parse(sToDate);
 				} else {
-					toDate = new Date(fromDate.getTime() + 86400000 /* 24 hours */);
+					toDate = new Date(fromDate.getTime() + Constants.DAY_IN_MILLIS);
 				}
 
 				if( options.has("hostname")) {
@@ -92,7 +92,7 @@ public class GenerateAPHEFromExternal extends AbstractCLI {
 			while( ftoDate.before(toDate)) {
 
 				ffromDate = new Date(ftoDate.getTime());
-				ftoDate = new Date(ftoDate.getTime() + TWENTY_FOUR_HOURS);
+				ftoDate = new Date(ftoDate.getTime() + Constants.DAY_IN_MILLIS);
 
 				helper.generateAPHEntriesFromExternalAPH(ffromDate, ftoDate, hostnames, false);
 

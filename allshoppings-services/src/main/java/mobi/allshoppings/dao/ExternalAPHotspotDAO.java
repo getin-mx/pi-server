@@ -10,6 +10,7 @@ import com.inodes.datanucleus.model.Key;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.model.ExternalAPHotspot;
 
+@Deprecated
 public interface ExternalAPHotspotDAO extends GenericDAO<ExternalAPHotspot> {
 
 	Key createKey() throws ASException;

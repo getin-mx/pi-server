@@ -145,6 +145,10 @@
 		<!--property name="xs3Endpoint" value="http://localhost:8085/xs3" /-->
 		<property name="xs3Endpoint" value="http://korriban.getin.mx:8085/xs3" />
 		<property name="maxUploadQueue" value="500" />
+		<property name="drocExternalSource" value="173.224.112.51:3306" />
+                <property name="drocDatabaseName" value="Syslog" />
+                <property name="drocUser" value="getin" />
+                <property name="drocPassword" value="getindroc" />
 		<property name="s3Buckets">
 			<map>
 				<entry><key><value>default</value></key><value>dump</value></entry>

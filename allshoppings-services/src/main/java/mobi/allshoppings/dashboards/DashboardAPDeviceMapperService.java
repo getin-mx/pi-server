@@ -3,6 +3,7 @@ package mobi.allshoppings.dashboards;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -164,8 +165,8 @@ public class DashboardAPDeviceMapperService {
 	private StoreRevenueByHourDAO srhDao;
 	@Autowired
 	private InnerZoneDAO innerzoneDao;
-	@Autowired
-	private ExternalAPHotspotDAO eaphDao;
+	/*@Autowired
+	private ExternalAPHotspotDAO eaphDao;*/
 
 	@Autowired
 	private SystemConfiguration systemConfiguration;
@@ -435,7 +436,16 @@ public class DashboardAPDeviceMapperService {
 				if((shopping != null || store != null) && !devices.isEmpty()) {
 
 					// All Wifi Data
-					List<ExternalAPHotspot> list = eaphDao.getUsingHostnameAndDates(devices, processDate, limitDate);
+					List<ExternalAPHotspot> list = new ArrayList<>();
+					//eaphDao.getUsingHostnameAndDates(devices, processDate, limitDate);
+					for(String dev : devices) {
+						DumperHelper<ExternalAPHotspot> dumper = new DumpFactory<ExternalAPHotspot>().build(null,
+								ExternalAPHotspot.class, false);
+						dumper.setFilter(dev);
+						for(Iterator<ExternalAPHotspot> in = dumper.iterator(processDate, limitDate, false);
+								in.hasNext();) list.add(in.next());
+						dumper.dispose();
+					}
 					for( ExternalAPHotspot hotspot : list ) {
 
 						for( WifiSpot wifiSpot : wifiSpotList ) {
