@@ -130,6 +130,7 @@ public class TempStoreDumper extends AbstractCLI {
 			stores.add(new StoreAdapter("843", "Tienda Tec", "tiendatec_mx", null, TempStoreDumper.MALL)); 
 			stores.add(new StoreAdapter("844", "Cloe Andares", "cloe_mx", null, TempStoreDumper.MALL)); 
 			stores.add(new StoreAdapter("845", "Aditivo Gran Patio Ecatepec", "aditivo_mx", null, TempStoreDumper.MALL)); 
+			stores.add(new StoreAdapter("846", "Sally Beauty Oasis Coyoacan", "sallybeauty_mx", null, TempStoreDumper.MALL));
 
 
 			
