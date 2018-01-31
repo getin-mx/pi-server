@@ -14,7 +14,7 @@ import com.inodes.datanucleus.model.Key;
 import mx.getin.model.interfaces.StoreDataEntity;
 
 @PersistenceCapable(detachable="true")
-@Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
+@Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
 public class StoreRevenue implements StoreDataEntity {
 
 	private static final long serialVersionUID = 1L;
