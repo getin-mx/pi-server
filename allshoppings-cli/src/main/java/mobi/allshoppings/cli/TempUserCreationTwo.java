@@ -270,10 +270,12 @@ public class TempUserCreationTwo extends AbstractCLI {
 			    
 			    try {
 			      juanLuisChomarc = userDao.get("juanluis.fernandez@grupochomarc.com.mx", true);
+			      userDao.delete(juanLuisChomarc);
+			      throw new Exception();
 			    } catch (Exception e) {
 			      juanLuisChomarc = new User();
-			      juanLuisChomarc.setFirstname("Victor");
-			      juanLuisChomarc.setLastname("");
+			      juanLuisChomarc.setFirstname("Juan Luis");
+			      juanLuisChomarc.setLastname("Fernández");
 			      juanLuisChomarc.setEmail("juanluis.fernandez@grupochomarc.com.mx");
 			      juanLuisChomarc.getSecuritySettings().setRole(Role.STORE);
 			      juanLuisChomarc.getSecuritySettings()
