@@ -1,7 +1,6 @@
 package mobi.allshoppings.cli;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Level;
@@ -19,9 +18,7 @@ import mobi.allshoppings.dao.ShoppingDAO;
 import mobi.allshoppings.dao.StoreDAO;
 import mobi.allshoppings.exception.ASException;
 import mobi.allshoppings.exception.ASExceptionHelper;
-import mobi.allshoppings.model.APDAssignation;
 import mobi.allshoppings.model.Brand;
-import mobi.allshoppings.model.EntityKind;
 import mobi.allshoppings.model.Shopping;
 import mobi.allshoppings.model.Store;
 import mobi.allshoppings.model.interfaces.StatusAware;
@@ -867,6 +864,19 @@ public class GetinDump extends AbstractCLI {
 				brandDao.create(brand);
 				log.log(Level.INFO, "Se ha creado la marca "+brand.getName());
 			}
+
+			try {
+				brand = brandDao.get("droc_mx", true);
+				brand.setStatus(StatusAware.STATUS_ENABLED);
+				brandDao.update(brand);
+			} catch(Exception e) {
+				brand = new Brand();
+				brand.setName("DROC");
+				brand.setCountry("Mexico");
+				brand.setKey((Key)keyHelper.obtainKey(Brand.class, "droc_mx"));
+				brandDao.create(brand);
+				log.log(Level.INFO, "Se ha creado la marca " +brand.getName());
+			}
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
 			stores.add(new StoreAdapter("56", "Sportium Lomas Verdes", "sportium_mx", null, GetinDump.MALL));
@@ -1071,7 +1081,8 @@ public class GetinDump extends AbstractCLI {
 			stores.add(new StoreAdapter("461", "Modatelas Tierra Blanca", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("462", "Modatelas Parral", "modatelas_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("463", "Modatelas Chihuahua IV", "modatelas_mx", null, GetinDump.MALL));
-			// IDS disponibles
+			stores.add(new StoreAdapter("464", "DROC Plaza Aragon", "droc_mx", "plazaaragon", GetinDump.MALL));
+			stores.add(new StoreAdapter("465", "DROC Mundo E", "droc_mx", "mundoe", GetinDump.MALL));
 			stores.add(new StoreAdapter("466", "FULLSAND LA QUINTA", "fullsand_mx", null, GetinDump.FOOT_STREET));
 			stores.add(new StoreAdapter("467", "Volaris AICM Nacional", "volaris_mx", null, GetinDump.AIRPORT));
 			stores.add(new StoreAdapter("468", "Pamela de Haro Athos", "pameladeharo_mx", null, 0));
@@ -1441,7 +1452,7 @@ public class GetinDump extends AbstractCLI {
 			}
 
 			// Assing antennas for droc
-			List<String> externalDevices = eaphDao.getExternalHostnames();
+			/*List<String> externalDevices = eaphDao.getExternalHostnames();
 			for(String hostname : externalDevices) {
 				List<APDAssignation> li = apdaDao.getUsingHostnameAndDate(hostname, new Date());
 				if( li.isEmpty() ) {
@@ -1453,7 +1464,7 @@ public class GetinDump extends AbstractCLI {
 					assig.setKey(apdaDao.createKey(assig));
 					apdaDao.create(assig);
 				}
-			}
+			}*/
 
 		} catch( Exception e ) {
 			e.printStackTrace();

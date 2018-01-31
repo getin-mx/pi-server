@@ -1,6 +1,5 @@
 package mobi.allshoppings.bdb.bz.spi;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 
@@ -9,7 +8,6 @@ import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.amazonaws.util.json.JSONArray;
 import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -127,7 +125,7 @@ public class BDBAPDeviceBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDev
 			modObj.setVisitStartFri(obj.getString("visitStartFri"));
 			modObj.setMonitorStart(obj.getString("monitorStart"));
 			modObj.setExternal(obj.getBoolean("external"));
-			modObj.setOffsetView((int)Math.abs(obj.getLong("viewerOffsetPowerThreshold")-obj.getLong("viewerPowerThreshold")));
+			modObj.setOffsetView(Math.abs(obj.getInt("viewerOffsetPowerThreshold")));
 			modObj.setLastUpdate(datef);
 			modObj.setVisitsOnMon(obj.getBoolean("visitsOnMon"));
 			modObj.setStatus(obj.getInt("status"));

@@ -121,6 +121,10 @@ public class SystemConfiguration implements Serializable {
 	private String externalGeoToDate;
 	private String devicesSysInfoURL;
 	private String frontendAddress;
+	private String drocExternalSource;
+	private String drocDatabaseName;
+	private String drocUser;
+	private String drocPassword;
 	
 	public String getDefaultLevel() {
 		return defaultLevel;
@@ -1034,6 +1038,38 @@ public class SystemConfiguration implements Serializable {
 
 	public void setFrontendAddress(String frontendAddress) {
 		this.frontendAddress = frontendAddress;
+	}
+	
+	public String getDrocExternalSource() {
+		return drocExternalSource;
+	}
+
+	public void setDrocExternalSource(String drocExternalSource) {
+		this.drocExternalSource = drocExternalSource;
+	}
+
+	public String getDrocDatabaseName() {
+		return drocDatabaseName;
+	}
+
+	public void setDrocDatabaseName(String drocDatabaseName) {
+		this.drocDatabaseName = drocDatabaseName;
+	}
+
+	public String getDrocUser() {
+		return drocUser;
+	}
+
+	public void setDrocUser(String drocUser) {
+		this.drocUser = drocUser;
+	}
+
+	public String getDrocPassword() {
+		return drocPassword;
+	}
+
+	public void setDrocPassword(String drocPassword) {
+		this.drocPassword = drocPassword;
 	}
 
 }

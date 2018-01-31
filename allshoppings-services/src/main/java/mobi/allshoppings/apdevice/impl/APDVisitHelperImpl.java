@@ -243,7 +243,12 @@ public class APDVisitHelperImpl implements APDVisitHelper {
 						store = storeDao.get(entityId);
 						name = store.getName();
 					} else if (entityKind == EntityKind.KIND_INNER_ZONE) {
-						InnerZone iz = innerzoneDao.get(entityId);
+						InnerZone iz;
+						String tempId = entityId;
+						do {
+							iz = innerzoneDao.get(tempId);
+							tempId = iz.getEntityId();
+						} while(iz.getEntityKind() != 3);
 						name = iz.getName();
 						store = storeDao.get(iz.getEntityId());
 					}

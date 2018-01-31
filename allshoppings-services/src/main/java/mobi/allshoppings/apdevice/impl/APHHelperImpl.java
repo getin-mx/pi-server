@@ -802,7 +802,7 @@ public class APHHelperImpl implements APHHelper {
 		dumpHelper = new DumpFactory<ExternalAPHotspot>().build(null, ExternalAPHotspot.class, false);
 
 		List<String> options;
-		if( hostnames == null || hostnames.size() == 0 ) {
+		if( hostnames == null || hostnames.isEmpty() ) {
 			options = dumpHelper.getMultipleNameOptions(fromDate);
 		} else if( hostnames.size() == 1 ) {
 			options = CollectionFactory.createList();
@@ -816,39 +816,41 @@ public class APHHelperImpl implements APHHelper {
 
 		for( String hostname : options ) {
 
-			log.log(Level.INFO, "Processing " + hostname + " for date " + fromDate
-					+ "...");
+			log.log(Level.INFO, "Processing {0} for date {1}...", new Object[] {hostname, fromDate});
 
 			dumpHelper = new DumpFactory<ExternalAPHotspot>().build(null, ExternalAPHotspot.class, false);
 			dumpHelper.setFilter(hostname);
 			Date xdate = new Date(toDate.getTime() - HOUR_IN_MILLIS);
-			Iterator<ExternalAPHotspot> i = dumpHelper.iterator(fromDate, xdate, false);
-			while( i.hasNext() ) {
-				ExternalAPHotspot obj = i.next();
-				if( totals % 1000 == 0 ) 
-					log.log(Level.INFO, "Processing for date " + obj.getCreationDateTime() + " with " + cache.size() + " records so far (" + cache.getHits() + "/" + cache.getMisses() + "/" + cache.getStores() + "/" + cache.getLoads() + ")...");
-
-				if( obj.getLastSeen() == null )
-					obj.setLastSeen(new Date(obj.getFirstSeen().getTime() + HOUR_IN_MILLIS));
-
-				if(isValidMacAddress(obj.getMac()))
-					setFramedRSSI(obj);
-
-				totals++;
-			}
-
-			log.log(Level.INFO, "Disposing ExternalAPHotspot dumper");
-			dumpHelper.dispose();
-
-			// Write to the database, only if it was not written yet!
-			log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
-			Iterator<APHEntry> x = cache.iterator();
-			while(x.hasNext()) {
-				APHEntry aphe = x.next();
-				//if( aphe.getDataCount() > 2 ) {
-					aphe.setKey(apheDao.createKey(aphe));
+			while(xdate.compareTo(toDate) < 0) {
+				Iterator<ExternalAPHotspot> i = dumpHelper.iterator(fromDate, xdate, false);
+				while( i.hasNext() ) {
+					ExternalAPHotspot obj = i.next();
+					if( totals % 1000 == 0 ) 
+						log.log(Level.INFO, "Processing for date {0} with {1} records so far ({2}/{3}/{4}/{5})...",
+								new Object[] {obj.getCreationDateTime(), cache.size(), cache.getHits(), cache.getMisses(),
+								cache.getStores(), cache.getLoads()});
+	
+					if( obj.getLastSeen() == null )
+						obj.setLastSeen(new Date(obj.getFirstSeen().getTime() + HOUR_IN_MILLIS));
+	
+					if(isValidMacAddress(obj.getMac()))
+						setFramedRSSI(obj);
+	
+					totals++;
+				}
+	
+				log.log(Level.INFO, "Disposing ExternalAPHotspot dumper");
+				dumpHelper.dispose();
+	
+				// Write to the database, only if it was not written yet!
+				log.log(Level.INFO, "Writing Database with " + cache.size() + " objects");
+				Iterator<APHEntry> x = cache.iterator();
+				while(x.hasNext()) {
+					APHEntry aphe = x.next();
+					aphe.setKey((Key)keyHelper.createStringUniqueKey(APHEntry.class,
+							aphe.getMac() + ":" + aphe.getHostname() + ":" + aphe.getDate()));
 					apheDumper.dump(aphe);
-				//}
+				}
 			}
 			log.log(Level.INFO, "Disposing cache");
 			cache.dispose();

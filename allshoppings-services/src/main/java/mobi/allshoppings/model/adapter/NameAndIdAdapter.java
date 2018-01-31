@@ -5,6 +5,7 @@ public class NameAndIdAdapter implements IGenericAdapter {
 	private String identifier;
 	private String name;
 	private String avatarId;
+	private byte entityKind;// TODO add to constructor
 	
 	public NameAndIdAdapter() {
 		
@@ -51,6 +52,14 @@ public class NameAndIdAdapter implements IGenericAdapter {
 	 */
 	public void setAvatarId(String avatarId) {
 		this.avatarId = avatarId;
+	}
+	
+	public byte getEntityKind() {
+		return entityKind;
+	}
+
+	public void setEntityKind(byte entityKind) {
+		this.entityKind = entityKind;
 	}
 
 }

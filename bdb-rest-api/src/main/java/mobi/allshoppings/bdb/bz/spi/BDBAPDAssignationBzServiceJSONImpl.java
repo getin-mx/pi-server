@@ -269,8 +269,12 @@ public class BDBAPDAssignationBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl
 			InnerZone zone = innerZoneDao.get(obj.getEntityId());
 			store = storeDao.get(zone.getEntityId());
 			adapter.setName(zone.getName());
+			adapter.setEntityKind(EntityKind.KIND_INNER_ZONE);
 		case EntityKind.KIND_STORE :
-			if(store == null) store = storeDao.get(obj.getEntityId());
+			if(store == null) {
+				store = storeDao.get(obj.getEntityId());
+				adapter.setEntityKind(EntityKind.KIND_STORE);
+			}
 			if(!StringUtils.hasText(adapter.getName())) adapter.setName(store.getName());
 			
 			Brand tmpb = brandDao.get(store.getBrandId());
@@ -280,6 +284,7 @@ public class BDBAPDAssignationBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl
 		case EntityKind.KIND_SHOPPING :
 			Shopping tmp = shoppingDao.get(obj.getEntityId());
 			adapter.setName(tmp.getName());
+			adapter.setEntityKind(EntityKind.KIND_SHOPPING);
 			break;
 		}
 
