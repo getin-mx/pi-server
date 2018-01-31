@@ -5,31 +5,67 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>mobi.allshoppings</groupId>
+		<groupId>mx.getin</groupId>
 		<artifactId>pi-server</artifactId>
-		<version>0.1</version>
+		<version>3.2</version>
 	</parent>
 
 	<artifactId>allshoppings-services</artifactId>	
 
-	<name>AllShoppings Common Services</name>
-	<url>http://www.allshoppings.mobi</url>
-
-	<licenses>
-		<license>
-			<name>Apache 2</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-			<comments>A business-friendly OSS license</comments>
-		</license>
-	</licenses>
+	<name>Getin Common Services</name>
+	<url>http://www.getin.mx</url>
 
 	<organization>
-		<name>AllShoppings LLC</name>
-		<url>http://www.allshoppings.mobi</url>
+		<name>Getin SAPI de CV</name>
+		<url>http://www.getin.mx</url>
 	</organization>
 
 	<developers>
+		<developer>
+			<id>nachintoch</id>
+			<name>Manuel Ignacio Castillo</name>
+			<email>contact@nachintoch.mx</email>
+			<url>http://www.nachintoch.mx</url>
+			<organization>Getin SAPI de CV</organization>
+			<organizationUrl>http://www.getin.mx</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+		<developer>
+			<id>luis_cruz</id>
+			<name>Luis Cruz</name>
+			<email>luis@getin.mx</email>
+			<organization>Getin SAPI de CV</organization>
+			<organizationUrl>http://www.getin.mx</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+		<developer>
+			<id>lecopain</id>
+			<name>Fernando Jimenez</name>
+			<email>fernando@getin.mx</email>
+			<organization>Getin SAPI de CV</organization>
+			<organizationUrl>http://www.getin.mx</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+		<developer>
+			<id>zero1416</id>
+			<name>Arturo Armengod</name>
+			<email>arturo@getin.mx</email>
+			<organization>Getin SAPI de CV</organization>
+			<organizationUrl>http://www.getin.mx</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
 		<developer>
 			<id>mhapanow</id>
 			<name>Matias Hapanowicz</name>
