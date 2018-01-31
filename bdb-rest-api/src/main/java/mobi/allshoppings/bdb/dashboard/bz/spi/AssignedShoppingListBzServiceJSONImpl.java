@@ -1,6 +1,7 @@
 package mobi.allshoppings.bdb.dashboard.bz.spi;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -53,17 +54,17 @@ implements BDBDashboardBzService {
 		try {
 			// obtain the id and validates the auth token
 			User user = getUserFromToken();
-			List<Shopping> shoppingList = CollectionFactory.createList();
+			List<Shopping> shoppingList = new ArrayList<>();
 			long diff = 0;
 			
-			long millisPre = new Date().getTime();
+			long millisPre = System.currentTimeMillis();
 
 			// Admin users
 			if( user.getSecuritySettings().getRole().equals(Role.ADMIN)) {
 
 				shoppingList = shoppingDao.getUsingLastUpdateStatusAndRange(null, null, false,
-						Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, "uName", null, false);
-				diff = new Date().getTime() - millisPre;
+						Arrays.asList(StatusAware.STATUS_ENABLED ), null, "name", null, false);
+				diff = System.currentTimeMillis() - millisPre;
 				log.info("Number of shoppings found [" + shoppingList.size() + "] in " + diff + " millis");
 
 			} else {

@@ -1,5 +1,7 @@
 package mx.getin.model;
 
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
 import com.inodes.datanucleus.model.Key;
@@ -14,6 +16,7 @@ import mx.getin.model.interfaces.StoreDataByHourEntity;
  * @since Mark III
  */
 @PersistenceCapable(detachable="true")
+@Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
 public class StoreItemByHour extends StoreItem implements StoreDataByHourEntity {
 
 	private static final long serialVersionUID = -5883423685204800884L;

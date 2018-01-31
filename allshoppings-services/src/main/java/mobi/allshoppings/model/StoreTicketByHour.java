@@ -1,5 +1,7 @@
 package mobi.allshoppings.model;
 
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
 import com.inodes.datanucleus.model.Key;
@@ -14,6 +16,7 @@ import mx.getin.model.interfaces.StoreDataByHourEntity;
  * @since Allshoppings
  */
 @PersistenceCapable(detachable="true")
+@Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
 public class StoreTicketByHour extends StoreTicket implements StoreDataByHourEntity {
 
 	private static final long serialVersionUID = 1L;

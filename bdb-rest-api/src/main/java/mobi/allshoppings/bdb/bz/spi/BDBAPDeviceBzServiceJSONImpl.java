@@ -1,8 +1,10 @@
 package mobi.allshoppings.bdb.bz.spi;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
@@ -106,10 +108,11 @@ public class BDBAPDeviceBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDev
 			modObj.setCountry(obj.getString("country"));
 			modObj.setOffsetView(obj.getInt("offsetViewer"));
 			modObj.setVisitMaxThreshold(obj.getLong("visitMaxThreshold"));
-			//modObj.setHostname(obj.getString("hostname"));
 			modObj.setProvince(obj.getString("province"));
-			org.json.JSONArray algo = obj.getJSONArray("reportMailList");
-			//modObj.setReportMailList(Arrays.asList(algo.getString("reportMailList").split(",")));			
+			JSONArray mails = obj.getJSONArray("reportMailList");
+			ArrayList<String> reportMail = new ArrayList<>();
+			for(int i = 0; i < mails.length(); i++) reportMail.add(mails.getString(i));
+			modObj.setReportMailList(reportMail	);
 			modObj.setVisitEndFri(obj.getString("visitEndFri"));
 			modObj.setVisitStartSun(obj.getString("visitStartSun"));
 			modObj.setVisitStartWed(obj.getString("visitStartWed"));

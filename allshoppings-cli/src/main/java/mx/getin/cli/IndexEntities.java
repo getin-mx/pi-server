@@ -10,6 +10,7 @@ import joptsimple.OptionParser;
 import mobi.allshoppings.cli.AbstractCLI;
 import mobi.allshoppings.dao.GenericDAO;
 import mobi.allshoppings.exception.ASException;
+import mobi.allshoppings.model.APDevice;
 import mobi.allshoppings.model.interfaces.ModelKey;
 import mobi.allshoppings.model.tools.IndexHelper;
 
@@ -26,7 +27,7 @@ public class IndexEntities extends AbstractCLI {
 		context = ctx;
 	}
 
-	public static void main(String args[]) throws ASException {
+	public static void main(String[] args) throws ASException {
 		LOG.log(Level.INFO, "Indexing entities...");
 		GenericDAO<ModelKey> dao = getEntityDao("brand.dao.ref");
 		LOG.log(Level.INFO, "Indexing brands...");
@@ -38,8 +39,11 @@ public class IndexEntities extends AbstractCLI {
 		LOG.log(Level.INFO, "Indexing stores...");
 		index(dao.getAll(), dao.getIndexHelper());
 		dao = getEntityDao("apdevice.dao.ref");
+		List<ModelKey> devs = dao.getAll();
+		LOG.log(Level.INFO, "Completing Antennas' defaults");
+		updateAntennas(devs, dao);
 		LOG.log(Level.INFO, "Indexing APDevices...");
-		index(dao.getAll(),  dao.getIndexHelper());
+		index(devs,  dao.getIndexHelper());
 		LOG.log(Level.INFO, "Process finished!");
 	}
 	
@@ -54,6 +58,19 @@ public class IndexEntities extends AbstractCLI {
 			indexer.indexObject(entity);
 			total++;
 			if(total %100 == 0) LOG.log(Level.INFO, "Indexed " +total +" of " +entities.size());
+		}
+	}
+	
+	private static void updateAntennas(List<ModelKey> devs, GenericDAO<ModelKey> dao) {
+		for(ModelKey dev : devs) {
+			APDevice d = (APDevice) dev;
+			d.completeDefaults();
+			try {
+				dao.update(d);//TODO optimizar
+			} catch(ASException e) {
+				LOG.log(Level.WARNING, "Couldn't update antenna", e);
+			}
+			
 		}
 	}
 
