@@ -32,3 +32,4 @@ target/
 
 #standarized project files
 datastore.properties
+baseApplicationContext.xml
