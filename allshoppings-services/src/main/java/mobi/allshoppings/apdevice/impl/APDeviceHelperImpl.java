@@ -360,7 +360,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 						User fake = new User();
 						fake.setEmail(mail);
 						try {
-							mailHelper.sendMessage(fake, mailTitle, mailText);
+							//mailHelper.sendMessage(fake, mailTitle, mailText);
+							log.log(Level.SEVERE, "Mail sent");
 						} catch (Exception e) {
 							// If mail server rejected the message, keep going
 							log.log(Level.SEVERE, e.getMessage(), e);
@@ -388,7 +389,8 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 						User fake = new User();
 						fake.setEmail(mail);
 						try {
-							mailHelper.sendMessage(fake, mailTitle, mailText);
+							//mailHelper.sendMessage(fake, mailTitle, mailText);
+							log.log(Level.INFO, "Mail sent");
 						} catch (Exception e) {
 							// If mail server rejected the message, keep going
 							log.log(Level.SEVERE, e.getMessage(), e);
