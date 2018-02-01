@@ -61,9 +61,9 @@ implements BDBDashboardBzService {
 			if( user.getSecuritySettings().getRole().equals(Role.ADMIN)) {
 
 				brandList = brandDao.getUsingLastUpdateStatusAndRange(null, null, false,
-						Arrays.asList(new Integer[] { StatusAware.STATUS_ENABLED }), null, "uName", null, false);
+						Arrays.asList(StatusAware.STATUS_ENABLED), null, "name", null, false);
 				diff = System.currentTimeMillis() - millisPre;
-				log.info("Number of brands found [" + brandList.size() + "] in " + diff + " millis");
+				log.log(Level.INFO, "Number of brands found [{0}] in {1} millis", new Object[] {brandList.size(), diff});
 
 			} else {
 				// Brand Users
@@ -85,7 +85,7 @@ implements BDBDashboardBzService {
 			diff = System.currentTimeMillis() - millisPre;
 
 			// Logs the result
-			log.info("Number of brands sorted [" + brandList.size() + "] in " + diff + " millis");
+			log.log(Level.INFO, "Number of brands sorted [{0}] in {1} millis", new Object[] {brandList.size(), diff});
 
 			// Creates the list
 			List<NameAndIdAdapter> adapter = CollectionFactory.createList();

@@ -16,7 +16,7 @@ import mx.getin.model.interfaces.StoreDataByHourEntity;
  * @since Mark III
  */
 @PersistenceCapable(detachable="true")
-@Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
+@Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
 public class StoreRevenueByHour extends StoreRevenue implements StoreDataByHourEntity {
 	
 	private static final long serialVersionUID = 3175715115738373101L;

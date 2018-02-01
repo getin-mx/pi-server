@@ -16,7 +16,7 @@ import mx.getin.model.interfaces.StoreDataByHourEntity;
  * @since Allshoppings
  */
 @PersistenceCapable(detachable="true")
-@Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
+@Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
 public class StoreTicketByHour extends StoreTicket implements StoreDataByHourEntity {
 
 	private static final long serialVersionUID = 1L;
