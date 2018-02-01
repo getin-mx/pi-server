@@ -671,7 +671,7 @@ public class APDeviceHelperImpl implements APDeviceHelper {
 		StringBuffer stdout = new StringBuffer();
 		StringBuffer stderr = new StringBuffer();
 
-		String[] command = new String[] { "wget http://aragorn.getin.mx/antennainfo.sh -O /tmp/antennainfo.sh",
+		String[] command = new String[] { "wget http://anakin.getin.mx/antennainfo.sh -O /tmp/antennainfo.sh",
 				"chmod 775 /tmp/antennainfo.sh", "sh /tmp/antennainfo.sh", "rm -f /tmp/antennainfo.sh" };
 
 		APDeviceSSHSession session = new APDeviceSSHSession(apdevice, systemConfiguration);
