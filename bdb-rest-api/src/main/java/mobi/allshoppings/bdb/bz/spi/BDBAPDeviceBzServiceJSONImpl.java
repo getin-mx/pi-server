@@ -105,7 +105,6 @@ public class BDBAPDeviceBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDev
 			final String identifier = obtainLowerCaseIdentifierFromJSON(obj);
 
 			APDevice modObj = myDao.get(identifier, true);
-			modObj.setOffsetView(obj.getInt("offsetViewer"));
 			modObj.setVisitMaxThreshold(obj.getLong("visitMaxThreshold"));
 			JSONArray mails = obj.getJSONArray("reportMailList");
 			ArrayList<String> reportMail = new ArrayList<>();
@@ -125,7 +124,7 @@ public class BDBAPDeviceBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDev
 			modObj.setVisitStartFri(obj.getString("visitStartFri"));
 			modObj.setMonitorStart(obj.getString("monitorStart"));
 			//modObj.setExternal(obj.getBoolean("external"));
-			modObj.setOffsetView(Math.abs(obj.getInt("viewerOffsetPowerThreshold")));
+			modObj.setOffsetView(obj.getInt("offsetViewer"));
 			modObj.setLastUpdate(datef);
 			modObj.setVisitsOnMon(obj.getBoolean("visitsOnMon"));
 			//modObj.setStatus(obj.getInt("status"));
@@ -136,7 +135,7 @@ public class BDBAPDeviceBzServiceJSONImpl extends BDBCrudBzServiceJSONImpl<APDev
 			modObj.setMonitorEnd(obj.getString("monitorEnd"));
 			modObj.setVisitEndSat(obj.getString("visitEndSat"));
 			modObj.setVisitGapThreshold(obj.getLong("visitGapThreshold"));
-			modObj.setDescription(obj.getString("description"));
+			//modObj.setDescription(obj.getString("description"));
 			//modObj.setLon(obj.getDouble("lon"));
 			modObj.setViewerMinTimeThreshold(obj.getInt("viewerMinTimeThreshold"));
 			modObj.setVisitDecay(obj.getLong("visitDecay"));
