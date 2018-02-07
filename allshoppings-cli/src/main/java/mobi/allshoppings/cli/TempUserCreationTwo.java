@@ -75,7 +75,7 @@ public class TempUserCreationTwo extends AbstractCLI {
 			UserDAO userDao = (UserDAO) getApplicationContext().getBean("user.dao.ref");
 			KeyHelper keyHelper = (KeyHelper) getApplicationContext().getBean("key.helper");
 
-		
+			/*
 			User trenderU = null;
 			UserMenu um = null;
 
@@ -310,8 +310,107 @@ public class TempUserCreationTwo extends AbstractCLI {
 			      log.log(Level.INFO, "Inserted Juan Luis Chomarc...");
 			    }
 			    
+			    User cloe;
+			    UserMenu um = null;
 			    
+				try {
+					  cloe = userDao.get("cloe_mx", true);
+					  userDao.delete("cloe_mx");
+					  throw new Exception();
+					} catch( Exception e ) {
+					    log.log(Level.INFO, "Inserting Cloe_mx...");
+					  cloe = new User();
+					  cloe.setFirstname("Cloe");
+					  cloe.setLastname("Mexico");
+					  cloe.setEmail("cloe@getin.mx");
+					  cloe.getSecuritySettings().setRole(Role.BRAND);
+					  cloe.getSecuritySettings().setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+					  cloe.setKey((Key)keyHelper.obtainKey(User.class, "cloe_mx"));
+					  userDao.create(cloe);
+					    log.log(Level.INFO, "Inserting cloe...");
+
+					}
+				  try {
+					    um = userMenuDao.get("cloe_mx", true);
+					    userMenuDao.delete("cloe_mx");
+					    throw new Exception();
+					  } catch( Exception e ) {
+					    um = new UserMenu();
+					    um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+					    um.setKey(userMenuDao.createKey("cloe_mx"));
+					    userMenuDao.create(um);
+					  }
+				  	
+				    User cloe= null;
+				    UserMenu um = null;
+				    
+					try {
+						cloe = userDao.get("cloe_mx", true);
+						  userDao.delete("cloe_mx");
+						  throw new Exception();
+						} catch( Exception e ) {
+						    log.log(Level.INFO, "Inserting Cloe_mx...");
+						    cloe = new User();
+						    cloe.setFirstname("Cloe");
+						    cloe.setLastname("Mexico");
+						    cloe.setEmail("cloe@getin.mx");
+						    cloe.getSecuritySettings().setRole(Role.BRAND);
+						    cloe.getSecuritySettings().setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+						    cloe.setKey((Key)keyHelper.obtainKey(User.class, "cloe_mx"));
+						  userDao.create(cloe);
+						    log.log(Level.INFO, "Inserting cloe...");
+
+						}
+					  try {
+						    um = userMenuDao.get("cloe_mx", true);
+						    userMenuDao.delete("cloe_mx");
+						    throw new Exception();
+						  } catch( Exception e ) {
+						    um = new UserMenu();
+						    um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+						    um.setKey(userMenuDao.createKey("cloe_mx"));
+						    userMenuDao.create(um);
+						  }
+				    
+			    */
+			
+			User lizbeth = null;
+			UserMenu um = null;
+			try {
 				
+
+				
+				lizbeth = userDao.get("lizbeth@aditivo.mx", true);
+			      userDao.delete(lizbeth);
+			      throw new Exception();
+			    } catch (Exception e) {
+			    	lizbeth = new User();
+			    	lizbeth.setFirstname("Liliana Lizbeth");
+			    	lizbeth.setLastname("Arroyo Saucedo");
+			    	lizbeth.setEmail("lizbeth@aditivo.mx");
+			    	lizbeth.getSecuritySettings().setRole(Role.STORE);
+			    	lizbeth.getSecuritySettings()
+			          .setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+			    	lizbeth.getSecuritySettings()
+			          .setStores(Arrays.asList("3338e021-59c4-4482-9603-fac42d656c7b",
+			        		  "78416e3d-2274-4a24-9186-3616588f6197",
+			        		  "9beaf247-e674-47a2-9d4c-c550bb1aa7cc",
+			        		  "129f18c1-c531-4488-9125-6d4e4ccf6d4d",
+			        		  "f33140b3-3ecd-4d70-bfcc-159f47ac9058"));
+			    	lizbeth.setKey((Key) keyHelper.obtainKey(User.class, "lizbeth@aditivo.mx"));
+			      userDao.create(lizbeth);
+			      log.log(Level.INFO, "Inserted Lizbeth Aditivo...");
+			    }
+			  try {
+				    um = userMenuDao.get("lizbeth@aditivo.mx", true);
+				    userMenuDao.delete("lizbeth@aditivo.mx");
+				    throw new Exception();
+				  } catch( Exception e ) {
+				    um = new UserMenu();
+				    um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				    um.setKey(userMenuDao.createKey("lizbeth@aditivo.mx"));
+				    userMenuDao.create(um);
+				  }
 				
 			
 		}
