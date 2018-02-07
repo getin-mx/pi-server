@@ -158,7 +158,7 @@ public class ImportDRoc extends AbstractCLI {
 										if( last == null || last.before(receivedAt)) {
 											last = receivedAt;
 										}
-										lastUpdates.put(hostname, last);
+										lastUpdates.put(hostname, last);// FIXME not closing visits?
 										
 										connections.put(key, obj);
 	
@@ -217,7 +217,7 @@ public class ImportDRoc extends AbstractCLI {
 					end = System.currentTimeMillis();
 					log.log(Level.INFO, list.size() + " elements written in " + (end - start) + "ms");
 					curDate.setTime(curDate.getTime() +Constants.DAY_IN_MILLIS);
-					//stmt.close();
+					stmt.close();
 					rs.close();
 				}
 			} catch (SQLException ex) {
