@@ -61,7 +61,7 @@ public class TempStoreDumper extends AbstractCLI {
 			// Brands ----------------------------------------------------------------------------------------------------
 			Brand brand;
 
-			
+			/*
 			try {
 				brand = brandDao.get("trender_mx", true);
 			} catch( Exception e ) {
@@ -111,10 +111,11 @@ public class TempStoreDumper extends AbstractCLI {
 
 			}
 
-
+			*/
+			
 			// Stores ----------------------------------------------------------------------------------------------------
 			List<StoreAdapter> stores = CollectionFactory.createList();
-			
+			/*
 			stores.add(new StoreAdapter("833", "MT Sport S2 San Martín", "mt_sport_mx", null, TempStoreDumper.MALL));
 			stores.add(new StoreAdapter("834", "MT Sport S4 Tuxtla", "mt_sport_mx", null, TempStoreDumper.MALL));
 			stores.add(new StoreAdapter("835", "MT Sport S10 Tuxtla", "mt_sport_mx", null, TempStoreDumper.MALL));
@@ -131,6 +132,19 @@ public class TempStoreDumper extends AbstractCLI {
 			stores.add(new StoreAdapter("844", "Cloe Andares", "cloe_mx", null, TempStoreDumper.MALL)); 
 			stores.add(new StoreAdapter("845", "Aditivo Gran Patio Ecatepec", "aditivo_mx", null, TempStoreDumper.MALL)); 
 			stores.add(new StoreAdapter("846", "Sally Beauty Oasis Coyoacan", "sallybeauty_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("1200", "Fullsand Zicatela", "fullsand_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("1201", "Modatelas San Cristobal de las Casas II", "modatelas_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("1202", "Modatelas Cd. Juarez IV", "modatelas_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("1203", "Modatelas Tlapacoyan", "modatelas_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("1204", "Modatelas Puebla III", "modatelas_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("1205", "Modatelas San Felipe Torres Mochas", "modatelas_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("1206", "Modatelas Hermosillo III", "modatelas_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("1207", "Modatelas Agua Prieta", "modatelas_mx", null, TempStoreDumper.MALL));
+			stores.add(new StoreAdapter("1208", "Modatelas Tecomán II", "modatelas_mx", null, TempStoreDumper.MALL));
+			*/
+			
+
+
 
 
 			
