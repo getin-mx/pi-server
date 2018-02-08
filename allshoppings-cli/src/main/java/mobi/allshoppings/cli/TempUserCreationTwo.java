@@ -372,7 +372,7 @@ public class TempUserCreationTwo extends AbstractCLI {
 						    userMenuDao.create(um);
 						  }
 				    
-			    */
+			    
 			
 			User lizbeth = null;
 			UserMenu um = null;
@@ -412,6 +412,81 @@ public class TempUserCreationTwo extends AbstractCLI {
 				    userMenuDao.create(um);
 				  }
 				
+			
+		    User aditivo= null;
+		    UserMenu um = null;
+		    
+			try {
+				aditivo = userDao.get("aditivofranquiciascelia_mx", true);
+				  userDao.delete("aditivofranquiciascelia_mx");
+				  throw new Exception();
+				} catch( Exception e ) {
+				    log.log(Level.INFO, "Inserting aditivo...");
+				    aditivo = new User();
+				    aditivo.setFirstname("Aditivo Celia");
+				    aditivo.setLastname("Mexico");
+				    aditivo.setEmail("aditivocelia2@getin.mx");
+				    aditivo.getSecuritySettings().setRole(Role.STORE);
+				    aditivo.getSecuritySettings().setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+				    aditivo.getSecuritySettings().setStores(Arrays.asList("07acea43-4a6c-4adc-896c-00b1f4781242",
+				    		"0867dbd4-53f1-4602-8a48-e0c07bd752da",
+				    		"2fea9047-6da8-4493-b97c-f3cdd809a18d",
+				    		"75746850-9ae4-4aa4-bf8f-3bf01daf2775",
+				    		"800f4a09-34f7-4116-bf5c-4b0ab45175c8"));
+				    aditivo.setKey((Key)keyHelper.obtainKey(User.class, "aditivofranquiciascelia_mx"));
+				  userDao.create(aditivo);
+				    log.log(Level.INFO, "Inserting cloe...");
+
+				}
+			  try {
+				    um = userMenuDao.get("aditivofranquiciascelia_mx", true);
+				    userMenuDao.delete("aditivofranquiciascelia_mx");
+				    throw new Exception();
+				  } catch( Exception e ) {
+				    um = new UserMenu();
+				    um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				    um.setKey(userMenuDao.createKey("aditivofranquiciascelia_mx"));
+				    userMenuDao.create(um);
+				  }
+				  
+				  */
+			
+		    User coastv= null;
+		    UserMenu um = null;
+		    
+			try {
+				coastv = userDao.get("tiendas@98coastav.mx", true);
+				  userDao.delete("tiendas@98coastav.mx");
+				  throw new Exception();
+				} catch( Exception e ) {
+				    log.log(Level.INFO, "Inserting 98 Coast...");
+				    coastv = new User();
+				    coastv.setFirstname("98 Coast av");
+				    coastv.setLastname("Mexico");
+				    coastv.setEmail("tiendas@98coastav.mx");
+				    coastv.getSecuritySettings().setRole(Role.STORE);
+				    coastv.getSecuritySettings().setPassword("4B3785A1117F3F2B6700CF71B3A6DF0CC7BD8D11F2296A1054FB52CB102B5BB1");
+				    coastv.getSecuritySettings().setStores(Arrays.asList("83d06e8f-4ca8-4a92-bf48-b796bc24ac50",
+				    		"2edff7a5-6000-45b1-9425-a7712e133d80",
+				    		"510b13bc-c316-42e1-853a-38dcf8855746",
+				    		"f03d2386-3c1e-40c7-9005-d402f565f107",
+				    		"a98dff46-f725-4e96-8a7f-6f74347c7ab1",
+				    		"0d8d0802-b950-4450-90ce-9742cef0ad3b"));
+				    coastv.setKey((Key)keyHelper.obtainKey(User.class, "tiendas@98coastav.mx"));
+				  userDao.create(coastv);
+				    log.log(Level.INFO, "Inserting 98 Coast av...");
+
+				}
+			  try {
+				    um = userMenuDao.get("tiendas@98coastav.mx", true);
+				    userMenuDao.delete("tiendas@98coastav.mx");
+				    throw new Exception();
+				  } catch( Exception e ) {
+				    um = new UserMenu();
+				    um.getEntries().add(new UserMenuEntry("index.apdvisits", "fa-area-chart", "Tráfico"));
+				    um.setKey(userMenuDao.createKey("tiendas@98coastav.mx"));
+				    userMenuDao.create(um);
+				  }
 			
 		}
 		catch(Exception e){
